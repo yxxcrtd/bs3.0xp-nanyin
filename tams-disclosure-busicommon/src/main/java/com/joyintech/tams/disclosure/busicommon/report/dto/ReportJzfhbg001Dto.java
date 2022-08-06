@@ -45,6 +45,16 @@ public class ReportJzfhbg001Dto {
    /*申购价格*/
    private String subValue;
    private String enddate;
+   /*增加报表日期*/
+   private Date reportDate;
+
+   public Date getReportDate() {
+      return reportDate;
+   }
+
+   public void setReportDate(Date reportDate) {
+      this.reportDate = reportDate;
+   }
 
    public String getEnddate() {
       return enddate;

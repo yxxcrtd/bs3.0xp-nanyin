@@ -157,8 +157,10 @@ public class ReportKfjzgg001Service implements IReportDataService {
                         accountDate = DateUtil.addDay(DateUtil.parse(openEndDateStr), 1);
                     }
                     reportKfjzgg001Dto.setAnnounceT(DateUtil.format(accountDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
-                    //增加公告期
-                    reportKfjzgg001Dto.setEnddate(DateUtil.format(accountDate));
+                    //增加跑批日
+                    reportKfjzgg001Dto.setEnddate(openEndDateStr);
+                    //增加报表日
+                    reportKfjzgg001Dto.setReportDate(DateUtil.parse(openEndDateStr));
                 }else{
                     logger.warn("开放及净值公告（公募）/（私募）；不符合【根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告】【{}】",JsonUtils.object2Json(paraMap));
                 }
