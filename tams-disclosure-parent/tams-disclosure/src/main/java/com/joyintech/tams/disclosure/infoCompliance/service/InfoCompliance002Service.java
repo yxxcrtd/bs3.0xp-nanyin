@@ -141,7 +141,7 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
                 InfoComplianceDto infoDto = (InfoComplianceDto)a;
 
                 String firstNodeId = infoComplianceMapper.getFirstNodeId(entity.getWorkflowId());
-                if(entity.getCurNodeId().equals(firstNodeId)){
+                if(!entity.getCurNodeId().equals(firstNodeId)){
                     //非第一个节点提交,需要修订意见
                     if(StringUtil.isEmpty(infoDto.getComment())){
                         return "修订意见不能为空!";
