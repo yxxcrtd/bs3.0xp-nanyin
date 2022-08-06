@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.busicommon.report.dto;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,6 +58,16 @@ public class ReportKfqzjfhgg001Dto {
     private String announceT;
     /*增加公告期*/
     private String enddate;
+    /*增加报表日期*/
+    private Date reportDate;
+
+    public Date getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(Date reportDate) {
+        this.reportDate = reportDate;
+    }
 
     public String getEnddate() {
         return enddate;

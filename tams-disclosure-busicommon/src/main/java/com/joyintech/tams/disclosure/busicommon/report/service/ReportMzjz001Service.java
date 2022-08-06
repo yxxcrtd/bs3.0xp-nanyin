@@ -82,7 +82,10 @@ public class ReportMzjz001Service implements IReportDataService {
                         announceDate = DateUtil.addDay(DateUtil.parse(valueDate), 1);
                     }
                     reportMzjz001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
-                    reportMzjz001Dto.setEnddate(DateUtil.format(announceDate));
+                    //跑批日
+                    reportMzjz001Dto.setEnddate(valueDate);
+                    //生成报表日
+                    reportMzjz001Dto.setReportDate(DateUtil.parse(valueDate));
                 }
             }
             resultMap.add(ReportCollectionUtils.bean2Map(reportMzjz001Dto));

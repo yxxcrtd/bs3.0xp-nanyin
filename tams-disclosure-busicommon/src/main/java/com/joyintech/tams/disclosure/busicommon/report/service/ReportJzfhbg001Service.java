@@ -206,7 +206,10 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             openPlanList.add(openPlanDto);
                         }
                         reportJzfhbg001Dto.setOpenPlanList(openPlanList);
-                        reportJzfhbg001Dto.setEnddate(DateUtil.format(announceDate));
+                        //生成跑批日
+                        reportJzfhbg001Dto.setEnddate(settDateStr);
+                        //生成报表日
+                        reportJzfhbg001Dto.setReportDate(DateUtil.parse(settDateStr));
                     } else {
                         logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】",JsonUtils.object2Json(paraMap));
                     }
