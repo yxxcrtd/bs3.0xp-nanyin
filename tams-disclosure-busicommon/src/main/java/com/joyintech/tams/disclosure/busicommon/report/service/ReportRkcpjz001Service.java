@@ -215,7 +215,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
 
                 Map<String, Object> prodTotalValueChart = new HashMap<String, Object>();
-                prodTotalValueChart.put("width", 500);
+                prodTotalValueChart.put("width", 350);
                 prodTotalValueChart.put("height", 150);
                 prodTotalValueChart.put("type", "png");
                 prodTotalValueChart.put("content", imagePath2 + ".png");
