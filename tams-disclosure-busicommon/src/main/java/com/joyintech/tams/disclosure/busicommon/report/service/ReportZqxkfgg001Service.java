@@ -93,6 +93,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     reportZqxkfgg001Dto = reportZqxkfgg001Mapper.getProdInfo(searchparam);
                     if (reportZqxkfgg001Dto.getSetDate() != null) {
                         reportZqxkfgg001Dto.setSetDateT(DateUtil.format(reportZqxkfgg001Dto.getSetDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
+                        searchparam.put("setDate",reportZqxkfgg001Dto.getSetDate());
                     }
                     reportZqxkfgg001Dto.setAnnounceT(DateUtil.format(DateUtil.parse(announceDate), DateUtil.DEFAULT_DATE_FORMAT_CN));
                     //查询后续申购赎回安排：根据产品排期计划展示当前“运作起始日”之后的未来6个开放周期（运作起始日大于当前运作起始日）】
