@@ -43,6 +43,8 @@ public class Report1Ysncp001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
+        List<Map<String, Object>> prodlist = new ArrayList<>();
+        dataMap.put("prodlist", prodlist);
         if (paraMap.get("elementname") == null) {
             return result;
         }
@@ -50,8 +52,8 @@ public class Report1Ysncp001Service implements IReportDataService {
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("adjField", adjField);
         if (null != paraMap.get("pprodid")) {
-            List<String> prodlist = StringUtil.splitToList(GlobalConstant.COMMA, paraMap.get("pprodid").toString());
-            searchparam.put("prodlist", prodlist);
+            List<String> prodlist1 = StringUtil.splitToList(GlobalConstant.COMMA, paraMap.get("pprodid").toString());
+            searchparam.put("prodlist", prodlist1);
         }
         String pubDateStr = commonPlatformDateService.getSysDateStr();
         if (null != paraMap.get("enddate")) {
@@ -91,7 +93,6 @@ public class Report1Ysncp001Service implements IReportDataService {
         // 产品要素调整明细
         List<ReportProdadjDto> prodadjDtos = reportCpystzMapper.qureyProdlist(searchparam);
         if (prodadjDtos != null && prodadjDtos.size() > 0) {
-            List<Map<String, Object>> prodlist = new ArrayList<>();
             prodadjDtos.forEach(x -> {
                 Map<String, Object> prodmap = new HashMap<>();
                 // 产品名称
@@ -107,7 +108,6 @@ public class Report1Ysncp001Service implements IReportDataService {
                         DateUtil.format(x.getEffDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
                 prodlist.add(prodmap);
             });
-            dataMap.put("prodlist", prodlist);
         }
         dataMap.put("enddate",pubDateStr);
         return result;
