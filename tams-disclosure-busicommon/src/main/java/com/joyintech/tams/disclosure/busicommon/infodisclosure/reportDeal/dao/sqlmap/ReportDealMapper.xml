@@ -116,6 +116,12 @@
 		from
 			sys_data_process_mark pm
 				inner join rep_reveal rr on pm.business_data_pk1 = rr.id
+		inner join (select max(HIS_NO) HIS_NO, WORKFLOW_ID
+		from SYS_DATA_PROCESS_MARK
+		where page_id = 'ReportConfirmManage001'
+		group by WORKFLOW_ID) tempHis
+		on pm.HIS_NO = tempHis.HIS_NO
+		and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
 		where
 			pm.page_id = 'ReportConfirmManage001'
 		  and pm.status in ('A', 'U', 'P')

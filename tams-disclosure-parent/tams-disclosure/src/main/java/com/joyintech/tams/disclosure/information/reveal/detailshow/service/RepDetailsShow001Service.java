@@ -422,18 +422,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         List<ValidMessage> messages = new ArrayList<>();
         RepReveal repReveal = poiReportService.getRepReveal(param);
 
-        if(StringUtil.equals("01",(String)param.get("flag"))){
-            if(reportDealService.checkSameReport(repReveal)){
-                result.setMessage("存在相同的报表,是否继续编辑?", MessageType.确认消息);
-                return result;
-            }
-        }else if(StringUtil.equals("02",(String)param.get("flag"))){
-            if(reportDealService.checkSameReport(repReveal)){
-                result.setMessage("存在相同的报表,是否继续生成?", MessageType.确认消息);
-                return result;
-            }
-        }
-
         if(!reportDealService.selectConfirmStatus(repReveal)){
             //存在已确认的数据
             messages.add(new ValidMessage("当前信披单据已确认，不支持重新生成"));
@@ -445,6 +433,18 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             messages.add(new ValidMessage("存在流程中的报表！"));
             result.setErrorList(messages);
             return result;
+        }
+
+        if(StringUtil.equals("01",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续编辑?", MessageType.确认消息);
+                return result;
+            }
+        }else if(StringUtil.equals("02",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续生成?", MessageType.确认消息);
+                return result;
+            }
         }
 
         return result;
