@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeExt1;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -75,7 +76,8 @@ public class ReportWorkManage003Service extends CommonExportService<ReportWorkMa
     					||StringUtil.equals(dto.getRuleType1(),DictCode.目标客户类型.getValue())
 						||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
 						||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
-						||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())){
+						||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
+						||StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())){
     				sb.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
 							.append(dto.getRuleType4()).append("'");
     			}else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
