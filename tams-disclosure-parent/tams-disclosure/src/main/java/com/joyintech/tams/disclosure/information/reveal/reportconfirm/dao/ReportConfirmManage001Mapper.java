@@ -267,4 +267,7 @@ public interface ReportConfirmManage001Mapper {
    /**
     * 批量上传后更新报表信息
     */
-   int updateRepRevealByInfo(RepReveal repReveal);}
+   int updateRepRevealByInfo(RepReveal repReveal);
+
+    String getProcessInstanceId(String workflowId);
+}
