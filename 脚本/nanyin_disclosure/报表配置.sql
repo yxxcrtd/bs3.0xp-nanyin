@@ -633,3 +633,10 @@ DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_012' AND RULE_TYPE1 = 'ISSU
 insert into REP_JOB_RANGE values ('D0000000000000000047','CP_001_002_012','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_011' AND RULE_TYPE1 = 'ISSUING_WAY';
 insert into REP_JOB_RANGE values ('D0000000000000000041','CP_001_002_011','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+
+--净值及分红报告（私募开放式） 发行方式改成开放式
+DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_014' AND RULE_TYPE1 = 'ISSUING_WAY';
+insert into REP_JOB_RANGE values ('D0000000000000000057','CP_001_002_014','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+--净值及分红报告（私募封闭式） 发行方式改成封闭式
+DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_013' AND RULE_TYPE1 = 'ISSUING_WAY';
+insert into REP_JOB_RANGE values ('D0000000000000000053','CP_001_002_013','02','ISSUING_WAY','=','02','02','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
