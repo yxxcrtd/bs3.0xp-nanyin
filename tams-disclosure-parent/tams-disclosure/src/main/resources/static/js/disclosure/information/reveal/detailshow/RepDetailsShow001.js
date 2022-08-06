@@ -659,7 +659,9 @@ $(function () {
     	params['uri'] = modelId;
 		params['flag']="01";
 		//编辑之前需要判断改报表是否已确认或者在流程中
-
+		var webRoot=document.location.href;
+		webRoot=webRoot.substring(0,webRoot.indexOf('disclosure'));	
+		params['webRoot']=webRoot;
 		Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
 			Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
 				JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),

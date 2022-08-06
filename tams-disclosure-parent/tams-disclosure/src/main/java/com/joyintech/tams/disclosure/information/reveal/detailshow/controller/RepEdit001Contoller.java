@@ -109,6 +109,7 @@ public class RepEdit001Contoller extends BaseController {
     	Date reportDate = RequestUtil.getPageParam().get("enddate")==null?commonPlatformDateService.getSysDate():DateUtil.parse(RequestUtil.getPageParam().get("enddate").toString());
     	 String portnum = RequestUtil.getPageParam().get("prodid")==null?RequestUtil.getPageParam().get("pprodid").toString():RequestUtil.getPageParam().get("prodid").toString();
     	String reportId = RequestUtil.getPageParam().get("repid")==null?"":RequestUtil.getPageParam().get("repid").toString();
+    	String webRoot = RequestUtil.getPageParam().get("webRoot")==null?"":RequestUtil.getPageParam().get("webRoot").toString();
     	
     	Map<String,Object> params = RequestUtil.getPageParam();
     	repDetailsShow001Service.collateParams(params);
@@ -117,6 +118,7 @@ public class RepEdit001Contoller extends BaseController {
         model.addAttribute("repName", templateName); 
         model.addAttribute("portnum", portnum);
         model.addAttribute("reportId", reportId);
+        model.addAttribute("webRoot", webRoot);
         
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         //reportDate = DateUtil.parse("2023-03-01");
