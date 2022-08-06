@@ -49,10 +49,10 @@ $(function () {
 	    			}
 	    		}
 				if(getKey==='prodid'){
-					obj['prodname']=$('#'+ids[i].key).text();
+					obj['prodname']=$('#'+ids[i].key).find("option:selected").text();
 				}
 				if(getKey==='pprodid'){
-					obj['pprodname']=$('#'+ids[i].key).text();
+					obj['pprodname']=$('#'+ids[i].key).find("option:selected").text();
 				}
         	}
     		if(obj.startDate&&obj.endDate){
