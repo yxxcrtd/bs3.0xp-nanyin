@@ -144,7 +144,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 configMap.put("xAxis.axisLabel.interval", 1);//设置x轴数据隔天显示
                 configMap.put("yAxis.type", "value");
                 configMap.put("yAxis.position", "left");
-                configMap.put("yAxis.splitNumber", "30");//设置y轴最多显示个数，不一定会显示
+//                configMap.put("yAxis.splitNumber", "30");//设置y轴最多显示个数，不一定会显示
 
 
                 searchparam.put("rptType", rptType);
@@ -187,8 +187,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath1, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
 
                 Map<String, Object> prodValueChart = new HashMap<String, Object>();
-                prodValueChart.put("width", 500);
-                prodValueChart.put("height", 200);
+                prodValueChart.put("width", 350);
+                prodValueChart.put("height", 150);
                 prodValueChart.put("type", "png");
                 prodValueChart.put("content", imagePath1 + ".png");
                 dataMap.put("${@image:image1}", prodValueChart);
@@ -216,7 +216,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
 
                 Map<String, Object> prodTotalValueChart = new HashMap<String, Object>();
                 prodTotalValueChart.put("width", 500);
-                prodTotalValueChart.put("height", 200);
+                prodTotalValueChart.put("height", 150);
                 prodTotalValueChart.put("type", "png");
                 prodTotalValueChart.put("content", imagePath2 + ".png");
                 dataMap.put("${@image:image2}", prodTotalValueChart);
