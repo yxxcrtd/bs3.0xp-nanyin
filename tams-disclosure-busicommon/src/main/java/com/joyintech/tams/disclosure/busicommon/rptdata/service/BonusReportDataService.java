@@ -108,25 +108,8 @@ public class BonusReportDataService implements IReportDataService {
 		RepReveal repReveal = new RepReveal();
 		repReveal.setRepId(paraMap.get("repId").toString());
 		repReveal.setProdid(paraMap.get("prodId").toString());
-		
-//		paraMap.put("reportDate", DateUtil.parse(paraMap.get("reportDate").toString()));
-//		List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
-//
-//		BonusReportDto report =  listReport.get(0); //指定产品后，只有一条数据
-//
-//			// 上一分配基准日
-//			if ("01".equals(report.getIssuingWay())) { // 开放式
-//				DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
-//				if (plan == null) { // 第一个计划
-//					repReveal.setStartDate(report.geteDate());
-//				} else {
-//					repReveal.setStartDate(plan.getSettDate());
-//				}
-//			} else {
-//				repReveal.setStartDate(report.geteDate());
-//			}
-			repReveal.setEndDate( DateUtil.parse(paraMap.get("reportDate").toString()) );
-			return repReveal;
+		repReveal.setEndDate( (Date)(paraMap.get("reportDate")) );
+		return repReveal;
 	}
 	
 }

@@ -196,7 +196,7 @@ public class MatureReportDataService implements IReportDataService {
 		repReveal.setRepId(paraMap.get("repId").toString());
 		repReveal.setProdid(paraMap.get("prodId").toString());
 		
-		Date eDate = DateUtil.parse(paraMap.get("platformDate").toString());
+		Date eDate = (Date)(paraMap.get("platformDate"));
 		List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
 		if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
 			BonusReportDto dto = listBonusReport.get(0);

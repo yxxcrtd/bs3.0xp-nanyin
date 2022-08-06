@@ -352,7 +352,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         
         Date genDate = commonPlatformDateService.getSysDate();
         if (params.get("reportDate")!=null )
-        	genDate = DateUtil.parse(params.get("reportDate").toString());
+        	genDate = (Date)(params.get("reportDate"));
         if (params.get("endDate")!=null )
         	genDate = DateUtil.parse(params.get("endDate").toString());
  
@@ -360,8 +360,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
         String reportFile = reportFileService.getTempOSSReportFileName(reportId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
-        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+ReportFileService.FILE_TYPE_DOCX;
-
+        File f = new File(reportFile);
+        //String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+ReportFileService.FILE_TYPE_DOCX;
+        String localFileName = f.getName();
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
             ByteArrayInputStream bis = null;
             byte[] bytes = poiReportService.getFileByteArray(reportFile);
@@ -373,7 +374,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
             PoiUtils.docxToPdf(bis,fos);
             reportFile = fileNamePdf;
-            localFileName = reportInfo.getReportName()+"_"+prodId+"_" +DateUtil.format(genDate)+ReportFileService.FILE_TYPE_PDF;
+            localFileName = localFileName.replace(ReportFileService.FILE_TYPE_DOCX, ReportFileService.FILE_TYPE_PDF);
         }else{
         	String  localReportFile = reportFileService.getReportFileName(reportId,genDate,params,ReportFileService.FILE_TYPE_DOCX);
         	FileOutputStream fos = null;
@@ -413,8 +414,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     public AjaxResult check(Map<String, Object> param){
         AjaxResult result = new AjaxResult();
         List<ValidMessage> messages = new ArrayList<>();
+        
+        collateParams(param);
         RepReveal repReveal = poiReportService.getRepReveal(param);
-
+        
         if(StringUtil.equals("01",(String)param.get("flag"))){
             if(reportDealService.checkSameReport(repReveal)){
                 result.setMessage("存在相同的报表,是否继续编辑?", MessageType.确认消息);
@@ -438,6 +441,18 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             messages.add(new ValidMessage("存在流程中的报表！"));
             result.setErrorList(messages);
             return result;
+        }
+
+        if(StringUtil.equals("01",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续编辑?", MessageType.确认消息);
+                return result;
+            }
+        }else if(StringUtil.equals("02",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续生成?", MessageType.确认消息);
+                return result;
+            }
         }
 
         return result;
