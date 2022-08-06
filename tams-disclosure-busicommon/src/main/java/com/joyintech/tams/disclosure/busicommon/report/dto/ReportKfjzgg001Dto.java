@@ -19,6 +19,16 @@ public class ReportKfjzgg001Dto {
     private List<ReportOpenPlanDto> hisValueList;
     private String announceT;
     private String times;
+    /*增加公告期*/
+    private String enddate;
+
+    public String getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
+    }
 
     public String getTitleName() {
         return titleName;

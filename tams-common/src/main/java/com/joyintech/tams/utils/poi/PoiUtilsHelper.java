@@ -362,7 +362,7 @@ public class PoiUtilsHelper {
 //		}
 //		System.out.println("==================");
 		String fontFamily = "方正仿宋简体";
-		int fontSize = 12;
+		int fontSize = 11;
 		if ( styleRow!=null  ) {
 			fontFamily = table.getRow(0).getCell(0).getParagraphs().get(0).getRuns().get(0).getFontFamily();
 			fontSize = table.getRow(0).getCell(0).getParagraphs().get(0).getRuns().get(0).getFontSize();
@@ -389,7 +389,8 @@ public class PoiUtilsHelper {
 					paragraph.setVerticalAlignment(TextAlignment.CENTER);  //没有效果
 					XWPFRun run = paragraph.createRun();
 					run.setFontFamily(fontFamily);
-					run.setFontSize(fontSize);
+					if ( fontSize!=-1 )
+						run.setFontSize( fontSize);
 					if ( cell.getParagraphs().size()>0 ) 
 						cell.removeParagraph(0);					
 					run.setText(content,0);					
@@ -440,7 +441,8 @@ public class PoiUtilsHelper {
 						paragraph.setVerticalAlignment(TextAlignment.CENTER);
 						XWPFRun run = paragraph.createRun();
 						run.setFontFamily(fontFamily);
-						run.setFontSize(fontSize);					
+						if ( fontSize!=-1 )
+							run.setFontSize( fontSize);			
 						run.setText(content,0);			
 						//cell.setText(content);
 					}
