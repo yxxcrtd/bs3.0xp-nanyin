@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.infoCompliance.service;
 import com.google.json.JsonSanitizer;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
@@ -73,18 +74,23 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
      * */
     @Override
     public void doUpdate(InfoComplianceDto dto){
-        //从待办下发起提交和保存
-        if(ProcessType.SAVE.equals(processType)){
-            doInsert(dto, null);
-        } else if(ProcessType.SUBMIT.equals(processType)){
-            //复核人向下流转流程
-            //保存修订意见
+        //从待办下发起提交和保存,或者是退回后在发起提交()
+        doInsert(dto, null);
+        //复核人向下流转流程
+        //保存修订意见
+        if(StringUtil.isNotEmpty(dto.getComment())){
             String infoSeqno = dto.getSeqno();
             InfoComplianceCommentDto commentDto = new InfoComplianceCommentDto(IDGenerator.generate(),infoSeqno,dto.getComment());
             infoComplianceMapper.saveInfoComplianceComment(commentDto);
             //修订意见与修订附件关联
             infoComplianceMapper.relationFileAndComment(commentDto);
         }
+
+    }
+
+    public void doBack(InfoComplianceDto entity) {
+        //退回删除已上传,未关联批注的附件
+        infoComplianceMapper.deleteUploadFile(entity.getSeqno());
     }
 
     @Override
@@ -97,7 +103,7 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
     //流程作废
     public void doDelete(String workflowId) {
         Map<String,String> param = new HashMap<>();
-        param.put("workflowId","workflowId");
+        param.put("workflowId",workflowId);
         infoComplianceMapper.deleteInfoCompliance(param);
     }
 
@@ -126,20 +132,24 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
             return "合规留痕管理不能批量审批";
         }
         try{
-            if(ProcessType.SUBMIT.equals(entity.getProcessType())){
-                processType = entity.getProcessType();
+            if(ProcessType.SUBMIT.equals(entity.getProcessType()) || ProcessType.BACK.equals(entity.getProcessType())){
                 FlowEntity flowEntity = WorkflowContext.getProcessService().getRuntimeEntity(entity.getProcessInstanceId());
                 BusinessService<WorkflowEntity> businessService = WorkflowContext.getBusinessService(flowEntity.getBusinessService());
                 Class<?> clz = WorkFlowUtil.getClassByBusinessServiceName(flowEntity.getBusinessService());
                 ProcessMark businessEntity = WorkFlowUtil.getBusinessObjectFromRequest(clz, true);
                 Object a = JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(businessEntity.getBusinessData()), GenericsUtils.getSuperClassGenricType(ProxyUtil.getTargetClass(businessService.getClass())));
                 InfoComplianceDto infoDto = (InfoComplianceDto)a;
-                if(StringUtil.isEmpty(infoDto.getComment())){
-                    return "修订意见不能为空!";
+
+                String firstNodeId = infoComplianceMapper.getFirstNodeId(entity.getWorkflowId());
+                if(entity.getCurNodeId().equals(firstNodeId)){
+                    //非第一个节点提交,需要修订意见
+                    if(StringUtil.isEmpty(infoDto.getComment())){
+                        return "修订意见不能为空!";
+                    }
                 }
             }
         } catch (Exception e){
-
+            e.printStackTrace();
         }
         return null;
     }
