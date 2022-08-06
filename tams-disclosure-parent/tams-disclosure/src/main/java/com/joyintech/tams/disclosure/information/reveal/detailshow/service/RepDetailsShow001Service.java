@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import org.slf4j.Logger;
@@ -260,7 +261,8 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
-                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_信批产品类别.getValue())){
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_信批产品类别.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())){
                     sb.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
                             .append(dto.getRuleType4()).append("'");
                 }else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
@@ -417,18 +419,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         
         collateParams(param);
         RepReveal repReveal = poiReportService.getRepReveal(param);
-        
-        if(StringUtil.equals("01",(String)param.get("flag"))){
-            if(reportDealService.checkSameReport(repReveal)){
-                result.setMessage("存在相同的报表,是否继续编辑?", MessageType.确认消息);
-                return result;
-            }
-        }else if(StringUtil.equals("02",(String)param.get("flag"))){
-            if(reportDealService.checkSameReport(repReveal)){
-                result.setMessage("存在相同的报表,是否继续生成?", MessageType.确认消息);
-                return result;
-            }
-        }
+
 
         if(!reportDealService.selectConfirmStatus(repReveal)){
             //存在已确认的数据
