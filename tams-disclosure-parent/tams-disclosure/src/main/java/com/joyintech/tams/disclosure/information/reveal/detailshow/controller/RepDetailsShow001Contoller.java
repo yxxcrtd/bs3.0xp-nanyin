@@ -314,7 +314,6 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@RequestMapping(value="/previewReport", method = RequestMethod.POST)
 	public void previewReport(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> params = RequestUtil.getPageParam();
-		repDetailsShow001Service.collateParams(params);
 		repDetailsShow001Service.previewReport(params,response);
 	}
 

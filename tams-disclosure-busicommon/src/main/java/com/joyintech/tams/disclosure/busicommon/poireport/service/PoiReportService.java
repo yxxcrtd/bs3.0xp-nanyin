@@ -96,6 +96,7 @@ public class PoiReportService {
 	
 	@Autowired
 	private ReportFileService reportFileService;
+
 	
 	/**
 	 * 日志
@@ -359,18 +360,23 @@ public class PoiReportService {
 		repReveal.setReportName(ReportName);
 		if (StringUtil.isNotEmpty(params.get("prodId"))) {
 			repReveal.setProdid(params.get("prodId").toString());
-			// 查询产品名称的全称
-			// String prodName =
-			// repDetailsShow001Mapper.getProdName(params.get("prodName").toString());
-			String prodName = params.get("prodName").toString();
-//           repReveal.setProdName(params.get("prodName").toString());
-			repReveal.setProdName(prodName);
+		} else {
+			if ( params.get("pprodId")!=null )
+				repReveal.setProdid(params.get("pprodId").toString());
+		}
+		if ( params.get("prodName")!=null ) { 
+			repReveal.setProdName(params.get("prodName").toString());
+		} else {
+			if ( params.get("pprodName")!=null )
+				repReveal.setProdName(params.get("pprodName").toString());			
 		}
 		if (StringUtil.isNotEmpty(params.get("startDate"))) {
 			repReveal.setStartDate(DateUtil.parse(params.get("startDate").toString()));
 		}
 		if (StringUtil.isNotEmpty(params.get("endDate"))) {
 			repReveal.setEndDate(DateUtil.parse(params.get("endDate").toString()));
+		} else {
+			repReveal.setEndDate((Date)params.get("reportDate"));
 		}
 		// 获取产品信息
 		String portnum = params.get("prodId") == null ? "" : params.get("prodId").toString();
@@ -599,6 +605,7 @@ public class PoiReportService {
 			genDate = (Date)params.get("platformDate");
 		}
 		String localPathFile = reportFileService.getTempSimpleReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX); 
+		logger.debug("==================报表生成文件上传："+localPathFile);
 		ByteArrayOutputStream bos = null;
 		ByteArrayInputStream is = null;
 		String realFilePath = "";

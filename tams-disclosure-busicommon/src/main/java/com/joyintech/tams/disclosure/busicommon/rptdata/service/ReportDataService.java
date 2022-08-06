@@ -348,4 +348,36 @@ public class ReportDataService {
 			}
 	        return repReveal;
 	    }
+	 
+	 /**
+	  * 统一处理报表的时间：包括开始日期何结束日期
+	  * @param params
+	  */
+	 public void collateReportDateParams(Map<String,Object> params ) {
+	        String repId=(String)params.get("repid");
+	        
+	        String rptType= "";
+	    	
+			if (params.get("uri") != null) 
+				rptType = params.get("uri").toString();
+			
+			RepReveal repReveal  = new RepReveal ();
+	        // 分红计算清单
+	        if (rptType.equals(DisReportType.FHJSQD)) {
+	        	repReveal = bonusReportDataService.getRepReveal(params);
+	        } else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
+	        	repReveal = settReportDataService.getRepReveal(params);
+	        } else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
+	        	repReveal = matureReportDataService.getRepReveal(params);
+	        } else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
+	        	repReveal = nostdReportDataService.getRepReveal(params);
+	        } else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
+	                || rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+	                || rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+	        ) { // 定期公告-季度/半年度/年度报告指数型和非指数型
+	        	repReveal = durationReportDataService.getRepReveal(params);
+	        }
+	        //params.put("startDate",repReveal.getStartDate());  //报表的开始日期
+	        params.put("reportDate",repReveal.getEndDate());  //报表的结束日期
+	 }
 }

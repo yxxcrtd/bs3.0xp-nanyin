@@ -104,25 +104,28 @@ public class RepEdit001Contoller extends BaseController {
      */
     @Override
     public String init(Model model) {
-    	
-    	String templateName = RequestUtil.getPageParam().get("repName")==null?"":RequestUtil.getPageParam().get("repName").toString();
-    	Date reportDate = RequestUtil.getPageParam().get("enddate")==null?commonPlatformDateService.getSysDate():DateUtil.parse(RequestUtil.getPageParam().get("enddate").toString());
-    	 String portnum = RequestUtil.getPageParam().get("prodid")==null?RequestUtil.getPageParam().get("pprodid").toString():RequestUtil.getPageParam().get("prodid").toString();
-    	String reportId = RequestUtil.getPageParam().get("repid")==null?"":RequestUtil.getPageParam().get("repid").toString();
-    	String webRoot = RequestUtil.getPageParam().get("webRoot")==null?"":RequestUtil.getPageParam().get("webRoot").toString();
-    	
     	Map<String,Object> params = RequestUtil.getPageParam();
     	repDetailsShow001Service.collateParams(params);
+
+    	String templateName = params.get("repName")==null?"":params.get("repName").toString();
+    	Date reportDate = (Date)params.get("reportDate"); 
+    	if ( reportDate ==null )
+    		reportDate = params.get("enddate")==null?commonPlatformDateService.getSysDate():DateUtil.parse(params.get("enddate").toString());
+    	 String portnum = params.get("prodid")==null?params.get("pprodid").toString():params.get("prodid").toString();
+    	String repId = params.get("repid")==null?"":params.get("repid").toString();
+    	String webRoot = params.get("webRoot")==null?"":params.get("webRoot").toString();
+    	
     	
         model.addAttribute("endDate", reportDate);
         model.addAttribute("repName", templateName); 
         model.addAttribute("portnum", portnum);
-        model.addAttribute("reportId", reportId);
+        model.addAttribute("reportId", repId);
         model.addAttribute("webRoot", webRoot);
         
-        ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
+        //ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         //reportDate = DateUtil.parse("2023-03-01");
-        editFilename = reportFileService.getTempOSSReportFileName(reportId, reportDate, params, ReportFileService.FILE_TYPE_DOCX) ;
+        editFilename = reportFileService.getTempOSSReportFileName(repId, reportDate, params, ReportFileService.FILE_TYPE_DOCX) ;
+		logger.debug("==================报表下载编辑文件："+editFilename);
     	saveFilename = editFilename;
         return super.init(model);
     }

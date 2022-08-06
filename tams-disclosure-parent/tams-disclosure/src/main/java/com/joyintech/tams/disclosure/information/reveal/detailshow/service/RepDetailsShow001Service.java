@@ -35,7 +35,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepJobRange;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -45,6 +44,7 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.Report
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportFileService;
+import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.ProdInfoDto;
@@ -80,6 +80,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     
     @Autowired
     private RepProdInfoMapper repProdInfoMapper;
+    
+    @Autowired
+    private ReportDataService reportDataService;
 
     /**
      * 日志
@@ -300,9 +303,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         try {
 	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  
 	        	//树单击：初始化报表，即报表模板中的变量全部用xxx代替
-	    		String repId = params.get("repId").toString();
+	    		String repId = params.get("repid").toString();
 	        	reportFile = poiReportService.initReport(repId);
 	        } else {  //预览按钮：显示指定产品的实际内容，生成了一个临时文件f1
+	    		collateParams(params);
 	            reportFile = poiReportService.previewReport(params);
 	        }
 	        
@@ -499,13 +503,17 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 //			logger.info("无产品的或者产品错误的报表");
 //		}
 		
-		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));  //单产品只传了pprodid
 		params.put("pprodName", params.get("pprodName")==null?params.get("pprodname"):params.get("pprodName"));
+		params.put("prodname", params.get("prodname")==null?params.get("pprodname"):params.get("prodname"));  //单产品只传了pprodid
+		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));  //单产品只传了pprodid
 
 		//以下新增参数
 		if ( params.get("endDate")!=null )
 			params.put("reportDate", DateUtil.parse(params.get("endDate").toString()) );
 		params.put("platformDate", commonPlatformDateService.getSysDate());
+		
+		reportDataService.collateReportDateParams(params);
+		
 		logger.debug("传入参数---------------------------------------<<<");
 		logger.debug(params.toString());
 		logger.debug("传入参数--------------------------------------->>>");
