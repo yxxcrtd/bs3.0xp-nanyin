@@ -85,7 +85,7 @@
 		where
 		AUDIT_STATUS='E'
 		<if test="indexId!=null">
-			and rindex.PRI_ID=#{indexId,jdbcType}
+			and rindex.PRI_ID=#{indexId,jdbcType=VARCHAR}
 		</if>
 		<if test="reportDate!=null">
 			and INDEX_DATE<![CDATA[<]]>#{reportDate,jdbcType=DATE}

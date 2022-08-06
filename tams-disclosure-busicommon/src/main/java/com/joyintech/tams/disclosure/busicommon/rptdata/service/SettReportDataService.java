@@ -13,18 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ibm.icu.util.Calendar;
-import com.joyintech.tams.common.base.dao.ChbMktHolidayMapper;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.BokBalance;
-import com.joyintech.tams.common.base.entity.ChbMktHoliday;
-import com.joyintech.tams.common.base.entity.ChbMktHolidayKey;
-import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dao.SettReportMapper;
-import com.joyintech.tams.disclosure.busicommon.rptdata.dto.BonusReportDto;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dto.SettReportDto;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 
