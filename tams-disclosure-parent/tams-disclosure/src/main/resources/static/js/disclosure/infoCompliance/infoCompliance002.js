@@ -31,6 +31,10 @@
 
         var checkFlag = true;
         if(FileCommon && FileCommon.getUploadFileInfo().length >0) {
+            if(FileCommon.getUploadFileInfo().length >5){
+                Joyin.error("报表/模板附件超过5个");
+                return;
+            }
             var fileArray = FileCommon.getUploadFileInfo();
             debugger;
             if(fileArray && _.isArray(fileArray)){
@@ -64,6 +68,10 @@
         }
 
         if(FileCommon2 && FileCommon2.getUploadFileInfo().length >0) {
+            if(FileCommon2.getUploadFileInfo().length >5){
+                Joyin.error("其他附件超过5个");
+                return;
+            }
             var fileArray = FileCommon2.getUploadFileInfo();
             if(fileArray && _.isArray(fileArray)){
 
@@ -147,8 +155,9 @@
                 $("#commentDiv").hide();
                 $("#upLoadDiv3").hide();
             }
-
-            var seqno =  $("#seqno").val();
+        }
+        var seqno =  $("#seqno").val();
+        if(seqno){
             Joyin.ajax(basePath + 'disclosure/infoCompliance/infoCompliance002/getCommentList', {seqno:seqno}, function(result) {
                 console.log(result);
                 var commentList = $("#commentList");
@@ -159,10 +168,10 @@
                     var fileList = obj.fileList;
                     console.log(result);
                     var div = $('<div class="upload layui-upload"></div>');
-                    var h3 = $('<h3 class="pro-module-title"><span class="title-des"></span>修订后<i class="iconfont must" style="display: inline;">*</i></h3>');
+                    var h3 = $('<h3 class="pro-module-title"><span class="title-des"></span>修订后附件<i class="iconfont must" style="display: inline;">*</i></h3>');
                     var table = $('<table class="layui-table"></table>');
                     var remark = $(['<div class="layui-form-item">'
-                        ,'<label style="float: left">备注<i class="iconfont must" style="display: inline;">*</i></label>'
+                        ,'<label style="float: left">修订意见<i class="iconfont must" style="display: inline;">*</i></label>'
                         ,'<div class="layui-input-inline input-inline" style="margin:0 10px;width: 80%!important;">'
                         ,'<textarea id="remark" name="remark" maxlength="500" class="layui-textarea" disabled="" autocomplete="off">'+comment+'</textarea>'
                         ,'</div></div>'
@@ -189,6 +198,7 @@
                 }
             });
         }
+
 
     });
 }());

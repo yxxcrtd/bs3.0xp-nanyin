@@ -34,4 +34,8 @@ public interface InfoComplianceMapper {
     void relationFileAndComment(InfoComplianceCommentDto commentDto);
 
     List<InfoComplianceCommentDto> getInfoComplianceComment(String infoSeqno);
+
+    String  getFirstNodeId(@Param("seqNo") String seqNo);
+
+    void  deleteUploadFile(@Param("businessId") String businessId);
 }

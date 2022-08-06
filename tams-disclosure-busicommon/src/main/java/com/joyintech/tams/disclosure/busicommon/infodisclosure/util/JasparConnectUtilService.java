@@ -18,6 +18,8 @@ import java.util.Map;
 import javax.sql.DataSource;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +78,12 @@ public class JasparConnectUtilService {
 
 	@Autowired
 	private ReportFileService reportFileService;
+
+	@Autowired
+	private RepProdInfoMapper repProdInfoMapper;
+
+	@Autowired
+	private PoiReportService poiReportService;
 	/**
 	 * 日志
 	 */
@@ -186,21 +194,27 @@ public class JasparConnectUtilService {
 			dataMap = listReports.get(0);
 		}
 		dataMap.put("uri",r1.getUri());
+		dataMap.put("execDate",params.get("execDate"));
+		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
+		dataMap.put("prodname",prodInfo.getProdName());
+		dataMap.put("repId",r1.getReportID());
 
-		//TODO:zhengxiaolian
-		String reportFile = reportFileService.getReportFileName(r1.getReportID(),(Date) params.get("execDate") ,dataMap,ReportFileService.FILE_TYPE_DOCX );
+//		//TODO:zhengxiaolian
+//		String reportFile = reportFileService.getReportFileName(r1.getReportID(),(Date) params.get("execDate") ,dataMap,ReportFileService.FILE_TYPE_DOCX );
+//
+//		fileName =fileName+GlobalConstant.POINT+fileType;
+//
+//		//String reportFile="";
+//		File localFile = new SafelyFile(reportFile);
+//		logger.info("UploadFile fileName= "  + reportFile);
+//		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(), localFile);
 
-		fileName =fileName+GlobalConstant.POINT+fileType;
-
-		//String reportFile="";
-		File localFile = new SafelyFile(reportFile);
-		logger.info("UploadFile fileName= "  + reportFile);
-		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(), localFile);
+		UploadFile uploadFile=poiReportService.genReportFile2Batch(dataMap);
 		
-		//存入SYS_UPLOAD_FILE_INFO表
-        if(null != fileAttachmentProcess) {
-            fileAttachmentProcess.upload(uploadFile);
-        }
+//		//存入SYS_UPLOAD_FILE_INFO表
+//        if(null != fileAttachmentProcess) {
+//            fileAttachmentProcess.upload(uploadFile);
+//        }
         
 //      //add by leipeng 上传文件处理
 //        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();

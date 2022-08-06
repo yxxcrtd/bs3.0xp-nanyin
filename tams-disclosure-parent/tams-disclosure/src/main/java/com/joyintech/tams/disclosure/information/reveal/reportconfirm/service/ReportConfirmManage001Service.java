@@ -776,4 +776,9 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         return newFile;
 
 
-    }}
+    }
+
+    public String getProcessInstanceId(String workflowId){
+        return reportConfirmManage001Mapper.getProcessInstanceId(workflowId);
+    }
+}

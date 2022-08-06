@@ -39,7 +39,7 @@
 		  <if test="infoStatus != null and !infoStatus.equals('')">
 			AND INFO_STATUS = #{infoStatus,jdbcType=VARCHAR}
 		  </if>
-		  order by info.update_time asc
+		  order by info.update_time desc
 		) t1 left join sys_datadict_list sd1 ON sd1.dict_code ='INFO_TYPE' AND t1.infotype = sd1.item_code
 		left join sys_datadict_list sd2 ON sd2.dict_code = 'INFO_STATUS' AND t1.infostatus = sd2.item_code
 		left join sys_datadict_list sd3 ON sd3.dict_code = 'INFO_DEV_STATUS' AND t1.infodevstatus = sd3.item_code
@@ -169,5 +169,16 @@
 		ORDER BY CREATE_TIME ASC
 	</select>
 
+	<select id="getFirstNodeId" parameterType="java.lang.String" resultType="java.lang.String">
+		select s2.node_id from sys_wfl_business_list s1
+        inner join sys_wfl_business_node s2 on s1.workflow_id = s2.workflow_id
+        where s2.his_no='1' and s1.seq_no = #{seqNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteUploadFile" parameterType="java.lang.String">
+		DELETE FROM sys_upload_file_info
+		WHERE FILE_TYPE ='03' and seqno_comment IS NULL
+		AND BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+	</delete>
 
 </mapper>

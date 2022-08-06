@@ -10,10 +10,10 @@
     <form class="layui-form joyin-form-wrap" id="submitForm"
           style="background: #ffffff; padding: 10px 0;">
         <input type="hidden" id="pageModel" name="pageModel" th:value="${pageModel}" />
-        <div class="layui-form-item" style="display: none;">
-            <input id="seqno" name="seqno" type="hidden" data-th-value="${seqno}">
+        <input id="seqno" name="seqno" type="hidden" data-th-value="${seqno}">
+        <div class="layui-form-item">
+            <label class="layui-form-label form-label-wrap">对选中的【审核通过】的模板进行开发状态变更</label>
         </div>
-
         <div class="layui-form-item">
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-label-wrap">开发状态<i class="iconfont must" style="display: inline;">*</i></label>
