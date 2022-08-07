@@ -154,6 +154,9 @@
     var data = $(function () {
         if (pageModel === PAGE_MODEL_EDIT) {
             $('#btnSave_wfl').hide();
+            if($('#issuingWay').val()=='02'){
+                $('#openFreq').attr("disabled",true);
+            }
         }
 
         // 绑定按钮事件
