@@ -102,10 +102,10 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     if (openList == null || openList.size() == 0) {
                         openList = new ArrayList<>();
                         ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
-                        reportOpenPlanDto.setOpenDurationDate("XXXX/XX/XX-XXXX/XX/XX");
-                        reportOpenPlanDto.setOperationStartDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setAutoRedeemDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setHoldDays("XXX");
+                        reportOpenPlanDto.setOpenDurationDate(" ");
+                        reportOpenPlanDto.setOperationStartDate(" ");
+                        reportOpenPlanDto.setAutoRedeemDate(" ");
+                        reportOpenPlanDto.setHoldDays(" ");
                         openList.add(reportOpenPlanDto);
                     }
                     reportZqxkfgg001Dto.setOpenList(openList);
