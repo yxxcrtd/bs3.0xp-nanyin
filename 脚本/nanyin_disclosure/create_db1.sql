@@ -891,3 +891,9 @@ comment on column REP_REPORT_CHECK.tips
 alter table REP_REPORT_CHECK
     add constraint PK_REP_REPORTCHECK primary key (REPORT_CHECK_ID);
 /**add by 丁锐 20220804   报表数据校验信息  end**/
+
+/**报表指标管理 add by cuiwei 2022-08-07 start**/
+ALTER TABLE REP_INDEX_SUB DROP COLUMN END_DATE;
+ALTER TABLE REP_INDEX_SUB add END_DATE DATE;
+COMMENT ON COLUMN REP_INDEX_SUB.END_DATE is '生效截止日期';
+/**报表指标管理 add by cuiwei 2022-08-07 end**/
