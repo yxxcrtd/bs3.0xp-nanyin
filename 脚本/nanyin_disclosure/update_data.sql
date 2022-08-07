@@ -811,3 +811,22 @@ values ('RULE_TYPE2', '!=', '!=', 6, '0', 'system', null, sysdate, 'system', sys
 update sys_menu a set a.remark='模板启用管理' where a.page_id='ReportPageManage001';
 update sys_page a set a.remark='模板启用管理' where a.page_id='ReportPageManage001';
 -- add by zhengxiaolian 2022-08-05 	模板启用管理 end
+
+/**报表指标管理 add by cuiwei 2022-08-07 start**/
+/*删除多余的指标规则,新增投资性质和产品名称选项*/
+delete from sys_datadict_list where dict_code ='RULE_TYPE1' and item_code not in('ISSUE_STATUS','IS_INDEX','IS_PERIOD','OPEN_FREQ','PROD_TYPE','RAISE_TYPE');
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RULE_TYPE1', 'INVEST_TYPE', '投资性质', 10, '0', 'system', '', sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RULE_TYPE1', 'FINPROD_NAME', '产品名称', 10, '0', 'system', '', sysdate, 'system', sysdate);
+
+--产品类型只保留净值型、现金管理类
+delete from sys_datadict_list where dict_code ='PROD_TYPE' and item_code not in('01','04');
+
+--发行方式只保留确认发行、发行成功、发行失败
+delete from sys_datadict_list where dict_code ='ISSUE_STATUS' and item_code not in('01','02','03');
+
+delete FROM sys_page WHERE PAGE_ID = 'ReportContentEnum004';
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum004', 'DIS', '/disclosure/information/config/reportcontentenum/ReportContentEnum004', 'disclosure/information/config/reportcontentenum/ReportContentEnum004', '', '', '', '02', '02', '报表指标管理产品树', 'system', '', sysdate, 'system', sysdate);
+/**报表指标管理 add by cuiwei 2022-08-07 end**/

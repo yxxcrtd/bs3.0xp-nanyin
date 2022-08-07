@@ -10,14 +10,16 @@
 
 package com.joyintech.tams.disclosure.information.config.reportcontentenum.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,8 +34,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
-import com.joyintech.tams.disclosure.common.common.service.BaseCommonService;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum003Dto;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.service.ReportContentEnum002Service;
@@ -60,8 +60,9 @@ public class ReportContentEnum003Controller extends BaseController {
 
 	@Autowired
 	private ReportContentEnum002Service reportContentEnum002Service;
+
 	@Autowired
-	private BaseCommonService baseCommonService;
+	private IPlatformDate iPlatformDate;
 
 	/**
 	 * 内容初始化 {@inheritDoc}
@@ -82,6 +83,8 @@ public class ReportContentEnum003Controller extends BaseController {
 		this.setSelectOptionToModel(model, DisclosureDictCode.产品期限类型);
 		this.setSelectOptionToModel(model, DictCode.投资风险偏好);
 		this.setSelectOptionToModel(model, DictCode.产品风险评级);
+		this.setSelectOptionToModel(model, DictCode.投资性质);
+		this.setSelectOptionToModel(model, DictCodeExt1.开放频率);
 		String id = getParam("id");
 		String operateType = getParam("operateType");
 		ReportContentEnum002Dto dto = new ReportContentEnum002Dto();
@@ -103,7 +106,7 @@ public class ReportContentEnum003Controller extends BaseController {
 		} else {
 			model.addAttribute("indexName", getParam("indexName"));
 		}
-		model.addAttribute("sysDate", DateUtil.format(baseCommonService.getSysDate(), "yyyy-MM-dd"));
+		model.addAttribute("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
 		model.addAttribute("entity", dto);
 		return super.init(model);
 	}
@@ -121,46 +124,27 @@ public class ReportContentEnum003Controller extends BaseController {
 	public AjaxResult check(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
-		//新建的时候为提交，修改的时候为保存
-		/*if(operateType.equals("submit")){
-			//新建时对生效日进行校验
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
-			BaseCommonService bs = new BaseCommonService();
-			String sysDate = sdf.format(bs.getSysDate());
-			if(StringUtil.isNotEmpty(dto.getIndexDate())) {
-				String indexDate = sdf.format(dto.getIndexDate());
-				if (indexDate.compareTo(sysDate) < 0 ){ 
-					msg = "生效日必须大于等于平台日";
-					return new AjaxResult(msg, MessageType.错误消息);
-				}
-			}
-		}*/
-		
-//		 唯一性验证,指标名称
-		/*if (OPERATE_TYPE_SUBMIT.equals(dto.getOperateType()) && !bindingResult.hasErrors()) {// submit事件 && 基础验证通过
-		    if(dto.getIndexDate()==null){
-                msg = "必填项必填！";
-              return new AjaxResult(msg, MessageType.错误消息);
-            }
-		}*/
-
-/*		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		if (dto.getIndexDate() != null) {
-			String indexDate = sdf.format(dto.getIndexDate());
-			BaseCommonService bs = new BaseCommonService();
-			String sysDate = sdf.format(bs.getSysDate());
-			if (indexDate.compareTo(sysDate) < 0) {
-				msg = "生效日必须大于等于平台日";
-				return new AjaxResult(msg, MessageType.错误消息);
-			}
-		}*/
-		// 唯一性验证,指标名称
-		/*
-		 * if (OPERATE_TYPE_SUBMIT.equals(dto.getOperateType()) &&
-		 * !bindingResult.hasErrors()) {// submit事件 && 基础验证通过
-		 * if(dto.getIndexDate()==null){ msg = "必填项必填！"; return new
-		 * AjaxResult(msg, MessageType.错误消息); } }
-		 */
+		if(!StringUtil.isNotEmpty(dto.getIndexDate())){
+			msg = "生效日期不能为空";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
+		if(!StringUtil.isNotEmpty(dto.getEndDate())){
+			msg = "生效截止日期不能为空";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
+		//获取平台日期
+		Date sysDate = iPlatformDate.getSysDate();
+		Date indexDate = dto.getIndexDate();
+		if (indexDate.compareTo(sysDate) < 0 ){
+			msg = "生效日期必须大于等于平台日";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
+		Date endDate = dto.getEndDate();
+		//生效截止日期必须大于生效日期
+		if(endDate.compareTo(indexDate) <=0){
+			msg = "生效截止日期必须大于生效日期";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
 
 		return commonCheck(bindingResult, operateType);
 	}

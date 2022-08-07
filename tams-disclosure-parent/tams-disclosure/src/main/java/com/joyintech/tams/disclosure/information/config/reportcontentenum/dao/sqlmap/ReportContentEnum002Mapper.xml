@@ -53,7 +53,7 @@
      <select id="selectById" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto" parameterType="java.lang.String">
        select ris.ID as id,ris.PRI_ID as priId,ris.INDEX_NAME as indexName,ris.INDEX_VALUE as indexValue,ris.INDEX_DATE as indexDate,
               ris.INDEX_TYPE as indexType,to_char(ris.INDEX_DATE,'yyyy-mm-dd') as indexDateStr,ris.INDEX_FILE as indexFile,ris.INDEX_DETAIL as indexDetail,
-              ris.AUDIT_STATUS as auditStatus
+              ris.AUDIT_STATUS as auditStatus,ris.END_DATE endDate,to_char(ris.END_DATE,'yyyy-mm-dd') as endDateStr
        from REP_INDEX_SUB ris
        where ris.ID =#{id}
    </select>
@@ -121,5 +121,35 @@
 	    	</foreach>
 	    	and pri.is_quote = '01' /*被引用*/
 		)
+    </select>
+
+    <select id="selectProdInfo" resultType="com.joyintech.framework.select.TreeNode">
+        select
+        PROD_ID id,
+        PROD_NAME name,
+        case PD_STATUS
+        when '01' then
+        (case ISSUING_WAY
+        when '01' then '0101' || PROD_SERIES
+        when '02' then '0102' || PROD_SERIES
+        else '' end
+        )
+        when '02' then
+        (case ISSUING_WAY
+        when '01' then '0201' || PROD_SERIES
+        when '02' then '0202' || PROD_SERIES
+        else '' end
+        )
+        when '03' then
+        (case ISSUING_WAY
+        when '01' then '0301' || PROD_SERIES
+        when '02' then '0301' || PROD_SERIES
+        else '' end
+        )
+        else '' end pid
+        from
+        REP_PROD_INFO
+        where (P_PROD_ID is null or PROD_ID=P_PROD_ID)
+        and status='E' AND PD_STATUS NOT IN ('02','03')
     </select>
 </mapper>
