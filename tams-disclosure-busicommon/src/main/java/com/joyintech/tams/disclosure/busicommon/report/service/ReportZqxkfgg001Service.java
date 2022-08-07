@@ -173,8 +173,6 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                         reportZqxkfgg001Dto.setOpenHisList(openHisList);
                         //跑批日
                         reportZqxkfgg001Dto.setEnddate(announceDate);
-                        //生成报表日
-                        reportZqxkfgg001Dto.setReportDate(DateUtil.parse(announceDate));
                     }
                 }else{
                     logger.warn("周期型产品开放公告（公募产品-单赎回）:客户周期型产品的自动赎回日大多是后续某一开放周期的运作起始日，根据产品排期表进行判断，若某一自动赎回日不是该产品未来某开放周期的运作起始日，则需要为该条赎回信息生成此公告；" +
@@ -192,9 +190,9 @@ public class ReportZqxkfgg001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

@@ -90,8 +90,6 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 reportRkcpjz001Dto.setAnnounceT(DateUtil.format(announceDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
                 //跑批日
                 reportRkcpjz001Dto.setEnddate(valueDate);
-                //生成报表日
-                reportRkcpjz001Dto.setReportDate(DateUtil.parse(valueDate));
 
                 //查询净值数据:现管型产品需要展示多条净值数据： 根据上交所日历判断，对于每周第一个工作日生成的净值公告，此部分需要披露自上一工作日至当前第一个工作日-1自然日的净值信息
                 List<ReportValueDto> list = new ArrayList<>();
@@ -234,9 +232,9 @@ public class ReportRkcpjz001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

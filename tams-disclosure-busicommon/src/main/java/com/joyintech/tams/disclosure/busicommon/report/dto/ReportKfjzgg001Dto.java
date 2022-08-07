@@ -21,16 +21,6 @@ public class ReportKfjzgg001Dto {
     private String times;
     /*增加公告期*/
     private String enddate;
-    /*增加报表日期*/
-    private Date reportDate;
-
-    public Date getReportDate() {
-        return reportDate;
-    }
-
-    public void setReportDate(Date reportDate) {
-        this.reportDate = reportDate;
-    }
 
     public String getEnddate() {
         return enddate;

@@ -218,8 +218,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     reportKfqzjfhgg001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
                     //跑批日
                     reportKfqzjfhgg001Dto.setEnddate(DateUtil.format(announceDate));
-                    //生成报表日
-                    reportKfqzjfhgg001Dto.setReportDate(DateUtil.parse(baseDate));
+
                 }else{
                     logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】",JsonUtils.object2Json(paraMap));
                 }
@@ -235,9 +234,9 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

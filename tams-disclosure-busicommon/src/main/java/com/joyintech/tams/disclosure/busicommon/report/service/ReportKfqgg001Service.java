@@ -89,8 +89,7 @@ public class ReportKfqgg001Service implements IReportDataService {
                 reportKfqgg001Dto.setOpenList(openList);
                 //跑批日
                 reportKfqgg001Dto.setEnddate(DateUtil.format(DateUtil.platDateFromCache()));
-                //生成报表日
-                reportKfqgg001Dto.setReportDate(DateUtil.platDateFromCache());
+
             }
             resultMap.add(ReportCollectionUtils.bean2Map(reportKfqgg001Dto));
             logger.info("产品开放期公告/报告【{}】生成成功", JsonUtils.object2Json(paraMap));
@@ -103,9 +102,9 @@ public class ReportKfqgg001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.platDateFromCache();
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }
