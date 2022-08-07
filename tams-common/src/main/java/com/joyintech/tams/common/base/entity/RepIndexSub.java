@@ -52,6 +52,10 @@ public class RepIndexSub extends BaseEntity {
     private String auditStatus;
 
     /**
+     * 生效截止日期
+     */
+    private Date endDate;
+    /**
      * 取得 主键ID
      * @return 主键ID
      */
@@ -194,5 +198,12 @@ public class RepIndexSub extends BaseEntity {
      */
     public void setAuditStatus(String auditStatus) {
         this.auditStatus = auditStatus == null ? null : auditStatus.trim();
+    }
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }
