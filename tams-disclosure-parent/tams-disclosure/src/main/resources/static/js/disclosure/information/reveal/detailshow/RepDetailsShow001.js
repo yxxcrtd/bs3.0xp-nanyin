@@ -280,7 +280,7 @@ $(function () {
 					return;
 				}
 				if (params['enddate']===null||params['enddate']===undefined) {
-					Joyin.alert('净值日期必填!',2);
+					Joyin.alert('本期运作起始日必填！!',2);
 					return;
 				}
 			}

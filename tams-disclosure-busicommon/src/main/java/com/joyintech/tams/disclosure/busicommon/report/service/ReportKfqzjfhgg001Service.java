@@ -199,11 +199,11 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         ReportOpenPlanDto openPlanDto = new ReportOpenPlanDto();
                         //后续排期计划为空的话，需要置空由业务老师手工维护
                         //后续申购/赎回起止日
-                        openPlanDto.setNextRange("XXXX-XX-XX至XXXX-XX-XX");
+                        openPlanDto.setNextRange(" ");
                         //后续申购/赎回确认日
-                        openPlanDto.setNextMdate("XXXX-XX-XX");
+                        openPlanDto.setNextMdate(" ");
                         //后续赎回资金到账日
-                        openPlanDto.setNextSettday("XXXX-XX-XX");
+                        openPlanDto.setNextSettday(" ");
                         openPlanList.add(openPlanDto);
                     }
                     reportKfqzjfhgg001Dto.setOpenPlanList(openPlanList);
