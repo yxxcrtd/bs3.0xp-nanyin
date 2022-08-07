@@ -129,6 +129,9 @@ $(function() {
 						} ]
 					});
 	settedRule.bind('click', '.delt', function(data, index) {
+		if(data.ruleType1 == 'FINPROD_NAME'){
+			$('#finprodIds').data('finprodIds',null);
+		}
 		settedRule.removeRow(data);
 		var obj = settedRule.getAllRows();
 		var describe = "";
@@ -301,8 +304,11 @@ $(function() {
 				{},function () {
 					var finprodIds = $('#finprodIds').data('finprodIds');
 					console.log(finprodIds);
-					rule.ruleType2 ='01';
-					rule.ruleType2Name ='常量';
+					if(finprodIds.length ==0){
+						return;
+					}
+					rule.ruleType2 ='=';
+					rule.ruleType2Name ='=';
 					rule.ruleType4 = finprodIds.join(',');
 					rule.ruleType4Name = finprodIds.join(',');
 

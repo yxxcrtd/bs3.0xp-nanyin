@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <title>产品选择</title>
+    <style>
+        .mst-lable{
+            width: 20%;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <form class="layui-form joyin-form-wrap" id="submitForm">
+                    <input id="nodes" type="hidden">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label form-lable mst-lable">产品名称</label>
+                        <div class="layui-input-block input-inline">
+                            <input type="checkbox" lay-skin="switch" data-th-lay-text="#{SystemActorRole001.expandAll}" id="expandAll" data-ignore=true>
+                            <div class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 219px; overflow-y: scroll;" id='tree'
+                                 data-th-url='|@{/disclosure/information/config/reportcontentenum/ReportContentEnum004/getAllProdIds}'
+                            </div>
+                        </div>
+                    </div>
+                <div class="layui-col-md10" style="margin:30px 0;">
+                    <div class="text-center">
+                       <a
+                            id="ReportContentEnum004_btn_submit"
+                            class="layui-btn layui-btn-sm btn-submit"
+                            data-th-text="#{SysCommon.submit}">提交</a> <a
+                            id="ReportContentEnum004_btn_cancel"
+                            class="layui-btn layui-btn-sm btn-cancel"
+                            data-th-text="#{SysCommon.cancel}">取消</a>
+                    </div>
+                </div>
+<!--            </div>-->
+        </form>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script
+            data-th-src="@{/js/disclosure/information/config/reportcontentenum/ReportContentEnum004.js}"
+            type="text/javascript"></script>
+</div>
+</body>
+
+</html>
