@@ -375,8 +375,10 @@ public class PoiReportService {
 		}
 		if (StringUtil.isNotEmpty(params.get("endDate"))) {
 			repReveal.setEndDate(DateUtil.parse(params.get("endDate").toString()));
-		} else {
+		} else if (params.get("reportDate") != null){
 			repReveal.setEndDate((Date)params.get("reportDate"));
+		}else{//有一部分报表生成没有日期，需要用平台日处理
+			repReveal.setEndDate(com.joyintech.framework.util.DateUtil.platDateFromCache());
 		}
 		// 获取产品信息
 		String portnum = params.get("prodId") == null ? "" : params.get("prodId").toString();
@@ -410,8 +412,9 @@ public class PoiReportService {
 //               repReveal.setEndDate(prodInfo.getMdate());
 //           }
 //       }
-
-		repReveal.setEndDate(params.get("endDate") == null ? null : DateUtil.parse(params.get("endDate").toString()));
+		//上面给endDate赋值了，这里还要再赋值一次？ 代码注掉 by zhengbs 20220807 start
+//		repReveal.setEndDate(params.get("endDate") == null ? null : DateUtil.parse(params.get("endDate").toString()));
+		//上面给endDate赋值了，这里还要再赋值一次？ 代码注掉 by zhengbs 20220807 end
 
 		// 获取披露渠道
 		if (null != prodInfo) {

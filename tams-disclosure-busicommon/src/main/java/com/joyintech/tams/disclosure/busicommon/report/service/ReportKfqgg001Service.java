@@ -104,7 +104,7 @@ public class ReportKfqgg001Service implements IReportDataService {
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         repReveal.setProdid(prodId);
         repReveal.setRepId((String) paraMap.get("repId"));
-        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
+        repReveal.setEndDate(DateUtil.platDateFromCache());
         return repReveal;
     }
 }
