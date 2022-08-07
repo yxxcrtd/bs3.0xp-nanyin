@@ -44,8 +44,8 @@ $(function() {
             ,{field:'setDateStr', sortable:false, width:100, title: '子产品成立日期'}
             ,{field:'pdStatusName', sortable:false, width:100, title: '产品状态'}
             ,{field:'prodSeries', sortable:false, width:100, title: '产品系列'}
-            ,{field:'pProdName', sortable:false, width:100, title: '产品名称'}
-            ,{field:'prodAbbr', sortable:false, width:100, title: '产品简称'}
+            ,{field:'pProdName', sortable:false, width:150, title: '产品名称'}
+            ,{field:'prodAbbr', sortable:false, width:150, title: '产品简称'}
             ,{field:'prodRe', sortable:false, width:100, title: '产品登记编码'}
             ,{field:'pProdId', sortable:false, width:100, title: '产品主代码'}
             ,{field:'raiseStrdateStr', sortable:false, width:100, title: '募集起始日期'}
