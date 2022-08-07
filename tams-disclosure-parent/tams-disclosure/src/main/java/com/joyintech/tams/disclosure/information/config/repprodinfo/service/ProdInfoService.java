@@ -22,6 +22,8 @@ import com.joyintech.tams.common.util.SysCommDataUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -345,9 +347,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         errorMsg.append("子产品代码 必填！");
                     }else{
                         ProdInfoDto prodInfo = this.selectByProdId(rowData.get(0));
-                        if (prodInfo != null && StringUtils.equals(DictCodeListExt1.维护数据状态_有效.getValue(),prodInfo.getStatus())) {
-                            errorMsg.append("子产品代码 已存在");
-                        }
+//                        if (prodInfo != null && StringUtils.equals(DictCodeListExt1.维护数据状态_有效.getValue(),prodInfo.getStatus())) {
+//                            errorMsg.append("子产品代码 已存在");
+//                        }
                     }
 
                     if (StringUtil.isEmpty(rowData.get(1))) {
@@ -572,6 +574,18 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+        String tempList = (String) resultMap.get("correctData");
+        ProdInfoDto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<ProdInfoDto> selectedItem = dto.getSelectedItem();
+        List<ProdInfoDto>  existData = new ArrayList<>();
+        for (ProdInfoDto temp:selectedItem) {
+            if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -608,11 +622,21 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 newData.add(temp);
             }
         }
+
+        for (ProdInfoDto temp:selectedItem) {
+            if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))){
+                existData.add(temp);
+            }
+            else {
+                temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                newData.add(temp);
+            }
+        }
         //更新操作
-        /*for (ProdInfoDto existDataDto : existData) {
+        for (ProdInfoDto existDataDto : existData) {
             //this.doComplete(existDataDto, OperationType.MODIFY);
             this.update(existDataDto);
-        }*/
+        }
         //插入操作
         for (ProdInfoDto newDataDto : newData
         ) {

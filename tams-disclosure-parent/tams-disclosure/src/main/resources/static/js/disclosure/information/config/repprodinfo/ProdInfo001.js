@@ -240,32 +240,121 @@ $(function() {
                     table.reload();
                 });
             });
+
         });*/
         /**
          * 导入按钮
          */
 
+        // $('#ProdInfo001_btn_import').click(function() {
+        //     Joyin.confirm("请确认是否要导入数据？", function () {
+        //         Joyin.uploadFile({pageId:'ProdInfo001'},function(fileName) {
+        //             Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/checkImportData',
+        //                 {fileName: fileName}, function(checkResult) {
+        //                     if (checkResult) {
+        //                         setTimeout( function () {
+        //                                 if(checkResult.data.errorMsg){
+        //                                     Joyin.error(checkResult.data.errorMsg);
+        //                                     return;
+        //                                 }
+        //                                 if (checkResult.data.confirmMsg) {
+        //                                     Joyin.confirm(checkResult.data.confirmMsg, function () {
+        //                                         var data = {
+        //                                             tempList: checkResult.data.correctData
+        //                                         }
+        //                                         Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
+        //                                             function (resultObj) {
+        //                                                 if (resultObj.statuCode.toString() === '200') {
+        //                                                     /** modify by yanya on 20210329 修正导入逻辑**/
+        //                                                     //Joyin.alert("文件导入成功！");
+        //                                                     table.reload();
+        //                                                     return;
+        //                                                 }
+        //                                             });
+        //                                     },{}, function () {
+        //                                         layui.layer.closeAll()
+        //                                         table.reload();
+        //                                     });
+        //                                 }else {
+        //                                     var data = {
+        //                                         tempList: checkResult.data.correctData
+        //                                     }
+        //                                     Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
+        //                                         function (resultObj) {
+        //                                             if (resultObj.statuCode.toString() === '200') {
+        //                                                 /** modify by yanya on 20210329 修正导入逻辑**/
+        //                                                 //Joyin.alert("文件导入成功！");
+        //                                                 table.reload();
+        //                                                 return;
+        //                                             }
+        //                                         });
+        //                                 }
+        //                             }
+        //                             ,1000);
+        //                     }
+        //                 });
+        //         },function() {
+        //             table.reload();
+        //         });
+        //     });
+        // });
+
+
+
         $('#ProdInfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function () {
                 Joyin.uploadFile({pageId:'ProdInfo001'},function(fileName) {
-                    Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/checkImportData',
-                        {fileName: fileName}, function(checkResult) {
-                            if (checkResult) {
-                                setTimeout( function () {
-                                        if(checkResult.data.errorMsg){
-                                            Joyin.error(checkResult.data.errorMsg);
-                                            return;
-                                        }
-                                        if (checkResult.data.confirmMsg) {
-                                            Joyin.confirm(checkResult.data.confirmMsg, function () {
+                    Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
+                        if (checkResult) {
+                            setTimeout( function () {
+                                    if(checkResult.data.errorMsg){
+                                        Joyin.error(checkResult.data.errorMsg);
+                                        return;
+                                    }
+                                    if (checkResult.data.confirmMsg) {
+                                        Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                            if (checkResult.data.confirmMsg2) {
+                                                Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                    var data = {
+                                                        tempList: checkResult.data.correctData
+                                                    }
+                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
+                                                        function (resultObj) {
+                                                            if (resultObj.statuCode.toString() === '200') {
+                                                                table.reload();
+                                                                return;
+                                                            }
+                                                        });
+                                                },{}, function () {
+                                                    layui.layer.closeAll()
+                                                    table.reload();
+                                                });
+                                            }else{
                                                 var data = {
                                                     tempList: checkResult.data.correctData
                                                 }
                                                 Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
                                                     function (resultObj) {
                                                         if (resultObj.statuCode.toString() === '200') {
-                                                            /** modify by yanya on 20210329 修正导入逻辑**/
-                                                            //Joyin.alert("文件导入成功！");
+                                                            table.reload();
+                                                            return;
+                                                        }
+                                                    });
+                                            }
+
+                                        },{}, function () {
+                                            layui.layer.closeAll()
+                                            table.reload();
+                                        });
+                                    }else {
+                                        if (checkResult.data.confirmMsg2) {
+                                            Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                var data = {
+                                                    tempList: checkResult.data.correctData
+                                                }
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
+                                                    function (resultObj) {
+                                                        if (resultObj.statuCode.toString() === '200') {
                                                             table.reload();
                                                             return;
                                                         }
@@ -274,30 +363,28 @@ $(function() {
                                                 layui.layer.closeAll()
                                                 table.reload();
                                             });
-                                        }else {
+                                        }else{
                                             var data = {
                                                 tempList: checkResult.data.correctData
                                             }
                                             Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
                                                 function (resultObj) {
                                                     if (resultObj.statuCode.toString() === '200') {
-                                                        /** modify by yanya on 20210329 修正导入逻辑**/
-                                                        //Joyin.alert("文件导入成功！");
                                                         table.reload();
                                                         return;
                                                     }
                                                 });
                                         }
                                     }
-                                    ,1000);
-                            }
-                        });
+                                }
+                                ,1000);
+                        }
+                    });
                 },function() {
                     table.reload();
                 });
             });
         });
-
 
     });
 }());
