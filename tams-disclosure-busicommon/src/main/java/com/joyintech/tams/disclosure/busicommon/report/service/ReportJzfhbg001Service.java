@@ -90,7 +90,11 @@ public class ReportJzfhbg001Service implements IReportDataService {
                     //查询产品相关信息
                     reportJzfhbg001Dto = reportJzfhbg001Mapper.getProdInfo(searchParam);
                     //设置产品成立日
-                    reportJzfhbg001Dto.setSetDateT(DateUtil.format(reportJzfhbg001Dto.getSetDate(), DateUtil.ABB_DATE_FORMAT_CN));
+                    if(reportJzfhbg001Dto.getSetDate() != null){
+                        reportJzfhbg001Dto.setSetDateT(DateUtil.format(reportJzfhbg001Dto.getSetDate(), DateUtil.ABB_DATE_FORMAT_CN));
+                        searchParam.put("setDate",reportJzfhbg001Dto.getSetDate());
+                    }
+
                     //查询收益分配基准日的产品分红到期表
                     DisProdBonusplan bonusplan = reportJzfhbg001Mapper.getBonusPlanBySettDate(searchParam);
 
@@ -191,17 +195,19 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             ReportOpenPlanDto openPlanDto = new ReportOpenPlanDto();
                             //后续排期计划为空的话，需要置空由业务老师手工维护
                             //后续申购/赎回起止日
-                            openPlanDto.setOpenStartDate("XXXX-XX-XX");
+                            openPlanDto.setOpenStartDate(" ");
                             //申购/赎回确认日
-                            openPlanDto.setOpenEndDate("XXXX-XX-XX");
-                            openPlanDto.setOpenDurationDate("XXXX-XX-XX至XXXX-XX-XX");
+                            openPlanDto.setOpenEndDate(" ");
+                            openPlanDto.setOpenDurationDate(" ");
                             //申购冷静期
-                            openPlanDto.setCollingoffPeriod("XXXX-XX-XX");
+                            openPlanDto.setCollingoffPeriod(" ");
                             //赎回资金到账日
-                            openPlanDto.setSettDate("XXXX-XX-XX");
+                            openPlanDto.setSettDate(" ");
                             openPlanList.add(openPlanDto);
                         }
                         reportJzfhbg001Dto.setOpenPlanList(openPlanList);
+                        //生成跑批日
+                        reportJzfhbg001Dto.setEnddate(settDateStr);
                     } else {
                         logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】",JsonUtils.object2Json(paraMap));
                     }
@@ -219,9 +225,9 @@ public class ReportJzfhbg001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

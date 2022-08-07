@@ -13,6 +13,17 @@ public class ReportKfqgg001Dto {
     private String plateDate;
     private Date setDate;
     private Date mDate;
+    /*增加公告期*/
+    private String enddate;
+
+
+    public String getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
+    }
 
     public Date getmDate() {
         return mDate;

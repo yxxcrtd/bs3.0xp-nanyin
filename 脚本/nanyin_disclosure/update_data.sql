@@ -617,7 +617,7 @@ values ('INFO_DEV_STATUS', '03', '终止', 1, '0', 'system', null, sysdate, 'sys
 
 delete from sys_datadict_list where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITEM_CODE='COMPLIANCE';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('COMMON_BUSINESS_TYPE', 'COMPLIANCE', '合规审核', 1002, '0', 'system', null, sysdate, 'system', sysdate);
+values ('COMMON_BUSINESS_TYPE', 'COMPLIANCE', '信披合规留痕管理', 1002, '0', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_wfl_business_module where page_id ='InfoCompliance002';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
@@ -806,3 +806,8 @@ delete from sys_datadict_list where DICT_CODE='RULE_TYPE2' and ITEM_CODE in('!='
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('RULE_TYPE2', '!=', '!=', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-08-04 	作业规则2增加枚举值 end
+
+-- add by zhengxiaolian 2022-08-05 	模板启用管理 start
+update sys_menu a set a.remark='模板启用管理' where a.page_id='ReportPageManage001';
+update sys_page a set a.remark='模板启用管理' where a.page_id='ReportPageManage001';
+-- add by zhengxiaolian 2022-08-05 	模板启用管理 end

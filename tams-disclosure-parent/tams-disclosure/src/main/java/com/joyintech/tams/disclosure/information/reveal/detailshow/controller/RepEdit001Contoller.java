@@ -85,6 +85,9 @@ public class RepEdit001Contoller extends BaseController {
     @Resource
     private FileRemoteService minioFileRemoteService;
 
+    @Autowired
+    private ReportFileService reportFileService;
+
     private String editFilename = "";
     private String saveFilename = "";
     /**
@@ -101,35 +104,28 @@ public class RepEdit001Contoller extends BaseController {
      */
     @Override
     public String init(Model model) {
-    	
-    	String templateName = RequestUtil.getPageParam().get("repName")==null?"":RequestUtil.getPageParam().get("repName").toString();
-    	Date reportDate = RequestUtil.getPageParam().get("enddate")==null?commonPlatformDateService.getSysDate():DateUtil.parse(RequestUtil.getPageParam().get("enddate").toString());
-    	 String portnum = RequestUtil.getPageParam().get("prodid")==null?RequestUtil.getPageParam().get("pprodid").toString():RequestUtil.getPageParam().get("prodid").toString();
-    	String reportId = RequestUtil.getPageParam().get("repid")==null?"":RequestUtil.getPageParam().get("repid").toString();
-    	
     	Map<String,Object> params = RequestUtil.getPageParam();
-		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
-		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
-		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
-		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
-		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
-		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
-		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
-		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
-		params.put("reportDate", params.get("reportDate")==null?params.get("endDate"):params.get("reportDate"));
-		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
-		params.put("platformDate", params.get("platformDate")==null? DateUtil.format(commonPlatformDateService.getSysDate()):params.get("platformDate"));
+    	repDetailsShow001Service.collateParams(params);
+
+    	String templateName = params.get("repName")==null?"":params.get("repName").toString();
+    	Date reportDate = (Date)params.get("reportDate"); 
+    	if ( reportDate ==null )
+    		reportDate = params.get("enddate")==null?commonPlatformDateService.getSysDate():DateUtil.parse(params.get("enddate").toString());
+    	 String portnum = params.get("prodid")==null?params.get("pprodid").toString():params.get("prodid").toString();
+    	String repId = params.get("repid")==null?"":params.get("repid").toString();
+    	String webRoot = params.get("webRoot")==null?"":params.get("webRoot").toString();
+    	
     	
         model.addAttribute("endDate", reportDate);
         model.addAttribute("repName", templateName); 
         model.addAttribute("portnum", portnum);
-        model.addAttribute("reportId", reportId);
+        model.addAttribute("reportId", repId);
+        model.addAttribute("webRoot", webRoot);
         
-        ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
+        //ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         //reportDate = DateUtil.parse("2023-03-01");
-        editFilename = poiReportService.getRomteFilePath(reportInfo, params,ReportFileService.FILE_TYPE_DOCX);
+        editFilename = reportFileService.getTempOSSReportFileName(repId, reportDate, params, ReportFileService.FILE_TYPE_DOCX) ;
+		logger.debug("==================报表下载编辑文件："+editFilename);
     	saveFilename = editFilename;
         return super.init(model);
     }

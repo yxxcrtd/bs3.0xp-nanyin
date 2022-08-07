@@ -62,7 +62,7 @@ public class NostdReportDataService implements IReportDataService {
 		repReveal.setRepId(paraMap.get("repId").toString());
 		repReveal.setProdid(paraMap.get("prodId").toString());
 		
-		Date eDate = DateUtil.parse(paraMap.get("reportDate").toString());
+		Date eDate = (Date)(paraMap.get("reportDate"));
 		repReveal.setEndDate(eDate);
 		return repReveal;
 	}

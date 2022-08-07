@@ -118,7 +118,7 @@
 	<select id="getPProdIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
 		distinct RPI.PROD_ID id,
-		RPI.PROD_ABBR text
+		RPI.PROD_NAME text
 		from
 		REP_PROD_INFO RPI
 		<if test="flag != null and flag != '' and flag == '01'">

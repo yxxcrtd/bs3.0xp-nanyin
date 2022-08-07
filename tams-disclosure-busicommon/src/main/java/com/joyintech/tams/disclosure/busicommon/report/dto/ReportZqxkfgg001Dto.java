@@ -14,6 +14,17 @@ public class ReportZqxkfgg001Dto {
     private String prodId;
     private Date setDate;
     private String setDateT;
+    /*增加公告期*/
+    private String enddate;
+
+    public String getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
+    }
+
     private List<ReportOpenPlanDto> openList;
     private List<ReportOpenPlanDto> openHisList;
 

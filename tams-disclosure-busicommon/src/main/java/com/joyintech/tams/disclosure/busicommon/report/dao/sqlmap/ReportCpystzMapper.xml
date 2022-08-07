@@ -48,6 +48,7 @@
 			from dis_prod_adjust t
 			where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})
 		and rpi.status = 'E'
+		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in
 			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
@@ -92,6 +93,7 @@
 		inner join rep_prod_info rpi
 		on rpi.prod_re = dpa.prod_regist_no
 		and rpi.status = 'E'
+		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
 		where dpa.adj_field = (select adj_field
 			from dis_prod_adjust t
 			where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})

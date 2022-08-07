@@ -87,7 +87,9 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 if (announceDate == null) {
                     announceDate = DateUtil.addDay(DateUtil.parse(valueDate), 1);
                 }
-                reportRkcpjz001Dto.setAnnounceT(DateUtil.format(announceDate, DateUtil.ABB_DATE_FORMAT_CN));
+                reportRkcpjz001Dto.setAnnounceT(DateUtil.format(announceDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+                //跑批日
+                reportRkcpjz001Dto.setEnddate(valueDate);
 
                 //查询净值数据:现管型产品需要展示多条净值数据： 根据上交所日历判断，对于每周第一个工作日生成的净值公告，此部分需要披露自上一工作日至当前第一个工作日-1自然日的净值信息
                 List<ReportValueDto> list = new ArrayList<>();
@@ -142,7 +144,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 configMap.put("xAxis.axisLabel.interval", 1);//设置x轴数据隔天显示
                 configMap.put("yAxis.type", "value");
                 configMap.put("yAxis.position", "left");
-                configMap.put("yAxis.splitNumber", "30");//设置y轴最多显示个数，不一定会显示
+//                configMap.put("yAxis.splitNumber", "30");//设置y轴最多显示个数，不一定会显示
 
 
                 searchparam.put("rptType", rptType);
@@ -154,6 +156,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMJZXCP)) {
                     //关联节假日表，查询小于等于当前净值日其的过去30个工作日
                     searchparam.put("is_holiday", "0");
+                }else{
+                    searchparam.put("is_holiday", "");
                 }
                 searchparam.put("busi_date", valueDate);
                 searchparam.put("market_code", "04");
@@ -183,8 +187,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath1, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
 
                 Map<String, Object> prodValueChart = new HashMap<String, Object>();
-                prodValueChart.put("width", 500);
-                prodValueChart.put("height", 200);
+                prodValueChart.put("width", 350);
+                prodValueChart.put("height", 150);
                 prodValueChart.put("type", "png");
                 prodValueChart.put("content", imagePath1 + ".png");
                 dataMap.put("${@image:image1}", prodValueChart);
@@ -211,8 +215,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
 
                 Map<String, Object> prodTotalValueChart = new HashMap<String, Object>();
-                prodTotalValueChart.put("width", 500);
-                prodTotalValueChart.put("height", 200);
+                prodTotalValueChart.put("width", 350);
+                prodTotalValueChart.put("height", 150);
                 prodTotalValueChart.put("type", "png");
                 prodTotalValueChart.put("content", imagePath2 + ".png");
                 dataMap.put("${@image:image2}", prodTotalValueChart);
@@ -228,9 +232,9 @@ public class ReportRkcpjz001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

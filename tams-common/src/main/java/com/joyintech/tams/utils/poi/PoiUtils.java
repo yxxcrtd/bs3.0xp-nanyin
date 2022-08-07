@@ -49,7 +49,8 @@ public class PoiUtils {
                     fos = new FileOutputStream(outfile);
                     fos.write(imageData);
                     fos.close();
-                    upload = "http://"+apacheAddress+"/images/" + imagePath;
+                    //增加随机数，防止浏览器缓存 modify by zhengbs
+                    upload = "http://"+apacheAddress+"/images/" + imagePath+"?fresh="+Math.random();
                 }catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -74,7 +75,7 @@ public class PoiUtils {
 
     public static void docxToPdf(InputStream is, OutputStream os) throws IOException {
         XWPFDocument xwpfDocument = new XWPFDocument(is);
-        setFontType(xwpfDocument);
+        //setFontType(xwpfDocument);
         PdfOptions pdfOptions = PdfOptions.create();
         PdfConverter.getInstance().convert(xwpfDocument, os, pdfOptions);
     }

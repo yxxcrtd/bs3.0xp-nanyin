@@ -58,6 +58,7 @@ public class ReportZjxsjg001Service implements IReportDataService {
             pubDateStr = (String)paraMap.get("enddate");
         }
         dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
+        dataMap.put("enddate",pubDateStr);
         return result;
     }
 

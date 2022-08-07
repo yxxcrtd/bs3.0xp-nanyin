@@ -101,6 +101,11 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                 if(generateFlag){
                     //根据产品代码查询产品信息
                     ReportCommonProdDto reportCommonProdDto = reportKfqzjfhgg001Mapper.getProdInfo(searchParam);
+                    //设置产品成立日
+                    if(reportCommonProdDto.getSetDate() != null){
+                        reportKfqzjfhgg001Dto.setSetDateT(DateUtil.format(reportCommonProdDto.getSetDate(), DateUtil.ABB_DATE_FORMAT_CN));
+                        searchParam.put("setDate",reportCommonProdDto.getSetDate());
+                    }
                     //查询后续开放计划  根据产品排期表，展示“申购/赎回确认日”大于当前收益分配基准日的下一个开放周期的信息；若当前已处于最后一个产品周期，则正常生成表格，表格内容置空，由业务老师手工调整
                     List<ReportOpenPlanDto> openPlanList = reportKfqzjfhgg001Mapper.getOpenPlanList(searchParam);
                     //查询“申购/赎回确认日”小于等于当前收益分配基准日的过去所有历史数据
@@ -115,8 +120,6 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     reportKfqzjfhgg001Dto.setRegCode(reportCommonProdDto.getRegCode());
                     //内部销售代码
                     reportKfqzjfhgg001Dto.setProdId(reportCommonProdDto.getProdId());
-                    //成立日
-                    reportKfqzjfhgg001Dto.setSetDateT(DateUtil.format(reportCommonProdDto.getSetDate(),DateUtil.ABB_DATE_FORMAT_CN));
                     //历史净值及分红信息
                     if(list != null && list.size()>0){
                         ReportKfqHisBonusDto reportKfqHisBonusDto = list.get(0);
@@ -196,11 +199,11 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         ReportOpenPlanDto openPlanDto = new ReportOpenPlanDto();
                         //后续排期计划为空的话，需要置空由业务老师手工维护
                         //后续申购/赎回起止日
-                        openPlanDto.setNextRange("XXXX-XX-XX至XXXX-XX-XX");
+                        openPlanDto.setNextRange(" ");
                         //后续申购/赎回确认日
-                        openPlanDto.setNextMdate("XXXX-XX-XX");
+                        openPlanDto.setNextMdate(" ");
                         //后续赎回资金到账日
-                        openPlanDto.setNextSettday("XXXX-XX-XX");
+                        openPlanDto.setNextSettday(" ");
                         openPlanList.add(openPlanDto);
                     }
                     reportKfqzjfhgg001Dto.setOpenPlanList(openPlanList);
@@ -212,7 +215,10 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     if (announceDate == null) {
                         announceDate = DateUtil.addDay(DateUtil.parse(baseDate), 1);
                     }
-                    reportKfqzjfhgg001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.ABB_DATE_FORMAT_CN));
+                    reportKfqzjfhgg001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
+                    //跑批日
+                    reportKfqzjfhgg001Dto.setEnddate(DateUtil.format(announceDate));
+
                 }else{
                     logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】",JsonUtils.object2Json(paraMap));
                 }
@@ -228,9 +234,9 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

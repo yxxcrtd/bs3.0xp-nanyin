@@ -272,11 +272,11 @@ $(function ($) {
             var _upload = upload.render({
                 elem: elem
                 , accept: 'file'
-                , exts: allowfiletype
-                , multiple: muit
+                , exts: 'doc||docx||pdf||xls||xlsx||zip'
+                , multiple: false
                 , number: muit ? 0 : 1
                 , auto: auto
-                , size: maxFileSize // 限制文件大小，单位 KB
+                , size: 20*1024 // 限制文件大小，单位 KB
                 , bindAction: bindAction || uploadBtn
                 , url: url
                 , method: 'post'
@@ -336,6 +336,7 @@ $(function ($) {
                         return;
                     }
                     $.each(files, function (i, file) {
+                        debugger;
                         if (uploadedFiles[i]) {
                             delete files[i];
                         }

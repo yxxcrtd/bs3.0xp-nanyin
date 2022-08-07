@@ -4,9 +4,8 @@
 package com.joyintech.tams.disclosure.common;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-
-import com.ibm.icu.util.Calendar;
 
 /**
  * @author Administrator

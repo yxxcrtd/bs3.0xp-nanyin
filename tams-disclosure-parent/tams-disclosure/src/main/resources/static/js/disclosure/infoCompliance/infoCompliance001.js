@@ -34,7 +34,7 @@
             ,{field:'infoDevStatus', visible:false}
         	,{field:'indexNo', width:120, title: '序号'}
         	,{field:'infoTypeText', width:120, title: '类型'}
-        	,{field:'infoName', width:600, title: '模板/报表名称'}
+        	,{field:'infoName', width:600, title: '报表/模板名称'}
         	//,{field:'approveUser', width:200, title: '当前处理人', sortable:false}
             ,{field:'infoStatusText', width:200, title: '当前状态', sortable:false}
         	,{field:'infoDevStatusText', width:200, title: '开发状态', sortable:false}
@@ -62,18 +62,24 @@
     //点击修改开发状态
     $("#infoCompliance001_btn_update").click(function(){
         var selRows = table.getAllCheckedRows();
-        if(selRows != null && selRows.length == 1){
-            var infoStatus = selRows[0].infoStatus;
-            if(infoStatus != '02'){
-                Joyin.error("数据状态不是审核通过,不能修改!");
-            } else {
-                Joyin.dialog("合规留痕查看",basePath+"disclosure/infoCompliance/infoCompliance003/init","70%","70%",
-                    {seqno:selRows[0].seqno},function () {
-                        table.reload();
-                    })
+        if(selRows != null && selRows.length >= 1){
+            var seqnos = new Array();
+            for(var i = 0;i<selRows.length;i++){
+                var infoStatus = selRows[i].infoStatus;
+                if(infoStatus != '02'){
+                    Joyin.error("存在状态不是审核通过的数据,不能进行开发状态变更!");
+                    return;
+                } else {
+                    seqnos.push(selRows[i].seqno)
+                }
             }
+            Joyin.dialog("开发状态变更",basePath+"disclosure/infoCompliance/infoCompliance003/init","770px","40%",
+                    {seqno:seqnos.join(",")},function () {
+                        table.reload();
+            })
+
         } else {
-            Joyin.error("只能选中一条数据进行修改!");
+            Joyin.error("请选择至少一条数据进行开发状态变更!");
         }
     });
 
@@ -100,7 +106,7 @@
         $('#SysActionLog001_btn_export').click(function() {
             exportExcel();
         });
-        table.load();
+        //table.load();
 
         $('.form-button-area').find('.btn-select-wrapper').attr('style','display:none');
 

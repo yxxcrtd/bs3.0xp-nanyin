@@ -47,6 +47,7 @@
 			from dis_prod_feediscount t
 			where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
 		and rpi.status = 'E'
+		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in
 			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
@@ -98,9 +99,10 @@
 		inner join rep_prod_info rpi
 		on rpi.prod_re = dpf.prod_regist_no
 		and rpi.status = 'E'
+		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
 		where dpf.feename = (select feename
-			from dis_prod_feediscount t
-			where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
+		from dis_prod_feediscount t
+		where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
 		and dpf.data_status = 'E'
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in

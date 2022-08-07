@@ -83,6 +83,7 @@ public class ReportJesh001Service implements IReportDataService {
         reportCommonService.setSaleString(prodIds, dataMap);
         // 发布日期
         dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
+        dataMap.put("enddate",pubDateStr);
         return result;
     }
 

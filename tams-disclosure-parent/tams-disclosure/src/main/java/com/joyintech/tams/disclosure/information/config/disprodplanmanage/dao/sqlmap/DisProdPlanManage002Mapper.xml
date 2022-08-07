@@ -156,4 +156,15 @@
             </if>
 
     </select>
+
+    <select id="checkInfo"
+            resultType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto">
+        select *
+        from DIS_PROD_PLAN
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and OPERATION_START_DATE = #{operationStartDate,jdbcType=DATE}
+        <if test="prodPlanId != null and prodPlanId != ''">
+            and PROD_PLAN_ID != #{prodPlanId,jdbcType=VARCHAR}
+        </if>
+    </select>
 </mapper>

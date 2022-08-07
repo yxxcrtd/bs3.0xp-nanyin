@@ -96,18 +96,12 @@ public class PoiReportService {
 	
 	@Autowired
 	private ReportFileService reportFileService;
+
 	
 	/**
 	 * 日志
 	 */
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-//	public final static String REPORT_TYPE_模板文件 = "REPORT_TYPE_M";
-//	public final static String REPORT_TYPE_临时文件 = "REPORT_TYPE_T";
-//	public final static String REPORT_TYPE_报表文件 = "REPORT_TYPE_E";
-//
-//	public final static String FILE_TYPE_DOCX = ".docx";
-//	public final static String FILE_TYPE_PDF = ".pdf";
 
 	/**
 	 * 生成报表：创建服务器文件，创建工作流进行报表确认
@@ -121,7 +115,7 @@ public class PoiReportService {
 		String fileType = ".docx";
 		String templateFile = reportFileService.getTemplateFile(repId, fileType);
 
-		//初始化参数，换个文件名称
+		//初始化参数，用xxx替换参数变量，文件已静态编辑好，存在放开模板的.../blank/目录，直接换个文件名称
 		File f = new File(templateFile);
 		return f.getParent() + "/blank/"+f.getName();
 	}
@@ -155,7 +149,7 @@ public class PoiReportService {
 			Date reportDate = null;
 			try {
 				if (params.get("reportDate") != null)
-					reportDate = DateUtil.parse(params.get("reportDate").toString());
+					reportDate = (Date)params.get("reportDate");
 			} catch (Exception e) {
 				logger.error("获取报表日期错误", e);
 			}
@@ -194,9 +188,10 @@ public class PoiReportService {
 			String reportFile = "";
 			ReportInfo reportInfo = null;
 			String prodId = "";
-			
+			String repId = "";
+			Date genDate = (Date)params.get("reportDate");
 			try {
-				String repId = params.get("repid").toString();
+				repId = params.get("repid").toString();
 				reportInfo = reportInfoMapper.getReportInfoByID(repId);
 				if (!StringUtil.isNotEmpty(reportInfo)) {
 					throw new Exception("生成报表失败!没有找到模板。");
@@ -214,15 +209,18 @@ public class PoiReportService {
 //				logger.error("获取报表日期错误", e);
 //			}
 
-			reportFile = getRomteFilePath(reportInfo, params, ReportFileService.FILE_TYPE_DOCX);
+			reportFile = reportFileService.getSimpleReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
+			String tempRemoteFileName = reportFileService.getTempOSSReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
+			//getRomteFilePath(reportInfo, params, ReportFileService.FILE_TYPE_DOCX);
 			
 			File localFile = new SafelyFile(reportFile);
 			String fileName = reportFile;
 			UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(), localFile);
 			logger.info("UploadFile fileName= "  + reportFile);
-	        if(null != fileAttachmentProcess) {
-	            fileAttachmentProcess.upload(uploadFile);
-	        }
+//	        if(null != fileAttachmentProcess) {
+//	            fileAttachmentProcess.upload(uploadFile);
+//	        }
+			minioFileRemoteService.tempFileCopy(tempRemoteFileName, uploadFile);
 	        
 			// 创建工作流
 			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),
@@ -362,18 +360,25 @@ public class PoiReportService {
 		repReveal.setReportName(ReportName);
 		if (StringUtil.isNotEmpty(params.get("prodId"))) {
 			repReveal.setProdid(params.get("prodId").toString());
-			// 查询产品名称的全称
-			// String prodName =
-			// repDetailsShow001Mapper.getProdName(params.get("prodName").toString());
-			String prodName = params.get("prodName").toString();
-//           repReveal.setProdName(params.get("prodName").toString());
-			repReveal.setProdName(prodName);
+		} else {
+			if ( params.get("pprodId")!=null )
+				repReveal.setProdid(params.get("pprodId").toString());
+		}
+		if ( params.get("prodName")!=null ) { 
+			repReveal.setProdName(params.get("prodName").toString());
+		} else {
+			if ( params.get("pprodName")!=null )
+				repReveal.setProdName(params.get("pprodName").toString());			
 		}
 		if (StringUtil.isNotEmpty(params.get("startDate"))) {
 			repReveal.setStartDate(DateUtil.parse(params.get("startDate").toString()));
 		}
 		if (StringUtil.isNotEmpty(params.get("endDate"))) {
 			repReveal.setEndDate(DateUtil.parse(params.get("endDate").toString()));
+		} else if (params.get("reportDate") != null){
+			repReveal.setEndDate((Date)params.get("reportDate"));
+		}else{//有一部分报表生成没有日期，需要用平台日处理
+			repReveal.setEndDate(com.joyintech.framework.util.DateUtil.platDateFromCache());
 		}
 		// 获取产品信息
 		String portnum = params.get("prodId") == null ? "" : params.get("prodId").toString();
@@ -407,8 +412,9 @@ public class PoiReportService {
 //               repReveal.setEndDate(prodInfo.getMdate());
 //           }
 //       }
-
-		repReveal.setEndDate(params.get("endDate") == null ? null : DateUtil.parse(params.get("endDate").toString()));
+		//上面给endDate赋值了，这里还要再赋值一次？ 代码注掉 by zhengbs 20220807 start
+//		repReveal.setEndDate(params.get("endDate") == null ? null : DateUtil.parse(params.get("endDate").toString()));
+		//上面给endDate赋值了，这里还要再赋值一次？ 代码注掉 by zhengbs 20220807 end
 
 		// 获取披露渠道
 		if (null != prodInfo) {
@@ -533,19 +539,6 @@ public class PoiReportService {
 	}
 	
     public RepReveal getRepReveal( Map<String,Object>params) {
-		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
-		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
-		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
-		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
-		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
-		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
-		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
-		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
-		params.put("reportDate", params.get("reportDate")==null?params.get("endDate"):params.get("reportDate"));
-		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
-		params.put("platformDate", params.get("platformDate")==null? DateUtil.format(commonPlatformDateService.getSysDate()):params.get("platformDate"));
     	return reportDataService.getRepReveal(params);
     }
 	/**
@@ -614,7 +607,8 @@ public class PoiReportService {
 		} else {
 			genDate = (Date)params.get("platformDate");
 		}
-		String localPathFile = reportFileService.getReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX); 
+		String localPathFile = reportFileService.getTempSimpleReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX); 
+		logger.debug("==================报表生成文件上传："+localPathFile);
 		ByteArrayOutputStream bos = null;
 		ByteArrayInputStream is = null;
 		String realFilePath = "";
@@ -700,5 +694,73 @@ public class PoiReportService {
 			}
 		}
 		return null;
+	}
+	/**
+	 * @Author ZY22350
+	 * @Description //批处理提交文件，此处需要注意，dataMap中必须要求包含：enddate,repId,prodName等生成文件头必须要的参数
+	 * 发生异常会进行异常抛出，如果异常不影响后续流程处理，请捕获异常RuntimeException
+	 * @Date 13:27 2022/8/6
+	 * @Param [dataMap]
+	 * @return com.joyintech.framework.base.dto.UploadFile
+	 **/
+	public UploadFile genReportFile2Batch(Map<String,Object> dataMap) throws RuntimeException{
+
+		if(dataMap == null ){
+			throw new IllegalArgumentException("业务数据为空");
+		}
+
+		String repId = dataMap.get("repId").toString();
+		if(logger.isDebugEnabled())
+			logger.debug("开始进行批处理报表生成,repId={}",repId);
+		String templateFile = reportFileService.getTemplateFile(repId, ReportFileService.FILE_TYPE_DOCX);
+		Date genDate = new Date();
+		Object endDateObj = dataMap.get("enddate");
+		if ( endDateObj!=null ) {
+			if(endDateObj instanceof String){
+				genDate = DateUtil.parse(endDateObj.toString());
+			}else if(endDateObj instanceof Date){
+				genDate = (Date) endDateObj;
+			}else{
+				throw new IllegalArgumentException("enddate 类型不正确");
+			}
+		} else {
+			Object execDateObj = dataMap.get("execDate");
+			if(execDateObj == null){
+				genDate = commonPlatformDateService.getSysDate();
+			}else {
+				genDate = (Date) execDateObj;
+			}
+		}
+		String localPathFile = reportFileService.getSimpleReportFileName(repId, genDate, dataMap, ReportFileService.FILE_TYPE_DOCX);
+		ByteArrayOutputStream bos = null;
+		ByteArrayInputStream is = null;
+		try {
+			bos = new ByteArrayOutputStream();
+			// 替换参数
+			PoiUtils.mergeDocx(templateFile, bos, dataMap);
+			is = new ByteArrayInputStream(bos.toByteArray());
+			File vFile = new SafelyFile(localPathFile);
+			UploadFile uploadFile = new UploadFile(localPathFile,IDGenerator.generate(),vFile);
+			uploadFile = minioFileRemoteService.uploadFile(uploadFile,is);
+			return uploadFile;
+		} catch (Exception e) {
+			logger.error("生成报表文件异常", e);
+			throw new RuntimeException("生成报表文件异常",e);
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					logger.error("关闭字节输出流异常", e);
+				}
+			}
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					logger.error("关闭字节输入流异常", e);
+				}
+			}
+		}
 	}
 }

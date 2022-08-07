@@ -47,6 +47,29 @@
 		AND STATUS='E'
 		AND CONFIRM_STATUS='1'
     </select>
+	<select id="checkSameReport" parameterType="com.joyintech.tams.common.base.entity.RepReveal" resultType="java.lang.Integer">
+		SELECT  COUNT(1)
+		FROM	REP_REVEAL
+		WHERE
+		1=1
+		<if test="repId !=null and repId != ''">
+			AND REP_ID = #{repId,jdbcType=VARCHAR}
+		</if>
+		<if test="reportName !=null and reportName != ''">
+			AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		</if>
+		<if test="prodid !=null and prodid != ''">
+			AND PRODID = #{prodid,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate !=null">
+			AND START_DATE = #{startDate,jdbcType=DATE}
+		</if>
+		<if test="endDate !=null">
+			AND END_DATE = #{endDate,jdbcType=DATE}
+		</if>
+		AND STATUS='E'
+		AND CONFIRM_STATUS='0'
+	</select>
     <select id="selectData" resultType="com.joyintech.tams.common.base.entity.RepReveal">
 	 	SELECT 
 			rr.PRODID prodid,
@@ -93,6 +116,12 @@
 		from
 			sys_data_process_mark pm
 				inner join rep_reveal rr on pm.business_data_pk1 = rr.id
+		inner join (select max(HIS_NO) HIS_NO, WORKFLOW_ID
+		from SYS_DATA_PROCESS_MARK
+		where page_id = 'ReportConfirmManage001'
+		group by WORKFLOW_ID) tempHis
+		on pm.HIS_NO = tempHis.HIS_NO
+		and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
 		where
 			pm.page_id = 'ReportConfirmManage001'
 		  and pm.status in ('A', 'U', 'P')

@@ -276,7 +276,9 @@ insert into REP_JOB_RANGE values ('D0000000000000000001','CP_001_001_001','02','
 insert into REP_JOB_RANGE values ('D0000000000000000002','CP_001_001_001','02','ISSUE_STATUS','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000003','CP_001_001_001','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000004','CP_001_002_001','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D0000000000000000005','CP_001_002_001','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000006','CP_001_002_002','02','RAISE_TYPE','=','02','02','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D0000000000000000007','CP_001_002_002','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000008','CP_001_002_003','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000009','CP_001_002_003','02','OPEN_FREQ','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000010','CP_001_002_003','02','PROD_TYPE','=','02','04','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
@@ -496,7 +498,7 @@ insert into REP_JOB values ('100000020','到期公告（公募）','01','0 0 5 *
 insert into REP_JOB values ('100000021','到期报告（私募）','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000021','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
 insert into REP_JOB values ('100000022','清算报告','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000022','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
 insert into REP_JOB values ('100000023','分红计算清单','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000023','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
-insert into REP_JOB values ('100000024','代理销售机构名单公告','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000024','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
+insert into REP_JOB values ('100000024','代理销售机构名单公告','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000024','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'N');
 
 -- 校验
 
@@ -621,3 +623,20 @@ insert into REP_FTP_PATH values ('04','临时公告','sftpuser','sftpuser','/hom
 insert into REP_FTP_PATH values ('05','销售公告','sftpuser','sftpuser','/home/weblogic/xp_file/pl/06','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
 insert into REP_FTP_PATH values ('06','托管公告','sftpuser','sftpuser','/home/weblogic/xp_file/pl/03','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
 insert into REP_FTP_PATH values ('07','其他报告 ','sftpuser','sftpuser','/home/weblogic/xp_file/pl/09','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
+
+--报表生成管理》开放、净值及分红公告（公募&开放频率在半年以上） 开放、净值及分红公告（公募&开放频率在半年（不含）以内） 开放及净值公告（公募） 开放及净值报告（私募） 发行方式由封闭式改成开放式 add by zhengbs 20220807
+DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_009' AND RULE_TYPE1 = 'ISSUING_WAY';
+insert into REP_JOB_RANGE values ('D0000000000000000029','CP_001_002_009','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_010' AND RULE_TYPE1 = 'ISSUING_WAY';
+insert into REP_JOB_RANGE values ('D0000000000000000035','CP_001_002_010','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_012' AND RULE_TYPE1 = 'ISSUING_WAY';
+insert into REP_JOB_RANGE values ('D0000000000000000047','CP_001_002_012','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_011' AND RULE_TYPE1 = 'ISSUING_WAY';
+insert into REP_JOB_RANGE values ('D0000000000000000041','CP_001_002_011','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+
+--净值及分红报告（私募开放式） 发行方式改成开放式
+DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_014' AND RULE_TYPE1 = 'ISSUING_WAY';
+insert into REP_JOB_RANGE values ('D0000000000000000057','CP_001_002_014','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+--净值及分红报告（私募封闭式） 发行方式改成封闭式
+DELETE FROM REP_JOB_RANGE WHERE JOB_ID = 'CP_001_002_013' AND RULE_TYPE1 = 'ISSUING_WAY';
+insert into REP_JOB_RANGE values ('D0000000000000000053','CP_001_002_013','02','ISSUING_WAY','=','02','02','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));

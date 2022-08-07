@@ -20,7 +20,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
+import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.constant.ProcessState;
+import com.joyintech.workflow.engine.entity.FlowEntity;
+import com.joyintech.workflow.engine.service.ProcessService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -104,22 +110,40 @@ public class ReportConfirmManage001Contoller extends BaseController {
     private FileAttachmentProcess fileAttachmentProcess;
 	@Autowired
 	private PoiReportService poiReportService;
+	@Autowired
+	private FileRemoteService minioFileRemoteService;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
      */
     @Override
     public String init(Model model) {
+		Map<String, Object> map=RequestUtil.getPageParam();
     	this.setSelectOptionToModel(model,DictCode.披露渠道);
         this.setSelectOptionToModel(model,DictCode.确认状态,DictCode.确认类型);
         model.addAttribute("confirmStatusYes", DictCodeList.确认状态_已确认.getValue());
         // 入账日期默认为系统平台日
         model.addAttribute("sysDate",DateUtil.format(baseCommonService.getSysDate(), "yyyy-MM-dd"));
-        
+        boolean editFlag=true;
+
         // 工作流ID
-         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);       
+         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);
          if(StringUtil.isNotEmpty(workflowId)){
-         	 model.addAttribute("workflowId",workflowId);
+			 model.addAttribute("workflowId",workflowId);
+
+			 String  processInstanceId=reportConfirmManage001Service.getProcessInstanceId(workflowId);
+
+				 ProcessService processService = WorkflowContext.getProcessService();
+				 FlowEntity flowEntity = processService.getRuntimeEntity(processInstanceId);
+				 if (StringUtil.isNotEmpty(flowEntity)) {
+					 if (!flowEntity.getProcessState().equals(ProcessState.BACK)) {
+						 editFlag = false;
+					 }
+				 } else {
+					 editFlag = false;
+				 }
+
+
          }
          model.addAttribute("reportCategoryList", JsonUtils.objectArray2Json(ftpPathService.getReportCategory().toArray()));
          
@@ -135,6 +159,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
         	model.addAttribute("searchDateStart", this.getParam("searchDateStart"));
         	model.addAttribute("searchDateEnd", this.getParam("searchDateEnd"));
         }
+		model.addAttribute("editFlag", editFlag);
          return super.init(model);
         
     }
@@ -491,7 +516,8 @@ public class ReportConfirmManage001Contoller extends BaseController {
 		InputStream in = null;
         try {
 			if(targetFile.getPath().startsWith("http:")){
-				byte[] bytes = poiReportService.getFileByteArray(targetFile.getPath());
+				byte[] bytes = minioFileRemoteService.getFile2ByteArray(targetFile.getPath());
+//				byte[] bytes = poiReportService.getFileByteArray(targetFile.getPath());
 				if(bytes == null){
 					throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
 				}else{

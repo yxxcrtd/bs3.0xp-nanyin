@@ -97,8 +97,9 @@ public class InfoCompliance002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getSeqno());
         params.setBusinessType("COMPLIANCE");
+        String infoTypeText = "01".equals(dto.getInfoType())?"模板":"临时公告";
         params.setComment((entity) -> WorkFlowUtil.concatComment(
-                "合规审核留痕新建 " + DateUtil.format(iPlatformDate.getSysDate(),"yyyy-MM-dd")));
+                infoTypeText+":"+entity.getInfoName()));
         processParameter.setWorkFlowParameter(params);
         String msg = infoCompliance002Service.start(processParameter,dto);
         return new AjaxResult(msg);

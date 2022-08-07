@@ -4,7 +4,9 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.constants.GlobalConstant;
+import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportCpflyhMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.Report1FlncpDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportProdfeeDto;
@@ -43,6 +45,8 @@ public class Report1Flncp001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
+        List<Map<String, Object>> prodlist = new ArrayList<>();
+        dataMap.put("prodlist", prodlist);
         if (paraMap.get("feename") == null) {
             return result;
         }
@@ -50,14 +54,20 @@ public class Report1Flncp001Service implements IReportDataService {
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("feename", feename);
         if (null != paraMap.get("pprodid")) {
-            List<String> prodlist = StringUtil.splitToList(GlobalConstant.COMMA, paraMap.get("pprodid").toString());
-            searchparam.put("prodlist", prodlist);
+            List<String> prodlist1 = StringUtil.splitToList(GlobalConstant.COMMA, paraMap.get("pprodid").toString());
+            searchparam.put("prodlist", prodlist1);
         }
         String pubDateStr = commonPlatformDateService.getSysDateStr();
         if (null != paraMap.get("enddate")) {
             pubDateStr = paraMap.get("enddate").toString();
         }
         searchparam.put("rptIssueDate", DateUtil.parse(pubDateStr));
+        String rptType = paraMap.get("uri").toString();
+        if (rptType.equals(DisReportType.DFLDCPMB1_GM) ) {
+            searchparam.put("raiseType", DictCodeListExt2.募集方式_中债_公募.getValue());
+        } else {
+            searchparam.put("raiseType", DictCodeListExt2.募集方式_中债_私募.getValue());
+        }
         Report1FlncpDto cpnflDto = reportCpflyhMapper.query1Flncp(searchparam);
         if (cpnflDto == null) {
             return result;
@@ -75,7 +85,6 @@ public class Report1Flncp001Service implements IReportDataService {
         // 费率优惠明细
         List<ReportProdfeeDto> prodfeeDtos = reportCpflyhMapper.qureyProdlist(searchparam);
         if (prodfeeDtos != null && prodfeeDtos.size() > 0) {
-            List<Map<String, Object>> prodlist = new ArrayList<>();
             prodfeeDtos.forEach(x -> {
                 Map<String, Object> prodmap = new HashMap<>();
                 // 产品名称
@@ -94,8 +103,8 @@ public class Report1Flncp001Service implements IReportDataService {
                         DateUtil.format(x.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
                 prodlist.add(prodmap);
             });
-            dataMap.put("prodlist", prodlist);
         }
+        dataMap.put("enddate",pubDateStr);
         return result;
     }
 

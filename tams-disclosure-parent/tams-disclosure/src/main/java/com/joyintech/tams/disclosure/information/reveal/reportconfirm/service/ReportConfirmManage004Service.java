@@ -1,5 +1,8 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +10,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +28,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.progressbar.ProgressBarService;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.RepRevealMapper;
 import com.joyintech.tams.common.base.entity.RepReveal;
@@ -32,6 +38,8 @@ import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao.Report
 @Service
 public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
 
+    private static final Logger logger = LoggerFactory.getLogger(ReportConfirmManage004Service.class);
+
     @Autowired
     private RepRevealMapper repRevealMapper;
 
@@ -40,6 +48,8 @@ public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
 
     @Autowired
     ReportConfirmManage004Mapper reportConfirmManage004Mapper;
+    @Autowired
+    private FileRemoteService minioFileRemoteService;
 
     /**
      * 手工上传入库操作
@@ -48,6 +58,7 @@ public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
      * @return
      */
     public List<ValidMessage> insertRepReveal(Map<String, Object> params) {
+
         RepReveal repReveal = new RepReveal();
         Date nowTime = new Date();
 
@@ -123,12 +134,61 @@ public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
             repReveal.setRevealEndDate(DateUtil.parse(revealEndDatestr + " 23:59:00"));
         }
         List<ValidMessage> checkList = checkInfo(repReveal);
+        try{
+            UploadFile uploadFile = this.uploadMinioFile(repReveal.getFilepath(),repReveal.getFilename());
+            repReveal.setFilename(uploadFile.getFileName());
+            repReveal.setFilepath(uploadFile.getFileNo());
+        }catch(Exception e){
+            logger.error("上传文件异常",e);
+            checkList.add(new ValidMessage("附件上传远程服务失败"));
+        }
         if (StringUtil.isEmptyList(checkList)) {
             repRevealMapper.insert(repReveal);
             return null;
         }
         else {
             return checkList;
+        }
+    }
+    /**
+     * @Author ZY22350
+     * @Description //上传到文件服务器
+     * @Date 19:20 2022/8/5
+     * @Param [fileNo, fileName]
+     * @return com.joyintech.framework.base.dto.UploadFile
+     **/
+    private UploadFile uploadMinioFile(String fileNo,String fileName){
+        UploadFile uploadFile =minioFileRemoteService.getUploadFileByFileNo(fileNo);
+        String filePath = uploadFile.getTargetFile().getPath();
+        String newfilePath = filePath.replace(":\\","://");
+        newfilePath = newfilePath.replace("\\","/");
+        String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+        if(StringUtil.isNotEmpty(basePath)){
+            newfilePath = newfilePath.replace(basePath,"");
+        }
+
+        if(logger.isDebugEnabled()){
+            logger.debug("上传文件开始,文件名称:{}",fileName);
+        }
+        FileInputStream fis = null;
+        String newFileNo = IDGenerator.generate();
+        try {
+            fis = new FileInputStream(filePath);
+            File localFile = new SafelyFile(newfilePath);
+            UploadFile newUploadFile = new UploadFile(fileName, newFileNo,localFile);
+            newUploadFile = minioFileRemoteService.uploadFile(newUploadFile,fis);
+            return newUploadFile;
+        }catch(Exception e){
+            logger.error("上传文件失败",e);
+            throw new RuntimeException("本地文件上传Minio失败");
+        }finally{
+            if(fis != null ){
+                try{
+                    fis.close();
+                }catch (IOException e){
+                    logger.error("关闭流异常",e);
+                }
+            }
         }
     }
 

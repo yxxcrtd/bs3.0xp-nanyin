@@ -262,10 +262,12 @@ public class PoiUtilsHelper {
 		if (imageList.size() > 0) { // 替换图片
 			for (String image : imageList) {
 				String key = "${@image:" + image + "}";
-				int width = Integer.parseInt(pic.get("width").toString());
-				int height = Integer.parseInt(pic.get("height").toString());
-				int picType = getPictureType(pic.get("type").toString());
-				String byteArray = (String) pic.get("content");
+				//NYLCXP-394 图形化界面预览报错问题，map传值有误 modify by zhengbs
+				Map<String,Object> picMap = (Map<String, Object>) pic.get(key);
+				int width = Integer.parseInt(picMap.get("width").toString());
+				int height = Integer.parseInt(picMap.get("height").toString());
+				int picType = getPictureType(picMap.get("type").toString());
+				String byteArray = (String) picMap.get("content");
 
 				FileInputStream fis = null;
 				try {
@@ -300,7 +302,7 @@ public class PoiUtilsHelper {
         //boolean ret =false;
         int beginpos = paracode.indexOf('<');
         if ( beginpos!=-1) {  //是关键字"<"
-            if ( paracode.substring(beginpos+1).indexOf('>')!=-1 )  //完整
+            if ( paracode.substring(beginpos+1).indexOf('>')!=-1 )  //完整啊
                 return true;
             else
                 return false;
@@ -362,7 +364,7 @@ public class PoiUtilsHelper {
 //		}
 //		System.out.println("==================");
 		String fontFamily = "方正仿宋简体";
-		int fontSize = 12;
+		int fontSize = 11;
 		if ( styleRow!=null  ) {
 			fontFamily = table.getRow(0).getCell(0).getParagraphs().get(0).getRuns().get(0).getFontFamily();
 			fontSize = table.getRow(0).getCell(0).getParagraphs().get(0).getRuns().get(0).getFontSize();
@@ -389,7 +391,8 @@ public class PoiUtilsHelper {
 					paragraph.setVerticalAlignment(TextAlignment.CENTER);  //没有效果
 					XWPFRun run = paragraph.createRun();
 					run.setFontFamily(fontFamily);
-					run.setFontSize(fontSize);
+					if ( fontSize!=-1 )
+						run.setFontSize( fontSize);
 					if ( cell.getParagraphs().size()>0 ) 
 						cell.removeParagraph(0);					
 					run.setText(content,0);					
@@ -440,7 +443,8 @@ public class PoiUtilsHelper {
 						paragraph.setVerticalAlignment(TextAlignment.CENTER);
 						XWPFRun run = paragraph.createRun();
 						run.setFontFamily(fontFamily);
-						run.setFontSize(fontSize);					
+						if ( fontSize!=-1 )
+							run.setFontSize( fontSize);			
 						run.setText(content,0);			
 						//cell.setText(content);
 					}

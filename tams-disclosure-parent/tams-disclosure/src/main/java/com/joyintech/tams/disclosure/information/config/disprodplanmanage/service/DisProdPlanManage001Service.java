@@ -197,6 +197,8 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     } else {
                         if (!this.getProdId(rowData.get(0))) {
                             errorMsg.append("产品主代码 不存在");
+                        }else{
+                            prodInfo = prodInfoService.selectByProdStatus(rowData.get(0));
                         }
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))) {
@@ -268,14 +270,15 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 for (int i = objects.size() - 1; i >= 1; i--) {
                     List<String> list1 = objects.get(i);
                     Boolean isRepeat = false;
-                    /*for (int k = i - 1; k >= 1; k--) {
+                    for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //子产品代码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))) {
+                        if ((StringUtil.equals(list1.get(0), list2.get(0)))
+                        && (StringUtil.equals(list1.get(4), list2.get(4)))) {
                             isRepeat = true;
                             break;
                         }
-                    }*/
+                    }
                     if (isRepeat) {
                         repeatNum++;
                     } else {
