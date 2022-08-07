@@ -158,7 +158,6 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
     @Override
     public void doComplete(ProdBonusplanDto entity, OperationType type) {
         entity.setOperateType(type.toString());
-        entity.setUpdateTime(DateUtil.now());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
             entity.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
