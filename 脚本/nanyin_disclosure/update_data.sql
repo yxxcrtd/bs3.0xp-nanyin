@@ -889,11 +889,13 @@ values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'ISSUING_WAY', '', '', 's
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
 
-delete from sys_page where page_id in ('ReportPageManage003','ReportUpload001');
+delete from sys_page where page_id in ('ReportPageManage003','ReportUpload001','RepDetailsShow003');
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportPageManage003', 'DIS', '/disclosure/information/reportpage/ReportPageManage003', 'disclosure/information/reportpage/ReportPageManage003', '', null, null, '02', '01', '模板启用管理', 'system', null, sysdate, 'system', sysdate);
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportUpload001', 'DIS', '/disclosure/information/reportpage/ReportUpload001', 'disclosure/information/reportpage/ReportUpload001', '', null, null, '02', '01', '模板启用/禁用上传组件', 'system', null, sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RepDetailsShow003', 'DIS', '/disclosure/information/reveal/detailshow/RepDetailsShow003', 'disclosure/information/reveal/detailshow/RepDetailsShow003', '', '', '', '02', '02', '模板启用禁用预览界面', 'system', '', sysdate, 'system', sysdate);
 
 delete from sys_datadict where DICT_CODE IN('START_OFF');
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
