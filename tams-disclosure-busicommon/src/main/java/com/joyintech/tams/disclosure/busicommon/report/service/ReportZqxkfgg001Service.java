@@ -164,7 +164,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                                         redValue = unitValue;
                                     } else {
                                         if (affirmAmt != null && affirmNum != null) {
-                                            redValue = affirmAmt.divide(affirmNum).setScale(4, RoundingMode.HALF_UP);
+                                            redValue = affirmAmt.divide(affirmNum,10,BigDecimal.ROUND_DOWN).setScale(4, BigDecimal.ROUND_DOWN);
                                         }
                                     }
                                 } else {
