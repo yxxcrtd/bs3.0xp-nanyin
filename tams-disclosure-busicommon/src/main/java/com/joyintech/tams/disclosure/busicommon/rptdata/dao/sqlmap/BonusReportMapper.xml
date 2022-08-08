@@ -4,19 +4,31 @@
     
    <select id="selectBonusReport" resultType="com.joyintech.tams.disclosure.busicommon.rptdata.dto.BonusReportDto">
 		SELECT 
-		    INFO.PROD_NAME
+		    (case info.REP_PROD_TYPE
+            when '02'
+                then info.PROD_NAME
+            else
+                pinfo.PROD_NAME||'('||info.PROD_ID||')'
+            end) reportTitle
+            ,(case info.REP_PROD_TYPE
+            when '02'
+                then info.PROD_NAME
+            else
+                pinfo.PROD_NAME
+            end) PROD_NAME
 			,INFO.PROD_RE
 		    ,INFO.ISSUING_WAY
 			,INFO.PROD_ID
 		    ,INFO.SET_DATE EDATE   /**产品成立日期**/
 		    ,PINDEX.ASSETS_VALUE  /**资产净值**/
 			,PINDEX.CAPITAL            /**期末余额**/
-			,PINDEX.UNIT_VALUE    /**单位净值**/
+			,trunc(pindex.ASSETS_VALUE/pindex.CAPITAL,4) UNIT_VALUE    /**单位净值**/
             ,PLAN.SETT_DATE      /**本期收益结算日**/			
 		    ,PLAN.ACHIEVEMENT_BASIS   /**业绩基准**/
 			,PLAN.ACHIEVEMENT_BASIS_PROP  /**业绩基准比例**/
 			,PLAN.EXCESS_ACHIEVEMENT_PROP   /**超额收益收取比例**/
 		FROM REP_PROD_INFO INFO
+		left join REP_PROD_INFO pinfo on info.P_PROD_ID=pinfo.PROD_ID and pinfo.STATUS='E'
 		LEFT JOIN REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E' and #{reportDate,jdbcType=DATE}=pindex.VALUE_DATE
 		LEFT JOIN DIS_PROD_BONUSPLAN PLAN ON INFO.PROD_ID=PLAN.PROD_ID AND PLAN.DATA_STATUS='E' AND PLAN.SETT_DATE=#{reportDate,jdbcType=DATE}
 		where info.REP_PROD_TYPE in ('02','03')   /**单产品或者子产品**/
@@ -40,8 +52,8 @@
 	        ,ROW_NUMBER() OVER (ORDER BY SETT_DATE DESC ) RN
 	    	FROM DIS_PROD_BONUSPLAN 
 	        WHERE 1=1
-	            AND SETT_DATE<![CDATA[<]]>#{SETT_DATE,jdbcType=DATE}
-	            AND PROD_ID=#{PROD_ID,jdbcType=VARCHAR}
+	            AND SETT_DATE<![CDATA[<]]>#{reportDate,jdbcType=DATE}
+	            AND PROD_ID=#{prodId,jdbcType=VARCHAR}
 	        ) T
 			WHERE RN=1
     </select>

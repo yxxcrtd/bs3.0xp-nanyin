@@ -601,6 +601,8 @@ public class PoiReportService {
 		Date genDate = new Date(); 
 		if ( params.get("reportDate")!=null ) {
 			genDate = (Date)params.get("reportDate");
+		}else if (params.get("endDate")!=null ){
+			genDate = DateUtil.parse(params.get("enddate").toString());
 		} else {
 			genDate = (Date)params.get("platformDate");
 		}

@@ -15,6 +15,8 @@ import java.util.Date;
 
 public class ReportDto {
 	
+	private String reportTitle;  //报表标题
+	
 	private String repProdType;  //产品分类：信披产品类别：01 母产品/02 普通产品/03子产品
 	private String prodId;         //产品代码
 	private String prodRe;  // 登记编码
@@ -31,6 +33,14 @@ public class ReportDto {
 	private Date genDate;  //报告生成日期，平台日，无平台日就是系统日
 	private Date signDate;  //签字日期，报表的落款日期
 	private Date disDate;  //报告披露日期
+	
+	
+	public String getReportTitle() {
+		return reportTitle;
+	}
+	public void setReportTitle(String reportTitle) {
+		this.reportTitle = reportTitle;
+	}
 	public String getRepProdType() {
 		return repProdType;
 	}
