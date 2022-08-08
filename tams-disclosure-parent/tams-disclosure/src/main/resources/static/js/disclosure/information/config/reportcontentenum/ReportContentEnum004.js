@@ -34,7 +34,7 @@
 	 */
 	function getParam(node, params) {
 		if (node) {
-			if(node.id != null && $.inArray(node.id, params) < 0){
+			if(node.id != null && node.pId !=null && node.pId.length>4 && $.inArray(node.id, params) < 0){
 				params.push(node.id);
 			}
 			getParam(node.getParentNode(), params);
@@ -48,7 +48,6 @@
 		for (var i = 0; i < nodes.length; i++) {
 			getParam(nodes[i], params);
 		}
-		debugger;
 		if(params.length == 0){
 			Joyin.error("请选择产品");
 			return;
