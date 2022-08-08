@@ -820,7 +820,7 @@ values ('RULE_TYPE1', 'INVEST_TYPE', '投资性质', 10, '0', 'system', '', sysd
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RULE_TYPE1', 'FINPROD_NAME', '产品名称', 10, '0', 'system', '', sysdate, 'system', sysdate);
 --产品使用页面规则
-delete from sys_page_dictlist where page_id ='ReportContentEnum003' and DICT_ID ='RULE_TYPE1' and DICT_ITEM_VAL IN('ISSUE_STATUS','IS_INDEX','IS_PERIOD','OPEN_FREQ','PROD_TYPE','RAISE_TYPE','INVEST_TYPE','FINPROD_NAME');
+delete from sys_page_dictlist where page_id ='ReportContentEnum003' and DICT_ID ='RULE_TYPE1' and DICT_ITEM_VAL IN('ISSUE_STATUS','IS_INDEX','IS_PERIOD','OPEN_FREQ','PROD_TYPE','RAISE_TYPE','INVEST_TYPE','FINPROD_NAME','ISSUING_WAY');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'INVEST_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -837,7 +837,8 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'PROD_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'RAISE_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
-
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'ISSUING_WAY', '', '', 'system', '', sysdate, 'system', sysdate);
 --产品类型当前页面使用:净值型、现金管理类
 delete from sys_page_dictlist where page_id = 'ReportContentEnum003' and DICT_ID='PROD_TYPE' and DICT_ITEM_VAL IN('01','04');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)

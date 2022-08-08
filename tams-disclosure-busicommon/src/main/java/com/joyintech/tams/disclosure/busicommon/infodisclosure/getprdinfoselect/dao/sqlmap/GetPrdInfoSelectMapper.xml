@@ -190,19 +190,22 @@
 	</select>
 
 	<select id="getElementNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
+
+		select id ,text from (
 		select
-		distinct DPA.PROD_ADJUST_ID id,
-		DPA.ADJ_FIELD text
+		DPA.PROD_ADJUST_ID id,
+		DPA.ADJ_FIELD text,
+		RANK() OVER(PARTITION BY DPA.ADJ_FIELD order by DPA.PROD_ADJUST_ID) NUM
 		from
 		DIS_PROD_ADJUST DPA
 		left join REP_PROD_INFO RPI on DPA.prod_id=RPI.prod_id
 		where DPA.DATA_STATUS='E'
-		<if test="search != null and search != ''">
-			and (DPA.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
-			or DPA.ADJ_FIELD like '%' || #{search, jdbcType=VARCHAR} || '%')
+		<if test="search != null and search != ''">and (DPA.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or
+			DPA.ADJ_FIELD like '%' || #{search, jdbcType=VARCHAR} || '%')
 		</if>
-		<if test="pprodid != null and pprodid != ''">
-			and RPI.P_PROD_ID=#{pprodid}
+		<if test="pprodid != null and pprodid != ''">and RPI.P_PROD_ID=#{pprodid}
 		</if>
+		)where NUM=1
 	</select>
 </mapper>
