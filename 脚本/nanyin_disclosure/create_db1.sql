@@ -930,3 +930,7 @@ COMMENT ON COLUMN REP_INFO_STATUS.UPDATE_USER IS '更新人';
 COMMENT ON COLUMN REP_INFO_STATUS.UPDATE_TIME IS '更新时间';
 COMMENT ON COLUMN REP_INFO_STATUS.CREATE_DEPT IS '创建部门';
 /**模板启用管理 add by cuiwei 2022-08-07 end*/
+
+/**信披合规留痕,模板临时公告长度修改为100 add by cuiwei 2022-08-07 start*/
+ALtER TABLE INFO_COMPLIANCE MODIFY INFO_NAME VARCHAR2(300);
+/**信披合规留痕,模板临时公告长度修改为100 add by cuiwei 2022-08-07 end*/
