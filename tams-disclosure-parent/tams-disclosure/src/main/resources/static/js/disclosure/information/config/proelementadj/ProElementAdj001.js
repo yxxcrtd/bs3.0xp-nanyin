@@ -75,8 +75,8 @@
             ,{field:'fieldAdjRemark',  title: '调整此要素（补充说明文1）',sortField:"fieldAdjRemark",width: 160} //调整此要素（补充说明文1）
             ,{field:'fieldAdjRemark2',  title: '调整此要素（补充说明文2）',sortField:"fieldAdjRemark2",width: 160} //调整此要素（补充说明文2）
             ,{field:'rptIssueDate',  title: '报告发布日期',sortField:"rptIssueDate",type:'date'}//报告发布日期
-            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'date'} //更新时间
-            ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
+            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
+            ,{field:'createUser',title:'更新人',sortField:"updateUser"}//更新人
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {
                     if (row.dataStatus == 'D')

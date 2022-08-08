@@ -82,7 +82,9 @@ public class ReportMzjz001Service implements IReportDataService {
                         announceDate = DateUtil.addDay(DateUtil.parse(valueDate), 1);
                     }
                     reportMzjz001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
-                    reportMzjz001Dto.setEnddate(DateUtil.format(announceDate));
+                    //跑批日
+                    reportMzjz001Dto.setEnddate(valueDate);
+
                 }
             }
             resultMap.add(ReportCollectionUtils.bean2Map(reportMzjz001Dto));
@@ -96,9 +98,9 @@ public class ReportMzjz001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

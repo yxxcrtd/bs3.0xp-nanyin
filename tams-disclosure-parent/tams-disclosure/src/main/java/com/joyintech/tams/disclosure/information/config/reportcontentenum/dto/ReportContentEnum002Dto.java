@@ -79,6 +79,16 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	 * 规则数据
 	 */
 	private List<ReportContentEnum003Dto> settedRule;
+
+	/**
+	 * 生效截止日期
+	 */
+	private Date endDate;
+
+	/**
+	 * 生效截止日期
+	 */
+	private String endDateStr;
 	
 	private String updateTimeFmt;
 
@@ -247,5 +257,20 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	public void setIndexDetail(String indexDetail) {
 		this.indexDetail = indexDetail;
 	}
-	
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getEndDateStr() {
+		return endDateStr;
+	}
+
+	public void setEndDateStr(String endDateStr) {
+		this.endDateStr = endDateStr;
+	}
 }

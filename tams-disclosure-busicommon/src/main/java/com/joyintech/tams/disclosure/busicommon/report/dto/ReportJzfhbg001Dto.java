@@ -46,6 +46,7 @@ public class ReportJzfhbg001Dto {
    private String subValue;
    private String enddate;
 
+
    public String getEnddate() {
       return enddate;
    }

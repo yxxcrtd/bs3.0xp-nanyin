@@ -102,10 +102,10 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     if (openList == null || openList.size() == 0) {
                         openList = new ArrayList<>();
                         ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
-                        reportOpenPlanDto.setOpenDurationDate("XXXX/XX/XX-XXXX/XX/XX");
-                        reportOpenPlanDto.setOperationStartDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setAutoRedeemDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setHoldDays("XXX");
+                        reportOpenPlanDto.setOpenDurationDate(" ");
+                        reportOpenPlanDto.setOperationStartDate(" ");
+                        reportOpenPlanDto.setAutoRedeemDate(" ");
+                        reportOpenPlanDto.setHoldDays(" ");
                         openList.add(reportOpenPlanDto);
                     }
                     reportZqxkfgg001Dto.setOpenList(openList);
@@ -171,7 +171,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                             reportOpenPlanDto.setUnitValueT(String.valueOf(unitValueT));
                         }
                         reportZqxkfgg001Dto.setOpenHisList(openHisList);
-                        //增加公告期
+                        //跑批日
                         reportZqxkfgg001Dto.setEnddate(announceDate);
                     }
                 }else{
@@ -190,9 +190,9 @@ public class ReportZqxkfgg001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

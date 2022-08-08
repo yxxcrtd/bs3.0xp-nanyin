@@ -9,7 +9,7 @@
 	<div layout:fragment="content">
 		<form class="layui-form joyin-form-wrap" id="submitForm"
 			style="background: #ffffff; padding: 10px 0;">
-
+			<input type="hidden" id="finprodIds">
 			<div class="layui-form-item" style="display: none;">
 				<input id="operateType" name="operateType"
 					class="layui-input form-input" placeholder="请输入"
@@ -41,6 +41,19 @@
 							placeholder="请选择日期"
 							class="layui-input form-input input-dateSelect"
 							data-th-Value="${entity?.indexDateStr}" allowClear="true">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md8">
+					<label class="layui-form-label form-lable" style="width: 180px;">
+						<i class="iconfont must" style="display: inline;">*</i> 生效截止日期
+					</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="endDate" name="endDate"
+							   placeholder="请选择日期"
+							   class="layui-input form-input input-dateSelect"
+							   data-th-Value="${entity?.endDateStr}" allowClear="true">
 					</div>
 				</div>
 			</div>
@@ -145,6 +158,20 @@
 								class="layui-input form-input input-select"
 								placeholder="请选择产品风险评级" data-th-formatoption="false"
 								data-th-data-result="${RISK_LEVEL}" allowClear="true">
+							</input>
+						</div>
+						<div id="investTypeSelect">
+							<input id="investType" name="investType"
+								   class="layui-input form-input input-select"
+								   placeholder="请选择投资性质" data-th-formatoption="false"
+								   data-th-data-result="${INVEST_TYPE}" allowClear="true">
+							</input>
+						</div>
+						<div id="openFreqSelect">
+							<input id="openFreq" name="openFreq"
+								   class="layui-input form-input input-select"
+								   placeholder="请选择开放频率" data-th-formatoption="false"
+								   data-th-data-result="${OPEN_FREQ}" allowClear="true">
 							</input>
 						</div>
 					</div>

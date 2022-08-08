@@ -14,7 +14,7 @@
           RPT_ISSUE_DATE rptIssueDate,
           DEAL_DATE dealDate,
           UPDATE_TIME updateTime,
-          UPDATE_USER updateUser
+        TO_CHAR(UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
        from
           DIS_LARGE_REDEMPTION
     <where>
@@ -71,7 +71,7 @@
             #{isSalesAgency,jdbcType=VARCHAR}, #{dealDate,jdbcType=DATE}, #{triggerRemark,jdbcType=VARCHAR},
             #{rejectRemark,jdbcType=VARCHAR}, #{rptIssueDate,jdbcType=DATE}, #{dataStatus,jdbcType=VARCHAR},
             #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
             )
     </insert>
 
@@ -114,7 +114,7 @@
         </set>
         where REDEMPTION_ID = #{redemptionId,jdbcType=VARCHAR}
     </update>
-    <update id="updateByBusKey">
+    <update id="updateByBusKey" parameterType="java.util.Map">
         update DIS_LARGE_REDEMPTION
         <set >
             <if test="prodRegistNo != null" >
@@ -129,9 +129,9 @@
             <if test="rejectRemark != null" >
                 REJECT_REMARK = #{rejectRemark,jdbcType=VARCHAR},
             </if>
-            <if test="rptIssueDate != null" >
-                RPT_ISSUE_DATE = to_date(#{rptIssueDate,jdbcType=DATE},'YYYY-MM-DD'),
-            </if>
+<!--            <if test="rptIssueDate != null" >-->
+<!--                RPT_ISSUE_DATE = to_date(#{rptIssueDate,jdbcType=DATE},'YYYY-MM-DD'),-->
+<!--            </if>-->
             <if test="dataStatus != null" >
                 DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
             </if>
@@ -141,12 +141,14 @@
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME = to_date(#{updateTime,jdbcType=DATE},'YYYY-MM-DD'),
-            </if>
+<!--            <if test="updateTime != null" >-->
+<!--                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},-->
+<!--            </if>-->
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
-        and DEAL_DATE = to_date(#{dealDate},'YYYY-MM-DD')
+        -- and DEAL_DATE = to_date(#{dealDate},'YYYY-MM-DD')
+        --and DEAL_DATE =  TO_DATE(#{dealDate},'YYYY-MM-DD')
+        <![CDATA[AND  DEAL_DATE = TO_DATE(#{dealDate},'YYYY-MM-DD') ]]>
     </update>
 
 

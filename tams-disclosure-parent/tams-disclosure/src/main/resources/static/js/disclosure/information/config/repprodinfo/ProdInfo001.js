@@ -44,8 +44,8 @@ $(function() {
             ,{field:'setDateStr', sortable:false, width:100, title: '子产品成立日期'}
             ,{field:'pdStatusName', sortable:false, width:100, title: '产品状态'}
             ,{field:'prodSeries', sortable:false, width:100, title: '产品系列'}
-            ,{field:'pProdName', sortable:false, width:100, title: '产品名称'}
-            ,{field:'prodAbbr', sortable:false, width:100, title: '产品简称'}
+            ,{field:'pProdName', sortable:false, width:150, title: '产品名称'}
+            ,{field:'prodAbbr', sortable:false, width:150, title: '产品简称'}
             ,{field:'prodRe', sortable:false, width:100, title: '产品登记编码'}
             ,{field:'pProdId', sortable:false, width:100, title: '产品主代码'}
             ,{field:'raiseStrdateStr', sortable:false, width:100, title: '募集起始日期'}
@@ -189,12 +189,12 @@ $(function() {
             }
             var selArrUseful =[];
             selArr.forEach(v => {
-                if(v.status == 'E'){
+                if(v.status == 'E' || v.status == 'A'){
                     selArrUseful.push(v);
                 }
             })
             if (!selArrUseful || selArrUseful.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
+                Joyin.error(JoyinUtil.getMessage("请选择一条有效或待处理的数据"));
                 return;
             }
 
@@ -212,60 +212,119 @@ $(function() {
         });
 
 
-        // 导入按钮
-        /*$('#ProdInfo001_btn_import').click(function() {
-            Joyin.confirm("请确认是否要导入数据？", function() {
-                var options = {};
-                options.pageId = "ProdInfo001";
-                options.exts = 'xls|xlsx';
-                Joyin.uploadFile(options,function(fileName) {
-                    Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/checkImportData', {fileName: fileName}, function(result) {
-                        if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
-                            var joyinMessages = "";
-                            $.each(result.joyinMessages, function(i, joyinMessage){
-                                joyinMessages += joyinMessage.message + "<br />"
-                            });
-                            Joyin.confirm(joyinMessages, function(){
-                                Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', {fileName: fileName},function () {
-                                    table.reload();
-                                });
-                            });
-                        }else{
-                            Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', {fileName: fileName},function () {
-                                table.reload();
-                            });
-                        }
-                    });
-                },function() {
-                    table.reload();
-                });
-            });
-        });*/
         /**
          * 导入按钮
          */
 
+        // $('#ProdInfo001_btn_import').click(function() {
+        //     Joyin.confirm("请确认是否要导入数据？", function () {
+        //         Joyin.uploadFile({pageId:'ProdInfo001'},function(fileName) {
+        //             Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/checkImportData',
+        //                 {fileName: fileName}, function(checkResult) {
+        //                     if (checkResult) {
+        //                         setTimeout( function () {
+        //                                 if(checkResult.data.errorMsg){
+        //                                     Joyin.error(checkResult.data.errorMsg);
+        //                                     return;
+        //                                 }
+        //                                 if (checkResult.data.confirmMsg) {
+        //                                     Joyin.confirm(checkResult.data.confirmMsg, function () {
+        //                                         var data = {
+        //                                             tempList: checkResult.data.correctData
+        //                                         }
+        //                                         Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
+        //                                             function (resultObj) {
+        //                                                 if (resultObj.statuCode.toString() === '200') {
+        //                                                     /** modify by yanya on 20210329 修正导入逻辑**/
+        //                                                     //Joyin.alert("文件导入成功！");
+        //                                                     table.reload();
+        //                                                     return;
+        //                                                 }
+        //                                             });
+        //                                     },{}, function () {
+        //                                         layui.layer.closeAll()
+        //                                         table.reload();
+        //                                     });
+        //                                 }else {
+        //                                     var data = {
+        //                                         tempList: checkResult.data.correctData
+        //                                     }
+        //                                     Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
+        //                                         function (resultObj) {
+        //                                             if (resultObj.statuCode.toString() === '200') {
+        //                                                 /** modify by yanya on 20210329 修正导入逻辑**/
+        //                                                 //Joyin.alert("文件导入成功！");
+        //                                                 table.reload();
+        //                                                 return;
+        //                                             }
+        //                                         });
+        //                                 }
+        //                             }
+        //                             ,1000);
+        //                     }
+        //                 });
+        //         },function() {
+        //             table.reload();
+        //         });
+        //     });
+        // });
+
+
+
         $('#ProdInfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function () {
                 Joyin.uploadFile({pageId:'ProdInfo001'},function(fileName) {
-                    Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/checkImportData',
-                        {fileName: fileName}, function(checkResult) {
-                            if (checkResult) {
-                                setTimeout( function () {
-                                        if(checkResult.data.errorMsg){
-                                            Joyin.error(checkResult.data.errorMsg);
-                                            return;
-                                        }
-                                        if (checkResult.data.confirmMsg) {
-                                            Joyin.confirm(checkResult.data.confirmMsg, function () {
+                    Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
+                        if (checkResult) {
+                            setTimeout( function () {
+                                    if(checkResult.data.errorMsg){
+                                        Joyin.error(checkResult.data.errorMsg);
+                                        return;
+                                    }
+                                    if (checkResult.data.confirmMsg) {
+                                        Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                            if (checkResult.data.confirmMsg2) {
+                                                Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                    var data = {
+                                                        tempList: checkResult.data.correctData
+                                                    }
+                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
+                                                        function (resultObj) {
+                                                            if (resultObj.statuCode.toString() === '200') {
+                                                                table.reload();
+                                                                return;
+                                                            }
+                                                        });
+                                                },{}, function () {
+                                                    layui.layer.closeAll()
+                                                    table.reload();
+                                                });
+                                            }else{
                                                 var data = {
                                                     tempList: checkResult.data.correctData
                                                 }
                                                 Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
                                                     function (resultObj) {
                                                         if (resultObj.statuCode.toString() === '200') {
-                                                            /** modify by yanya on 20210329 修正导入逻辑**/
-                                                            //Joyin.alert("文件导入成功！");
+                                                            table.reload();
+                                                            return;
+                                                        }
+                                                    });
+                                            }
+
+                                        },{}, function () {
+                                            layui.layer.closeAll()
+                                            table.reload();
+                                        });
+                                    }else {
+                                        if (checkResult.data.confirmMsg2) {
+                                            Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                var data = {
+                                                    tempList: checkResult.data.correctData
+                                                }
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
+                                                    function (resultObj) {
+                                                        if (resultObj.statuCode.toString() === '200') {
                                                             table.reload();
                                                             return;
                                                         }
@@ -274,30 +333,28 @@ $(function() {
                                                 layui.layer.closeAll()
                                                 table.reload();
                                             });
-                                        }else {
+                                        }else{
                                             var data = {
                                                 tempList: checkResult.data.correctData
                                             }
                                             Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', data,
                                                 function (resultObj) {
                                                     if (resultObj.statuCode.toString() === '200') {
-                                                        /** modify by yanya on 20210329 修正导入逻辑**/
-                                                        //Joyin.alert("文件导入成功！");
                                                         table.reload();
                                                         return;
                                                     }
                                                 });
                                         }
                                     }
-                                    ,1000);
-                            }
-                        });
+                                }
+                                ,1000);
+                        }
+                    });
                 },function() {
                     table.reload();
                 });
             });
         });
-
 
     });
 }());

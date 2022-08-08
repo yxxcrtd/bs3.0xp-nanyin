@@ -69,7 +69,6 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
 
     @Override
     public void doComplete(HugeInfoPro001Dto dto, OperationType operationType) {
-        dto.setUpdateTime(DateUtil.now());
         dto.setOperateType(operationType.toString());
         String type = dto.getOperateType();
         if (StringUtil.equals(type, "DELETE")) {

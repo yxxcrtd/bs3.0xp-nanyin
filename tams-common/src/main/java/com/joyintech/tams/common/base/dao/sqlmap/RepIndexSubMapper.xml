@@ -48,12 +48,12 @@
             INDEX_VALUE, INDEX_TYPE, INDEX_DATE, 
             INDEX_FILE, INDEX_DETAIL, CREATE_DEPT, 
             CREATE_USER, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, AUDIT_STATUS)
+            UPDATE_TIME, AUDIT_STATUS,END_DATE)
         values (#{id,jdbcType=VARCHAR}, #{priId,jdbcType=VARCHAR}, #{indexName,jdbcType=VARCHAR}, 
             #{indexValue,jdbcType=VARCHAR}, #{indexType,jdbcType=VARCHAR}, #{indexDate,jdbcType=DATE}, 
             #{indexFile,jdbcType=VARCHAR}, #{indexDetail,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{auditStatus,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP}, #{auditStatus,jdbcType=VARCHAR},#{endDate,jdbcType=DATE})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepIndexSub" >
         insert into REP_INDEX_SUB
@@ -188,6 +188,9 @@
             </if>
             <if test="auditStatus != null" >
                 AUDIT_STATUS = #{auditStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null">
+                END_DATE = #{endDate,jdbcType=VARCHAR},
             </if>
         </set>
         where ID = #{id,jdbcType=VARCHAR}
