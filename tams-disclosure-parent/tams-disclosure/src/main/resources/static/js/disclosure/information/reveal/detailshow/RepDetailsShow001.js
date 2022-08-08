@@ -304,7 +304,7 @@ $(function () {
 					return;
 				}
 			}
-			if(modelId==="KFJJZGG_GM"||modelId==='KFJJZGG_GM'){
+			if(modelId==="KFJJZGG_SM"||modelId==='KFJJZGG_SM'){
 				if (params['prodid']===null||params['prodid']===undefined) {
 					Joyin.alert('子产品代码必填!',2);
 					return;
