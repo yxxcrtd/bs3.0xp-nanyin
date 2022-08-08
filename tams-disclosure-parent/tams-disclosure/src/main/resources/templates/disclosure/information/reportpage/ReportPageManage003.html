@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{layout/default}">
+<head>
+<title>页面配置</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<form class="layui-form joyin-form-wrap" id="submitForm">
+			<input type="hidden" id="realName" name="realName" data-th-value="${user?.realName}">
+
+				<div class="layui-collapse" lay-filter="test">
+							<!-- class="layui-colla-content" -->
+							<div class="layui-form-item">
+								<div class="form-inline-wrap">
+									<label class="layui-form-label form-label-wrap">启用禁用<i class="iconfont must" style="display: inline;">*</i></label>
+									<div class="layui-input-inline input-inline">
+										<input type="text" disabled id="workflowType" name="workflowType"
+											placeholder="请选择模板" class="layui-input form-input input-checkbox"
+											   data-th-data-result="${START_OFF}"
+											th:initValue="${workflowType}">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item" id="startDiv">
+								<div class="form-inline-wrap">
+									<label class="layui-form-label form-label-wrap">启用模板<i class="iconfont must" style="display: inline;">*</i></label>
+									<div class="layui-input-inline input-inline">
+										<select id="startRepId" name="startRepId"
+												class="layui-input form-input input-select"
+												data-th-data-result="${REPORT_NAME}" allowClear="true"
+												placeholder="请输入内容" th:initValue="${startRepId}">
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="form-inline-wrap">
+									<label class="layui-form-label form-label-wrap">禁用模板<i class="iconfont must" style="display: inline;">*</i></label>
+									<div class="layui-input-inline input-inline">
+										<select id="offRepId" name="offRepId"
+											class="layui-input form-input input-select" placeholder="请选择"
+											data-th-data-result="${REPORT_NAME2}" allowClear="true" th:initValue="${offRepId}"
+											 >
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<div class="form-inline-wrap">
+									<label class="layui-form-label form-label-wrap">生效时间<i class="iconfont must" style="display: inline;">*</i></label>
+									<div class="layui-input-inline input-inline">
+										<input id="effDate" name="effDate" placeholder="请选择时间"
+											   data-option="{type:'datetime',format:'yyyy-MM-dd HH:mm'}"
+											   class="layui-input form-input input-dateSelect" value="" lay-verify="required"
+											   autocomplete="off" lay-key="1" title="日期格式 [HH:mm]" data-th-Value="${entity?.effDateStr}">
+										<div class="time-icon"><i class="iconfont icon-date"></i></div>
+									</div>
+								</div>
+							</div>
+					<div class="layui-form-item">
+						<label style="float: left">备注<i class="iconfont must" style="display: inline;">*</i></label>
+						<div class="layui-input-inline input-inline" style="margin:0 10px;width: 80%!important;">
+                            <textarea id="remark" name="remark" maxlength="1000" th:text="${entity?.remark}"
+									  class="layui-textarea" placeholder="请输入内容"
+									  th:placeholder="#{SysCommon.placeholder}"></textarea>
+						</div>
+					</div>
+
+				</div>
+			</fieldset>
+			<div class="page-component" th:data-path="@{/disclosure/information/reportpage/ReportUpload001/init}"
+				 th:data-params="|{businessId: '${repId}'}|"></div>
+
+			<div class="pro-module-wrap" id="commentDiv" style="display: none">
+				<div class="pro-module">
+					<div class="pro-module-item">
+						<div class="layui-form-item">
+							<label style="float: left">审批意见<i class="iconfont must" style="display: inline;">*</i></label>
+							<div class="layui-input-inline input-inline" style="margin:0 10px;width: 80%!important;">
+                            <textarea data-ignore="true" id="comment" name="comment" maxlength="1000"
+									  class="layui-textarea" placeholder="请输入内容"
+									  th:placeholder="#{SysCommon.placeholder}"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+		<div class="text-center" filter="false" export="false"
+			style="margin-top: 0px;">
+			<a id="ReportPageManage003_btn_save"
+				class="layui-btn layui-btn-sm btn-save"><i
+				class="iconfont icon-save"></i>保存</a>
+			<a id="ReportPageManage003_btn_submit"
+			   class="layui-btn layui-btn-sm btn-submit"><i
+					class="iconfont icon-submit"></i>提交</a>
+			<a id="reportPage003_btn_cancel"
+				class="layui-btn layui-btn-sm btn-cancel"><i
+				class="iconfont icon-cancel"></i>取消</a>
+		</div>
+	</div>
+
+	<div layout:fragment="script">
+		<script
+			data-th-src="@{/js/disclosure/information/config/reportpage/ReportPageManage003.js}"
+			type="text/javascript"></script>
+	</div>
+</body>
+</html>
