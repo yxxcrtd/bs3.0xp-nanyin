@@ -1,9 +1,9 @@
 package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +63,7 @@ public class MatureReportDataService implements IReportDataService {
 			List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
 			if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
 				BonusReportDto dto = listBonusReport.get(0);
+				matureReportDto.setReportTitle(dto.getReportTitle());
 				matureReportDto.setProdName(dto.getProdName());
 				matureReportDto.setProdId(dto.getProdId());
 				matureReportDto.setProdRe(dto.getProdRe());
@@ -91,7 +92,10 @@ public class MatureReportDataService implements IReportDataService {
 			for ( BonusReportDto report:listBonusReport ) {  //计算每次分红的累计值
 	        	//上一分配基准日
 	        	if ( "01".equals(report.getIssuingWay()) ) {  //开放式
-	        		DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
+	    			Map<String,Object> map = new HashMap<>();
+	    			map.put("prodId", paraMap.get("prodId"));
+	    			map.put("reportDate", report.getSettDate());
+	        		DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(map);
 	        		if ( plan==null  ) { //第一个计划
 	        			report.setLastSettDate(report.geteDate());
 	        		} else {
@@ -101,39 +105,45 @@ public class MatureReportDataService implements IReportDataService {
 	        		report.setLastSettDate(report.geteDate());
 	        	}
 	        	
-	        	Date settDate = DateUtil.parse("2020-01-01");
+	        	Date settDate = DateUtil.parse("2000-01-01");
 
 	        	//运行天数
 	        	if ( report.getLastSettDate().compareTo(report.geteDate())==0 ){
-	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getSettDate(),report.getLastSettDate())+1);
+	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate())+1);
 	        	} else {
-	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getSettDate(),report.getLastSettDate()));
+	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate()));
 	        	}
 	        	
 	        	//可供分配利润
 	        	report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()));
 	
 	        	//业绩比较基准收益
-	        	report.setAchievementBasisProfit(report.getCapital().multiply(report.getAchievementBasisProp()));
+				report.setAchievementBasisProfit(
+						report.getCapital().multiply(report.getAchievementBasisProp())
+						.multiply(new BigDecimal(365))
+						.divide(new BigDecimal(report.getRunDays()),2,BigDecimal.ROUND_DOWN) );
 	        	
 	        	//超出收益
 	        	report.setExcessProfit(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
 	        	
 	        	//业绩报酬
-	        	report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()));
+	        	report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
 	        	
 	        	//应分配利润
 	        	report.setDistributedProfit(report.getDistributableProfit().subtract(report.getFloatFee()));
 	        	
 	        	//单位分红
-	        	report.setUnitProfit(report.getDistributedProfit().divide(report.getCapital(),4,RoundingMode.HALF_UP));
-	        	//年化收益率
-	        	report.setYearYield(report.getUnitProfit().multiply(new BigDecimal(365)).divide(  new BigDecimal(report.getRunDays()),4,RoundingMode.HALF_UP  ));
+				report.setUnitProfit(
+						report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
+
+				// 年化收益率
+				report.setYearYield(report.getUnitProfit().multiply(new BigDecimal(365))
+						.divide(new BigDecimal(report.getRunDays()), 4, BigDecimal.ROUND_DOWN));
 
 	        	accuValue = accuValue.add(report.getUnitProfit());
 	        	custProfit = custProfit.add(report.getDistributedProfit());
 	        	if ( report.getSettDate().compareTo(settDate)>0 ) //取最近的分红计划的年化收益率
-	        		yearYield = report.getYearYield(); 
+	        		yearYield = report.getYearYield().setScale(2,BigDecimal.ROUND_DOWN); 
 		        	
 			}
 			matureReportDto.setSumValueAmt(accuValue);
