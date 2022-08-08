@@ -1,0 +1,172 @@
+/*
+ * 文件名：ReportPageManage002Controller.java
+ * 版权：Copyright 2016-2017 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：中信银行资管系统
+ * 修改人：jiangsucheng
+ * 修改时间：2018年11月6日
+ * 修改内容：新建
+ * 系统名称：中信银行资管系统
+ */
+ 
+package com.joyintech.tams.disclosure.information.config.reportpage.controller;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.web.PlatformDate;
+import com.joyintech.tams.disclosure.busicommon.common.constants.DictCode;
+import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto;
+import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto;
+import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto;
+import com.joyintech.tams.disclosure.information.config.reportpage.service.ReportPageManage002Service;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author jiangsucheng
+ * @version 1.0 2018年11月6日
+ * @see ReportPageManage003Controller
+ * @since 1.0
+ */
+@PageId("ReportPageManage003")
+@Controller
+@RequestMapping("/disclosure/information/reportpage/ReportPageManage003")
+public class ReportPageManage003Controller extends BaseController {
+    
+    @Autowired
+    private ReportPageManage002Service reportPageManage002Service;
+
+    @Autowired
+    private PlatformDate platformDate;
+    
+    /**
+     * 模板启用,禁用界面
+     */
+    private Logger logger = LoggerFactory.getLogger(ReportPageManage003Controller.class);
+    @Override
+    public String init(Model model){
+        this.setSelectOptionToModel(model, DictCode.启用禁用);
+        String repId = this.getParam("repId");
+        String workflowType = this.getParam("workflowType");
+        String workflowId = this.getParam("workflowId");
+
+        String startRepId = repId;
+        String offRepId = repId;
+
+        //默认的启用或者禁用模板
+        List<SelectOptionDto> reportInfos = reportPageManage002Service.getReportInfo();
+        model.addAttribute("REPORT_NAME",JsonUtils.objectArray2Json(reportInfos.toArray()));
+
+        //流程中
+        if(StringUtil.isNotEmpty(workflowId)){
+            Map<String,String> map = new HashMap<String,String>();
+            map.put("workflowId",workflowId);
+            ReportStatusDto entity = reportPageManage002Service.selectReportInfo(map);
+            workflowType = entity.getWorkflowType();
+            startRepId = entity.getStartRepId();
+            offRepId = entity.getOffRepId();
+            model.addAttribute("entity",entity);
+        }
+
+        //如果是启用界面,则处查询出可以禁用的模板
+        if("01".equals(workflowType)){
+            //禁用报表下拉选项
+            List<SelectOptionDto> reportInfos2 = new ArrayList<SelectOptionDto>();
+            for(SelectOptionDto dto: reportInfos){
+                //启用报表id,不能包含在禁用报表列中
+                if(!dto.getId().equals(repId)){
+                    reportInfos2.add(dto);
+                }
+            }
+            //可以禁用的模板
+            model.addAttribute("REPORT_NAME2",JsonUtils.objectArray2Json(reportInfos2.toArray()));
+        } else {
+            //禁用界面,禁用模板选项包含全部
+            model.addAttribute("REPORT_NAME2",JsonUtils.objectArray2Json(reportInfos.toArray()));
+        }
+
+        model.addAttribute("startRepId",startRepId);
+        model.addAttribute("offRepId",offRepId);
+        //启用禁用:01启用;02禁用
+        model.addAttribute("workflowType",workflowType);
+        return super.init(model);
+    }
+
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody @Valid ReportStatusDto dto, BindingResult bindingResult) {
+        String msg = StringUtil.EMPTY;
+        String operateType = dto.getOperateType();
+        if(!StringUtil.isNotEmpty(dto.getEffDate())){
+            msg = "生效日期不能为空";
+            return new AjaxResult(msg, MessageType.错误消息);
+        }
+
+        //生效日必须大于平台日
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String sysDate = sdf.format(platformDate.getSysDate());
+        String effDate = sdf.format(dto.getEffDate());
+        if (effDate.compareTo(sysDate) < 0 ){
+            msg = "生效日必须大于等于平台日";
+            return new AjaxResult(msg, MessageType.错误消息);
+        }
+        return commonCheck(bindingResult, operateType);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    AjaxResult save(@RequestBody ReportStatusDto dto){
+        ProcessParameter<ReportStatusDto> processParameter = new ProcessParameter<>();
+        WorkFlowParameter<ReportStatusDto> params = new WorkFlowParameter<>();
+        processParameter.setWorkFlowParameter(params);
+        processParameter.setPageId(this.getPageId());
+        if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+            processParameter.setOperationType(OperationType.NEW);
+        } else {
+            processParameter.setOperationType(OperationType.MODIFY);
+        }
+        //如果是从新建页面保存,则设置seqno
+        if(StringUtils.isEmpty(dto.getSeqno())){
+            dto.setSeqno(IDGenerator.generate());
+        }
+
+        params.setPageId(this.getPageId());
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(dto.getSeqno());
+        params.setBusinessType("REPSTARTOFF");
+        Date sysDate = platformDate.getSysDate();
+        params.setComment((entity) -> WorkFlowUtil.concatComment(
+                "模板启用禁用"+":"+ DateUtil.format(sysDate,"yyyy-MM-dd")));
+        processParameter.setWorkFlowParameter(params);
+        String msg = reportPageManage002Service.start(processParameter,dto);
+        return new AjaxResult(msg);
+    }
+
+}

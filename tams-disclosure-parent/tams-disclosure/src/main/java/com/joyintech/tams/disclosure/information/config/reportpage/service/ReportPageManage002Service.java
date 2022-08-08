@@ -1,0 +1,179 @@
+/*
+ * 文件名：ReportPageManage001Service.java
+ * 版权：Copyright 2016-2017 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：中信银行资管系统
+ * 修改人：jiangsucheng
+ * 修改时间：2018年11月7日
+ * 修改内容：新建
+ * 系统名称：中信银行资管系统
+ */
+ 
+package com.joyintech.tams.disclosure.information.config.reportpage.service;
+
+import com.google.json.JsonSanitizer;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
+import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
+import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
+import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage001Mapper;
+import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage002Mapper;
+import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto;
+import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto;
+import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.constant.ProcessType;
+import com.joyintech.workflow.engine.entity.FlowEntity;
+import com.joyintech.workflow.engine.entity.WorkflowEntity;
+import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.service.BusinessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author jiangsucheng
+ * @version 1.0 2018年11月7日
+ * @see ReportPageManage002Service
+ * @since 1.0
+ */
+@Service
+public class ReportPageManage002Service extends BaseService<ReportStatusDto> implements BaseProcessService<ReportStatusDto> {
+
+	@Autowired
+	private ReportPageManage001Mapper reportPageManage001Mapper;
+
+	@Autowired
+	private ReportPageManage002Mapper reportPageManage002Mapper;
+
+	@Autowired
+	private InfoComplianceMapper infoComplianceMapper;
+
+	public List<SelectOptionDto> getReportInfo() {
+		List<ReportPageManage001Dto> reportInfoList = reportPageManage002Mapper.getReportInfo();
+		List<SelectOptionDto> listSelectDto = new ArrayList<SelectOptionDto>();
+		for (ReportPageManage001Dto reportInfo : reportInfoList) {
+			SelectOptionDto dto = new SelectOptionDto();
+			dto.setId(reportInfo.getRepId());
+			dto.setText(reportInfo.getReportName());
+			listSelectDto.add(dto);
+		}
+		return listSelectDto;
+	}
+
+	@Override
+	public void doInsert(ReportStatusDto dto, OperationType type) {
+
+		if("01".equals(dto.getWorkflowType())){
+			//流程状态:审核中
+			dto.setRepStatus("01");
+			dto.setStartOff(dto.getWorkflowType());
+			dto.setRepId(dto.getStartRepId());
+			reportPageManage002Mapper.saveReportStatus(dto);
+
+			if(StringUtil.isNotEmpty(dto.getOffRepId())){
+				ReportStatusDto offDto = new ReportStatusDto();
+				//禁用dto
+				BeanUtils.copyProperties(dto,offDto);
+				//设置报表ID
+				offDto.setRepId(dto.getOffRepId());
+				//启用禁用标识:02禁用
+				offDto.setStartOff("02");
+				//流程状态:审核中
+				offDto.setRepStatus("01");
+				offDto.setSeqno(IDGenerator.generate());
+				reportPageManage002Mapper.saveReportStatus(offDto);
+			}
+		}
+		//发起的是禁用流程
+		if("02".equals(dto.getWorkflowType())){
+			//流程状态:审核中
+			dto.setRepStatus("01");
+			dto.setStartOff(dto.getWorkflowType());
+			dto.setRepId(dto.getOffRepId());
+			reportPageManage002Mapper.saveReportStatus(dto);
+		}
+
+		if (CollectionUtils.isNotEmpty(dto.getUploadFileList())) {
+			for (UploadFileDto file : dto.getUploadFileList()){
+				UploadFileDto sysFile = new UploadFileDto();
+				sysFile.setBusinessId(dto.getSeqno());
+				sysFile.setSeqNo(file.getFileNo());
+				sysFile.setFileType("01");
+				reportPageManage002Mapper.updateUplodFile(sysFile);
+			}
+		}
+	}
+
+	/**
+	 *  流程中保存按钮
+	 * */
+	@Override
+	public void doUpdate(ReportStatusDto dto){
+		//保存审批意见
+		if(StringUtil.isNotEmpty(dto.getComment())){
+			String infoSeqno = dto.getSeqno();
+			InfoComplianceCommentDto commentDto = new InfoComplianceCommentDto(IDGenerator.generate(),infoSeqno,dto.getComment());
+			infoComplianceMapper.saveInfoComplianceComment(commentDto);
+		}
+	}
+
+	//流程作废
+	public void doDelete(String workflowId) {
+		Map<String,String> param = new HashMap<>();
+		param.put("workflowId",workflowId);
+		reportPageManage002Mapper.deleteReportStatus(param);
+	}
+
+	@Override
+	public void doComplete(ReportStatusDto dto, OperationType operationType) {
+		//流程状态:审核通过
+		dto.setRepStatus("02");
+		reportPageManage002Mapper.updateReportStatus(dto);
+	}
+
+	public ReportStatusDto selectReportInfo(Map<String,String> map){
+		return reportPageManage002Mapper.selectReportInfo(map);
+	}
+
+	/**
+	 *  流程中需要增加批注,不能进行批量审批
+	 **/
+	@Override
+	public String checkForSubmit(FlowEntity entity, boolean isMutiApproval)  {
+		if (isMutiApproval) {
+			return "模板启用管理不能批量审批";
+		}
+		try{
+			if(ProcessType.SUBMIT.equals(entity.getProcessType()) || ProcessType.BACK.equals(entity.getProcessType())){
+				FlowEntity flowEntity = WorkflowContext.getProcessService().getRuntimeEntity(entity.getProcessInstanceId());
+				BusinessService<WorkflowEntity> businessService = WorkflowContext.getBusinessService(flowEntity.getBusinessService());
+				Class<?> clz = WorkFlowUtil.getClassByBusinessServiceName(flowEntity.getBusinessService());
+				ProcessMark businessEntity = WorkFlowUtil.getBusinessObjectFromRequest(clz, true);
+				Object a = JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(businessEntity.getBusinessData()), GenericsUtils.getSuperClassGenricType(ProxyUtil.getTargetClass(businessService.getClass())));
+				ReportStatusDto infoDto = (ReportStatusDto)a;
+
+				String firstNodeId = infoComplianceMapper.getFirstNodeId(entity.getWorkflowId());
+				if(!entity.getCurNodeId().equals(firstNodeId)){
+					//非第一个节点提交,需要修订意见
+					if(StringUtil.isEmpty(infoDto.getComment())){
+						return "审批意见不能为空!";
+					}
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+}

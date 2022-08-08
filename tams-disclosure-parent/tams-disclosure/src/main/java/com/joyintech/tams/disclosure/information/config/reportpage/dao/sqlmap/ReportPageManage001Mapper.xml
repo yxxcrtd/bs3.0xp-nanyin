@@ -14,19 +14,21 @@
 	</select>
 	
 	<select id="findPage" parameterType="java.util.Map" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto">
-	    select
-	    A.REP_ID repId,
-	    A.TEMPLATE_ID templateId,
-	    A.TEMPLATE_NAME templateName,
-	    A.TEMPLATE_PATH templatePath,
-	    A.REPORT_NAME reportName,
-	    A.UPDATE_USER updateUser,
-	    A.REPORT_TYPE reportType,
-	    A.REPORT_CATEGORY reportCategory,
-	    rfp.NAME reportCategoryName
-	    from REP_INFO A
-	    left join REP_FTP_PATH rfp
-	    on A.REPORT_CATEGORY=rfp.ID
+		select
+		A.REP_ID repId,
+		A.TEMPLATE_ID templateId,
+		A.TEMPLATE_NAME templateName,
+		A.TEMPLATE_PATH templatePath,
+		A.REPORT_NAME reportName,
+		A.UPDATE_USER updateUser,
+		ris.start_off||ris.rep_status reportType,
+		A.REPORT_CATEGORY reportCategory,
+		rfp.NAME reportCategoryName,
+		ris.eff_date updateTime
+		from REP_INFO A
+		left join REP_FTP_PATH rfp
+		on A.REPORT_CATEGORY=rfp.ID
+		left join rep_info_status ris ON A.REP_ID = ris.Rep_Id
 	    <where>
 	        <if test="reportName!=null and reportName!=''">
 				A.REPORT_NAME like concat(concat('%',#{reportName,jdbcType=VARCHAR}),'%')
