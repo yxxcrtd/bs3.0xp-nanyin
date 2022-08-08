@@ -16,12 +16,13 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="AUDIT_STATUS" property="auditStatus" jdbcType="VARCHAR" />
+        <result column="END_DATE" property="endDate" jdbcType="DATE" />
     </resultMap>
     <sql id="Base_Column_List" >
         ID ID, PRI_ID PRI_ID, INDEX_NAME INDEX_NAME, INDEX_VALUE INDEX_VALUE, INDEX_TYPE INDEX_TYPE, 
         INDEX_DATE INDEX_DATE, INDEX_FILE INDEX_FILE, INDEX_DETAIL INDEX_DETAIL, CREATE_DEPT CREATE_DEPT, 
         CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        AUDIT_STATUS AUDIT_STATUS
+        AUDIT_STATUS AUDIT_STATUS,END_DATE
     </sql>
     <sql id="Sql_All_Data" >
         select 
