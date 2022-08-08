@@ -52,6 +52,9 @@
 			  WHERE INFO.STATUS = 'E'
 				AND DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
 				AND DPP.OPEN_END_DATE>TO_DATE(#{baseDate},'yyyy-MM-dd')
+				<if test="setDate != null">
+					AND DPP.OPEN_END_DATE > #{setDate}
+				</if>
 				AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
 			  ORDER BY DPP.OPEN_END_DATE
 		  ) WHERE ROWNUM = 1

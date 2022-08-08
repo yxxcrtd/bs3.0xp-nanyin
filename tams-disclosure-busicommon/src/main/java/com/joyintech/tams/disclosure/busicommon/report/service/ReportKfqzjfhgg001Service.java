@@ -134,7 +134,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         //基准日
                         reportKfqzjfhgg001Dto.setBaseDateT(DateUtil.format(reportKfqHisBonusDto.getSettDate(),DateUtil.ABB_DATE_FORMAT_CN));
                         reportKfqzjfhgg001Dto.setBaseDate(DateUtil.format(reportKfqHisBonusDto.getSettDate()));
-                        //应分配分红金额 = 产品资产净值 - 期末余额
+                        //应分配分红金额 = 可供分配利润-业绩报酬
                         BigDecimal distributableProfit = reportKfqHisBonusDto.getAssetsValue().subtract(reportKfqHisBonusDto.getCapital());
                         //单位分红应分配分红金额/产品期末余额（份额）
                         BigDecimal unitValue = distributableProfit.divide(reportKfqHisBonusDto.getCapital(),4,RoundingMode.HALF_UP);
@@ -173,7 +173,8 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             //设置历史净值当前封闭期
                             bonusDto.setCurRange(curRange);
                             //计算年化收益率
-                            bonusDto.setYield(new BigDecimal(unitProfitStr).multiply(new BigDecimal(365).divide(new BigDecimal(runday),4,RoundingMode.HALF_UP )).setScale(4,RoundingMode.HALF_UP ).toString());
+                            bonusDto.setYield((distributableProfit.multiply(new BigDecimal(365))
+                                            .divide(  new BigDecimal(runday).multiply(reportKfqHisBonusDto.getCapital()), 4, BigDecimal.ROUND_DOWN)).toString());
                             bonusDto.setMunitValue("1.0000");
                             bonusDto.setRedValue("1.0000");
                             bonusDto.setSubValue("1.0000");

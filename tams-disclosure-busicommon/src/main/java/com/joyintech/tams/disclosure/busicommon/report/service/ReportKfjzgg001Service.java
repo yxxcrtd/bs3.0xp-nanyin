@@ -92,6 +92,12 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     //查询后续申购赎回安排：根据产品排期表，展示“申购/赎回确认日”大于当前开放结束日的下一个开放周期的信息；
                     // 若当前已是产品的最后一个开放周期，后续没一个开放周期了，则正常生成表格，表格内容置空，由业务老师手工调整
                     List<ReportOpenPlanDto> openList = reportKfjzgg001Mapper.getOpenList(searchparam);
+
+                    for(int i = 0 ; i < openList.size();i++){
+                        if( DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(openEndDateStr))<=0){
+                            openList.remove(i);
+                        }
+                    }
                     if(openList == null || openList.size() == 0){
                         openList = new ArrayList<>();
                         ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
