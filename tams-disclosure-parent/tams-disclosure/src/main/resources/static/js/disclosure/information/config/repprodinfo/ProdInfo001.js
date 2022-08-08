@@ -189,12 +189,12 @@ $(function() {
             }
             var selArrUseful =[];
             selArr.forEach(v => {
-                if(v.status == 'E'){
+                if(v.status == 'E' || v.status == 'A'){
                     selArrUseful.push(v);
                 }
             })
             if (!selArrUseful || selArrUseful.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
+                Joyin.error(JoyinUtil.getMessage("请选择一条有效或待处理的数据"));
                 return;
             }
 
@@ -212,36 +212,6 @@ $(function() {
         });
 
 
-        // 导入按钮
-        /*$('#ProdInfo001_btn_import').click(function() {
-            Joyin.confirm("请确认是否要导入数据？", function() {
-                var options = {};
-                options.pageId = "ProdInfo001";
-                options.exts = 'xls|xlsx';
-                Joyin.uploadFile(options,function(fileName) {
-                    Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/checkImportData', {fileName: fileName}, function(result) {
-                        if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
-                            var joyinMessages = "";
-                            $.each(result.joyinMessages, function(i, joyinMessage){
-                                joyinMessages += joyinMessage.message + "<br />"
-                            });
-                            Joyin.confirm(joyinMessages, function(){
-                                Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', {fileName: fileName},function () {
-                                    table.reload();
-                                });
-                            });
-                        }else{
-                            Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/importFile', {fileName: fileName},function () {
-                                table.reload();
-                            });
-                        }
-                    });
-                },function() {
-                    table.reload();
-                });
-            });
-
-        });*/
         /**
          * 导入按钮
          */
