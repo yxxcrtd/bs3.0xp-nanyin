@@ -58,7 +58,7 @@
        where ris.ID =#{id}
    </select>
       <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
-     update REP_INDEX_SUB 
+     update REP_INDEX_SUB
        <set >
             <if test="indexName != null" >
                 INDEX_NAME = #{indexName,jdbcType=VARCHAR},
@@ -97,12 +97,12 @@
 		where rjr.JOB_ID=#{id,jdbcType=VARCHAR}
     </select>
     <select id="findIndexIsQuoteById" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
-		select distinct id,indexName 
+		select distinct id,indexName
 		from (
-			select 
+			select
 				ID id,
 				index_name indexName
-	      	from REP_INDEX_PRIMARY 
+	      	from REP_INDEX_PRIMARY
 			where 1=1
 			and ID in
 			<foreach collection="array" open="(" separator="," close=")" item="id">
@@ -120,6 +120,6 @@
 	            #{id}
 	    	</foreach>
 	    	and pri.is_quote = '01' /*被引用*/
-		)
+		) tmp
     </select>
 </mapper>
