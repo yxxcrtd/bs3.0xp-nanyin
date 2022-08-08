@@ -149,7 +149,7 @@ public class ReportKfjzgg001Service implements IReportDataService {
                                 //运行天数
                                 long runday = DateUtil.getBetweenDayNumber(lastOpenPlanDto.getOperationStartDate(),reportOpenPlanDto.getOpenEndDate());
                                 //计算年化收益率 = 当前开放结束日累计净值-上一开放结束日累计净值）/上一开放结束日单位净值 /本期天数*365
-                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT()),BigDecimal.ROUND_DOWN).divide(new BigDecimal(runday)).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_DOWN).toString());
+                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT()),6,BigDecimal.ROUND_HALF_UP).divide(new BigDecimal(runday),6,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_DOWN).toString());
                             }
                         }
                         //判断是否处于第一个周期，第一个周期需要表格置空，由业务手工维护
