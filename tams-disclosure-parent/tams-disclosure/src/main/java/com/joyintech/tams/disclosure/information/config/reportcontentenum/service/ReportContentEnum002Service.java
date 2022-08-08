@@ -18,6 +18,7 @@ import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.RepJobRangeMapper;
+import com.joyintech.tams.common.base.entity.RepIndexSub;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum001Mapper;
@@ -314,6 +315,26 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		
 		
 		
+	}
+
+	public void copyindexDetial(ReportContentEnum002Dto dto){
+		RepIndexSub subDto = repIndexSubMapper.selectByPrimaryKey(dto.getId());
+		List<ReportContentEnum003Dto> ruleList = reportContentEnum002Mapper.findRulePage(subDto.getId());
+		ReportContentEnum002Dto dto2 = new ReportContentEnum002Dto();
+		BeanUtil.copyPropertiesIgnoreNull(dto2,subDto);
+		//复制后的指标重新生成ID
+		dto2.setId(IDGenerator.generate());
+		Date sysDate = new Date();
+		dto2.setUpdateTime(sysDate);
+		dto2.setCreateTime(sysDate);
+		///复制后的规则关联到新的指标id
+		for(ReportContentEnum003Dto ruleDto:ruleList){
+			ruleDto.setId(dto2.getId());
+		}
+		dto2.setSettedRule(ruleList);
+		doinsertOrUpdate(dto2);
+		repIndexSubMapper.insert(dto2);
+
 	}
 
     /**

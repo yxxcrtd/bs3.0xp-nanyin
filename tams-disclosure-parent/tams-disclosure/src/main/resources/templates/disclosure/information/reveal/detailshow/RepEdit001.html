@@ -9,9 +9,9 @@
     <script data-th-src="@{/js/disclosure/WebOffice.js}" type="text/javascript"></script>
     <script type="text/javascript">
 	var WebOfficeObj = new WebOffice2015(); //创建WebOffice对象
-	var webRootUrl = "http://192.168.60.186:8081/tamsyy"; 
-	//var webRootUrl = "http://localhost:8081/tamsyy";
-		//[[${webRoot}]];
+	//var webRootUrl = "http://192.168.60.186:8081/tamsyy"; 
+	//var webRootUrl = webRoot;
+	var webRootUrl = "[[${webRoot}]]";
 
 	</script>
 
@@ -21,7 +21,7 @@
 	{
 		try
 		{
-            WebOfficeObj.ServerUrl = "<%=mServerUrl%>";
+            WebOfficeObj.ServerUrl = webRootUrl;
             WebOfficeObj.UserName = "演示人";
             //WebOfficeObj.FileName = "sample.doc";
             WebOfficeObj.FileType = ".docx";             //FileType:文档类型  .doc  .xls
@@ -47,7 +47,7 @@
                 WebOfficeObj.FileName = filename;
 
                //WebOfficeObj.Alert("tttttttttt");
-               //WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
+               WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
                //WebOfficeObj.Alert(WebOfficeObj.FileName);
 
 
@@ -225,6 +225,7 @@
 	    var REPORT_PASSWORD = [[${REPORT_PASSWORD}]];
 	    var REPORT_SERVER_PATH = [[${REPORT_SERVER_PATH}]];
 	    var cureDate = [[${cureDate}]];
+	    var webRoot=[[${webRoot}]];
     </script>
 </div>
 
