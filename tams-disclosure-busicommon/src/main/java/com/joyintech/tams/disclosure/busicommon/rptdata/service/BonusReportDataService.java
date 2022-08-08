@@ -70,7 +70,7 @@ public class BonusReportDataService implements IReportDataService {
 
 				try {
 					// 可供分配利润
-					report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()));
+					report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()) );
 	
 					// 业绩比较基准收益
 					report.setAchievementBasisProfit(
@@ -82,18 +82,18 @@ public class BonusReportDataService implements IReportDataService {
 					report.setExcessProfit(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
 	
 					// 业绩报酬
-					report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()));
+					report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
 	
 					// 应分配利润
 					report.setDistributedProfit(report.getDistributableProfit().subtract(report.getFloatFee()));
 	
 					// 单位分红
 					report.setUnitProfit(
-							report.getDistributedProfit().divide(report.getCapital(), 4, RoundingMode.HALF_UP));
+							report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
 	
 					// 年化收益率
 					report.setYearYield(report.getUnitProfit().multiply(new BigDecimal(365))
-							.divide(new BigDecimal(report.getRunDays()), 4, RoundingMode.HALF_UP));
+							.divide(new BigDecimal(report.getRunDays()), 4, BigDecimal.ROUND_DOWN));
 				} catch(Exception e) {
 					logger.error("获取分红计算清单异常。",e);
 				}

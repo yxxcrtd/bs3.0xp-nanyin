@@ -25,8 +25,8 @@
 			,trunc(pindex.ASSETS_VALUE/pindex.CAPITAL,4) UNIT_VALUE    /**单位净值**/
             ,PLAN.SETT_DATE      /**本期收益结算日**/			
 		    ,PLAN.ACHIEVEMENT_BASIS   /**业绩基准**/
-			,PLAN.ACHIEVEMENT_BASIS_PROP  /**业绩基准比例**/
-			,PLAN.EXCESS_ACHIEVEMENT_PROP   /**超额收益收取比例**/
+			,PLAN.ACHIEVEMENT_BASIS_PROP/100  ACHIEVEMENT_BASIS_PROP /**业绩基准比例**/
+			,PLAN.EXCESS_ACHIEVEMENT_PROP/100  EXCESS_ACHIEVEMENT_PROP /**超额收益收取比例**/
 		FROM REP_PROD_INFO INFO
 		left join REP_PROD_INFO pinfo on info.P_PROD_ID=pinfo.PROD_ID and pinfo.STATUS='E'
 		LEFT JOIN REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E' and #{reportDate,jdbcType=DATE}=pindex.VALUE_DATE
