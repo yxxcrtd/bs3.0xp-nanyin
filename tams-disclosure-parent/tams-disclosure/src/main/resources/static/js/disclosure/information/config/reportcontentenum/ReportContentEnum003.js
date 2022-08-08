@@ -154,7 +154,6 @@ $(function() {
 	 * @returns
 	 */
 	function addrule() {
-		debugger;
 		var rule = new Object;
 		if($('#ruleType1').select2('data')[0]){
 			rule.ruleType1 = $('#ruleType1').select2('data')[0].id;
@@ -168,6 +167,9 @@ $(function() {
 		if($('#ruleType2').select2('data')[0]){
 			rule.ruleType2 = $('#ruleType2').select2('data')[0].id;
 			rule.ruleType2Name = $('#ruleType2').select2('data')[0].text;
+		} else if(rule.ruleType1 =='FINPROD_NAME'){
+			rule.ruleType2 = '=';
+			rule.ruleType2Name = '=';
 		}
 		else{
 			Joyin.alert("请选择比较条件",7);
@@ -303,7 +305,6 @@ $(function() {
 			Joyin.dialog("产品选择",basePath+"disclosure/information/config/reportcontentenum/ReportContentEnum004/init","80%","80%",
 				{},function () {
 					var finprodIds = $('#finprodIds').data('finprodIds');
-					console.log(finprodIds);
 					if(finprodIds.length ==0){
 						return;
 					}
@@ -325,10 +326,7 @@ $(function() {
 								+ obj[i].ruleType3Name + ";";
 						}
 
-						if (obj[i].ruleType1 == rule.ruleType1
-							&& obj[i].ruleType2 == rule.ruleType2
-							&& obj[i].ruleType3 == rule.ruleType3
-							&& obj[i].ruleType4 == rule.ruleType4) {
+						if (obj[i].ruleType1 == rule.ruleType1) {
 							index++;
 						}
 					}
@@ -438,6 +436,8 @@ $(function() {
 		}
 		//先对选择框进行全部隐藏
 		hideAllSeclt();
+		$('#ruleType2Div').show();
+		$('#ruleType3Div').show();
 		if (ruleType1 == 'PROFIT_TYPE') {
 			$('#profitTypeSelect').show();
 		} else if (ruleType1 == 'RAISE_TYPE') {
@@ -465,6 +465,9 @@ $(function() {
 			$("#investTypeSelect").show();
 		} else if(ruleType1 == 'OPEN_FREQ'){
 			$("#openFreqSelect").show();
+		}  else if(ruleType1 == 'FINPROD_NAME'){
+			$('#ruleType2Div').hide();
+			$('#ruleType3Div').hide();
 		}else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();

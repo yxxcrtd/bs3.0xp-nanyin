@@ -63,9 +63,9 @@ public class BonusReportDataService implements IReportDataService {
 
 				// 运行天数
 				if (report.getLastSettDate().compareTo(report.geteDate()) == 0) {
-					report.setRunDays(DateUtil.getBetweenDayNumber(report.getSettDate(), report.getLastSettDate()) + 1);
+					report.setRunDays(DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate() ) + 1);
 				} else {
-					report.setRunDays(DateUtil.getBetweenDayNumber(report.getSettDate(), report.getLastSettDate()));
+					report.setRunDays(DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate() ));
 				}
 
 				try {

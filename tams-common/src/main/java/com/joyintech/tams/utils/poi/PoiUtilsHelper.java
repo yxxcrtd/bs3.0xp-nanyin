@@ -193,9 +193,9 @@ public class PoiUtilsHelper {
 	            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 	            	v = sdf.format(v);
 	            }
-	            if ( v!=null && v instanceof BigDecimal  ) {
-	            	v = ((BigDecimal) v).setScale(2, RoundingMode.HALF_DOWN);
-	            }
+//	            if ( v!=null && v instanceof BigDecimal  ) {
+//	            	v = ((BigDecimal) v).setScale(2, RoundingMode.HALF_DOWN);
+//	            }
 
 				text = text.replace(key,v==null?" ":v.toString());
 			}

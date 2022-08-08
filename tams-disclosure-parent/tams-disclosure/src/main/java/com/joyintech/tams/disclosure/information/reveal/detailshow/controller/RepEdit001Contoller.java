@@ -111,7 +111,9 @@ public class RepEdit001Contoller extends BaseController {
     	Date reportDate = (Date)params.get("reportDate"); 
     	if ( reportDate ==null )
     		reportDate = params.get("enddate")==null?commonPlatformDateService.getSysDate():DateUtil.parse(params.get("enddate").toString());
-    	 String portnum = params.get("prodid")==null?params.get("pprodid").toString():params.get("prodid").toString();
+    	String portnum ="";
+    	if ( params.get("pprodid")!=null )
+    		 portnum = params.get("prodid")==null?params.get("pprodid").toString():params.get("prodid").toString();
     	String repId = params.get("repid")==null?"":params.get("repid").toString();
     	String webRoot = params.get("webRoot")==null?"":params.get("webRoot").toString();
     	
