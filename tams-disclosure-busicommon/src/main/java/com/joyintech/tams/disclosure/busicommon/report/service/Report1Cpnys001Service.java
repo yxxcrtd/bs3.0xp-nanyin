@@ -42,6 +42,8 @@ public class Report1Cpnys001Service implements IReportDataService {
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         String prodId = "";
+        List<Map<String, Object>> fieldlist = new ArrayList<>();
+        dataMap.put("fieldlist", fieldlist);
         if (StringUtil.equals("batch", paraMap.get("opttype"))) {
             prodId = (String)paraMap.get("prodid");
         } else {
@@ -87,7 +89,6 @@ public class Report1Cpnys001Service implements IReportDataService {
         searchparam.put("regCode", cpnysDto.getRegCode());
         List<ReportProdadjDto> prodadjDtos = reportCpystzMapper.qureyFieldlist(searchparam);
         if (prodadjDtos != null && prodadjDtos.size() > 0) {
-            List<Map<String, Object>> fieldlist = new ArrayList<>();
             prodadjDtos.forEach(x -> {
                 Map<String, Object> fieldmap = new HashMap<>();
                 // 内部销售代码
@@ -103,7 +104,6 @@ public class Report1Cpnys001Service implements IReportDataService {
                         DateUtil.format(x.getEffDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
                 fieldlist.add(fieldmap);
             });
-            dataMap.put("fieldlist", fieldlist);
         }
         dataMap.put("enddate",pubDateStr);
         return result;

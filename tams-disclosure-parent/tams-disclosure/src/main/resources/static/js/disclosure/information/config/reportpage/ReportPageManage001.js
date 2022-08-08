@@ -46,19 +46,7 @@ $(function() {
             {field:'reportCategoryName', title: '报表类别',width:200, sort: true}
             ,{field:'updateUser', width:200, title: '制作人'}
             ,{field:'reportType', title: '状态',sort: true,visible:false}
-            ,{field:'reportTypeName', width:140, title: '状态', align: 'center'
-                ,render: function (data, type, row, meta) {
-                	if(row.reportType == 'Y') {
-                		return '<span class="layui-badge-rim layui-bg-blue">'+row.reportTypeName+'</span>';
-                	}
-                	else if(row.reportType == 'N') {
-                		return '<span class="layui-badge-rim layui-bg-gray">'+row.reportTypeName+'</span>';
-                	}
-                	else {
-                		return '';
-                	}
-                }
-            },
+            ,{field:'reportTypeName', width:140, title: '状态', align: 'center'},
             // {field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt']}
             {field:'operation',width:60, title: 'SysCommon.operation', type:'action',
                 render : function(data, type, row, meta){
@@ -148,27 +136,24 @@ $(function() {
         }
     };
     
-    function effective(flag){
-    	var select = table.getAllCheckedRows();
-    	var selectData = [];
-    	for(var i in select){
-    		selectData.push(select[i].repId)
-    	}
-    	var message = "请选择需要停用的报表";
-		var confirmMessage = "确认停用已选择的报表吗？"
-    	if(flag=='Y'){
-    		message = "请选择需要启用的报表"
-    		confirmMessage = "确认启用已选择的报表吗？"
-    	}
-    	if(selectData.length==0){
-    		Joyin.alert(message, 7,null, null);
-    	}else{
-    		Joyin.confirm(confirmMessage, function(){
-    			 Joyin.ajaxJson('effitive', {flag:flag,selectData:selectData}, function(result) {
-    				   table.reload();
-    			   });
+    function effective(workflowType){
+    	var selRows = table.getAllCheckedRows();
+        var message = "请选择一条记录进行停用";
+        var confirmMessage = "确认停用已选择的报表吗？"
+        if(workflowType==='01'){
+            message = "请选择一条记录进行启用"
+            confirmMessage = "确认启用已选择的报表吗？"
+        }
+        if(selRows != null && selRows.length == 1){
+            Joyin.confirm(confirmMessage, function(){
+                Joyin.dialog("信披模板启用禁用",basePath+"disclosure/information/reportpage/ReportPageManage003/init","70%","70%",
+                    {repId:selRows[0].repId,workflowType:workflowType},function () {
+                            table.reload();
+                })
             });
-    	}
+        } else {
+            Joyin.error(message);
+        }
     };
     
     $(function() {
@@ -184,10 +169,10 @@ $(function() {
         	addNew();
         });
         $('#reportPagel001_btn_effective').click(function() {
-        	effective('Y')
+        	effective('01')
         });
         $('#reportPagel001_btn_neffective').click(function() {
-    		effective('N')
+    		effective('02')
         });
     });
 

@@ -45,6 +45,8 @@ public class Report1Flncp001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
+        List<Map<String, Object>> prodlist = new ArrayList<>();
+        dataMap.put("prodlist", prodlist);
         if (paraMap.get("feename") == null) {
             return result;
         }
@@ -52,8 +54,8 @@ public class Report1Flncp001Service implements IReportDataService {
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("feename", feename);
         if (null != paraMap.get("pprodid")) {
-            List<String> prodlist = StringUtil.splitToList(GlobalConstant.COMMA, paraMap.get("pprodid").toString());
-            searchparam.put("prodlist", prodlist);
+            List<String> prodlist1 = StringUtil.splitToList(GlobalConstant.COMMA, paraMap.get("pprodid").toString());
+            searchparam.put("prodlist", prodlist1);
         }
         String pubDateStr = commonPlatformDateService.getSysDateStr();
         if (null != paraMap.get("enddate")) {
@@ -83,7 +85,6 @@ public class Report1Flncp001Service implements IReportDataService {
         // 费率优惠明细
         List<ReportProdfeeDto> prodfeeDtos = reportCpflyhMapper.qureyProdlist(searchparam);
         if (prodfeeDtos != null && prodfeeDtos.size() > 0) {
-            List<Map<String, Object>> prodlist = new ArrayList<>();
             prodfeeDtos.forEach(x -> {
                 Map<String, Object> prodmap = new HashMap<>();
                 // 产品名称
@@ -102,7 +103,6 @@ public class Report1Flncp001Service implements IReportDataService {
                         DateUtil.format(x.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
                 prodlist.add(prodmap);
             });
-            dataMap.put("prodlist", prodlist);
         }
         dataMap.put("enddate",pubDateStr);
         return result;

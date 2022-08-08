@@ -16,6 +16,7 @@ public class ReportKfqgg001Dto {
     /*增加公告期*/
     private String enddate;
 
+
     public String getEnddate() {
         return enddate;
     }

@@ -44,6 +44,8 @@ public class Report1Cpnfl002Service implements IReportDataService {
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         String prodId = "";
+        List<Map<String, Object>> feelist = new ArrayList<>();
+        dataMap.put("feelist", feelist);
         if (StringUtil.equals("batch", paraMap.get("opttype"))) {
             prodId = (String)paraMap.get("prodid");
         } else {
@@ -89,7 +91,6 @@ public class Report1Cpnfl002Service implements IReportDataService {
         searchparam.put("regCode", cpnflDto.getRegCode());
         List<ReportProdfeeDto> prodfeeDtos = reportCpflyhMapper.qureyFeelist(searchparam);
         if (prodfeeDtos != null && prodfeeDtos.size() > 0) {
-            List<Map<String, Object>> feelist = new ArrayList<>();
             prodfeeDtos.forEach(x -> {
                 Map<String, Object> feemap = new HashMap<>();
                 // 内部销售代码
@@ -104,7 +105,6 @@ public class Report1Cpnfl002Service implements IReportDataService {
                 feemap.put("thisEndFeerate", StringUtil.isBlank(x.getThisEndFeerate()) ? GlobalConstant.SPLIT : x.getThisEndFeerate());
                 feelist.add(feemap);
             });
-            dataMap.put("feelist", feelist);
         }
         dataMap.put("enddate",pubDateStr);
         return result;

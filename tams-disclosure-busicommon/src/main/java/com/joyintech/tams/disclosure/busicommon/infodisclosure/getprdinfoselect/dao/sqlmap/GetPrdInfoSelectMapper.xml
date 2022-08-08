@@ -79,19 +79,30 @@
 		PROD_NAME id
 		from
 		REP_PROD_INFO
-		where STATUS='E'
+		where STATUS='E' and IS_GRADE = '02'
 		<if test="search != null and search != ''">
 			and (PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
 			or PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
 		</if>
+		union all
+		select distinct
+		rp1.PROD_ID text,
+		concat(rp2.PROD_NAME,concat('(',concat(rp1.PROD_NAME,')'))) id
+		from
+		REP_PROD_INFO rp1 left join REP_PROD_INFO rp2 on rp1.P_PROD_ID = rp2.PROD_ID
+		where rp1.STATUS='E' and rp2.IS_GRADE = '01'
+		<if test="search != null and search != ''">
+			and (rp2.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or rp2.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+		</if>
 		<!-- 只取母产品 -->
-		<if test="sonFlag != null and sonFlag != '' and sonFlag == '1'.toString() ">
-			and p_prod_id is null
-		</if>
-		<!-- 只取子产品 -->
-		<if test="sonFlag != null and sonFlag != '' and sonFlag == '2'.toString() ">
-			and p_prod_id is not null
-		</if>
+<!--		<if test="sonFlag != null and sonFlag != '' and sonFlag == '1'.toString() ">-->
+<!--			and p_prod_id is null-->
+<!--		</if>-->
+<!--		&lt;!&ndash; 只取子产品 &ndash;&gt;-->
+<!--		<if test="sonFlag != null and sonFlag != '' and sonFlag == '2'.toString() ">-->
+<!--			and p_prod_id is not null-->
+<!--		</if>-->
 	</select>
 
 

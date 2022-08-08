@@ -193,9 +193,9 @@ public class PoiUtilsHelper {
 	            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 	            	v = sdf.format(v);
 	            }
-	            if ( v!=null && v instanceof BigDecimal  ) {
-	            	v = ((BigDecimal) v).setScale(2, RoundingMode.HALF_DOWN);
-	            }
+//	            if ( v!=null && v instanceof BigDecimal  ) {
+//	            	v = ((BigDecimal) v).setScale(2, RoundingMode.HALF_DOWN);
+//	            }
 
 				text = text.replace(key,v==null?" ":v.toString());
 			}
@@ -262,10 +262,12 @@ public class PoiUtilsHelper {
 		if (imageList.size() > 0) { // 替换图片
 			for (String image : imageList) {
 				String key = "${@image:" + image + "}";
-				int width = Integer.parseInt(pic.get("width").toString());
-				int height = Integer.parseInt(pic.get("height").toString());
-				int picType = getPictureType(pic.get("type").toString());
-				String byteArray = (String) pic.get("content");
+				//NYLCXP-394 图形化界面预览报错问题，map传值有误 modify by zhengbs
+				Map<String,Object> picMap = (Map<String, Object>) pic.get(key);
+				int width = Integer.parseInt(picMap.get("width").toString());
+				int height = Integer.parseInt(picMap.get("height").toString());
+				int picType = getPictureType(picMap.get("type").toString());
+				String byteArray = (String) picMap.get("content");
 
 				FileInputStream fis = null;
 				try {
@@ -300,7 +302,7 @@ public class PoiUtilsHelper {
         //boolean ret =false;
         int beginpos = paracode.indexOf('<');
         if ( beginpos!=-1) {  //是关键字"<"
-            if ( paracode.substring(beginpos+1).indexOf('>')!=-1 )  //完整
+            if ( paracode.substring(beginpos+1).indexOf('>')!=-1 )  //完整啊
                 return true;
             else
                 return false;
