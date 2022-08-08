@@ -858,12 +858,16 @@ delete FROM sys_page WHERE PAGE_ID = 'ReportContentEnum004';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum004', 'DIS', '/disclosure/information/config/reportcontentenum/ReportContentEnum004', 'disclosure/information/config/reportcontentenum/ReportContentEnum004', '', '', '', '02', '02', '报表指标管理产品树', 'system', '', sysdate, 'system', sysdate);
 --增加一级规则和二级,三级规则的关联关系
-DELETE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='RULE_TYPE1' and dict_code ='RULE_TYPE2' and linked_item_code IN('INVEST_TYPE');
+DELETE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='RULE_TYPE1' and dict_code ='RULE_TYPE2' and linked_item_code IN('INVEST_TYPE','ISSUING_TYPE');
 insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RULE_TYPE2', '=', 'RULE_TYPE1', 'INVEST_TYPE', 'admin', '', sysdate, 'admin', sysdate);
-DELETE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='RULE_TYPE1' and dict_code ='RULE_TYPE3' and linked_item_code IN('INVEST_TYPE');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RULE_TYPE2', '=', 'RULE_TYPE1', 'ISSUING_TYPE', 'admin', '', sysdate, 'admin', sysdate);
+DELETE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='RULE_TYPE1' and dict_code ='RULE_TYPE3' and linked_item_code IN('INVEST_TYPE','ISSUING_TYPE');
 insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RULE_TYPE3', '02', 'RULE_TYPE1', 'INVEST_TYPE', 'admin', '', sysdate, 'admin', sysdate);
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RULE_TYPE3', '02', 'RULE_TYPE1', 'ISSUING_TYPE', 'admin', '', sysdate, 'admin', sysdate);
 /**报表指标管理 add by cuiwei 2022-08-07 end**/
 
 /**报表页面管理,模板启用管理 add by cuiwei 2022-08-07 start**/
