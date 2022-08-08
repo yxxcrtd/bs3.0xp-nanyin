@@ -108,9 +108,10 @@ public class ReportPageManage001Dto extends RepInfo {
      * @return reportTypeName.
      */
     public String getReportTypeName() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报表启用状态,
+        /*return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报表启用状态,
             this.reportType)) ? SysDataUtil.getNameFromDataDict(DictCode.报表启用状态,
-                this.reportType) : this.reportType;
+                this.reportType) : this.reportType;*/
+        return this.reportTypeName;
     }
 
     /**
@@ -134,7 +135,7 @@ public class ReportPageManage001Dto extends RepInfo {
     /**
      * 设置 报表类别
      * 
-     * @param 报表类别 报表类别
+     * @param
      */
     public void setReportCategoryName(String reportCategoryName) {
         this.reportCategoryName = reportCategoryName;
