@@ -73,7 +73,10 @@ public class BonusReportDataService implements IReportDataService {
 					report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()));
 	
 					// 业绩比较基准收益
-					report.setAchievementBasisProfit(report.getCapital().multiply(report.getAchievementBasisProp()));
+					report.setAchievementBasisProfit(
+							report.getCapital().multiply(report.getAchievementBasisProp())
+							.multiply(new BigDecimal(365))
+							.divide(new BigDecimal(report.getRunDays()),2,BigDecimal.ROUND_DOWN) );
 	
 					// 超出收益
 					report.setExcessProfit(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
