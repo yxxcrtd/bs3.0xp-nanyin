@@ -107,7 +107,7 @@
 				and h.is_holiday = #{is_holiday}
 			</if>
 			order by h.busi_date desc
-		) WHERE ROWNUM &lt;= 30
+		) WHERE ROWNUM &lt;= 31
 	</select>
 
 </mapper>
