@@ -173,20 +173,22 @@
 	</select>
 
 	<select id="getFeeNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select id ,text from (
 		select
-		distinct DPF.PROD_DISCOUNT_ID id,
-		DPF.FEENAME text
+		DPF.PROD_DISCOUNT_ID id,
+		DPF.FEENAME text,
+		RANK() OVER(PARTITION BY DPF.FEENAME order by DPF.PROD_DISCOUNT_ID) NUM
 		from
 		DIS_PROD_FEEDISCOUNT DPF
 		left join REP_PROD_INFO RPI on DPF.prod_id=RPI.prod_id
 		where DPF.DATA_STATUS='E'
-		<if test="search != null and search != ''">
-			and (DPF.PROD_DISCOUNT_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
-			or DPF.FEENAME like '%' || #{search, jdbcType=VARCHAR} || '%')
-		</if>
-		<if test="pprodid != null and pprodid != ''">
-			and RPI.P_PROD_ID=#{pprodid}
-		</if>
+		<if test="search != null and search != ''">and (DPF.PROD_DISCOUNT_ID like '%' || #{search, jdbcType=VARCHAR} ||
+			'%'</if>
+				<if test="pprodid != null and pprodid != ''">or
+					DPF.FEENAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+					and RPI.P_PROD_ID=#{pprodid}
+				</if>
+		)where NUM=1
 	</select>
 
 	<select id="getElementNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
