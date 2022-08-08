@@ -813,7 +813,7 @@ update sys_page a set a.remark='模板启用管理' where a.page_id='ReportPageM
 -- add by zhengxiaolian 2022-08-05 	模板启用管理 end
 
 /**报表指标管理 add by cuiwei 2022-08-07 start**/
-/*删除多余的指标规则,新增投资性质和产品名称选项*/
+/*新增投资性质和产品名称选项*/
 delete from sys_datadict_list where dict_code ='RULE_TYPE1' and item_code in('INVEST_TYPE','FINPROD_NAME');
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RULE_TYPE1', 'INVEST_TYPE', '投资性质', 10, '0', 'system', '', sysdate, 'system', sysdate);
@@ -845,7 +845,7 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('ReportContentEnum003', '999999', 'PROD_TYPE', '01', '', '', 'system', '', sysdate, 'system', sysdate);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum003', '999999', 'PROD_TYPE', '04', '', '', 'system', '', sysdate, 'system', sysdate);
---发行方式当前页面使用:确认发行、发行成功、发行失败
+--发行状态当前页面使用:确认发行、发行成功、发行失败
 delete from sys_page_dictlist where page_id = 'ReportContentEnum003' and DICT_ID='ISSUE_STATUS' and DICT_ITEM_VAL IN('01','02','03');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum003', '999999', 'ISSUE_STATUS', '01', '', '', 'system', '', sysdate, 'system', sysdate);
@@ -857,6 +857,13 @@ values ('ReportContentEnum003', '999999', 'ISSUE_STATUS', '03', '', '', 'system'
 delete FROM sys_page WHERE PAGE_ID = 'ReportContentEnum004';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum004', 'DIS', '/disclosure/information/config/reportcontentenum/ReportContentEnum004', 'disclosure/information/config/reportcontentenum/ReportContentEnum004', '', '', '', '02', '02', '报表指标管理产品树', 'system', '', sysdate, 'system', sysdate);
+--增加一级规则和二级,三级规则的关联关系
+DELETE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='RULE_TYPE1' and dict_code ='RULE_TYPE2' and linked_item_code IN('INVEST_TYPE');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RULE_TYPE2', '=', 'RULE_TYPE1', 'INVEST_TYPE', 'admin', '', sysdate, 'admin', sysdate);
+DELETE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='RULE_TYPE1' and dict_code ='RULE_TYPE3' and linked_item_code IN('INVEST_TYPE');
+insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RULE_TYPE3', '02', 'RULE_TYPE1', 'INVEST_TYPE', 'admin', '', sysdate, 'admin', sysdate);
 /**报表指标管理 add by cuiwei 2022-08-07 end**/
 
 /**报表页面管理,模板启用管理 add by cuiwei 2022-08-07 start**/
