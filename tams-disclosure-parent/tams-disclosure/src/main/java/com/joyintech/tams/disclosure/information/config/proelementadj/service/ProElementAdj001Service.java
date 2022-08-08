@@ -266,7 +266,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
     }
 
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             format.setLenient(false);
             format.parse(str);
