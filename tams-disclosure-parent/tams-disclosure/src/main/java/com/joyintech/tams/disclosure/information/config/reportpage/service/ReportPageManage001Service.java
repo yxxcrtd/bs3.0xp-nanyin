@@ -11,13 +11,12 @@
 package com.joyintech.tams.disclosure.information.config.reportpage.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
+import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage001Mapper;
 import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +57,9 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
 //    private RepScreenMapper repScreenMapper;
     @Autowired
     private JasparConnectUtilService jasparConnectUtilService;
+
+    @Autowired
+	private ReportPageManage001Mapper reportPageManage001Mapper;
     /**
      */
 //    @Autowired
@@ -72,16 +74,38 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
         
     }
     public List<ReportPageManage001Dto> findPage(Map<String, Object> param) {
-//    	 String reportCategory = (String)param.get("reportCategory");
-//         String[] reportCategoryArr = null;
-//         if(StringUtil.isNotEmpty(reportCategory)){
-//        	 reportCategoryArr = reportCategory.split(",");
-//         }
-//         param.put("reportCategoryArr", reportCategoryArr);
-//        return reportPageManage001Mapper.findPage(param);
-    	return restTemplate.postForList(
+    	 String reportCategory = (String)param.get("reportCategory");
+         String[] reportCategoryArr = null;
+         if(StringUtil.isNotEmpty(reportCategory)){
+         }
+         param.put("reportCategoryArr", reportCategoryArr);
+		 List<ReportPageManage001Dto> dtos = reportPageManage001Mapper.findPage(param);
+		 Date sysDate = new Date();
+         for(ReportPageManage001Dto dto:dtos){
+			if(dto.getReportType() == null){
+				dto.setReportTypeName("初始化");
+			} else if("0101".equals(dto.getReportType())){
+				dto.setReportTypeName("启用流程中");
+			} else if("0201".equals(dto.getReportType())){
+				dto.setReportTypeName("禁用流程中");
+			}else if("0102".equals(dto.getReportType())){
+				if(DateUtil.compareDate(dto.getUpdateTime(),sysDate)>0){
+					dto.setReportTypeName("启用审核通过");
+				} else {
+					dto.setReportTypeName("启用生效");
+				}
+			}else if("0202".equals(dto.getReportType())){
+				if(DateUtil.compareDate(dto.getUpdateTime(),sysDate)>0){
+					dto.setReportTypeName("禁用审核通过");
+				} else {
+					dto.setReportTypeName("禁用生效");
+				}
+			}
+		 }
+         return dtos;
+    	/*return restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ReportPageManage001/findPage",
-                param, ReportPageManage001Dto.class);
+                param, ReportPageManage001Dto.class);*/
     }
     /**
      * 规则数据入库

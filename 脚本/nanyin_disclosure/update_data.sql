@@ -814,19 +814,84 @@ update sys_page a set a.remark='模板启用管理' where a.page_id='ReportPageM
 
 /**报表指标管理 add by cuiwei 2022-08-07 start**/
 /*删除多余的指标规则,新增投资性质和产品名称选项*/
-delete from sys_datadict_list where dict_code ='RULE_TYPE1' and item_code not in('ISSUE_STATUS','IS_INDEX','IS_PERIOD','OPEN_FREQ','PROD_TYPE','RAISE_TYPE');
+delete from sys_datadict_list where dict_code ='RULE_TYPE1' and item_code in('INVEST_TYPE','FINPROD_NAME');
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RULE_TYPE1', 'INVEST_TYPE', '投资性质', 10, '0', 'system', '', sysdate, 'system', sysdate);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RULE_TYPE1', 'FINPROD_NAME', '产品名称', 10, '0', 'system', '', sysdate, 'system', sysdate);
+--产品使用页面规则
+delete from sys_page_dictlist where page_id ='ReportContentEnum003' and DICT_ID ='RULE_TYPE1' and DICT_ITEM_VAL IN('ISSUE_STATUS','IS_INDEX','IS_PERIOD','OPEN_FREQ','PROD_TYPE','RAISE_TYPE','INVEST_TYPE','FINPROD_NAME');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'INVEST_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'FINPROD_NAME', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'ISSUE_STATUS', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'IS_INDEX', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'IS_PERIOD', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'OPEN_FREQ', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'PROD_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'RAISE_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
 
---产品类型只保留净值型、现金管理类
-delete from sys_datadict_list where dict_code ='PROD_TYPE' and item_code not in('01','04');
-
---发行方式只保留确认发行、发行成功、发行失败
-delete from sys_datadict_list where dict_code ='ISSUE_STATUS' and item_code not in('01','02','03');
+--产品类型当前页面使用:净值型、现金管理类
+delete from sys_page_dictlist where page_id = 'ReportContentEnum003' and DICT_ID='PROD_TYPE' and DICT_ITEM_VAL IN('01','04');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'PROD_TYPE', '01', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'PROD_TYPE', '04', '', '', 'system', '', sysdate, 'system', sysdate);
+--发行方式当前页面使用:确认发行、发行成功、发行失败
+delete from sys_page_dictlist where page_id = 'ReportContentEnum003' and DICT_ID='ISSUE_STATUS' and DICT_ITEM_VAL IN('01','02','03');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'ISSUE_STATUS', '01', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'ISSUE_STATUS', '02', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'ISSUE_STATUS', '03', '', '', 'system', '', sysdate, 'system', sysdate);
 
 delete FROM sys_page WHERE PAGE_ID = 'ReportContentEnum004';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum004', 'DIS', '/disclosure/information/config/reportcontentenum/ReportContentEnum004', 'disclosure/information/config/reportcontentenum/ReportContentEnum004', '', '', '', '02', '02', '报表指标管理产品树', 'system', '', sysdate, 'system', sysdate);
 /**报表指标管理 add by cuiwei 2022-08-07 end**/
+
+/**报表页面管理,模板启用管理 add by cuiwei 2022-08-07 start**/
+delete from sys_page_dictlist where page_id ='ReportPageManage002' and DICT_ID ='RULE_TYPE1' and DICT_ITEM_VAL IN('RAISE_TYPE','PROD_TYPE','OPEN_FREQ','IS_PERIOD','IS_INDEX','ISSUE_STATUS','ISSUING_WAY','REP_PROD_TYPE');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'RAISE_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'PROD_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'OPEN_FREQ', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'IS_PERIOD', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'IS_INDEX', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'ISSUE_STATUS', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'ISSUING_WAY', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
+
+delete from sys_page where page_id in ('ReportPageManage003','ReportUpload001');
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportPageManage003', 'DIS', '/disclosure/information/reportpage/ReportPageManage003', 'disclosure/information/reportpage/ReportPageManage003', '', null, null, '02', '01', '模板启用管理', 'system', null, sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportUpload001', 'DIS', '/disclosure/information/reportpage/ReportUpload001', 'disclosure/information/reportpage/ReportUpload001', '', null, null, '02', '01', '模板启用/禁用上传组件', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict where DICT_CODE IN('START_OFF');
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('START_OFF', 'DIS', '启用/禁用', '', '02', 'system', null, sysdate, 'system', sysdate);
+delete from sys_datadict_list where DICT_CODE IN ('START_OFF');
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('START_OFF', '01', '启用', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('START_OFF', '02', '禁用', 2, '0', 'system', null, sysdate, 'system', sysdate);
+delete from sys_datadict_list where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITEM_CODE='REPSTARTOFF';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('COMMON_BUSINESS_TYPE', 'REPSTARTOFF', '模板启用禁用', 1002, '0', 'system', null, sysdate, 'system', sysdate);
+/**报表页面管理,模板启用管理 add by cuiwei 2022-08-07 end**/
