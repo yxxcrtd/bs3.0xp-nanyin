@@ -476,6 +476,15 @@ $(function () {
 					return;
 				}
 			}
+			if(modelId==="FXGG"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+			}
+
+
+
 
 
     	}else{
