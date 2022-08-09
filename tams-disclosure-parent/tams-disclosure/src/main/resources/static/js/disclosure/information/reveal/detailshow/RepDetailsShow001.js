@@ -542,7 +542,7 @@ $(function () {
 		if(backParam !=null){
 			for ( var key in params) {
 				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					Joyin.alert('页面参数发生变化，请重新点击预览',2);
 					return;
 				}
 			}
@@ -649,7 +649,7 @@ $(function () {
 		if(backParam !=null){
 			for ( var key in params) {
 				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					Joyin.alert('页面参数发生变化，请重新点击预览',2);
 					return;
 				}
 			}
@@ -696,7 +696,7 @@ $(function () {
 		if(backParam !=null){
 			for ( var key in params) {
 				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					Joyin.alert('页面参数发生变化，请重新点击预览',2);
 					return;
 				}
 			}
