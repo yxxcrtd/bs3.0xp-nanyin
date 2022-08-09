@@ -87,6 +87,11 @@ public class DisProdAdjust extends BaseEntity {
     private String adjReason;
 
     /**
+     * null
+     */
+    private String adjReason2;
+
+    /**
      * 取得 产品调整编号，主键
      * @return 产品调整编号，主键
      */
@@ -342,5 +347,21 @@ public class DisProdAdjust extends BaseEntity {
      */
     public void setAdjReason(String adjReason) {
         this.adjReason = adjReason == null ? null : adjReason.trim();
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public String getAdjReason2() {
+        return adjReason2;
+    }
+
+    /**
+     * 设置 null
+     * @param adjReason2 null
+     */
+    public void setAdjReason2(String adjReason2) {
+        this.adjReason2 = adjReason2 == null ? null : adjReason2.trim();
     }
 }
