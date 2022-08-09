@@ -145,7 +145,8 @@ public class ProElementAdj001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("getAdjF")
-    public List<SelectOptionDto> getAdjF() {
-        return proElementAdj001Service.getAdjF(RequestUtil.getPageParam());
+    public Page<SelectOptionDto> getAdjF() {
+        Page<SelectOptionDto> temp = proElementAdj001Service.getAdjF(RequestUtil.getPageParam());
+        return temp;
     }
 }

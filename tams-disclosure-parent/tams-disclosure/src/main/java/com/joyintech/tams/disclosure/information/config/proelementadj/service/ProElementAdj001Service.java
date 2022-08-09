@@ -116,8 +116,10 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
     public List<SelectOptionDto> getProdId(Map<String, Object> map) {
         return proElementAdjMapper.getProdId(map);
     }
-    public List<SelectOptionDto> getAdjF(Map<String, Object> map) {
-        return proElementAdjMapper.getAdjF(map);
+    public Page<SelectOptionDto>  getAdjF(Map<String, Object> map) {
+//        return proElementAdjMapper.getAdjF(map);
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")),()->proElementAdjMapper.getAdjF(map));
     }
 
     public Page<SelectOptionDto> getRegistNoList(Map map) {
