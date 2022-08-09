@@ -41,7 +41,7 @@ public class Report1Ysncp001Service implements IReportDataService {
     private ReportCommonService reportCommonService;
 
     @Autowired
-    DisProdAdjustMapper disProdAdjustMapper;
+    private DisProdAdjustMapper disProdAdjustMapper;
 
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
