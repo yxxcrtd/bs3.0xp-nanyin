@@ -99,6 +99,8 @@ public class ReportJzfhbg001Service implements IReportDataService {
                     DisProdBonusplan bonusplan = reportJzfhbg001Mapper.getBonusPlanBySettDate(searchParam);
 
                     if (bonusplan != null) {
+                        //需要重新将查出来的分红业绩基准日塞到map中，因为前台传过来的可能非收益分配基准日，按原来逻辑来看这样可能会导致上一次分红跟当前分红是同一条
+                        searchParam.put("settDate", DateUtil.format(bonusplan.getSettDate()));
                         //设置业绩分配基准日
                         reportJzfhbg001Dto.setSettDate(DateUtil.format(bonusplan.getSettDate()));
                         reportJzfhbg001Dto.setSettDateT(DateUtil.format(bonusplan.getSettDate(), DateUtil.ABB_DATE_FORMAT_CN));
@@ -136,6 +138,7 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             //业绩比较基准收益 = 产品期末余额（份额）*“产品分红到期计划表中的“业绩比较基准比例（%）”*365/运行天数，结果截位法保留2位小数
                             BigDecimal achievementBasisProfit =
                                     capital.multiply(bonusplan.getAchievementBasisProp())
+                                            .divide(new BigDecimal(100))
                                             .multiply(new BigDecimal(365))
                                             .divide(runday, 10, BigDecimal.ROUND_DOWN);
                             //超出部分 = 可供分配利润-业绩比较基准收益

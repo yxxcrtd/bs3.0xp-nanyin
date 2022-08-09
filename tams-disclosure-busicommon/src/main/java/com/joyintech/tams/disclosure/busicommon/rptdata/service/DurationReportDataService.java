@@ -136,6 +136,9 @@ public class DurationReportDataService implements IReportDataService {
 				List<RepProdIndex> listDto = durationReportMapper.selectFinIndex(paraMap);
 				List<Map<String,Object>> listFinIndex = new ArrayList<>();
 				listDto.forEach(item->{
+					item.setAssetsValue(item.getAssetsValue().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setUnitValue(item.getUnitValue().setScale(4,BigDecimal.ROUND_DOWN));
+					item.setUnitValueT(item.getUnitValueT().setScale(4,BigDecimal.ROUND_DOWN));
 					listFinIndex.add(CollectionUtils.bean2Map(item));
 				});
 				reportDto.setListFinIndex(listFinIndex);
@@ -199,14 +202,15 @@ public class DurationReportDataService implements IReportDataService {
 				//2.产品是分级产品：
 				//本产品Z10002【子产品代码1】份额净值为1.0108【产品基础指标：子产品1期末单位净值，保留4位小数】元,Z10030【子产品代码2】份额净值为1.0109【子产品2期末单位净值，保留4位小数】元。】
 				try {
-					String perVal = "份额净值为"+String.valueOf(BigDecimal.ONE);
+					String perVal = "份额净值为"+String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
 					if ( "01".equals(reportDto.getProdType()) ) { //净值型
 						perVal = "份额净值为"+reportDto.getListFinIndex().get(0).get("unitValue").toString();
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
 							perVal = "";
 							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
-								perVal += map.get("prodId")+"份额净值为"+map.get("achieveBasis").toString()+"\n";
+								perVal += map.get("prodId")+"份额净值为"+map.get("unitValue").toString()+"元，";
 							}
+							perVal = perVal.substring(0, perVal.length()-2);
 						}
 					}
 					reportDto.setYjbx(perVal);
@@ -224,6 +228,16 @@ public class DurationReportDataService implements IReportDataService {
 			//产品资产组合
 			try {
 				List<DisProdAsset> listAssetComb = durationReportMapper.selectProdAssetComb (paraMap);	
+				listAssetComb.forEach(item->{
+					item.setEquityAfterRatio(item.getEquityAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setEquityPreRatio(item.getEquityPreRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setFixPreRatio(item.getFixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setFixPreRatio(item.getFixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setFdPreRatio(item.getFdAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setFdPreRatio(item.getFdAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setMixPreRatio(item.getMixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setMixPreRatio(item.getMixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+				});		
 				if ( listAssetComb!=null && listAssetComb.size()>0 )
 					reportDto.setProdAssetComb( CollectionUtils.bean2Map(listAssetComb.get(0)));
 				else
@@ -237,10 +251,25 @@ public class DurationReportDataService implements IReportDataService {
 			try {
 				List<RepAssetsComb> listDto = durationReportMapper.selectProdAssetDetail (paraMap);
 				List<Map<String,Object>> listAssetDetail = new ArrayList<>();
-				int i=1;
-				listDto.forEach(item->{
-					listAssetDetail.add(CollectionUtils.bean2Map(item));
-				});		
+				int i=0;
+				//取10条，但如果占比和公允价值的一样，则全部报出来
+				for ( RepAssetsComb item:listDto ) {
+					BigDecimal pd = BigDecimal.ZERO;
+					BigDecimal fv = BigDecimal.ZERO;
+					if ( i<10 ) {
+						item.setPersonalField(++i+"");
+						listAssetDetail.add(CollectionUtils.bean2Map(item));
+						pd = item.getPdProp();
+						fv = item.getFairValue();
+					} else {
+						if ( item.getPdProp().equals(pd) && item.getFairValue().equals(fv) ) {
+							item.setPersonalField(++i+"");
+							listAssetDetail.add(CollectionUtils.bean2Map(item));
+						} else {
+							break;
+						}
+					}
+				}
 				reportDto.setListAssetsDetail(listAssetDetail);
 			}  catch (Exception e) {
 				logger.error("报表产品资产投资明细信息错误.");

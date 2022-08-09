@@ -93,7 +93,7 @@ public class SettReportDataService implements IReportDataService {
 				//签字日期
 				Date signDate = DateUtil.addDay(prodInfo.getMdate(),1);
 				try {
-					signDate = holidayService.getLastWordDateOfWeek(DateUtil.addDay(prodInfo.getMdate(),1));
+					signDate = holidayService.getLastWordDateOfWeek( holidayService.getNextWorkDate(prodInfo.getMdate()) );
 				} catch( Exception e ) {
 					logger.error("获取签字日期错误.");
 				}
@@ -101,7 +101,7 @@ public class SettReportDataService implements IReportDataService {
 				
 				BigDecimal sumAssetAmt = BigDecimal.ZERO;
 				// 银行存款
-				BigDecimal amt = mapBalance.get("100201");
+				BigDecimal amt = mapBalance.get("100201").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setDeposit(amt.toString()); // 银行存款
 					sumAssetAmt = sumAssetAmt.add(amt);
@@ -111,7 +111,7 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setDeposit(mapBalance.get("100201")==null?"-":mapBalance.get("100201").toString()); // 银行存款
 				
 				// 保证金
-				amt = mapBalance.get("103106");
+				amt = mapBalance.get("103106").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setGuarantyAmt(amt.toString()); // 银行存款
 					sumAssetAmt = sumAssetAmt.add(amt);
@@ -121,7 +121,7 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setGuarantyAmt(mapBalance.get("103106")); // 保证金
 
 				// 应计利息
-				amt = mapBalance.get("10020601");
+				amt = mapBalance.get("10020601").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setIntAmt(amt.toString()); // 银行存款
 					sumAssetAmt = sumAssetAmt.add(amt);
@@ -132,7 +132,7 @@ public class SettReportDataService implements IReportDataService {
 				
 				// 资产合计
 				if ( sumAssetAmt!=null &&  sumAssetAmt.compareTo(BigDecimal.ZERO)!=0 ) {
-					settReportDto.setSumAssetAmt(sumAssetAmt.toString()); // 银行存款
+					settReportDto.setSumAssetAmt(sumAssetAmt.setScale(2,BigDecimal.ROUND_DOWN).toString()); // 银行存款
 				} else {
 					settReportDto.setSumAssetAmt("-");  
 				}
@@ -140,7 +140,7 @@ public class SettReportDataService implements IReportDataService {
 
 				// 管理费
 				BigDecimal sumDebtAmt = BigDecimal.ZERO;
-				amt = mapBalance.get("220601");
+				amt = mapBalance.get("220601").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setMgrFee(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
@@ -150,7 +150,7 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setMgrFee(mapBalance.get("220601")); // 管理费
 				
 				// 应付管理人业绩报酬
-				amt = mapBalance.get("220602");
+				amt = mapBalance.get("220602").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setFloatFee(amt.toString()); 
 					sumDebtAmt = sumDebtAmt.add(amt);
@@ -160,7 +160,7 @@ public class SettReportDataService implements IReportDataService {
 				// settReportDto.setFloatFee(mapBalance.get("220602"));
 				
 				// 应付托管费
-				amt = mapBalance.get("2207");
+				amt = mapBalance.get("2207").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setTrustFee(amt.toString()); 
 					sumDebtAmt = sumDebtAmt.add(amt);
@@ -170,7 +170,7 @@ public class SettReportDataService implements IReportDataService {
 				// settReportDto.setTrustFee(mapBalance.get("2207")); // 托管费
 				
 				//  销售费
-				amt = mapBalance.get("2208");
+				amt = mapBalance.get("2208").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setSaleFee(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
@@ -180,7 +180,7 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setSaleFee(mapBalance.get("2208")); // 销售费
 				
 				// 应付赎回款
-				amt = mapBalance.get("2203");
+				amt = mapBalance.get("2203").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setRedemAmt(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
@@ -190,7 +190,7 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setPayAmt(mapBalance.get("2203")==null?BigDecimal.ZERO:mapBalance.get("2203")); // 应付款回款
 				
 				// 税费
-				amt = mapBalance.get("2221");
+				amt = mapBalance.get("2221").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setTaxFee(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
@@ -200,7 +200,7 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setTaxFee(mapBalance.get("2221")); 
 				
 				// 应付利润
-				amt = mapBalance.get("2232");
+				amt = mapBalance.get("2232").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setProfit(amt.toString()); 
 					sumDebtAmt = sumDebtAmt.add(amt);
@@ -210,7 +210,7 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setProfit(mapBalance.get("2232"));
 				
 				// 其他应付款
-				amt = mapBalance.get("2241");
+				amt = mapBalance.get("2241").setScale(2,BigDecimal.ROUND_DOWN);
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					settReportDto.setOtherPayAmt(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
@@ -226,7 +226,7 @@ public class SettReportDataService implements IReportDataService {
 //						.add(mapBalance.get("2221")).add(mapBalance.get("2232")).add(mapBalance.get("2241"))); 
 				// 负债合计
 				if ( sumDebtAmt!=null &&  sumDebtAmt.compareTo(BigDecimal.ZERO)!=0 ) {
-					settReportDto.setSumDebtAmt(sumDebtAmt.toString()); // 银行存款
+					settReportDto.setSumDebtAmt(sumDebtAmt.setScale(2,BigDecimal.ROUND_DOWN).toString()); // 银行存款
 				} else {
 					settReportDto.setSumDebtAmt("-");  
 				}

@@ -281,16 +281,12 @@ public class ReportDataService {
 	
 	 public RepReveal getRepReveal(Map<String, Object> params) {
 	    	RepReveal repReveal = new RepReveal();
-	    	
-	        String repId=(String)params.get("repid");
-	        repReveal.setRepId(repId);
 	        
 	        String rptType= "";
-	    	
 			if (params.get("uri") != null) 
 				rptType = params.get("uri").toString();
 
-	        repReveal.setRepId(repId);
+	        //repReveal.setRepId(repId);
 	        //repReveal.setProdid(prodId);
 	        //repReveal.setStartDate();
 	        //repReveal.setEndDate(endDate);
@@ -346,6 +342,9 @@ public class ReportDataService {
 			}else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
 				repReveal = reportJzfhbg001Service.getRepReveal(params);
 			}
+	        
+	        String repId=(String)params.get("repid").toString();
+	        repReveal.setRepId(repId);
 	        return repReveal;
 	    }
 	 

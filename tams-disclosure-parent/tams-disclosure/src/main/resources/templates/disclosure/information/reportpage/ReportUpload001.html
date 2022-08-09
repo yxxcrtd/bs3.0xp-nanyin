@@ -61,7 +61,7 @@
 
     $(function() {
         $('#multFileBtn').click(function() {
-            if(FileCommon.getUploadFileInfo().length >=5){
+            if(FileCommon.getUploadFileInfo().length > 10){
                 Joyin.error("最大上传10个附件。");
                 return;
             } else {

@@ -42,7 +42,7 @@ public class MatureReportDataService implements IReportDataService {
 	private BonusReportMapper bonusReportMapper;
 	
 	@Autowired
-	private ChbMktHolidayMapper chbMktHolidayMapper;
+	private HolidayService holidayService;
 
 	/**
 	 * 日志
@@ -70,7 +70,7 @@ public class MatureReportDataService implements IReportDataService {
 				matureReportDto.seteDate(dto.geteDate());
 				
 				if ( "02".equals(dto.getBonusMode()) ) {  //分红方式==到期兑付
-					matureReportDto.setmDate( getNextWorkDate(dto.getSettDate()) );
+					matureReportDto.setmDate( holidayService.getNextWorkDate(dto.getSettDate()) );
 				} else {
 					matureReportDto.setmDate(dto.getSettDate());
 				}
@@ -176,29 +176,6 @@ public class MatureReportDataService implements IReportDataService {
 		}
 
 		return listResult;
-	}
-	
-	/**
-	 * 下一个工作日，不包含当日
-	 * @param currDate
-	 * @return
-	 */
-	private Date getNextWorkDate(Date currDate ) {
-		ChbMktHolidayKey key = new ChbMktHolidayKey();
-		Date iDate = currDate;
-		do {
-			iDate = DateUtil.addDay(iDate, 1);
-			key.setBusiDate(iDate);
-			key.setMarketCode("01");
-			ChbMktHoliday holiday = chbMktHolidayMapper.selectByPrimaryKey(key);
-			if ( holiday==null ) {
-				return iDate;
-			}
-			if ( "0".equals(holiday.getIsHoliday()) ) {  //工作日
-				return iDate;
-			}
-		} while (true);
-
 	}
 	
 	public RepReveal getRepReveal(Map<String, Object> paraMap) {

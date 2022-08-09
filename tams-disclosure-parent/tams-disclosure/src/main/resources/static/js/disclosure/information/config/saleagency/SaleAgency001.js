@@ -33,11 +33,11 @@ $(function(){
         },
         cols:[
             {field:'sequenceNo', visible: false}
-            ,{field:'agencyName', width:'10%', sortField:'dataStatus', title: '代销机构'}
-            ,{field:'agreementVdateStr', width:'10%', sortField:'agreementVdate', title: '协议起始时间'}
-            ,{field:'agreementMdateStr', width:'10%', sortField:'agreementMdate', title: '协议终止时间'}
-            ,{field:'prodSeriesStr', width:'10%', sortField:'prodSeries', title: '产品系列'}
-            ,{field:'updateUser', width:'10%', sortField:'updateUser', title: '更新人'}
+            ,{field:'agencyName', width:'10%', sortField:'AGENCY_NAME', title: '代销机构'}
+            ,{field:'agreementVdateStr', width:'10%', sortField:'AGREEMENT_VDATE', title: '协议起始时间'}
+            ,{field:'agreementMdateStr', width:'10%', sortField:'AGREEMENT_MDATE', title: '协议终止时间'}
+            ,{field:'prodSeriesStr', width:'10%', title: '产品系列'}
+            ,{field:'updateUser', width:'10%', sortField:'UPDATE_USER', title: '更新人'}
             ,{field: 'updateTimeStr', type: 'datetime',width:'15%', sortable:false,title: "更新时间"}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
