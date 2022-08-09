@@ -909,3 +909,10 @@ delete from sys_datadict_list where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITE
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('COMMON_BUSINESS_TYPE', 'REPSTARTOFF', '模板启用禁用', 1002, '0', 'system', null, sysdate, 'system', sysdate);
 /**报表页面管理,模板启用管理 add by cuiwei 2022-08-07 end**/
+
+/**指标阈值配置 add by zhengxiaolian 2022-08-09 start**/
+delete from sys_page where PAGE_ID ='ReportCheck002';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportCheck002', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck002', 'disclosure/information/config/repreportcheck/ReportCheck002', null, null, null, '02', '02', '指标阈值配置', 'system', null, sysdate, 'system', sysdate);
+/**指标阈值配置 add by zhengxiaolian 2022-08-09 end**/

@@ -934,3 +934,12 @@ COMMENT ON COLUMN REP_INFO_STATUS.CREATE_DEPT IS '创建部门';
 /**信披合规留痕,模板临时公告长度修改为100 add by cuiwei 2022-08-07 start*/
 ALtER TABLE INFO_COMPLIANCE MODIFY INFO_NAME VARCHAR2(300);
 /**信披合规留痕,模板临时公告长度修改为100 add by cuiwei 2022-08-07 end*/
+
+/**信息披露表,产品名称长度修改为1000 add by 郑孝廉 2022-08-09 start*/
+ALtER TABLE REP_REVEAL MODIFY PROD_NAME VARCHAR2(1000);
+/**信息披露表,产品名称长度修改为1000 add by 郑孝廉 2022-08-09 end*/
+
+/**报表信息,增加字段 add by 郑孝廉 2022-08-09 start*/
+alter table REP_INFO add (FILE_NAME varchar2(600) default null null);
+comment on column REP_INFO.FILE_NAME is '生成的文件名';
+/**报表信息,增加字段 add by 郑孝廉 2022-08-09 end*/

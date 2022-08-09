@@ -46,18 +46,16 @@
 	</select>
 
 	<select id="getOpenPlanList" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto">
-		SELECT * FROM (
-			  SELECT TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') nextRange,TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') nextMdate
-			  FROM REP_PROD_INFO INFO,DIS_PROD_PLAN DPP
-			  WHERE INFO.STATUS = 'E'
-				AND DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
-				AND DPP.OPEN_END_DATE>TO_DATE(#{baseDate},'yyyy-MM-dd')
-				<if test="setDate != null">
-					AND DPP.OPEN_END_DATE > #{setDate}
-				</if>
-				AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
-			  ORDER BY DPP.OPEN_END_DATE
-		  ) WHERE ROWNUM = 1
+		  SELECT TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd') openStartDate,TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') nextRange,TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') nextMdate
+		  FROM REP_PROD_INFO INFO,DIS_PROD_PLAN DPP
+		  WHERE INFO.STATUS = 'E'
+			AND DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
+			AND DPP.OPEN_END_DATE>TO_DATE(#{baseDate},'yyyy-MM-dd')
+			<if test="setDate != null">
+				AND DPP.OPEN_END_DATE > #{setDate}
+			</if>
+			AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  ORDER BY DPP.OPEN_END_DATE
 	</select>
 
 	<select id="getHisBonusReportList" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqHisBonusDto">
