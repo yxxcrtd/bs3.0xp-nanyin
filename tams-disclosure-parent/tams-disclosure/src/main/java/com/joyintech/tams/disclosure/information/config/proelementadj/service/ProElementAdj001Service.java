@@ -185,15 +185,15 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     else if(!findProdList.contains(rowData.get(1).trim())){
                         errorMsg.append("子产品代码未在产品基本信息表中维护！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(2).trim())){
-                        errorMsg.append("调整此产品要素原因 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
-                        errorMsg.append("此产品要素调整描述文字1 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
-                        errorMsg.append("此产品要素调整描述文字2 必填！");
-                    }
+//                    if (!StringUtil.isNotEmpty(rowData.get(2).trim())){
+//                        errorMsg.append("调整此产品要素原因 必填！");
+//                    }
+//                    if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
+//                        errorMsg.append("此产品要素调整描述文字1 必填！");
+//                    }
+//                    if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
+//                        errorMsg.append("此产品要素调整描述文字2 必填！");
+//                    }
                     if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
                         errorMsg.append("调整要素 必填！");
                     }
@@ -208,15 +208,15 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     }else if(!this.isDateStr(rowData.get(8))){
                         errorMsg.append("生效时间 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(9).trim())){
-                        errorMsg.append("对此要素调整(原因) 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(10).trim())){
-                        errorMsg.append("调整此要素（补充说明文1） 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(11).trim())){
-                        errorMsg.append("调整此要素（补充说明文2） 必填！");
-                    }
+//                    if (!StringUtil.isNotEmpty(rowData.get(9).trim())){
+//                        errorMsg.append("对此要素调整(原因) 必填！");
+//                    }
+//                    if (!StringUtil.isNotEmpty(rowData.get(10).trim())){
+//                        errorMsg.append("调整此要素（补充说明文1） 必填！");
+//                    }
+//                    if (!StringUtil.isNotEmpty(rowData.get(11).trim())){
+//                        errorMsg.append("调整此要素（补充说明文2） 必填！");
+//                    }
                     if (!StringUtil.isNotEmpty(rowData.get(12))){
                         errorMsg.append("报告发布日期 必填！");
                     }else if(!this.isDateStr(rowData.get(12))){
