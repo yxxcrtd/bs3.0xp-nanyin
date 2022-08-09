@@ -205,6 +205,10 @@
              PROD_REGIST_NO text
         FROM
              DIS_PROD_ADJUST
+             where 1=1
+        <if test="search != null and search != ''">
+            and (PROD_REGIST_NO like concat(concat('%',#{search}),'%'))
+        </if>
 
     </select>
     <select id="getProdIdlist" resultType="com.joyintech.framework.select.SelectOptionDto">
