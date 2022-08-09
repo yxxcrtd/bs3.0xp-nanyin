@@ -403,7 +403,7 @@ public class PoiUtilsHelper {
 			table.removeRow(rowNo);  //删除最后一行
 		}
 		
-		if ( "col".equals(rule.getLoopMode()) ) {
+		if ( "col".equals(rule.getLoopMode()) && listData!=null ) {
 			Iterator itr = listData.iterator();
 			int colNo = rule.getStartCol();   //列号
 			int initWidth = table.getRow(rule.getStartRow()).getCell(rule.getStartCol()-1).getWidth()/100;
