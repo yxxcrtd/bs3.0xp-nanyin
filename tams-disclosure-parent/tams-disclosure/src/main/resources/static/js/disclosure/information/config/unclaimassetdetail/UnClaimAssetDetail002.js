@@ -2,26 +2,13 @@
     /**
      * 获取表单参数
      */
-    // var getPageParam = function () {
-    //     //        var paramObj = $.serializeToObject('#submitForm');
-    //     var paramObj = {};
-    //
-    //     // 模拟交易列表
-    //     paramObj.uncliamList = unclaimTable.getAllRows();
-    //
-    //     return paramObj;
-    // }
-
-
-
-
     //画面联动：输入产品名称，带出产品主代码
     var prodNameChange = function() {
-        if (!$('#prodName').select2('data') || $('#prodName').select2('data').length == 0 || !$('#prodName').select2('data')[0]) {
+        if (!$('#prodId').select2('data') || $('#prodId').select2('data').length == 0 || !$('#prodId').select2('data')[0]) {
             return;
         }
-        var finprodId = $('#prodName').select2('data')[0].id;
-        $('#prodId').val(finprodId);
+        var finprodId = $('#prodId').select2('data')[0].id;
+        $('#prodName').val(finprodId);
     };
 
     function saveOrSubmit(operateType) {
@@ -43,13 +30,6 @@
 
     // 非标资产明细列表
     var unclaimTable = $("#unclaimTable").joyintable({
-        // ajax: {
-        //             url: 'selectDetailList',
-        //             type: 'POST',
-        //             data: {prodId: $("#prodId").val().trim(),effDate: $("#effDate").val(),effEndDate : $('#effEndDate').val(),
-        //                 dataStatus:$('#dataStatus').val()
-        //             }
-        //         },
         data: unclaimList == null ? null: unclaimList,
         searchOnInit: true,
         checkbox: false,
@@ -70,6 +50,33 @@
             , { field: 'operation', sortable: false, title: 'SysCommon.operation', type: 'action', buttons: ['delt'] }
         ],
         addbtn: pageModel == PAGE_MODEL_REFERENCE ? false:true,
+        addclick: function(row) {
+            var _row = unclaimTable.getRow(0);
+            if (_row.projectNo==null){
+                Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/selectCount', '', function (result) {
+                    row.projectNo=result['count'];
+                    unclaimTable.renderRow(unclaimTable.getAllRows().length-1, row);
+                });
+            }else {
+                var row2 = unclaimTable.getRow(unclaimTable.getAllRows().length-2);
+                row.projectNo=row2.projectNo+1;
+            }
+        },
+        editCell : function(value, data, field, cell, column){
+               if (value == '无'){
+                   var RowData = {};
+                   RowData.financier='无';
+                   RowData.projectName='无';
+                   RowData.remFinancingPeriod='无';
+                   RowData.incomeDistribute='无';
+                   RowData.trdConstruct='无';
+                   RowData.riskInfo='无';
+                   unclaimTable.clear();
+                   unclaimTable.addRow(RowData);
+                   $('.btn-table-add').hide();
+               }
+            unclaimTable.renderRow(data.LAY_TABLE_INDEX, RowData);
+        },
         done: function () {
             this.bind('click', '.delt', function (data, index) {
                 var object = { selectedItem: [data], operateType: "delete" };
@@ -79,9 +86,10 @@
         }
     });
 
+
     function　init(){
         if(pageModel != PAGE_MODEL_NEW){
-            $("#prodName").attr("disabled",true);
+            $("#prodId").attr("disabled",true);
         }
         //修改时，如果生效日小于等于平台日，生效日不能修改
         if($('#effDate').val() != '' && $('#effDate').val() != null){
@@ -111,7 +119,7 @@
         });
 
         //产品名称联动
-        $('#prodName').change(function() {
+        $('#prodId').change(function() {
             prodNameChange();
         });
 

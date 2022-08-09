@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.serv
 
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
@@ -49,7 +50,11 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
 
         if (OperationType.DELETE.equals(type)) {
             //删除,删除该产品所投该生效区间所有非标资产,逻辑删除,更新数据状态为D：无效
-                 unClaimAssetDetailMapper.deleteOnStatus(dto);
+                HashMap map =new HashMap();
+                map.put("prodId",dto.getProdId());
+                map.put("eddDate", DateUtil.format(dto.getEffDate()));
+                map.put("effEndDate",DateUtil.format(dto.getEffEndDate()));
+                 unClaimAssetDetailMapper.deleteOnStatus(map);
         }
         else if (OperationType.NEW.equals(type)) {//新建
 //            for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()
@@ -89,5 +94,12 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
     public List<UnClaimAssetDetailDto> checkNostdExistByProdId(Map<String, Object> param) {
         param.put("status",DictCodeListExt1.维护数据状态_有效.getValue());
         return unClaimAssetDetailMapper.checkNostdExistByProdId(param);
+    }
+
+
+
+
+    public int selectCount() {
+        return unClaimAssetDetailMapper.selectCount();
     }
 }

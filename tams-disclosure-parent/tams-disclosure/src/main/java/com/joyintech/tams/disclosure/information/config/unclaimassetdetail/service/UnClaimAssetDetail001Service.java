@@ -10,6 +10,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -69,11 +70,6 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
 
 
 
-    @Override
-    public Page<UnClaimAssetDetailDto> selectPageData(Map<String, Object> selectParam) {
-        return selectForPage(selectParam);
-    }
-
 
     /**
      *
@@ -99,20 +95,9 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                 "/com/joyintech/tams/disclosure/information/config/unclaimassetdetail/config/export_unclaimassetdetail.xml").dataSource(
                 DataSourceType.MASERT);
     }
-    /**
-     * 选中导出
-     * @param param
-     * @return
-     */
-    public List<UnClaimAssetDetailDto> selectForExport(Map<String, Object> param) {
-        List<UnClaimAssetDetailDto> investList = null;
-        try {
-            investList = (List<UnClaimAssetDetailDto>)param.get("investList");
-            return unClaimAssetDetailMapper.selectForExport(investList);
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
-        return new ArrayList<UnClaimAssetDetailDto>();
+    @Override
+    public Page<UnClaimAssetDetailDto> selectPageData(Map<String, Object> selectParam) {
+        return this.selectForPage(selectParam);
     }
 
     /**

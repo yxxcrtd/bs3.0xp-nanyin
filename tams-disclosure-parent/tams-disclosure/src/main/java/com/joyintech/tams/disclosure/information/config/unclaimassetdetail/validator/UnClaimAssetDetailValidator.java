@@ -46,11 +46,6 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
                     }
                 }
             }else{
-                /**编辑：
-                 * 若平台日＜生效日，则生效日和生效截止日期都可以修改
-                 * 若生效日≤平台日＜生效截止日期，则生效日不能修改，生效截止日期可以修改
-                 * 若生效截止日期≤平台日，则生效日和生效截止日期都不不能修改
-                 */
                 Map<String,Object> map=new HashMap<>();
                 map.put("nostdAssetId",dto.getNostdAssetId());
                 //根据主键查询被修改的数据
@@ -104,8 +99,8 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
                 for (UnClaimAssetDetailDto unClaimAssetDetailDto : unClaimAssetDetailDtoList) {
                     if(!((DateUtil.compareDate(dto.getEffDate(),unClaimAssetDetailDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),unClaimAssetDetailDto.getEffDate())<0)
                             || (DateUtil.compareDate(dto.getEffDate(),unClaimAssetDetailDto.getEffEndDate())>0 && DateUtil.compareDate(dto.getEffEndDate(),unClaimAssetDetailDto.getEffEndDate())>0))){
-                        resultList.add(new ValidMessage("生效区间范围有重叠！"+"{"+DateUtil.format(unClaimAssetDetailDto.getEffDate(),"yyyyMMdd")
-                                +"-"+DateUtil.format(unClaimAssetDetailDto.getEffEndDate(),"yyyyMMdd")+"}"));
+                        resultList.add(new ValidMessage("生效区间范围有重叠！"+"{"+DateUtil.format(unClaimAssetDetailDto.getEffDate(),"yyyy-MM-dd")
+                                +"-"+DateUtil.format(unClaimAssetDetailDto.getEffEndDate(),"yyyy-MM-dd")+"}"));
                         break;
                     }
                 }

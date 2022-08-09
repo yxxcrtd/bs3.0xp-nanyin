@@ -1,36 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper" >
-<!--    /**-->
-<!--    *页面查询方法-->
-<!--    * @param pageParam-->
-<!--    * @return-->
-<!--    */-->
-<!--    List<UnClaimAssetDetailDto> selectForPage(Map<String, Object> pageParam);-->
 <select id="selectForPage" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
     SELECT distinct
+        DNDC.NOSTD_ASSET_ID,
         DNDC.PROD_ID prodId,
---         count(distinct DNDC.PROD_ID),
         RPI.PROD_NAME prodName,
         DNDC.DATA_STATUS dataStatus,
         DNDC.EFF_DATE effDate,
---         count(distinct DNDC.effDate),
         DNDC.EFF_END_DATE effEndDate,
---         count(distinct DNDC.effEndDate),
---         DNDC.UPDATE_TIME updateTime
-    TO_CHAR(DNDC.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTime
+         DNDC.UPDATE_USER updateUser,
+         DNDC.UPDATE_TIME updateTime
     FROM DIS_NOSTD_CREDITOR DNDC
     LEFT JOIN REP_PROD_INFO RPI
     on DNDC.PROD_ID = RPI.PROD_ID
-    <where> RPI.STATUS = 'E'
+    <where>
         <if test="dataStatus != null and dataStatus != ''">
         AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
         </if>
-        <if test="effDate != null and effDate != ''">
-            <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDate},'YYYY-MM-DD') ]]>
+        <if test="effDateStart != null and effDateStart != ''">
+            <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDateStart},'YYYY-MM-DD') ]]>
         </if>
-        <if test="effEndDate != null and effEndDate != ''">
-            <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDate},'YYYY-MM-DD')]]>
+        <if test="effDateEnd != null and effDateEnd != ''">
+            <![CDATA[AND  DNDC.EFF_DATE <= TO_DATE(#{effDateEnd},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="effEndDateStart != null and effEndDateStart != ''">
+            <![CDATA[AND  DNDC.EFF_END_DATE >= TO_DATE(#{effEndDateStart},'YYYY-MM-DD')]]>
+        </if>
+        <if test="effEndDateEnd != null and effEndDateEnd != ''">
+            <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDateEnd},'YYYY-MM-DD')]]>
         </if>
         <if test="prodId != null and !prodId.equals('')">
             AND DNDC.PROD_ID in
@@ -39,7 +37,6 @@
             </foreach>
         </if>
     </where>
---     GROUP BY DNDC.PROD_ID,RPI.PROD_NAME,DNDC.DATA_STATUS,DNDC.EFF_DATE,DNDC.EFF_END_DATE,DNDC.UPDATE_TIME
 </select>
     <select id="selectDetail" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
         SELECT
@@ -83,7 +80,7 @@
 <!--产品代码产品名称模糊查询-->
     <select id="getProdInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
         select PROD_ID id,
-        nvl(PROD_NAME,PROD_ABBR) text
+         PROD_NAME text
         from REP_PROD_INFO
         where  (P_PROD_ID is null or P_PROD_ID = PROD_ID)
         <if test="dataStatus != null and dataStatus != ''">
@@ -93,6 +90,9 @@
             and (PROD_ID like
             concat(concat('%',#{search}),'%')
             or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+        <if test="initValue != null and initValue != ''">
+           and PROD_ID = #{initValue}
         </if>
     </select>
 <!--查询导出-->
@@ -222,6 +222,9 @@
         where DATA_STATUS='E'
 		and PROD_ID=#{prodId,jdbcType=VARCHAR}
     </select>
+    <select id="selectCount" resultType="int">
+       select count(*) from DIS_NOSTD_CREDITOR where DATA_STATUS='E'
+    </select>
 
     <delete id="deleteOnStatus" parameterType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto" >
         update DIS_NOSTD_CREDITOR DNDC set DATA_STATUS = 'D'
@@ -229,10 +232,10 @@
             <if test="dataStatus != null and dataStatus != ''">
                 AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
             </if>
-            <if test="effDate != null and effDate != ''">
+            <if test="effDate != null">
                 <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDate},'YYYY-MM-DD') ]]>
             </if>
-            <if test="effEndDate != null and effEndDate != ''">
+            <if test="effEndDate != null">
                 <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDate},'YYYY-MM-DD')]]>
             </if>
             <if test="prodId != null and !prodId.equals('')">
@@ -247,11 +250,11 @@
             <if test="dataStatus != null and dataStatus != ''">
                 AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
             </if>
-            <if test="effDate != null and effDate != ''">
-                <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDate},'YYYY-MM-DD') ]]>
+            <if test="effDate != null">
+                <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDateStr},'YYYY-MM-DD') ]]>
             </if>
-            <if test="effEndDate != null and effEndDate != ''">
-                <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDate},'YYYY-MM-DD')]]>
+            <if test="effEndDate != null">
+                <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDateStr},'YYYY-MM-DD')]]>
             </if>
             <if test="prodId != null and !prodId.equals('')">
                 AND DNDC.PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -266,7 +269,6 @@
         TRD_CONSTRUCT,RISK_INFO ,DATA_STATUS,
         DATA_SOURCE,CREATE_USER ,CREATE_TIME,UPDATE_USER,
          UPDATE_TIME
---          ,CREATE_DEPT
          )
         values (#{nostdAssetId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{effEndDate,jdbcType=DATE},
         #{financier,jdbcType=VARCHAR},
@@ -274,8 +276,7 @@
         #{projectName,jdbcType=VARCHAR}, #{remFinancingPeriod,jdbcType=VARCHAR}, #{incomeDistribute,jdbcType=VARCHAR},
             #{trdConstruct,jdbcType=VARCHAR}, #{riskInfo,jdbcType=VARCHAR},
             #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
---          #,{createDept,jdbcType=VARCHAR}
+            #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
             )
     </insert>
 

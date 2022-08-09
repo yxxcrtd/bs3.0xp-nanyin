@@ -31,20 +31,22 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
-                    <label class="layui-form-label form-lable"
-                           data-th-text="#{UnClaimAssetDetail002.effDate}">生效日期</label>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">生效日</label>
                     <div class="layui-input-inline input-inline">
-                        <input name="effDate" id= "effDate" class="layui-input form-input input-dateSelect"
-                               placeholder="请选择、支持区间" data-th-placeholder="#{SysCommon.dateInterval}">
+                        <input id="effDate" name='effDate'
+                               class="layui-input form-input input-dateRangeSelect"
+                               placeholder="请选择时间区间"
+                               data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
-                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
-                    <label class="layui-form-label form-lable"
-                           data-th-text="#{UnClaimAssetDetail002.effEndDate}">生效截止日期</label>
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">生效截止日期</label>
                     <div class="layui-input-inline input-inline">
-                        <input name="effEndDate" id="effEndDate" class="layui-input form-input input-dateSelect"
-                               placeholder="请选择、支持区间" data-th-placeholder="#{SysCommon.dateInterval}">
+                        <input id="effEndDate" name='effEndDate'
+                               class="layui-input form-input input-dateRangeSelect"
+                               placeholder="请选择时间区间"
+                               data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
             </div>

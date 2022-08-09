@@ -305,7 +305,7 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].dataStatus =="02"){
+                if(selArr[i].dataStatus =="D"){
                     return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }

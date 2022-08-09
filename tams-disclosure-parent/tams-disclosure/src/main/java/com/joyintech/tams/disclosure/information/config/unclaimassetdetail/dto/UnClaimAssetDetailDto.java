@@ -4,6 +4,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -49,6 +50,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
 
     /**
      * 更新时间str
+     *
      * @return
      */
     private String updateTimeStr;
@@ -64,7 +66,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     /**
      * 该产品下非标资产列表
      */
-    private  List<UnClaimAssetDetailDto> unclaimList;
+    private List<UnClaimAssetDetailDto> unclaimList;
     /**
      * 选中的数据
      */
@@ -95,19 +97,22 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     }
 
     public String getEffDateStr() {
-         return DateUtil.format(super.getEffDate());
+        return DateUtil.format(super.getEffDate());
     }
+    public String effDateStr;
+    public String effEndDateStr;
 
     public String getEffEndDateStr() {
-       return DateUtil.format(super.getEffEndDate());
+        return DateUtil.format(super.getEffEndDate());
     }
-//    获取数据状态枚举
+
+    //    获取数据状态枚举
     public String getDataStatusStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,this.getDataStatus());
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
     }
 
 
-
+    @NotEmpty(fieldName = "产品名称", groups = {ValidateGroupEdit.class})
     public String getProdName() {
         return prodName;
     }
@@ -131,4 +136,26 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     public void setSelectedItem(List<UnClaimAssetDetailDto> selectedItem) {
         this.selectedItem = selectedItem;
     }
+
+
+    @Override
+    @NotEmpty(fieldName = "产品主代码", groups = {ValidateGroupEdit.class})
+    public String getProdId() {
+        return super.getProdId();
+    }
+
+    @Override
+    @NotEmpty(fieldName = "生效日", groups = {ValidateGroupEdit.class})
+    public Date getEffDate() {
+        return super.getEffDate();
+    }
+
+    @Override
+    @NotEmpty(fieldName = "生效截止日", groups = {ValidateGroupEdit.class})
+    public Date getEffEndDate() {
+        return super.getEffEndDate();
+    }
+
+
+
 }

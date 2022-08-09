@@ -123,30 +123,17 @@ public class UnClaimAssetDetail001Controller extends BaseController {
      * @see
      * @since 1.0
      */
+    /**
+     * 导出
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() {
-        Map<String, Object> param = RequestUtil.getParameters(getRequest());
-        Date sysDate = DateUtil.platDateFromCache()==null?new Date():DateUtil.platDateFromCache();//平台日期
-        if(param.containsKey("keyList")){
-            //导出选中行
-            String keyList = param.get("keyList").toString();
-            try {
-                List<UnClaimAssetDetailDto> unClaimAssetDetailDtoList = JsonUtils.json2List(keyList,UnClaimAssetDetailDto.class);
-                param.put("investList", unClaimAssetDetailDtoList);
-            } catch (IOException e) {
-                logger.error(e.getMessage(),e);
-            }
-            List<UnClaimAssetDetailDto> dtoList = unClaimAssetDetail001Service.selectForExport(param);
-            File outFile = unClaimAssetDetail001Service.makeFile(
-                    "/com/joyintech/tams/disclosure/information/config/unclaimassetdetail/config/export_unclaimassetdetail.xml", dtoList);
-            return ExportUtil.export(
-                    DictCodeListExt4.共通业务类型_非标债权类资产明细维护.getCodeName() + GlobalConstant.UNDER_LINE
-                            + DateUtil.format(sysDate,"yyyyMMdd") +"."+ FileNameUtil.getFileExtName(outFile),
-                    outFile, true);
-        }else{
-            //todo:框架中导出的excel文件与需求中的不符
-            return unClaimAssetDetail001Service.export(this.getPageId(),param);
-        }
+    public ResponseEntity<byte[]> export(){
+        return unClaimAssetDetail001Service.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
     }
     /**
      * 导入check：单次导入数据量

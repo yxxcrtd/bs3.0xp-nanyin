@@ -99,7 +99,7 @@ public interface UnClaimAssetDetailMapper  {
      * @param record
      * @return
      */
-    int deleteOnStatus(UnClaimAssetDetailDto record);
+    int deleteOnStatus(Map map);
 
     /**
      * 物理删除（以产品维度，删除多个非标资产）
@@ -114,4 +114,5 @@ public interface UnClaimAssetDetailMapper  {
     int updateByKey(UnClaimAssetDetailDto record);
 
 
+    int selectCount();
 }

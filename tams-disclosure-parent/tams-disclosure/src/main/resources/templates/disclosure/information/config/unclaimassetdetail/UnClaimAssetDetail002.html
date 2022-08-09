@@ -111,12 +111,11 @@
                                     <input type="text" id="nostdAssetId" name="nostdAssetId" class="layui-input form-input" data-th-value="${entity?.nostdAssetId}" style = "display: none">
                                     <label class="layui-form-label form-lable mst-lable">产品名称</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select id="prodName" name="prodName"
-                                                class="layui-input form-input input-select"
+                                        <select id="prodId" name="prodId" class="input-select"
+                                                data-th-initValue="${entity?.prodId}"
                                                 data-th-data-url="@{/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/getProdInfo}"
-                                                required="required" allowClear="true" placeholder="请输入内容"
-                                                data-th-placeholder="#{SysCommon.placeholder}" searchable="true"
-                                                data-th-initValue='${entity?.prodId}'>
+                                                placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                                allowClear="true" required>
                                         </select>
                                     </div>
                                 </div>
@@ -125,8 +124,8 @@
                                     <label class="layui-form-label form-lable mst-lable">产品主代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" class="layui-input form-input"
-                                               data-th-placeholder="#{SysCommon.placeholder}" id="prodId"
-                                               name="prodId" data-th-value="${entity?.prodId}" disabled required="required"/>
+                                               data-th-placeholder="#{SysCommon.placeholder}" id="prodName"
+                                               name="prodName" data-th-value="${entity?.prodName}" disabled required="required"/>
                                     </div>
                                 </div>
                             </div>
