@@ -100,7 +100,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     // 注：若产品临近到期后续已没有6个开放周期，则有几个周期展示几个周期；若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
                     List<ReportOpenPlanDto> openList = reportZqxkfgg001Mapper.getOpenList(searchparam);
                     for(int i = 0 ; i < openList.size();i++){
-                        if( DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(announceDate))<=0){
+                        if(openList.size() == 1 && DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(announceDate))<=0){
                             openList.remove(i);
                         }
                     }

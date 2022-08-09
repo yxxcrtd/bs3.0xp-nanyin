@@ -197,7 +197,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     reportKfqzjfhgg001Dto.setList(list);
                     //若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
                     for(int i = 0 ; i < openPlanList.size();i++){
-                        if( DateUtil.parse(openPlanList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(baseDate))<=0){
+                        if( openPlanList.size() == 1 &&  DateUtil.parse(openPlanList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(baseDate))<=0){
                             openPlanList.remove(i);
                         }
                     }

@@ -94,7 +94,7 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     List<ReportOpenPlanDto> openList = reportKfjzgg001Mapper.getOpenList(searchparam);
 
                     for(int i = 0 ; i < openList.size();i++){
-                        if( DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(openEndDateStr))<=0){
+                        if(openList.size() == 1 &&  DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(openEndDateStr))<=0){
                             openList.remove(i);
                         }
                     }
