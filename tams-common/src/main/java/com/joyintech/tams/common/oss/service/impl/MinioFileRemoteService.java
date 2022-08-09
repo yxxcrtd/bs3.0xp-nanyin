@@ -116,7 +116,7 @@ public class MinioFileRemoteService implements FileRemoteService {
         if(StringUtils.isBlank(filePath)){
             return null;
         }
-        if(filePath.startsWith("http:")){
+        if(filePath.startsWith("http:")||filePath.startsWith("https:")){
             return minioTemplate.downLoadFile(filePath);
         }else{
             FileInputStream fis = null;
