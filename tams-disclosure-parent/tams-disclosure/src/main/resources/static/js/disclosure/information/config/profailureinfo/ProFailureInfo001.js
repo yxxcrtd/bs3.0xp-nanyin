@@ -195,6 +195,11 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             }
+            for(var i=0;i<selArr.length;i++){
+                if(selArr[i].dataStatus =="D"){
+                    return Joyin.error("只能删除有效数据，请重新选择");
+                }
+            }
             var object = {selectedItem: selArr, operateType: "delete"};
             Joyin.ajaxJson(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
