@@ -52,7 +52,7 @@
 								<div class="form-inline-wrap">
 									<label class="layui-form-label form-label-wrap">生效时间<i class="iconfont must" style="display: inline;">*</i></label>
 									<div class="layui-input-inline input-inline">
-										<input id="effDate" name="effDate" placeholder="请选择时间"
+										<input id="effDateStr" name="effDateStr" placeholder="请选择时间"
 											   data-option="{type:'datetime',format:'yyyy-MM-dd HH:mm'}"
 											   class="layui-input form-input input-dateSelect" value="" lay-verify="required"
 											   autocomplete="off" lay-key="1" title="日期格式 [HH:mm]" data-th-Value="${entity?.effDateStr}">
@@ -70,9 +70,11 @@
 					</div>
 
 				</div>
-			</fieldset>
 			<div class="page-component" th:data-path="@{/disclosure/information/reportpage/ReportUpload001/init}"
 				 th:data-params="|{businessId: '${repId}'}|"></div>
+
+			<div class="page-component" th:data-path="@{/disclosure/information/reveal/detailshow/RepDetailsShow003/init}"
+				 th:data-params="|{repId: '${repId}',repName:'测试'}|"></div>
 
 			<div class="pro-module-wrap" id="commentDiv" style="display: none">
 				<div class="pro-module">

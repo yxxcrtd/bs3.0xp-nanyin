@@ -34,6 +34,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +75,11 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 
 	@Override
 	public void doInsert(ReportStatusDto dto, OperationType type) {
+		try{
+			dto.setEffDate(DateUtil.parseDate(dto.getEffDateStr(),"yyyy-MM-dd HH:mm"));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 
 		if("01".equals(dto.getWorkflowType())){
 			//流程状态:审核中

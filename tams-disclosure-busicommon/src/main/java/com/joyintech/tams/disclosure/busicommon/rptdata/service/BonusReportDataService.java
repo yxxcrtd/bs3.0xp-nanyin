@@ -92,8 +92,9 @@ public class BonusReportDataService implements IReportDataService {
 							report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
 	
 					// 年化收益率
-					report.setYearYield(report.getUnitProfit().multiply(new BigDecimal(365))
-							.divide(new BigDecimal(report.getRunDays()), 4, BigDecimal.ROUND_DOWN));
+					report.setYearYield(
+							report.getDistributedProfit().multiply(new BigDecimal(365))
+							.divide(  new BigDecimal(report.getRunDays()).multiply(report.getCapital()), 4, BigDecimal.ROUND_DOWN));
 				} catch(Exception e) {
 					logger.error("获取分红计算清单异常。",e);
 				}

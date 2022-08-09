@@ -1,7 +1,7 @@
 (function() {
 
 	function saveOrSubmit(operateType) {
-		var effDate = $('#effDate').val();
+		var effDate = $('#effDateStr').val();
 		if(!effDate){
 			Joyin.error("生效日期不能为空!");
 			return;

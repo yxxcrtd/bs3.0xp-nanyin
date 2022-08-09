@@ -92,6 +92,12 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     //查询后续申购赎回安排：根据产品排期表，展示“申购/赎回确认日”大于当前开放结束日的下一个开放周期的信息；
                     // 若当前已是产品的最后一个开放周期，后续没一个开放周期了，则正常生成表格，表格内容置空，由业务老师手工调整
                     List<ReportOpenPlanDto> openList = reportKfjzgg001Mapper.getOpenList(searchparam);
+
+                    for(int i = 0 ; i < openList.size();i++){
+                        if( DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(openEndDateStr))<=0){
+                            openList.remove(i);
+                        }
+                    }
                     if(openList == null || openList.size() == 0){
                         openList = new ArrayList<>();
                         ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
@@ -143,7 +149,7 @@ public class ReportKfjzgg001Service implements IReportDataService {
                                 //运行天数
                                 long runday = DateUtil.getBetweenDayNumber(lastOpenPlanDto.getOperationStartDate(),reportOpenPlanDto.getOpenEndDate());
                                 //计算年化收益率 = 当前开放结束日累计净值-上一开放结束日累计净值）/上一开放结束日单位净值 /本期天数*365
-                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(runday)).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_HALF_UP).toString());
+                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT()),10,BigDecimal.ROUND_DOWN).divide(new BigDecimal(runday),10,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_DOWN).toString());
                             }
                         }
                         //判断是否处于第一个周期，第一个周期需要表格置空，由业务手工维护

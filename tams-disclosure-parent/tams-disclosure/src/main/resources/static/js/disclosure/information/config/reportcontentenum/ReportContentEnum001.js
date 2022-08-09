@@ -244,7 +244,7 @@ $(function () {
 		                html +='<i class="btn layui-icon delete" title="删除">&#xe640;</i>';
 		            }
 					if(purviewElements.indexOf('_manual')!=-1){
-						html +="<i class = 'iconfont icon-startup manual' title='复制'></i>";
+						html +="<i class = 'iconfont icon-copy manual' title='复制'></i>";
 					}
 		            return html;
 		        } 

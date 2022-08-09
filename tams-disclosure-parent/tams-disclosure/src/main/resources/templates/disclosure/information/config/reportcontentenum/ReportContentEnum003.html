@@ -64,8 +64,8 @@
 						style="width: 15% !important;">
 						<input type="text" id="ruleType1" name="ruleType1"
 							class="layui-input form-input input-select" placeholder="请输字段值"
-							data-th-data-result="${RULE_TYPE1}" allowClear="true"
-							><!--childrenIds="ruleType2,ruleType3"--> </input>
+							data-th-data-result="${RULE_TYPE1}" allowClear="true" childrenIds="ruleType2,ruleType3"
+							></input>
 					</div>
 					<div class="layui-input-inline input-inline" id="ruleType2Div"
 						style="width: 15% !important;">
@@ -172,6 +172,13 @@
 								   class="layui-input form-input input-select"
 								   placeholder="请选择开放频率" data-th-formatoption="false"
 								   data-th-data-result="${OPEN_FREQ}" allowClear="true">
+							</input>
+						</div>
+						<div id="issuingWaySelect">
+							<input id="issuingWay" name="issuingWay"
+								   class="layui-input form-input input-select"
+								   placeholder="请选择发行方式" data-th-formatoption="false"
+								   data-th-data-result="${ISSUING_WAY}" allowClear="true">
 							</input>
 						</div>
 					</div>

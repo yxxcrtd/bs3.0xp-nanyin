@@ -106,7 +106,7 @@
 		,dpa.MIX_AFTER_RATIO
 		from DIS_PROD_ASSET dpa
 		where
-		dpa.DATA_STATUS='01'
+		dpa.DATA_STATUS='E'
 		<if test="prodid!=null">
 			and PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>

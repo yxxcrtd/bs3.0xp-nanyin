@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.reveal.reportreveal.dao.ReportRevealManageEX001Mapper">
+    <update id="updateRevealStatusById">
+		update REP_REVEAL
+	      set
+	      REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR},
+	      REVEAL_DATE = #{revealDate,jdbcType=TIMESTAMP},
+	      REVEAL_USER = #{revealUser,jdbcType=VARCHAR},
+	      UPDATE_TIME = sysdate,
+	      UPDATE_USER = #{revealUser,jdbcType=VARCHAR}
+	      where id = #{id,jdbcType=VARCHAR}
+	</update>
+    <select id="getRepRevealList"
+            resultType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+    SELECT
+		reveal.ID id,
+		reveal.REP_ID repId,
+		reveal.REPORT_NAME reportName,
+		reveal.REPORT_CATEGORY reportCategory,
+		reveal.PROD_NAME prodName,
+		reveal.PRODID prodid,
+		reveal.END_DATE endDate,
+		reveal.START_DATE startDate,
+		reveal.SYS_FILENAME sysFilename,
+		reveal.SYS_FILEPATH sysFilepath,
+		reveal.SYS_FILENAME_DATE sysFilenameDate,
+		reveal.FILEPATH filepath,
+		reveal.TIME time,
+		reveal.FILENAME filename,
+		reveal.CONFIRM_STATUS confirmStatus,
+		reveal.CONFIRM_USER confirmUser,
+		reveal.CONFIRM_DATE confirmDate,
+		reveal.REVEAL_STATUS revealStatus,
+		reveal.REVEAL_DATE revealDate,
+		reveal.REVEAL_USER revealUser,
+		reveal.IS_REVEAL isReveal,
+		reveal.IS_CONFIRM isConfirm,
+		reveal.DETAIL detail,
+		reveal.REVEAL_CHANNEL revealChannel,
+		reveal.REVEAL_END_DATE revealEndDate,
+		dsa.AGENCY_NAME agencyName
+	FROM REP_REVEAL reveal
+    LEFT JOIN DIS_PROD_AGENCY dpa on dpa.PROD_ID = reveal.PRODID
+    LEFT JOIN DIS_SALE_AGENCY dsa on dsa.SEQUENCE_NO = dpa.AGENCY_ID
+    WHERE 1=1
+        <if test="ids != null and ids.size()>0">
+            AND	reveal.id in
+            <foreach collection="ids" item="item" open="(" close=")"
+                     separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>

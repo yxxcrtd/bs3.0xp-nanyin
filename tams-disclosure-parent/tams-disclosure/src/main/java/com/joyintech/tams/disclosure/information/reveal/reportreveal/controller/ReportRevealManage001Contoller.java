@@ -428,4 +428,27 @@ public class ReportRevealManage001Contoller extends BaseController {
         }
 		return ExportUtil.export(exportFileName, outFile, true);
     }
+
+
+    /**
+     * 信息披露
+     * @param dto
+     * @param result
+     * @param operateType
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("updateRevealStatus")
+    public AjaxResult updateRevealStatus(@Valid ReportConfirmManage001Dto dto, BindingResult result, String operateType) {
+        try {
+            String data=dto.getData();
+            List<ReportConfirmManage001Dto> listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
+            reportRevealManage001Service.updateRevealStatusEX(listdto);
+        }
+        catch (Exception e) {
+            logger.error("error:",e);
+            return new AjaxResult(e.getMessage());
+        }
+        return  new AjaxResult("披露成功。");
+    }
 }
