@@ -136,6 +136,7 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             //业绩比较基准收益 = 产品期末余额（份额）*“产品分红到期计划表中的“业绩比较基准比例（%）”*365/运行天数，结果截位法保留2位小数
                             BigDecimal achievementBasisProfit =
                                     capital.multiply(bonusplan.getAchievementBasisProp())
+                                            .divide(new BigDecimal(100))
                                             .multiply(new BigDecimal(365))
                                             .divide(runday, 10, BigDecimal.ROUND_DOWN);
                             //超出部分 = 可供分配利润-业绩比较基准收益
