@@ -81,16 +81,16 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 	 * 信息披露-自动
 	 * @param sysBatchExecInfo
 	 */
-	public void generateData(SysBatchExecInfo sysBatchExecInfo) {
+	public void generateData(SysBatchExecInfo sysBatchExecInfo) throws IOException {
 		//todo:zhouqiang 替换批处理名称
-		setBatchBeanName(BatchBeanName.信息披露生成报表并发送批处理);
+		setBatchBeanName(BatchBeanName.信披单据zip包生成发送批处理);
 		logInfoBatchStart();
 		//获取需要自动披露的披露列表
 		//1.查询确认状态为“已确认”且披露状态为“未披露”且配置为“自动披露”的信披单据的信披单据
 		String holidayIsWork = CacheUtil.getSysParam(ReportGlobalConstant.HOLIDAY_IS_WORK);
 		List<InfoDiscAutoRevealDto> revealList = new ArrayList<InfoDiscAutoRevealDto>();
 		//系统设置节假日执行时，直接执行；设置为不执行时，则判断是否为节假日，为节假日则不执行
-		if (StringUtil.equals(holidayIsWork, DictCodeList.是否_是.getValue())) {
+		/*if (StringUtil.equals(holidayIsWork, DictCodeList.是否_是.getValue())) {
 			revealList = infoDiscAutoRevealEXMapper.getRepRevealList(DictCodeListExt2.披露状态_未披露.getValue(),
 					DictCodeListExt1.披露确认状态_已确认.getValue(), DictCodeListExt2.披露方式_自动.getValue());
 		} else {
@@ -99,7 +99,10 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 				revealList = infoDiscAutoRevealEXMapper.getRepRevealList(DictCodeListExt2.披露状态_未披露.getValue(),
 						DictCodeListExt1.披露确认状态_已确认.getValue(), DictCodeListExt2.披露方式_自动.getValue());
 			}
-		}
+		}*/
+		//查询要处理的信披单据，没有关联代销机构的产品对应的单据，不进行披露
+		revealList = infoDiscAutoRevealEXMapper.getRepRevealList(DictCodeListExt2.披露状态_未披露.getValue(),
+				DictCodeListExt1.披露确认状态_已确认.getValue(), DictCodeListExt2.披露方式_自动.getValue());
 		//按代销机构分类生成压缩包
 		generateAndSendPackageByAgency(revealList);
 	}
@@ -108,21 +111,58 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 	 * 根据产品代销机构分类生成压缩包并上传服务器
 	 * @param revealList
 	 */
-	private void generateAndSendPackageByAgency(List<InfoDiscAutoRevealDto> revealList) {
+	private void generateAndSendPackageByAgency(List<InfoDiscAutoRevealDto> revealList) throws IOException {
 		if(revealList!=null && revealList.size()>0){
 			Map<String, List<InfoDiscAutoRevealDto>> map = revealList.stream().collect(Collectors.groupingBy(InfoDiscAutoRevealDto::getSaleAgency));
-			map.forEach((key, infoDiscAutoRevealList) -> {
-				//压缩包名称：代销机构名称-yyyyMMdd.zip
-				if(!StringUtil.isEmptyList(infoDiscAutoRevealList)){
-					try {
-						generatePackageByAgency(key,infoDiscAutoRevealList);
-					} catch (IOException e) {
-						logger.error("",e);
+			for(String agencyName : map.keySet()){
+				List<InfoDiscAutoRevealDto> infoDiscAutoRevealList = map.get(agencyName);
+				if(infoDiscAutoRevealList!=null && infoDiscAutoRevealList.size()>0){
+					boolean generateResult=generatePackageByAgency(agencyName,infoDiscAutoRevealList);
+					if(!generateResult){
+//						List<InfoDiscAutoRevealDto> list = revealList.stream().filter(item -> StringUtil.equals(agencyName, item.getSaleAgency())).collect(Collectors.toList());
+						//有生成压缩包失败的，默认全部披露失败，直接结束，将单据的披露状态更新为“生成失败”
+						updateRevealStatus(revealList);
+						return;
 					}
 				}
-			});
+			}
+			//所有的代销机构都成功生成压缩包，再上传压缩包至指定服务器
+			for(String agencyName : map.keySet()){
+				String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+				exportFilePath=exportFilePath+ DateUtil.formatDate(DateUtil.getCurrentDate());
+				String zipFileName = this.createFileName("zip");
+				zipFileName=agencyName+zipFileName;
+				Boolean isSucess = SendFileUtil.sendToFinanceByFtp(zipFileName, exportFilePath);
+				if(!isSucess){
+					//有上传压缩包失败的，默认全部披露失败，直接结束
+					return;
+				}
+			}
+			//都上传成功，更新披露状态
+			for (InfoDiscAutoRevealDto infoDiscAutoRevealDto : revealList) {
+				infoDiscAutoRevealDto.setRevealStatus(DictCodeListExt2.披露状态_已披露.getValue());
+				infoDiscAutoRevealDto.setRevealUser("system");
+				infoDiscAutoRevealDto.setRevealDate(DateUtil.now());
+				infoDiscAutoRevealEXMapper.updateRevealStatusById(infoDiscAutoRevealDto);
+			}
 		}
 
+	}
+
+
+	/**
+	 * 更新披露状态为生成失败
+	 * @param revealList
+	 */
+	private void updateRevealStatus(List<InfoDiscAutoRevealDto> revealList) {
+		if(revealList!=null && revealList.size()>0){
+			for (InfoDiscAutoRevealDto infoDiscAutoRevealDto : revealList) {
+				infoDiscAutoRevealDto.setRevealStatus(DictCodeListExt2.披露状态_生成失败.getValue());
+				infoDiscAutoRevealDto.setRevealUser("system");
+				infoDiscAutoRevealDto.setRevealDate(DateUtil.now());
+				infoDiscAutoRevealEXMapper.updateRevealStatusById(infoDiscAutoRevealDto);
+			}
+		}
 	}
 
 	/**
@@ -130,7 +170,7 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 	 * @param agencyName
 	 * @param infoDiscAutoRevealList
 	 */
-	private void generatePackageByAgency(String agencyName, List<InfoDiscAutoRevealDto> infoDiscAutoRevealList) throws IOException {
+	private boolean generatePackageByAgency(String agencyName, List<InfoDiscAutoRevealDto> infoDiscAutoRevealList) throws IOException {
 		String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		exportFilePath=exportFilePath+DateUtil.formatDate(DateUtil.getCurrentDate());
 		File dateFilePath=new SafelyFile(exportFilePath);
@@ -272,23 +312,14 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 			}
 			catch (Exception e) {
 				logger.error("", e);
+				return false;
 			}finally {
 				if (fos != null){
 					fos.close();
 				}
 			}
 		}
-		//上传压缩包至指定服务器
-		Boolean isSucess =   SendFileUtil.sendToFinanceByFtp(zipFileName, exportFilePath);
-		if(isSucess){//上传成功，更新披露状态
-			for (InfoDiscAutoRevealDto infoDiscAutoRevealDto : infoDiscAutoRevealList) {
-				infoDiscAutoRevealDto.setRevealStatus(DictCodeListExt2.披露状态_已披露.getValue());
-				infoDiscAutoRevealDto.setRevealUser("system");
-				infoDiscAutoRevealDto.setRevealDate(DateUtil.now());
-				infoDiscAutoRevealEXMapper.updateRevealStatusById(infoDiscAutoRevealDto);
-			}
-
-		}
+		return true;
 	}
 
 	/**
