@@ -19,6 +19,7 @@
 		and dlr.data_status = 'E'
 		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
 		and rpi.status = 'E'
+		and rpi.rep_prod_type in ('01','02')
 		group by
 			rpi.prod_id,
 			rpi.prod_name,

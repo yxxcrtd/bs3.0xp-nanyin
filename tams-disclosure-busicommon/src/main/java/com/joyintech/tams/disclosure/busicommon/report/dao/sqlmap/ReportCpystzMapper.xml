@@ -19,6 +19,7 @@
 			AND dpa.rpt_issue_date = #{rptIssueDate}
 			where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
 			and rpi.status = 'E'
+			and rpi.rep_prod_type in ('01','02')
 			<if test="fieldlist != null and fieldlist.size() > 0">
 				AND dpa.adj_field in (
 				select distinct adj_field from dis_prod_adjust t where t.prod_adjust_id in
@@ -49,6 +50,7 @@
 			where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})
 		and rpi.status = 'E'
 		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
+		and rpi.rep_prod_type in ('01','02')
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in
 			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
@@ -94,6 +96,7 @@
 		on rpi.prod_re = dpa.prod_regist_no
 		and rpi.status = 'E'
 		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
+		and rpi.rep_prod_type in ('01','02')
 		where dpa.adj_field = (select adj_field
 			from dis_prod_adjust t
 			where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})
