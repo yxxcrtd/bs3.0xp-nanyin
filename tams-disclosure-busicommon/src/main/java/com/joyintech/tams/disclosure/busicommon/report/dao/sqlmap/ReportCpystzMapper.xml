@@ -37,7 +37,7 @@
 			dpa.adj_field adj_field,
 			rpi.raise_type raise_type,
 			min(dpa.eff_date) eff_date,
-			max(dpa.adjustReason2) adjustReason,
+			max(dpa.adj_reason2) adjustReason,
 			max(dpa.field_adj_remark) remark1,
 			max(dpa.field_adj_remark2) remark2
 		from rep_prod_info rpi
