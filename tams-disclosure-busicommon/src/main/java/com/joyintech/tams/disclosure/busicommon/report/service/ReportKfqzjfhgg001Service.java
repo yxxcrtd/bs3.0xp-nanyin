@@ -141,8 +141,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             searchParam.put("baseDate", bonusDto.getOpenEndDate());
                             ReportKfqHisBonusDto lastBonus = reportKfqzjfhgg001Mapper.getLastBonusInfo(searchParam);
                             if(lastBonus != null && lastBonus.getSettDate() != null){
-//                                runday = new BigDecimal(DateUtil.getBetweenDayNumber(lastBonus.getSettDate(), bonusDto.getSettDate()));
-                                runday = new BigDecimal(5);
+                                runday = new BigDecimal(DateUtil.getBetweenDayNumber(lastBonus.getSettDate(), bonusDto.getSettDate()));
                                 //上一收益分配基准日+1工作日至当前收益分配基准日
                                 curRange = DateUtil.format(DateUtil.addDay(lastBonus.getSettDate(),1)) + "至" + DateUtil.format(bonusDto.getSettDate());
                             }else{
