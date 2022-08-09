@@ -416,6 +416,20 @@ $(function () {
 					return;
 				}
 			}
+			if(modelId==="DYSDCPTZMB_GM"||modelId==="DYSDCPTZMB"){
+				if (params['elementname']===null||params['elementname']===undefined) {
+					Joyin.alert('要素名称必填!',2);
+					return;
+				}
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('发布日期必填!',2);
+					return;
+				}
+			}
 			if(modelId==="DFLDCPMB1_GM"||modelId==="DFLDCPMB1_SM"||modelId==="DFLDCPMB2_GM"||modelId==="DFLDCPMB2_SM"){
 				if (params['feename']===null||params['feename']===undefined) {
 					Joyin.alert('费率名称必填!',2);
