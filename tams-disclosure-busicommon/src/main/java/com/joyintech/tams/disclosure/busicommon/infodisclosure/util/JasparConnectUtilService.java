@@ -196,7 +196,9 @@ public class JasparConnectUtilService {
 		dataMap.put("uri",r1.getUri());
 		dataMap.put("execDate",params.get("execDate"));
 		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
-		dataMap.put("prodname",prodInfo.getProdName());
+		if (prodInfo != null) {
+			dataMap.put("prodname", prodInfo.getProdName());
+		}
 		dataMap.put("repId",r1.getReportID());
 
 //		//TODO:zhengxiaolian
