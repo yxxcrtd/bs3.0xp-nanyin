@@ -114,6 +114,7 @@ public class Report1Flncp001Service implements IReportDataService {
         Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
         repReveal.setEndDate(enddate);
+        paraMap.put("enddate_filename", DateUtil.format(enddate, DateUtil.DEFAULT_OTHER_FORMAT));
         return repReveal;
     }
 }

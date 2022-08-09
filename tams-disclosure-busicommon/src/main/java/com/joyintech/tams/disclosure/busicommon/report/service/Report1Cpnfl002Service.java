@@ -116,6 +116,7 @@ public class Report1Cpnfl002Service implements IReportDataService {
         Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
         repReveal.setEndDate(enddate);
+        paraMap.put("enddate_filename", DateUtil.format(enddate, DateUtil.DEFAULT_OTHER_FORMAT));
         return repReveal;
     }
 }
