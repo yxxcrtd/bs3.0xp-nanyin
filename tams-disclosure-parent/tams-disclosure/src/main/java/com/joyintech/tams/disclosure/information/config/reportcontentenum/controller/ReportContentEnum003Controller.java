@@ -85,6 +85,7 @@ public class ReportContentEnum003Controller extends BaseController {
 		this.setSelectOptionToModel(model, DictCode.产品风险评级);
 		this.setSelectOptionToModel(model, DictCode.投资性质);
 		this.setSelectOptionToModel(model, DictCodeExt1.开放频率);
+		this.setSelectOptionToModel(model, DictCodeExt1.发行方式_信批);
 		String id = getParam("id");
 		String operateType = getParam("operateType");
 		ReportContentEnum002Dto dto = new ReportContentEnum002Dto();

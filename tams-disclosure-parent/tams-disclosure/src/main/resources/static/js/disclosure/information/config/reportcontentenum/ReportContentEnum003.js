@@ -427,6 +427,7 @@ $(function() {
 		$('#riskLevelSelect').hide();
 		$("#investTypeSelect").hide();
 		$("#openFreqSelect").hide();
+		$('#issuingWaySelect').hide();
 	}
 	function ruleType1Change() {
 		var ruleType1 = $('#ruleType1').select2('data')[0].id;
@@ -468,6 +469,8 @@ $(function() {
 		}  else if(ruleType1 == 'FINPROD_NAME'){
 			$('#ruleType2Div').hide();
 			$('#ruleType3Div').hide();
+		} else if(ruleType1 == 'ISSUING_WAY'){
+			$('#issuingWaySelect').show();
 		}else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();
@@ -532,6 +535,8 @@ $(function() {
 			$('#investTypeSelect').show();
 		}else if(ruleType1 == 'OPEN_FREQ'){
 			$("#openFreqSelect").show();
+		}else if(ruleType1 == 'ISSUING_WAY'){
+			$('#issuingWaySelect').show();
 		}else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();

@@ -106,9 +106,11 @@ public class ReportPageManage003Controller extends BaseController {
                 }
             }
             //可以禁用的模板
+            model.addAttribute("repId",startRepId);
             model.addAttribute("REPORT_NAME2",JsonUtils.objectArray2Json(reportInfos2.toArray()));
         } else {
             //禁用界面,禁用模板选项包含全部
+            model.addAttribute("repId",offRepId);
             model.addAttribute("REPORT_NAME2",JsonUtils.objectArray2Json(reportInfos.toArray()));
         }
 
@@ -121,19 +123,16 @@ public class ReportPageManage003Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid ReportStatusDto dto, BindingResult bindingResult) {
+    public AjaxResult check(@RequestBody @Valid ReportStatusDto dto, BindingResult bindingResult) throws Exception{
         String msg = StringUtil.EMPTY;
         String operateType = dto.getOperateType();
-        if(!StringUtil.isNotEmpty(dto.getEffDate())){
-            msg = "生效日期不能为空";
-            return new AjaxResult(msg, MessageType.错误消息);
-        }
+        Date effDate = DateUtil.parseDate(dto.getEffDateStr(),"yyyy-MM-dd HH:mm");
 
         //生效日必须大于平台日
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         String sysDate = sdf.format(platformDate.getSysDate());
-        String effDate = sdf.format(dto.getEffDate());
-        if (effDate.compareTo(sysDate) < 0 ){
+        String effDateStr = sdf.format(effDate);
+        if (effDateStr.compareTo(sysDate) < 0 ){
             msg = "生效日必须大于等于平台日";
             return new AjaxResult(msg, MessageType.错误消息);
         }

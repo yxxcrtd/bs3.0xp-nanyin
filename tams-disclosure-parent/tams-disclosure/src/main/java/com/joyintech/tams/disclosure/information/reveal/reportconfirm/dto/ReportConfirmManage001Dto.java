@@ -79,7 +79,20 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     private String reportCategoryName; // 报表类别名称
     private String reportDate; // 报告期
     private String revealEndDateStr; // 披露截至日
-    
+
+    //产品代销机构:单据披露按照代销机构维度生成压缩包 add by zhouqiang start
+    private String agencyName;
+
+    public String getAgencyName() {
+        return agencyName;
+    }
+
+    public void setAgencyName(String agencyName) {
+        this.agencyName = agencyName;
+    }
+
+    //产品代销机构:单据披露按照代销机构维度生成压缩包 add by zhouqiang end
+
     public String getSeqno() {
         return this.getId();
     }

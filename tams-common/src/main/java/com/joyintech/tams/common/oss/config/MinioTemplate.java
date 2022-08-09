@@ -396,13 +396,15 @@ public class MinioTemplate {
         //针对转化文件夹分隔符进行转化处理
         String pathUrl = filePath.replace(":\\","://");
         pathUrl = pathUrl.replace("\\",separator);
-        if(pathUrl.indexOf("http://") < 0){ //解决linux使用File获取的名称http://变成http:/问题
+        if(pathUrl.startsWith("http:") && pathUrl.indexOf("http://") < 0){ //解决linux使用File获取的名称http://变成http:/问题
             pathUrl = pathUrl.replace("http:/","http://");
+        }else if(pathUrl.startsWith("https:") && pathUrl.indexOf("https://")<0){
+            pathUrl = pathUrl.replace("https:/","https://");
         }
         if(logger.isDebugEnabled())
             logger.debug("转化后文件名为:{}",pathUrl);
 
-        if(upload && pathUrl.startsWith("http:")){
+        if(upload && (pathUrl.startsWith("http:") || pathUrl.startsWith("https:"))){
             String key = pathUrl.replace(minioProperties.getEndpoint() + "/", "");
             int index = key.indexOf(separator);
             return key.substring(index + 1);

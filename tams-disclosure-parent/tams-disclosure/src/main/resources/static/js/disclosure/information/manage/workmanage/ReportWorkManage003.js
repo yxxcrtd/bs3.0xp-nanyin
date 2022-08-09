@@ -3,7 +3,7 @@ $(function () {
 	
 	var cols = [{field:'prodId',title: '产品代码',fixed:true}
     ,{field:'prodName',title: '产品名称',width:449,fixed:true}
-    ,{field:'operation',title: 'SysCommon.operation', type:'action', buttons: ['add']}
+    ,{field:'operation',title: 'SysCommon.operation', type:'action', buttons: ['delt']}
     ];
 	if($.trim($('#onlyView').val())=='01'){
 		cols = [{field:'prodId',title: '产品代码',width:440,fixed:true}
@@ -54,7 +54,7 @@ $(function () {
     /**
      * 绑定编辑事件
      */
-    previewProdTable.bind('click', '.add', function(data, index) {
+    previewProdTable.bind('click', '.delt', function(data, index) {
     	if($.trim($('#onlyView').val())=='01'){
     		return;
     	}

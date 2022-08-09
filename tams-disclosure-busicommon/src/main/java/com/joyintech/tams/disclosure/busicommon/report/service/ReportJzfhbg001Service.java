@@ -111,16 +111,43 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             /**
                              * 分红信息模块
                              */
+                            //根据业绩分配基准日查询上次分红计划表
+                            DisProdBonusplan lastBonus = reportJzfhbg001Mapper.getLastBonusInfo(searchParam);
+                            BigDecimal runday = BigDecimal.ONE;
+                            //产品第一次进行分红
+                            if (lastBonus == null) {
+                                //若产品是第一次分红，则取子产品成立日至当前收益分配基准日
+                                runday = new BigDecimal(DateUtil.getBetweenDayNumber(reportJzfhbg001Dto.getSetDate(), bonusplan.getSettDate())+1);
+                                //设置封闭期
+                                reportJzfhbg001Dto.setRange(DateUtil.format(reportJzfhbg001Dto.getSetDate()) + "至" + DateUtil.format(bonusplan.getSettDate()));
+                            } else {//产品非第一次进行分红
+                                //上一收益分配基准日+1工作日至当前收益分配基准日
+                                runday = new BigDecimal(DateUtil.getBetweenDayNumber(lastBonus.getSettDate(), bonusplan.getSettDate()));
+                                //设置封闭期
+                                reportJzfhbg001Dto.setRange(DateUtil.format(lastBonus.getSettDate()) + "至" + DateUtil.format(bonusplan.getSettDate()));
+                            }
+
                             //实收资本
                             BigDecimal capital = repProdIndex.getCapital() == null ? BigDecimal.ZERO : repProdIndex.getCapital();
                             //资产净值
                             BigDecimal assetsValue = repProdIndex.getAssetsValue() == null ? BigDecimal.ZERO : repProdIndex.getAssetsValue();
-                            //应分配分红金额 = 产品资产净值 - 期末余额
+                            //可供分配利润 = 产品资产净值-产品期末余额（份额）
                             BigDecimal distributableProfit = assetsValue.subtract(capital);
-                            //单位分红应分配分红金额/产品期末余额（份额）
-                            BigDecimal unitValue = distributableProfit.divide(capital, 4, RoundingMode.HALF_UP);
+                            //业绩比较基准收益 = 产品期末余额（份额）*“产品分红到期计划表中的“业绩比较基准比例（%）”*365/运行天数，结果截位法保留2位小数
+                            BigDecimal achievementBasisProfit =
+                                    capital.multiply(bonusplan.getAchievementBasisProp())
+                                            .multiply(new BigDecimal(365))
+                                            .divide(runday, 10, BigDecimal.ROUND_DOWN);
+                            //超出部分 = 可供分配利润-业绩比较基准收益
+                            BigDecimal excessPart = distributableProfit.subtract(achievementBasisProfit);
+                            //业绩报酬 =  超出部分*【产品分红到期计划中的：超额业绩报酬收取比例
+                            BigDecimal floatFee = excessPart.multiply(bonusplan.getExcessAchievementProp()).divide(new BigDecimal(100));
+                            //应分配分红金额 = 可供分配利润-业绩报酬
+                            BigDecimal mustDistributedProfit = distributableProfit.subtract(floatFee);
+                            //单位分红 = 应分配分红金额/产品期末余额（份额），结果截位法保留四位小数
+                            BigDecimal unitValue = mustDistributedProfit.divide(capital, 10, BigDecimal.ROUND_DOWN);
                             //收益分配基准日份额净值（元） = 【单位分红结果截位法保留四位小数】 + 1
-                            String unitValueStr = unitValue.toString();
+                            String unitValueStr = unitValue.setScale(4, BigDecimal.ROUND_DOWN).toString();
                             unitValueStr = "1" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
                             reportJzfhbg001Dto.setcUnitValue(unitValueStr);
                             //本次分红方案（元/1份份额）
@@ -132,32 +159,21 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             //期末每份额净值（元） = 固定值1.000
                             reportJzfhbg001Dto.setUnitValue("1.0000");
 
-                            //根据业绩分配基准日查询上次分红计划表
-                            DisProdBonusplan lastBonus = reportJzfhbg001Mapper.getLastBonusInfo(searchParam);
-                            long runday = 1;
-                            //产品第一次进行分红
                             if (lastBonus == null) {
-                                //若产品是第一次分红，则取子产品成立日至当前收益分配基准日
-                                runday = DateUtil.getBetweenDayNumber(reportJzfhbg001Dto.getSetDate(), bonusplan.getSettDate());
-                                //设置封闭期
-                                reportJzfhbg001Dto.setRange(DateUtil.format(reportJzfhbg001Dto.getSetDate()) + "至" + DateUtil.format(bonusplan.getSettDate()));
                                 //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)；
                                 reportJzfhbg001Dto.setUnitValueT(BigDecimal.ONE.add(new BigDecimal(unitProfitStr)).toString());
-                            } else {//产品非第一次进行分红
-                                //上一收益分配基准日+1工作日至当前收益分配基准日
-                                runday = DateUtil.getBetweenDayNumber(lastBonus.getSettDate(), bonusplan.getSettDate());
-                                //设置封闭期
-                                reportJzfhbg001Dto.setRange(DateUtil.format(lastBonus.getSettDate()) + "至" + DateUtil.format(bonusplan.getSettDate()));
+                            } else {
                                 // 若产品不是第一次分红，每份额累计净值（元）=（子）产品上一个收益分配基准日的产品累计单位净值+本次分红方案（结果保留四位小数）
                                 searchParam.put("settDate", DateUtil.format(lastBonus.getSettDate()));
                                 RepProdIndex lastRepProdIndex = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
-
                                 if (lastRepProdIndex != null) {
                                     reportJzfhbg001Dto.setUnitValueT(lastRepProdIndex.getUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
                                 }
                             }
+                            //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
+                            BigDecimal yield = unitValue.divide(new BigDecimal(365), 10, BigDecimal.ROUND_DOWN).multiply(runday).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
                             //年化收益率
-                            reportJzfhbg001Dto.setYield(new BigDecimal(unitProfitStr).multiply(new BigDecimal(365).divide(new BigDecimal(runday), 4, RoundingMode.HALF_UP)).setScale(4, RoundingMode.HALF_UP).toString());
+                            reportJzfhbg001Dto.setYield(yield.toString()+"%");
                         }
                     }
                     //设置公告日 = 收益分配基准日+1工作日

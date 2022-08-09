@@ -304,7 +304,7 @@ $(function () {
 					return;
 				}
 			}
-			if(modelId==="KFJJZGG_GM"||modelId==='KFJJZGG_GM'){
+			if(modelId==="KFJJZGG_SM"||modelId==='KFJJZGG_SM'){
 				if (params['prodid']===null||params['prodid']===undefined) {
 					Joyin.alert('子产品代码必填!',2);
 					return;
@@ -476,6 +476,15 @@ $(function () {
 					return;
 				}
 			}
+			if(modelId==="FXGG"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+			}
+
+
+
 
 
     	}else{
@@ -542,7 +551,7 @@ $(function () {
 		if(backParam !=null){
 			for ( var key in params) {
 				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					Joyin.alert('页面参数发生变化，请重新点击预览',2);
 					return;
 				}
 			}
@@ -649,7 +658,7 @@ $(function () {
 		if(backParam !=null){
 			for ( var key in params) {
 				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					Joyin.alert('页面参数发生变化，请重新点击预览',2);
 					return;
 				}
 			}
@@ -696,7 +705,7 @@ $(function () {
 		if(backParam !=null){
 			for ( var key in params) {
 				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					Joyin.alert('页面参数发生变化，请重新点击预览',2);
 					return;
 				}
 			}

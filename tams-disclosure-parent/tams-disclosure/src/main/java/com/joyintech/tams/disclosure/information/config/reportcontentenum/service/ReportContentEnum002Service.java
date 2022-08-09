@@ -159,6 +159,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	public void insert(ReportContentEnum002Dto dto) {
 		//插入插入报表作业屏蔽产品，作业范围数据
 		doinsertOrUpdate(dto);
+		dto.setAuditStatus("E");
 		repIndexSubMapper.insert(dto);
 		/*restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/insert",
 				dto,Integer.class);**/
@@ -174,6 +175,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	public void updateByPrimaryKeySelective(ReportContentEnum002Dto dto) {
 		//插入插入报表作业屏蔽产品，作业范围数据
 		doinsertOrUpdate(dto);
+		dto.setAuditStatus("E");
 		repIndexSubMapper.updateByPrimaryKeySelective(dto);
 		/*restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/updateByPrimaryKeySelective",
 				dto,Integer.class);*/

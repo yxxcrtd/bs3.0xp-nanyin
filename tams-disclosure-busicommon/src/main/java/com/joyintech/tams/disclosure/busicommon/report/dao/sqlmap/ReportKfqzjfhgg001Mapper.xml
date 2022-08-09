@@ -28,7 +28,7 @@
 	</select>
 
 	<select id="getLastBonusInfo" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqHisBonusDto">
-		SELECT PINDEX.UNIT_VALUE_T lastUnitValueT FROM
+		SELECT DPB.SETT_DATE, PINDEX.UNIT_VALUE_T lastUnitValueT FROM
 			REP_PROD_INFO INFO
 		INNER JOIN DIS_PROD_BONUSPLAN DPB  ON DPB.PROD_ID=INFO.PROD_ID AND DPB.DATA_STATUS='E'
 		INNER JOIN REP_PROD_INDEX PINDEX ON PINDEX.PROD_ID=INFO.PROD_ID AND PINDEX.STATUS='E' AND PINDEX.VALUE_DATE=DPB.SETT_DATE
@@ -52,6 +52,9 @@
 			  WHERE INFO.STATUS = 'E'
 				AND DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
 				AND DPP.OPEN_END_DATE>TO_DATE(#{baseDate},'yyyy-MM-dd')
+				<if test="setDate != null">
+					AND DPP.OPEN_END_DATE > #{setDate}
+				</if>
 				AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
 			  ORDER BY DPP.OPEN_END_DATE
 		  ) WHERE ROWNUM = 1
@@ -67,6 +70,8 @@
 			 ,DPP.OPEN_END_DATE  /*开放结束日*/
 			,TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') curBaseDate
 			,TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') curRange
+			,PLAN.ACHIEVEMENT_BASIS_PROP
+			,PLAN.EXCESS_ACHIEVEMENT_PROP
 		FROM REP_PROD_INFO INFO
 		 INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE &lt;=TO_DATE(#{baseDate},'yyyy-MM-dd')
 		<if test="setDate != null">

@@ -41,6 +41,26 @@ public class ReportKfqHisBonusDto {
     private String yield;
     /*当期封闭期*/
     private String curRange;
+    /*业绩比较基准比例*/
+    private BigDecimal achievementBasisProp;
+    /**/
+    private BigDecimal excessAchievementprop;
+
+    public BigDecimal getExcessAchievementprop() {
+        return excessAchievementprop;
+    }
+
+    public void setExcessAchievementprop(BigDecimal excessAchievementprop) {
+        this.excessAchievementprop = excessAchievementprop;
+    }
+
+    public BigDecimal getAchievementBasisProp() {
+        return achievementBasisProp;
+    }
+
+    public void setAchievementBasisProp(BigDecimal achievementBasisProp) {
+        this.achievementBasisProp = achievementBasisProp;
+    }
 
     public BigDecimal getAssetsValue() {
         return assetsValue;
