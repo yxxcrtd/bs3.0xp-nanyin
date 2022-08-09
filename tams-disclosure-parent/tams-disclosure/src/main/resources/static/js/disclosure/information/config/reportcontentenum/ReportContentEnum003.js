@@ -1,6 +1,3 @@
-var upFile;
-var upFileName;
-
 $(function() {
 
 	var gradeChange = function() {
@@ -12,9 +9,6 @@ $(function() {
 	 */
 	var saveOrSubmit = function(operateType) {
 		var object = $.serializeToObject('#submitForm');
-		if (upFileName) {
-			object.indexValue = upFileName;
-		}
 		object.pageModel = pageModel;
 		object.operateType = operateType;
 		object.indexDetail = $('#indexDetail').val();
@@ -135,6 +129,9 @@ $(function() {
 						} ]
 					});
 	settedRule.bind('click', '.delt', function(data, index) {
+		if(data.ruleType1 == 'FINPROD_NAME'){
+			$('#finprodIds').data('finprodIds',null);
+		}
 		settedRule.removeRow(data);
 		var obj = settedRule.getAllRows();
 		var describe = "";
@@ -151,9 +148,9 @@ $(function() {
 		}
 		$('#indexDetail').val(describe);
 	});
+
 	/**
 	 * 规则增加事件
-	 * 
 	 * @returns
 	 */
 	function addrule() {
@@ -170,6 +167,9 @@ $(function() {
 		if($('#ruleType2').select2('data')[0]){
 			rule.ruleType2 = $('#ruleType2').select2('data')[0].id;
 			rule.ruleType2Name = $('#ruleType2').select2('data')[0].text;
+		} else if(rule.ruleType1 =='FINPROD_NAME'){
+			rule.ruleType2 = '=';
+			rule.ruleType2Name = '=';
 		}
 		else{
 			Joyin.alert("请选择比较条件",7);
@@ -178,6 +178,9 @@ $(function() {
 		if($('#ruleType3').select2('data')[0]){
 			rule.ruleType3 = $('#ruleType3').select2('data')[0].id;
 			rule.ruleType3Name = $('#ruleType3').select2('data')[0].text;
+		} else if(rule.ruleType1 =='FINPROD_NAME'){
+			rule.ruleType3 = '02';
+			rule.ruleType3Name ='常量';
 		}
 		else{
 			Joyin.alert("请选择值类型",7);
@@ -228,7 +231,7 @@ $(function() {
 				return;
 			}
 			
-		} else if (rule.ruleType1 == 'IS_INDEPE_ACC') {
+		} else if (rule.ruleType1 == 'IS_INDEPE_ACC' || rule.ruleType1 == 'IS_INDEX' || rule.ruleType1 == 'IS_PERIOD') {
 			if ($('#isIndepeAcc').select2('data')[0]) {
 				rule.ruleType4 = $('#isIndepeAcc').select2('data')[0].id;
 				rule.ruleType4Name = $('#isIndepeAcc').select2('data')[0].text;
@@ -282,6 +285,72 @@ $(function() {
 				return;
 			}
 			
+		} else if(rule.ruleType1 == 'INVEST_TYPE'){
+			if ($('#investType').select2('data')[0]) {
+				rule.ruleType4 = $('#investType').select2('data')[0].id;
+				rule.ruleType4Name = $('#investType').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择投资性质", 7);
+				return;
+			}
+		}else if(rule.ruleType1 == 'OPEN_FREQ'){
+			if ($('#openFreq').select2('data')[0]) {
+				rule.ruleType4 = $('#openFreq').select2('data')[0].id;
+				rule.ruleType4Name = $('#openFreq').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择开放频率", 7);
+				return;
+			}
+		} else if(rule.ruleType1 == 'FINPROD_NAME'){
+			Joyin.dialog("产品选择",basePath+"disclosure/information/config/reportcontentenum/ReportContentEnum004/init","80%","80%",
+				{},function () {
+					var finprodIds = $('#finprodIds').data('finprodIds');
+					if(finprodIds.length ==0){
+						return;
+					}
+					rule.ruleType2 ='=';
+					rule.ruleType2Name ='=';
+					rule.ruleType4 = finprodIds.join(',');
+					rule.ruleType4Name = finprodIds.join(',');
+
+					var obj = settedRule.getAllRows();
+					var describe = "";
+					var index = 0;
+					for ( var i in obj) {
+						if(obj[i].ruleType4Name.length!=0){
+							describe += obj[i].ruleType1Name + obj[i].ruleType2Name
+								+ obj[i].ruleType4Name + ";";
+						}
+						else{
+							describe += obj[i].ruleType1Name + obj[i].ruleType2Name
+								+ obj[i].ruleType3Name + ";";
+						}
+
+						if (obj[i].ruleType1 == rule.ruleType1) {
+							index++;
+						}
+					}
+					if (index == 0) {
+						if(rule.ruleType4.length!=0){
+							settedRule.addRow(rule);
+							describe = describe + rule.ruleType1Name + rule.ruleType2Name
+								+ rule.ruleType4Name+ ";"
+							$('#indexDetail').val(describe);
+						}
+						else{
+							settedRule.addRow(rule);
+							describe = describe + rule.ruleType1Name + rule.ruleType2Name
+								+ rule.ruleType3Name+ ";"
+							$('#indexDetail').val(describe);
+						}
+
+					}
+					else{
+						Joyin.alert("规则已存在，请重新设置！",7);
+						return;
+					}
+				});
+			return;
 		} else {
 			if (rule.ruleType3 == '03') {
 				// 平台日
@@ -340,155 +409,68 @@ $(function() {
 		}
 
 	}
+
+
+	//隐藏全部下拉框
+	function hideAllSeclt(){
+		$('#raiseTypeSelect').hide();
+		$('#chooseDateSelect').hide();
+		$('#profitTypeSelect').hide();
+		$('#issueModeSelect').hide();
+		$('#issueStautsSelect').hide();
+		$('#openModeSelect').hide();
+		$('#isIndepeAccSelect').hide();
+		$('#prodTypeSelect').hide();
+		$('#finaTypeSelect').hide();
+		$('#prodTermTypeSelect').hide();
+		$('#riskTypeSelect').hide();
+		$('#riskLevelSelect').hide();
+		$("#investTypeSelect").hide();
+		$("#openFreqSelect").hide();
+		$('#issuingWaySelect').hide();
+	}
 	function ruleType1Change() {
 		var ruleType1 = $('#ruleType1').select2('data')[0].id;
 		var ruleType3;
 		if ($('#ruleType3').val()) {
 			ruleType3 = $('#ruleType3').select2('data')[0].id;
 		}
+		//先对选择框进行全部隐藏
+		hideAllSeclt();
+		$('#ruleType2Div').show();
+		$('#ruleType3Div').show();
 		if (ruleType1 == 'PROFIT_TYPE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
 			$('#profitTypeSelect').show();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'RAISE_TYPE') {
 			$('#raiseTypeSelect').show();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'ISSUE_MODE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
 			$('#issueModeSelect').show();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'ISSUE_STATUS') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
 			$('#issueStautsSelect').show();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'OPEN_MODE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
 			$('#openModeSelect').show();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
-		} else if (ruleType1 == 'IS_INDEPE_ACC') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
+		} else if (ruleType1 == 'IS_INDEPE_ACC' || ruleType1 == 'IS_INDEX' || ruleType1 == 'IS_PERIOD') {
 			$('#isIndepeAccSelect').show();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'PROD_TYPE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
 			$('#prodTypeSelect').show();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'FINA_TYPE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
 			$('#finaTypeSelect').show();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if(ruleType1 == 'PROD_TERM_TYPE'){
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
 			$('#prodTermTypeSelect').show();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		}else if(ruleType1 == 'RISKTYPE'){
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
 			$('#riskTypeSelect').show();
-			$('#riskLevelSelect').hide();
 		}else if(ruleType1 == 'RISK_LEVEL'){
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
 			$('#riskLevelSelect').show();
+		} else if (ruleType1 == 'INVEST_TYPE'){
+			//投资性质
+			$("#investTypeSelect").show();
+		} else if(ruleType1 == 'OPEN_FREQ'){
+			$("#openFreqSelect").show();
+		}  else if(ruleType1 == 'FINPROD_NAME'){
+			$('#ruleType2Div').hide();
+			$('#ruleType3Div').hide();
+		} else if(ruleType1 == 'ISSUING_WAY'){
+			$('#issuingWaySelect').show();
 		}else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();
@@ -525,149 +507,36 @@ $(function() {
 		if ($('#ruleType3').val()) {
 			ruleType3 = $('#ruleType3').select2('data')[0].id;
 		}
+		//先对选择框进行全部隐藏
+		hideAllSeclt();
 		if (ruleType1 == 'PROFIT_TYPE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
 			$('#profitTypeSelect').show();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'RAISE_TYPE') {
 			$('#raiseTypeSelect').show();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'ISSUE_MODE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
 			$('#issueModeSelect').show();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'ISSUE_STATUS') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
 			$('#issueStautsSelect').show();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'OPEN_MODE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
 			$('#openModeSelect').show();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
-		} else if (ruleType1 == 'IS_INDEPE_ACC') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
+		} else if (ruleType1 == 'IS_INDEPE_ACC' || ruleType1 == 'IS_INDEX' || ruleType1 == 'IS_PERIOD') {
 			$('#isIndepeAccSelect').show();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'PROD_TYPE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
 			$('#prodTypeSelect').show();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		} else if (ruleType1 == 'FINA_TYPE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
 			$('#finaTypeSelect').show();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		}else if (ruleType1 == 'PROD_TERM_TYPE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
 			$('#prodTermTypeSelect').show();
-			$('#riskTypeSelect').hide();
-			$('#riskLevelSelect').hide();
 		}else if (ruleType1 == 'RISKTYPE') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
 			$('#riskTypeSelect').show();
-			$('#riskLevelSelect').hide();
 		}else if (ruleType1 == 'RISK_LEVEL') {
-			$('#raiseTypeSelect').hide();
-			$('#chooseDateSelect').hide();
-			$('#profitTypeSelect').hide();
-			$('#issueModeSelect').hide();
-			$('#issueStautsSelect').hide();
-			$('#openModeSelect').hide();
-			$('#isIndepeAccSelect').hide();
-			$('#prodTypeSelect').hide();
-			$('#finaTypeSelect').hide();
-			$('#prodTermTypeSelect').hide();
-			$('#riskTypeSelect').hide();
 			$('#riskLevelSelect').show();
+		} else if(ruleType1 == 'INVEST_TYPE'){
+			$('#investTypeSelect').show();
+		}else if(ruleType1 == 'OPEN_FREQ'){
+			$("#openFreqSelect").show();
+		}else if(ruleType1 == 'ISSUING_WAY'){
+			$('#issuingWaySelect').show();
 		}else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();
@@ -712,6 +581,8 @@ $(function() {
 		$('#prodTermTypeSelect').hide();
 		$('#riskTypeSelect').hide();
 		$('#riskLevelSelect').hide();
+		$('#investTypeSelect').hide();
+		$('#openFreqSelect').hide();
 		// 规则增加事件
 		$('#ReportContentEnum003_btn_add').click(addrule);
 		// 规则1改变事件
@@ -733,34 +604,3 @@ $(function() {
 		/* fileShow(); */
 	});
 });
-
-var FileCommon = {
-	onUploaded : function(res) {
-		if (res && res.length > 0) {
-			Joyin.ajax('uploadFile', {
-				fileName : res[0].fileName,
-				fileNameOnly : res[0].srcName
-			}, function(result) {
-				fileShow(res[0].srcName, res[0].fileNo);
-				upFileName = res[0].srcName;
-				$('#indexFile').val(res[0].fileNo);
-			});
-		}
-	}
-};
-
-var fileShow = function(fileName, fileNo) {
-	if (fileName && fileNo) {
-		$('#uploadFile').html(fileName);
-		$('#uploadFile').attr('href',
-				JoyinUtil.getRealPath('/framework/download/' + fileNo));
-	} else {
-		if ($('#indexType').val() == '02') {
-			$('#uploadFile').html($('#indexValue').val());
-			$('#uploadFile').attr(
-					'href',
-					JoyinUtil.getRealPath('/framework/download/'
-							+ $('#indexFile').val()));
-		}
-	}
-}

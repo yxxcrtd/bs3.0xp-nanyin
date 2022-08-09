@@ -276,7 +276,7 @@ $(function ($) {
                 , multiple: false
                 , number: muit ? 0 : 1
                 , auto: auto
-                , size: 20*1024*1024 // 限制文件大小，单位 KB
+                , size: 20*1024 // 限制文件大小，单位 KB
                 , bindAction: bindAction || uploadBtn
                 , url: url
                 , method: 'post'

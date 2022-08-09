@@ -150,6 +150,25 @@ public class ReportContentEnum001Controller  extends BaseController{
 		msg = "删除失败";
 		return new AjaxResult(msg, MessageType.错误消息);
 	}
+
+	/**
+	 * 右侧栏删除
+	 * <一句话功能简述>
+	 * <功能详细描述>
+	 * @param dto
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "copyindexDetial", method = RequestMethod.POST)
+	public AjaxResult copyindexDetial(@RequestBody ReportContentEnum002Dto dto) {
+		String msg = "复制成功";
+		try{
+			reportContentEnum002Service.copyindexDetial(dto);
+			return new AjaxResult(msg);
+		}catch (Exception e){
+			return new AjaxResult("复制失败", MessageType.错误消息);
+		}
+	}
 	/**
 	 * 导出
 	 * <一句话功能简述>

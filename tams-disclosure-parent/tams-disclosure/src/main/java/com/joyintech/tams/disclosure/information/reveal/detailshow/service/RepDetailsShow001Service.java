@@ -1,23 +1,21 @@
 package com.joyintech.tams.disclosure.information.reveal.detailshow.service;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.tams.common.base.entity.RepReveal;
-import com.joyintech.tams.constant.DictCodeExt1;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
-import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.file.SafelyFile;
@@ -34,9 +33,11 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.util.JacksonUtil;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
@@ -44,6 +45,7 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.Report
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportFileService;
+import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.ProdInfoDto;
@@ -76,6 +78,12 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
     @Autowired
     private ReportFileService reportFileService;
+    
+    @Autowired
+    private RepProdInfoMapper repProdInfoMapper;
+    
+    @Autowired
+    private ReportDataService reportDataService;
 
     /**
      * 日志
@@ -297,9 +305,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         try {
 	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  
 	        	//树单击：初始化报表，即报表模板中的变量全部用xxx代替
-	    		String repId = params.get("repId").toString();
+	    		String repId = params.get("repid").toString();
 	        	reportFile = poiReportService.initReport(repId);
 	        } else {  //预览按钮：显示指定产品的实际内容，生成了一个临时文件f1
+	    		collateParams(params);
 	            reportFile = poiReportService.previewReport(params);
 	        }
 	        
@@ -463,21 +472,50 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	public void collateParams(Map<String,Object> params) {
 		//如下传入参数标准化
 		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
-		params.put("prodid", params.get("prodid")==null?params.get("pprodid"):params.get("prodid"));  //单产品只传了pprodid
-		params.put("prodname", params.get("prodname")==null?params.get("pprodname"):params.get("prodname"));  //单产品只传了pprodid
+		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
+		
 		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
+		params.put("prodid", params.get("prodid")==null?params.get("pprodid"):params.get("prodid"));  //单产品只传了pprodid
 		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
-		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
+
+		
 		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
 		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
 		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
 		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
-		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
+		
+//		try {
+//			String pprodId = "";
+//			if ( params.get("pprodId")!=null ) {
+//				pprodId = params.get("pprodId").toString();
+//				RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(pprodId);
+//				params.put("pprodname", prodInfo.getProdName());
+//			}	
+//			String prodId ="";
+//			if ( params.get("prodId")!=null ) {
+//				prodId = params.get("prodId").toString();
+//				if (pprodId.equals(prodId)) {
+//					params.put("prodname", params.get("pprodname"));
+//				} else {
+//					RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
+//					params.put("prodname",prodInfo.getProdName());
+//				}
+//			}
+//		} catch (Exception e) {
+//			logger.info("无产品的或者产品错误的报表");
+//		}
+		
+		params.put("pprodName", params.get("pprodName")==null?params.get("pprodname"):params.get("pprodName"));
+		params.put("prodname", params.get("prodname")==null?params.get("pprodname"):params.get("prodname"));  //单产品只传了pprodid
+		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));  //单产品只传了pprodid
 
 		//以下新增参数
 		if ( params.get("endDate")!=null )
 			params.put("reportDate", DateUtil.parse(params.get("endDate").toString()) );
 		params.put("platformDate", commonPlatformDateService.getSysDate());
+		
+		reportDataService.collateReportDateParams(params);
+		
 		logger.debug("传入参数---------------------------------------<<<");
 		logger.debug(params.toString());
 		logger.debug("传入参数--------------------------------------->>>");

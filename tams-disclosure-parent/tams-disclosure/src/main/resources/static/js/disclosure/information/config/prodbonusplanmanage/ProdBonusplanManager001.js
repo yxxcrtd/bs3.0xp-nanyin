@@ -145,8 +145,8 @@
 				 ,{field:'achievementBasisProp',  title: '业绩比较基准比例（%）',width:200,sortable:false}
 				 ,{field:'bonusModeName',title: '分红方式',width:90,sortable:false}
 				 ,{field:'dataStatusName',title: '数据状态',width:90,sortable:false}
-				 ,{field:'updateDateStr',  title: '更新时间',width:200,sortable:false}
-				 ,{field:'updateUser',  title: '更新人',width:100,sortable:false}
+				 ,{field:'createTime',  title: '更新时间',width:200,sortable:false,type:'datetime'}
+				 ,{field:'createUser',  title: '更新人',width:100,sortable:false}
 				 ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
 					 render: function (data, type, row, meta) {
 						 if (row.dataStatus == 'D')

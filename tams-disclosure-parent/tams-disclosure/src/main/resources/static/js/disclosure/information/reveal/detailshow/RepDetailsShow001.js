@@ -280,7 +280,7 @@ $(function () {
 					return;
 				}
 				if (params['enddate']===null||params['enddate']===undefined) {
-					Joyin.alert('净值日期必填!',2);
+					Joyin.alert('本期运作起始日必填！!',2);
 					return;
 				}
 			}
@@ -304,7 +304,7 @@ $(function () {
 					return;
 				}
 			}
-			if(modelId==="KFJJZGG_GM"||modelId==='KFJJZGG_GM'){
+			if(modelId==="KFJJZGG_SM"||modelId==='KFJJZGG_SM'){
 				if (params['prodid']===null||params['prodid']===undefined) {
 					Joyin.alert('子产品代码必填!',2);
 					return;

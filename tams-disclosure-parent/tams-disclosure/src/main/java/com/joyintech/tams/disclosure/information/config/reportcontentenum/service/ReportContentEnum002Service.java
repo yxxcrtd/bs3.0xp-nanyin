@@ -10,13 +10,21 @@
  
 package com.joyintech.tams.disclosure.information.config.reportcontentenum.service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.RepJobRangeMapper;
+import com.joyintech.tams.common.base.entity.RepIndexSub;
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum001Mapper;
+import com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +35,6 @@ import com.jcraft.jsch.JSchException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RepIndexSubMapper;
 import com.joyintech.tams.disclosure.common.common.service.BaseCommonService;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
@@ -49,7 +53,10 @@ import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.Re
  */
 @Service
 public class ReportContentEnum002Service  extends CommonExportService<ReportContentEnum002Dto>{
-	
+
+	@Autowired
+	private ReportContentEnum001Mapper reportContentEnum001Mapper;
+
 	@Autowired
 	private ReportContentEnum002Mapper  reportContentEnum002Mapper;
 	
@@ -61,6 +68,14 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	
 	@Autowired
 	private ProgressBarService progressBarService;
+
+	@Autowired
+	private SaleAgency002Mapper saleAgency002Mapper;
+
+	@Autowired
+	private RepJobRangeMapper repJobRangeMapper;
+
+
 	
 //	@Autowired
 //	private ReportContentEnum001Mapper reportContentEnum001Mapper;
@@ -109,7 +124,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
      * 通过id查询
      * <一句话功能简述>
      * <功能详细描述>
-     * @param indexId
+     * @param indexName
      * @return
      */
 	public List<ReportContentEnum002Dto> findbyIndexId(String indexName) {
@@ -121,20 +136,20 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 * 
 	 * @param dto
 	 */
-//	public void doinsertOrUpdate(ReportContentEnum002Dto dto) {
-//		// 根据作业编号删除作业范围数据
-//		reportContentEnum001Mapper.deleteRangeInfo(dto.getId());
-//		// 插入作业范围数据
-//		List<ReportContentEnum003Dto> settedRuleList = dto.getSettedRule();
-//		if (!StringUtil.isEmptyList(settedRuleList)) {
-//			for (ReportContentEnum003Dto manage3Dto : settedRuleList) {
-//				manage3Dto.setJobId(dto.getId());
-//				manage3Dto.setFlag(DisclosureDictCodeList.规则类型_指标值.getValue());
-//				manage3Dto.setId(CommonUtil.getSequenceIndexData(DataIndexSequenceType.基础数据));
-//				repJobRangeMapper.insertSelective(manage3Dto);
-//			}
-//		}
-//	}
+	public void doinsertOrUpdate(ReportContentEnum002Dto dto) {
+		// 根据作业编号删除作业范围数据
+		reportContentEnum001Mapper.deleteRangeInfo(dto.getId());
+		// 插入作业范围数据
+		List<ReportContentEnum003Dto> settedRuleList = dto.getSettedRule();
+		if (!StringUtil.isEmptyList(settedRuleList)) {
+			for (ReportContentEnum003Dto manage3Dto : settedRuleList) {
+				manage3Dto.setJobId(dto.getId());
+				manage3Dto.setFlag(DictCodeListExt2.规则类型_指标值.getValue());
+				manage3Dto.setId(CommonUtil.getSequenceIndexData(DataIndexSequenceType.基础数据));
+				repJobRangeMapper.insertSelective(manage3Dto);
+			}
+		}
+	}
 	/**
 	 * 右侧栏表格新建
 	 * <一句话功能简述>
@@ -143,10 +158,11 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 */
 	public void insert(ReportContentEnum002Dto dto) {
 		//插入插入报表作业屏蔽产品，作业范围数据
-//		doinsertOrUpdate(dto);
-//		repIndexSubMapper.insert(dto);
-		restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/insert",
-				dto,Integer.class);
+		doinsertOrUpdate(dto);
+		dto.setAuditStatus("E");
+		repIndexSubMapper.insert(dto);
+		/*restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/insert",
+				dto,Integer.class);**/
 		
 	}
 	
@@ -158,10 +174,11 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 */
 	public void updateByPrimaryKeySelective(ReportContentEnum002Dto dto) {
 		//插入插入报表作业屏蔽产品，作业范围数据
-//		doinsertOrUpdate(dto);
-//		repIndexSubMapper.updateByPrimaryKeySelective(dto);
-		restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/updateByPrimaryKeySelective",
-				dto,Integer.class);
+		doinsertOrUpdate(dto);
+		dto.setAuditStatus("E");
+		repIndexSubMapper.updateByPrimaryKeySelective(dto);
+		/*restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/updateByPrimaryKeySelective",
+				dto,Integer.class);*/
 	}
 	
 	/**
@@ -265,9 +282,9 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	  * @return
 	  */
 	public ReportContentEnum002Dto findById(String id) {
-//		return reportContentEnum002Mapper.selectById(id);
-		return restTemplate.getForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/findById?id="+id,
-				ReportContentEnum002Dto.class);
+		return reportContentEnum002Mapper.selectById(id);
+		/*return restTemplate.getForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/findById?id="+id,
+				ReportContentEnum002Dto.class);*/
 	}
 	
 	/**
@@ -302,6 +319,26 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		
 	}
 
+	public void copyindexDetial(ReportContentEnum002Dto dto){
+		RepIndexSub subDto = repIndexSubMapper.selectByPrimaryKey(dto.getId());
+		List<ReportContentEnum003Dto> ruleList = reportContentEnum002Mapper.findRulePage(subDto.getId());
+		ReportContentEnum002Dto dto2 = new ReportContentEnum002Dto();
+		BeanUtil.copyPropertiesIgnoreNull(dto2,subDto);
+		//复制后的指标重新生成ID
+		dto2.setId(IDGenerator.generate());
+		Date sysDate = new Date();
+		dto2.setUpdateTime(sysDate);
+		dto2.setCreateTime(sysDate);
+		///复制后的规则关联到新的指标id
+		for(ReportContentEnum003Dto ruleDto:ruleList){
+			ruleDto.setId(dto2.getId());
+		}
+		dto2.setSettedRule(ruleList);
+		doinsertOrUpdate(dto2);
+		repIndexSubMapper.insert(dto2);
+
+	}
+
     /**
      * 检查是否被引用
      * 
@@ -328,4 +365,74 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
         }
         return null;
     }
+
+	/**
+	 * 查询产品树结构
+	 * @param
+	 * @return
+	 */
+	public List<TreeNode> getProductTree() {
+		List<TreeNode> result = new ArrayList<TreeNode>();
+		//获取父节点
+		result.addAll(this.getParentNodes());
+		//查询当前所有产品，作为子节点
+		List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectProdInfo();
+		result.addAll(prodInfoNodes);
+		return result;
+	}
+
+	/**
+	 * 组装除产品子节点以外的父节点
+	 * @return
+	 */
+	public List<TreeNode> getParentNodes(){
+		List<DataDictItem> prodStatusList = new ArrayList<DataDictItem>();//产品状态
+		List<DataDictItem> issueTypeList = new ArrayList<DataDictItem>();//发行方式
+		List<String> prodSeriesList = new ArrayList<String>();//产品系列
+		List<TreeNode> parentNodes = new ArrayList<TreeNode>();
+		prodStatusList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.信披_产品状态.getValue());
+		issueTypeList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.发行方式_信批.getValue());
+		//一级：产品状态
+		if (prodStatusList!=null && prodStatusList.size() > 0) {
+			for (DataDictItem map_1 : prodStatusList) {
+				//只显示运行中的产品
+				if(!"01".equals(map_1.getItemCode())){
+					continue;
+				}
+				//查询产品系列的条件
+				Map<String,Object> param=new HashMap<>();
+				TreeNode treeDto = new TreeNode();
+				treeDto.setId(map_1.getItemCode());
+				treeDto.setName(map_1.getItemValue());
+				treeDto.setpId("");
+				treeDto.setOpen(true);
+				parentNodes.add(treeDto);
+				param.put("prodStatus",map_1.getItemCode());
+				//二级：发行方式
+				for (DataDictItem map_2 : issueTypeList) {
+					TreeNode treeDto_2 = new TreeNode();
+					treeDto_2.setId(map_1.getItemCode() + map_2.getItemCode());
+					treeDto_2.setName(map_2.getItemValue());
+					treeDto_2.setpId(map_1.getItemCode());
+					treeDto_2.setOpen(true);
+					parentNodes.add(treeDto_2);
+					param.put("issueType",map_2.getItemCode());
+					//三级：产品系列：产品系列为文本框输入，不是字典值，需要从产品基本信息表中查询所有的产品系列
+					prodSeriesList = saleAgency002Mapper.selectAllProdSeries(param);
+					if(prodSeriesList!=null && prodSeriesList.size()>0){
+						for (String map_3 : prodSeriesList) {
+							TreeNode treeDto_3 = new TreeNode();
+							treeDto_3.setId(map_1.getItemCode() + map_2.getItemCode() + map_3);
+							treeDto_3.setName(map_3);
+							treeDto_3.setpId(map_1.getItemCode() + map_2.getItemCode());
+							treeDto_3.setOpen(true);
+							parentNodes.add(treeDto_3);
+						}
+					}
+
+				}
+			}
+		}
+		return parentNodes;
+	}
 }

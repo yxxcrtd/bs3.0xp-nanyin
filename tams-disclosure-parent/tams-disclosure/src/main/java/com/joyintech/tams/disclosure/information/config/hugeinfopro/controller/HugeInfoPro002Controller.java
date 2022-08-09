@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.hugeinfopro.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -94,10 +95,10 @@ public class HugeInfoPro002Controller extends BaseController {
             dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
         }
         Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期
-        dto.setCreateTime(sysDate);
-        dto.setUpdateTime(sysDate);
-        dto.setCreateUser(CommonUtil.getUserName());
-        dto.setUpdateUser(CommonUtil.getUserName());
+//        dto.setCreateTime(sysDate);
+//        dto.setUpdateTime(sysDate);
+//        dto.setCreateUser(CommonUtil.getUserName());
+//        dto.setUpdateUser(CommonUtil.getUserName());
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getProdRegistNo());

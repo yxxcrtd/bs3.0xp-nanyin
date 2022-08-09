@@ -649,4 +649,24 @@ values ('DIS_REPORT_TYPE', '99', '其他公告', 7, '0', 'system', null, sysdate
 -- add by dingrui 20220804 报表数据校验信息 end
 
 
+--信披单户自动打包功能脚本  add by zhouqiang start
+delete from SYS_PARA where PARA_CODE in('SFTP_DIS_HOST','SFTP_DIS_PORT','SFTP_DIS_USERNAME','SFTP_DIS_PASWORD','SFTP_DIS_FPATH');
+Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('VAL','SFTP_DIS_HOST','192.168.60.236','0',null,'发送信披单据主机ip','system',null,sysdate,'system',sysdate);
+Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('VAL','SFTP_DIS_PORT','22','0',null,'发送信披单据服务器端口号','system',null,sysdate,'system',sysdate);
+Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('VAL','SFTP_DIS_USERNAME','root','0',null,'发送信披单据服务器用户名','system',null,sysdate,'system',sysdate);
+Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('VAL','SFTP_DIS_PASWORD','joyin!619','0',null,'发送信披单据服务器密码','system',null,sysdate,'system',sysdate);
+Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('VAL','SFTP_DIS_FPATH','/home/dis/','0',null,'发送信披单据服务器地址','system',null,sysdate,'system',sysdate);
+--批处理
+delete from SYS_BATCH_TASK where task_id='100401';
+insert into SYS_BATCH_TASK (task_id, system_code, task_name, ftask_id, bean_name, task_pri, create_user, create_time, update_user, update_time, create_dept)
+values ('100401','VAL','信披单据zip包生成发送批处理','','infoDiscAutoPackAndSendService','900','system',sysdate, 'system',sysdate, '');
+--信披单户自动打包功能脚本  add by zhouqiang end
+
+
+
 commit ;

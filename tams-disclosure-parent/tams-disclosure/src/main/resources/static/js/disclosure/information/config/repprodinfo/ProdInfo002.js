@@ -136,16 +136,21 @@
     };
 
     function doSaveOrSubmit(object,operateType) {
-        Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/check', object, function (result) {
-            //提交工作流
-            Joyin.confirm(result.data, function() {
-                if (operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_save");
-                } else {
-                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_submit");
-                }
+        if (operateType === 'submit'){
+            Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/check', object, function (result) {
+                //提交工作流
+                Joyin.confirm(result.data, function() {
+                    Joyin.confirm(result.data, function() {
+                        WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_submit");
+                    });
+                });
             });
-        });
+        }else {
+            Joyin.confirm('是否保存？', function() {
+                    WorkFlow.doSaveList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_save");
+            });
+        }
+
     }
 
     /**
@@ -154,6 +159,9 @@
     var data = $(function () {
         if (pageModel === PAGE_MODEL_EDIT) {
             $('#btnSave_wfl').hide();
+            if($('#issuingWay').val()=='02'){
+                $('#openFreq').attr("disabled",true);
+            }
         }
 
         // 绑定按钮事件

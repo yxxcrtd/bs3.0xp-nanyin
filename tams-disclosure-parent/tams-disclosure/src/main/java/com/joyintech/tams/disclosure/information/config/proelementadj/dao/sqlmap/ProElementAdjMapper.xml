@@ -20,7 +20,9 @@
           FIELD_ADJ_REMARK2 fieldAdjRemark2,
           RPT_ISSUE_DATE rptIssueDate,
           UPDATE_TIME updateTime,
-          UPDATE_USER updateUser
+          UPDATE_USER updateUser,
+          CREATE_TIME createTime,
+          CREATE_USER createUser
        from
           DIS_PROD_ADJUST
     <where>
@@ -91,8 +93,8 @@
             #{adjField,jdbcType=VARCHAR}, #{preAdjust,jdbcType=VARCHAR}, #{afterAdjust,jdbcType=VARCHAR},
             #{effDate,jdbcType=DATE}, #{fieldAdjRemark,jdbcType=VARCHAR}, #{fieldAdjRemark2,jdbcType=VARCHAR},
             #{rptIssueDate,jdbcType=DATE}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
-            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{adjReason,jdbcType=VARCHAR}
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{adjReason,jdbcType=VARCHAR}
             )
     </insert>
 

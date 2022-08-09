@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage002Mapper">
+
+    <insert id="saveReportStatus" parameterType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto">
+		 insert into REP_INFO_STATUS (SEQNO, REP_ID, START_OFF,
+            EFF_DATE,REP_STATUS, REMARK,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME,WORKFLOW_ID,WORKFLOW_TYPE)
+        values (#{seqno,jdbcType=VARCHAR}, #{repId,jdbcType=VARCHAR}, #{startOff,jdbcType=VARCHAR},
+            #{effDate,jdbcType=TIMESTAMP},#{repStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{workflowId,jdbcType=VARCHAR},#{workflowType,jdbcType=VARCHAR})
+	</insert>
+
+    <update id="updateUplodFile" parameterType="com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto" >
+        update SYS_UPLOAD_FILE_INFO
+        <set >
+            <if test="fileType != null" >
+                FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="businessId != null" >
+                BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getReportInfo" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto">
+		SELECT
+		    ri.REP_ID as repId,
+		    ri.REPORT_NAME as reportName
+		FROM
+		    REP_INFO ri
+    </select>
+
+    <select id="selectReportInfo" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto">
+        select
+        r1.SEQNO seqno,
+        decode(r1.workflow_type,'01',r1.rep_id) startrepId,
+        decode(r1.workflow_type,'02',r1.rep_id,r2.rep_id) offRepId,
+        r1.workflow_type workflowType,
+        r1.workflow_id workflowId,
+        r1.Remark remark,
+        r1.EFF_DATE effDate,
+        to_char(r1.EFF_DAtE,'yyyy-MM-dd HH24:mi') effDateStr,
+        r1.REP_STATUS repStatus
+        from REP_INFO_STATUS r1
+        left join REP_INFO_STATUS r2 on r1.workflow_id = r2.workflow_id and r2.workflow_type != r2.start_off
+        where r1.workflow_type = r1.start_off
+        <if test="workflowId != null">
+            AND r1.WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <delete id="deleteReportStatus" parameterType="java.lang.String">
+        delete from REP_INFO_STATUS
+        where 1 = 1
+        <if test="workflowId != null">
+            AND WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+        </if>
+    </delete>
+
+    <update id="updateReportStatus" parameterType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto">
+        UPDATE REP_INFO_STATUS
+        <set>
+            <if test="repStatus != null">
+                REP_STATUS = #{repStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </update>
+</mapper>

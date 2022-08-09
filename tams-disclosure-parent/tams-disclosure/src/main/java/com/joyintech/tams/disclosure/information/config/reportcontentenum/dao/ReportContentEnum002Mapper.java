@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.information.config.reportcontentenum.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.TreeNode;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -95,4 +96,6 @@ public interface ReportContentEnum002Mapper {
      * @since 1.0
      */
     List<ReportContentEnum002Dto> findIndexIsQuoteById(String[] idsarr);
+
+	List<TreeNode> selectProdInfo();
 }

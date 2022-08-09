@@ -92,14 +92,20 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     //查询后续申购赎回安排：根据产品排期表，展示“申购/赎回确认日”大于当前开放结束日的下一个开放周期的信息；
                     // 若当前已是产品的最后一个开放周期，后续没一个开放周期了，则正常生成表格，表格内容置空，由业务老师手工调整
                     List<ReportOpenPlanDto> openList = reportKfjzgg001Mapper.getOpenList(searchparam);
+
+                    for(int i = 0 ; i < openList.size();i++){
+                        if( DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(openEndDateStr))<=0){
+                            openList.remove(i);
+                        }
+                    }
                     if(openList == null || openList.size() == 0){
                         openList = new ArrayList<>();
                         ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
-                        reportOpenPlanDto.setOpenStartDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setOpenEndDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setCollingoffPeriod("XXXX-XX-XX");
-                        reportOpenPlanDto.setSettDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setOpenDurationDate("XXXX-XX-XX至XXXX-XX-XX");
+                        reportOpenPlanDto.setOpenStartDate(" ");
+                        reportOpenPlanDto.setOpenEndDate(" ");
+                        reportOpenPlanDto.setCollingoffPeriod(" ");
+                        reportOpenPlanDto.setSettDate(" ");
+                        reportOpenPlanDto.setOpenDurationDate(" ");
                         openList.add(reportOpenPlanDto);
                     }
                     reportKfjzgg001Dto.setOpenPlanList(openList);
@@ -111,6 +117,7 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     if (openHisList != null && openHisList.size()>0) {
                         //当前净值数据
                         ReportOpenPlanDto curOpenPlanDto = openHisList.get(0);
+
                         //如果是私募的话，只展示当前数据
                         if(StringUtil.equals(rptType, DisReportType.KFJJZGG_SM)){
                             openHisList = new ArrayList<>();
@@ -142,9 +149,23 @@ public class ReportKfjzgg001Service implements IReportDataService {
                                 //运行天数
                                 long runday = DateUtil.getBetweenDayNumber(lastOpenPlanDto.getOperationStartDate(),reportOpenPlanDto.getOpenEndDate());
                                 //计算年化收益率 = 当前开放结束日累计净值-上一开放结束日累计净值）/上一开放结束日单位净值 /本期天数*365
-                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(runday)).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_HALF_UP).toString());
+                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT()),10,BigDecimal.ROUND_DOWN).divide(new BigDecimal(runday),10,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_DOWN).toString());
                             }
                         }
+                        //判断是否处于第一个周期，第一个周期需要表格置空，由业务手工维护
+                        if(openHisList.size() == 1 && DateUtil.parse(openEndDateStr).compareTo(DateUtil.parse(openHisList.get(0).getOpenEndDate())) <= 0){
+                            openHisList.clear();
+                            ReportOpenPlanDto blankOpenPlan = new ReportOpenPlanDto();
+                            blankOpenPlan.setOpenStartDate(" ");
+                            blankOpenPlan.setOpenEndDate(" ");
+                            blankOpenPlan.setUnitValue(" ");
+                            blankOpenPlan.setUnitValueT(" ");
+                            blankOpenPlan.setRedValue(" ");
+                            blankOpenPlan.setSubValue(" ");
+                            blankOpenPlan.setYield(" ");
+                            openHisList.add(blankOpenPlan);
+                        }
+
                         reportKfjzgg001Dto.setHisValueList(openHisList);
                     }
 
@@ -157,8 +178,9 @@ public class ReportKfjzgg001Service implements IReportDataService {
                         accountDate = DateUtil.addDay(DateUtil.parse(openEndDateStr), 1);
                     }
                     reportKfjzgg001Dto.setAnnounceT(DateUtil.format(accountDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
-                    //增加公告期
-                    reportKfjzgg001Dto.setEnddate(DateUtil.format(accountDate));
+                    //增加跑批日
+                    reportKfjzgg001Dto.setEnddate(openEndDateStr);
+
                 }else{
                     logger.warn("开放及净值公告（公募）/（私募）；不符合【根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告】【{}】",JsonUtils.object2Json(paraMap));
                 }
@@ -175,9 +197,9 @@ public class ReportKfjzgg001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

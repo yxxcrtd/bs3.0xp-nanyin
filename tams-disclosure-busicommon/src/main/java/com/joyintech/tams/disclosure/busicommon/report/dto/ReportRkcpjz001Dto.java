@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.busicommon.report.dto;
 
+import java.util.Date;
 import java.util.List;
 
 /**

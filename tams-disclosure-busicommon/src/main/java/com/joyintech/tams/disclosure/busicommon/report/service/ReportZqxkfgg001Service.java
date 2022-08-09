@@ -99,13 +99,18 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     //查询后续申购赎回安排：根据产品排期计划展示当前“运作起始日”之后的未来6个开放周期（运作起始日大于当前运作起始日）】
                     // 注：若产品临近到期后续已没有6个开放周期，则有几个周期展示几个周期；若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
                     List<ReportOpenPlanDto> openList = reportZqxkfgg001Mapper.getOpenList(searchparam);
-                    if (openList == null || openList.size() == 0) {
+                    for(int i = 0 ; i < openList.size();i++){
+                        if( DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(announceDate))<=0){
+                            openList.remove(i);
+                        }
+                    }
+                    if (openList == null || openList.size() == 0 ) {
                         openList = new ArrayList<>();
                         ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
-                        reportOpenPlanDto.setOpenDurationDate("XXXX/XX/XX-XXXX/XX/XX");
-                        reportOpenPlanDto.setOperationStartDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setAutoRedeemDate("XXXX-XX-XX");
-                        reportOpenPlanDto.setHoldDays("XXX");
+                        reportOpenPlanDto.setOpenDurationDate(" ");
+                        reportOpenPlanDto.setOperationStartDate(" ");
+                        reportOpenPlanDto.setAutoRedeemDate(" ");
+                        reportOpenPlanDto.setHoldDays(" ");
                         openList.add(reportOpenPlanDto);
                     }
                     reportZqxkfgg001Dto.setOpenList(openList);
@@ -159,7 +164,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                                         redValue = unitValue;
                                     } else {
                                         if (affirmAmt != null && affirmNum != null) {
-                                            redValue = affirmAmt.divide(affirmNum).setScale(4, RoundingMode.HALF_UP);
+                                            redValue = affirmAmt.divide(affirmNum,10,BigDecimal.ROUND_DOWN).setScale(4, BigDecimal.ROUND_DOWN);
                                         }
                                     }
                                 } else {
@@ -171,7 +176,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                             reportOpenPlanDto.setUnitValueT(String.valueOf(unitValueT));
                         }
                         reportZqxkfgg001Dto.setOpenHisList(openHisList);
-                        //增加公告期
+                        //跑批日
                         reportZqxkfgg001Dto.setEnddate(announceDate);
                     }
                 }else{
@@ -190,9 +195,9 @@ public class ReportZqxkfgg001Service implements IReportDataService {
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
-        repReveal.setEndDate(enddate);
+        repReveal.setRepId((String) paraMap.get("repId"));
+        repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
     }
 }

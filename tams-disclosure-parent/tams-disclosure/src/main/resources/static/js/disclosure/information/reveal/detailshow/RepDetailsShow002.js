@@ -166,7 +166,7 @@ $(function () {
 			repId:repId,
 			repName:repName
 		};
-		Joyin.ajax('getRepsearch',
+		Joyin.ajax(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow002/getRepsearch',
 			parms,
 			function(data) {
 				if(data){
