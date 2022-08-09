@@ -43,6 +43,16 @@ public class ReportKfqHisBonusDto {
     private String curRange;
     /*业绩比较基准比例*/
     private BigDecimal achievementBasisProp;
+    /**/
+    private BigDecimal excessAchievementprop;
+
+    public BigDecimal getExcessAchievementprop() {
+        return excessAchievementprop;
+    }
+
+    public void setExcessAchievementprop(BigDecimal excessAchievementprop) {
+        this.excessAchievementprop = excessAchievementprop;
+    }
 
     public BigDecimal getAchievementBasisProp() {
         return achievementBasisProp;

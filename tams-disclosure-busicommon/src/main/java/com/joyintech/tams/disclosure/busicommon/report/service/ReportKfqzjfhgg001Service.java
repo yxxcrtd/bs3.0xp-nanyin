@@ -141,7 +141,8 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             searchParam.put("baseDate", bonusDto.getOpenEndDate());
                             ReportKfqHisBonusDto lastBonus = reportKfqzjfhgg001Mapper.getLastBonusInfo(searchParam);
                             if(lastBonus != null && lastBonus.getSettDate() != null){
-                                runday = new BigDecimal(DateUtil.getBetweenDayNumber(lastBonus.getSettDate(), bonusDto.getSettDate()));
+//                                runday = new BigDecimal(DateUtil.getBetweenDayNumber(lastBonus.getSettDate(), bonusDto.getSettDate()));
+                                runday = new BigDecimal(5);
                                 //上一收益分配基准日+1工作日至当前收益分配基准日
                                 curRange = DateUtil.format(DateUtil.addDay(lastBonus.getSettDate(),1)) + "至" + DateUtil.format(bonusDto.getSettDate());
                             }else{
@@ -151,11 +152,13 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             }
                             //业绩比较基准收益 = 产品期末余额（份额）*“产品分红到期计划表中的“业绩比较基准比例（%）”*365/运行天数，结果截位法保留2位小数
                             BigDecimal achievementBasisProfit =
-                                    reportKfqHisBonusDto.getCapital().multiply(reportKfqHisBonusDto.getAchievementBasisProp())
+                                    reportKfqHisBonusDto.getCapital().multiply(reportKfqHisBonusDto.getAchievementBasisProp()).divide(new BigDecimal(100))
                                             .multiply(new BigDecimal(365))
                                             .divide(runday, 10, BigDecimal.ROUND_DOWN);
-                            //业绩报酬 = 可供分配利润-业绩比较基准收益
-                            BigDecimal floatFee = distributableProfit.subtract(achievementBasisProfit);
+                            //超出部分 = 可供分配利润-业绩比较基准收益
+                            BigDecimal excessPart = distributableProfit.subtract(achievementBasisProfit);
+                            //业绩报酬 =  超出部分*【产品分红到期计划中的：超额业绩报酬收取比例
+                            BigDecimal floatFee = excessPart.multiply(reportKfqHisBonusDto.getExcessAchievementprop()).divide(new BigDecimal(100));
                             //应分配分红金额 = 可供分配利润-业绩报酬
                             BigDecimal mustDistributedProfit = distributableProfit.subtract(floatFee);
                             //单位分红 = 应分配分红金额/产品期末余额（份额），结果截位法保留四位小数
@@ -174,7 +177,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             //设置历史净值当前封闭期
                             bonusDto.setCurRange(curRange);
                             //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
-                            BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 4, BigDecimal.ROUND_DOWN);
+                            BigDecimal yield = unitValue.divide(new BigDecimal(365), 10, BigDecimal.ROUND_DOWN).multiply(runday);
                             bonusDto.setYield(yield.toString());
                             bonusDto.setMunitValue("1.0000");
                             bonusDto.setRedValue("1.0000");
