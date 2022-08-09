@@ -107,7 +107,12 @@ public class ReportKfjzgg001Service implements IReportDataService {
                         reportOpenPlanDto.setSettDate(" ");
                         reportOpenPlanDto.setOpenDurationDate(" ");
                         openList.add(reportOpenPlanDto);
+                    }else{//只取第一条
+                        ReportOpenPlanDto reportOpenPlanDto = openList.get(0);
+                        openList.clear();
+                        openList.add(reportOpenPlanDto);
                     }
+
                     reportKfjzgg001Dto.setOpenPlanList(openList);
 
                     //查询历史开放信息
