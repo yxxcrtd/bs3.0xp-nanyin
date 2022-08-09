@@ -171,9 +171,9 @@ public class ReportJzfhbg001Service implements IReportDataService {
                                 }
                             }
                             //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
-                            BigDecimal yield = unitValue.divide(new BigDecimal(365), 10, BigDecimal.ROUND_DOWN).multiply(runday);
+                            BigDecimal yield = unitValue.divide(new BigDecimal(365), 10, BigDecimal.ROUND_DOWN).multiply(runday).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
                             //年化收益率
-                            reportJzfhbg001Dto.setYield(yield.toString());
+                            reportJzfhbg001Dto.setYield(yield.toString()+"%");
                         }
                     }
                     //设置公告日 = 收益分配基准日+1工作日
