@@ -107,9 +107,8 @@ public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, 
         return super.getRejectRemark();
     }
 
-
     public String getDataStatusStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态,super.getDataStatus());
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,super.getDataStatus());
     }
     public String getIsSalesAgencyStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.是否,super.getIsSalesAgency());
