@@ -66,6 +66,8 @@ public class ReportPageManage001Dto extends RepInfo {
     @SuppressWarnings("unused")
     private String reportTypeName;
 
+    private String remark;
+
     /**
      * 获取 repScreenParam
      * 
@@ -213,5 +215,13 @@ public class ReportPageManage001Dto extends RepInfo {
      */
     public void setSettedRule(List<RepJobRangeDto> settedRule) {
         this.settedRule = settedRule;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
