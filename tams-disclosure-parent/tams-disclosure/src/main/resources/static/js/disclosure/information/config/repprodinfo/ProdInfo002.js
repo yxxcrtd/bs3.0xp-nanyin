@@ -396,7 +396,7 @@
         //if (setDate && mdate && isGrade && isGrade == '01' ){
         var days = (Date.ofDate(mdate) - Date.ofDate(setDate)) / (24 * 60 * 60 * 1000);
         if (days < 0) {
-            Joyin.error(JoyinUtil.getMessage("产品到期日期必须大于子产品成立日期", JoyinUtil.getLabel("ProdInfo002.mdate")));
+            Joyin.error(JoyinUtil.getMessage("产品到期日必须大于子产品成立日期", JoyinUtil.getLabel("ProdInfo002.mdate")));
             $('#mdate').val('');
         }
         //}

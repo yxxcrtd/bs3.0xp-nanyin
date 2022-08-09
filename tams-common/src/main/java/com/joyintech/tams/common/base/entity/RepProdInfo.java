@@ -32,7 +32,7 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 募集金额：子产品或母产品募集金额、普通产品募集金额
      */
-    @NotEmpty(fieldName = "募集金额")
+    @NotEmpty(fieldName = "产品募集金额")
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal raiseAmt;
 
@@ -57,13 +57,13 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 募集开始日：母产品募集开始日，子产品为空
      */
-    @NotEmpty(fieldName = "募集开始日")
+    @NotEmpty(fieldName = "募集开始日期")
     private Date raiseStrdate;
 
     /**
      * 募集结束日：母产品募集结束日，子产品为空
      */
-    @NotEmpty(fieldName = "募集结束日")
+    @NotEmpty(fieldName = "募集结束日期")
     private Date raiseEnddate;
 
     /**
@@ -86,19 +86,19 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 是否是客户周期型产品：不区分母子产品 01 是/02 否
      */
-    @NotEmpty(fieldName = "是否是客户周期型产品")
+    @NotEmpty(fieldName = "是否客户周期型产品")
     private String isPeriod;
 
     /**
      * 是否是分级产品：不区分母子产品 01 是/02 否
      */
-    @NotEmpty(fieldName = "是否是分级产品")
+    @NotEmpty(fieldName = "是否分级产品")
     private String isGrade;
 
     /**
      * 是否是指数型产品：不区分母子产品 01 是/02 否
      */
-    @NotEmpty(fieldName = "是否是指数型产品")
+    @NotEmpty(fieldName = "是否指数型产品")
     private String isIndex;
 
     /**
