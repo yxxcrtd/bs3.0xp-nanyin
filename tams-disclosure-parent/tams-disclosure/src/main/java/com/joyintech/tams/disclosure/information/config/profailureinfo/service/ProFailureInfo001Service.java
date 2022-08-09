@@ -220,7 +220,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
     }
 
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             format.setLenient(false);
             format.parse(str);

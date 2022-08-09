@@ -56,7 +56,7 @@
 
 
     <delete id="deleteByKey">
-        update DIS_LARGE_REDEMPTION set DATA_STATUS = '02'
+        update DIS_LARGE_REDEMPTION set DATA_STATUS = 'D'
         where REDEMPTION_ID = #{redemptionId,jdbcType=VARCHAR}
     </delete>
 

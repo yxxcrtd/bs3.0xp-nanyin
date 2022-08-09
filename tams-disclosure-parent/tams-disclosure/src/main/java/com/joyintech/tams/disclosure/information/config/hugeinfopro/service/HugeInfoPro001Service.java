@@ -10,6 +10,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dao.HugeInfoProMapper;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
@@ -77,11 +78,11 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         else if (StringUtil.equals(type, "NEW")) {
             HugeInfoPro001Dto hugeInfoPro001Dto = new HugeInfoPro001Dto();
             BeanUtil.copyPropertiesIgnoreNull(hugeInfoPro001Dto,dto);
-            hugeInfoPro001Dto.setDataStatus("01");
+            hugeInfoPro001Dto.setDataStatus("E");
             hugeInfoProMapper.insert(hugeInfoPro001Dto);
         }
         else {
-            dto.setDataStatus("01");
+            dto.setDataStatus("E");
             hugeInfoProMapper.updateByKey(dto);
         }
     }
@@ -267,7 +268,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             if (StringUtil.isNotEmpty(this.selectByBusPK(map))) {
                 existData.add(temp);
             } else {
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+                temp.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
                 temp.setUpdateTime(sysDate);
                 temp.setUpdateUser(CommonUtil.getUserName());

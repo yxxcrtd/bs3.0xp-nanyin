@@ -667,6 +667,10 @@ insert into SYS_BATCH_TASK (task_id, system_code, task_name, ftask_id, bean_name
 values ('100401','VAL','信披单据zip包生成发送批处理','','infoDiscAutoPackAndSendService','900','system',sysdate, 'system',sysdate, '');
 --信披单户自动打包功能脚本  add by zhouqiang end
 
-
+-- add by sunjie 20220809 巨额赎回信息数据状态下拉框改成ED start
+delete from SYS_PAGE_DICTLIST where PAGE_ID like '%HugeInfoPro00%' and DICT_ID = 'MAINTAIN_STATUS';
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('HugeInfoPro001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('HugeInfoPro001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+-- add by sunjie 20220809 巨额赎回信息数据状态下拉框改成ED end
 
 commit ;

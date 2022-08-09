@@ -52,7 +52,7 @@ public class HugeInfoPro001Controller extends BaseController {
     @Override
     public String init(Model model){
         this.setSelectOptionToModel(model, DictCode.是否);
-        this.setSelectOptionToModel(model, DictCode.信披_数据状态);
+        this.setSelectOptionToModel(model, DictCode.维护数据状态);
         return super.init(model);
     }
 
