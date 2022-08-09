@@ -77,6 +77,7 @@ public class ReportWorkManage003Service extends CommonExportService<ReportWorkMa
 						||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
 						||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
 						||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
+						||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_信批产品类别.getValue())
 						||StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())){
     				sb.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
 							.append(dto.getRuleType4()).append("'");

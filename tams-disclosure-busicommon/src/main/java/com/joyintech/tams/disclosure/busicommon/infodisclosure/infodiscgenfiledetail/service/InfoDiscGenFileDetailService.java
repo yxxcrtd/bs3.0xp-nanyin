@@ -334,19 +334,24 @@ public class InfoDiscGenFileDetailService {
 			RepInstallFile repInstallFile = doRepInstallFile(prodInfoListEntity,dateMap,infoDisclosureReadAndGenEntity,repRule);
 			
 			//定期公告必须满足起息日距离结束日大于90天，结束日离实际到期日大于90天
-			if(StringUtil.equals(DictCodeListExt2.报表类别_理财产品定期公告.getValue(), repRule.getReportCategory())){
-				if(repInstallFile.getEndDate()!=null&&!(DateUtil.getBetweenDayNumber(prodInfoListEntity.getVdate(), repInstallFile.getEndDate())<90
-						||DateUtil.getBetweenDayNumber(repInstallFile.getEndDate(), prodInfoListEntity.getActMdate())<90)
-						&&DateUtil.compareDate(prodInfoListEntity.getActMdate(), repInstallFile.getEndDate())>0){
+			if(StringUtil.equals("CP_001_002_015", repRule.getRepId())
+			||StringUtil.equals("CP_001_002_016", repRule.getRepId())
+			||StringUtil.equals("CP_001_002_017", repRule.getRepId())
+			||StringUtil.equals("CP_001_002_018", repRule.getRepId())
+			||StringUtil.equals("CP_001_002_019", repRule.getRepId())
+			||StringUtil.equals("CP_001_002_020", repRule.getRepId())){
+				if(repInstallFile.getEndDate()!=null&&!(DateUtil.getBetweenDayNumber(prodInfoListEntity.getSetDate(), repInstallFile.getEndDate())<90
+						||DateUtil.getBetweenDayNumber(repInstallFile.getEndDate(), prodInfoListEntity.getMdate())<90)
+						&&DateUtil.compareDate(prodInfoListEntity.getMdate(), repInstallFile.getEndDate())>0){
 					revealList.add(repInstallFile);
 				}
 			}
-			else if(StringUtil.equals(DictCodeListExt2.报表类别_净值披露.getValue(), repRule.getReportCategory())){
-				if(repInstallFile.getEndDate()!=null&&DateUtil.compareDate(prodInfoListEntity.getActMdate(), repInstallFile.getEndDate())>0
-						&&DateUtil.compareDate(repInstallFile.getEndDate(), prodInfoListEntity.getVdate())>=0){
-					revealList.add(repInstallFile);
-				}
-			}
+//			else if(StringUtil.equals(DictCodeListExt2.报表类别_净值披露.getValue(), repRule.getReportCategory())){
+//				if(repInstallFile.getEndDate()!=null&&DateUtil.compareDate(prodInfoListEntity.getActMdate(), repInstallFile.getEndDate())>0
+//						&&DateUtil.compareDate(repInstallFile.getEndDate(), prodInfoListEntity.getVdate())>=0){
+//					revealList.add(repInstallFile);
+//				}
+//			}
 			else{
 				revealList.add(repInstallFile);
 			}

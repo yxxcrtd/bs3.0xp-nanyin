@@ -68,7 +68,7 @@
 			AND END_DATE = #{endDate,jdbcType=DATE}
 		</if>
 		AND STATUS='E'
-		AND CONFIRM_STATUS='0'
+		AND CONFIRM_STATUS in('0','2')
 	</select>
     <select id="selectData" resultType="com.joyintech.tams.common.base.entity.RepReveal">
 	 	SELECT 
@@ -141,6 +141,6 @@
 			AND rr.END_DATE = #{endDate,jdbcType=DATE}
 		</if>
 		AND rr.STATUS='E'
-		AND rr.CONFIRM_STATUS='0'
+		AND rr.CONFIRM_STATUS in('0','2')
 	</select>
 </mapper>
