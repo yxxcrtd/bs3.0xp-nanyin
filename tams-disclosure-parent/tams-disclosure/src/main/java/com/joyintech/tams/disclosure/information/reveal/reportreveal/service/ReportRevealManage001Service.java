@@ -24,6 +24,7 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.progressbar.ProgressBarService;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -81,6 +82,17 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
 
     @Autowired
     private FileRemoteService minioFileRemoteService;
+
+    /**
+     * 进度条接口
+     */
+    @Autowired
+    private ProgressBarService progressBarService;
+
+    /**
+     * 进度条ID
+     */
+    private static final String PROCESS_KEY = "exportProcessBar";
     /**
      * 根据条件获取表格信息
      * 
@@ -155,29 +167,49 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      * 手动披露
      * @param listdto
      */
-    public void updateRevealStatusEX(List<ReportConfirmManage001Dto> listdto) {
+    public boolean updateRevealStatusEX(List<ReportConfirmManage001Dto> listdto) throws IOException{
+        boolean result=true;
         //勾选数据的id
         List<String> ids = listdto.stream().map(ReportConfirmManage001Dto::getId).distinct().collect(Collectors.toList());
         //查询单据
         HashMap<String,Object> param=new HashMap<>();
         param.put("ids",ids);
+        //查询要处理的信披单据，没有关联代销机构的产品对应的单据，不进行披露
         List<ReportConfirmManage001Dto> list=mapper.getRepRevealList(param);
         if(list!=null && list.size()>0){
             Map<String, List<ReportConfirmManage001Dto>> map = list.stream().collect(Collectors.groupingBy(ReportConfirmManage001Dto::getAgencyName));
-            map.forEach((key, infoDiscAutoRevealList) -> {
-                //压缩包名称：代销机构名称-yyyyMMdd.zip
-                if(!StringUtil.isEmptyList(infoDiscAutoRevealList)){
-                    try {
-                        generateAndSendPackageByAgency(key,infoDiscAutoRevealList);
-                    } catch (IOException e) {
-                        log.error("",e);
+            for(String agencyName : map.keySet()){
+                List<ReportConfirmManage001Dto> reportConfirmManage001DtoList = map.get(agencyName);
+                if(reportConfirmManage001DtoList!=null && reportConfirmManage001DtoList.size()>0){
+                    boolean generateResult=generatePackageByAgency(agencyName,reportConfirmManage001DtoList);
+                    if(!generateResult){
+                        //有生成压缩包失败的，默认全部披露失败，直接结束
+                        return false;
                     }
                 }
-            });
+            }
+
+            //所有的代销机构都成功生成压缩包，再上传压缩包至指定服务器
+//            int i=1;
+            for(String agencyName : map.keySet()){
+                String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+                exportFilePath=exportFilePath+ DateUtil.formatDate(DateUtil.getCurrentDate());
+                String zipFileName = this.createFileName("zip");
+                zipFileName=agencyName+zipFileName;
+                Boolean isSucess = SendFileUtil.sendToFinanceByFtp(zipFileName, exportFilePath);
+                if(!isSucess){
+                    //有上传压缩包失败的，默认全部披露失败，直接结束
+                    return false;
+                }
+//                progressBarService.updatePercent("ReportRevealManage001", PROCESS_KEY, Double.parseDouble(String.valueOf(i)) / map.size(), false);
+//                i++;
+            }
+            //上传成功，更新披露状态
         }
+        return result;
     }
 
-    private void generateAndSendPackageByAgency(String agencyName, List<ReportConfirmManage001Dto> infoDiscAutoRevealList) throws IOException {
+    private boolean generatePackageByAgency(String agencyName, List<ReportConfirmManage001Dto> infoDiscAutoRevealList) throws IOException {
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         exportFilePath=exportFilePath+ DateUtil.formatDate(DateUtil.getCurrentDate());
         File dateFilePath=new SafelyFile(exportFilePath);
@@ -319,23 +351,14 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
             }
             catch (Exception e) {
                 log.error("", e);
+                return false;
             }finally {
                 if (fos != null){
                     fos.close();
                 }
             }
         }
-        //上传压缩包至指定服务器
-        Boolean isSucess = SendFileUtil.sendToFinanceByFtp(zipFileName, exportFilePath);
-        if(isSucess){//上传成功，更新披露状态
-            for (ReportConfirmManage001Dto infoDiscAutoRevealDto : infoDiscAutoRevealList) {
-                infoDiscAutoRevealDto.setRevealStatus(DictCodeListExt2.披露状态_已披露.getValue());
-                infoDiscAutoRevealDto.setRevealUser(CommonUtil.getUserName());
-                infoDiscAutoRevealDto.setRevealDate(DateUtil.now());
-                mapper.updateRevealStatusById(infoDiscAutoRevealDto);
-            }
-
-        }
+        return true;
     }
 
     /**
@@ -496,6 +519,20 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
 
                 }
             }
+        }
+    }
+
+    /**
+     * 批量更新披露状态--生成失败
+     * @param listdto
+     */
+    public void updateRevealStatusBatch(List<ReportConfirmManage001Dto> listdto) {
+        //获取所有勾选单据的id
+        for (ReportConfirmManage001Dto dto : listdto) {
+            dto.setRevealStatus(DictCodeListExt2.披露状态_生成失败.getValue());
+            dto.setRevealUser(CommonUtil.getUserName());
+            dto.setRevealDate(DateUtil.now());
+            mapper.updateRevealStatusById(dto);
         }
     }
 }
