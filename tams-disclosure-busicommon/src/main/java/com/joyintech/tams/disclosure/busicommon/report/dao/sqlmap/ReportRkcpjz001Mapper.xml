@@ -55,7 +55,7 @@
 						TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')
 			       ELSE NULL END
 			   ELSE
-			       CASE WHEN TO_DATE(#{valueDate},'yyyy-MM-dd') > (INFO.SET_DATE + nvl(INFO.HOLDDAY,0) - 1) THEN
+			       CASE WHEN TO_DATE(#{valueDate},'yyyy-MM-dd') >= (INFO.SET_DATE + nvl(INFO.HOLDDAY,0) - 1) THEN
 						TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')
 			       ELSE NULL END
 			   END AS  redValue
