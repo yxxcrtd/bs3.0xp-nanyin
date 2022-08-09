@@ -29,7 +29,6 @@
 	</select>
 
 	<select id="getOpenList"  resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto">
-		SELECT * FROM (
 			SELECT
 				TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD') openStartDate
 				,TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'YYYY-MM-DD') openDurationDate
@@ -45,8 +44,7 @@
 				WHERE
 					INFO.STATUS = 'E'
 				AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
-			ORDER BY DPP.OPERATION_START_DATE
-		  ) WHERE ROWNUM = 1
+			ORDER BY DPP.OPEN_END_DATE
 	</select>
 
 	<select id="getOpenHisList" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto">
