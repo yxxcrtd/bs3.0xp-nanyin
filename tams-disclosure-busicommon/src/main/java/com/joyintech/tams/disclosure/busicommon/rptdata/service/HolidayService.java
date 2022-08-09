@@ -71,4 +71,27 @@ public class HolidayService {
 		} while (true);
 
 	}
+	
+	/**
+	 * 下一个工作日，不包含当日
+	 * @param currDate
+	 * @return
+	 */
+	public Date getNextWorkDate(Date currDate ) {
+		ChbMktHolidayKey key = new ChbMktHolidayKey();
+		Date iDate = currDate;
+		do {
+			iDate = DateUtil.addDay(iDate, 1);
+			key.setBusiDate(iDate);
+			key.setMarketCode("01");
+			ChbMktHoliday holiday = chbMktHolidayMapper.selectByPrimaryKey(key);
+			if ( holiday==null ) {
+				return iDate;
+			}
+			if ( "0".equals(holiday.getIsHoliday()) ) {  //工作日
+				return iDate;
+			}
+		} while (true);
+
+	}
 }

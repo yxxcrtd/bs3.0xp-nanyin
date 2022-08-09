@@ -8,21 +8,26 @@
 		,INFO.PROD_NAME
 		,INFO.PROD_RE
 		,INFO.ISSUING_WAY
-		,INFO.PROFIT_TYPE   /**运作方式**/
+		,case INFO.PROFIT_TYPE
+			when '01' then '封闭式净值型'
+			when '02' then ' 封闭式非净值型'
+			when '03' then '开放式净值型'
+			when '04' then '开放式非净值型'
+		end PROFIT_TYPE  /**运作方式**/
 		,info.PROD_TYPE  /**产品类型**/
 		,INFO.SET_DATE   eDate /**成立日**/
 		,'南银理财有限责任公司' prodManager  /**管理人**/
 		,info.ACCT_CHNNAME  prodTruster /**托管人**/
 		,info.REP_PROD_TYPE  /**信披产品类型，母子产品，单产品**/
 		,PINDEX.CAPITAL    /**期末余额**/
-		,PARTNER.PARTNER_NAME partner /**合作机构**/
+		,nvl(PARTNER.PARTNER_NAME,'-') partner /**合作机构**/
 		from REP_PROD_INFO info
 		left join REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E' and #{reportDate,jdbcType=DATE}=pindex.VALUE_DATE
 		left join DIS_PROD_PARTNER PARTNER ON INFO.PROD_ID=PARTNER.PROD_ID AND #{reportDate,jdbcType=DATE} between partner.EFF_DATE and partner.EFF_END_DATE
 		where REP_PROD_TYPE in ('01','02')  /**母产品或者单产品**/
 		AND info.STATUS='E'
 		<if test="pprodid!=null">
-			AND info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
+			AND info.PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
 	</select>
 
@@ -40,6 +45,7 @@
 		<if test="pprodid!=null">
 			AND info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
+		order by info.PROD_ID
 	</select>
 
 	<select id="selectFinIndex" resultType="com.joyintech.tams.common.base.entity.RepProdIndex">
@@ -73,6 +79,7 @@
 		<if test="pprodid!=null">
 			and info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
+		order by info.PROD_ID
 	</select>
 
 	<select id="selectReportIndex" resultType="com.joyintech.tams.common.base.entity.RepIndexSub">
@@ -133,13 +140,17 @@
 		<if test="reportDate!=null">
 			and rac.PUB_DATE = #{reportDate,jdbcType=DATE}
 		</if>
+		order by rac.PD_PROP desc,rac.FAIR_VALUE desc
 	</select>
 
 	<select id="selectAccts" resultType="com.joyintech.tams.common.base.entity.RepInvestAccount">
 		select
 		rownum personalField
 		,accts.PROD_ID
-		,accts.ACCOUNT_TYPE
+		,case accts.ACCOUNT_TYPE
+			when 'A01' then '托管账户'
+            else accts.ACCOUNT_TYPE
+		end ACCOUNT_TYPE
 		,accts.ACCOUNT_NUM
 		,accts.ACCOUNT_NAME
 		,accts.ACCOUNT_OPENER
@@ -166,7 +177,7 @@
 			and deal.PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>
 		<if test="reportDate!=null">
-			and deal.PUB_DATE = #{reportDate,jdbcType=DATE}
+			and #{reportDate,jdbcType=DATE} between EFFDATE and EFFDELIDATE		
 		</if>
 	</select>
 

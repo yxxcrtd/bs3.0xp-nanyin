@@ -73,6 +73,8 @@
 	<select id="getLastOpenPlan" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto">
 		SELECT
 			TO_CHAR(DPP.OPERATION_START_DATE,'YYYY-MM-DD')  operationStartDate
+		     ,TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD')  openStartDate
+			 ,TO_CHAR(DPP.OPEN_END_DATE,'YYYY-MM-DD')  openEndDate
 			 ,TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')  unitValue
 			 ,TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE_T,0),4),'FM9999999999999990.0000')  unitValueT
 			FROM

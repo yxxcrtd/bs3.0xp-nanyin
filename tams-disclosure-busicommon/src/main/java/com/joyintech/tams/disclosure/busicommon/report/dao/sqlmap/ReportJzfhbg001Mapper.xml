@@ -29,7 +29,8 @@
 	</select>
 
 	<select id="getBonusPlanBySettDate" resultType="com.joyintech.tams.common.base.entity.DisProdBonusplan">
-		SELECT * FROM DIS_PROD_BONUSPLAN WHERE DATA_STATUS = 'E' AND PROD_ID = #{prodId} AND SETT_DATE = TO_DATE(#{settDate},'yyyy-MM-dd')
+		SELECT * FROM (SELECT * FROM DIS_PROD_BONUSPLAN WHERE DATA_STATUS = 'E' AND PROD_ID = #{prodId} AND SETT_DATE &lt;= TO_DATE(#{settDate},'yyyy-MM-dd')
+		    ORDER BY SETT_DATE DESC ) WHERE ROWNUM = 1
 	</select>
 
 	<select id="getIndexBySettDate" resultType="com.joyintech.tams.common.base.entity.RepProdIndex" >

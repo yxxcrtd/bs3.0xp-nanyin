@@ -18,6 +18,7 @@
 		AND dpf.rpt_issue_date = #{rptIssueDate}
 		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
 		and rpi.status = 'E'
+		and rpi.rep_prod_type in ('01','02')
 		<if test="feelist != null and feelist.size() > 0">
 			AND dpf.feename in (
 			select distinct feename from dis_prod_feediscount t where t.prod_discount_id in
@@ -48,6 +49,7 @@
 			where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
 		and rpi.status = 'E'
 		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
+		and rpi.rep_prod_type in ('01','02')
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in
 			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
@@ -100,6 +102,7 @@
 		on rpi.prod_re = dpf.prod_regist_no
 		and rpi.status = 'E'
 		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
+		and rpi.rep_prod_type in ('01','02')
 		where dpf.feename = (select feename
 		from dis_prod_feediscount t
 		where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
