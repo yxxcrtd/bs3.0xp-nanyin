@@ -71,7 +71,7 @@
             ,{field:'preAdjust',  title: '调整前',sortField:"preAdjust",width: 160} //调整前
             ,{field:'afterAdjust',  title: '调整后',sortField:"afterAdjust",width: 160} //调整后
             ,{field:'effDate',  title: '生效时间',sortField:"effDate",type:'date'}//生效时间
-            ,{field:'adjReason',  title: '对此要素调整（原因）',sortField:"adjReason",width: 160} //对此要素调整（原因）
+            ,{field:'adjReason2',  title: '对此要素调整（原因）',sortField:"adjReason2",width: 160} //对此要素调整（原因）
             ,{field:'fieldAdjRemark',  title: '调整此要素（补充说明文1）',sortField:"fieldAdjRemark",width: 160} //调整此要素（补充说明文1）
             ,{field:'fieldAdjRemark2',  title: '调整此要素（补充说明文2）',sortField:"fieldAdjRemark2",width: 160} //调整此要素（补充说明文2）
             ,{field:'rptIssueDate',  title: '报告发布日期',sortField:"rptIssueDate",type:'date'}//报告发布日期
@@ -231,7 +231,7 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].dataStatus =="02"){
+                if(selArr[i].dataStatus =="D"){
                     return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }

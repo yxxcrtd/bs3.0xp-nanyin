@@ -351,7 +351,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                 proElementAdj001Dto.setEffDate(DateUtil.parse(rowData.get(8).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(9))) {
-                proElementAdj001Dto.setAdjReason(rowData.get(9).toString());
+                proElementAdj001Dto.setAdjReason2(rowData.get(9).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(10))) {
                 proElementAdj001Dto.setFieldAdjRemark(rowData.get(10).toString());
