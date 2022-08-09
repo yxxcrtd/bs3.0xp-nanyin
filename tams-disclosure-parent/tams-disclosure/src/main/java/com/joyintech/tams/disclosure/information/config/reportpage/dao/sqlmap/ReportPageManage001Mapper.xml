@@ -98,8 +98,6 @@
 		    ri.REPORT_NAME as reportName
 		FROM
 		    REP_INFO ri
-		WHERE
-		    ri.REPORT_TYPE='Y'
     </select>
     <select id="getReportInputsNew" parameterType="java.util.Map" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto">
 	    SELECT 

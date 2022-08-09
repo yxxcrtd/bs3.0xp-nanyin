@@ -77,6 +77,7 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
     	 String reportCategory = (String)param.get("reportCategory");
          String[] reportCategoryArr = null;
          if(StringUtil.isNotEmpty(reportCategory)){
+			 reportCategoryArr = reportCategory.split(",");
          }
          param.put("reportCategoryArr", reportCategoryArr);
 		 List<ReportPageManage001Dto> dtos = reportPageManage001Mapper.findPage(param);
@@ -201,18 +202,15 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
     * @return 报表名称
     */
 	public List<SelectOptionDto> getReportInfo() {
-//		List<ReportPageManage001Dto> reportInfoList = reportPageManage001Mapper.getReportInfo();
-//		List<SelectOptionDto> listSelectDto = new ArrayList<SelectOptionDto>();
-//		for (ReportPageManage001Dto reportInfo : reportInfoList) {
-//			SelectOptionDto dto = new SelectOptionDto();
-//			dto.setId(reportInfo.getRepId());
-//			dto.setText(reportInfo.getReportName());
-//			listSelectDto.add(dto);
-//		}
-//		return listSelectDto;
-		
-		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportPageManage001/getReportInfo",
-    			null,SelectOptionDto.class);
+		List<ReportPageManage001Dto> reportInfoList = reportPageManage001Mapper.getReportInfo();
+		List<SelectOptionDto> listSelectDto = new ArrayList<SelectOptionDto>();
+		for (ReportPageManage001Dto reportInfo : reportInfoList) {
+			SelectOptionDto dto = new SelectOptionDto();
+			dto.setId(reportInfo.getRepId());
+			dto.setText(reportInfo.getReportName());
+			listSelectDto.add(dto);
+		}
+		return listSelectDto;
 	}
 	
 	
