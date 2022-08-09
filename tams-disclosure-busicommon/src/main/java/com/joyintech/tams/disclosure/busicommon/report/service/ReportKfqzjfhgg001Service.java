@@ -130,7 +130,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         }
                         //封装历史分红数据
                         for (int i = 0 ; i< list.size(); i++) {
-                            ReportKfqHisBonusDto bonusDto = list.get(0);
+                            ReportKfqHisBonusDto bonusDto = list.get(i);
                             //可供分配利润 = 产品资产净值-产品期末余额（份额）
                             BigDecimal distributableProfit = reportKfqHisBonusDto.getAssetsValue().subtract(reportKfqHisBonusDto.getCapital());
                             //运行天数 =若上一收益分配基准日是成立日：本期收益分配基准日-上一收益分配基准日+1； 若上一收益分配基准日不是成立日：本期收益分配基准日-上一收益分配基准日
