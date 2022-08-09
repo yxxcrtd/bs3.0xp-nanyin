@@ -152,9 +152,9 @@ public class ReportKfjzgg001Service implements IReportDataService {
                                 //本期封闭期 = 上一开放周期的运作起始日-当前开放周期的开放结束日
                                 reportOpenPlanDto.setRange(lastOpenPlanDto.getOperationStartDate() + "至" + reportOpenPlanDto.getOpenEndDate());
                                 //运行天数
-                                long runday = DateUtil.getBetweenDayNumber(lastOpenPlanDto.getOperationStartDate(),reportOpenPlanDto.getOpenEndDate());
+                                long runday = DateUtil.getBetweenDayNumber(lastOpenPlanDto.getOpenEndDate(),reportOpenPlanDto.getOpenEndDate());
                                 //计算年化收益率 = 当前开放结束日累计净值-上一开放结束日累计净值）/上一开放结束日单位净值 /本期天数*365
-                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT()),10,BigDecimal.ROUND_DOWN).divide(new BigDecimal(runday),10,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_DOWN).toString());
+                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT()),10,BigDecimal.ROUND_DOWN).divide(new BigDecimal(runday),10,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(365)).multiply(new BigDecimal(100)).setScale(4,BigDecimal.ROUND_DOWN).toString()+"%");
                             }
                         }
                         //判断是否处于第一个周期，第一个周期需要表格置空，由业务手工维护
