@@ -1,16 +1,27 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageCommentDto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,10 +32,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.constant.DictCode;
@@ -56,16 +63,54 @@ public class ReportConfirmManage004Contoller extends BaseController {
 	
 	@Override
 	public String init(Model model) {
+		String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+		String seqno = getParam("seqno");
 		// 获取披露渠道
 		model.addAttribute("channelList", JsonUtils.objectArray2Json(reportConfirmManage004Service.getRevealChannel().toArray()));
 		// 获取报表类别
 		model.addAttribute("REPORT_STYLE",JsonUtils.objectArray2Json(ftpPathService.getReportCategory().toArray()));
-		// 确认方式、披露方式默认类型为自动
-		String type= "02";
-		model.addAttribute("type", type);
-		model.addAttribute("confirmType", DictCodeListExt1.确认类型_手动.getValue());
-		model.addAttribute("revealType", DictCodeListExt2.披露方式_自动.getValue());
-		model.addAttribute("revealChannel", DictCodeListExt2.披露渠道_官网.getValue());
+		ReportConfirmManage004Dto dto = null;
+		Map<String,String> paramMap = new HashMap<String,String>();
+		if(StringUtil.isNotEmpty(seqno)){
+			paramMap.put("seqno",seqno);
+			dto = reportConfirmManage004Service.queryInfo(paramMap);
+			model.addAttribute("startDate",dto.getStartDateStr());
+			model.addAttribute("endDate", dto.getEndDateStr());
+			model.addAttribute("confirmType", dto.getIsConfirm());
+			model.addAttribute("revealType", dto.getIsReveal());
+			model.addAttribute("revealChannel", dto.getRevealChannel());
+		} else if(StringUtil.isNotEmpty(workflowId)){
+			paramMap.put("workflowId",workflowId);
+			dto = reportConfirmManage004Service.queryInfo(paramMap);
+			model.addAttribute("startDate",dto.getStartDateStr());
+			model.addAttribute("endDate", dto.getEndDateStr());
+			model.addAttribute("confirmType", dto.getIsConfirm());
+			model.addAttribute("revealType", dto.getIsReveal());
+			model.addAttribute("revealChannel", dto.getRevealChannel());
+		}else{
+			// 确认方式、披露方式默认类型为自动
+			String type= "02";
+			model.addAttribute("type", type);
+			model.addAttribute("confirmType", DictCodeListExt1.确认类型_手动.getValue());
+			model.addAttribute("revealType", DictCodeListExt2.披露方式_自动.getValue());
+			model.addAttribute("revealChannel", DictCodeListExt2.披露渠道_官网.getValue());
+		}
+		if(dto != null){
+			model.addAttribute("seqno", dto.getId());
+			if(StringUtil.isNotEmpty(dto.getStartDateStr()) && StringUtil.isNotEmpty(dto.getEndDateStr())){
+				String reportDate = dto.getStartDateStr() + " - " +dto.getEndDateStr();
+				model.addAttribute("reportDate",reportDate);
+			}else if(StringUtil.isNotEmpty(dto.getStartDateStr()) && StringUtil.isEmpty(dto.getEndDateStr())){
+				String reportDate = dto.getStartDateStr() + " - " +dto.getStartDateStr();
+				model.addAttribute("reportDate",reportDate);
+			}else if(StringUtil.isEmpty(dto.getStartDateStr()) && StringUtil.isNotEmpty(dto.getEndDateStr())){
+				String reportDate = dto.getEndDateStr() + " - " +dto.getEndDateStr();
+				model.addAttribute("reportDate",reportDate);
+			}
+		}
+		model.addAttribute("entity", dto);
+		String viewFlag = getParam("viewFlag");
+		model.addAttribute("viewFlag",viewFlag);
 		this.setSelectOptionToModel(model, DictCode.确认类型, DictCode.披露方式);
 		return super.init(model);
 	}
@@ -197,4 +242,53 @@ public class ReportConfirmManage004Contoller extends BaseController {
     		return null;
     	}
     }
+
+
+
+	@ResponseBody
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	AjaxResult save(@RequestBody ReportConfirmManage004Dto dto){
+		ProcessParameter<ReportConfirmManage004Dto> processParameter = new ProcessParameter<>();
+		WorkFlowParameter<ReportConfirmManage004Dto> params = new WorkFlowParameter<>();
+		processParameter.setWorkFlowParameter(params);
+		processParameter.setPageId(this.getPageId());
+		if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+			processParameter.setOperationType(OperationType.NEW);
+		} else {
+			processParameter.setOperationType(OperationType.MODIFY);
+		}
+		//如果是从新建页面保存,则设置seqno
+		if(StringUtils.isEmpty(dto.getId())){
+			dto.setId(IDGenerator.generate());
+		}
+		params.setPageId(this.getPageId());
+		params.setElementId(dto.getElementId());
+		params.setBusinessCode(dto.getId());
+		params.setComment((entity) -> dto.getProdid()+ "(" + "报表名称" + dto.getReportName() + ")");
+		processParameter.setWorkFlowParameter(params);
+		String msg = reportConfirmManage004Service.start(processParameter,dto);
+		return new AjaxResult(msg);
+	}
+
+
+	@ResponseBody
+	@RequestMapping(value = "/getCommentList", method = RequestMethod.POST)
+	List<Map<String,Object>> getCommentList(){
+		String seqno = this.getParam("seqno");
+		List<Map<String,Object>> commentList = new ArrayList<Map<String, Object>>();
+		//获取审批意见记录
+		List<ReportConfirmManageCommentDto> comments = reportConfirmManage004Service.getInfo(seqno);
+		for(ReportConfirmManageCommentDto commentDto:comments){
+			Map<String,String> param = new HashMap<String,String>();
+			param.put("businessId",seqno);
+			param.put("seqnoComment",commentDto.getSeqno());
+			param.put("fileType","03");
+			List<UploadFileDto> fileList = reportConfirmManage004Service.getFileByBusinessCode(param);
+			Map<String,Object> commentMap = new HashMap<String,Object>();
+			commentMap.put("comment",commentDto.getCommentRemark());
+			commentMap.put("fileList",fileList);
+			commentList.add(commentMap);
+		}
+		return commentList;
+	}
 }

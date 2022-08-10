@@ -21,13 +21,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
+import com.joyintech.tams.disclosure.common.common.dto.WflValidInputParameter;
+import com.joyintech.tams.disclosure.common.common.service.MstWorkflowCommonService;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.validator.ReportConfirmManageParamValidator;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.ProcessState;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.service.ProcessService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -112,6 +118,11 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	private PoiReportService poiReportService;
 	@Autowired
 	private FileRemoteService minioFileRemoteService;
+
+	@Autowired
+	private MstWorkflowCommonService mstWorkflowCommonService;
+
+	private Logger logger = LoggerFactory.getLogger(ReportConfirmManage001Contoller.class);
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -313,6 +324,54 @@ public class ReportConfirmManage001Contoller extends BaseController {
         return commonCheck(result, operateType);
 //    	 return  new AjaxResult();
     }
+
+	@ResponseBody
+	@RequestMapping("check2")
+	public AjaxResult check2(@RequestBody ReportConfirmManageParamDto dto) {
+
+		AjaxResult ar =new AjaxResult();
+		List<ValidMessage> errorList = ar.getErrorList();
+		//获取页面勾选的数据
+		String data=dto.getData();
+
+		//转换为实体类
+		List<ReportConfirmManage001Dto> listdto = new ArrayList<>();
+		try {
+			listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
+		}
+		catch (IOException e) {
+			logger.error("",e);
+		}
+
+
+		//定义返回值：验证消息
+		List<ValidMessage> validMessageList = new ArrayList<ValidMessage>();
+
+		//数据验证判断
+		if(listdto!=null){
+			WflValidInputParameter wflValidInputParameter;
+			for(ReportConfirmManage001Dto nowDto : listdto){
+
+				//判断是否在流程中 zhangyf
+				wflValidInputParameter  = new WflValidInputParameter();
+				wflValidInputParameter.setPageId(dto.getPageId());
+				wflValidInputParameter.setBusinessDataPk1(nowDto.getSeqno());
+				if(StringUtil.isNotEmpty(nowDto.getWorkflowId())){
+					wflValidInputParameter.setWorkflowId(nowDto.getWorkflowId());
+				}
+				if(mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
+					//流程存在情况
+//					validMessageList.add(new ValidMessage(getMessage("该报表存在流程中数据，不可删除附件！")));
+					errorList.add(new ValidMessage("该报表存在流程中数据，不可删除附件！"));
+					ar.setErrorList(errorList);
+				}
+			}
+		}
+
+//		return validMessageList;
+		return ar;
+	}
+
 
     /**
      * 导出信息excel

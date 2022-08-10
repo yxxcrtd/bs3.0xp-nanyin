@@ -3,20 +3,35 @@ package com.joyintech.tams.disclosure.information.reveal.reportconfirm.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
+import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageCommentDto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto;
+import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.constant.ProcessType;
+import com.joyintech.workflow.engine.entity.FlowEntity;
+import com.joyintech.workflow.engine.entity.WorkflowEntity;
+import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.service.BusinessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao.UploadattAchment001Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +51,7 @@ import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage004Mapper;
 
 @Service
-public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
+public class ReportConfirmManage004Service extends BaseService<ReportConfirmManage004Dto> implements BaseProcessService<ReportConfirmManage004Dto> {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportConfirmManage004Service.class);
 
@@ -48,6 +63,8 @@ public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
 
     @Autowired
     ReportConfirmManage004Mapper reportConfirmManage004Mapper;
+    @Autowired
+    UploadattAchment001Mapper uploadattAchment001Mapper;
     @Autowired
     private FileRemoteService minioFileRemoteService;
 
@@ -221,7 +238,7 @@ public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
 //        s2.setId("02");
 //        s2.setText("点对点");
 //        update by zoujiamin 2021/05/28 TISHKBS-2070 end
-        s3.setId("03");
+        s3.setId("99");
         s3.setText("其他");
         listSelectDto.add(s1);
 //        listSelectDto.add(s2);
@@ -315,4 +332,123 @@ public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
         progressBarService.removePercent("ReportConfirmManage004", ProgressBarService.FILE_UPLOAD_ID);
     }
 
+    public List<UploadFileDto> getFileByBusinessCode(Map<String,String> param){
+        return uploadattAchment001Mapper.getFileByBusinessCode(param);
+    }
+
+    @Override
+    public void doInsert(ReportConfirmManage004Dto dto, OperationType type) {
+
+        Date nowTime = new Date();
+
+        // 人工上传时间
+        dto.setTime(nowTime);
+        dto.setRevealStatus(DictCodeListExt2.披露状态_未披露.getValue());
+        if (dto.getIsConfirm().equals(DictCodeListExt1.确认类型_自动.getValue())) {
+            // 确认状态
+            dto.setConfirmStatus(DictCodeList.确认状态_已确认.getValue());
+            dto.setConfirmDate(nowTime);
+        }
+        else {
+            // 确认状态
+            dto.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
+        }
+        if (StringUtil.isNotEmpty(dto.getRevealEndDate()) && !StringUtil.equals("", dto.getRevealEndDate())) {
+            dto.setRevealEndDate(DateUtil.parse(DateUtil.format(dto.getRevealEndDate()) + " 23:59:00"));
+        }
+
+
+        Map<String,String> param = new HashMap<>();
+        param.put("id",dto.getId());
+        //删除旧数据
+        reportConfirmManage004Mapper.deleteInfo(param);
+        //保存新数据
+        reportConfirmManage004Mapper.saveInfo(dto);
+
+        if (CollectionUtils.isNotEmpty(dto.getUploadFileList2())) {
+            for (UploadFileDto file : dto.getUploadFileList2()){
+                UploadFileDto sysFile = new UploadFileDto();
+                sysFile.setBusinessId(dto.getId());
+                sysFile.setSeqNo(file.getFileNo());
+                sysFile.setFileType("02");
+                reportConfirmManage004Mapper.updateUplodFile(sysFile);
+            }
+        }
+    }
+    /**
+     *  流程中保存按钮
+     * */
+    @Override
+    public void doUpdate(ReportConfirmManage004Dto dto){
+        //从待办下发起提交和保存,或者是退回后在发起提交()
+        doInsert(dto, null);
+        //复核人向下流转流程
+        //保存修订意见
+        if(StringUtil.isNotEmpty(dto.getComment())){
+            String infoSeqno = dto.getId();
+            ReportConfirmManageCommentDto commentDto = new ReportConfirmManageCommentDto(IDGenerator.generate(),infoSeqno,dto.getComment());
+            reportConfirmManage004Mapper.saveInfoComment(commentDto);
+            //修订意见与修订附件关联
+            reportConfirmManage004Mapper.relationFileAndComment(commentDto);
+        }
+
+    }
+
+    public void doBack(ReportConfirmManage004Dto entity) {
+        //退回删除已上传,未关联批注的附件
+        reportConfirmManage004Mapper.deleteUploadFile(entity.getId());
+
+    }
+
+    @Override
+    public void doComplete(ReportConfirmManage004Dto dto, OperationType operationType) {
+        dto.setStatus("E");
+        reportConfirmManage004Mapper.updateInfo(dto);
+    }
+
+    /**
+     *  流程中需要增加批注,不能进行批量审批
+     **/
+    @Override
+    public String checkForSubmit(FlowEntity entity, boolean isMutiApproval)  {
+        if (isMutiApproval) {
+            return "报表确认管理不能批量审批";
+        }
+        try{
+            if(ProcessType.SUBMIT.equals(entity.getProcessType()) || ProcessType.BACK.equals(entity.getProcessType())){
+                FlowEntity flowEntity = WorkflowContext.getProcessService().getRuntimeEntity(entity.getProcessInstanceId());
+                BusinessService<WorkflowEntity> businessService = WorkflowContext.getBusinessService(flowEntity.getBusinessService());
+                Class<?> clz = WorkFlowUtil.getClassByBusinessServiceName(flowEntity.getBusinessService());
+                ProcessMark businessEntity = WorkFlowUtil.getBusinessObjectFromRequest(clz, true);
+                Object a = JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(businessEntity.getBusinessData()), GenericsUtils.getSuperClassGenricType(ProxyUtil.getTargetClass(businessService.getClass())));
+                ReportConfirmManage004Dto infoDto = (ReportConfirmManage004Dto)a;
+
+                String firstNodeId = reportConfirmManage004Mapper.getFirstNodeId(entity.getWorkflowId());
+                if(!entity.getCurNodeId().equals(firstNodeId)){
+                    //非第一个节点提交,需要修订意见
+                    if(StringUtil.isEmpty(infoDto.getComment())){
+                        return "修订意见不能为空!";
+                    }
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public void doDelete(String workflowId) {
+        Map<String,String> param = new HashMap<>();
+        param.put("workflowId",workflowId);
+        reportConfirmManage004Mapper.deleteInfo(param);
+    }
+
+    public ReportConfirmManage004Dto queryInfo(Map<String,String> paramMap){
+        return reportConfirmManage004Mapper.queryInfo(paramMap);
+    }
+
+    public List<ReportConfirmManageCommentDto> getInfo(String infoSeqno){
+        return reportConfirmManage004Mapper.getInfo(infoSeqno);
+    }
 }

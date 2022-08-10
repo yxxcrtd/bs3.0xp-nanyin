@@ -7,7 +7,8 @@
 		FROM 
 			REP_REVEAL
 		WHERE
-			REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+			<!--REPORT_NAME = #{reportName,jdbcType=VARCHAR}-->
+			REPORT_CATEGORY = #{reportType,jdbcType=VARCHAR}
 		AND PRODID = #{prodId,jdbcType=VARCHAR}
 		AND nvl2(TO_CHAR(START_DATE,'yyyy-mm-dd'),TO_CHAR(START_DATE,'yyyy-mm-dd'),'0') = #{reportDateBegin}
 		AND nvl2(TO_CHAR(END_DATE,'yyyy-mm-dd'),TO_CHAR(END_DATE,'yyyy-mm-dd'),'0') = #{reportDateEnd}

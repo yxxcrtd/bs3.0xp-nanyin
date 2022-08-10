@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao.UploadattAchment001Mapper">
+    <select id="getFileByBusinessCode" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto">
+        SELECT s1.SEQ_NO as seqNo, s1.FILE_NAME as fileName,
+        s1.PATH as "path", s1.BUSINESS_ID as businessId,s1.SEQ_NO fileNo,to_char(s1.CREATE_TIME,'yyyy/MM/dd hh24:mi') createTimeText,
+        s2.real_name uploadUser
+        FROM SYS_UPLOAD_FILE_INFO s1
+        LEFT JOIN SYS_USER s2 ON s1.create_user = s2.user_name
+        WHERE BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+        <if test="fileType != null">
+            AND FILE_TYPE = #{fileType,jdbcType=VARCHAR}
+        </if>
+        <if test="seqnoComment == null">
+            AND SEQNO_COMMENT IS NULL
+        </if>
+        <if test="seqnoComment != null">
+            AND SEQNO_COMMENT = #{seqnoComment,jdbcType=VARCHAR}
+        </if>
+        ORDER BY s1.CREATE_TIME ASC
+    </select>
+
+    <update id="updateUplodFile" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto" >
+        update SYS_UPLOAD_FILE_INFO
+        <set >
+            <if test="fileType != null" >
+                FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="businessId != null" >
+                BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

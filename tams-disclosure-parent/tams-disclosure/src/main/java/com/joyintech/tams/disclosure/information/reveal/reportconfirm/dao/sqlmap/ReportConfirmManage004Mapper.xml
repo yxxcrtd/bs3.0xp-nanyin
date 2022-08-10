@@ -26,4 +26,139 @@
 		AND nvl2(TO_CHAR(END_DATE,'yyyy-mm-dd'),TO_CHAR(END_DATE,'yyyy-mm-dd'),'0') = #{reportDateEnd}
 		AND STATUS='E'
     </update>
+
+	<update id="updateUplodFile" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto" >
+		update SYS_UPLOAD_FILE_INFO
+		<set >
+			<if test="fileType != null" >
+				FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+			</if>
+			<if test="businessId != null" >
+				BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteInfo" parameterType="java.lang.String">
+		delete from REP_REVEAL
+		where 1 = 1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="workflowId != null">
+			AND WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+		</if>
+	</delete>
+
+	<insert id="saveInfo" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto" >
+        insert into REP_REVEAL (ID, REP_ID, REPORT_NAME,
+            REPORT_CATEGORY, PROD_NAME, PRODID,
+            END_DATE, START_DATE, SYS_FILENAME,
+            SYS_FILEPATH, SYS_FILENAME_DATE, FILEPATH,
+            TIME, FILENAME, ANNEX,
+            ANNEX_PATH, CONFIRM_STATUS, CONFIRM_USER,
+            CONFIRM_DATE, REVEAL_STATUS, REVEAL_DATE,
+            REVEAL_END_DATE, REVEAL_USER, IS_REVEAL,
+            IS_CONFIRM, DETAIL, REVEAL_CHANNEL,
+            STATUS, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+            WORKFLOW_ID
+            )
+        values (#{id,jdbcType=VARCHAR}, #{repId,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR},
+            #{reportCategory,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{prodid,jdbcType=VARCHAR},
+            #{endDate,jdbcType=DATE}, #{startDate,jdbcType=DATE}, #{sysFilename,jdbcType=VARCHAR},
+            #{sysFilepath,jdbcType=VARCHAR}, #{sysFilenameDate,jdbcType=TIMESTAMP}, #{filepath,jdbcType=VARCHAR},
+            #{time,jdbcType=TIMESTAMP}, #{filename,jdbcType=VARCHAR}, #{annex,jdbcType=VARCHAR},
+            #{annexPath,jdbcType=VARCHAR}, #{confirmStatus,jdbcType=VARCHAR}, #{confirmUser,jdbcType=VARCHAR},
+            #{confirmDate,jdbcType=TIMESTAMP}, #{revealStatus,jdbcType=VARCHAR}, #{revealDate,jdbcType=TIMESTAMP},
+            #{revealEndDate,jdbcType=TIMESTAMP}, #{revealUser,jdbcType=VARCHAR}, #{isReveal,jdbcType=VARCHAR},
+            #{isConfirm,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, #{revealChannel,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{workflowId,jdbcType=VARCHAR}
+            )
+    </insert>
+
+	<insert id="saveInfoComment" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageCommentDto">
+		insert into REP_REVEAL_COMMENT (SEQNO, INFO_SEQNO, COMMENT_REMARK,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{infoSeqno,jdbcType=VARCHAR}, #{commentRemark,jdbcType=DATE},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<update id="relationFileAndComment" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageCommentDto">
+		UPDATE sys_upload_file_info SET seqno_comment = #{seqno,jdbcType=VARCHAR}
+		WHERE FILE_TYPE = '03'
+		AND BUSINESS_ID = #{infoSeqno,jdbcType=VARCHAR}
+		AND seqno_comment IS NULL
+	</update>
+
+	<delete id="deleteUploadFile" parameterType="java.lang.String">
+		DELETE FROM sys_upload_file_info
+		WHERE FILE_TYPE ='03' and seqno_comment IS NULL
+		AND BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+	</delete>
+
+
+
+	<update id="updateInfo" parameterType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto">
+		UPDATE REP_REVEAL
+		<set>
+			<if test="filename != null">
+				FILENAME = #{filename,jdbcType=VARCHAR},
+			</if>
+			<if test="filepath != null">
+				FILEPATH = #{filepath,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryInfo" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto">
+		SELECT
+		T1.ID id,
+		T1.PRODID prodid,
+		T1.PROD_NAME prodName,
+		T1.REPORT_CATEGORY reportCategory,
+		T1.REPORT_NAME reportName,
+		T1.IS_CONFIRM isConfirm,
+		T1.IS_REVEAL isReveal,
+		T1.START_DATE startDate,
+		T1.END_DATE endDate,
+		T1.REVEAL_CHANNEL revealChannel,
+		T1.DETAIL detail,
+		T1.REVEAL_END_DATE revealEndDate,
+		T2.COMMENT_REMARK comment_remark,
+		T1.FILEPATH filepath,
+		T1.FILENAME filename,
+		T1.WORKFLOW_ID workflowId
+		FROM REP_REVEAL T1
+		left join REP_REVEAL_COMMENT T2 on T2.INFO_SEQNO = T1.ID
+		<where>
+			<if test="workflowId != null and !workflowId.equals('')">
+				AND WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+			</if>
+			<if test="seqno !=null and !seqno.equals('')">
+				AND ID = #{seqno,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="getInfo" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageCommentDto">
+		SELECT
+		SEQNO seqno,COMMENT_REMARK commentRemark
+		FROM REP_REVEAL_COMMENT
+		WHERE INFO_SEQNO = #{infoSeqno,jdbcType=VARCHAR}
+		ORDER BY CREATE_TIME ASC
+	</select>
+	<select id="getFirstNodeId" parameterType="java.lang.String" resultType="java.lang.String">
+		select s2.node_id from sys_wfl_business_list s1
+        inner join sys_wfl_business_node s2 on s1.workflow_id = s2.workflow_id
+        where s2.his_no='1' and s1.seq_no = #{seqNo,jdbcType=VARCHAR}
+	</select>
 </mapper>

@@ -1,7 +1,12 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao;
 
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageCommentDto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -23,4 +28,26 @@ public interface ReportConfirmManage004Mapper {
      * @since 1.0
      */
     int updateDataStatus(Map<String, Object>params);
+
+    void updateUplodFile(UploadFileDto dto);
+
+    void deleteInfo(Map<String,String> paramMap);
+
+    void saveInfo(ReportConfirmManage004Dto dto);
+
+    void saveInfoComment(ReportConfirmManageCommentDto commentDto);
+
+    void relationFileAndComment(ReportConfirmManageCommentDto commentDto);
+
+    void  deleteUploadFile(@Param("businessId") String businessId);
+
+    void updateConfirmStatus(ReportConfirmManage004Dto dto);
+
+    void updateInfo(ReportConfirmManage004Dto dto);
+
+    ReportConfirmManage004Dto queryInfo(Map<String,String> paramMap);
+
+    List<ReportConfirmManageCommentDto> getInfo(@Param("infoSeqno") String infoSeqno);
+
+    String  getFirstNodeId(@Param("seqNo") String seqNo);
 }

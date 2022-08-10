@@ -37,7 +37,12 @@ $(function () {
             data: function() {
                 return getSearchParams();
             }
-        },
+        },dblclick:function(table, data) {
+			Joyin.dialog("报表确认管理查看",
+				basePath + "disclosure/information/reveal/reportconfirm/ReportConfirmManage004/init",
+				"90%", "90%", {pageModel:PAGE_MODEL_REFERENCE,
+					seqno:data.id,'viewFlag':'view'},function(){});
+		},
 		checkbox: true,
 		cols: [ 
 		        {field:'id', title: 'id',visible:false},
@@ -48,7 +53,9 @@ $(function () {
                             return '<span class="layui-badge-rim layui-bg-blue">'+row.confirmStatusName+'</span>';
                         }else if(row.confirmStatus=='0'){
                             return '<span class="layui-badge-rim layui-bg-red">'+row.confirmStatusName+'</span>';
-                        }else{
+                        }else if(row.confirmStatus=='2'){
+							return '<span class="layui-badge-rim layui-bg-black">'+row.confirmStatusName+'</span>';
+						}else{
                         	return '';
                         }
                     }
@@ -76,8 +83,8 @@ $(function () {
 						if(editFlag==='true'){
 							var str = '<div style="height:28px; overflow:hidden;float:left">'+'<a href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.filepath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName)+ '">' + data + '</a>'+'</div>';
 							//'<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.filepath)+ '">'+ data +'</a>'+'</div>';
-							if(row.filename != null && row.filename != "" && row.confirmStatus == '0'){
-								str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除文件"></i></a>'+'</div>';
+							if(row.filename != null && row.filename != "" ){
+								str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'","'+row.confirmStatus+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除文件"></i></a>'+'</div>';
 							}
 							return str;
 						}
@@ -92,6 +99,9 @@ $(function () {
                 {field:'isConfirmName', title: '确认方式',width:100, sort: true,sortField:"isConfirm"},
                 {field:'revealChannelName', title: '披露渠道',width:100, sort: true,sortField:"revealChannel"},
                 {field:'isRevealName', title: '披露方式',width:100, sort: true,sortField:"isReveal"},
+			    {field:'confirmUser', title: '确认人',width:100, sort: true,sortField:"confirmUser"},
+			    {field:'checkUser', title: '确认复核人',width:100, sort: true,sortField:"checkUser"},
+		     	{field:'checkTimeStr', title: '复核时间',width:100, sort: true,sortField:"checkTime"},
 //添加          附件  ===========   
                 {field:'annexPath', title: '路径',visible:false},
                 {field:'annex', title: '附件',width:300, sort: true
@@ -99,8 +109,8 @@ $(function () {
 						if(editFlag==='true'){
 							var str = '<div style="width:210px;height:28px; overflow:hidden;float:left">'+'<a style="width:100%" href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.annexPath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName )+ '">'+ data +'</a>'+'</div>';
 							//str += '<a class="fileclass"  href=\'javascript:deletFile("'+3+'","'+row.id+'")\'><i title="删除文件"  visibility="hidden" class="iconfont icon-cloud-upload1"></i></a>';
-							if(row.annex != null && row.annex != "" && row.confirmStatus == '0'){
-								str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除附件"></i></a>'+'</div>';
+							if(row.annex != null && row.annex != "" ){
+								str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'","'+row.confirmStatus+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除附件"></i></a>'+'</div>';
 							}
 							return str;
 						}
@@ -510,7 +520,7 @@ $(function () {
      	 }
      	else {
      		for(var i = 0 ; i<rowArr.length ; i++){
-     			if(rowArr[i].confirmStatus=='0'){
+     			if(rowArr[i].confirmStatus=='0' || rowArr[i].confirmStatus=='2'){
      				Joyin.error("只能对已确认的数据进行取消确认");
      				break;
      			}
@@ -638,7 +648,7 @@ $(function () {
 	 /**
 	  * 跳转页面3  删除文件
 	  */
-	 var redirectUrl3 = function(id, option,seqno,prodid){
+	 var redirectUrl3 = function(id, option,seqno,prodid,confirmStatus){
 		 var workflowId = $("#workflowId").val();
 		 if(option == "1"){
 			 var object = {}; 
@@ -648,20 +658,89 @@ $(function () {
 			 object.pageModel = pageModel;
 			 object.updateTypeFlag = "QR";//当前操作为确认还是下发【确认："QR",下发："XF"】
 			 if(workflowId) {
-				 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id}, 
-						 function(result) {
-					 table.reload();
-				 });
-			 }else {
-				 Joyin.ajax(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check',
-						 object,function(){
-					 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id}, 
-							 function(result) {
+				 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+					 function(result) {
 						 table.reload();
 					 });
-				 });
+			 }else{
+				 if(confirmStatus == "1"){
+					 Joyin.error("只能对未确认或已退回报表进行附件删除");
+				 }else if(confirmStatus == "0"){
+					 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check2',
+						 object,function(result){
+					 	debugger;
+							 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+								 function(result) {
+									 table.reload();
+								 });
+						 });
+				 }else{
+					 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+						 function(result) {
+							 table.reload();
+						 });
+				 }
 			 }
-		 }else {
+
+			 // if(workflowId) {
+				//  Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+				// 		 function(result) {
+				// 	 table.reload();
+				//  });
+			 // }else {
+				//  Joyin.ajax(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check',
+				// 		 object,function(){
+				// 	 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+				// 			 function(result) {
+				// 		 table.reload();
+				// 	 });
+				//  });
+			 // }
+		 }else if(option == "2"){
+			 var object = {};
+			 var rowArr = table.getAllCheckedRows();
+			 object.data = '[{"seqno":"' + id + '","prodid":"' + prodid + '","id":"' + id + '"}]';
+			 object.operateType = 'submit';
+			 object.pageModel = pageModel;
+			 object.updateTypeFlag = "QR";//当前操作为确认还是下发【确认："QR",下发："XF"】
+			 if(confirmStatus == "1"){
+				 Joyin.error("只能对未确认或已退回报表进行附件删除");
+			 }else if(confirmStatus == "0"){
+				 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check2',
+					 object,function(){
+						 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+							 function(result) {
+								 table.reload();
+							 });
+					 });
+			 }else{
+				 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+					 function(result) {
+						 table.reload();
+					 });
+			 }
+			 // var object = {};
+			 // var rowArr = table.getAllCheckedRows();
+			 // object.data = '[{"seqno":"' + id + '","prodid":"' + prodid + '","id":"' + id + '"}]';
+			 // object.operateType = 'submit';
+			 // object.pageModel = pageModel;
+			 // object.updateTypeFlag = "QR";//当前操作为确认还是下发【确认："QR",下发："XF"】
+			 // if(workflowId) {
+				//  Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+				// 	 function(result) {
+				// 		 table.reload();
+				// 	 });
+			 // }else {
+				//  Joyin.ajax(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check',
+				// 	 object,function(){
+				// 		 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id},
+				// 			 function(result) {
+				// 				 table.reload();
+				// 			 });
+				// 	 });
+			 // }
+		 }
+		 else {
 			 Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteFile', {option: option, id:id}, 
 					 function(result) {
 				 table.reload();
@@ -770,7 +849,7 @@ var redirectUrl4 = function(param){
 	
 	Joyin.dialog(JoyinUtil.getLabel("报表人工上传"),
           JoyinUtil.getRealPath("/disclosure/information/reveal/reportconfirm/ReportConfirmManage004/init?"),
-          "80%", "80%", {},
+          "90%", "90%", {},
           function(data){
         	  param.reload();
               data;

@@ -1955,6 +1955,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	对账结果_对账一致(DictCode.对账结果,"1","对账一致"),
 	确认状态_未确认(DictCode.确认状态,"0","未确认"),
 	确认状态_已确认(DictCode.确认状态,"1","已确认"),
+	确认状态_已退回(DictCode.确认状态,"2","已退回"),
 	持仓类型_可用(DictCode.持仓类型,"01","可用"),
 	持仓类型_在途(DictCode.持仓类型,"02","在途"),
 	持仓类型_实际(DictCode.持仓类型,"03","实际"),

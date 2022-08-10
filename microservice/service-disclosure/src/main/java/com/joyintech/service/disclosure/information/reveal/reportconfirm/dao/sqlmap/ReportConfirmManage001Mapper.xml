@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage001Mapper">
     <select id="queryPageList" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
-		select * from (SELECT 
+		select * from (SELECT
 			REVEAL.ID id
 			,REVEAL.REP_ID repId
 			,REVEAL.REPORT_NAME reportName
 			,REVEAL.PROD_NAME prodName
 			,REVEAL.PRODID prodid
-			,case when 
+			,case when
 				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
 			 then to_char(REVEAL.END_DATE,'yyyy-mm-dd')
 			 else to_char(REVEAL.START_DATE,'yyyy-mm-dd') || '--'||to_char(REVEAL.END_DATE,'yyyy-mm-dd')
@@ -40,7 +40,7 @@
 			<!-- add by guozhongbao 报表披露管理 20181204 end -->
 			,REVEAL.DETAIL detail
 			,to_char(REVEAL.TIME,'yyyy-MM-dd') uploadTime
-			,REVEAL.CONFIRM_USER confirmUser
+		<!--,REVEAL.CONFIRM_USER confirmUser-->
 			,REVEAL.REPORT_CATEGORY reportCategory
 			,rfp.NAME reportCategoryName
 			,to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd hh24:mi') revealEndDateStr
@@ -50,11 +50,22 @@
 			,fp.finprod_id finprodId
 			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
             ,decode(REVEAL.REVEAL_STATUS,'01',decode(REVEAL.IS_REVEAL,'01',T2.REAL_NAME,'系统自动披露'),null) revealUser
+	      	,decode(REVEAL.CONFIRM_STATUS,'1',decode(REVEAL.IS_CONFIRM,'01',F1.REAL_NAME,'系统自动确认'),null) confirmUser
+            ,F2.REAL_NAME checkUser
+            ,REVEAL.CHECK_TIME checkTime
 		FROM REP_REVEAL REVEAL
 		left join (SELECT * FROM(
 		SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
 		FROM SYS_USER su
 		) T where T.ronum = 1) T2 on REVEAL.REVEAL_USER = T2.USER_NAME
+		left join (SELECT * FROM(
+		SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
+		FROM SYS_USER su
+		) F where F.ronum = 1) F1 on REVEAL.CONFIRM_USER = F1.USER_NAME
+		left join (SELECT * FROM(
+		SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
+		FROM SYS_USER su
+		) F where F.ronum = 1) F2 on REVEAL.CHECK_USER = F2.USER_NAME
 		left join rep_info info on REVEAL.rep_id = info.rep_id
 		left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
 		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
@@ -181,6 +192,8 @@
 	      CONFIRM_USER = #{confirmUser,jdbcType=VARCHAR}
 	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		  ,UPDATE_TIME = sysdate
+		  ,CHECK_USER = #{checkUser,jdbcType=VARCHAR}
+		  ,CHECK_TIME = #{checkTime,jdbcType=DATE}
 	      <if test="isReveal != null and isReveal != ''">
 		  	,IS_REVEAL=#{isReveal,jdbcType=VARCHAR}
 	      </if>
@@ -474,6 +487,8 @@
           CONFIRM_USER=null,
           UPDATE_USER=#{updateUser,jdbcType=VARCHAR},
           UPDATE_TIME=sysdate
+		 ,CHECK_USER = null
+		 ,CHECK_TIME = null
 	      WHERE 1=1
 	      AND ID in
        		<foreach collection="idList" item="item" open="(" separator="," close=")">
