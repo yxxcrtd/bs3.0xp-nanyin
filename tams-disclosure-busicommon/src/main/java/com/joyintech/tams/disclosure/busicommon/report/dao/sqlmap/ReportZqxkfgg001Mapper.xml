@@ -38,9 +38,9 @@
 				,TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD') openStartDate
 			FROM
 				REP_PROD_INFO INFO
-				INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPERATION_START_DATE > TO_DATE(#{announceDate},'yyyy-MM-dd')
+				INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_START_DATE > TO_DATE(#{announceDate},'yyyy-MM-dd')
 				<if test="setDate != null">
-					AND DPP.OPERATION_START_DATE > #{setDate}
+					AND DPP.OPEN_START_DATE > #{setDate}
 				</if>
 				WHERE
 				 	INFO.STATUS = 'E'
@@ -64,7 +64,7 @@
 			REP_PROD_INFO INFO
 			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND  DPP.OPERATION_START_DATE &lt;= TO_DATE(#{announceDate},'yyyy-MM-dd')
 			<if test="setDate != null">
-				AND DPP.OPERATION_START_DATE > #{setDate}
+				AND DPP.OPEN_START_DATE > #{setDate}
 			</if>
 			/*
 				查询根据自动赎回日查询超额业绩报酬
