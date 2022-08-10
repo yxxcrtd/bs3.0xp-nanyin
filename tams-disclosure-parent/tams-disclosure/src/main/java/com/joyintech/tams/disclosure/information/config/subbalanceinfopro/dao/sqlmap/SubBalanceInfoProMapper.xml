@@ -176,7 +176,7 @@
     <select id="findProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         PROD_ID id,
-        PROD_ABBR text,
+        PROD_NAME text,
         PROD_NAME object
         FROM
         rep_prod_info
