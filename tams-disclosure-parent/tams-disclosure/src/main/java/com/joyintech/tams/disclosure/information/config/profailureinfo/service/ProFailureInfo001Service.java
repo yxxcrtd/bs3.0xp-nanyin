@@ -294,4 +294,8 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
     public List<SelectOptionDto> getRePord(Map<String, Object> pageParam) {
         return proFailureInfoMapper.getRePord(pageParam);
     }
+
+    public int hasRepeatedData(ProFailureInfo001Dto dto) {
+        return proFailureInfoMapper.hasRepeatedData(dto);
+    }
 }

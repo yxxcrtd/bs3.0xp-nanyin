@@ -250,22 +250,6 @@
 
 
 
-    var error1= function(message, callback) {
-        var index = layer.alert(message, {
-            icon: 2,
-            closeBtn: 0,
-            area: ["500px", "200px"],
-            maxHeight: 230
-            // 按钮
-        }, function () {
-            assertClick();
-            layer.close(index);
-            if (callback && typeof callback === "function") {
-                callback();
-            }
-        });
-        return index;
-    }
     /**
      * 导出选中的表格数据
      */

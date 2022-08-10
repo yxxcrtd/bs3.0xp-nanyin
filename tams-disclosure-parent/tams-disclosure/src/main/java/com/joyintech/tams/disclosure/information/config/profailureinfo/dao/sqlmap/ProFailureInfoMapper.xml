@@ -108,7 +108,7 @@
         WHERE PROD_RE IS NOT NULL
     </select>
     <select id="selectByProdRegistNo" resultType="java.lang.String">
-        select PROD_RE
+        select distinct PROD_RE
         from REP_PROD_INFO
         where PROD_RE = #{prodRegistNo,jdbcType=VARCHAR}
     </select>
@@ -149,6 +149,12 @@
         from DIS_PROD_NOCREATE dp
         left join REP_PROD_INFO  rp
         on dp.PROD_REGIST_NO = rp.PROD_RE
+    </select>
+    <select id="hasRepeatedData" resultType="java.lang.Integer">
+        select count (1) from DIS_PROD_NOCREATE where
+        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and
+        NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and
+        REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
     </select>
 
 </mapper>
