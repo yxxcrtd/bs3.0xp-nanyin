@@ -79,7 +79,7 @@ public class MatureReportDataService implements IReportDataService {
 				matureReportDto.setGenDate(matureReportDto.getmDate());
 				
 	        	//期限天数
-				matureReportDto.setRunDays( DateUtil.getBetweenDayNumber(dto.geteDate(),dto.getmDate()));
+				matureReportDto.setRunDays( DateUtil.getBetweenDayNumber(matureReportDto.geteDate(),matureReportDto.getmDate()));
 				
 			}
 
