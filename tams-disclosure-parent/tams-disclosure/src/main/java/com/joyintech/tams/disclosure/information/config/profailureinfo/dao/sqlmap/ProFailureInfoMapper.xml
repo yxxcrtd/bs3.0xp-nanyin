@@ -108,9 +108,8 @@
         WHERE PROD_RE IS NOT NULL
     </select>
     <select id="selectByProdRegistNo" resultType="java.lang.String">
-        select distinct PROD_RE
-        from REP_PROD_INFO
-        where PROD_RE = #{prodRegistNo,jdbcType=VARCHAR}
+        select distinct PROD_REGIST_NO from DIS_PROD_NOCREATE
+        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
     </select>
 
     <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
