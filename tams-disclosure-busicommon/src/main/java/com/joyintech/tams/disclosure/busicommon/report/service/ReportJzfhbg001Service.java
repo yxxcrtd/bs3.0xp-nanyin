@@ -64,14 +64,13 @@ public class ReportJzfhbg001Service implements IReportDataService {
         logger.info("净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）【{}】开始生成", JsonUtils.object2Json(paraMap));
         List<Map<String, Object>> resultMap = new ArrayList<>();
         ReportJzfhbg001Dto reportJzfhbg001Dto = new ReportJzfhbg001Dto();
+        //产品代码：子产品代码为空的话，取父产品代码
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        //收益分配基准日
+        String settDateStr = (String) paraMap.get("enddate");
+        //判断是 净值及分红报告（私募封闭式） 还是 净值及分红报告（私募开放式） 的模板
+        String rptType = (String) paraMap.get("uri");
         try {
-            //产品代码：子产品代码为空的话，取父产品代码
-            String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-            //收益分配基准日
-            String settDateStr = (String) paraMap.get("enddate");
-            //判断是 净值及分红报告（私募封闭式） 还是 净值及分红报告（私募开放式） 的模板
-            String rptType = (String) paraMap.get("uri");
-
             if (StringUtil.isNotEmpty(prodId) && StringUtil.isNotEmpty(settDateStr)) {
                 Map<String, Object> searchParam = new HashMap<>();
                 searchParam.put("prodId", prodId);
@@ -234,11 +233,11 @@ public class ReportJzfhbg001Service implements IReportDataService {
 
                 }
             }
-            resultMap.add(ReportCollectionUtils.bean2Map(reportJzfhbg001Dto));
             logger.info("净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
+        resultMap.add(ReportCollectionUtils.bean2Map(reportJzfhbg001Dto));
         return resultMap;
     }
 

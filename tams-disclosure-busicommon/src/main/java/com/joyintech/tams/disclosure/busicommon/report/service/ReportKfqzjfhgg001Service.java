@@ -75,14 +75,13 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
         logger.info("开放、净值及分红公告【{}】开始生成", JsonUtils.object2Json(paraMap));
         List<Map<String, Object>> resultMap = new ArrayList<>();
         ReportKfqzjfhgg001Dto reportKfqzjfhgg001Dto = new ReportKfqzjfhgg001Dto();
+        //产品代码：子产品代码为空的话，取父产品代码
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        //日期
+        String baseDate = (String) paraMap.get("enddate");
+        //判断是开放、净值及分红公告（公募&开放频率在半年（不含）以内） 还是 开放、净值及分红公告（公募&开放频率在半年以上） 的模板
+        String rptType = (String) paraMap.get("uri");
         try {
-            //产品代码：子产品代码为空的话，取父产品代码
-            String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-            //日期
-            String baseDate = (String) paraMap.get("enddate");
-            //判断是开放、净值及分红公告（公募&开放频率在半年（不含）以内） 还是 开放、净值及分红公告（公募&开放频率在半年以上） 的模板
-            String rptType = (String) paraMap.get("uri");
-
             if (StringUtil.isNotEmpty(prodId) && StringUtil.isNotEmpty(baseDate)) {
                 Map<String, Object> searchParam = new HashMap<>();
                 searchParam.put("prodId", prodId);
@@ -243,11 +242,11 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】", JsonUtils.object2Json(paraMap));
                 }
             }
-            resultMap.add(ReportCollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
             logger.info("开放、净值及分红公告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("开放、净值及分红公告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
+        resultMap.add(ReportCollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
         return resultMap;
     }
 
