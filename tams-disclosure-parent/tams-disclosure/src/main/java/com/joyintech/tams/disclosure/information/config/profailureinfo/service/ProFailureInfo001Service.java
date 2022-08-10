@@ -55,10 +55,16 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             proFailureInfoMapper.deleteByKey(dto.getProdRegistNo());
         }
         else if (StringUtil.equals(type, "NEW")) {
+            ProFailureInfo001Dto dto1 = proFailureInfoMapper.isRepeated(dto);
+            if (dto!=null && StringUtil.equals(dto1.getDataStatus(),"D")){
+                dto.setDataStatus("E");
+                proFailureInfoMapper.updateByKey(dto);
+            }else {
             ProFailureInfo001Dto proFailureInfo001Dto = new ProFailureInfo001Dto();
             BeanUtil.copyPropertiesIgnoreNull(proFailureInfo001Dto,dto);
             proFailureInfo001Dto.setDataStatus("E");
             proFailureInfoMapper.insert(proFailureInfo001Dto);
+            }
         }
         else {
             dto.setDataStatus("E");
@@ -297,5 +303,9 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
 
     public int hasRepeatedData(ProFailureInfo001Dto dto) {
         return proFailureInfoMapper.hasRepeatedData(dto);
+    }
+
+    public ProFailureInfo001Dto isRepeated(ProFailureInfo001Dto dto) {
+        return proFailureInfoMapper.isRepeated(dto);
     }
 }

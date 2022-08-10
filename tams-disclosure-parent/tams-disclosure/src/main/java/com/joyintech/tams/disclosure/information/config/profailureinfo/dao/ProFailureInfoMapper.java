@@ -34,4 +34,6 @@ public interface ProFailureInfoMapper {
     List<SelectOptionDto> getRePord(Map<String, Object> pageParam);
 
     int hasRepeatedData(ProFailureInfo001Dto dto);
+
+    ProFailureInfo001Dto isRepeated(ProFailureInfo001Dto dto);
 }

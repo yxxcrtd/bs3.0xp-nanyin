@@ -18,20 +18,46 @@ $(function() {
 		} else if (pageModel == PAGE_MODEL_EDIT) {
 			object.operateType = 'update';
 		}
-		 Joyin.ajaxJson(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/check',
-                 object, function(result) {
-                     Joyin.confirm(result.data, function() {
-                         if (operateType === 'save') {
-                             WorkFlow.doSaveList(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save',
-                                     object, "ProFailureInfo002_btn_save");
-                         } else {
-                             WorkFlow.doSubmitList(basePath  + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save',
-                                     object, "ProFailureInfo002_btn_submit");
-                         }
-                     });
-         });
-	}
+	// 	 Joyin.ajaxJson(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/check',
+    //              object, function(result) {
+    //                  Joyin.confirm(result.data, function() {
+    //                      if (operateType === 'save') {
+    //                          WorkFlow.doSaveList(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save',
+    //                                  object, "ProFailureInfo002_btn_save");
+    //                      } else {
+    //                          WorkFlow.doSubmitList(basePath  + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save',
+    //                                  object, "ProFailureInfo002_btn_submit");
+    //                      }
+    //                  });
+    //      });
+	// }
+		Joyin.ajaxJson(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/check',object,function(result){
+			if(result){
+				Joyin.ajaxJson(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/checkExistData', object, function(checkResult) {
+					if(checkResult){
+						object.operationType = 'modify';
+						Joyin.confirm("有已删除的数据，是否覆盖", function () {
+							if(operateType === 'save') {
+								WorkFlow.doSaveList(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save', object, "ProFailureInfo002_btn_save");
+							}
+							else {
+								WorkFlow.doSubmitList(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save', object, "ProFailureInfo002_btn_submit");
+							}
+						},{}, function () {
+						});
+					}else{
+						if(operateType === 'save') {
+							WorkFlow.doSaveList(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save', object, "ProFailureInfo002_btn_save");
+						}
+						else {
+							WorkFlow.doSubmitList(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save', object, "ProFailureInfo002_btn_submit");
+						}
+					}
+				})
 
+			}
+		})
+	}
 	/**
 	 * 页面初始化
 	 */
