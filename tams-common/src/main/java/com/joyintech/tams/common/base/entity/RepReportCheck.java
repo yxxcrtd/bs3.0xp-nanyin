@@ -12,6 +12,11 @@ public class RepReportCheck extends BaseEntity {
     private String reportCheckId;
 
     /**
+     * 报表ID
+     */
+    private String repId;
+
+    /**
      * 报表类别
      */
     private String reportType;
@@ -20,11 +25,6 @@ public class RepReportCheck extends BaseEntity {
      * 报表名称
      */
     private String reportName;
-
-    /**
-     * 产品名称
-     */
-    private String prodName;
 
     /**
      * 产品代码
@@ -37,9 +37,24 @@ public class RepReportCheck extends BaseEntity {
     private Date checkDate;
 
     /**
+     * null
+     */
+    private Date startDate;
+
+    /**
+     * null
+     */
+    private Date endDate;
+
+    /**
      * 错误信息
      */
     private String errormsg;
+
+    /**
+     * 文件编号
+     */
+    private String fileNo;
 
     /**
      * 数据状态
@@ -50,11 +65,6 @@ public class RepReportCheck extends BaseEntity {
      * 数据来源
      */
     private String dataSource;
-
-    /**
-     * 是否提示（01 是；02否，默认是）
-     */
-    private String tips;
 
     /**
      * 取得 报表数据校验主键
@@ -70,6 +80,22 @@ public class RepReportCheck extends BaseEntity {
      */
     public void setReportCheckId(String reportCheckId) {
         this.reportCheckId = reportCheckId == null ? null : reportCheckId.trim();
+    }
+
+    /**
+     * 取得 报表ID
+     * @return 报表ID
+     */
+    public String getRepId() {
+        return repId;
+    }
+
+    /**
+     * 设置 报表ID
+     * @param repId 报表ID
+     */
+    public void setRepId(String repId) {
+        this.repId = repId == null ? null : repId.trim();
     }
 
     /**
@@ -102,22 +128,6 @@ public class RepReportCheck extends BaseEntity {
      */
     public void setReportName(String reportName) {
         this.reportName = reportName == null ? null : reportName.trim();
-    }
-
-    /**
-     * 取得 产品名称
-     * @return 产品名称
-     */
-    public String getProdName() {
-        return prodName;
-    }
-
-    /**
-     * 设置 产品名称
-     * @param prodName 产品名称
-     */
-    public void setProdName(String prodName) {
-        this.prodName = prodName == null ? null : prodName.trim();
     }
 
     /**
@@ -154,6 +164,40 @@ public class RepReportCheck extends BaseEntity {
     }
 
     /**
+     * 取得 null
+     * @return null
+     */
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * 设置 null
+     * @param startDate null
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * 设置 null
+     * @param endDate null
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    /**
      * 取得 错误信息
      * @return 错误信息
      */
@@ -167,6 +211,22 @@ public class RepReportCheck extends BaseEntity {
      */
     public void setErrormsg(String errormsg) {
         this.errormsg = errormsg == null ? null : errormsg.trim();
+    }
+
+    /**
+     * 取得 文件编号
+     * @return 文件编号
+     */
+    public String getFileNo() {
+        return fileNo;
+    }
+
+    /**
+     * 设置 文件编号
+     * @param fileNo 文件编号
+     */
+    public void setFileNo(String fileNo) {
+        this.fileNo = fileNo == null ? null : fileNo.trim();
     }
 
     /**
@@ -199,21 +259,5 @@ public class RepReportCheck extends BaseEntity {
      */
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource == null ? null : dataSource.trim();
-    }
-
-    /**
-     * 取得 是否提示（01 是；02否，默认是）
-     * @return 是否提示（01 是；02否，默认是）
-     */
-    public String getTips() {
-        return tips;
-    }
-
-    /**
-     * 设置 是否提示（01 是；02否，默认是）
-     * @param tips 是否提示（01 是；02否，默认是）
-     */
-    public void setTips(String tips) {
-        this.tips = tips == null ? null : tips.trim();
     }
 }

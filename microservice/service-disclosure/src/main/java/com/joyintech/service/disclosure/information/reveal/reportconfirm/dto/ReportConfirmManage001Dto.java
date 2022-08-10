@@ -6,6 +6,7 @@
 package com.joyintech.service.disclosure.information.reveal.reportconfirm.dto;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.annotation.PageId;
@@ -89,6 +90,10 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     private String reportDate; // 报告期
 
     private String revealEndDateStr; // 披露截至日
+
+    private String checkUser;
+
+    private Date checkTime;
 
     public String getSeqno() {
         return this.getId();
@@ -306,5 +311,22 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public void setRevealEndDateStr(String revealEndDateStr) {
         this.revealEndDateStr = revealEndDateStr;
     }
+
+    public String getCheckUser() {
+        return checkUser;
+    }
+
+    public void setCheckUser(String checkUser) {
+        this.checkUser = checkUser;
+    }
+
+    public Date getCheckTime() {
+        return checkTime;
+    }
+
+    public void setCheckTime(Date checkTime) {
+        this.checkTime = checkTime;
+    }
+
 
 }

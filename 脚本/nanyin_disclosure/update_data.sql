@@ -916,3 +916,16 @@ delete from sys_page where PAGE_ID ='ReportCheck002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportCheck002', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck002', 'disclosure/information/config/repreportcheck/ReportCheck002', null, null, null, '02', '02', '指标阈值配置', 'system', null, sysdate, 'system', sysdate);
 /**指标阈值配置 add by zhengxiaolian 2022-08-09 end**/
+
+/**报表确认管理 add by shengning 2022-08-10 start**/
+DELETE FROM SYS_PAGE WHERE PAGE_ID in ('UploadattAchment001','UploadattAchment002','UploadattAchment003');
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('UploadattAchment001', 'DIS', '/disclosure/information/reveal/reportconfirm/UploadattAchment001', 'disclosure/information/reveal/reportconfirm/UploadattAchment001', null, null, null, '02', '01', '报表/模板附件', 'system', null,sysdate, 'system',sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('UploadattAchment002', 'DIS', '/disclosure/information/reveal/reportconfirm/UploadattAchment002', 'disclosure/information/reveal/reportconfirm/UploadattAchment002', null, null, null, '02', '01', '其他附件', 'system', null,sysdate, 'system',sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('UploadattAchment003', 'DIS', '/disclosure/information/reveal/reportconfirm/UploadattAchment003', 'disclosure/information/reveal/reportconfirm/UploadattAchment003', null, null, null, '02', '01', '其他附件', 'system', null, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE =  'CONFIRM_STATUS' and ITEM_CODE = '2';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('CONFIRM_STATUS', '2', '已退回', 3, '0', 'system', null,sysdate, 'system',sysdate, null);
+
+/**报表确认管理 add by shengning 2022-08-10 end**/
+

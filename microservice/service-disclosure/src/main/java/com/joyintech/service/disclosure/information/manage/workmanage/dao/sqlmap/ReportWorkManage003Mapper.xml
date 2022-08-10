@@ -26,7 +26,7 @@
 			and PROD_ID like '%'||#{prodId,jdbcType=VARCHAR}||'%'
 		</if>
 		<if test="prodName != null and prodName != ''">
-			and nvl(PROD_ABBR,PROD_NAME) like '%'||#{prodName,jdbcType=VARCHAR}||'%'
+			and nvl(PROD_NAME,PROD_ABBR) like '%'||#{prodName,jdbcType=VARCHAR}||'%'
 		</if>
     </select>
     

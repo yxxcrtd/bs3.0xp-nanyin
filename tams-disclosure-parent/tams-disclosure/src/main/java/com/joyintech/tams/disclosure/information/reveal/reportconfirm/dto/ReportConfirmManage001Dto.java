@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.annotation.PageId;
@@ -80,6 +81,9 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     private String reportDate; // 报告期
     private String revealEndDateStr; // 披露截至日
 
+    private String checkUser;
+
+    private Date checkTime;
     //产品代销机构:单据披露按照代销机构维度生成压缩包 add by zhouqiang start
     private String agencyName;
 
@@ -301,7 +305,27 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
 	public void setRevealEndDateStr(String revealEndDateStr) {
 		this.revealEndDateStr = revealEndDateStr;
 	}
-    
-}     				
+
+
+
+    public String getCheckUser() {
+        return checkUser;
+    }
+
+    public void setCheckUser(String checkUser) {
+        this.checkUser = checkUser;
+    }
+
+    public Date getCheckTime() {
+        return checkTime;
+    }
+
+    public void setCheckTime(Date checkTime) {
+        this.checkTime = checkTime;
+    }
+    public String getCheckTimeStr() {
+        return DateUtil.formatDateTime(this.getCheckTime());
+    }
+}
       			
       

@@ -156,6 +156,34 @@ public class ReportFileService {
 		sb.append(fileType);
 		return sb.toString();
     }
+
+	public String getCheckFileName(String repId,Date genDate,Map<String,Object> params,String fileType) {
+
+		ReportInfo reportInfo = null;
+		try {
+			reportInfo = reportInfoMapper.getReportInfoByID(repId);
+		} catch (Exception e) {
+			logger.error("获取报表模板错误。",e);
+			return "";
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		if ( genDate==null )
+			genDate = commonPlatformDateService.getSysDate();
+		String dirname = sdf.format(genDate);
+
+		//文件的名称，用params里面的值替换变量，如：{prodName}{prodid}{enddate}开放公告
+		String filename = replacePara(reportInfo.getFileName(),params);
+
+		StringBuffer sb = new StringBuffer();
+		sb.append(dirname);
+		sb.append(SEPARATOR);
+		sb.append("check");
+		sb.append(SEPARATOR);
+		sb.append(filename);
+		sb.append(fileType);
+		return sb.toString();
+	}
 	
 	/**
 	 * 获取报表文件名称

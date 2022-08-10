@@ -947,3 +947,58 @@ comment on column REP_INFO.FILE_NAME is '生成的文件名';
 /**上传文件记录返回信息表"披露文件名称"字段长度修改(应该和REP_REVEAL中的FILENAME字段长度保持一致) add by zhouqiang 2022-08-09 start*/
 ALTER TABLE REP_FTP_DETAIL_MSG MODIFY FILE_NAME VARCHAR2(150 BYTE);
 /**上传文件记录返回信息表"披露文件名称"字段长度修改(应该和REP_REVEAL中的FILENAME字段长度保持一致) add by zhouqiang 2022-08-09 end*/
+
+/**报表确认管理,增加字段 add by shengning 2022-08-10 start*/
+alter table REP_REVEAL add WORKFLOW_ID VARCHAR2(50);
+comment on column REP_REVEAL.WORKFLOW_ID is '流程ID';
+
+alter table REP_REVEAL add CHECK_USER VARCHAR2(50);
+comment on column REP_REVEAL.CHECK_USER is '确认复核人';
+
+alter table REP_REVEAL drop column CHECK_TIME;
+alter table REP_REVEAL add CHECK_TIME TIMESTAMP(6);
+comment on column REP_REVEAL.CHECK_TIME is '复核时间';
+/**报表确认管理,增加字段 add by shengning 2022-08-10 end*/
+/**报表确认管理批注表 add by shengning 2022-08-10 start*/
+drop table REP_REVEAL_COMMENT;
+CREATE TABLE
+    REP_REVEAL_COMMENT
+    (
+        SEQNO VARCHAR2(32) NOT NULL,
+        INFO_SEQNO VARCHAR2(32) NOT NULL,
+        COMMENT_REMARK VARCHAR2(1500),
+        CREATE_USER VARCHAR2(20) NOT NULL,
+        CREATE_DEPT VARCHAR2(32),
+        CREATE_TIME TIMESTAMP(6) NOT NULL,
+        UPDATE_USER VARCHAR2(20) NOT NULL,
+        UPDATE_TIME TIMESTAMP(6) NOT NULL,
+        PRIMARY KEY (SEQNO)
+    );
+COMMENT ON TABLE REP_REVEAL_COMMENT
+IS
+    '报表确认管理批注表';
+COMMENT ON COLUMN REP_REVEAL_COMMENT.SEQNO
+IS
+    '主键';
+COMMENT ON COLUMN REP_REVEAL_COMMENT.INFO_SEQNO
+IS
+    '报表确认管理主键';
+COMMENT ON COLUMN REP_REVEAL_COMMENT.COMMENT_REMARK
+IS
+    '批注';
+COMMENT ON COLUMN REP_REVEAL_COMMENT.CREATE_USER
+IS
+    '创建人';
+COMMENT ON COLUMN REP_REVEAL_COMMENT.CREATE_DEPT
+IS
+    '创建部门';
+COMMENT ON COLUMN REP_REVEAL_COMMENT.CREATE_TIME
+IS
+    '创建时间';
+COMMENT ON COLUMN REP_REVEAL_COMMENT.UPDATE_USER
+IS
+    '更新人';
+COMMENT ON COLUMN REP_REVEAL_COMMENT.UPDATE_TIME
+IS
+    '更新时间';
+/**报表确认管理批注表 add by shengning 2022-08-10 end*/

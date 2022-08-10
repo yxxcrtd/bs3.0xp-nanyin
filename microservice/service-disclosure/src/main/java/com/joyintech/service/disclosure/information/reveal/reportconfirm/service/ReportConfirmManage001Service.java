@@ -265,6 +265,8 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 //            }    
             entity.setConfirmStatus(DictCodeList.确认状态_已确认.getValue());
             entity.setConfirmDate(new Date());
+            entity.setCheckUser(LoginUserUtil.getUserName());
+            entity.setCheckTime(new Date());
             //entity.setConfirmUser(SecurityUtil.getLoginUser().getUserName());
             //entity.setConfirmDateStr(DateUtil.getCurrentDate());
             

@@ -247,7 +247,8 @@ public class ReportConfirmManage004Service {
     		reportDateEnd = params.get("reportDateEnd").toString();
     		paramList.put("reportDateEnd", reportDateEnd);
     	}
-    	paramList.put("reportName", params.get("reportName").toString());
+//    	paramList.put("reportName", params.get("reportName").toString());
+		paramList.put("reportType", params.get("reportType").toString());
     	paramList.put("prodId", params.get("prodId").toString());
     	int count = reportConfirmManage004Mapper.querySameCount(paramList);
     	return count;

@@ -4,13 +4,14 @@
 package com.joyintech.tams.disclosure.busicommon.poireport.service;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.tams.common.base.dao.RepReportCheckMapper;
+import com.joyintech.tams.common.base.entity.RepReportCheck;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -97,7 +98,11 @@ public class PoiReportService {
 	@Autowired
 	private ReportFileService reportFileService;
 
-	
+	@Autowired
+	private PoiReportService poiReportService;
+
+	@Autowired
+	private RepReportCheckMapper repReportCheckMapper;
 	/**
 	 * 日志
 	 */
@@ -765,4 +770,194 @@ public class PoiReportService {
 			}
 		}
 	}
+
+    public UploadFile genReportFileForCheck(Map<String,Object> dataMap) throws RuntimeException{
+
+        if(dataMap == null ){
+            throw new IllegalArgumentException("业务数据为空");
+        }
+
+        String repId = dataMap.get("repId").toString();
+        if(logger.isDebugEnabled())
+            logger.debug("开始进行批处理报表生成,repId={}",repId);
+        String templateFile = reportFileService.getTemplateFile(repId, ReportFileService.FILE_TYPE_DOCX);
+        Date genDate = new Date();
+        Object endDateObj = dataMap.get("enddate");
+        if ( endDateObj!=null ) {
+            if(endDateObj instanceof String){
+                genDate = DateUtil.parse(endDateObj.toString());
+            }else if(endDateObj instanceof Date){
+                genDate = (Date) endDateObj;
+            }else{
+                throw new IllegalArgumentException("enddate 类型不正确");
+            }
+        } else {
+            Object execDateObj = dataMap.get("execDate");
+            if(execDateObj == null){
+                genDate = commonPlatformDateService.getSysDate();
+            }else {
+                genDate = (Date) execDateObj;
+            }
+        }
+        String localPathFile = reportFileService.getCheckFileName(repId, genDate, dataMap, ReportFileService.FILE_TYPE_DOCX);
+		String[]ss=StringUtil.split(localPathFile,"/");
+		String fileName=ss[ss.length-1];
+
+		ByteArrayOutputStream bos = null;
+        ByteArrayInputStream is = null;
+        try {
+            bos = new ByteArrayOutputStream();
+            // 替换参数
+            PoiUtils.mergeDocx(templateFile, bos, dataMap);
+            is = new ByteArrayInputStream(bos.toByteArray());
+            File vFile = new SafelyFile(localPathFile);
+            UploadFile uploadFile = new UploadFile(fileName,IDGenerator.generate(),vFile);
+            uploadFile = minioFileRemoteService.uploadFile(uploadFile,is);
+            return uploadFile;
+        } catch (Exception e) {
+            logger.error("生成报表文件异常", e);
+            throw new RuntimeException("生成报表文件异常",e);
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    logger.error("关闭字节输出流异常", e);
+                }
+            }
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    logger.error("关闭字节输入流异常", e);
+                }
+            }
+        }
+    }
+
+
+	public String dataCheck(Map<String, Object> params){
+		StringBuffer resultSb=new StringBuffer();
+
+		String reportId = params.get("repid").toString();   //报表编号
+		ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
+
+		RepReveal repReveal = poiReportService.getRepReveal(params);
+
+		Map<String, Object> dataMap = null;
+		List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+		if (listReports.size() > 0) {
+			dataMap = listReports.get(0);
+			dataMap.put("prodId",repReveal.getProdid());
+			dataMap.put("repId",params.get("repid"));
+		} else{
+			return resultSb.toString();
+		}
+
+		String rptType = params.get("uri").toString();
+		String prodId = repReveal.getProdid();
+		if (StringUtil.isNotEmpty(rptType)) {
+			if (StringUtil.equals(rptType,DisReportType.FXGG)) {
+				//发行公告
+				//产品募集金额只能是整数，不能出现角和分；
+				BigDecimal raiseAmt=(BigDecimal)dataMap.get("raiseAmtVal");
+				if(!(new BigDecimal(raiseAmt.intValue()).compareTo(raiseAmt)==0)){
+					resultSb.append("产品募集金额只能是整数");
+				}
+			}else if (StringUtil.equals(rptType,DisReportType.KFJZJFHGG_BNYS)
+					||StringUtil.equals(rptType,DisReportType.KFJZJFHGG_BNYN)){
+				//	开放、净值及分红公告
+				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
+				//TODO:
+				String baseDate=(String) dataMap.get("baseDate");
+				if(poiReportMapper.checkBaseDate(prodId,baseDate)<1){
+					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日");
+				}
+
+			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMFB)
+					||StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
+				//净值及分红报告
+				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
+				//TODO:
+				String settDate=(String) dataMap.get("settDate");
+				if(poiReportMapper.checkBaseDate(prodId,settDate)<1){
+					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日");
+				}
+			}
+			else if(StringUtil.equals(rptType,DisReportType.JDBG_ZSX)
+					||StringUtil.equals(rptType,DisReportType.JDBG_FZSX)
+					||StringUtil.equals(rptType,DisReportType.BNDBG_ZSX)
+					||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
+					||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
+					||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
+					//季报、半年报、年报
+					//	当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前及穿透后占比必须大于等于80%；
+					//	当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须大于等于80%；
+					//	当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前及穿透后占比必须大于等于80%；
+					//	当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透前及穿透后占比必须小于80%；
+					//TODO:
+
+					if(StringUtil.equals(rptType,DisReportType.BNDBG_ZSX)
+						||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
+						||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
+						||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
+						//半年报、年报：
+						//	当产品的募集方式为“公募”，发行方式为“开放式”时，“报告期末产品杠杆水平”小于等于140；
+						//	当“产品类型”为“现管类产品”时，“报告期末产品杠杆水平”小于等于120；
+						//	当产品的募集方式为“私募”或产品募集方式为“公募”且发行方式为“封闭式”时，“报告期末产品杠杆水平”小于等于200；
+						//	当产品募集方式为“私募”且“是否是分级产品”为“是”的时候，“报告期末产品杠杆水平”小于等于140；
+						//	当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须等于0%
+						//TODO:
+					}
+
+					//对于定期报告中需要从【报表指标管理】或“合作机构信息维护”、“产品资产组合情况信息维护”、“非标债权类资产明细信息维护”“关联交易情况信息维护”中取值的统计项，
+					// 若在生成报告时，上述内容取不到值或无有效数据（系统生成报告的日期在数据的生效期及有效截止日期之间），也需要在本界面生成一条对应数据项为空的提示；
+					//TODO:
+
+					//对于开放式产品，若在定期报告的统计期内产品业绩比较基准发生了变更（由非指数型产品变为指数型产品，或指数型产品挂钩的行情代码由A变为B）需要在本模块给出提示：
+					//TODO:
+			}
+
+			//对所有报告的通用校验
+			//生成报告时，若存在某个统计项取不到值的情况，需要在本模块进行提示 提示“生成报告所需数据有缺失”
+			//TODO:
+			for (String key:dataMap.keySet()){
+				if (!StringUtil.isNotEmpty(dataMap.get(key))) {
+					if (!dataMap.containsKey(key+"_xx")) {
+						resultSb.append("生成报告所需数据有缺失");
+						break;
+					}
+				}
+			}
+
+			//校验完成之后判断有没有错误
+			if(StringUtil.isNotEmpty(resultSb)){
+				//生成文件
+				UploadFile uploadFile=poiReportService.genReportFileForCheck(dataMap);
+
+				RepReportCheck repReportCheck=new RepReportCheck();
+
+				repReportCheck.setReportCheckId(IDGenerator.generate(32));
+				repReportCheck.setRepId(reportId);
+				repReportCheck.setReportType("");
+				repReportCheck.setReportName(uploadFile.getFileName());
+				repReportCheck.setProdId(prodId);
+				repReportCheck.setCheckDate((Date)params.get("platformDate"));
+				repReportCheck.setEndDate(repReveal.getEndDate());
+				repReportCheck.setErrormsg(resultSb.toString());
+				repReportCheck.setDataStatus("E");
+
+				poiReportMapper.deleteCheckData(repReportCheck);
+
+				repReportCheckMapper.insertSelective(repReportCheck);
+				//入库REP_REPORT_CHECK
+				//TODO:
+				//数据全删全插
+				resultSb.append("\n").append("确认");
+			}
+		}
+
+		return resultSb.toString();
+	}
+
 }
