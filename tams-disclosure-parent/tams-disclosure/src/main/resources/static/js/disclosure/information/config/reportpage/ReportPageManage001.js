@@ -58,7 +58,7 @@ $(function() {
                     if(purviewElements.indexOf('_manual')!=-1){
                         html +="<i class = 'iconfont icon-delete delt' title='删除'></i>";
                     }
-                    html +="<i class = 'iconfont icon-send view' title='预览'></i>";
+                    html +="<i class='iconfont icon-search view'></i>";
                     return html;
                 }
             }
