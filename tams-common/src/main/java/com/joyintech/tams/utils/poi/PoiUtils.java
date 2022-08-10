@@ -176,7 +176,7 @@ public class PoiUtils {
             int beginIdx = content.indexOf(beginStr);  //30%;
             if (beginIdx!=-1 ) {  //找到，需要进行替换
             	//replaceStr = beginStr + "38%" + endStr;
-            	replaceStr = "<div style=\"width:37%;margin-bottom:42.65pt;margin-top:70.9pt;margin-left:220pt;margin-right:70.9pt;\">";
+            	replaceStr = "<div style=\"width:450pt;margin-bottom:42.65pt;margin-top:70.9pt;margin-left:220pt;margin-right:70.9pt;\">";
             	int endIdx = content.indexOf(endStr);
             	
             	content = replaceStr + content.substring(endIdx+1);
