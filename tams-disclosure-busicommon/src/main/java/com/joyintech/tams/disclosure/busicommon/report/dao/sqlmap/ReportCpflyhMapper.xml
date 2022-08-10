@@ -7,8 +7,8 @@
 			rpi.prod_id prod_id,
 			rpi.prod_name prod_name,
 			rpi.prod_re reg_code,
-			listagg(dpf.prod_id, '、') within group(order by dpf.prod_id) saleCode,
-    		listagg(dpf.feename, '、') within group(order by dpf.prod_id) feeName,
+			listagg(distinct dpf.prod_id, '、') within group(order by dpf.prod_id) saleCode,
+    		listagg(distinct dpf.feename, '、') within group(order by dpf.prod_id) feeName,
 			rpi.raise_type raise_type,
 			max(dpf.prod_dis_remark) remark
 		from rep_prod_info rpi

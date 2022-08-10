@@ -51,11 +51,11 @@ public class ReportKfqgg001Service implements IReportDataService {
         logger.info("产品开放期公告/报告【{}】开始生成", JsonUtils.object2Json(paraMap));
         List<Map<String, Object>> resultMap = new ArrayList<>();
         ReportKfqgg001Dto reportKfqgg001Dto = new ReportKfqgg001Dto();
+        //产品代码：子产品代码为空的话，取父产品代码
+        String prodId =  (paraMap.get("prodid") == null ? (String)paraMap.get("pprodid") : (String)paraMap.get("prodid"));
+        //年份
+        String year = (String)paraMap.get("year");
         try {
-            //产品代码：子产品代码为空的话，取父产品代码
-            String prodId =  (paraMap.get("prodid") == null ? (String)paraMap.get("pprodid") : (String)paraMap.get("prodid"));
-            //年份
-            String year = (String)paraMap.get("year");
             if(StringUtil.isNotEmpty(prodId)&&StringUtil.isNotEmpty(year)){
                 Map<String, Object> searchparam = new HashMap<>();
                 searchparam.put("prodId", prodId);
@@ -91,11 +91,11 @@ public class ReportKfqgg001Service implements IReportDataService {
                 reportKfqgg001Dto.setEnddate(DateUtil.format(DateUtil.platDateFromCache()));
 
             }
-            resultMap.add(ReportCollectionUtils.bean2Map(reportKfqgg001Dto));
             logger.info("产品开放期公告/报告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("产品开放期公告/报告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
+        resultMap.add(ReportCollectionUtils.bean2Map(reportKfqgg001Dto));
         return resultMap;
     }
 
