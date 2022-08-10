@@ -393,6 +393,14 @@ var ReportPageManage003 = function(global) {
 				Joyin.alert("请选择是否是客户周期型产品", 7);
 				return;
 			}
+		} else if(rule.ruleType1 == 'REP_PROD_TYPE'){
+			if ($('#repProdType').select2('data')[0]) {
+				rule.ruleType4 = $('#repProdType').select2('data')[0].id;
+				rule.ruleType4Name = $('#repProdType').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择信披产品类别", 7);
+				return;
+			}
 		}
 		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 end
 		else {
