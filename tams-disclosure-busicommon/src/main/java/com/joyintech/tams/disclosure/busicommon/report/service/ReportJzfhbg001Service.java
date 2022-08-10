@@ -174,7 +174,7 @@ public class ReportJzfhbg001Service implements IReportDataService {
                                 }
                             }
                             //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
-                            BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 10, BigDecimal.ROUND_DOWN).setScale(2,BigDecimal.ROUND_DOWN);
+                            BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 10, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
                             //年化收益率
                             reportJzfhbg001Dto.setYield(yield.toString()+"%");
                         }
@@ -197,12 +197,6 @@ public class ReportJzfhbg001Service implements IReportDataService {
                         reportJzfhbg001Dto.setSubValue("1.0000");
                         //根据产品排期表，展示开放起始日大于当前收益分配基准日的下一个开放周期的信息；若当前已处于最后一个产品周期，则正常生成表格，表格内容置空，由业务老师手工调整
                         List<ReportOpenPlanDto> openPlanList = reportJzfhbg001Mapper.getOpenPlanList(searchParam);
-
-                        for(int i = 0 ; i < openPlanList.size();i++){
-                            if(openPlanList.size() == 1 &&  DateUtil.parse(openPlanList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(settDateStr))<=0){
-                                openPlanList.remove(i);
-                            }
-                        }
 
                         if (openPlanList != null && openPlanList.size() > 0) {
                             for (ReportOpenPlanDto openPlanDto : openPlanList) {

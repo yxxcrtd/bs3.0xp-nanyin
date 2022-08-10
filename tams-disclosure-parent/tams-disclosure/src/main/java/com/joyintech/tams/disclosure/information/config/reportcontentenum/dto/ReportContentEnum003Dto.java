@@ -5,6 +5,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
 
 /**
@@ -76,7 +77,7 @@ public class ReportContentEnum003Dto extends RepJobRange {
 		} else if (DictCode.发行状态.getValue().equals(key)) {
 			value = backCode(DictCode.发行状态, this.getRuleType4());
 
-		} else if ("IS_INDEPE_ACC".equals(key)) {
+		} else if ("IS_INDEPE_ACC".equals(key) || "IS_INDEX".equals(key)|| "IS_PERIOD".equals(key)) {
 			value = backCode(DisclosureDictCode.是否, this.getRuleType4());
 
 		} else if (DisclosureDictCode.产品类型.getValue().equals(key)) {
@@ -87,7 +88,13 @@ public class ReportContentEnum003Dto extends RepJobRange {
 		}
 		else if (DisclosureDictCode.产品期限类型.getValue().equals(key)) {
             value = backCode(DisclosureDictCode.产品期限类型, this.getRuleType4());
-        }
+        } else if(DictCodeExt1.发行方式_信批.getValue().equals(key)){
+			value = backCode(DictCodeExt1.发行方式_信批, this.getRuleType4());
+		}else if(DictCodeExt1.开放频率.getValue().equals(key)){
+			value = backCode(DictCodeExt1.开放频率, this.getRuleType4());
+		} else if(DictCode.投资性质.getValue().equals(key)){
+			value = backCode(DictCode.投资性质, this.getRuleType4());
+		}
 		return value;
 	}
 
