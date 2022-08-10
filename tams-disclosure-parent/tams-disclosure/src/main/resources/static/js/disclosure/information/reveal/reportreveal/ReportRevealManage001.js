@@ -46,7 +46,10 @@ $(function () {
                             return '<span class="layui-badge-rim layui-bg-green">'+row.revealStatusName+'</span>';
                         }else if(row.revealStatus=='02'){
                             return '<span class="layui-badge-rim layui-bg-red">'+row.revealStatusName+'</span>';
-                        }else{
+                        }else if(row.revealStatus=='03'){
+                            return '<span class="layui-badge-rim layui-bg-orange">'+'生成失败'+'</span>';
+                        }
+                        else{
                         	return '';
                         }
                     }
@@ -209,16 +212,8 @@ $(function () {
                     object.pageModel = pageModel;
                     object.updateTypeFlag = "QR";//当前操作为确认还是下发【确认："QR",下发："XF"】
                     object.pageId = "ReportRevealManage001";
-                    //披露功能，南银不需要流程 add by zhouqiang start
-                    Joyin.ajax(basePath + 'disclosure/information/reveal/reportreveal/ReportRevealManage001/updateRevealStatus',
-                        object,
-                        function(result) {
-                            table.reload();
-                        }
-                    );
-                    /*//启动流程操作
-                    startFunction(object,"ReportRevealManage001_btn_submit");*/
-                    //披露功能，南银不需要流程 add by zhouqiang end
+                    //启动流程操作
+                    startFunction(object,"ReportRevealManage001_btn_submit");
                 }, function() {
                     //console.log('取消');
                 });
@@ -476,6 +471,8 @@ $(function () {
      * 启动流程
      */
     var startFunction = function(objectDate,elementId){
+        // 打开虚拟进度条
+        // JoyinProgress.showInDialog('exportProcessBar');
         Joyin.ajax(basePath + 'disclosure/information/reveal/reportreveal/ReportRevealManage001/check', 
         		objectDate, 
         		function(result) {
@@ -484,7 +481,10 @@ $(function () {
                     		objectDate, 
                     		elementId,
                     		null,
-                    		function (data) {table.reload();}
+                    		function (data) {
+                                // 关闭虚拟进度条
+                                // JoyinProgress.hideCommon();
+                    		    table.reload();}
                     		);
         		}
         );

@@ -35,8 +35,9 @@ SELECT
 		REP_REVEAL reveal
 		LEFT JOIN DIS_PROD_AGENCY dpa on dpa.PROD_ID = reveal.PRODID
 		LEFT JOIN DIS_SALE_AGENCY dsa on dsa.SEQUENCE_NO = dpa.AGENCY_ID
-		WHERE
-		reveal.REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR}
+		WHERE 1=1
+		and dsa.AGENCY_NAME is not null
+		and reveal.REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR}
 		AND reveal.CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
 		AND reveal.STATUS = 'E'
 		AND reveal.IS_REVEAL = #{isReveal,jdbcType=VARCHAR}

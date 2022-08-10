@@ -3,8 +3,6 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.DisProdFeediscountMapper;
-import com.joyintech.tams.common.base.entity.DisProdFeediscount;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.constants.GlobalConstant;
@@ -17,8 +15,6 @@ import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -41,9 +37,6 @@ public class Report1Flncp002Service implements IReportDataService {
 
     @Autowired
     private ReportCommonService reportCommonService;
-
-    @Autowired
-    private DisProdFeediscountMapper disProdFeediscountMapper;
 
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
@@ -113,10 +106,9 @@ public class Report1Flncp002Service implements IReportDataService {
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
-        String prodDiscountId = (String)paraMap.get("feename");
-        DisProdFeediscount disProdFeediscount = disProdFeediscountMapper.selectByPrimaryKey(prodDiscountId);
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
-        repReveal.setProdid(disProdFeediscount.getFeename());
+        repReveal.setProdid(prodId);
         repReveal.setEndDate(enddate);
         paraMap.put("enddate_filename", DateUtil.format(enddate, DateUtil.DEFAULT_OTHER_FORMAT));
         return repReveal;

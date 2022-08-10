@@ -69,9 +69,13 @@ public class PoiUtils {
         options.setFragment(true);
 
         //output
-        XHTMLConverter.getInstance().convert(wordDocument, os, options); //这里的os可以是ByteArrayOutputStream，获取内容，进行格式调整
-
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        XHTMLConverter.getInstance().convert(wordDocument, bos, options); //这里的os可以是ByteArrayOutputStream，获取内容，进行格式调整
+        reviseHtml(bos);
+        bos.writeTo(os);
     }
+    
+    
 
     public static void docxToPdf(InputStream is, OutputStream os) throws IOException {
         XWPFDocument xwpfDocument = new XWPFDocument(is);
@@ -152,6 +156,35 @@ public class PoiUtils {
                     }
                 }
             }
+        }
+    }
+    
+	/**
+	 * 
+     * 这里只对html宽度进行调整，因此只做最简单的替换，不用jsoup包读写html了，后面如果又复杂的转换再考虑
+	 * @param bos
+	 */
+    private static void reviseHtml(ByteArrayOutputStream bos) {
+        try {
+//            System.out.println("==--------------------------------------------------------------------------------------------------------==");
+//            System.out.println(bos.toString());
+//            System.out.println("==--------------------------------------------------------------------------------------------------------==");
+            String content = bos.toString();
+            String beginStr = "<div style=\"width:";
+            String endStr = ">";
+            String replaceStr = "";
+            int beginIdx = content.indexOf(beginStr);  //30%;
+            if (beginIdx!=-1 ) {  //找到，需要进行替换
+            	//replaceStr = beginStr + "38%" + endStr;
+            	replaceStr = "<div style=\"width:37%;margin-bottom:42.65pt;margin-top:70.9pt;margin-left:220pt;margin-right:70.9pt;\">";
+            	int endIdx = content.indexOf(endStr);
+            	
+            	content = replaceStr + content.substring(endIdx+1);
+            }
+            bos.reset();
+            bos.write(content.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

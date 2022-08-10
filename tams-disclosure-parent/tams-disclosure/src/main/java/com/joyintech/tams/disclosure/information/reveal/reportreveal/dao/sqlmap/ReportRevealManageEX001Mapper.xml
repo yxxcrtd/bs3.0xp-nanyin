@@ -44,6 +44,7 @@
     LEFT JOIN DIS_PROD_AGENCY dpa on dpa.PROD_ID = reveal.PRODID
     LEFT JOIN DIS_SALE_AGENCY dsa on dsa.SEQUENCE_NO = dpa.AGENCY_ID
     WHERE 1=1
+    and dsa.AGENCY_NAME is not null
         <if test="ids != null and ids.size()>0">
             AND	reveal.id in
             <foreach collection="ids" item="item" open="(" close=")"

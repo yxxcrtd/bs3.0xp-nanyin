@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.joyintech.framework.ajax.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -320,10 +321,16 @@ public class ReportRevealManage001Contoller extends BaseController {
                 return new AjaxResult(e.getMessage());
             }
         }
-        
+
+        //按代销机构维度披露
+        Boolean revealResult=reportRevealManage001Service.updateRevealStatusEX(listdto);
+        if(revealResult){
+            return new AjaxResult("披露成功！");
+        }
+        //披露失败，把勾选的单据的披露状态全部更新为生成失败
+        reportRevealManage001Service.updateRevealStatusBatch(listdto);
+        return new AjaxResult("披露失败，请核实！", MessageType.警告消息);
       // reportRevealManage001Service.updateConfirmStatus(listdto);
-        
-        return new AjaxResult(msg);
     }
     
     /**
@@ -437,18 +444,17 @@ public class ReportRevealManage001Contoller extends BaseController {
      * @param operateType
      * @return
      */
-    @ResponseBody
+    /*@ResponseBody
     @RequestMapping("updateRevealStatus")
     public AjaxResult updateRevealStatus(@Valid ReportConfirmManage001Dto dto, BindingResult result, String operateType) {
         try {
             String data=dto.getData();
             List<ReportConfirmManage001Dto> listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
-            reportRevealManage001Service.updateRevealStatusEX(listdto);
+            return reportRevealManage001Service.updateRevealStatusEX(listdto);
         }
         catch (Exception e) {
             logger.error("error:",e);
             return new AjaxResult(e.getMessage());
         }
-        return  new AjaxResult("披露成功。");
-    }
+    }*/
 }
