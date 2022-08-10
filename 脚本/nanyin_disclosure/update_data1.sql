@@ -673,4 +673,8 @@ INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('HugeInfoPro001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
 -- add by sunjie 20220809 巨额赎回信息数据状态下拉框改成ED end
 
+
+--报表披露管理-披露功能不走流程 add by zhouqiang
+update SYS_WFL_BUSINESS_MODULE set MODULE_ID='noneApproval' where PAGE_ID='ReportRevealManage001' and ELEMENT_ID='ReportRevealManage001_btn_submit';
+
 commit ;

@@ -120,10 +120,11 @@ public class Report1Ysncp001Service implements IReportDataService {
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         String adjField = (String)paraMap.get("elementname");
         DisProdAdjust disProdAdjust = disProdAdjustMapper.selectByPrimaryKey(adjField);
         Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
-        repReveal.setProdid(disProdAdjust.getAdjField());
+        repReveal.setProdid(prodId);
         repReveal.setEndDate(enddate);
         paraMap.put("fieldname", disProdAdjust.getAdjField());
         paraMap.put("enddate_filename", DateUtil.format(enddate, DateUtil.DEFAULT_OTHER_FORMAT));

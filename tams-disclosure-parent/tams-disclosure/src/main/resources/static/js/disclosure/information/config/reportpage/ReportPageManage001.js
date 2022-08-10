@@ -44,9 +44,10 @@ $(function() {
             {field:'repId', visible: false,  title: '报表ID'},
             {field:'reportCategory', visible: false, title: '报表类别', sort: true},
             {field:'reportCategoryName', title: '报表类别',width:200, sort: true}
-            ,{field:'updateUser', width:200, title: '制作人'}
+            ,{field:'updateUser', width:200, title: '当前处理人'}
             ,{field:'reportType', title: '状态',sort: true,visible:false}
-            ,{field:'reportTypeName', width:140, title: '状态', align: 'center'},
+            ,{field:'reportTypeName', width:140, title: '状态', align: 'center'}
+            ,{field:'remark', width:140, title: '备注说明', align: 'center'},
             // {field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt']}
             {field:'operation',width:60, title: 'SysCommon.operation', type:'action',
                 render : function(data, type, row, meta){
@@ -100,7 +101,7 @@ $(function() {
             return;
         }
         Joyin.dialog(JoyinUtil.getLabel('预览'), basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow002/init',
-            '95%', '95%', {repId:data.repId,repName:data.reportName},function() {
+            '70%', '90%', {repId:data.repId,repName:data.reportName},function() {
             });
 
     };

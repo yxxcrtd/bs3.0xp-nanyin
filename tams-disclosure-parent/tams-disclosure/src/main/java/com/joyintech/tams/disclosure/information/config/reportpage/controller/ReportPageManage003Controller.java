@@ -93,6 +93,8 @@ public class ReportPageManage003Controller extends BaseController {
             startRepId = entity.getStartRepId();
             offRepId = entity.getOffRepId();
             model.addAttribute("entity",entity);
+            //关联上传文件的businessId
+            model.addAttribute("businessId",entity.getSeqno());
         }
 
         //如果是启用界面,则处查询出可以禁用的模板

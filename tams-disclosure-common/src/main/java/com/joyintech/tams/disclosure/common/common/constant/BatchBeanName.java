@@ -115,6 +115,11 @@ public enum BatchBeanName {
      * 生成产品申赎信息批处理
      */
     生成确认标识批处理("1011", "DisDoReadyRunner", "生成数据就位标识批处理"),
+
+    /**
+     * 信息披露生成报表并发送批处理
+     */
+    信披单据zip包生成发送批处理("100401", "infoDisclosureGenAndSendService", "信披单据zip包生成发送批处理"),
     ;
 
     /**

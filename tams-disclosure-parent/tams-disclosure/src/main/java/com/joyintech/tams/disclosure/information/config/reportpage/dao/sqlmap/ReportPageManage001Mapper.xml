@@ -24,7 +24,8 @@
 		ris.start_off||ris.rep_status reportType,
 		A.REPORT_CATEGORY reportCategory,
 		rfp.NAME reportCategoryName,
-		ris.eff_date updateTime
+		ris.eff_date updateTime,
+		ris.REMARK remark
 		from REP_INFO A
 		left join REP_FTP_PATH rfp
 		on A.REPORT_CATEGORY=rfp.ID
