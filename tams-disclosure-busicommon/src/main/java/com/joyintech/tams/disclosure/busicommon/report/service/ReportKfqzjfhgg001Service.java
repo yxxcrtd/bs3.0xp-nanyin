@@ -176,7 +176,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             //设置历史净值当前封闭期
                             bonusDto.setCurRange(curRange);
                             //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
-                            BigDecimal yield = unitValue.divide(new BigDecimal(365), 10, BigDecimal.ROUND_DOWN).multiply(runday).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
+                            BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 10, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
                             bonusDto.setYield(yield.toString()+"%");
                             bonusDto.setMunitValue("1.0000");
                             bonusDto.setRedValue("1.0000");
@@ -195,12 +195,6 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         }
                     }
                     reportKfqzjfhgg001Dto.setList(list);
-                    //若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
-                    for(int i = 0 ; i < openPlanList.size();i++){
-                        if( openPlanList.size() == 1 &&  DateUtil.parse(openPlanList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(baseDate))<=0){
-                            openPlanList.remove(i);
-                        }
-                    }
                     //后续开放计划
                     if (openPlanList != null && openPlanList.size() > 0) {
                        //只取第一条
@@ -220,7 +214,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             }
                             openPlanDto.setNextSettday(DateUtil.format(nextSetday));
                         }
-                    } else {
+                    } else {//若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
                         openPlanList = new ArrayList<>();
                         ReportOpenPlanDto openPlanDto = new ReportOpenPlanDto();
                         //后续排期计划为空的话，需要置空由业务老师手工维护
