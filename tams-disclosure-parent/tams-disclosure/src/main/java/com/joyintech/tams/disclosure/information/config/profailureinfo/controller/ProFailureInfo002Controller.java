@@ -12,6 +12,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.service.ProFailureInfo001Service;
+import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @PageId("ProFailureInfo002")
@@ -135,4 +137,17 @@ public class ProFailureInfo002Controller extends BaseController {
     public List<SelectOptionDto> getProdId() {
         return proFailureInfo001Service.getProdId(RequestUtil.getPageParam());
     }
+
+    @ResponseBody
+    @RequestMapping("checkExistData")
+    public Boolean checkExistData(@RequestBody ProFailureInfo001Dto dto){
+        ProFailureInfo001Dto proFailureInfo001Dto = proFailureInfo001Service.isRepeated(dto);
+        if(proFailureInfo001Dto != null && StringUtil.equals(proFailureInfo001Dto.getDataStatus(),"D")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
 }

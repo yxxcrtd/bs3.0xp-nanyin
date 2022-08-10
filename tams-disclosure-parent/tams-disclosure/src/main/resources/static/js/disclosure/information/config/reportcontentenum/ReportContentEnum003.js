@@ -351,6 +351,14 @@ $(function() {
 					}
 				});
 			return;
+		} else if(rule.ruleType1 == 'ISSUING_WAY'){
+			if ($('#issuingWay').select2('data')[0]) {
+				rule.ruleType4 = $('#issuingWay').select2('data')[0].id;
+				rule.ruleType4Name = $('#issuingWay').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择发行方式", 7);
+				return;
+			}
 		} else {
 			if (rule.ruleType3 == '03') {
 				// 平台日

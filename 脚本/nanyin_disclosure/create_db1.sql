@@ -943,3 +943,7 @@ ALtER TABLE REP_REVEAL MODIFY PROD_NAME VARCHAR2(1000);
 alter table REP_INFO add (FILE_NAME varchar2(600) default null null);
 comment on column REP_INFO.FILE_NAME is '生成的文件名';
 /**报表信息,增加字段 add by 郑孝廉 2022-08-09 end*/
+
+/**上传文件记录返回信息表"披露文件名称"字段长度修改(应该和REP_REVEAL中的FILENAME字段长度保持一致) add by zhouqiang 2022-08-09 start*/
+ALTER TABLE REP_FTP_DETAIL_MSG MODIFY FILE_NAME VARCHAR2(150 BYTE);
+/**上传文件记录返回信息表"披露文件名称"字段长度修改(应该和REP_REVEAL中的FILENAME字段长度保持一致) add by zhouqiang 2022-08-09 end*/

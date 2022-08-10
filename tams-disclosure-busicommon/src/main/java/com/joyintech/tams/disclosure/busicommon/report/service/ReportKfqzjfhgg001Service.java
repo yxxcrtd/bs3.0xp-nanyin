@@ -75,14 +75,13 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
         logger.info("开放、净值及分红公告【{}】开始生成", JsonUtils.object2Json(paraMap));
         List<Map<String, Object>> resultMap = new ArrayList<>();
         ReportKfqzjfhgg001Dto reportKfqzjfhgg001Dto = new ReportKfqzjfhgg001Dto();
+        //产品代码：子产品代码为空的话，取父产品代码
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        //日期
+        String baseDate = (String) paraMap.get("enddate");
+        //判断是开放、净值及分红公告（公募&开放频率在半年（不含）以内） 还是 开放、净值及分红公告（公募&开放频率在半年以上） 的模板
+        String rptType = (String) paraMap.get("uri");
         try {
-            //产品代码：子产品代码为空的话，取父产品代码
-            String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-            //日期
-            String baseDate = (String) paraMap.get("enddate");
-            //判断是开放、净值及分红公告（公募&开放频率在半年（不含）以内） 还是 开放、净值及分红公告（公募&开放频率在半年以上） 的模板
-            String rptType = (String) paraMap.get("uri");
-
             if (StringUtil.isNotEmpty(prodId) && StringUtil.isNotEmpty(baseDate)) {
                 Map<String, Object> searchParam = new HashMap<>();
                 searchParam.put("prodId", prodId);
@@ -176,7 +175,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             //设置历史净值当前封闭期
                             bonusDto.setCurRange(curRange);
                             //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
-                            BigDecimal yield = unitValue.divide(new BigDecimal(365), 10, BigDecimal.ROUND_DOWN).multiply(runday).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
+                            BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 10, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
                             bonusDto.setYield(yield.toString()+"%");
                             bonusDto.setMunitValue("1.0000");
                             bonusDto.setRedValue("1.0000");
@@ -195,12 +194,6 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         }
                     }
                     reportKfqzjfhgg001Dto.setList(list);
-                    //若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
-                    for(int i = 0 ; i < openPlanList.size();i++){
-                        if( openPlanList.size() == 1 &&  DateUtil.parse(openPlanList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(baseDate))<=0){
-                            openPlanList.remove(i);
-                        }
-                    }
                     //后续开放计划
                     if (openPlanList != null && openPlanList.size() > 0) {
                        //只取第一条
@@ -220,7 +213,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             }
                             openPlanDto.setNextSettday(DateUtil.format(nextSetday));
                         }
-                    } else {
+                    } else {//若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
                         openPlanList = new ArrayList<>();
                         ReportOpenPlanDto openPlanDto = new ReportOpenPlanDto();
                         //后续排期计划为空的话，需要置空由业务老师手工维护
@@ -249,11 +242,11 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】", JsonUtils.object2Json(paraMap));
                 }
             }
-            resultMap.add(ReportCollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
             logger.info("开放、净值及分红公告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("开放、净值及分红公告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
+        resultMap.add(ReportCollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
         return resultMap;
     }
 

@@ -2,11 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
 <body>
 <div layout:fragment="content">
-	<div class="layui-row layui-col-space15">
-		<div class="layui-col-md9" style="padding-left: 10%">
-			<div id="showtable"></div>
-		</div>
-	</div>
+	<div id="showtable"></div>
 </div>
 </body>
 <div layout:fragment="script">
@@ -14,15 +10,16 @@
 	<script data-th-inline="javascript" type="text/javascript">
 		var repId = [[${repId}]];
 
-		$(function () {
-			function showTable(){
-				$("#showtable").append("加载中");
-				var $container = $("#showtable");
-				Joyin.ajax(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/previewReport', {repid:repId}, function(result) {
-					$container.html(result);
-				});
-			}
+		function showTable(){
+			$("#showtable").append("加载中");
+			var $container = $("#showtable");
 
+			Joyin.ajax(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/previewReport', {repid:repId}, function(result) {
+				$container.html(result);
+			});
+		}
+
+		$(function () {
 			/**
 			 * 画面加载完成
 			 */

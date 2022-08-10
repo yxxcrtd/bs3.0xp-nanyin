@@ -64,15 +64,15 @@ public class ReportZqxkfgg001Service implements IReportDataService {
         logger.info("周期型产品开放公告【{}】开始生成", JsonUtils.object2Json(paraMap));
         List<Map<String, Object>> resultMap = new ArrayList<>();
         ReportZqxkfgg001Dto reportZqxkfgg001Dto = new ReportZqxkfgg001Dto();
+        //产品代码：子产品代码为空的话，取父产品代码
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        //公告日
+        String announceDate = (String) paraMap.get("enddate");
+        //判断是 周期型产品开放公告（公募产品-单赎回）还是 周期型产品开放公告（公募产品） 的模板
+        //周期型产品开放公告（公募产品-单赎回）:客户周期型产品的自动赎回日大多是后续某一开放周期的运作起始日，根据产品排期表进行判断，若某一自动赎回日不是该产品未来某开放周期的运作起始日，则需要为该条赎回信息生成此公告；
+        //周期型产品开放公告（公募产品） 根据产品排期计划表，每个开放周期的运作起始日都需要生成此公告；
+        String rptType = (String) paraMap.get("uri");
         try {
-            //产品代码：子产品代码为空的话，取父产品代码
-            String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-            //公告日
-            String announceDate = (String) paraMap.get("enddate");
-            //判断是 周期型产品开放公告（公募产品-单赎回）还是 周期型产品开放公告（公募产品） 的模板
-            //周期型产品开放公告（公募产品-单赎回）:客户周期型产品的自动赎回日大多是后续某一开放周期的运作起始日，根据产品排期表进行判断，若某一自动赎回日不是该产品未来某开放周期的运作起始日，则需要为该条赎回信息生成此公告；
-            //周期型产品开放公告（公募产品） 根据产品排期计划表，每个开放周期的运作起始日都需要生成此公告；
-            String rptType = (String) paraMap.get("uri");
             if (StringUtil.isNotEmpty(prodId) && StringUtil.isNotEmpty(announceDate)) {
                 Map<String, Object> searchparam = new HashMap<>();
                 searchparam.put("prodId", prodId);
@@ -99,11 +99,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     //查询后续申购赎回安排：根据产品排期计划展示当前“运作起始日”之后的未来6个开放周期（运作起始日大于当前运作起始日）】
                     // 注：若产品临近到期后续已没有6个开放周期，则有几个周期展示几个周期；若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
                     List<ReportOpenPlanDto> openList = reportZqxkfgg001Mapper.getOpenList(searchparam);
-                    for(int i = 0 ; i < openList.size();i++){
-                        if(openList.size() == 1 && DateUtil.parse(openList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(announceDate))<=0){
-                            openList.remove(i);
-                        }
-                    }
+
                     if (openList == null || openList.size() == 0 ) {
                         openList = new ArrayList<>();
                         ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
@@ -118,7 +114,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     Date plateDate = DateUtil.platDateFromCache();
                     //查询历史开放信息
                     List<ReportOpenPlanDto> openHisList = reportZqxkfgg001Mapper.getOpenHisList(searchparam);
-                    if (openHisList != null) {
+                    if (openHisList != null && openHisList.size() > 0) {
                         //根据每个区间去查各区间的净值数据
                         for (ReportOpenPlanDto reportOpenPlanDto : openHisList) {
                             //周期运作起始日
@@ -184,11 +180,11 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                             " 周期型产品开放公告（公募产品）：根据产品排期计划表，每个开放周期的运作起始日都需要生成此公告；【请检查当前产品的排期计划以及查询日期】【{}】",JsonUtils.object2Json(paraMap));
                 }
             }
-            resultMap.add(ReportCollectionUtils.bean2Map(reportZqxkfgg001Dto));
             logger.info("周期型产品开放公告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("周期型产品开放公告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
+        resultMap.add(ReportCollectionUtils.bean2Map(reportZqxkfgg001Dto));
         return resultMap;
     }
 

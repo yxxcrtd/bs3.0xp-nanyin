@@ -139,6 +139,7 @@ public class DurationReportDataService implements IReportDataService {
 					item.setAssetsValue(item.getAssetsValue().setScale(2,BigDecimal.ROUND_DOWN));
 					item.setUnitValue(item.getUnitValue().setScale(4,BigDecimal.ROUND_DOWN));
 					item.setUnitValueT(item.getUnitValueT().setScale(4,BigDecimal.ROUND_DOWN));
+					item.setOtherFee(item.getOtherFee().setScale(2,BigDecimal.ROUND_DOWN));
 					listFinIndex.add(CollectionUtils.bean2Map(item));
 				});
 				reportDto.setListFinIndex(listFinIndex);
@@ -231,12 +232,12 @@ public class DurationReportDataService implements IReportDataService {
 				listAssetComb.forEach(item->{
 					item.setEquityAfterRatio(item.getEquityAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
 					item.setEquityPreRatio(item.getEquityPreRatio().setScale(2,BigDecimal.ROUND_DOWN));
-					item.setFixPreRatio(item.getFixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
-					item.setFixPreRatio(item.getFixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
-					item.setFdPreRatio(item.getFdAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
-					item.setFdPreRatio(item.getFdAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
-					item.setMixPreRatio(item.getMixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
-					item.setMixPreRatio(item.getMixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setFixAfterRatio(item.getFixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setFixPreRatio(item.getFixPreRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setFdAfterRatio(item.getFdAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setFdPreRatio(item.getFdPreRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setMixAfterRatio(item.getMixAfterRatio().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setMixPreRatio(item.getMixPreRatio().setScale(2,BigDecimal.ROUND_DOWN));
 				});		
 				if ( listAssetComb!=null && listAssetComb.size()>0 )
 					reportDto.setProdAssetComb( CollectionUtils.bean2Map(listAssetComb.get(0)));
@@ -253,14 +254,12 @@ public class DurationReportDataService implements IReportDataService {
 				List<Map<String,Object>> listAssetDetail = new ArrayList<>();
 				int i=0;
 				//取10条，但如果占比和公允价值的一样，则全部报出来
+				BigDecimal pd = BigDecimal.ZERO;
+				BigDecimal fv = BigDecimal.ZERO;
 				for ( RepAssetsComb item:listDto ) {
-					BigDecimal pd = BigDecimal.ZERO;
-					BigDecimal fv = BigDecimal.ZERO;
 					if ( i<10 ) {
 						item.setPersonalField(++i+"");
 						listAssetDetail.add(CollectionUtils.bean2Map(item));
-						pd = item.getPdProp();
-						fv = item.getFairValue();
 					} else {
 						if ( item.getPdProp().equals(pd) && item.getFairValue().equals(fv) ) {
 							item.setPersonalField(++i+"");
@@ -269,6 +268,8 @@ public class DurationReportDataService implements IReportDataService {
 							break;
 						}
 					}
+					pd = item.getPdProp();
+					fv = item.getFairValue();
 				}
 				reportDto.setListAssetsDetail(listAssetDetail);
 			}  catch (Exception e) {

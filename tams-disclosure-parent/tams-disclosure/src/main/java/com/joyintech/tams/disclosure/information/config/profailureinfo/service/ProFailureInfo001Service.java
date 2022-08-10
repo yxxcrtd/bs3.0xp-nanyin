@@ -12,9 +12,11 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFailureInfoMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
+import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -55,10 +57,16 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             proFailureInfoMapper.deleteByKey(dto.getProdRegistNo());
         }
         else if (StringUtil.equals(type, "NEW")) {
+            ProFailureInfo001Dto dto1 = proFailureInfoMapper.isRepeated(dto);
+            if (dto!=null && StringUtil.equals(dto1.getDataStatus(),"D")){
+                dto.setDataStatus("E");
+                proFailureInfoMapper.updateByKey(dto);
+            }else {
             ProFailureInfo001Dto proFailureInfo001Dto = new ProFailureInfo001Dto();
             BeanUtil.copyPropertiesIgnoreNull(proFailureInfo001Dto,dto);
             proFailureInfo001Dto.setDataStatus("E");
             proFailureInfoMapper.insert(proFailureInfo001Dto);
+            }
         }
         else {
             dto.setDataStatus("E");
@@ -214,6 +222,20 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+
+        String tempList = (String) resultMap.get("correctData");
+        ProFailureInfo001Dto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<ProFailureInfo001Dto> selectedItem = dto.getSelectedItem();
+        List<ProFailureInfo001Dto>  existData = new ArrayList<>();
+        for (ProFailureInfo001Dto temp:selectedItem) {
+            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
+
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -239,9 +261,10 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         List<ProFailureInfo001Dto> selectedItem = dto.getSelectedItem();
         List<ProFailureInfo001Dto>  existData = new ArrayList<>();
         List<ProFailureInfo001Dto>  newData = new ArrayList<>();
+
         for (ProFailureInfo001Dto temp:selectedItem) {
             //数据已存在 【产品登记编码 相同】，做更新操作。
-            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
+            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
                 existData.add(temp);
             }else {
                 temp.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -297,5 +320,9 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
 
     public int hasRepeatedData(ProFailureInfo001Dto dto) {
         return proFailureInfoMapper.hasRepeatedData(dto);
+    }
+
+    public ProFailureInfo001Dto isRepeated(ProFailureInfo001Dto dto) {
+        return proFailureInfoMapper.isRepeated(dto);
     }
 }

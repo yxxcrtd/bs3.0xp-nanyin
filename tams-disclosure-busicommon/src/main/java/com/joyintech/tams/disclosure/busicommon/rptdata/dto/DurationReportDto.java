@@ -29,6 +29,7 @@ public class DurationReportDto extends ReportDto {
 	private String issuingWay;  //发行方式：01开放，02封闭
 	
 	private BigDecimal capital; //期末产品份额
+	private BigDecimal leverage; //杠杆率
 	private String partner; //合作机构
 	
 	private int year;           //年
@@ -100,6 +101,14 @@ public class DurationReportDto extends ReportDto {
 
 	public void setCapital(BigDecimal capital) {
 		this.capital = capital;
+	}
+
+	public BigDecimal getLeverage() {
+		return leverage;
+	}
+
+	public void setLeverage(BigDecimal leverage) {
+		this.leverage = leverage;
 	}
 
 	public String getPartner() {

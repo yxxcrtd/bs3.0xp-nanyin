@@ -53,6 +53,24 @@
       where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
    </select>
 
+
+    <select id="isRepeated"
+            resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
+      select
+          PROD_REGIST_NO prodRegistNo,
+          DATA_STATUS dataStatus,
+          NOCREATE_REASON nocreateReason,
+          REPORT_ISSUE_DATE reportIssueDate,
+          IS_SALES_AGENCY isSalesAgency,
+          DATA_SOURCE,
+          UPDATE_TIME,
+          UPDATE_USER
+      from DIS_PROD_NOCREATE
+      where
+        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and
+        NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and
+        REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
+   </select>
     <delete id="deleteByKey">
         update DIS_PROD_NOCREATE set DATA_STATUS = 'D'
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
@@ -102,10 +120,14 @@
         SELECT
         DISTINCT
         PROD_RE id,
-        PROD_RE text
+        PROD_NAME text
         FROM
         rep_prod_info
         WHERE PROD_RE IS NOT NULL
+        <if test="search != null and search != ''">
+            and (PROD_RE like concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
     </select>
     <select id="selectByProdRegistNo" resultType="java.lang.String">
         select distinct PROD_REGIST_NO from DIS_PROD_NOCREATE
@@ -151,6 +173,7 @@
     </select>
     <select id="hasRepeatedData" resultType="java.lang.Integer">
         select count (1) from DIS_PROD_NOCREATE where
+        DATA_STATUS = 'E' and
         PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and
         NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and
         REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
