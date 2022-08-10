@@ -198,12 +198,6 @@ public class ReportJzfhbg001Service implements IReportDataService {
                         //根据产品排期表，展示开放起始日大于当前收益分配基准日的下一个开放周期的信息；若当前已处于最后一个产品周期，则正常生成表格，表格内容置空，由业务老师手工调整
                         List<ReportOpenPlanDto> openPlanList = reportJzfhbg001Mapper.getOpenPlanList(searchParam);
 
-                        for(int i = 0 ; i < openPlanList.size();i++){
-                            if(openPlanList.size() == 1 &&  DateUtil.parse(openPlanList.get(i).getOpenStartDate()).compareTo(DateUtil.parse(settDateStr))<=0){
-                                openPlanList.remove(i);
-                            }
-                        }
-
                         if (openPlanList != null && openPlanList.size() > 0) {
                             for (ReportOpenPlanDto openPlanDto : openPlanList) {
                                 //查询申购/赎回确认日的下一工作日

@@ -37,9 +37,9 @@
 				,TO_CHAR(DPP.OPEN_END_DATE+1,'YYYY-MM-DD')  settDate
 			FROM
 				REP_PROD_INFO INFO
-				INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE > TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
+				INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_START_DATE > TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
 				<if test="setDate != null">
-					AND DPP.OPEN_END_DATE >= #{setDate}
+					AND DPP.OPEN_START_DATE > #{setDate}
 				</if>
 				WHERE
 					INFO.STATUS = 'E'
@@ -60,7 +60,7 @@
 				REP_PROD_INFO INFO
 				INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND  DPP.OPEN_END_DATE &lt;= TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
 				<if test="setDate != null">
-					AND DPP.OPEN_END_DATE > #{setDate}
+					AND DPP.OPEN_START_DATE > #{setDate}
 				</if>
 				INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID =INFO.PROD_ID AND PRI.STATUS = 'E' AND PRI.VALUE_DATE = DPP.OPEN_END_DATE
 			where
@@ -87,6 +87,9 @@
 			SELECT MAX(H.OPEN_END_DATE) FROM
 				REP_PROD_INFO INFO2
 			    INNER JOIN DIS_PROD_PLAN H ON H.PROD_ID = NVL(INFO2.P_PROD_ID,INFO2.PROD_ID) AND H.OPEN_END_DATE &lt; TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
+				<if test="setDate != null">
+					AND H.OPEN_START_DATE > #{setDate}
+				</if>
 		    WHERE INFO2.PROD_ID = #{prodId,jdbcType=VARCHAR} AND INFO2.STATUS = 'E'
 		)
 	</select>
