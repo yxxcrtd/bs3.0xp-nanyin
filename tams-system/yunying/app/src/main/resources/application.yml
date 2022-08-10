@@ -512,13 +512,13 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: BS30CVR_V306_XP_TEST
     password: BS30CVR_V306_XP_TEST
-    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
   sqldiruserName: BS30CVR_V306_XP_TEST
   sqldirpassword: BS30CVR_V306_XP_TEST
@@ -541,13 +541,13 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: BS30CVR_V306_XP_TEST
     password: BS30CVR_V306_XP_TEST
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: BS30CVR_V306_XP_TEST
     password: BS30CVR_V306_XP_TEST
@@ -556,19 +556,19 @@ interf:
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: BS30CVR_V306_XP_DEV
     password: BS30CVR_V306_XP_DEV
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: BS30CVR_V306_XP_TEST
     password: BS30CVR_V306_XP_TEST
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: BS30CVR_V306_XP_TEST
     password: BS30CVR_V306_XP_TEST
