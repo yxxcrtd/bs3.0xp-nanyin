@@ -75,6 +75,7 @@ public class ReportFxgg001Service implements IReportDataService {
         if (raiseAmt != null) {
             DecimalFormat df = new DecimalFormat("#,###.00");
             dataMap.put("raiseAmt", df.format(raiseAmt));
+            dataMap.put("raiseAmtVal", raiseAmt);
         } else {
             dataMap.put("raiseAmt", BigDecimal.ZERO);
         }

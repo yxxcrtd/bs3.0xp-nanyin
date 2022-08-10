@@ -454,5 +454,12 @@ public class RepDetailsShow001Contoller extends BaseController {
 	public AjaxResult check(@RequestBody Map<String, Object> param) {
 		return repDetailsShow001Service.check(param);
 	}
-	
+
+
+	@ResponseBody
+	@RequestMapping("dataCheck")
+	public AjaxResult dataCheck(@RequestBody Map<String, Object> param) {
+		repDetailsShow001Service.collateParams(param);
+		return repDetailsShow001Service.dataCheck(param);
+	}
 }

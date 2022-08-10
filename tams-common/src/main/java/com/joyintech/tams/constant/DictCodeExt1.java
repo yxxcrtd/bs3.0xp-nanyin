@@ -91,6 +91,7 @@ public enum DictCodeExt1 implements BaseDictCode {
      */
     信披报表类别("DIS_REPORT_STYLE"),
 
+    信披数据校验比较符("REP_CHECK_TYPE"),
     ;
     private String value;
 

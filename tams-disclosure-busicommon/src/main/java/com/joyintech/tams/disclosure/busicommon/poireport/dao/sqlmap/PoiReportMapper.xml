@@ -37,4 +37,27 @@
 		AND REP_ID = #{repId,jdbcType=VARCHAR}
 	</select>
 
+	<select id="checkBaseDate" resultType="int">
+		select count(1)
+		from (
+		    select  OPEN_END_DATE
+		    from DIS_PROD_PLAN
+		    where PROD_ID=#{prodId}
+		    and OPEN_END_DATE= TO_DATE(#{baseDate},'yyyy-MM-dd')
+		    union all
+			select  SETT_DATE
+			from DIS_PROD_BONUSPLAN
+			where PROD_ID=#{prodId}
+			  and BONUS_MODE='02'
+			  and SETT_DATE= TO_DATE(#{baseDate},'yyyy-MM-dd')
+		)
+	</select>
+
+	<delete id="deleteCheckData" parameterType="com.joyintech.tams.common.base.entity.RepReportCheck">
+		delete from REP_REPORT_CHECK rrc
+		where rrc.REP_ID=#{repId,jdbcType=VARCHAR}
+		and rrc.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		and rrc.END_DATE=#{endDate,jdbcType=DATE}
+		and rrc.CHECK_DATE=#{checkDate,jdbcType=DATE}
+	</delete>
 </mapper>

@@ -76,5 +76,12 @@
             //$('#ReportCheck001_btn_delete').show();
         });
 
+        $('#ReportCheck001_btn_set').click(function () {
+            Joyin.dialog(JoyinUtil.getLabel('指标阈值配置'), '/disclosure/information/config/repreportcheck/ReportCheck002/init', "50%", "90%",{pageModel:PAGE_MODEL_NEW},
+                function(result) {
+                }
+            );
+        });
+
     });
 }());

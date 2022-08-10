@@ -82,7 +82,7 @@ $(function () {
 			}
 			//产品名称下拉框
 			if(data[i].screenType==='01'){
-				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getPProdIdList"'
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select select2-hidden-accessible" placeholder="请选择" data-url="getPProdIdList"'
 					+'parentIds="repId,prodid" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true" >' +'</select>';
@@ -93,7 +93,7 @@ $(function () {
 			//子产品代码下拉框
 			else if(data[i].screenType==='02'){
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getProdIdList"'
-					+'parentIds="repId,pprodid" allowClear="true"';
+					+'parentIds="repId,pprodid" allowClear="true" ';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
@@ -117,7 +117,7 @@ $(function () {
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
-					SearchHtml+= 'onchange=elementNameChange()>' +'</select>';
+					SearchHtml+= 'onchange=elementNameChange("'+modelId+'")>' +'</select>';
 				}
 			}
 			//季度选择框
@@ -529,12 +529,12 @@ $(function () {
 	    	params['uri'] = modelId;
 	    	params['repid']=repId;
 			console.log(params)
-	    	Joyin.ajax('previewReport', params, function(result) {
-				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
-				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
-				$container.html(result);
-				previewFlag=true;
-	        });
+			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result) {
+				Joyin.ajax('previewReport', params, function(result) {
+					$container.html(result);
+					previewFlag=true;
+				});
+			});
 	    }     
 	}
 	  
@@ -886,8 +886,13 @@ function feeNameChange(){
 	$('#pprodid').val("").trigger("change");
 }
 
-function elementNameChange(){
-	$('#pprodid').val("").trigger("change");
+function elementNameChange(modelId){
+
+	if(modelId==="DYSDCPTZMB_GM"||modelId==="DYSDCPTZMB"){
+
+		$('#pprodid').val("NYLCSMCP").trigger("change").trigger('blur');
+		//$('#pprodid').select2('destroy').textSelect('setValue', 'NYLCSMCP');
+	}
 }
 
 

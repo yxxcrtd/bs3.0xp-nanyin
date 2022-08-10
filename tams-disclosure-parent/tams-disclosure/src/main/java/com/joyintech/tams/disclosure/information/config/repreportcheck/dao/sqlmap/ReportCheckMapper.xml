@@ -3,12 +3,15 @@
 <mapper namespace="com.joyintech.tams.disclosure.information.config.repreportcheck.dao.ReportCheckMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto" >
         <id column="REPORT_CHECK_ID" property="reportCheckId" jdbcType="VARCHAR" />
+        <result column="REP_ID" property="repId" jdbcType="VARCHAR" />
         <result column="REPORT_TYPE" property="reportType" jdbcType="VARCHAR" />
         <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
-        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
         <result column="CHECK_DATE" property="checkDate" jdbcType="DATE" />
+        <result column="START_DATE" property="startDate" jdbcType="DATE" />
+        <result column="END_DATE" property="endDate" jdbcType="DATE" />
         <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
+        <result column="FILE_NO" property="fileNo" jdbcType="VARCHAR" />
         <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -16,27 +19,27 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-        <result column="TIPS" property="tips" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        REPORT_CHECK_ID REPORT_CHECK_ID, REPORT_TYPE REPORT_TYPE, REPORT_NAME REPORT_NAME, 
-        PROD_NAME PROD_NAME, PROD_ID PROD_ID, CHECK_DATE CHECK_DATE, ERRORMSG ERRORMSG, DATA_STATUS DATA_STATUS, 
-        DATA_SOURCE DATA_SOURCE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT, TIPS TIPS
+        REPORT_CHECK_ID REPORT_CHECK_ID, REP_ID REP_ID, REPORT_TYPE REPORT_TYPE, REPORT_NAME REPORT_NAME,
+        PROD_ID PROD_ID, CHECK_DATE CHECK_DATE, START_DATE START_DATE, END_DATE END_DATE,
+        ERRORMSG ERRORMSG, FILE_NO FILE_NO, DATA_STATUS DATA_STATUS, DATA_SOURCE DATA_SOURCE,
+        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
+        CREATE_DEPT CREATE_DEPT
     </sql>
     <sql id="Sql_All_Data" >
-        select 
-        <include refid="com.joyintech.tams.disclosure.information.config.repreportcheck.dao.ReportCheckMapper.Base_Column_List" />
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepReportCheckMapper.Base_Column_List" />
         from REP_REPORT_CHECK
     </sql>
     <sql id="Sql_All_Effective_Data" >
-        select 
-        <include refid="com.joyintech.tams.disclosure.information.config.repreportcheck.dao.ReportCheckMapper.Base_Column_List" />
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepReportCheckMapper.Base_Column_List" />
         from REP_REPORT_CHECK
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select 
-        <include refid="com.joyintech.tams.disclosure.information.config.repreportcheck.dao.ReportCheckMapper.Base_Column_List" />
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepReportCheckMapper.Base_Column_List" />
         from REP_REPORT_CHECK
         where REPORT_CHECK_ID = #{reportCheckId,jdbcType=VARCHAR}
     </select>
@@ -44,25 +47,28 @@
         delete from REP_REPORT_CHECK
         where REPORT_CHECK_ID = #{reportCheckId,jdbcType=VARCHAR}
     </delete>
-    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto" >
-        insert into REP_REPORT_CHECK (REPORT_CHECK_ID, REPORT_TYPE, REPORT_NAME, 
-            PROD_NAME, PROD_ID, CHECK_DATE, 
-            ERRORMSG, DATA_STATUS, DATA_SOURCE, 
-            CREATE_USER, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, CREATE_DEPT, TIPS
-            )
-        values (#{reportCheckId,jdbcType=VARCHAR}, #{reportType,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR}, 
-            #{prodName,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{checkDate,jdbcType=DATE}, 
-            #{errormsg,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{tips,jdbcType=VARCHAR}
-            )
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepReportCheck" >
+        insert into REP_REPORT_CHECK (REPORT_CHECK_ID, REP_ID, REPORT_TYPE,
+                                      REPORT_NAME, PROD_ID, CHECK_DATE,
+                                      START_DATE, END_DATE, ERRORMSG,
+                                      FILE_NO, DATA_STATUS, DATA_SOURCE,
+                                      CREATE_USER, CREATE_TIME, UPDATE_USER,
+                                      UPDATE_TIME, CREATE_DEPT)
+        values (#{reportCheckId,jdbcType=VARCHAR}, #{repId,jdbcType=VARCHAR}, #{reportType,jdbcType=VARCHAR},
+                #{reportName,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{checkDate,jdbcType=DATE},
+                #{startDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, #{errormsg,jdbcType=VARCHAR},
+                #{fileNo,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
+                #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
     </insert>
-    <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto" >
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepReportCheck" >
         insert into REP_REPORT_CHECK
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="reportCheckId != null" >
                 REPORT_CHECK_ID,
+            </if>
+            <if test="repId != null" >
+                REP_ID,
             </if>
             <if test="reportType != null" >
                 REPORT_TYPE,
@@ -70,17 +76,23 @@
             <if test="reportName != null" >
                 REPORT_NAME,
             </if>
-            <if test="prodName != null" >
-                PROD_NAME,
-            </if>
             <if test="prodId != null" >
                 PROD_ID,
             </if>
             <if test="checkDate != null" >
                 CHECK_DATE,
             </if>
+            <if test="startDate != null" >
+                START_DATE,
+            </if>
+            <if test="endDate != null" >
+                END_DATE,
+            </if>
             <if test="errormsg != null" >
                 ERRORMSG,
+            </if>
+            <if test="fileNo != null" >
+                FILE_NO,
             </if>
             <if test="dataStatus != null" >
                 DATA_STATUS,
@@ -103,13 +115,13 @@
             <if test="createDept != null" >
                 CREATE_DEPT,
             </if>
-            <if test="tips != null" >
-                TIPS,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="reportCheckId != null" >
                 #{reportCheckId,jdbcType=VARCHAR},
+            </if>
+            <if test="repId != null" >
+                #{repId,jdbcType=VARCHAR},
             </if>
             <if test="reportType != null" >
                 #{reportType,jdbcType=VARCHAR},
@@ -117,17 +129,23 @@
             <if test="reportName != null" >
                 #{reportName,jdbcType=VARCHAR},
             </if>
-            <if test="prodName != null" >
-                #{prodName,jdbcType=VARCHAR},
-            </if>
             <if test="prodId != null" >
                 #{prodId,jdbcType=VARCHAR},
             </if>
             <if test="checkDate != null" >
                 #{checkDate,jdbcType=DATE},
             </if>
+            <if test="startDate != null" >
+                #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=DATE},
+            </if>
             <if test="errormsg != null" >
                 #{errormsg,jdbcType=VARCHAR},
+            </if>
+            <if test="fileNo != null" >
+                #{fileNo,jdbcType=VARCHAR},
             </if>
             <if test="dataStatus != null" >
                 #{dataStatus,jdbcType=VARCHAR},
@@ -150,32 +168,29 @@
             <if test="createDept != null" >
                 #{createDept,jdbcType=VARCHAR},
             </if>
-            <if test="tips != null" >
-                #{tips,jdbcType=VARCHAR},
-            </if>
         </trim>
     </insert>
-    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto" >
-        insert into REP_REPORT_CHECK(REPORT_CHECK_ID, REPORT_TYPE, REPORT_NAME, PROD_NAME, 
-        PROD_ID, CHECK_DATE, ERRORMSG, DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, 
-        UPDATE_USER, UPDATE_TIME, CREATE_DEPT, TIPS)
-        select REPORT_CHECK_ID, REPORT_TYPE, REPORT_NAME, PROD_NAME, 
-            PROD_ID, CHECK_DATE, ERRORMSG, DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, 
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT, TIPS
-             from REP_REPORT_CHECK
-             where 1 = 1 and REPORT_CHECK_ID = #{reportCheckId,jdbcType=VARCHAR}
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepReportCheck" >
+        insert into REP_REPORT_CHECK(REPORT_CHECK_ID, REP_ID, REPORT_TYPE, REPORT_NAME, PROD_ID,
+                                     CHECK_DATE, START_DATE, END_DATE, ERRORMSG, FILE_NO, DATA_STATUS, DATA_SOURCE, CREATE_USER,
+                                     CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select REPORT_CHECK_ID, REP_ID, REPORT_TYPE, REPORT_NAME, PROD_ID,
+               CHECK_DATE, START_DATE, END_DATE, ERRORMSG, FILE_NO, DATA_STATUS, DATA_SOURCE, CREATE_USER,
+               CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+        from REP_REPORT_CHECK
+        where 1 = 1 and REPORT_CHECK_ID = #{reportCheckId,jdbcType=VARCHAR}
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto" >
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepReportCheck" >
         update REP_REPORT_CHECK
         <set >
+            <if test="repId != null" >
+                REP_ID = #{repId,jdbcType=VARCHAR},
+            </if>
             <if test="reportType != null" >
                 REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
             </if>
             <if test="reportName != null" >
                 REPORT_NAME = #{reportName,jdbcType=VARCHAR},
-            </if>
-            <if test="prodName != null" >
-                PROD_NAME = #{prodName,jdbcType=VARCHAR},
             </if>
             <if test="prodId != null" >
                 PROD_ID = #{prodId,jdbcType=VARCHAR},
@@ -183,8 +198,17 @@
             <if test="checkDate != null" >
                 CHECK_DATE = #{checkDate,jdbcType=DATE},
             </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=DATE},
+            </if>
             <if test="errormsg != null" >
                 ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            </if>
+            <if test="fileNo != null" >
+                FILE_NO = #{fileNo,jdbcType=VARCHAR},
             </if>
             <if test="dataStatus != null" >
                 DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
@@ -198,26 +222,25 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="tips != null" >
-                TIPS = #{tips,jdbcType=VARCHAR},
-            </if>
         </set>
         where REPORT_CHECK_ID = #{reportCheckId,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto" >
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepReportCheck" >
         update REP_REPORT_CHECK
-        set REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+        set REP_ID = #{repId,jdbcType=VARCHAR},
+            REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
             REPORT_NAME = #{reportName,jdbcType=VARCHAR},
-            PROD_NAME = #{prodName,jdbcType=VARCHAR},
             PROD_ID = #{prodId,jdbcType=VARCHAR},
             CHECK_DATE = #{checkDate,jdbcType=DATE},
+            START_DATE = #{startDate,jdbcType=DATE},
+            END_DATE = #{endDate,jdbcType=DATE},
             ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            FILE_NO = #{fileNo,jdbcType=VARCHAR},
             DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
             DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            TIPS = #{tips,jdbcType=VARCHAR}
-        where REPORT_CHECK_ID = #{reportCheckId,jdbcType=VARCHAR}
+            where REPORT_CHECK_ID = #{reportCheckId,jdbcType=VARCHAR}
     </update>
 
 
@@ -247,5 +270,16 @@
             <![CDATA[AND  CHECK_DATE <= TO_DATE(#{checkDateEnd},'YYYY-MM-DD')]]>
         </if>
         order by NVL(UPDATE_TIME,CREATE_TIME) desc
+    </select>
+
+    <select id="getRepDataCheckList" resultType="com.joyintech.tams.common.base.entity.RepDataCheck">
+        select
+            CHECK_ID checkId,
+            CHECK_TYPE checkType,
+            CHECK_DESC checkDesc,
+            PARAM_VALUE1 paramValue1,
+            PARAM_VALUE2 paramValue2
+        from REP_DATA_CHECK
+        where status='E'
     </select>
 </mapper>

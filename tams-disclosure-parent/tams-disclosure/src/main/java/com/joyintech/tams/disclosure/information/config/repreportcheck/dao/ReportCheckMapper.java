@@ -1,6 +1,6 @@
 package com.joyintech.tams.disclosure.information.config.repreportcheck.dao;
 
-import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
+import com.joyintech.tams.common.base.entity.RepDataCheck;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto;
 import org.springframework.stereotype.Repository;
 
@@ -24,5 +24,8 @@ public interface ReportCheckMapper {
     int updateByPrimaryKey(ReportCheckDto record);
 
     List<ReportCheckDto> searchList(Map<String, Object> params);
+
+
+    List<RepDataCheck> getRepDataCheckList();
 
 }
