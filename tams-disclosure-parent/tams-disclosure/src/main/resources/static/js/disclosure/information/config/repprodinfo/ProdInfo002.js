@@ -163,6 +163,14 @@
                 $('#openFreq').attr("disabled",true);
             }
         }
+        // if(pageModel=== PAGE_MODEL_NEW){
+        //     $('#isGrade').change(function () {
+        //         if($('#isGrade').val()=='02'){
+        //             $('#prodName').attr("disabled",true);
+        //             $('#setDate').attr("disabled",true);
+        //         }
+        //     })
+        // }
 
         // 绑定按钮事件
         $('#ProdInfo002_btn_submit').click(function () {
@@ -257,13 +265,13 @@
         });
 
         // 子产品名称修改后的事件
-        $("#prodName").blur(function(){
+        $("#pProdName").blur(function(){
             var isGrade = $('#isGrade').val();
             generatepProdName(isGrade);
         });
 
         // 子产品成立时间 修改事件
-        $("#setDate").change(function(){
+        $("#pSetDate").change(function(){
             var isGrade = $('#isGrade').val();
             generatepProdName(isGrade);
         });
@@ -272,14 +280,16 @@
         function generatepProdName(isGrade){
             //当“是否分级产品”为“否”时
             if(isGrade && isGrade == '02' ){
-                $("#pProdName").attr("disabled", true);
-                $("#pSetDate").attr("disabled", true);
-                var prodName = $('#prodName').val(); //pSetDate
-                var setDate = $('#setDate').val();
-                $("#pProdName").val(prodName);
+                // $("#pProdName").attr("disabled", true);
+                // $("#pSetDate").attr("disabled", true);
+                $('#prodName').attr("disabled",true);
+                $('#setDate').attr("disabled",true);
+                var pProdName = $('#pProdName').val(); //pSetDate
+                var pSetDate = $('#pSetDate').val();
+                $("#prodName").val(pProdName);
                 laydate.render({
-                    elem: '#pSetDate'
-                    ,value: setDate //必须遵循format参数设定的格式
+                    elem: '#setDate'
+                    ,value: pSetDate //必须遵循format参数设定的格式
                 });
             }else{
                 $("#pProdName").attr("disabled", false);
