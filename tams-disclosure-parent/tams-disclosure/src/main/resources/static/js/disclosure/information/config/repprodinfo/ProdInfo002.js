@@ -388,7 +388,7 @@
         if (pSetDate && mdate) {
             var days = (Date.ofDate(mdate) - Date.ofDate(pSetDate)) / (24 * 60 * 60 * 1000);
             if (days < 0) {
-                Joyin.error(JoyinUtil.getMessage("产品到期日期必须大于产品成立日期", JoyinUtil.getLabel("ProdInfo002.mdate")));
+                Joyin.error(JoyinUtil.getMessage("产品到期日必须大于产品成立日", JoyinUtil.getLabel("ProdInfo002.mdate")));
                 $('#mdate').val('');
                 return;
             }
@@ -419,7 +419,7 @@
         if (raiseStrdate && raiseEnddate) {
             var days = (Date.ofDate(raiseEnddate) - Date.ofDate(raiseStrdate)) / (24 * 60 * 60 * 1000);
             if (days < 0) {
-                Joyin.error(JoyinUtil.getMessage("募集结束日必须大于等于募集开始日", JoyinUtil.getLabel("ProdInfo002.raiseEnddate")));
+                Joyin.error(JoyinUtil.getMessage("募集结束日期必须大于等于募集起始日期", JoyinUtil.getLabel("ProdInfo002.raiseEnddate")));
                 $('#raiseEnddate').val('');
             }
         }

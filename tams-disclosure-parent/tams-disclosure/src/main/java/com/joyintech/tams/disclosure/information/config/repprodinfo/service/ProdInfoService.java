@@ -399,9 +399,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         errorMsg.append("产品成立日期 格式不正确！");
                     }
                     if (StringUtil.isEmpty(rowData.get(13))) {
-                        errorMsg.append("产品到期日期 必填！");
+                        errorMsg.append("产品到期日 必填！");
                     } else if (!this.isDateStr(rowData.get(13))) {
-                        errorMsg.append("产品到期日期 格式不正确！");
+                        errorMsg.append("产品到期日 格式不正确！");
                     }
                     if (StringUtil.isEmpty(rowData.get(14))) {
                         errorMsg.append("募集方式 必填！");
@@ -410,11 +410,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     if (DateUtil.compareDate(rowData.get(10),rowData.get(9)) < 0
                             || DateUtil.compareDate(rowData.get(10),rowData.get(2)) > 0
                             || DateUtil.compareDate(rowData.get(10),rowData.get(12)) > 0) {
-                        errorMsg.append("募集结束日必须大于等于募集开始日，且必须小于子产品成立日期和产品成立日期！");
+                        errorMsg.append("募集结束日期必须大于等于募集起始日期，且必须小于子产品成立日期和产品成立日！");
                     }
                     if (DateUtil.compareDate(rowData.get(13),rowData.get(2)) < 0
                             || DateUtil.compareDate(rowData.get(13),rowData.get(12)) < 0 ) {
-                        errorMsg.append("产品到期日期必须大于产品成立日期及子产品成立日期！");
+                        errorMsg.append("产品到期日必须大于产品成立日及子产品成立日期！");
                     }
 
                     if (StringUtils.equals(DictCodeListExt5.信披募集方式_公募.getCodeName(), rowData.get(14))
