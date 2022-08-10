@@ -301,7 +301,7 @@ $(function ($) {
                                 ,'<td class="layui-hide">'+ file.size +'</td>'
                                 ,'<td>'+ new Date().format('yyyy-MM-dd hh:mm') +'</td>'
                                 ,'<td>'
-                                ,'<button class="layui-btn layui-btn-mini file-reload layui-hide">重传</button>'
+                                /*,'<button class="layui-btn layui-btn-mini file-reload layui-hide">重传</button>'*/
                                 ,'<button class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button>'
                                 ,'</td>'
                                 ,'</tr>'].join(''));
