@@ -59,7 +59,7 @@
             ,{field:'oAmt',  title: '原币余额',sortField:"oAmt",type:'number'}//原币余额
             ,{field:'tdyODAmt',  title: '原币发生额(借方)',sortField:"tdyODAmt",type:'number'}//原币发生额（借方）
             ,{field:'errormsg',  title: '错误信息',sortField:"errormsg"}//错误信息
-            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'date'} //更新时间
+            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {
