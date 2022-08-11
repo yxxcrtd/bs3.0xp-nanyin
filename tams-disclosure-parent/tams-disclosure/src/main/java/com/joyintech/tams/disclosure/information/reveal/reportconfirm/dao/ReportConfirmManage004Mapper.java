@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageCommentDto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto;
@@ -50,4 +51,6 @@ public interface ReportConfirmManage004Mapper {
     List<ReportConfirmManageCommentDto> getInfo(@Param("infoSeqno") String infoSeqno);
 
     String  getFirstNodeId(@Param("seqNo") String seqNo);
+
+    List<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paramMap);
 }
