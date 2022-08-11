@@ -41,7 +41,7 @@ $(function(){
               ,{field:'partnerName', width:'10%', sortField:'partnerName', title: '合作机构'}
               ,{field:'effDateStr',width:'10%' , sortField:"effDate", title: '生效日',type:'date'}
               ,{field:'effEndDateStr',width:'10%' , sortField:"effEndDate", title: '生效截止日期',type:'date'}
-              ,{field: 'updateTime', type: 'datetime',width:'15%', sortable:false,title: "更新时间"}
+              ,{field: 'updateTime', type: 'datetime',width:'15%', sortField:"updateTime",title: "更新时间"}
               ,{field:'updateUser', width:'10%', sortField:'updateUser', title: '更新人'}
               ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                  render: function (data, type, row, meta) {
@@ -145,7 +145,7 @@ $(function(){
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].dataStatus=='02'){
+                if(selArr[i].dataStatus=='D'){
                     Joyin.error("请选择有效状态的数据进行删除");
                     return;
                 }

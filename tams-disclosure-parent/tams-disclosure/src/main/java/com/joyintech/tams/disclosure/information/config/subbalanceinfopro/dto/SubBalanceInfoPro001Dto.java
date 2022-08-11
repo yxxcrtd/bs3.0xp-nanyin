@@ -151,4 +151,12 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
     public BigDecimal getTdyODAmt() {
         return super.getTdyODAmt();
     }
+
+    public String getUpdateTimeStr() {
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
+    }
+
+    public String getDataStatusStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,super.getStatus());
+    }
 }

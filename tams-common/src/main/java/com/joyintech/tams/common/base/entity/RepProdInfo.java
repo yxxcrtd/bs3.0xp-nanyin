@@ -57,7 +57,7 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 募集开始日：母产品募集开始日，子产品为空
      */
-    @NotEmpty(fieldName = "募集开始日期")
+    @NotEmpty(fieldName = "募集起始日期")
     private Date raiseStrdate;
 
     /**

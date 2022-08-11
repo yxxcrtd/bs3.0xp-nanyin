@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.information.config.repprodinfo.dao;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -42,5 +43,7 @@ public interface DisProdBaseInfoMapper  {
     List<ProdInfoDto> selectListByPprodId(@Param("prodId") String prodId);
 
     int updateRaiseAmtByPprodId(ProdInfoDto record);
+
+    List<SelectOptionDto> queryPprodIds(Map<String, Object> paramMap);
 
 }

@@ -98,12 +98,15 @@ public class DurationReportDataService implements IReportDataService {
 			//报表基本产品信息，母产品维度
 			try {
 				DurationReportDto dto= durationReportMapper.selectProdInfo(paraMap);
+				
+				if ( DateUtil.getBetweenDayNumber(reportDate, dto.getmDate())<=90 )  //不需要生成定期报表
+					return null;
+				
 				if ( dto!=null ) {
 					reportDto = dto; 
 				}
 			} catch (Exception e) {
-				logger.error("报表产品基本信息错误.");
-				e.printStackTrace();				
+				logger.error("报表产品基本信息错误.",e);
 			}
 			
 			//报表时间信息
@@ -419,12 +422,13 @@ public class DurationReportDataService implements IReportDataService {
 		
 		String rptType = paraMap.get("uri").toString();
 		try {
-			year = Integer.parseInt(paraMap.get("year").toString());
-
+			year = paraMap.get("year")!=null?Integer.parseInt(paraMap.get("year").toString()):2022;
 			if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+				quarter = Integer.parseInt(paraMap.get("quarter").toString());
 				sDate = DurationUtil.getQuarterStart(year, quarter);
 				eDate = DurationUtil.getQuarterEnd(year, quarter);
 			} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+				halfYear = Integer.parseInt(paraMap.get("halfYear").toString());
 				sDate = DurationUtil.getHalfYearStart(year, halfYear);
 				eDate = DurationUtil.getHalfYearEnd(year, halfYear);
 			} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  

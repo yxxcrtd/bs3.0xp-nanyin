@@ -3,16 +3,19 @@
  */
 package com.joyintech.tams.disclosure.busicommon.poireport.service;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.tams.common.base.dao.RepReportCheckMapper;
-import com.joyintech.tams.common.base.entity.RepReportCheck;
-import com.joyintech.tams.common.oss.service.FileRemoteService;
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,22 +24,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
-import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RepInstallLogDetailMapper;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
+import com.joyintech.tams.common.base.dao.RepReportCheckMapper;
 import com.joyintech.tams.common.base.dao.RepRevealMapper;
 import com.joyintech.tams.common.base.entity.RepInstallLogDetail;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepReportCheck;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
@@ -49,8 +50,6 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.utils.poi.PoiUtils;
-
-import javax.annotation.Resource;
 
 /**
  * poi报表生成服务<br>
@@ -90,8 +89,6 @@ public class PoiReportService {
 	@Autowired
 	private RepInstallLogDetailMapper repInstallLogDetailMapper;
 
-	@Autowired
-	private FileAttachmentProcess fileAttachmentProcess;
 	@Resource
 	private FileRemoteService minioFileRemoteService;
 	
@@ -137,7 +134,6 @@ public class PoiReportService {
 
 			String reportFile = "";
 			ReportInfo reportInfo = null;
-			String prodId = "";
 			
 			//模板信息
 			try {
@@ -151,17 +147,19 @@ public class PoiReportService {
 				throw new Exception("生成报表失败!没有找到模板。");
 			}
 	
-			Date reportDate = null;
-			try {
-				if (params.get("reportDate") != null)
-					reportDate = (Date)params.get("reportDate");
-			} catch (Exception e) {
-				logger.error("获取报表日期错误", e);
-			}
+//			Date reportDate = null;
+//			try {
+//				if (params.get("reportDate") != null)
+//					reportDate = (Date)params.get("reportDate");
+//			} catch (Exception e) {
+//				logger.error("获取报表日期错误", e);
+//			}
 			
 			//查询数据
 			Map<String, Object> dataMap = null;
 				List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+				if ( listReports==null )
+					return null;
 				if (listReports.size() > 0) {
 					dataMap = listReports.get(0);
 					dataMap.put("prodId",params.get("prodId"));
@@ -172,8 +170,8 @@ public class PoiReportService {
 					//throw new Exception("生成报表失败!没有找到数据。");
 				}
 
-				if ( dataMap.get("reportDate")!=null ) 
-					reportDate = (Date)dataMap.get("reportDate");
+//				if ( dataMap.get("reportDate")!=null ) 
+//					reportDate = (Date)dataMap.get("reportDate");
 			
 			reportFile = this.genOssReportFile(reportInfo, dataMap, params);
 			logger.info("生成文件成功!" + reportFile);
@@ -192,7 +190,6 @@ public class PoiReportService {
 
 			String reportFile = "";
 			ReportInfo reportInfo = null;
-			String prodId = "";
 			String repId = "";
 			Date genDate = (Date)params.get("reportDate");
 			try {

@@ -127,6 +127,10 @@ public class SvrProdFeeDealInterf001Controller extends BaseController {
         params.setComment(entity ->  "产品主代码" + "(" + entity.getProdId() + ")");
         processParameter.setOperationType(OperationType.DELETE);
         processParameter.setWorkFlowParameter(params);
+        for(SvrProdFeeDealInterfDto dd :dto.getSelectedItem()){
+            dd.setCreateUser(LoginUserUtil.getUserName());
+            dd.setCreateTime(new Date());
+        }
         String msg =svrProdFeeDealInterfService.start(processParameter, dto.getSelectedItem().toArray(new SvrProdFeeDealInterfDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
     }

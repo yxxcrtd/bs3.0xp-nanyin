@@ -16,6 +16,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.util.SysCommDataUtil;
@@ -614,20 +615,20 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         List<ProdInfoDto> selectedItem = dto.getSelectedItem();
         List<ProdInfoDto> existData = new ArrayList<>();
         List<ProdInfoDto> newData = new ArrayList<>();
-        for (ProdInfoDto temp : selectedItem) {
-            //数据已存在 【产品编码 相同】，数据被过滤。
-            ProdInfoDto prodInfo = this.selectByProdStatus(temp.getProdId());
-            if (prodInfo == null) {
-                temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                newData.add(temp);
-            }
-        }
-
+        // for (ProdInfoDto temp : selectedItem) {
+        //     //数据已存在 【产品编码 相同】，数据被过滤。
+        //     ProdInfoDto prodInfo = this.selectByProdStatus(temp.getProdId());
+        //     if (prodInfo == null) {
+        //         temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+        //         newData.add(temp);
+        //     }
+        // }
+        // NYLCXP-580 两次判断都为空会导致newData中重复塞入数据 modify by kongzhifang 2022-08-11
         for (ProdInfoDto temp:selectedItem) {
             if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))){
                 existData.add(temp);
             }
-            else {
+            else if(!StringUtil.isNotEmpty(this.selectByProdStatus(temp.getProdId()))) {
                 temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 newData.add(temp);
             }
@@ -821,4 +822,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         return prodInfoMapper.queryForList(prodIdStr.split(","));
     }
 
+    public Page<SelectOptionDto> queryPprodIds(Map<String, Object> map) {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> prodInfoMapper.queryPprodIds(map));
+        return result;
+    }
 }

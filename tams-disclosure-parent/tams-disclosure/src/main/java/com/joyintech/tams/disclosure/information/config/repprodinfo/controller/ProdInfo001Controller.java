@@ -5,6 +5,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -85,6 +86,19 @@ public class ProdInfo001Controller extends BaseController {
     public Page<ProdInfoDto> selectAll() {
 
         return prodInfoService.findByPage(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 根据产品代码模糊查询联系下拉框
+     *
+     * @return 产品代码和简称
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("queryPprodIds")
+    public Page<SelectOptionDto> queryPprodIds() {
+        return prodInfoService.queryPprodIds(RequestUtil.getPageParam());
     }
 
     /**
