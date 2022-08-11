@@ -2,12 +2,15 @@
 <Workbook filePath="SubBalanceInfo.xlsx" name="科目余额信息">
     <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto">
         <Row>
-            <Cell order="1" name="产品主代码">booksetId</Cell>
-            <Cell order="2" name="余额日期">balanceDate</Cell>
-            <Cell order="3" name="科目号">subjectNo</Cell>
-            <Cell order="4" name="原币币种">oCcy</Cell>
-            <Cell order="5" name="原币余额">oAmt</Cell>
-            <Cell order="6" name="原币发生额（借方）">tdyODAmt</Cell>
+            <Cell order="1" name="数据状态">dataStatusStr</Cell>
+            <Cell order="2" name="产品主代码">booksetId</Cell>
+            <Cell order="3" name="余额日期">balanceDate</Cell>
+            <Cell order="4" name="科目号">subjectNo</Cell>
+            <Cell order="5" name="原币币种">oCcy</Cell>
+            <Cell order="6" name="原币余额">oAmt</Cell>
+            <Cell order="7" name="原币发生额（借方）">tdyODAmt</Cell>
+            <Cell order="8" name="更新时间">updateTimeStr</Cell>
+            <Cell order="9" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

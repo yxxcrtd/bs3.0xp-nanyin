@@ -129,9 +129,9 @@
             <if test="rejectRemark != null" >
                 REJECT_REMARK = #{rejectRemark,jdbcType=VARCHAR},
             </if>
-<!--            <if test="rptIssueDate != null" >-->
-<!--                RPT_ISSUE_DATE = to_date(#{rptIssueDate,jdbcType=DATE},'YYYY-MM-DD'),-->
-<!--            </if>-->
+            <if test="rptIssueDate != null" >
+                RPT_ISSUE_DATE = to_date(#{rptIssueDateStr},'YYYY-MM-DD'),
+            </if>
             <if test="dataStatus != null" >
                 DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
             </if>

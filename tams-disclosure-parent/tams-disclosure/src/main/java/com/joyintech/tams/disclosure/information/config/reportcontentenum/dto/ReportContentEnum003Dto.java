@@ -94,6 +94,8 @@ public class ReportContentEnum003Dto extends RepJobRange {
 			value = backCode(DictCodeExt1.开放频率, this.getRuleType4());
 		} else if(DictCode.投资性质.getValue().equals(key)){
 			value = backCode(DictCode.投资性质, this.getRuleType4());
+		} else if(DictCodeExt1.信批产品类别.getValue().equals(key)){
+			value = backCode(DictCodeExt1.信批产品类别, this.getRuleType4());
 		}
 		return value;
 	}
