@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.tams.disclosure.information.reveal.reportreveal.service.ReportRevealManage002Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,9 @@ public class ReportRevealManage001Contoller extends BaseController {
     
     @Autowired
 	private GetPrdInfoSelectService getPrdInfoSelectService;
+
+    @Autowired
+    private ReportRevealManage002Service reportRevealManage002Service;
     /**
      * 日志
      */
@@ -322,15 +326,9 @@ public class ReportRevealManage001Contoller extends BaseController {
             }
         }
 
-        //按代销机构维度披露
-        Boolean revealResult=reportRevealManage001Service.updateRevealStatusEX(listdto);
-        if(revealResult){
-            return new AjaxResult("披露成功！");
-        }
-        //披露失败，把勾选的单据的披露状态全部更新为生成失败
-        reportRevealManage001Service.updateRevealStatusBatch(listdto);
-        return new AjaxResult("披露失败，请核实！", MessageType.警告消息);
       // reportRevealManage001Service.updateConfirmStatus(listdto);
+
+        return new AjaxResult(msg);
     }
     
     /**
@@ -439,22 +437,29 @@ public class ReportRevealManage001Contoller extends BaseController {
 
     /**
      * 信息披露
-     * @param dto
+     * @param paDto
      * @param result
-     * @param operateType
      * @return
      */
-    /*@ResponseBody
+    @ResponseBody
     @RequestMapping("updateRevealStatus")
-    public AjaxResult updateRevealStatus(@Valid ReportConfirmManage001Dto dto, BindingResult result, String operateType) {
+    public AjaxResult updateRevealStatus(@Valid ReportConfirmManage001Dto paDto,BindingResult result, String operateType) throws IOException {
+        // 获取勾选的数据
+        String data=paDto.getData();
+        List<ReportConfirmManage001Dto> listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
+        //按代销机构维度披露
+        Boolean revealResult= null;
         try {
-            String data=dto.getData();
-            List<ReportConfirmManage001Dto> listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
-            return reportRevealManage001Service.updateRevealStatusEX(listdto);
-        }
-        catch (Exception e) {
-            logger.error("error:",e);
+            revealResult = reportRevealManage002Service.updateRevealStatusEX(listdto);
+        } catch (IOException e) {
+            getLogger().error("披露失败：", e);
             return new AjaxResult(e.getMessage());
         }
-    }*/
+        if(revealResult){
+            return new AjaxResult("披露成功！");
+        }
+        //披露失败，把勾选的单据的披露状态全部更新为生成失败
+        reportRevealManage002Service.updateRevealStatusBatch(listdto);
+        return new AjaxResult("披露失败，请核实！", MessageType.警告消息);
+    }
 }

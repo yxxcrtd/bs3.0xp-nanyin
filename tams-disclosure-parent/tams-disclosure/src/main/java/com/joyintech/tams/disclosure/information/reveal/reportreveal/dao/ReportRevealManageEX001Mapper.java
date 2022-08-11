@@ -42,4 +42,6 @@ public interface ReportRevealManageEX001Mapper {
      * @return
      */
     int updateRevealStatusById(ReportConfirmManage001Dto infoDiscAutoRevealDto);
+
+    int updateRevealStatusByIdEX(ReportConfirmManage001Dto dto);
 }

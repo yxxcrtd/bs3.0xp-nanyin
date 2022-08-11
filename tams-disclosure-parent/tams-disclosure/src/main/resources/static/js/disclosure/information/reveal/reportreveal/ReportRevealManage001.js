@@ -212,8 +212,14 @@ $(function () {
                     object.pageModel = pageModel;
                     object.updateTypeFlag = "QR";//当前操作为确认还是下发【确认："QR",下发："XF"】
                     object.pageId = "ReportRevealManage001";
-                    //启动流程操作
-                    startFunction(object,"ReportRevealManage001_btn_submit");
+                    Joyin.ajax(basePath + 'disclosure/information/reveal/reportreveal/ReportRevealManage001/updateRevealStatus',
+                        object,
+                        function(result) {
+                            table.reload();
+                        }
+                    );
+                    /*//启动流程操作
+                    startFunction(object,"ReportRevealManage001_btn_submit");*/
                 }, function() {
                     //console.log('取消');
                 });
