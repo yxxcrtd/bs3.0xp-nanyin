@@ -940,3 +940,8 @@ INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportConfirmManage004', 'ReportConfirmManage004_btn_save', 'fourprocess', 'system', '0001', SYSDATE, 'system', SYSDATE);
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportConfirmManage004', 'RepRelDeal001_btn_delete', 'fourprocess', 'system', '0001', SYSDATE, 'system', SYSDATE);
 /**报表确认管理 add by shengning 2022-08-11 end**/
+
+/**菜单修改 add by shaoxuan 2022-08-11 start**/
+update  SYS_PAGE set menu_id='REPORT_006_004_006' where PAGE_ID='ProdBonusplanManager001';
+/**菜单修改 add by shaoxuan 2022-08-11 end**/
+
