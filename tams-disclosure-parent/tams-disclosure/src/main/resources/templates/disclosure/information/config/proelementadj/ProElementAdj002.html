@@ -5,9 +5,9 @@
 <html>
 <head>
     <title data-th-text="#{ProElementAdj002}">产品要素调整新建</title>
-    <style type="text/css">
-        .form-inline-wrap{
-            width:30%
+    <style>
+        .mst-lable{
+            width: 30%;
         }
     </style>
 </head>
@@ -24,8 +24,8 @@
                         </h3>
                         <div class="pro-module-item">
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.prodRegistNo}">产品登记编码</label>
+                                <div>
+                                    <label class="layui-form-label form-lable mst-lable" data-th-text="#{ProElementAdj001.prodRegistNo}">产品登记编码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="prodRegistNo" name="prodRegistNo" class="input-select"
                                                 data-th-initValue="${entity?.prodRegistNo}" data-th-formatoption="false"
@@ -35,8 +35,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-lable mst-lable" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="prodId" name="prodId" class="input-select"
                                                 data-th-initValue="${entity?.prodId}"
@@ -46,8 +48,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="调整此产品要素原因">调整此产品要素原因</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="adjReason" name="adjReason"
@@ -58,8 +62,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj001.prodAdjRemark}">描述文字1</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="prodAdjRemark" name="prodAdjRemark"
@@ -68,8 +72,10 @@
                                                data-th-value="${entity?.prodAdjRemark}">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj001.prodAdjRemark2}">描述文字2</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="prodAdjRemark2" name="prodAdjRemark2"
@@ -78,8 +84,10 @@
                                                data-th-value="${entity?.prodAdjRemark2}">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj001.adjField}">调整要素</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="adjField" name="adjField"
@@ -90,8 +98,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj001.preAdjust}">调整前</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="preAdjust" name="preAdjust"
@@ -100,8 +108,10 @@
                                                data-th-value="${entity?.preAdjust}">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj001.afterAdjust}">调整后</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="afterAdjust" name="afterAdjust"
@@ -110,8 +120,10 @@
                                                data-th-value="${entity?.afterAdjust}">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj002.effDate}">生效时间</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="effDate" name="effDate"
@@ -124,8 +136,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj001.adjReason2}">对此要素调整（原因）</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="adjReason2" name="adjReason2"
@@ -134,18 +146,22 @@
                                                data-th-value="${entity?.adjReason2}">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj002.fieldAdjRemark}">调整此要素（补充说明文1）</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="fieldAdjRemark" name="fieldAdjRemark"
                                                class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}"
+                                               data-th-placeholder="#{SysCommon.placeholder}" width="200px"
                                                data-th-value="${entity?.fieldAdjRemark}">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj002.fieldAdjRemark2}">调整此要素（补充说明文2）</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="fieldAdjRemark2" name="fieldAdjRemark2"
@@ -156,8 +172,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable"
                                            data-th-text="#{ProElementAdj002.rptIssueDate}">报告发布日期</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="rptIssueDate" name="rptIssueDate"

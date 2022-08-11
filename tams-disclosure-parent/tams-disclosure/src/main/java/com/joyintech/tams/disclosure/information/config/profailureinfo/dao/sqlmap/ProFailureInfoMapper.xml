@@ -165,11 +165,16 @@
     </select>
     <select id="getRePord" resultType="com.joyintech.framework.select.SelectOptionDto">
         select
-        dp.PROD_REGIST_NO id,
+        distinct
+         dp.PROD_REGIST_NO id,
          rp.PROD_NAME text
         from DIS_PROD_NOCREATE dp
         left join REP_PROD_INFO  rp
         on dp.PROD_REGIST_NO = rp.PROD_RE
+        <if test="search != null and search != ''">
+            and (dp.PROD_REGIST_NO like concat(concat('%',#{search}),'%')
+            or rp.PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
     </select>
     <select id="hasRepeatedData" resultType="java.lang.Integer">
         select count (1) from DIS_PROD_NOCREATE where
