@@ -38,7 +38,7 @@ $(function(){
             ,{field:'agreementMdateStr', width:'10%', sortField:'AGREEMENT_MDATE', title: '协议终止时间'}
             ,{field:'prodSeriesStr', width:'10%',sortable:false, title: '产品系列'}
             ,{field:'updateUser', width:'10%', sortField:'UPDATE_USER', title: '更新人'}
-            ,{field: 'updateTimeStr', type: 'datetime',width:'15%', sortable:false,title: "更新时间"}
+            ,{field: 'updateTimeStr', type: 'datetime',width:'15%', sortable:'UPDATE_TIME',title: "更新时间"}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });

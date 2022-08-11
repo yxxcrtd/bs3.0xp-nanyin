@@ -132,4 +132,9 @@ public String dealDateStr;
         return super.getRptIssueDate()==null?null: DateUtil.format(super.getRptIssueDate(), "yyyy-MM-dd");
     }
 
+    public String getUpdateTimeStr() {
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
+    }
+
+
 }

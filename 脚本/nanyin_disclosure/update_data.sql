@@ -842,7 +842,7 @@ values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'ISSUING_WAY', '', '', '
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
 --规则2,增加!=
-DELETE FROM Sys_Page_Dictlist WHERE PAGE_ID='ReportContentEnum003' AND DICT_ID='RULE_TYPE2';
+DELETE FROM Sys_Page_Dictlist WHERE PAGE_ID='ReportContentEnum003' AND DICT_ID='RULE_TYPE2' AND DICT_ITEM_VAL ='!=';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum003', '999999', 'RULE_TYPE2', '!=', '', '', 'system', '', sysdate, 'system', sysdate);
 --产品类型当前页面使用:净值型、现金管理类

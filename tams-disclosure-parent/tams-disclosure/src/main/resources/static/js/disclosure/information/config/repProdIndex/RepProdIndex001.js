@@ -119,7 +119,7 @@ $(function() {
             title : '更新时间',
             render : function(data, type, row, meta) {
                 if(row.updateTime != null && row.updateTime != ''){
-                    return new Date(row.updateTime).Format('yyyyMMddhhmm');
+                    return new Date(row.updateTime).Format('yyyy-MM-dd hh:mm:ss');
                 }
             }
         }, {
