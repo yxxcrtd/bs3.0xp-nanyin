@@ -2,19 +2,22 @@
 <Workbook filePath="ProElementAdjInfo.xlsx" name="产品要素调整信息">
     <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
         <Row>
-            <Cell order="1" name="产品登记编码">prodRegistNo</Cell>
-            <Cell order="2" name="子产品代码">prodId</Cell>
-            <Cell order="3" name="调整此产品要素原因">adjReason</Cell>
-            <Cell order="4" name="此产品要素调整描述文字1">prodAdjRemark</Cell>
-            <Cell order="5" name="此产品要素调整描述文字2">prodAdjRemark2</Cell>
-            <Cell order="6" name="调整要素">adjField</Cell>
-            <Cell order="7" name="调整前">preAdjust</Cell>
-            <Cell order="8" name="调整后">afterAdjust</Cell>
-            <Cell order="9" name="生效时间">effDate</Cell>
-            <Cell order="10" name="对此要素调整(原因)">adjReason</Cell>
-            <Cell order="11" name="调整此要素（补充说明文1）">fieldAdjRemark</Cell>
-            <Cell order="12" name="调整此要素（补充说明文2）">fieldAdjRemark2</Cell>
-            <Cell order="13" name="报告发布日期">rptIssueDateStr</Cell>
+            <Cell order="1" name="数据状态">dataStatusStr</Cell>
+            <Cell order="2" name="产品登记编码">prodRegistNo</Cell>
+            <Cell order="3" name="子产品代码">prodId</Cell>
+            <Cell order="4" name="调整此产品要素原因">adjReason</Cell>
+            <Cell order="5" name="此产品要素调整描述文字1">prodAdjRemark</Cell>
+            <Cell order="6" name="此产品要素调整描述文字2">prodAdjRemark2</Cell>
+            <Cell order="7" name="调整要素">adjField</Cell>
+            <Cell order="8" name="调整前">preAdjust</Cell>
+            <Cell order="9" name="调整后">afterAdjust</Cell>
+            <Cell order="10" name="生效时间">effDate</Cell>
+            <Cell order="11" name="对此要素调整(原因)">adjReason</Cell>
+            <Cell order="12" name="调整此要素（补充说明文1）">fieldAdjRemark</Cell>
+            <Cell order="13" name="调整此要素（补充说明文2）">fieldAdjRemark2</Cell>
+            <Cell order="14" name="报告发布日期">rptIssueDateStr</Cell>
+            <Cell order="15" name="更新时间">updateTimeStr</Cell>
+            <Cell order="16" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>
