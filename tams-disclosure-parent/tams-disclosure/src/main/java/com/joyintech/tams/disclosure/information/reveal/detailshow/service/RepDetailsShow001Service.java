@@ -312,12 +312,17 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	            reportFile = poiReportService.previewReport(params);
 	        }
 	        
-	        if ( reportFile ==null )
-	        	return -1;
+//	        if ( reportFile ==null )  //生成日期与产品到期日小于等于90天，不需要生成报表。
+//	        	return -1;
 	        
 	        //将生成的文件作为输入，转换成html后，发送到response
-            byte[] bytes = poiReportService.getFileByteArray(reportFile);
-            if(bytes != null) {
+	        byte[] bytes = null;
+	        if ( reportFile!=null )
+	        	bytes = poiReportService.getFileByteArray(reportFile);
+	        else
+	        	bytes = "生成日期与产品到期日小于等于90天，不需要生成报表".getBytes();
+
+	        if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);
 	            PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
             }

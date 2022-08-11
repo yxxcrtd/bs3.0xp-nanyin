@@ -312,14 +312,14 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(value="/previewReport", method = RequestMethod.POST)
-	public AjaxResult previewReport(HttpServletRequest request, HttpServletResponse response) {
+	public void previewReport(HttpServletRequest request, HttpServletResponse response) {
         AjaxResult value = new AjaxResult();
 		Map<String,Object> params = RequestUtil.getPageParam();
 		int ret = repDetailsShow001Service.previewReport(params,response);
 		if (ret==-1 ) {
 			value.setMessage("生成日期与产品到期日小于等于90天，不需要生成报表。", MessageType.提示消息);
 		}
-		return value;
+		//return value;
 	}
 
 	/**

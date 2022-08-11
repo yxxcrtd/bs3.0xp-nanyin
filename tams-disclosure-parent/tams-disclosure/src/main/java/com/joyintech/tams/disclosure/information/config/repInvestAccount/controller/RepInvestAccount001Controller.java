@@ -11,6 +11,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.service.RepInvestAccountService;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -104,6 +106,10 @@ public class RepInvestAccount001Controller extends BaseController {
         params.setComment(entity ->  "产品主代码" + "(" + entity.getProdId() + ")");
         processParameter.setOperationType(OperationType.DELETE);
         processParameter.setWorkFlowParameter(params);
+        for(RepInvestAccountDto dd :dto.getSelectedItem()){
+            dd.setCreateUser(LoginUserUtil.getUserName());
+            dd.setCreateTime(new Date());
+        }
         String msg =repInvestAccountService.start(processParameter, dto.getSelectedItem().toArray(new RepInvestAccountDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
     }
