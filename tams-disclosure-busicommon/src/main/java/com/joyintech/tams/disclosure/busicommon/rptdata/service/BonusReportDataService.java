@@ -73,15 +73,21 @@ public class BonusReportDataService implements IReportDataService {
 					report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()) );
 	
 					// 业绩比较基准收益
+					BigDecimal abProfit = 
+					report.getCapital().multiply(report.getAchievementBasisProp())
+					.multiply(new BigDecimal(365))
+					.divide(new BigDecimal(report.getRunDays()),14,BigDecimal.ROUND_DOWN);
 					report.setAchievementBasisProfit(
 							report.getCapital().multiply(report.getAchievementBasisProp())
 							.multiply(new BigDecimal(365))
 							.divide(new BigDecimal(report.getRunDays()),2,BigDecimal.ROUND_DOWN) );
 	
 					// 超出收益
+					BigDecimal esProfit = report.getDistributableProfit().subtract(abProfit);
 					report.setExcessProfit(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
 	
 					// 业绩报酬
+					BigDecimal floatFee = esProfit.multiply(report.getExcessAchievementProp());
 					report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
 	
 					// 应分配利润
@@ -92,8 +98,9 @@ public class BonusReportDataService implements IReportDataService {
 							report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
 	
 					// 年化收益率
+					BigDecimal ddProfit = report.getDistributableProfit().subtract(floatFee);
 					report.setYearYield(
-							report.getDistributedProfit().multiply(new BigDecimal(365))
+							ddProfit.multiply(new BigDecimal(365))
 							.divide(  new BigDecimal(report.getRunDays()).multiply(report.getCapital()), 4, BigDecimal.ROUND_DOWN));
 				} catch(Exception e) {
 					logger.error("获取分红计算清单异常。",e);

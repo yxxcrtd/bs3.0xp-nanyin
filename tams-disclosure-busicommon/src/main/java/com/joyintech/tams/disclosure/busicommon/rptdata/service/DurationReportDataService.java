@@ -341,17 +341,26 @@ public class DurationReportDataService implements IReportDataService {
 			//查询指定的产品在统计区间内的所有业绩基准
 			Map<String,Object> mapParas = new HashMap<>();
 			mapParas.put("prodId", prod.getProdId());
-			mapParas.put("sDate", sDate);
-			mapParas.put("eDate",eDate);
+//			mapParas.put("sDate", sDate);
+//			mapParas.put("eDate",eDate);
 			List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(mapParas);
+			
+			//区间内是否有业绩基准变更的标志
+			boolean changeFlag = false;
 			
 			//查询指定的产品在统计区间内的有效业绩基准
 			List<RepProdBasicChange> listEffBasis = new ArrayList<>();
-			listBasis.forEach( item->{
-				if ( "E".equals(item.getStatus()) )
+			for ( RepProdBasicChange item:listBasis ) {
+				if ( "E".equals(item.getStatus()) ) {
 					listEffBasis.add(item);
 				}
-			);
+				//更新日期在统计区间内，且状态为D，说明有变更
+				if ( item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+					changeFlag=true;
+				}
+			}
+			
+			//查询指定产品最新的业绩基准指数
 			
 			if ( "02".equals(prod.getIssuingWay()) ) {  //封闭式：max(产品成立日，统计周期开始日）
 				if (prod.getSetDate().compareTo(sDate)>0) {
@@ -360,7 +369,7 @@ public class DurationReportDataService implements IReportDataService {
 			} else if ( "01".equals(prod.getIssuingWay()) ) {  //开放式
 				//查询是否在区间内有业绩基准变更，变更的判断规则是变更表的数据记录，与需求中的变更判断思路不一样，经过讨论，按变更履历表来
 				//有无业绩基准变更，过滤listBasis状态为D的数据，如果条数减少，就是有变更
-				if ( listBasis.size()==listEffBasis.size() ) {  //无业绩基准变更：max(产品成立日，统计周期开始日）
+				if ( changeFlag==true ) {  //无业绩基准变更：max(产品成立日，统计周期开始日）
 					if (prod.getSetDate().compareTo(sDate)>0) {
 						sDate = prod.getSetDate();
 					}
