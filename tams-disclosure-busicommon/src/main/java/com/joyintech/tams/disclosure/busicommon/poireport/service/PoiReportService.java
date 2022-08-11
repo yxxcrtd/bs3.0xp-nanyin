@@ -936,12 +936,13 @@ public class PoiReportService {
 
 				repReportCheck.setReportCheckId(IDGenerator.generate(32));
 				repReportCheck.setRepId(reportId);
-				repReportCheck.setReportType("");
+				repReportCheck.setReportType(reportInfo.getReportCategory());
 				repReportCheck.setReportName(uploadFile.getFileName());
 				repReportCheck.setProdId(prodId);
 				repReportCheck.setCheckDate((Date)params.get("platformDate"));
 				repReportCheck.setEndDate(repReveal.getEndDate());
 				repReportCheck.setErrormsg(resultSb.toString());
+				repReportCheck.setFileNo(uploadFile.getFileNo());
 				repReportCheck.setDataStatus("E");
 
 				poiReportMapper.deleteCheckData(repReportCheck);
@@ -950,7 +951,7 @@ public class PoiReportService {
 				//入库REP_REPORT_CHECK
 				//TODO:
 				//数据全删全插
-				resultSb.append("\n").append("确认");
+				resultSb.append("提示语");
 			}
 		}
 

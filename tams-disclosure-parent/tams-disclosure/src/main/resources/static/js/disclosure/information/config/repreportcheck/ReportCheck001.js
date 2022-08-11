@@ -38,6 +38,7 @@
             , {field:'prodId',  title: '产品代码',sortField:"prodId",width:200,sortable:false}
             ,{field:'checkDate',  title: '检查日期',sortField:"checkDate",type:'date',width:120,sortable:false}
             ,{field:'errormsg',  title: '错误信息',sortField:"errormsg",width:400,sortable:false}
+            ,{field:'fileNo',  visible: false}
             ,{
                 title : '操作',
                 field : 'operation',
@@ -46,13 +47,21 @@
                 buttons : [
                     {
                         text : '&#xe615;',
-                        clas : 'batch',
+                        clas : 'view',
                         title : '预览'
                     } ]
             },
         ]
     });
 
+
+    table.bind('click', '.view', function(data, index) {
+        Joyin.dialog(JoyinUtil.getLabel("文件预览"),
+            basePath + "disclosure/information/config/repreportcheck/ReportCheck003/init",
+            "95%", "96%", {
+                fileNo:data.fileNo
+            });
+    });
 
     /**
      * 导出选中的表格数据

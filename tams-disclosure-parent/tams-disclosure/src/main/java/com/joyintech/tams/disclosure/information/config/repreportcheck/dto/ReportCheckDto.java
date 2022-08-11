@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.repreportcheck.dto;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -19,6 +20,8 @@ public class ReportCheckDto extends RepReportCheck implements ITableRow, Process
 
     private String reportTypeName ;
 
+    private  String prodName;
+
     public String getReportTypeName() {
       //  return reportTypeName;
         return SysDataUtil.getNameFromDataDict(DictCodeExt1.信披报表类别,getReportType());
@@ -27,5 +30,18 @@ public class ReportCheckDto extends RepReportCheck implements ITableRow, Process
 
     public void setReportTypeName(String reportTypeName) {
         this.reportTypeName = reportTypeName;
+    }
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
+
+
+    public String getCheckDateStr(){
+        return DateUtil.format(this.getCheckDate());
     }
 }
