@@ -40,13 +40,9 @@
                                 <div>
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
                                     <div class="layui-input-inline input-inline">
-<!--                                        <select type="text" id="prodId" name="prodId" formatoption="true" required-->
-<!--                                                class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodId}' data-th-initVale="${entity?.prodId}"-->
-<!--                                                data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj002/getProdId}" allowClear="true">-->
-<!--                                        </select>-->
                                         <select id="prodId" name="prodId" class="input-select"
                                                 data-th-initValue="${entity?.prodId}"
-                                                data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj002/getProdId}"
+                                                data-th-data-url="@{/disclosure/information/config/hugeinfopro/HugeInfoPro002/getProdId}"
                                                 parentIds="prodRegistNo" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
                                                 allowClear="true" required>
                                         </select>

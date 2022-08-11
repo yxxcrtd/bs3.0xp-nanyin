@@ -33,4 +33,6 @@ public interface HugeInfoProMapper {
     HugeInfoPro001Dto selectByBusPK(Map map);
 
     int updateByBusKey(HugeInfoPro001Dto existDataDto);
+
+    List<SelectOptionDto> getProdId(Map<String, Object> map);
 }

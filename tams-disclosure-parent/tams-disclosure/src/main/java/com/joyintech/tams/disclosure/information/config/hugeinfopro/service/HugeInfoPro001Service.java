@@ -342,4 +342,9 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")),()->hugeInfoProMapper.getProdIdlist(map));
     }
+
+
+    public List<SelectOptionDto> getProdId(Map<String, Object> map) {
+        return hugeInfoProMapper.getProdId(map);
+    }
 }
