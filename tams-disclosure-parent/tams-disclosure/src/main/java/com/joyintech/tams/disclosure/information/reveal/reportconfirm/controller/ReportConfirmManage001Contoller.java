@@ -544,31 +544,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
         }
         // 获取附件
         UploadFile attachment = fileAttachmentProcess.fetch(sysFilepath);
-        String targetFileName="";
-        String formate=reportConfirmManage001Service.getFormate(sysFilepath);
-        formate=formate.substring(formate.lastIndexOf(".") );
-        // 文件名
-    	targetFileName=reportConfirmManage001Service.getFileName(sysFilepath)+"_"+DateUtil.format(new Date(), DateUtil.DEFAULT_OTHER_FORMAT)+formate;
-    	
-    	String prodId = RequestUtil.getParam("prodId");
-        String reportDate = RequestUtil.getParam("reportDate");
-        String reportName = RequestUtil.getParam("reportName");
-    	targetFileName=reportName+formate;
-    	if (StringUtil.isNotEmpty(reportDate)&&!StringUtil.equals(reportDate, "undefined")){
-    	    if(reportDate.lastIndexOf("--")!=-1){
-    	        targetFileName=reportDate.substring(reportDate.lastIndexOf("--")+2)+GlobalConstant.UNDER_LINE+targetFileName;
-    	    }
-    	    else{
-    	        targetFileName=reportDate+GlobalConstant.UNDER_LINE+targetFileName;
-    	    }
-        }
-    	if (StringUtil.isNotEmpty(prodId)&&!StringUtil.equals(prodId, "undefined")) {
-    	    targetFileName=prodId+GlobalConstant.UNDER_LINE+targetFileName;
-        }
-        
-    	if(StringUtil.isEmpty(targetFileName)){
-        	targetFileName=attachment.getFileName();
-        }
+
 //        String targetFileName = attachment.getFileName();
         // 目标文件
         File targetFile = attachment.getTargetFile();
@@ -590,7 +566,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 					in = new FileInputStream(targetFile);
 				}
 			}
-			return ExportUtil.export(targetFileName, in);
+			return ExportUtil.export(attachment.getFileName(), in);
 		}finally {
 			if (in != null){
 				in.close();
