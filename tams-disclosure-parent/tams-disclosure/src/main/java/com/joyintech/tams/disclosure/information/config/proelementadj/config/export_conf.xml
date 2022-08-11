@@ -14,7 +14,7 @@
             <Cell order="10" name="对此要素调整(原因)">adjReason</Cell>
             <Cell order="11" name="调整此要素（补充说明文1）">fieldAdjRemark</Cell>
             <Cell order="12" name="调整此要素（补充说明文2）">fieldAdjRemark2</Cell>
-            <Cell order="13" name="报告发布日期">rptIssueDate</Cell>
+            <Cell order="13" name="报告发布日期">rptIssueDateStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>
