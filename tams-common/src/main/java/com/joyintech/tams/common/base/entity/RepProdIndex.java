@@ -14,7 +14,6 @@ public class RepProdIndex extends RepProdIndexKey {
     /**
      * 产品资产净值
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal assetsValue;
 
     /**

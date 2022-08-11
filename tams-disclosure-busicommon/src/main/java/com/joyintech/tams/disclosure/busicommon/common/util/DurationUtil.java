@@ -9,7 +9,7 @@ import java.util.Date;
 
 
 /**
- * @author Administrator
+ * @author chenxc
  *
  */
 public class DurationUtil {
@@ -25,6 +25,9 @@ public class DurationUtil {
 
 	public static Date getQuarterStart(int year,int quarter) {
 		Calendar sDate = Calendar.getInstance();
+		sDate.set(Calendar.HOUR_OF_DAY, 0);
+		sDate.set(Calendar.MINUTE, 0);
+		sDate.set(Calendar.SECOND, 0);
 		switch (quarter ) {
 		case 1:
 			sDate.set(year, 0, 1);
@@ -45,6 +48,9 @@ public class DurationUtil {
 	
 	public static Date getQuarterEnd(int year,int quarter) {
 		Calendar eDate = Calendar.getInstance();
+		eDate.set(Calendar.HOUR_OF_DAY, 0);
+		eDate.set(Calendar.MINUTE, 0);
+		eDate.set(Calendar.SECOND, 0);
 		switch (quarter ) {
 		case 1:
 			eDate.set(year, 2, 31);
@@ -78,6 +84,9 @@ public class DurationUtil {
 	
 	public static Date getHalfYearStart(int year,int halfYear) {
 		Calendar eDate = Calendar.getInstance();
+		eDate.set(Calendar.HOUR_OF_DAY, 0);
+		eDate.set(Calendar.MINUTE, 0);
+		eDate.set(Calendar.SECOND, 0);
 		switch (halfYear ) {
 		case 1:
 			eDate.set(year, 0, 1);
@@ -91,6 +100,9 @@ public class DurationUtil {
 	
 	public static Date getHalfYearEnd(int year,int halfYear) {
 		Calendar eDate = Calendar.getInstance();
+		eDate.set(Calendar.HOUR_OF_DAY, 0);
+		eDate.set(Calendar.MINUTE, 0);
+		eDate.set(Calendar.SECOND, 0);
 		switch (halfYear ) {
 		case 1:
 			eDate.set(year, 5, 30);
