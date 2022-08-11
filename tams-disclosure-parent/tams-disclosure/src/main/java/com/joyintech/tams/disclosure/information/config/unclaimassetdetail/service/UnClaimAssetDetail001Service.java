@@ -63,7 +63,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             pageParam.remove("prodId");
         }
 
-        Page<UnClaimAssetDetailDto> page = super.queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+        Page<UnClaimAssetDetailDto> page = super.queryForPage(Integer.parseInt(pageParam.get("page").toString()), Integer.parseInt(pageParam.get("length").toString()), ()
                 -> unClaimAssetDetailMapper.selectForPage(pageParam));
         return page;
     }
