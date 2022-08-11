@@ -122,6 +122,12 @@ public String dealDateStr;
     public String getDealDateStr() {
         return super.getDealDate()==null?null: DateUtil.format(super.getDealDate(), "yyyy-MM-dd");
     }
+    private String rptIssueDateStr;
+
+    public void setRptIssueDateStr(String rptIssueDateStr) {
+        this.rptIssueDateStr = rptIssueDateStr;
+    }
+
     public String getRptIssueDateStr() {
         return super.getRptIssueDate()==null?null: DateUtil.format(super.getRptIssueDate(), "yyyy-MM-dd");
     }
