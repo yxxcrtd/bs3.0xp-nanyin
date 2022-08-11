@@ -113,6 +113,11 @@ public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, 
     public String getIsSalesAgencyStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.是否,super.getIsSalesAgency());
     }
+public String dealDateStr;
+
+    public void setDealDateStr(String dealDateStr) {
+        this.dealDateStr = dealDateStr;
+    }
 
     public String getDealDateStr() {
         return super.getDealDate()==null?null: DateUtil.format(super.getDealDate(), "yyyy-MM-dd");
@@ -120,4 +125,5 @@ public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, 
     public String getRptIssueDateStr() {
         return super.getRptIssueDate()==null?null: DateUtil.format(super.getRptIssueDate(), "yyyy-MM-dd");
     }
+
 }

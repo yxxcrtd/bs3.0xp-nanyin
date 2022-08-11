@@ -278,9 +278,10 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         }
         //更新操作
         for (HugeInfoPro001Dto existDataDto : existData) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("prodId", existDataDto.getProdId());
-            map.put("dealDate", existDataDto.getDealDate());
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("prodId", existDataDto.getProdId());
+//            map.put("dealDate", DateUtil.format(existDataDto.getDealDate()));
+            existDataDto.setDealDateStr(DateUtil.format(existDataDto.getDealDate()));
             hugeInfoProMapper.updateByBusKey(existDataDto);
 //            this.doComplete(existDataDto,OperationType.MODIFY);
         }
