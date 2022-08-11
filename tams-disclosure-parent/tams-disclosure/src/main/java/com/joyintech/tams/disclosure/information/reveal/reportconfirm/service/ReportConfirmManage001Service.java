@@ -441,16 +441,16 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 List<String> splitToList = StringUtil.splitToList(".", filename);
                                 // modifed by zhangyf 2019-04-22 end
 
-                                String newFileName = "";
-                                if (StringUtil.isNotEmpty(splitToList)) {
-                                    String fileType = splitToList.get(splitToList.size() - 1);
-                                    splitToList.remove(splitToList.size() - 1);
-
-                                    // modifed by zhangyf 2019-04-22 start
-                                    // newFileName = reportName+"_(手动上传)."+fileType;
-                                    newFileName = reportName + "." + fileType;
-                                    // modifed by zhangyf 2019-04-22 end
-                                }
+                                String newFileName = filename;
+//                                if (StringUtil.isNotEmpty(splitToList)) {
+//                                    String fileType = splitToList.get(splitToList.size() - 1);
+//                                    splitToList.remove(splitToList.size() - 1);
+//
+//                                    // modifed by zhangyf 2019-04-22 start
+//                                    // newFileName = reportName+"_(手动上传)."+fileType;
+//                                    newFileName = report.getSysFilename() + "." + fileType;
+//                                    // modifed by zhangyf 2019-04-22 end
+//                                }
                                 File peopleFile = null;
                                 if (StringUtil.isNotEmpty(newFileName)) {
                                     String peoplePath = basePath + File.separator + newFileName;
@@ -477,7 +477,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
                                     // modifed by zhangyf 2019-04-22 start
                                     // String newSysFileName =reportName;
-                                    String newSysFileName = reportName + sysFileType;
+                                    String newSysFileName = report.getSysFilename();
                                     // modifed by zhangyf 2019-04-22 end
 
                                     File sysFile = null;
