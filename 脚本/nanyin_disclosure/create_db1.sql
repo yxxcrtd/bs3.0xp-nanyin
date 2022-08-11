@@ -1002,3 +1002,9 @@ COMMENT ON COLUMN REP_REVEAL_COMMENT.UPDATE_TIME
 IS
     '更新时间';
 /**报表确认管理批注表 add by shengning 2022-08-10 end*/
+
+/**产品要素调整表增加字段 add by sunjie 2022-08-11 start*/
+alter table DIS_PROD_ADJUST
+	add ADJ_REASON VARCHAR2(512);
+comment on column DIS_PROD_ADJUST.ADJ_REASON is '调整原因';
+/**产品要素调整表增加字段 add by sunjie 2022-08-11 end*/
