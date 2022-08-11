@@ -109,4 +109,9 @@ public class ProFailureInfo001Dto extends DisProdNocreate implements ITableRow, 
     public String getReportIssueDateStr(){
         return DateUtil.format(super.getReportIssueDate());
     }
+
+    public String getUpdateTimeStr() {
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
+    }
+
 }

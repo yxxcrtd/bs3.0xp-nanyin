@@ -301,7 +301,15 @@ $(function() {
 				Joyin.alert("请选择开放频率", 7);
 				return;
 			}
-		} else if(rule.ruleType1 == 'FINPROD_NAME'){
+		} else if(rule.ruleType1 == 'REP_PROD_TYPE'){
+			if ($('#repProdType').select2('data')[0]) {
+				rule.ruleType4 = $('#repProdType').select2('data')[0].id;
+				rule.ruleType4Name = $('#repProdType').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择信披产品类别", 7);
+				return;
+			}
+		}else if(rule.ruleType1 == 'FINPROD_NAME'){
 			Joyin.dialog("产品选择",basePath+"disclosure/information/config/reportcontentenum/ReportContentEnum004/init","80%","80%",
 				{},function () {
 					var finprodIds = $('#finprodIds').data('finprodIds');
@@ -436,6 +444,7 @@ $(function() {
 		$("#investTypeSelect").hide();
 		$("#openFreqSelect").hide();
 		$('#issuingWaySelect').hide();
+		$('#repProdTypeSelect').hide()
 	}
 	function ruleType1Change() {
 		var ruleType1 = $('#ruleType1').select2('data')[0].id;
@@ -479,6 +488,8 @@ $(function() {
 			$('#ruleType3Div').hide();
 		} else if(ruleType1 == 'ISSUING_WAY'){
 			$('#issuingWaySelect').show();
+		}else if(ruleType1 == 'REP_PROD_TYPE'){
+			$('#repProdTypeSelect').show();
 		}else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();
@@ -545,6 +556,8 @@ $(function() {
 			$("#openFreqSelect").show();
 		}else if(ruleType1 == 'ISSUING_WAY'){
 			$('#issuingWaySelect').show();
+		} else if(ruleType1 == 'REP_PROD_TYPE'){
+			$('#repProdTypeSelect').show();
 		}else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();
@@ -591,6 +604,7 @@ $(function() {
 		$('#riskLevelSelect').hide();
 		$('#investTypeSelect').hide();
 		$('#openFreqSelect').hide();
+		$('#repProdTypeSelect').hide();
 		// 规则增加事件
 		$('#ReportContentEnum003_btn_add').click(addrule);
 		// 规则1改变事件

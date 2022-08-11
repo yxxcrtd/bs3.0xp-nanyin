@@ -129,4 +129,8 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
         return DateUtil.format(super.getRptIssueDate());
     }
 
+    public String getUpdateTimeStr() {
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
+    }
+
 }

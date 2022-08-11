@@ -216,14 +216,17 @@
 		    ,basis.PROPORTION
 		    ,basis.GROUP_ID
 		    ,basis.STATUS
+		    ,basis.UPDATE_TIME
 		from REP_PROD_INFO info
-		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID and basis.EFF_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE}
+		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID 
 		where 1=1
 			and info.REP_PROD_TYPE in ('02','03')  /**单产品或者子产品**/
 		<if test="prodId!=null">
 			and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
-		
+		<if test="status!=null">
+			and info.STATUS=#{status,jdbcType=VARCHAR}
+		</if>
 		order by basis.EFF_DATE
     </select>
     
