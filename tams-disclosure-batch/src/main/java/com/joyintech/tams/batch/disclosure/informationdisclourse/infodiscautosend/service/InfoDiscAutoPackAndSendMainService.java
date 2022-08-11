@@ -282,9 +282,10 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 						// 不存在手动上传文件时下载系统生成文件
 						else {
 							if (StringUtil.isNotEmpty(downloadFile)) {
+								String filename = downloadFile.getName();
 								File secondSysFile = null;
-								if (StringUtil.isNotEmpty(reportName)) {
-									String secondSysPath = firstPath + File.separator + reportName;
+								if (StringUtil.isNotEmpty(filename)) {
+									String secondSysPath = firstPath + File.separator + filename;
 									secondSysFile = new SafelyFile(getEncodeFileName(secondSysPath));
 								}
 								if (StringUtil.isNotEmpty(secondSysFile)) {
