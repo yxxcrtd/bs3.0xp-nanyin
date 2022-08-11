@@ -820,7 +820,7 @@ values ('RULE_TYPE1', 'INVEST_TYPE', '投资性质', 10, '0', 'system', '', sysd
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RULE_TYPE1', 'FINPROD_NAME', '产品名称', 10, '0', 'system', '', sysdate, 'system', sysdate);
 --产品使用页面规则
-delete from sys_page_dictlist where page_id ='ReportContentEnum003' and DICT_ID ='RULE_TYPE1' and DICT_ITEM_VAL IN('ISSUE_STATUS','IS_INDEX','IS_PERIOD','OPEN_FREQ','PROD_TYPE','RAISE_TYPE','INVEST_TYPE','FINPROD_NAME','ISSUING_WAY');
+delete from sys_page_dictlist where page_id ='ReportContentEnum003' and DICT_ID ='RULE_TYPE1' and DICT_ITEM_VAL IN('ISSUE_STATUS','IS_INDEX','IS_PERIOD','OPEN_FREQ','PROD_TYPE','RAISE_TYPE','INVEST_TYPE','FINPROD_NAME','ISSUING_WAY','REP_PROD_TYPE');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'INVEST_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -839,6 +839,12 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'RAISE_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'ISSUING_WAY', '', '', 'system', '', sysdate, 'system', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', '', '', 'system', '', sysdate, 'system', sysdate);
+--规则2,增加!=
+DELETE FROM Sys_Page_Dictlist WHERE PAGE_ID='ReportContentEnum003' AND DICT_ID='RULE_TYPE2';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum003', '999999', 'RULE_TYPE2', '!=', '', '', 'system', '', sysdate, 'system', sysdate);
 --产品类型当前页面使用:净值型、现金管理类
 delete from sys_page_dictlist where page_id = 'ReportContentEnum003' and DICT_ID='PROD_TYPE' and DICT_ITEM_VAL IN('01','04');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -858,7 +864,7 @@ delete FROM sys_page WHERE PAGE_ID = 'ReportContentEnum004';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportContentEnum004', 'DIS', '/disclosure/information/config/reportcontentenum/ReportContentEnum004', 'disclosure/information/config/reportcontentenum/ReportContentEnum004', '', '', '', '02', '02', '报表指标管理产品树', 'system', '', sysdate, 'system', sysdate);
 --增加一级规则和二级,三级规则的关联关系
-DELETE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='RULE_TYPE1' and dict_code ='RULE_TYPE2' and linked_item_code IN('INVEST_TYPE','ISSUING_TYPE');
+    DELETE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='RULE_TYPE1' and dict_code ='RULE_TYPE2' and linked_item_code IN('INVEST_TYPE','ISSUING_TYPE');
 insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RULE_TYPE2', '=', 'RULE_TYPE1', 'INVEST_TYPE', 'admin', '', sysdate, 'admin', sysdate);
 insert into sys_datadict_list_link (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
