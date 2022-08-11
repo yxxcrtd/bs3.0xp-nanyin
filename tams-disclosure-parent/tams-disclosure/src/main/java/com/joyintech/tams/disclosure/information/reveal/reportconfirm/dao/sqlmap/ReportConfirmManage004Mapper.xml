@@ -171,7 +171,7 @@
 		FROM
 		REP_PROD_INFO
 		where
-		REP_PROD_TYPE = '01'
+		REP_PROD_TYPE in ('01','02')
 		<if test="search != null and search != ''">
 			and (PROD_ID like
 			concat(concat('%',#{search}),'%')
