@@ -297,7 +297,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
      * @param response
      * @author chenxc
      */
-    public void previewReport(Map<String,Object> params, HttpServletResponse response) {
+    public int previewReport(Map<String,Object> params, HttpServletResponse response) {
         String imagePath = "";
         String reportFile = "";
 //        FileInputStream fis = null;
@@ -311,6 +311,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	    		collateParams(params);
 	            reportFile = poiReportService.previewReport(params);
 	        }
+	        
+	        if ( reportFile ==null )
+	        	return -1;
 	        
 	        //将生成的文件作为输入，转换成html后，发送到response
             byte[] bytes = poiReportService.getFileByteArray(reportFile);
@@ -330,7 +333,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                 }
             }
         }
-
+        return 0;
     }
 
     /**

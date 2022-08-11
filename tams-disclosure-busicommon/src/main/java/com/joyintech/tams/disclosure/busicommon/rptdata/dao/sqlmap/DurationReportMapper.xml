@@ -16,6 +16,7 @@
 		end PROFIT_TYPE  /**运作方式**/
 		,info.PROD_TYPE  /**产品类型**/
 		,INFO.SET_DATE   eDate /**成立日**/
+		,info.MDATE  /**到期日**/
 		,'南银理财有限责任公司' prodManager  /**管理人**/
 		,info.ACCT_CHNNAME  prodTruster /**托管人**/
 		,info.REP_PROD_TYPE  /**信披产品类型，母子产品，单产品**/
