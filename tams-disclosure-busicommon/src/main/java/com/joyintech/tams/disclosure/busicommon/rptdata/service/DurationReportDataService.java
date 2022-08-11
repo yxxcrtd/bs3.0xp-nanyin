@@ -419,12 +419,13 @@ public class DurationReportDataService implements IReportDataService {
 		
 		String rptType = paraMap.get("uri").toString();
 		try {
-			year = Integer.parseInt(paraMap.get("year").toString());
-
+			year = paraMap.get("year")!=null?Integer.parseInt(paraMap.get("year").toString()):2022;
 			if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+				quarter = Integer.parseInt(paraMap.get("quarter").toString());
 				sDate = DurationUtil.getQuarterStart(year, quarter);
 				eDate = DurationUtil.getQuarterEnd(year, quarter);
 			} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+				halfYear = Integer.parseInt(paraMap.get("halfYear").toString());
 				sDate = DurationUtil.getHalfYearStart(year, halfYear);
 				eDate = DurationUtil.getHalfYearEnd(year, halfYear);
 			} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
