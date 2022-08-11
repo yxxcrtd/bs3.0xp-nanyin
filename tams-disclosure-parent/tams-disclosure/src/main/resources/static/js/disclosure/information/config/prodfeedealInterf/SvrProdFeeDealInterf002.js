@@ -36,6 +36,20 @@ var SvrPrdFeeDealInterfCode002 = function() {
                     Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/checkExistData', param, function(checkResult) {
                         if(checkResult){
                             Joyin.confirm("有已删除的数据，是否覆盖", function () {
+                                Joyin.confirm("请确认是否要操作？", function () {
+                                    if(operateType === 'save') {
+                                        WorkFlow.doSaveList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_save");
+                                    }
+                                    else {
+                                        WorkFlow.doSubmitList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_submit");
+                                    }
+                                },{}, function () {
+                                });
+
+                            },{}, function () {
+                            });
+                        }else{
+                            Joyin.confirm("是否提交？", function () {
                                 if(operateType === 'save') {
                                     WorkFlow.doSaveList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_save");
                                 }
@@ -44,13 +58,7 @@ var SvrPrdFeeDealInterfCode002 = function() {
                                 }
                             },{}, function () {
                             });
-                        }else{
-                            if(operateType === 'save') {
-                                WorkFlow.doSaveList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_save");
-                            }
-                            else {
-                                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_submit");
-                            }
+
                         }
                     })
 
