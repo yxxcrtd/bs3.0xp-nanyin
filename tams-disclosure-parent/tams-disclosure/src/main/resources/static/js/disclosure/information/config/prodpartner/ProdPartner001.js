@@ -145,7 +145,7 @@ $(function(){
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].dataStatus=='02'){
+                if(selArr[i].dataStatus=='D'){
                     Joyin.error("请选择有效状态的数据进行删除");
                     return;
                 }
