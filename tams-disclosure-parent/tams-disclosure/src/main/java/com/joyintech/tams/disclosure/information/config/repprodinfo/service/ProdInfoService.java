@@ -16,6 +16,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.util.SysCommDataUtil;
@@ -821,4 +822,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         return prodInfoMapper.queryForList(prodIdStr.split(","));
     }
 
+    public Page<SelectOptionDto> queryPprodIds(Map<String, Object> map) {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> prodInfoMapper.queryPprodIds(map));
+        return result;
+    }
 }
