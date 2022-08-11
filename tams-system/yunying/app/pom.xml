@@ -113,6 +113,10 @@
 					<artifactId>okhttp</artifactId>
 					<groupId>com.squareup.okhttp3</groupId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.oracle</groupId>
+					<artifactId>ojdbc6</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
