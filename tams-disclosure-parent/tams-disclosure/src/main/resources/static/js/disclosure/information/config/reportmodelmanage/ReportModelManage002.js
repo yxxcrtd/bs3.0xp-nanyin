@@ -165,8 +165,7 @@
  var FileCommon = {
  		onUploaded : function(res) {
  		       if(res && res.length > 0){
- 		    	  $('#fileName').val(res[0].srcName);
-		    	   $('#filePath').val(res[0].fileNo);
+
  		    	   Joyin.ajax('uploadFile', {
  				    		   fileNo : res[0].fileNo,
  				    		   fileName : res[0].fileName,
@@ -176,6 +175,8 @@
  				    		   uploadFileName:res[0].srcName
  				    	   }, function(result) {
  				    			   upFileName = res[0].srcName;
+							   $('#fileName').val(res[0].srcName);
+							   $('#filePath').val(res[0].fileNo);
  				    	   });
  		       }
  		}

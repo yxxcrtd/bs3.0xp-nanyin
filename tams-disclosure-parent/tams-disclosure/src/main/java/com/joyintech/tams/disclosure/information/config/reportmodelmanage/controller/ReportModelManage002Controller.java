@@ -18,14 +18,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
+import com.joyintech.tams.disclosure.interf.interf.common.dto.FileDisposeResultEntity;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +48,6 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
@@ -233,14 +234,14 @@ public class ReportModelManage002Controller extends BaseController {
 			 if(Integer.parseInt(size)>10485760){
 				 //进度条消除
 				 reportModelManage002Service.removePercent(request);
-				 String msg = "文件大小不能超过10M";
+				 String msg = "文件大小不能超过10M，请重新上传";
 					res =  new AjaxResult(msg, MessageType.错误消息);
 					return res;
 			 }else{
 			 try {
 				 reportModelManage002Service.readFile(request);
 				} catch (Exception e) {
-					String msg = "上传失败：" + e.getMessage();
+					String msg = "上传失败：" + e.getMessage()+"，请重新上传";
 					res =  new AjaxResult(msg, MessageType.错误消息);
 					return res;
 				}}
@@ -266,12 +267,11 @@ public class ReportModelManage002Controller extends BaseController {
 			 
 			 
 			 if(filepath.exists()&&filepath.isDirectory()){
-				 
+
 			//调用解压工具,并解压至指定目录
 			 boolean deczip =  FileUtil.decompressZip(new SafelyFile(this.getParam("fileName")), filepath2.getPath());
-			 
 			 if(!deczip){
-				 String msg = "文件上传并解压失败,请检查文件是否完好!";
+				 String msg = "文件上传失败,请检查zip文件并重新上传!";
 				res =  new AjaxResult(msg, MessageType.错误消息);
 				return res;
 			 }else{

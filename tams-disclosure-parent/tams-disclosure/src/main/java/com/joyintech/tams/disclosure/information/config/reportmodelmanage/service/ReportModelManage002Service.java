@@ -173,6 +173,9 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 		if(StringUtil.isEmpty(dto.getReportWarehouse())){
 			message.add("请输入报表仓库");
 		}
+		if(StringUtil.isEmpty(dto.getFileName())||StringUtil.isEmpty(dto.getFilePath())){
+			message.add("请上传有效的文件");
+		}
 		AjaxResult result = new AjaxResult();
 		if(CollectionUtils.isNotEmpty(message)){
             List<ValidMessage> errorList = new ArrayList<>();
