@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.proelementadj.dto;
 import com.joyintech.framework.annotation.PageId;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -124,5 +125,8 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,super.getDataStatus());
     }
 
+    public String getRptIssueDateStr(){
+        return DateUtil.format(super.getRptIssueDate());
+    }
 
 }
