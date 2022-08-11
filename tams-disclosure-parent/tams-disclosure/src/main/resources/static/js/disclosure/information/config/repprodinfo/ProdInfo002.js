@@ -163,6 +163,14 @@
                 $('#openFreq').attr("disabled",true);
             }
         }
+        // if(pageModel=== PAGE_MODEL_NEW){
+        //     $('#isGrade').change(function () {
+        //         if($('#isGrade').val()=='02'){
+        //             $('#prodName').attr("disabled",true);
+        //             $('#setDate').attr("disabled",true);
+        //         }
+        //     })
+        // }
 
         // 绑定按钮事件
         $('#ProdInfo002_btn_submit').click(function () {
@@ -257,13 +265,13 @@
         });
 
         // 子产品名称修改后的事件
-        $("#prodName").blur(function(){
+        $("#pProdName").blur(function(){
             var isGrade = $('#isGrade').val();
             generatepProdName(isGrade);
         });
 
         // 子产品成立时间 修改事件
-        $("#setDate").change(function(){
+        $("#pSetDate").change(function(){
             var isGrade = $('#isGrade').val();
             generatepProdName(isGrade);
         });
@@ -272,14 +280,16 @@
         function generatepProdName(isGrade){
             //当“是否分级产品”为“否”时
             if(isGrade && isGrade == '02' ){
-                $("#pProdName").attr("disabled", true);
-                $("#pSetDate").attr("disabled", true);
-                var prodName = $('#prodName').val(); //pSetDate
-                var setDate = $('#setDate').val();
-                $("#pProdName").val(prodName);
+                // $("#pProdName").attr("disabled", true);
+                // $("#pSetDate").attr("disabled", true);
+                $('#prodName').attr("disabled",true);
+                $('#setDate').attr("disabled",true);
+                var pProdName = $('#pProdName').val(); //pSetDate
+                var pSetDate = $('#pSetDate').val();
+                $("#prodName").val(pProdName);
                 laydate.render({
-                    elem: '#pSetDate'
-                    ,value: setDate //必须遵循format参数设定的格式
+                    elem: '#setDate'
+                    ,value: pSetDate //必须遵循format参数设定的格式
                 });
             }else{
                 $("#pProdName").attr("disabled", false);
@@ -378,7 +388,7 @@
         if (pSetDate && mdate) {
             var days = (Date.ofDate(mdate) - Date.ofDate(pSetDate)) / (24 * 60 * 60 * 1000);
             if (days < 0) {
-                Joyin.error(JoyinUtil.getMessage("产品到期日期必须大于产品成立日期", JoyinUtil.getLabel("ProdInfo002.mdate")));
+                Joyin.error(JoyinUtil.getMessage("产品到期日必须大于产品成立日", JoyinUtil.getLabel("ProdInfo002.mdate")));
                 $('#mdate').val('');
                 return;
             }
@@ -409,7 +419,7 @@
         if (raiseStrdate && raiseEnddate) {
             var days = (Date.ofDate(raiseEnddate) - Date.ofDate(raiseStrdate)) / (24 * 60 * 60 * 1000);
             if (days < 0) {
-                Joyin.error(JoyinUtil.getMessage("募集结束日必须大于等于募集开始日", JoyinUtil.getLabel("ProdInfo002.raiseEnddate")));
+                Joyin.error(JoyinUtil.getMessage("募集结束日期必须大于等于募集起始日期", JoyinUtil.getLabel("ProdInfo002.raiseEnddate")));
                 $('#raiseEnddate').val('');
             }
         }

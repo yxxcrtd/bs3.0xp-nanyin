@@ -100,8 +100,8 @@ public class RepJobRangeDto extends RepJobRange {
             value = backCode(DictCode.发行状态, this.getRuleType4());
 
         }
-        else if ("IS_INDEPE_ACC".equals(key)) {
-            value = backCode(DisclosureDictCode.是否, this.getRuleType4());
+        else if ("IS_INDEPE_ACC".equals(key) || "IS_INDEX".equals(key)|| "IS_PERIOD".equals(key)) {
+            value = backCode(DictCode.是否, this.getRuleType4());
 
         }
         else if (DisclosureDictCode.产品类型.getValue().equals(key)) {

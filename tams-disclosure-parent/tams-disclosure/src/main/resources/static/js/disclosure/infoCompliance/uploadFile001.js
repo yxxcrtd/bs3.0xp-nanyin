@@ -18,7 +18,23 @@ Date.prototype.format = function(format)
     return format;
 }
 
+var processIndex;
 
+var doprocess = function(){
+    processIndex = layer.open({
+        type: 1
+        ,title: false //不显示标题栏
+        ,closeBtn: false
+        ,area: '300px;'
+        ,shade: 0.6
+        ,id: 'JOY_process' //设定一个id，防止重复弹出
+        ,moveType: 1 //拖拽模式，0或者1
+        ,success: function(layero){
+            layero.css('background', 'transparent');
+            // 开始进度条
+        }
+    });
+}
 /**
  * Created by zhengyan on 2018/1/29 0029.
  */
@@ -281,15 +297,13 @@ $(function ($) {
                 , url: url
                 , method: 'post'
                 , choose: function (obj) {
+                    //增加遮罩层,上传中不允许再点击上传按钮
+                    doprocess();
                     //将每次选择的文件追加到文件队列
                     files = obj.pushFile();
                     var names = [];
                     var _file = $(_this).siblings(':file');
-                    debugger;
-                    console.log(_file);
-                    console.log(_file.size);
                     if(muit && type == 'list') {
-                        debugger;
                         // 读取本地文件
                         obj.preview(function(index, file, result){
                             rownum ++;
@@ -301,7 +315,7 @@ $(function ($) {
                                 ,'<td class="layui-hide">'+ file.size +'</td>'
                                 ,'<td>'+ new Date().format('yyyy-MM-dd hh:mm') +'</td>'
                                 ,'<td>'
-                                ,'<button class="layui-btn layui-btn-mini file-reload layui-hide">重传</button>'
+                                /*,'<button class="layui-btn layui-btn-mini file-reload layui-hide">重传</button>'*/
                                 ,'<button class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button>'
                                 ,'</td>'
                                 ,'</tr>'].join(''));
@@ -417,8 +431,6 @@ $(function ($) {
                     _file.val('');
                 }
                 , before: function (obj) {
-                    debugger;
-                    console.log(obj);
                     this.data={'pageId':pageId};
                     if(!muit) {
                         layer.load();
@@ -428,6 +440,7 @@ $(function ($) {
                 }
                 , done: function (res, file, upload) {//上传完毕回调
                     layer.closeAll('loading');
+                    layer.close(processIndex);
                     uploadedFiles[file] = res;
                     if(muit && type == 'list') {
                         if(res!= null){
@@ -458,6 +471,7 @@ $(function ($) {
                     }
                 }
                 , error: function (index, upload) {//请求异常回调
+                    layer.close(processIndex);
                     layer.closeAll('loading');
                     if(files) delete files[index]; //删除文件队列已经上传成功的文件
                     if(muit && type == 'list') {

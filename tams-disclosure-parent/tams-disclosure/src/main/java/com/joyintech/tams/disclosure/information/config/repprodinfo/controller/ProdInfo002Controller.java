@@ -186,7 +186,7 @@ public class ProdInfo002Controller extends BaseController {
         if (DateUtil.compareDate(dto.getRaiseEnddate(),dto.getRaiseStrdate()) < 0
                 || DateUtil.compareDate(dto.getRaiseEnddate(),dto.getSetDate()) > 0
                 || DateUtil.compareDate(dto.getRaiseEnddate(),dto.getpSetDate()) > 0) {
-            return new AjaxResult("募集结束日必须大于等于募集开始日，且必须小于子产品成立日期和产品成立日期！", MessageType.错误消息);
+            return new AjaxResult("募集结束日期必须大于等于募集起始日期，且必须小于子产品成立日期和产品成立日！", MessageType.错误消息);
         }
 
         if (StringUtils.equals(DictCodeListExt5.发行方式_开放式.getValue(), dto.getIssuingWay())
