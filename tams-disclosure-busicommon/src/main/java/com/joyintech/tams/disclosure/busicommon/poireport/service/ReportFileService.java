@@ -240,7 +240,7 @@ public class ReportFileService {
 			for ( String key:listExp) {
 				Object val = params.get(key);
 				String src = "{"+key+"}";
-				expressText = expressText.replace(src,val==null?"null":val.toString());
+				expressText = expressText.replace(src,val==null?"":val.toString());
 			}
 		}
 		return expressText;
