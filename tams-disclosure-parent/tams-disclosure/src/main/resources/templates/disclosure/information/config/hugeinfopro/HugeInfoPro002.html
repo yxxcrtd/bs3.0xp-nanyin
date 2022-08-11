@@ -5,9 +5,9 @@
 <html>
 <head>
     <title data-th-text="#{HugeInfoPro002}">巨额赎回信息维护新建</title>
-    <style type="text/css">
-        .form-inline-wrap{
-            width:30%
+    <style>
+        .mst-lable{
+            width: 30%;
         }
     </style>
 </head>
@@ -24,8 +24,8 @@
                         </h3>
                         <div class="pro-module-item">
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.prodRegistNo}">产品登记编码</label>
+                                <div >
+                                    <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="#{ProElementAdj001.prodRegistNo}">产品登记编码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="prodRegistNo" name="prodRegistNo" class="input-select"
                                                 data-th-initValue="${entity?.prodRegistNo}" formatoption="false"
@@ -35,8 +35,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
                                     <div class="layui-input-inline input-inline">
 <!--                                        <select type="text" id="prodId" name="prodId" formatoption="true" required-->
 <!--                                                class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodId}' data-th-initVale="${entity?.prodId}"-->
@@ -50,8 +52,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="巨额赎回日期">巨额赎回日期</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="dealDate" name="dealDate"
@@ -64,8 +68,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="触发的情形说明文字">触发的情形说明文字</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="triggerRemark" name="triggerRemark"
@@ -74,8 +78,10 @@
                                                data-th-value="${entity?.triggerRemark}">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{HugeInfoPro002.rejectRemark}">拒绝赎回说明（文字）</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="rejectRemark" name="rejectRemark"
@@ -84,8 +90,10 @@
                                                data-th-value="${entity?.rejectRemark}">
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-label-wrap"
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{ProElementAdj002.rptIssueDate}">报告发布日期</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="rptIssueDate" name="rptIssueDate"
@@ -101,7 +109,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </form>
         <div class="layui-form-item">
             <div align="center" style="height:50px;padding-top: 10px;">
