@@ -46,6 +46,9 @@ $(function () {
 			object.reportName = $('#reportName').val();
 			object.reportCategory = $('#reportType').val();
 			object.isConfirm = $('#conFirmType').val();
+			if($('#revealChannel').val() == "999"){
+				$('#revealChannel').val('');
+			}
 			object.revealChannel = $('#revealChannel').val();
 			object.isReveal = $('#revealType').val();
 			object.detail = $('#uploadDescribe').val();

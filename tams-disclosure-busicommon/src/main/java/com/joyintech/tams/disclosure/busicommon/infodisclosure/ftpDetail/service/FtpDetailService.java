@@ -208,7 +208,7 @@ public class FtpDetailService {
 				flag = true;
 				String revealFlag = CacheUtil.getSysParam(ReportGlobalConstant.REVEAL_FLAG);
 				for (RepFtpDetailMsg repFtpDetailMsg : list) {
-					if(revealFlag.equals(DictCodeListExt3.披露发送标识_反馈状态.getValue())){
+					if(revealFlag.equals(DictCodeListExt3.披露发送标识_发送状态.getValue())){
 						if(StringUtil.isNotEmpty(repFtpDetailMsg.getReceiveStatus())&&
 								repFtpDetailMsg.getReceiveStatus().equals(DictCodeListExt3.披露发送状态_失败.getValue())){
 							flag = false;

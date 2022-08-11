@@ -338,44 +338,62 @@ public class DurationReportDataService implements IReportDataService {
 			Date sDate = durStartDate;
 			Date eDate = durEndDate;
 			
+			//查询指定的产品在统计区间内的所有业绩基准
+			Map<String,Object> mapParas = new HashMap<>();
+			mapParas.put("prodId", prod.getProdId());
+			mapParas.put("sDate", sDate);
+			mapParas.put("eDate",eDate);
+			List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(mapParas);
+			
+			//查询指定的产品在统计区间内的有效业绩基准
+			List<RepProdBasicChange> listEffBasis = new ArrayList<>();
+			listBasis.forEach( item->{
+				if ( "E".equals(item.getStatus()) )
+					listEffBasis.add(item);
+				}
+			);
+			
 			if ( "02".equals(prod.getIssuingWay()) ) {  //封闭式：max(产品成立日，统计周期开始日）
 				if (prod.getSetDate().compareTo(sDate)>0) {
 					sDate = prod.getSetDate();
 				}
 			} else if ( "01".equals(prod.getIssuingWay()) ) {  //开放式
-				List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(prod.getProdId());
-				List<RepProdBasicChange> listEffBasis = new ArrayList<>();
 				//查询是否在区间内有业绩基准变更，变更的判断规则是变更表的数据记录，与需求中的变更判断思路不一样，经过讨论，按变更履历表来
 				//有无业绩基准变更，过滤listBasis状态为D的数据，如果条数减少，就是有变更
-				listBasis.forEach( item->{
-					if ( "E".equals(item.getStatus()) )
-						listEffBasis.add(item);
-					}
-				);
-				
-				if ( listBasis.size()<=listEffBasis.size() ) {  //无业绩基准变更：max(产品成立日，统计周期开始日）
+				if ( listBasis.size()==listEffBasis.size() ) {  //无业绩基准变更：max(产品成立日，统计周期开始日）
 					if (prod.getSetDate().compareTo(sDate)>0) {
 						sDate = prod.getSetDate();
 					}
 				} else {  //有业绩基准变更
 					sDate = listBasis.get(0).getEffDate();  //最新的变更生效日
 				}
-				
-				int days = DateUtil.getBetweenDayNumber(sDate,eDate);
-				//查找指数行情
-				for (RepProdBasicChange basis:listEffBasis ) {
-					RepExtConusKey key = new RepExtConusKey();
-					key.setDataType(basis.getDataType());
-					key.setDataDate(holidayService.getPreWorkDate(sDate));
-					RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
-					key.setDataDate(eDate);
-					RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
-					basisValue = ( eConus.getMarketInfo().subtract(sConus.getMarketInfo()).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
-					basisValue = basisValue.divide(new BigDecimal(days),2,RoundingMode.HALF_DOWN);
+			}
+			
+			int days = DateUtil.getBetweenDayNumber(sDate,eDate);
+			
+			//查找指数行情
+			for (RepProdBasicChange basis:listEffBasis ) {
+				BigDecimal val = BigDecimal.ZERO;
+				RepExtConusKey key = new RepExtConusKey();
+				key.setDataType(basis.getDataType());
+				key.setDataDate(holidayService.getPreWorkDate(sDate));
+				RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
+				if ( sConus==null || sConus.getMarketInfo()==null ) {
+					logger.error("没有找到起始日前一工作日行情。");
+					continue;
 				}
+				key.setDataDate(eDate);
+				RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
+				if ( eConus==null || eConus.getMarketInfo()==null ) {
+					logger.error("没有找到起始日前一工作日行情。");
+					continue;
+				}
+				val = ( eConus.getMarketInfo().subtract(sConus.getMarketInfo()).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
+				val = val.divide(new BigDecimal(days),2,BigDecimal.ROUND_DOWN);
+				basisValue = basisValue.add(val);
 			}
 		} catch (Exception e) {
-			logger.error("业绩比较基准计算错误！");
+			logger.error("业绩比较基准计算错误！",e);
 		}
 		return basisValue;
 	}

@@ -44,7 +44,7 @@ public interface DurationReportMapper {
 	/**
 	 * 查询业绩基准
 	 */
-	List<RepProdBasicChange> selectAchievementBasis(String prodId);
+	List<RepProdBasicChange> selectAchievementBasis(Map<String,Object>paras);
 	
 	List<RepIndexSub> selectReportIndex ( Map<String,Object>paras );
 	

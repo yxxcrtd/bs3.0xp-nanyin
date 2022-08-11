@@ -93,15 +93,15 @@ $(function () {
                 },
 //                {field:'perUploadId', title: '人工上传id',sort: true,visible:false},
                 {field:'createTimeStr', title: '生成日期',width:100, sort: true},
+		 	    {field:'confirmUser', title: '确认人',width:100, sort: true,sortField:"confirmUser"},
                 {field:'confirmDateStr', title: '确认时间',width:100, sort: true},
+		     	{field:'checkUser', title: '确认复核人',width:100, sort: true,sortField:"checkUser"},
+		    	{field:'checkTimeStr', title: '复核时间',width:100, sort: true,sortField:"checkTime"},
                 {field:'detail', title: '上传说明',width:100, sort: true},
                 {field:'uploadTime', title: '上传时间',width:100, sort: true},
                 {field:'isConfirmName', title: '确认方式',width:100, sort: true,sortField:"isConfirm"},
                 {field:'revealChannelName', title: '披露渠道',width:100, sort: true,sortField:"revealChannel"},
                 {field:'isRevealName', title: '披露方式',width:100, sort: true,sortField:"isReveal"},
-			    {field:'confirmUser', title: '确认人',width:100, sort: true,sortField:"confirmUser"},
-			    {field:'checkUser', title: '确认复核人',width:100, sort: true,sortField:"checkUser"},
-		     	{field:'checkTimeStr', title: '复核时间',width:100, sort: true,sortField:"checkTime"},
 //添加          附件  ===========   
                 {field:'annexPath', title: '路径',visible:false},
                 {field:'annex', title: '附件',width:300, sort: true

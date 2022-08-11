@@ -210,20 +210,20 @@
     </select>
     
     <select id="selectAchievementBasis" resultType="com.joyintech.tams.common.base.entity.RepProdBasicChange">
-	    select basis.PROD_ID
+	    select info.PROD_ID
 		    ,basis.EFF_DATE EFF_DATE
 		    ,basis.DATA_TYPE
 		    ,basis.PROPORTION
 		    ,basis.GROUP_ID
 		    ,basis.STATUS
 		from REP_PROD_INFO info
-		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID
+		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID and basis.EFF_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE}
 		where 1=1
-		and info.STATUS='E' 
-		and info.REP_PROD_TYPE in ('02','03')  /**单产品或者子产品**/
-		<if test="pprodid!=null">
-			and info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
+			and info.REP_PROD_TYPE in ('02','03')  /**单产品或者子产品**/
+		<if test="prodId!=null">
+			and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
+		
 		order by basis.EFF_DATE
     </select>
     
