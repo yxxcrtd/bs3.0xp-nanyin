@@ -259,7 +259,8 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //产品登记编码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(1), list2.get(1)))) {
+                        /* NYLCXP-540 登记编码相同且调整字段相同才视为重复数据  modify by kongzhifang 2022-08-11 */
+                        if (StringUtil.equals(list1.get(1), list2.get(1))&&StringUtil.equals(list1.get(5), list2.get(5))) {
                             isRepeat = true;
                             break;
                         }

@@ -129,9 +129,9 @@
             <if test="rejectRemark != null" >
                 REJECT_REMARK = #{rejectRemark,jdbcType=VARCHAR},
             </if>
-<!--            <if test="rptIssueDate != null" >-->
-<!--                RPT_ISSUE_DATE = to_date(#{rptIssueDate,jdbcType=DATE},'YYYY-MM-DD'),-->
-<!--            </if>-->
+            <if test="rptIssueDate != null" >
+                RPT_ISSUE_DATE = to_date(#{rptIssueDateStr},'YYYY-MM-DD'),
+            </if>
             <if test="dataStatus != null" >
                 DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
             </if>
@@ -165,14 +165,14 @@
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
     </select>
 
-    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT
-        PROD_ID id,
-        PROD_NAME text,
-        PROD_ABBR
-        FROM
-        rep_prod_info
-    </select>
+<!--    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">-->
+<!--        SELECT-->
+<!--        PROD_ID id,-->
+<!--        PROD_NAME text,-->
+<!--        PROD_ABBR-->
+<!--        FROM-->
+<!--        rep_prod_info-->
+<!--    </select>-->
 
 
     <select id="getRegistNoList" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -215,4 +215,23 @@
 
     </select>
 
+
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_NAME id,
+        PROD_ID text,
+        PROD_RE object
+        FROM
+        rep_prod_info
+        <where>
+            REP_PROD_TYPE in ('02','03')
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+    </select>
 </mapper>

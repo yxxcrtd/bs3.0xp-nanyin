@@ -4,7 +4,9 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 
 @PageId("HugeInfoPro002")
 @Controller
@@ -110,5 +113,11 @@ public class HugeInfoPro002Controller extends BaseController {
         processParameter.setWorkFlowParameter(params);
         String msg = hugeInfoPro001Service.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+    @ResponseBody
+    @RequestMapping("getProdId")
+    public List<SelectOptionDto> getProdId() {
+        return hugeInfoPro001Service.getProdId(RequestUtil.getPageParam());
     }
 }
