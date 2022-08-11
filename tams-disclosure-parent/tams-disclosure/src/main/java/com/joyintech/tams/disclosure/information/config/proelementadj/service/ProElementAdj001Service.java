@@ -185,28 +185,46 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     else if(!findProdList.contains(rowData.get(1).trim())){
                         errorMsg.append("子产品代码未在产品基本信息表中维护！");
                     }
-//                    if (!StringUtil.isNotEmpty(rowData.get(2).trim())){
-//                        errorMsg.append("调整此产品要素原因 必填！");
-//                    }
-//                    if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
-//                        errorMsg.append("此产品要素调整描述文字1 必填！");
-//                    }
-//                    if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
-//                        errorMsg.append("此产品要素调整描述文字2 必填！");
-//                    }
+                    if (rowData.get(2).length()>500){
+                        errorMsg.append("调整此产品要素原因 输入字符长度超过限制！");
+                    }
+                    if (rowData.get(3).length()>500){
+                        errorMsg.append("此产品要素调整描述文字1 输入字符长度超过限制！");
+                    }
+                    if (rowData.get(4).length()>500){
+                        errorMsg.append("此产品要素调整描述文字2 输入字符长度超过限制！");
+                    }
                     if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
                         errorMsg.append("调整要素 必填！");
+                    }
+                    if (rowData.get(5).length()>500){
+                        errorMsg.append("调整要素输入字符长度超过限制！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
                         errorMsg.append("调整前 必填！");
                     }
+                    if (rowData.get(6).length()>500){
+                        errorMsg.append("调整前 输入字符长度超过限制！");
+                    }
                     if (!StringUtil.isNotEmpty(rowData.get(7).trim())){
                         errorMsg.append("调整后 必填！");
+                    }
+                    if (rowData.get(7).length()>500){
+                        errorMsg.append("调整后 输入字符长度超过限制！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(8))){
                         errorMsg.append("生效时间 必填！");
                     }else if(!this.isDateStr(rowData.get(8))){
                         errorMsg.append("生效时间 格式不正确！");
+                    }
+                    if (rowData.get(9).length()>500){
+                        errorMsg.append("对此要素调整(原因) 输入字符长度超过限制！");
+                    }
+                    if (rowData.get(10).length()>500){
+                        errorMsg.append("调整此要素（补充说明文1） 输入字符长度超过限制！");
+                    }
+                    if (rowData.get(11).length()>500){
+                        errorMsg.append("调整此要素（补充说明文2） 输入字符长度超过限制！");
                     }
 //                    if (!StringUtil.isNotEmpty(rowData.get(9).trim())){
 //                        errorMsg.append("对此要素调整(原因) 必填！");
