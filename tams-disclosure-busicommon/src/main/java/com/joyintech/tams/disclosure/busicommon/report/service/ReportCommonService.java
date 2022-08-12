@@ -44,6 +44,7 @@ public class ReportCommonService {
         } else if (StringUtil.equals(raiseType, DictCodeListExt2.募集方式_中债_私募.getValue())) {
             dataMap.put("pubType", PUBTYPE_BAOGAO);
             dataMap.put("pubString", "");
+            dataMap.put("pubString_xx", "");
             dataMap.put("raiseType", RAISETYPE_SM);
         }
     }
@@ -70,6 +71,8 @@ public class ReportCommonService {
         } else {
             dataMap.put("saleString1", "");
             dataMap.put("saleString2", "");
+            dataMap.put("saleString1_xx", "");
+            dataMap.put("saleString2_xx", "");
         }
     }
 }

@@ -113,6 +113,13 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             params.put("profitTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, profitType));
         }
 
+        /* NYLCXP-411 产品名称字段改为多选下拉框 add by kongzhifang 2022-08-12 start */
+        String prodName = (String) params.get("prodName");
+        if (StringUtil.isNotEmpty(prodName)) {
+            params.put("prodNameArr", StringUtil.splitToList(GlobalConstant.COMMA, prodName));
+        }
+        /* NYLCXP-411 产品名称字段改为多选下拉框 add by kongzhifang 2022-08-12 start */
+
         Page<ProdInfoDto> pages = super.queryForPageForSelectReturn(Integer.parseInt((String) params.get("page")),
                 Integer.parseInt((String) params.get("length")),
                 () -> prodInfoMapper.searchProdList(params));

@@ -147,14 +147,6 @@ public class PoiReportService {
 				throw new Exception("生成报表失败!没有找到模板。");
 			}
 	
-//			Date reportDate = null;
-//			try {
-//				if (params.get("reportDate") != null)
-//					reportDate = (Date)params.get("reportDate");
-//			} catch (Exception e) {
-//				logger.error("获取报表日期错误", e);
-//			}
-			
 			//查询数据
 			Map<String, Object> dataMap = null;
 				List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
