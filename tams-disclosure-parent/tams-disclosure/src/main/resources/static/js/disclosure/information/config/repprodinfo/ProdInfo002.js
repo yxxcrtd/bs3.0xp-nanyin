@@ -140,9 +140,7 @@
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/check', object, function (result) {
                 //提交工作流
                 Joyin.confirm(result.data, function() {
-                    Joyin.confirm(result.data, function() {
-                        WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_submit");
-                    });
+                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_submit");
                 });
             });
         }else {
