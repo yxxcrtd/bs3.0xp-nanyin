@@ -1,11 +1,14 @@
 package com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import org.apache.commons.net.ftp.FTPClient;
+import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +83,9 @@ public class FtpDetailService {
 	
 	@Autowired
 	private FileAttachmentProcess fileAttachmentProcess;
+
+	@Autowired
+	private FileRemoteService minioFileRemoteService;
 
 	/**
 	 * 单条发送接口信息
@@ -172,11 +178,18 @@ public class FtpDetailService {
 			}
 			
 			UploadFile uploadfile = fileAttachmentProcess.fetch(filePath);
+
 			if(StringUtil.isNotEmpty(uploadfile)){
 				repReveal.setFilepath(uploadfile.getTargetFile().getPath());
 				repReveal.setFilename(fileName);
 				
 				try {
+					//系统升级后,文件存储的路径为http://形式,用该路径put到远程服务器，会导致找不到本地文件。
+					// 处理：先copy一份至临时路径下，用copy出的文件上传服务器
+					File downloadFileTemp = null;
+					String tempDir = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+					downloadFileTemp = fileCopy(tempDir,repReveal.getFilepath(),downloadFileTemp,repReveal.getFilename());
+					repReveal.setFilepath(downloadFileTemp.getPath());
 					List<RepFtpDetailMsg> list = revealInterf.sendReportfile(reportinfo, repReveal, ftpPath, DetailId);
 					
 					flag = doReveiceMsg(list,DetailId);
@@ -229,4 +242,64 @@ public class FtpDetailService {
 			
 			return flag;
 		}
+
+	private File fileCopy(String basePath,String filePath,File newFile,String filename) throws IOException {
+		if(filePath.startsWith("http:")) {
+			byte[] bytes = minioFileRemoteService.downloadFile(filePath);
+			if(bytes !=null) {
+				if(newFile == null) {
+					File downloadFilePeopleTmp = new SafelyFile(minioFileRemoteService.getSimpleFilePathName(filePath));
+					newFile = new SafelyFile(getEncodeFileName(basePath+File.separator+
+							downloadFilePeopleTmp.getParent() + File.separator + filename));
+					File parentFile = new File(newFile.getParent());
+					if(!parentFile.exists()){
+						parentFile.mkdirs();
+					}
+				}
+				FileOutputStream fos = null;
+				try {
+					fos = new FileOutputStream(newFile);
+					fos.write(bytes);
+					fos.flush();
+				}catch(Exception e){
+					logger.error("远程文件写入本地文件异常",e);
+				}finally{
+					if(fos != null){
+						try{
+							fos.close();
+						}catch(IOException e){
+							logger.error("关闭流异常",e);
+						}
+					}
+				}
+			}
+		}else{
+			File downloadFilePeopleTmp = new SafelyFile(filePath);
+			if(newFile == null) {
+				newFile = new SafelyFile(getEncodeFileName(
+						downloadFilePeopleTmp.getParent() + File.separator + filename));
+			}
+			try {
+				FileUtil.copyFile(downloadFilePeopleTmp, newFile);
+			}catch(Exception e){
+				logger.error("本地文件Copy异常",e);
+			}
+		}
+		return newFile;
+	}
+
+
+	/**
+	 * 中文文件名编码转换
+	 * @param fileName
+	 * @return
+	 */
+	private String getEncodeFileName(String fileName) {
+		try {
+			return StringUtil.isNotEmpty(fileName) ? (new String(fileName.getBytes(System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding")), "UTF-8")) : fileName;
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(),e);
+		}
+		return fileName;
+	}
 }
