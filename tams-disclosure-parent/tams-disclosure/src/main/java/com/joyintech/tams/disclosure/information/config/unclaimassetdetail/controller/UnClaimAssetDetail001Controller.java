@@ -7,10 +7,13 @@ import com.joyintech.framework.base.intf.IDictCode;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.service.UnClaimAssetDetail001Service;
@@ -35,6 +38,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @PageId("UnClaimAssetDetail001")
@@ -63,7 +67,13 @@ public class UnClaimAssetDetail001Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
-        setSelectOptionToModel(model, DICT_CODES);
+//        setSelectOptionToModel(model, DICT_CODES);
+        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.维护数据状态, null);
+        List<SelectOptionDto> jys = selectDto.getOptions().stream().filter(option -> {
+            return StringUtil.equals(option.getId(), DictCodeListExt1.维护数据状态_有效.getValue())
+                    || StringUtil.equals(option.getId(), DictCodeListExt1.维护数据状态_删除.getValue());
+        }).collect(Collectors.toList());
+        model.addAttribute(DictCode.维护数据状态.getValue(), JsonUtils.objectArray2Json(jys.toArray()));
         return super.init(model);
     }
 
