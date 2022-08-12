@@ -732,4 +732,10 @@ values ('SaleAgency001', 'SaleAgency001_btn_filter', '01', '02', null, '筛选',
 insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('SaleAgency001', 'SaleAgency001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
 
+-- add by kongzhifang 20220812 行情代码数据字典更新映射关系
+update sys_datadict_list set item_vaule = '中债新综合全价指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '01';
+update sys_datadict_list set item_vaule = '沪深300指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '02';
+update sys_datadict_list set item_vaule = '中债新综合财富指数（1-3年）收益率' where dict_code = 'QUOTA_CODE' and item_code = '03';
+update sys_datadict_list set item_vaule = '中证500指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '04';
+
 commit ;
