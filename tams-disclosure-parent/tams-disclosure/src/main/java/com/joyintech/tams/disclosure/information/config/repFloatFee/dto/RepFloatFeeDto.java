@@ -226,7 +226,7 @@ public class RepFloatFeeDto extends RepFloatFee implements ITableRow, ProcessEnt
     }
 
     public String getUpdateTimeStr() {
-        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyyMMddHHmmss");
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
     }
     public String getBusinessCodeStr(){
         return SysDataUtil.getNameFromDataDict(DictCodeExt1.业务代码, this.getBusinessCode());
