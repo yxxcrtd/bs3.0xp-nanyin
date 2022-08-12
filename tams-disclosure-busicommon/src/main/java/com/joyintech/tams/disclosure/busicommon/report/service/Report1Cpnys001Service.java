@@ -39,6 +39,7 @@ public class Report1Cpnys001Service implements IReportDataService {
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         Map<String,Object> dataMap = new HashMap<>();
+        this.initMap(dataMap);
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         String prodId = "";
@@ -107,6 +108,19 @@ public class Report1Cpnys001Service implements IReportDataService {
         }
         dataMap.put("enddate",pubDateStr);
         return result;
+    }
+
+    private void initMap(Map<String,Object> dataMap) {
+        dataMap.put("prodName", "");
+        dataMap.put("regCode", "");
+        dataMap.put("adjustReason", "");
+        dataMap.put("remark1", "");
+        dataMap.put("remark2", "");
+        dataMap.put("pubType", "");
+        dataMap.put("pubString", "");
+        dataMap.put("saleString1", "");
+        dataMap.put("saleString2", "");
+        dataMap.put("pubDate", "");
     }
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {

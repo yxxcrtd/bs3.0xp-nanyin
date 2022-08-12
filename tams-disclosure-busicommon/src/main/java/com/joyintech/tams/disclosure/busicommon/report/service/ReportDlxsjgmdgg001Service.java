@@ -36,6 +36,7 @@ public class ReportDlxsjgmdgg001Service implements IReportDataService {
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         Map<String,Object> dataMap = new HashMap<>();
+        this.initMap(dataMap);
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         Map<String,Object> searchparam = new HashMap<>();
@@ -60,6 +61,11 @@ public class ReportDlxsjgmdgg001Service implements IReportDataService {
         dataMap.put("pubDate",DateUtil.format(pubDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
         dataMap.put("enddate",curDateStr);
         return result;
+    }
+
+    private void initMap(Map<String,Object> dataMap) {
+        dataMap.put("saleOrgName", "");
+        dataMap.put("pubDate", "");
     }
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {

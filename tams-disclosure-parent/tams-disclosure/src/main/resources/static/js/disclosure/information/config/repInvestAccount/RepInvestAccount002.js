@@ -26,6 +26,20 @@ var RepInvestAccount002 = function() {
 
                         if(checkResult){
                             Joyin.confirm("有已删除的数据，是否覆盖", function () {
+                                Joyin.confirm("请确认是否要操作？", function () {
+                                    if(operateType === 'save') {
+                                        WorkFlow.doSaveList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_save");
+                                    }
+                                    else {
+                                        WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_submit");
+                                    }
+                                },{}, function () {
+                                });
+
+                            },{}, function () {
+                            });
+                        }else{
+                            Joyin.confirm("请确认是否要操作？", function () {
                                 if(operateType === 'save') {
                                     WorkFlow.doSaveList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_save");
                                 }
@@ -34,13 +48,7 @@ var RepInvestAccount002 = function() {
                                 }
                             },{}, function () {
                             });
-                        }else{
-                            if(operateType === 'save') {
-                                WorkFlow.doSaveList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_save");
-                            }
-                            else {
-                                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_submit");
-                            }
+
                         }
                     })
 
