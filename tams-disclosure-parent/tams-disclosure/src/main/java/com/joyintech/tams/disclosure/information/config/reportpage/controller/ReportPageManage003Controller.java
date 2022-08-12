@@ -138,6 +138,35 @@ public class ReportPageManage003Controller extends BaseController {
             msg = "生效日必须大于等于平台日";
             return new AjaxResult(msg, MessageType.错误消息);
         }
+        //判断模板是否存在流程中的数据
+        int repInFlow = reportPageManage002Service.getInfoStatusInFlow(dto);
+        if(repInFlow > 0){
+            msg = "模板已经在启用/禁用流程中";
+            return new AjaxResult(msg, MessageType.错误消息);
+        }
+
+        //判断是否有待生效的启用禁用
+        int count = reportPageManage002Service.getInfoStatusAfterSysDate(dto);
+        if(count > 0 ){
+            msg = "模板已经存在大于当前日期待生效的流程";
+            return new AjaxResult(msg, MessageType.错误消息);
+        }
+        //流程已经在生效日之前已经生效
+        if("01".equals(dto.getStartOff())){
+            dto.setRepStatus("02");
+            int startCount = reportPageManage002Service.getInfoStatusBeforeEffdate(dto);
+            msg = "启用流程已生效,不能再次启用";
+            return new AjaxResult(msg, MessageType.错误消息);
+        }
+
+        if("02".equals(dto.getStartOff()) || ("01".equals(dto.getStartOff()) && StringUtil.isNotEmpty(dto.getOffRepId()))){
+            dto.setRepId(dto.getOffRepId());
+            dto.setRepStatus("02");
+            int startCount = reportPageManage002Service.getInfoStatusBeforeEffdate(dto);
+            msg = "禁用流程已生效,不能再次禁用";
+            return new AjaxResult(msg, MessageType.错误消息);
+        }
+
         return commonCheck(bindingResult, operateType);
     }
 

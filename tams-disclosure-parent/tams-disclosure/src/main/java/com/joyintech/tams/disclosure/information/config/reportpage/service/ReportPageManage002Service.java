@@ -80,9 +80,9 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-
+		//rep_status:01,启用审核中：02,启用审核通过;03,禁用审核中;04,禁用审核通过
 		if("01".equals(dto.getWorkflowType())){
-			//流程状态:审核中
+			//流程状态:启用审核中
 			dto.setRepStatus("01");
 			dto.setStartOff(dto.getWorkflowType());
 			dto.setRepId(dto.getStartRepId());
@@ -96,21 +96,21 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 				offDto.setRepId(dto.getOffRepId());
 				//启用禁用标识:02禁用
 				offDto.setStartOff("02");
-				//流程状态:审核中
-				offDto.setRepStatus("01");
+				//流程状态:禁用审核中
+				offDto.setRepStatus("03");
 				offDto.setSeqno(IDGenerator.generate());
 				reportPageManage002Mapper.saveReportStatus(offDto);
 			}
 		}
 		//发起的是禁用流程
 		if("02".equals(dto.getWorkflowType())){
-			//流程状态:审核中
-			dto.setRepStatus("01");
+			//流程状态:禁用审核中
+			dto.setRepStatus("03");
 			dto.setStartOff(dto.getWorkflowType());
 			dto.setRepId(dto.getOffRepId());
 			reportPageManage002Mapper.saveReportStatus(dto);
 		}
-
+		//保存附件信息
 		if (CollectionUtils.isNotEmpty(dto.getUploadFileList())) {
 			for (UploadFileDto file : dto.getUploadFileList()){
 				UploadFileDto sysFile = new UploadFileDto();
@@ -144,9 +144,27 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 
 	@Override
 	public void doComplete(ReportStatusDto dto, OperationType operationType) {
-		//流程状态:审核通过
-		dto.setRepStatus("02");
-		reportPageManage002Mapper.updateReportStatus(dto);
+
+		//启用流程
+		if("01".equals(dto.getWorkflowType())){
+			//流程状态:启用审核通过
+			dto.setRepStatus("02");
+			dto.setRepId(dto.getStartRepId());
+			reportPageManage002Mapper.updateReportStatus(dto);
+			if(StringUtil.isNotEmpty(dto.getOffRepId())){
+				dto.setRepId(dto.getOffRepId());
+				//流程状态:禁用审核通过
+				dto.setRepStatus("04");
+				reportPageManage002Mapper.updateReportStatus(dto);
+			}
+		}
+		//禁用流程
+		if("02".equals(dto.getWorkflowType())){
+			dto.setRepId(dto.getOffRepId());
+			//流程状态:禁用审核通过
+			dto.setRepStatus("04");
+			reportPageManage002Mapper.updateReportStatus(dto);
+		}
 	}
 
 	public ReportStatusDto selectReportInfo(Map<String,String> map){
@@ -182,5 +200,20 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public int getInfoStatusAfterSysDate(ReportStatusDto dto){
+		//查询是否存在生效日之后的流程
+		return reportPageManage002Mapper.getInfoStatusAfterSysDate(dto);
+	}
+
+	public int getInfoStatusInFlow(ReportStatusDto dto){
+		//查询是否存在生效日之后的流程
+		return reportPageManage002Mapper.getInfoStatusInFlow(dto);
+	}
+
+	public int getInfoStatusBeforeEffdate(ReportStatusDto dto){
+		//查询是否存在生效日之后的流程
+		return reportPageManage002Mapper.getInfoStatusBeforeEffdate(dto);
 	}
 }
