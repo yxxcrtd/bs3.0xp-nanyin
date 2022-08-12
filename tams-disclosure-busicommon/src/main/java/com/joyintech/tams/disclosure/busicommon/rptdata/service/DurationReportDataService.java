@@ -406,7 +406,7 @@ public class DurationReportDataService implements IReportDataService {
 					logger.error("没有找到起始日前一工作日行情。");
 					continue;
 				}
-				val = ( ArithmeticUtil.divide(eConus.getMarketInfo(), sConus.getMarketInfo()).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
+				val = ( eConus.getMarketInfo().divide(sConus.getMarketInfo(),20,BigDecimal.ROUND_DOWN ).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
 				val = val.multiply(percent2BigDecimal(basis.getProportion())).divide(new BigDecimal(days),2,BigDecimal.ROUND_DOWN);
 				basisValue = basisValue.add(val);
 			}
