@@ -304,6 +304,17 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             dto.setProdId(keyId);
             dto.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
             prodInfoMapper.updateByPrimaryKeySelective(dto);
+            /* NYLCXP-388 子产品全部删除后母产品状态更新为删除 add by kongzhifang 2022-08-12 start */
+            if(StringUtil.isNotEmpty(entity.getpProdId())){
+                List<ProdInfoDto> dtoList = prodInfoMapper.selectListByPprodId(entity.getpProdId());
+                if(StringUtil.isEmptyList(dtoList)){
+                    ProdInfoDto dto2 = new ProdInfoDto();
+                    dto2.setProdId(entity.getpProdId());
+                    dto2.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
+                    prodInfoMapper.updateByPrimaryKeySelective(dto2);
+                }
+            }
+            /* NYLCXP-388 子产品全部删除后母产品状态更新为删除 add by kongzhifang 2022-08-12 start */
         }
     }
 
