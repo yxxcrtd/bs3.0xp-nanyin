@@ -84,6 +84,6 @@ public class RepInvestAccountDto extends RepInvestAccount implements ITableRow, 
     }
 
     public String getUpdateTimeStr() {
-        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyyMMddHHmmss");
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
     }
 }
