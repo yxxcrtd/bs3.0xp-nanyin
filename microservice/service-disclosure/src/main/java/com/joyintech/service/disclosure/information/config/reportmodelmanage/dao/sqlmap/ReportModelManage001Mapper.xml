@@ -21,7 +21,7 @@
 			and rr.URI like concat(concat('%',#{temName,jdbcType=VARCHAR}),'%')
 		</if>
         <if test="temDescription!=null and temDescription!=''">
-			and rr.URIREPORTDESC like concat(concat('%',#{temDescription,jdbcType=VARCHAR}),'%')
+			and rr.REPORTDESC like concat(concat('%',#{temDescription,jdbcType=VARCHAR}),'%')
 		</if>
 		order by rr.URI asc
 	</select>
