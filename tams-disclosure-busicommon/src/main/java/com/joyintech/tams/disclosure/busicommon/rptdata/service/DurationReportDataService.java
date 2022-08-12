@@ -98,12 +98,15 @@ public class DurationReportDataService implements IReportDataService {
 			//报表基本产品信息，母产品维度
 			try {
 				DurationReportDto dto= durationReportMapper.selectProdInfo(paraMap);
+				
+				if ( DateUtil.getBetweenDayNumber(reportDate, dto.getmDate())<=90 )  //不需要生成定期报表
+					return null;
+				
 				if ( dto!=null ) {
 					reportDto = dto; 
 				}
 			} catch (Exception e) {
-				logger.error("报表产品基本信息错误.");
-				e.printStackTrace();				
+				logger.error("报表产品基本信息错误.",e);
 			}
 			
 			//报表时间信息

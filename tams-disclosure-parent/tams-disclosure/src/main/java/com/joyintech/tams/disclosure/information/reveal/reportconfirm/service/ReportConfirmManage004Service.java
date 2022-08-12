@@ -12,6 +12,7 @@ import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
@@ -450,5 +451,10 @@ public class ReportConfirmManage004Service extends BaseService<ReportConfirmMana
 
     public List<ReportConfirmManageCommentDto> getInfo(String infoSeqno){
         return reportConfirmManage004Mapper.getInfo(infoSeqno);
+    }
+
+    public List<SelectOptionDto> getPrdInfoSelect(Map<String, Object> map) {
+        List<SelectOptionDto> result = reportConfirmManage004Mapper.getPrdInfoSelect(map);
+        return result;
     }
 }

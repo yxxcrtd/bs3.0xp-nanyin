@@ -46,6 +46,7 @@ public class Report1Ysncp001Service implements IReportDataService {
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         Map<String,Object> dataMap = new HashMap<>();
+        this.initMap(dataMap);
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         List<Map<String, Object>> prodlist = new ArrayList<>();
@@ -82,8 +83,6 @@ public class Report1Ysncp001Service implements IReportDataService {
         // 生效时间
         if (cpnysDto.getEffDate() != null) {
             dataMap.put("effDate", DateUtil.format(cpnysDto.getEffDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
-        } else {
-            dataMap.put("effDate", "XXXX年XX月XX日");
         }
         // 调整补充说明1
         dataMap.put("remark1", cpnysDto.getRemark1());
@@ -116,6 +115,20 @@ public class Report1Ysncp001Service implements IReportDataService {
         }
         dataMap.put("enddate",pubDateStr);
         return result;
+    }
+
+    private void initMap(Map<String,Object> dataMap) {
+        dataMap.put("adjField", "");
+        dataMap.put("adjustReason", "");
+        dataMap.put("effDate", "");
+        dataMap.put("remark1", "");
+        dataMap.put("remark2", "");
+        dataMap.put("pubType", "");
+        dataMap.put("pubString", "");
+        dataMap.put("raiseType", "");
+        dataMap.put("saleString1", "");
+        dataMap.put("saleString2", "");
+        dataMap.put("pubDate", "");
     }
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {

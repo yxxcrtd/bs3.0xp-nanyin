@@ -63,13 +63,16 @@ public class ReportPageManage001Controller extends BaseController {
     @Override
     public String init(Model model){
         this.setSelectOptionToModel(model, SystemDictCode.机构类型);//读的是字典的内容
-        model.addAttribute("REPORT_NAME",JsonUtils.objectArray2Json(this.getReportNameList().toArray()));
+        //model.addAttribute("REPORT_NAME",JsonUtils.objectArray2Json(this.getReportNameList().toArray()));
         model.addAttribute("ADMINISTRATIVE_TYPE1",JsonUtils.objectArray2Json(01,02));
         //model.addAttribute("pageList", JsonUtils.objectArray2Json(reportPageManage001Service.getPageName(null).toArray()));
         model.addAttribute("REPORT_STYLE",JsonUtils.objectArray2Json(ftpPathService.getReportCategory().toArray()));
         return super.init(model);
     }
+
     //查询报表名称
+    @ResponseBody
+    @RequestMapping("getReportNameList")
     private List<SelectOptionDto> getReportNameList() {
 		
     	return reportPageManage001Service.getReportInfo();

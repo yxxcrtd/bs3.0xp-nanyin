@@ -9,13 +9,16 @@
  
 package com.joyintech.tams.disclosure.information.config.prodassetinfo.service;
 
+import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.prodassetinfo.dao.ProdAssetInfo002Mapper;
 import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dao.ProdPartner002Mapper;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dao.WorkflowMapper;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,9 @@ public class ProdAssetInfo002Service extends CommonExportService<ProdAssetInfoDt
     @Autowired
     private ProdAssetInfo002Mapper prodAssetInfo002Mapper;
 
+    @Autowired
+    private WorkflowMapper workflowMapper;
+
     /**
      * 双击查看详情
      *
@@ -59,6 +65,14 @@ public class ProdAssetInfo002Service extends CommonExportService<ProdAssetInfoDt
 
         if (OperationType.DELETE.equals(type)) {
             //删除
+            //根据workflowId查询流程发起人、发起时间
+            if(StringUtil.isNotEmpty(dto.getWorkflowId())){
+                BaseEntity baseEntity = workflowMapper.selectWflCreateInfo(dto.getWorkflowId());
+                if(baseEntity!=null){
+                    dto.setUpdateUser(baseEntity.getCreateUser());
+                    dto.setUpdateTime(baseEntity.getCreateTime());
+                }
+            }
             prodAssetInfo002Mapper.deleteProdAssetByPrimaryKey(dto);
         }
         else if (OperationType.NEW.equals(type)) {//新建

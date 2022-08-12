@@ -247,29 +247,40 @@
 
     <select id="searchList" parameterType="java.util.Map"
             resultType="com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto">
-        SELECT * FROM REP_REPORT_CHECK
-        where DATA_STATUS ='E'
+        SELECT
+        rrc.REPORT_CHECK_ID reportCheckId,
+        rrc.REP_ID repId,
+        rrc.REPORT_TYPE reportType,
+        rrc.REPORT_NAME reportName ,
+        rrc.PROD_ID prodId,
+        rri.PROD_NAME prodName,
+        rrc.CHECK_DATE checkDate,
+        rrc.ERRORMSG errormsg,
+        rrc.FILE_NO  fileNo
+        FROM REP_REPORT_CHECK rrc
+        left join REP_PROD_INFO rri on rrc.PROD_ID=rri.PROD_ID
+        where rrc.DATA_STATUS ='E'
         <if test="prodIdArr != null and prodIdArr.length > 0">
-            AND PROD_ID IN
+            AND rrc.PROD_ID IN
             <foreach item="item" collection="prodIdArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="reportTypeArr != null and reportTypeArr.length > 0">
-            AND REPORT_TYPE IN
+            AND rrc.REPORT_TYPE IN
             <foreach item="item" collection="reportTypeArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="checkDateStart != null and checkDateStart != ''">
-            <![CDATA[AND  CHECK_DATE >= TO_DATE(#{checkDateStart},'YYYY-MM-DD') ]]>
+            <![CDATA[AND  rrc.CHECK_DATE >= TO_DATE(#{checkDateStart},'YYYY-MM-DD') ]]>
         </if>
         <if test="checkDateEnd != null and checkDateEnd != ''">
-            <![CDATA[AND  CHECK_DATE <= TO_DATE(#{checkDateEnd},'YYYY-MM-DD')]]>
+            <![CDATA[AND  rrc.CHECK_DATE <= TO_DATE(#{checkDateEnd},'YYYY-MM-DD')]]>
         </if>
-        order by NVL(UPDATE_TIME,CREATE_TIME) desc
+        order by NVL(rrc.UPDATE_TIME,rrc.CREATE_TIME) desc
     </select>
 
     <select id="getRepDataCheckList" resultType="com.joyintech.tams.common.base.entity.RepDataCheck">

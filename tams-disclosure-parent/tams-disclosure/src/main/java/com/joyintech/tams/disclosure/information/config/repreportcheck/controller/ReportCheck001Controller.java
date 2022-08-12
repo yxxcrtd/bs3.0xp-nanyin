@@ -77,4 +77,10 @@ public class ReportCheck001Controller extends BaseController {
         return page;
     }
 
+    @RequestMapping("export")
+    public ResponseEntity<byte[]> export(){
+        return reportCheckService.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
+    }
+
 }

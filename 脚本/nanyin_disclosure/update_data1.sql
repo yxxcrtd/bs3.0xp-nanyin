@@ -627,24 +627,27 @@ values ('ReportCheck001', 'ReportCheck001_btn_filter', '01', '02', null, '筛选
 
 
 -- 新增"报表数据类别"字典信息
+delete from  sys_datadict where DICT_CODE='DIS_REPORT_STYLE';
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_REPORT_STYLE', 'DIS', '报表数据类别', 'DIS_REPORT_STYLE', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE='DIS_REPORT_STYLE';
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_REPORT_STYLE', '01', '发行公告', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_REPORT_STYLE', '02', '运行公告', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_REPORT_TYPE', '03', '到期公告', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('DIS_REPORT_STYLE', '03', '到期公告', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_REPORT_TYPE', '04', '临时公告', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('DIS_REPORT_STYLE', '04', '临时公告', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_REPORT_TYPE', '05', '销售公告', 5, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('DIS_REPORT_STYLE', '05', '销售公告', 5, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_REPORT_TYPE', '06', '托管公告', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('DIS_REPORT_STYLE', '06', '托管公告', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_REPORT_TYPE', '99', '其他公告', 7, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('DIS_REPORT_STYLE', '99', '其他公告', 7, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- add by dingrui 20220804 报表数据校验信息 end
 

@@ -36,6 +36,7 @@ public class ReportFxgg001Service implements IReportDataService {
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         Map<String,Object> dataMap = new HashMap<>();
+        this.initMap(dataMap);
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         String prodId = "";
@@ -67,20 +68,23 @@ public class ReportFxgg001Service implements IReportDataService {
             }
             dataMap.put("raiseEndDate", DateUtil.format(raiseEndDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
             dataMap.put("setDate",DateUtil.format(setDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-        } else {
-            dataMap.put("raiseEndDate", "XXXX年X月XX日");
-            dataMap.put("setDate", "XXXX年X月XX日");
         }
         BigDecimal raiseAmt = fxgg.getRaiseAmt();
         if (raiseAmt != null) {
             DecimalFormat df = new DecimalFormat("#,###.00");
             dataMap.put("raiseAmt", df.format(raiseAmt));
             dataMap.put("raiseAmtVal", raiseAmt);
-        } else {
-            dataMap.put("raiseAmt", BigDecimal.ZERO);
         }
         dataMap.put("enddate",DateUtil.format(setDate));
         return result;
+    }
+
+    private void initMap(Map<String,Object> dataMap) {
+        dataMap.put("prodName", "");
+        dataMap.put("regCode", "");
+        dataMap.put("raiseEndDate", "");
+        dataMap.put("setDate", "");
+        dataMap.put("raiseAmt", "");
     }
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {

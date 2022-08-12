@@ -529,15 +529,11 @@ $(function () {
 	    	params['uri'] = modelId;
 	    	params['repid']=repId;
 			console.log(params)
-			// Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result) {
-			// 	Joyin.ajax('previewReport', params, function(result) {
-			// 		$container.html(result);
-			// 		previewFlag=true;
-			// 	});
-			// });
-			Joyin.ajax('previewReport', params, function(result) {
-				$container.html(result);
-				previewFlag=true;
+			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result) {
+				Joyin.ajax('previewReport', params, function(result) {
+					$container.html(result);
+					previewFlag=true;
+				});
 			});
 	    }     
 	}

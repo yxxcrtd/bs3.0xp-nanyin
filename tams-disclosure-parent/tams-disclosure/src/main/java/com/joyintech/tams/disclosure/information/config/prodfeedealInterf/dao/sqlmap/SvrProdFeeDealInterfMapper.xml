@@ -44,7 +44,7 @@
         #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
         #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
         #{createUser,jdbcType=VARCHAR} UPDATE_USER,
-        #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+        #{createTime,jdbcType=TIMESTAMP} UPDATE_TIME
         FROM
         DUAL
         ) TEMP
@@ -101,8 +101,8 @@
             <if test="createUser != null" >
                 UPDATE_USER = #{createUser,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            <if test="createTime != null" >
+                UPDATE_TIME = #{createTime,jdbcType=TIMESTAMP},
             </if>
                 ERRORMSG = #{errmsg,jdbcType=VARCHAR},
         </set>
@@ -113,7 +113,9 @@
 
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto"  >
 		update REP_FEE_TRD
-		set STATUS = 'D'
+		set STATUS = 'D',
+		UPDATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		UPDATE_USER = #{createUser,jdbcType=VARCHAR}
 		where PROD_ID = #{prodId,jdbcType=CHAR}
           and PAY_DATE = #{payDate,jdbcType=DATE}
           and FEE_TYPE = #{feeType,jdbcType=CHAR}

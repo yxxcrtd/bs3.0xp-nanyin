@@ -11,8 +11,11 @@
 package com.joyintech.tams.disclosure.information.config.repreportcheck.service;
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.dao.ReportCheckMapper;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -77,9 +80,20 @@ public class ReportCheckService extends CommonExportService<ReportCheckDto> impl
         }
         params.put("reportTypeArr", reportTypeArr);
 
-        Page<ReportCheckDto> pages = super.queryForPageForSelectReturn(Integer.parseInt((String) params.get("page")),
-                Integer.parseInt((String) params.get("length")),
-                () -> reportCheckMapper.searchList(params));
+        int page=1;
+        if(params.get("page") instanceof String){
+            page=Integer.parseInt((String) params.get("page"));
+        } else if (params.get("page") instanceof Integer) {
+            page=(Integer)params.get("page");
+        }
+        int length=1;
+        if(params.get("length") instanceof String){
+            length=Integer.parseInt((String) params.get("length"));
+        } else if (params.get("length") instanceof Integer) {
+            length=(Integer)params.get("length");
+        }
+
+        Page<ReportCheckDto> pages = super.queryForPageForSelectReturn(page,length, () -> reportCheckMapper.searchList(params));
         return pages;
     }
 
@@ -99,5 +113,17 @@ public class ReportCheckService extends CommonExportService<ReportCheckDto> impl
         }*/
     }
 
+
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config(
+                "/com/joyintech/tams/disclosure/information/config/repreportcheck/config/export.xml").dataSource(
+                DataSourceType.MASERT);
+    }
+
+    @Override
+    public Page<ReportCheckDto> selectPageData(Map<String, Object> selectParam) {
+        return this.findByPage(selectParam);
+    }
 
 }
