@@ -240,7 +240,8 @@ public class ReportConfirmManage004Contoller extends BaseController {
     	Map<String, Object>params = RequestUtil.getPageParam();
     	int count = reportConfirmManage004Service.querySameCount(params);
     	if(count > 0){
-    		return new AjaxResult("存在相同的报表，是否继续生成？",MessageType.确认消息);
+//    		return new AjaxResult("存在相同的报表，是否继续生成？",MessageType.确认消息);
+			return new AjaxResult("同一产品同一报告期同一报表类别只能有一条记录",MessageType.错误消息);
     	}
     	else {
     		return null;
