@@ -39,6 +39,7 @@ import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
@@ -312,15 +313,11 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	            reportFile = poiReportService.previewReport(params);
 	        }
 	        
-//	        if ( reportFile ==null )  //生成日期与产品到期日小于等于90天，不需要生成报表。
-//	        	return -1;
+	        if ( reportFile ==null )  //生成日期与产品到期日小于等于90天，不需要生成报表。
+	        	reportFile = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH)+"/CP/NOREPORT.DOCX";
 	        
 	        //将生成的文件作为输入，转换成html后，发送到response
-	        byte[] bytes = null;
-	        if ( reportFile!=null )
-	        	bytes = poiReportService.getFileByteArray(reportFile);
-	        else
-	        	bytes = "生成日期与产品到期日小于等于90天，不需要生成报表".getBytes();
+	        byte[] bytes = poiReportService.getFileByteArray(reportFile);
 
 	        if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);

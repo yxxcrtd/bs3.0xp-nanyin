@@ -87,6 +87,7 @@
 	<select id="selectReportIndex" resultType="com.joyintech.tams.common.base.entity.RepIndexSub">
 		select
 		rownum personalField
+		,id
 		,rindex.PRI_ID
 		,rindex.INDEX_NAME
 		,rindex.INDEX_VALUE
@@ -251,4 +252,13 @@
 			</if>
     </select>
     
+    <select id="selectIndexRuleByJobId" resultType="com.joyintech.tams.common.base.entity.RepJobRange">
+		select * from REP_JOB_RANGE where JOB_ID=#{jobId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectProdInfoBySql" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
+		select PROD_ID from REP_PROD_INFO 
+		where 1=1 ${sql}
+	</select>
+	
 </mapper>

@@ -1,7 +1,6 @@
 package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.dao.ChbMktHolidayMapper;
 import com.joyintech.tams.common.base.dao.RepExtConusMapper;
-import com.joyintech.tams.common.base.entity.ChbMktHoliday;
-import com.joyintech.tams.common.base.entity.ChbMktHolidayKey;
 import com.joyintech.tams.common.base.entity.DisNostdCreditor;
 import com.joyintech.tams.common.base.entity.DisProdAsset;
 import com.joyintech.tams.common.base.entity.RepAssetsComb;
@@ -24,11 +20,13 @@ import com.joyintech.tams.common.base.entity.RepExtConus;
 import com.joyintech.tams.common.base.entity.RepExtConusKey;
 import com.joyintech.tams.common.base.entity.RepIndexSub;
 import com.joyintech.tams.common.base.entity.RepInvestAccount;
+import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepProdBasicChange;
 import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepRelDeal;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.common.util.ArithmeticUtil;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
@@ -179,8 +177,16 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//报告指标
 			try {
-				List<RepIndexSub> listRepIndex = durationReportMapper.selectReportIndex (paraMap);  //一般只有一条
-				if ( listRepIndex!=null && listRepIndex.size()>0 ) {
+				//区间内有效指标
+				List<RepIndexSub> listRepIndex = durationReportMapper.selectReportIndex (paraMap);  
+				List<RepIndexSub> listEffRepIndex = new ArrayList<>(); 
+				//找到符合本产品的有效指标
+				String prodId = paraMap.get("prodId").toString();
+				for ( RepIndexSub idx:listRepIndex ) { 
+					if ( isEffIndex(prodId,idx) )
+						listEffRepIndex.add(idx);
+				}
+				if ( listEffRepIndex!=null && listEffRepIndex.size()>0 ) {  //一般只有一条
 					for ( RepIndexSub item:listRepIndex ) {
 						if ( "tzclhyzfx".equals(item.getPriId()) ) {
 							reportDto.setTzclhyzfx( item.getIndexValue() );
@@ -400,8 +406,8 @@ public class DurationReportDataService implements IReportDataService {
 					logger.error("没有找到起始日前一工作日行情。");
 					continue;
 				}
-				val = ( eConus.getMarketInfo().subtract(sConus.getMarketInfo()).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
-				val = val.divide(new BigDecimal(days),2,BigDecimal.ROUND_DOWN);
+				val = ( ArithmeticUtil.divide(eConus.getMarketInfo(), sConus.getMarketInfo()).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
+				val = val.multiply(percent2BigDecimal(basis.getProportion())).divide(new BigDecimal(days),2,BigDecimal.ROUND_DOWN);
 				basisValue = basisValue.add(val);
 			}
 		} catch (Exception e) {
@@ -443,4 +449,35 @@ public class DurationReportDataService implements IReportDataService {
 		repReveal.setEndDate(eDate);
 		return repReveal;
 	}
+	
+	private boolean isEffIndex ( String prodId, RepIndexSub idx ) {
+		List<RepJobRange> listRules = durationReportMapper.selectIndexRuleByJobId(idx.getId());
+		StringBuffer sql = new StringBuffer();
+		sql.append("and prod_id='"+prodId+"' ");
+		if ( listRules!=null ) {
+			for ( RepJobRange rule:listRules ) {
+				sql.append(" and ");
+				sql.append(rule.getRuleType1());
+				sql.append(rule.getRuleType2());
+				if ( "02".equals(rule.getRuleType3()) )
+					sql.append("'");
+				sql.append(rule.getRuleType4());
+				if ( "02".equals(rule.getRuleType3()) )
+					sql.append("'");		
+			}
+		}
+		List<RepProdInfo> list = durationReportMapper.selectProdInfoBySql(sql.toString());
+		if (list.size()>0)
+			return true;
+		else
+			return false;
+	}
+	
+    private static BigDecimal percent2BigDecimal(String percent) {
+    	try {
+    		return new BigDecimal(percent.trim().replace("%", "")).divide(BigDecimal.valueOf(100));
+    	} catch (Exception e) {
+    		return null;
+    	}
+    }
 }
