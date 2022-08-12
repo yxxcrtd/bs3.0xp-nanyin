@@ -16,6 +16,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto;
@@ -354,9 +355,14 @@ public class ReportConfirmManage004Service extends BaseService<ReportConfirmMana
             // 确认状态
             dto.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
         }
-        if (StringUtil.isNotEmpty(dto.getRevealEndDate()) && !StringUtil.equals("", dto.getRevealEndDate())) {
-            dto.setRevealEndDate(DateUtil.parse(DateUtil.format(dto.getRevealEndDate()) + " 23:59:00"));
-        }
+
+        String execDate = DateUtil.format(dto.getCreateTime(),"yyyy-MM-dd");
+        ChbDeadLine001Dto chbDeadLine001Dto = reportConfirmManage004Mapper.getChbDeadline("04",
+                execDate, "02" , 1);
+        dto.setRevealEndDate(DateUtil.parse(DateUtil.format(chbDeadLine001Dto.getBusiDate()) + " 23:59:00"));
+//        if (StringUtil.isNotEmpty(dto.getRevealEndDate()) && !StringUtil.equals("", dto.getRevealEndDate())) {
+//            dto.setRevealEndDate(DateUtil.parse(DateUtil.format(dto.getRevealEndDate()) + " 23:59:00"));
+//        }
 
 
         Map<String,String> param = new HashMap<>();

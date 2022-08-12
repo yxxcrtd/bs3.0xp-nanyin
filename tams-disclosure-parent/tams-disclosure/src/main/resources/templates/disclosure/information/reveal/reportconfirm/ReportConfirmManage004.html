@@ -123,7 +123,7 @@
             	<div class="layui-form-item">
             		<div class="layui-inline layui-col-md7">
 	                  <label class="layui-form-label form-lable">
-	                  	<i class="iconfont must" style="display: inline;">*</i>	
+	                  	<i class="iconfont must" style="display: inline;">*</i>
 	                  		&nbsp;&nbsp;报&nbsp;告&nbsp;期</label>
 	                  <div class="layui-input-inline input-inline">
 	                    <input type="text" id="reportDate" name="reportDate" placeholder="请选择时间区间" class="layui-input form-input input-dateRangeSelect" data-th-Value='${reportDate}'>
@@ -133,10 +133,11 @@
             	<div class="layui-form-item">
             		<div class="layui-inline layui-col-md7">
 	                  <label class="layui-form-label form-lable">
-	                  	<i class="iconfont must" style="display: inline;">*</i>	
+	                  	<i class="iconfont must" style="display: inline;"></i>
 	                  		披露截止日</label>
 	                  <div class="layui-input-inline input-inline">
-	                    <input id="revealEndDate" name="revealEndDate" placeholder="请选择时间" type="datetime" class="layui-input form-input input-dateSelect" th:value='${#dates.format(entity?.revealEndDate,"yyyy-MM-dd")}'>
+	                    <input id="revealEndDate" name="revealEndDate" placeholder="请选择时间" type="datetime" class="layui-input form-input input-dateSelect"
+							   th:value='${#dates.format(entity?.revealEndDate,"yyyy-MM-dd")}'  disabled="disabled">
 	                  </div>
                 	</div> 
             	</div>

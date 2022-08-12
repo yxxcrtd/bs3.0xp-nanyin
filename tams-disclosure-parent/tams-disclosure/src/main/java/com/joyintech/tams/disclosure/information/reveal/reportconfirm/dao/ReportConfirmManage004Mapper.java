@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageCommentDto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto;
@@ -53,4 +54,7 @@ public interface ReportConfirmManage004Mapper {
     String  getFirstNodeId(@Param("seqNo") String seqNo);
 
     List<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paramMap);
+
+    ChbDeadLine001Dto getChbDeadline(@Param("marketCode") String marketCode, @Param("holidayDate") String date,
+                                     @Param("type") String type, @Param("days")  int days);
 }

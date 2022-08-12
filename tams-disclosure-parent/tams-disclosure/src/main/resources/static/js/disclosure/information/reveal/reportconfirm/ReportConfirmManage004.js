@@ -90,10 +90,10 @@ $(function () {
 				Joyin.error(JoyinUtil.getMessage("报告期不能为空"));
 				return;
 			}
-			if(object.revealEndDate == "" || object.revealEndDate == null){
-				Joyin.error(JoyinUtil.getMessage("披露截止日不能为空"));
-				return;
-			}
+			// if(object.revealEndDate == "" || object.revealEndDate == null){
+			// 	Joyin.error(JoyinUtil.getMessage("披露截止日不能为空"));
+			// 	return;
+			// }
 
 			if(FileCommon2 && FileCommon2.getUploadFileInfo().length >0) {
 				if(FileCommon2.getUploadFileInfo().length >10){
