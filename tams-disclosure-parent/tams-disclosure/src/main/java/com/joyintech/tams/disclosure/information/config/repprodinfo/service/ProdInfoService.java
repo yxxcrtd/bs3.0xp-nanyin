@@ -506,9 +506,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         /*if (!StringUtils.equals(rowData.get(0), rowData.get(8))) {
                             return new AjaxResult("非分级产品，子产品代码和产品主代码需要一致", MessageType.错误消息);
                         }*/
-                        if (!StringUtils.equals(rowData.get(1), rowData.get(5))) {
+                        // NYLCXP-246 产品基本信息，非分级产品新建时存在错误check modify by kongzhifang 2022-08-12 start
+                        /*if (!StringUtils.equals(rowData.get(1), rowData.get(5))) {
                             errorMsg.append("非分级产品，子产品名称和产品名称需要一致");
-                        }
+                        }*/
+                        // NYLCXP-246 产品基本信息，非分级产品新建时存在错误check modify by kongzhifang 2022-08-12 start
                         if (!StringUtils.equals(rowData.get(2), rowData.get(12))) {
                             errorMsg.append("非分级产品，子产品成立日期和产品成立日期需要一致");
                         }

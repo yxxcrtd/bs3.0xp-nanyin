@@ -131,7 +131,7 @@ $(function(){
         data.pageModel = PAGE_MODEL_EDIT;
         Joyin.dialog(JoyinUtil.getLabel("产品资产组合情况维护编辑"),
                     basePath + "disclosure/information/config/prodassetinfo/ProdAssetInfo002/init",
-                    "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
+                    "100%", "90%", {pageModel:PAGE_MODEL_EDIT,
                 prodAssetId:data.prodAssetId},function(){table.reload();})
     });
     
