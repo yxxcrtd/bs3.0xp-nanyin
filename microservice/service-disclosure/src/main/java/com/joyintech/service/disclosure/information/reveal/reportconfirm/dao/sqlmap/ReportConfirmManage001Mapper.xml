@@ -6,7 +6,7 @@
 			REVEAL.ID id
 			,REVEAL.REP_ID repId
 			,REVEAL.REPORT_NAME reportName
-			,REVEAL.PROD_NAME prodName
+			,decode(R1.REP_PROD_TYPE,'03',R2.PROD_NAME,R1.PROD_NAME) prodName
 			,REVEAL.PRODID prodid
 			,case when
 				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
@@ -54,6 +54,8 @@
             ,F2.REAL_NAME checkUser
             ,REVEAL.CHECK_TIME checkTime
 		FROM REP_REVEAL REVEAL
+		left join REP_PROD_INFO R1 on REVEAL.PRODID = R1.PROD_ID
+		left join REP_PROD_INFO R2 on R1.P_PROD_ID = R2.PROD_ID
 		left join (SELECT * FROM(
 		SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
 		FROM SYS_USER su
@@ -516,7 +518,7 @@
 			REVEAL.ID id
 			,REVEAL.REP_ID repId
 			,REVEAL.REPORT_NAME reportName
-			,REVEAL.PROD_NAME prodName
+			,decode(T1.REP_PROD_TYPE,'03',T2.PROD_NAME,T1.PROD_NAME) prodName
 			,REVEAL.PRODID prodid
 			,case when 
 				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
@@ -560,6 +562,8 @@
 			,fp.finprod_id finprodId
 			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
 		FROM REP_REVEAL REVEAL
+		 left join REP_PROD_INFO T1 on REVEAL.PRODID = T1.PROD_ID
+		 left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID
 		left join rep_info info on REVEAL.rep_id = info.rep_id
 		left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
 		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/

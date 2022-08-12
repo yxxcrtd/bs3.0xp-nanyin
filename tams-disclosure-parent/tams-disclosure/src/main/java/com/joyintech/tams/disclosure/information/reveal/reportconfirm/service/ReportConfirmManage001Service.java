@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import org.apache.tools.zip.ZipEntry;
@@ -99,7 +100,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/findPage",
             params, ReportConfirmManage001Dto.class);
     }
-
+    public Page<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paraMap){
+        Page<SelectOptionDto> page =  queryForPageForSelectReturn(()->reportConfirmManage001Mapper.getPrdInfoSelect(paraMap));
+        return page;
+    }
     /**
      * <一句话功能简述> <功能详细描述>
      * 
