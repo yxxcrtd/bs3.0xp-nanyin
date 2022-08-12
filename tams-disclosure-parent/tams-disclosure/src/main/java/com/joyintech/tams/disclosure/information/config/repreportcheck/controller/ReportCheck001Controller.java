@@ -10,28 +10,42 @@
 
 package com.joyintech.tams.disclosure.information.config.repreportcheck.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt4;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.service.ReportCheckService;
+import com.joyintech.tams.disclosure.information.manage.workrule.dto.ReportRule001Dto;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 报表数据校验
@@ -81,6 +95,28 @@ public class ReportCheck001Controller extends BaseController {
     public ResponseEntity<byte[]> export(){
         return reportCheckService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
+    }
+
+    @ResponseBody
+    @RequestMapping("delete")
+    public AjaxResult delete(@RequestBody  ReportCheckDto dto) {
+        AjaxResult result = new AjaxResult("处理成功", MessageType.提示消息);
+        try {
+            List<ReportCheckDto> listData = dto.getSelectedItem();
+            reportCheckService.delete(listData);
+        } catch (Exception e) {
+            logger.error("error:",e);
+            result = new AjaxResult("处理失败", MessageType.错误消息);
+        }
+        return result;
+    }
+
+    @RequestMapping("getProdIdList")
+    @ResponseBody
+    public Page<SelectOptionDto> getProdIdList(){
+        Map<String, Object> param=RequestUtil.getPageParam();
+        Page<SelectOptionDto> prdInfoSelect = reportCheckService.getProdIdList(param);
+        return prdInfoSelect;
     }
 
 }
