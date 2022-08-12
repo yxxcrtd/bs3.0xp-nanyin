@@ -14,7 +14,7 @@
                     type: 'select', multiple: false, searchable: true, result: REP_CHECK_TYPE
                 }
             }
-            , { field: 'paramValue1', sortable: false, edit: true, title: '阈值' }
+            , { field: 'paramValue', sortable: false, edit: true, title: '阈值' }
         ],
         done: function () {
         }
@@ -24,19 +24,14 @@
         let paramObj = {};
         paramObj.dataList = JSON.stringify(dataTable.getAllRows()) ;
         Joyin.ajaxJson(basePath + 'disclosure/information/config/repreportcheck/ReportCheck002/check', paramObj, function(result) {
-            // Joyin.confirm(result.data, function() {
-            //     Joyin.ajax(basePath + 'disclosure/information/config/repreportcheck/ReportCheck002/insert',
-            //         {
-            //             pageModel: pageModel,
-            //             object: JSON.stringify(object),
-            //             addParam: JSON.stringify(addParam),
-            //             liparams: object.liparams
-            //         },
-            //         function (result) {
-            //             var index = parent.layer.getFrameIndex(window.name);
-            //             parent.layer.close(index);
-            //         });
-            // });
+            Joyin.confirm("请确认是否保存", function() {
+                Joyin.ajaxJson(basePath + 'disclosure/information/config/repreportcheck/ReportCheck002/save',
+                    paramObj,
+                    function (result) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    });
+            });
         });
     }
 

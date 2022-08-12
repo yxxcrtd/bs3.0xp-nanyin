@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.repreportcheck.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.RepDataCheckMapper;
 import com.joyintech.tams.common.base.entity.RepDataCheck;
 import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.dao.ReportCheckMapper;
@@ -25,8 +26,19 @@ public class ReportCheck002Service {
     @Autowired
     private ReportCheckMapper reportCheckMapper;
 
+    @Autowired
+    private RepDataCheckMapper repDataCheckMapper;
+
     public List<RepDataCheck>getRepDataCheckList(){
-        return reportCheckMapper.getRepDataCheckList();
+        List<RepDataCheck>list=reportCheckMapper.getRepDataCheckList();
+        for (RepDataCheck repDataCheck:list) {
+            String paramValue=repDataCheck.getParamValue1();
+            if(StringUtil.isNotEmpty(repDataCheck.getParamValue2())){
+                paramValue+=";"+repDataCheck.getParamValue2();
+            }
+            repDataCheck.setParamValue(paramValue);
+        }
+        return list;
     }
 
     public AjaxResult check(List<RepDataCheck>dataList){
@@ -53,4 +65,27 @@ public class ReportCheck002Service {
 
         return webResult;
     }
+    public AjaxResult save(List<RepDataCheck>dataList){
+        AjaxResult webResult = new AjaxResult();
+        for (int i = 0; i < dataList.size(); i++) {
+            RepDataCheck repDataCheck=dataList.get(i);
+            String paramValue=repDataCheck.getParamValue();
+            if(StringUtil.equals(DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值,repDataCheck.getCheckType())
+                    ||StringUtil.equals(DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值,repDataCheck.getCheckType())
+                    ||StringUtil.equals(DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值,repDataCheck.getCheckType())){
+                //若阈值是一个范围，需要以分号分隔分别输入两边的临界值，例：控制的区间是50-80，此处需要“50;80”
+                List<String>aa=StringUtil.splitToList(paramValue,";");
+                repDataCheck.setParamValue1(aa.get(0));
+                repDataCheck.setParamValue2(aa.get(1));
+            }else{
+                repDataCheck.setParamValue1(paramValue);
+            }
+            repDataCheck.setStatus("E");
+            repDataCheckMapper.deleteByPrimaryKey(repDataCheck);
+            repDataCheckMapper.insert(repDataCheck);
+        }
+        webResult.setMessage("保存成功");
+        return webResult;
+    }
+
 }

@@ -1008,3 +1008,109 @@ alter table DIS_PROD_ADJUST
 	add ADJ_REASON VARCHAR2(512);
 comment on column DIS_PROD_ADJUST.ADJ_REASON is '调整原因';
 /**产品要素调整表增加字段 add by sunjie 2022-08-11 end*/
+
+/**add by zhengxiaolian 20220808   报表数据校验信息  start**/
+DROP TABLE REP_REPORT_CHECK;
+create table REP_REPORT_CHECK
+(
+    report_check_id VARCHAR2(60) not null,
+    rep_id          VARCHAR2(60),
+    report_type     VARCHAR2(2),
+    report_name     VARCHAR2(1000),
+    prod_id         VARCHAR2(60),
+    check_date      DATE,
+    start_date      DATE,
+    end_date        DATE,
+    errormsg        VARCHAR2(500),
+    file_no         VARCHAR2(100),
+    data_status     VARCHAR2(10),
+    data_source     VARCHAR2(10),
+    create_user     VARCHAR2(20),
+    create_time     TIMESTAMP(6),
+    update_user     VARCHAR2(20),
+    update_time     TIMESTAMP(6),
+    create_dept     VARCHAR2(32)
+);
+-- Add comments to the table
+comment on table REP_REPORT_CHECK
+    is '报表数据校验信息';
+-- Add comments to the columns
+comment on column REP_REPORT_CHECK.report_check_id
+    is '报表数据校验主键';
+comment on column REP_REPORT_CHECK.rep_id
+    is '报表ID';
+comment on column REP_REPORT_CHECK.report_type
+    is '报表类别';
+comment on column REP_REPORT_CHECK.report_name
+    is '报表名称';
+comment on column REP_REPORT_CHECK.prod_id
+    is '产品代码';
+comment on column REP_REPORT_CHECK.check_date
+    is '检查日期';
+comment on column REP_REPORT_CHECK.errormsg
+    is '错误信息';
+comment on column REP_REPORT_CHECK.file_no
+    is '文件编号';
+comment on column REP_REPORT_CHECK.data_status
+    is '数据状态';
+comment on column REP_REPORT_CHECK.data_source
+    is '数据来源';
+comment on column REP_REPORT_CHECK.create_user
+    is '创建人';
+comment on column REP_REPORT_CHECK.create_time
+    is '创建时间';
+comment on column REP_REPORT_CHECK.update_user
+    is '更新人';
+comment on column REP_REPORT_CHECK.update_time
+    is '更新时间';
+comment on column REP_REPORT_CHECK.create_dept
+    is '创建部门';
+-- Create/Recreate primary, unique and foreign key constraints
+alter table REP_REPORT_CHECK
+    add constraint PK_REP_REPORTCHECK primary key (REPORT_CHECK_ID);
+/**add by zhengxiaolian 20220808   报表数据校验信息  end**/
+
+-- Create table
+drop table REP_DATA_CHECK;
+create table REP_DATA_CHECK
+(
+    check_id           VARCHAR2(100) not null,
+    check_type         VARCHAR2(10),
+    check_desc         VARCHAR2(1000),
+    param_value1       VARCHAR2(1000),
+    param_value2       VARCHAR2(1000),
+    status             VARCHAR2(10) not null,
+    create_user        VARCHAR2(50) not null,
+    create_dept        VARCHAR2(50),
+    create_time        TIMESTAMP(6) not null,
+    update_user        VARCHAR2(50) not null,
+    update_time        TIMESTAMP(6) not null
+);
+
+-- Add comments to the table
+comment on table REP_DATA_CHECK
+    is '信批内容校验';
+-- Add comments to the columns
+comment on column REP_DATA_CHECK.check_id
+    is '校验编号';
+comment on column REP_DATA_CHECK.check_type
+    is '校验方式';
+comment on column REP_DATA_CHECK.check_desc
+    is '校验描述';
+comment on column REP_DATA_CHECK.param_value1
+    is '参数值1';
+comment on column REP_DATA_CHECK.param_value2
+    is '参数值2';
+comment on column REP_DATA_CHECK.status
+    is '数据状态';
+comment on column REP_DATA_CHECK.create_user
+    is '创建人';
+comment on column REP_DATA_CHECK.create_dept
+    is '创建部门';
+comment on column REP_DATA_CHECK.create_time
+    is '创建时间';
+comment on column REP_DATA_CHECK.update_user
+    is '更新人';
+comment on column REP_DATA_CHECK.update_time
+    is '更新时间';
+alter table REP_DATA_CHECK  add constraint P_REP_DATA_CHECK_ID primary key (CHECK_ID, STATUS);

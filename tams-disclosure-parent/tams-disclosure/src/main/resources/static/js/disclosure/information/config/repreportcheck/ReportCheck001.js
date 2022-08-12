@@ -85,6 +85,23 @@
             //$('#ReportCheck001_btn_delete').show();
         });
 
+        $('#ReportCheck001_btn_tips').click(function () {
+            if (table != null && table != '') {
+                var selArr = table.getAllCheckedRows();
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("请勾选数据"));
+                return;
+            }
+            var object = {selectedItem: selArr, operateType: "delete"};//请求参数
+            Joyin.confirm("是否不再对勾选数据的错误信息进行提示", function () {
+                Joyin.ajaxJson(basePath + 'disclosure/information/config/repreportcheck/ReportCheck001/delete', object,
+                    function(result) {
+                        table.reload();
+                    });
+            });
+        });
+
         $('#ReportCheck001_btn_set').click(function () {
             Joyin.dialog(JoyinUtil.getLabel('指标阈值配置'), '/disclosure/information/config/repreportcheck/ReportCheck002/init', "50%", "90%",{pageModel:PAGE_MODEL_NEW},
                 function(result) {

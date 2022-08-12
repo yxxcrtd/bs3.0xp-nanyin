@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.busicommon.rptdata.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.DisNostdCreditor;
@@ -20,6 +21,7 @@ import com.joyintech.tams.common.base.entity.DisProdAsset;
 import com.joyintech.tams.common.base.entity.RepAssetsComb;
 import com.joyintech.tams.common.base.entity.RepIndexSub;
 import com.joyintech.tams.common.base.entity.RepInvestAccount;
+import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepProdBasicChange;
 import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
@@ -59,4 +61,8 @@ public interface DurationReportMapper {
 	//List<Map<String,Object>>selectOtherFee(Map<String,Object>paras );
 	
 	List<DisNostdCreditor>selectNostdCreditor(Map<String,Object>paras );
+	
+	List<RepJobRange> selectIndexRuleByJobId(String jobId);
+	
+	List<RepProdInfo> selectProdInfoBySql(@Param("sql") String sql);
 }

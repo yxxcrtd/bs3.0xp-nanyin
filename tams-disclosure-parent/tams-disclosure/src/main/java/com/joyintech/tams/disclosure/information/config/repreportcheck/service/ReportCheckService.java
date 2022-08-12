@@ -10,11 +10,14 @@
 
 package com.joyintech.tams.disclosure.information.config.repreportcheck.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.dao.ReportCheckMapper;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto;
@@ -67,18 +70,13 @@ public class ReportCheckService extends CommonExportService<ReportCheckDto> impl
      */
     public Page<ReportCheckDto> findByPage(Map<String, Object> params) {
         String prodId = (String) params.get("prodId");
-        String[] prodIdArr = null;
         if (StringUtil.isNotEmpty(prodId)) {
-            prodIdArr = prodId.split(",");
+            params.put("prodIdArr", StringUtil.splitToList(GlobalConstant.COMMA, prodId));
         }
-        params.put("prodIdArr", prodIdArr);
-
         String reportType = (String) params.get("reportType");
-        String[] reportTypeArr = null;
         if (StringUtil.isNotEmpty(reportType)) {
-            reportTypeArr = reportType.split(",");
+            params.put("reportTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, reportType));
         }
-        params.put("reportTypeArr", reportTypeArr);
 
         int page=1;
         if(params.get("page") instanceof String){
@@ -124,6 +122,15 @@ public class ReportCheckService extends CommonExportService<ReportCheckDto> impl
     @Override
     public Page<ReportCheckDto> selectPageData(Map<String, Object> selectParam) {
         return this.findByPage(selectParam);
+    }
+    public int delete(List<ReportCheckDto> listData ){
+        return reportCheckMapper.delete(listData);
+    }
+
+    public Page<SelectOptionDto>getProdIdList(Map<String, Object> param){
+        Page<SelectOptionDto> page = queryForPageForSelectReturn(Integer.parseInt((String) param.get("page")), Integer.parseInt((String) param.get("length")), ()
+                -> reportCheckMapper.getProdIdList(param));
+        return page;
     }
 
 }

@@ -165,17 +165,19 @@
 
 	<select id="getPrdInfoSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT
-		PROD_ID id,
-		PROD_NAME text,
-		PROD_NAME object
+		T1.PROD_ID id,
+		decode(T1.REP_PROD_TYPE,'03',T2.PROD_NAME,T1.PROD_NAME) text,
+		T1.PROD_NAME object
 		FROM
-		REP_PROD_INFO
+		REP_PROD_INFO T1
+		left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID
 		where
-		REP_PROD_TYPE in ('01','02')
+		T1.ISSUE_STATUS in ('01')
+		and T1.STATUS='E'
 		<if test="search != null and search != ''">
-			and (PROD_ID like
+			and (T1.PROD_ID like
 			concat(concat('%',#{search}),'%')
-			or PROD_NAME like concat(concat('%',#{search}),'%'))
+			or decode(T1.REP_PROD_TYPE,'03',T2.PROD_NAME,T1.PROD_NAME) like concat(concat('%',#{search}),'%'))
 		</if>
 	</select>
 </mapper>

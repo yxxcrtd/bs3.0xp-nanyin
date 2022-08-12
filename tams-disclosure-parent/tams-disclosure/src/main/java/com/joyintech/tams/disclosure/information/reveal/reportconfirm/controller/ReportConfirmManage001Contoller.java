@@ -185,8 +185,10 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
     public Page<SelectOptionDto> getPrdInfoSelect(){
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
-        return prdInfoSelect;
+//		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
+		Page<SelectOptionDto> prdInfoSelect = reportConfirmManage001Service.getPrdInfoSelect(RequestUtil.getPageParam());
+
+		return prdInfoSelect;
     }
 	
     /**
@@ -324,6 +326,50 @@ public class ReportConfirmManage001Contoller extends BaseController {
         return commonCheck(result, operateType);
 //    	 return  new AjaxResult();
     }
+	@ResponseBody
+	@RequestMapping("check3")
+	public AjaxResult check3(@RequestBody ReportConfirmManageParamDto dto) {
+
+		AjaxResult ar =new AjaxResult();
+		Map<String, Object> resultMap = new HashMap<>();
+		//获取页面勾选的数据
+		String data=dto.getData();
+
+		//转换为实体类
+		List<ReportConfirmManage001Dto> listdto = new ArrayList<>();
+		try {
+			listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
+		}
+		catch (IOException e) {
+			logger.error("",e);
+		}
+
+
+		//定义返回值：验证消息
+		List<ValidMessage> validMessageList = new ArrayList<ValidMessage>();
+
+		//数据验证判断
+		if(listdto!=null){
+			WflValidInputParameter wflValidInputParameter;
+			for(ReportConfirmManage001Dto nowDto : listdto){
+
+				//判断是否在流程中 zhangyf
+				wflValidInputParameter  = new WflValidInputParameter();
+				wflValidInputParameter.setPageId(dto.getPageId());
+				wflValidInputParameter.setBusinessDataPk1(nowDto.getSeqno());
+				if(StringUtil.isNotEmpty(nowDto.getWorkflowId())){
+					wflValidInputParameter.setWorkflowId(nowDto.getWorkflowId());
+				}
+				if(mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
+					//流程存在情况
+					resultMap.put("errordata", "只能对未确认或已退回的报表进行删除！");
+				}
+			}
+		}
+		ar.setData(resultMap);
+//		return validMessageList;
+		return ar;
+	}
 
 	@ResponseBody
 	@RequestMapping("check2")

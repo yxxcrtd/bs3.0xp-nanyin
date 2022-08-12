@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.RepReveal;
@@ -270,4 +271,6 @@ public interface ReportConfirmManage001Mapper {
    int updateRepRevealByInfo(RepReveal repReveal);
 
     String getProcessInstanceId(String workflowId);
+
+    List<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paramMap);
 }
