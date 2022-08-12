@@ -49,7 +49,7 @@ var SvrPrdFeeDealInterfCode002 = function() {
                             },{}, function () {
                             });
                         }else{
-                            Joyin.confirm("是否提交？", function () {
+                            Joyin.confirm("请确认是否要操作？？", function () {
                                 if(operateType === 'save') {
                                     WorkFlow.doSaveList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_save");
                                 }
