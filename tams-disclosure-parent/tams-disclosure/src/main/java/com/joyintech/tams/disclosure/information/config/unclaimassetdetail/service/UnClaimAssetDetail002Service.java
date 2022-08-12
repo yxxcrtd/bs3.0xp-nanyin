@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.serv
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
@@ -82,6 +83,8 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
             //编辑后更新  全删全插，覆盖掉 删除按照prodId,effDate,effEndDate
                 unClaimAssetDetailMapper.deleteOnReal(dto);
             for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()){
+                String code = IDGenerator.generate(36);
+                unclaimDto.setNostdAssetId(code);
                 unClaimAssetDetailMapper.insert(unclaimDto);
             }
         }
