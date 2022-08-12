@@ -162,7 +162,7 @@
 
     $('#SubBalanceInfoPro001_btn_import').click(function() {
         Joyin.confirm("请确认是否要导入数据？", function () {
-            Joyin.uploadFile({pageId:'SubBalanceInfo'},function(fileName) {
+            Joyin.uploadFile(function(fileName) {
                 Joyin.ajax(basePath + 'disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro001/checkImportData', {fileName: fileName}, function(checkResult) {
                     if (checkResult) {
                         setTimeout( function () {
