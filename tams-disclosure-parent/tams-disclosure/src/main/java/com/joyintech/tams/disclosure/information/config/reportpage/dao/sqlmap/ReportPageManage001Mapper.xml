@@ -21,7 +21,7 @@
 		A.TEMPLATE_PATH templatePath,
 		A.REPORT_NAME reportName,
 		A.UPDATE_USER updateUser,
-		ris.start_off||ris.rep_status reportType,
+		ris.rep_status reportType,
 		A.REPORT_CATEGORY reportCategory,
 		rfp.NAME reportCategoryName,
 		ris.eff_date updateTime,
