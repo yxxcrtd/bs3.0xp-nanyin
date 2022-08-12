@@ -53,4 +53,11 @@ public class ReportCheck002Controller extends BaseController {
         return reportCheck002Service.check(dataList);
     }
 
+    @ResponseBody
+    @PostMapping("save")
+    public AjaxResult save(@RequestBody Map<String, Object> param) throws IOException {
+        List<RepDataCheck>dataList=JsonUtils.json2List((String) param.get("dataList"),RepDataCheck.class);
+        return reportCheck002Service.save(dataList);
+    }
+
 }

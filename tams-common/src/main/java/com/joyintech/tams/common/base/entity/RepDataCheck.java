@@ -1,6 +1,7 @@
 package com.joyintech.tams.common.base.entity;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.StringUtil;
 
 public class RepDataCheck extends BaseEntity {
     /**
