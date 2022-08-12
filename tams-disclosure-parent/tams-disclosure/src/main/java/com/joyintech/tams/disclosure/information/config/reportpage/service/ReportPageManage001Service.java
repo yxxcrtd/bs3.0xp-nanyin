@@ -85,17 +85,17 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
          for(ReportPageManage001Dto dto:dtos){
 			if(dto.getReportType() == null){
 				dto.setReportTypeName("初始化");
-			} else if("0101".equals(dto.getReportType())){
+			} else if("01".equals(dto.getReportType())){
 				dto.setReportTypeName("启用流程中");
-			} else if("0201".equals(dto.getReportType())){
+			} else if("03".equals(dto.getReportType())){
 				dto.setReportTypeName("禁用流程中");
-			}else if("0102".equals(dto.getReportType())){
+			}else if("02".equals(dto.getReportType())){
 				if(DateUtil.compareDate(dto.getUpdateTime(),sysDate)>0){
 					dto.setReportTypeName("启用审核通过");
 				} else {
 					dto.setReportTypeName("启用生效");
 				}
-			}else if("0202".equals(dto.getReportType())){
+			}else if("04".equals(dto.getReportType())){
 				if(DateUtil.compareDate(dto.getUpdateTime(),sysDate)>0){
 					dto.setReportTypeName("禁用审核通过");
 				} else {

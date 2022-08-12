@@ -51,8 +51,6 @@ public class UnClaimAssetDetail002Controller extends BaseController {
         String prodId = getParam("prodId");
         String effDate = getParam("effDateStr");
         String effEndDate = getParam("effEndDateStr");
-//        Date effDate = DateUtil.parse((String)getParam("effDate"));
-//        Date effEndDate = DateUtil.parse((String)getParam("effEndDate"));
         String dataStatus = getParam("dataStatus");
         Map<String,Object> params = new HashMap<>();
         params.put("prodId",prodId);
