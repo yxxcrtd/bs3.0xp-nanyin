@@ -613,8 +613,13 @@
         <if test="prodId != null and prodId.length > 0">
             AND  temp.P_PROD_ID LIKE concat('%',concat(#{prodId,jdbcType=VARCHAR},'%'))
         </if>
-        <if test="prodName != null and prodName.length > 0">
-            AND  temp.pProdName LIKE concat('%',concat(#{prodName,jdbcType=VARCHAR},'%'))
+
+        <if test="prodNameArr != null and prodNameArr.size > 0">
+            AND temp.PROD_ID IN
+            <foreach item="item" collection="prodNameArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
 
         <if test="dataStatusArr != null and dataStatusArr.size > 0">

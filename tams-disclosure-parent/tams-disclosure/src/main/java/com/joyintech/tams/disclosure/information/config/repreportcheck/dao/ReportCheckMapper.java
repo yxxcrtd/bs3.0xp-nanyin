@@ -1,7 +1,9 @@
 package com.joyintech.tams.disclosure.information.config.repreportcheck.dao;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.RepDataCheck;
 import com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,7 +27,9 @@ public interface ReportCheckMapper {
 
     List<ReportCheckDto> searchList(Map<String, Object> params);
 
-
     List<RepDataCheck> getRepDataCheckList();
+    int delete(@Param("listData")  List<ReportCheckDto> listData);
+
+    List<SelectOptionDto>getProdIdList(Map<String, Object> params);
 
 }

@@ -123,10 +123,14 @@ public class ReportConfirmManage004Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect(){
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
-        return prdInfoSelect;
-    }
+//    public Page<SelectOptionDto> getPrdInfoSelect(){
+//		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
+//        return prdInfoSelect;
+//    }
+	public List<SelectOptionDto> getPrdInfoSelect(){
+		List<SelectOptionDto> prdInfoSelect = reportConfirmManage004Service.getPrdInfoSelect(RequestUtil.getPageParam());
+		return prdInfoSelect;
+	}
 	
 	/**
      * 

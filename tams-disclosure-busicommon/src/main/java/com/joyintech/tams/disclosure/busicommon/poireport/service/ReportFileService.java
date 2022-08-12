@@ -171,6 +171,7 @@ public class ReportFileService {
 		if ( genDate==null )
 			genDate = commonPlatformDateService.getSysDate();
 		String dirname = sdf.format(genDate);
+		params.put("prodname",params.get("prodName"));
 
 		//文件的名称，用params里面的值替换变量，如：{prodName}{prodid}{enddate}开放公告
 		String filename = replacePara(reportInfo.getFileName(),params);

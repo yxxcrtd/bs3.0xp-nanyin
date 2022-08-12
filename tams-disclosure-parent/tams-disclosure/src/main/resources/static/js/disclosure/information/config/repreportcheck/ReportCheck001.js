@@ -38,6 +38,7 @@
             , {field:'prodId',  title: '产品代码',sortField:"prodId",width:200,sortable:false}
             ,{field:'checkDate',  title: '检查日期',sortField:"checkDate",type:'date',width:120,sortable:false}
             ,{field:'errormsg',  title: '错误信息',sortField:"errormsg",width:400,sortable:false}
+            ,{field:'fileNo',  visible: false}
             ,{
                 title : '操作',
                 field : 'operation',
@@ -46,13 +47,21 @@
                 buttons : [
                     {
                         text : '&#xe615;',
-                        clas : 'batch',
+                        clas : 'view',
                         title : '预览'
                     } ]
             },
         ]
     });
 
+
+    table.bind('click', '.view', function(data, index) {
+        Joyin.dialog(JoyinUtil.getLabel("文件预览"),
+            basePath + "disclosure/information/config/repreportcheck/ReportCheck003/init",
+            "95%", "96%", {
+                fileNo:data.fileNo
+            });
+    });
 
     /**
      * 导出选中的表格数据
@@ -74,6 +83,23 @@
         $('#ReportCheck001_btn_search').click(function () {
             table.load();
             //$('#ReportCheck001_btn_delete').show();
+        });
+
+        $('#ReportCheck001_btn_tips').click(function () {
+            if (table != null && table != '') {
+                var selArr = table.getAllCheckedRows();
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("请勾选数据"));
+                return;
+            }
+            var object = {selectedItem: selArr, operateType: "delete"};//请求参数
+            Joyin.confirm("是否不再对勾选数据的错误信息进行提示", function () {
+                Joyin.ajaxJson(basePath + 'disclosure/information/config/repreportcheck/ReportCheck001/delete', object,
+                    function(result) {
+                        table.reload();
+                    });
+            });
         });
 
         $('#ReportCheck001_btn_set').click(function () {

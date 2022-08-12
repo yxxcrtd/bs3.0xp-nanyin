@@ -31,7 +31,7 @@ public class ReportCheck002Controller extends BaseController {
     /**
      * 日志
      */
-    private Logger logger = LoggerFactory.getLogger(ReportCheck001Controller.class);
+    private Logger logger = LoggerFactory.getLogger(ReportCheck002Controller.class);
 
     @Autowired
     private ReportCheck002Service reportCheck002Service;
@@ -52,4 +52,5 @@ public class ReportCheck002Controller extends BaseController {
         List<RepDataCheck>dataList=JsonUtils.json2List((String) param.get("dataList"),RepDataCheck.class);
         return reportCheck002Service.check(dataList);
     }
+
 }
