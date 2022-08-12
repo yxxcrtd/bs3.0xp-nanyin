@@ -680,4 +680,11 @@ INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 --报表披露管理-披露功能不走流程 add by zhouqiang
 update SYS_WFL_BUSINESS_MODULE set MODULE_ID='noneApproval' where PAGE_ID='ReportRevealManage001' and ELEMENT_ID='ReportRevealManage001_btn_submit';
 
+-- add by kongzhifang 20220812 行情代码数据字典映射关系更新
+update sys_datadict_list set item_vaule = '中债新综合全价指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '01';
+update sys_datadict_list set item_vaule = '沪深300指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '02';
+update sys_datadict_list set item_vaule = '中债新综合财富指数（1-3年）收益率' where dict_code = 'QUOTA_CODE' and item_code = '03';
+update sys_datadict_list set item_vaule = '中证500指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '04';
+
+
 commit ;
