@@ -945,3 +945,74 @@ INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 update  SYS_PAGE set menu_id='REPORT_006_004_006' where PAGE_ID='ProdBonusplanManager001';
 /**菜单修改 add by shaoxuan 2022-08-11 end**/
 
+
+/**数据校验阈值 add by zhengxiaolian 2022-08-12 start**/
+delete from REP_DATA_CHECK;
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000001', '03', '固定收益类产品投资固守类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000002', '03', '权益类产品投资权益类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000003', '03', '商品及衍生品类产品投资商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000004', '01', '混合类产品产品投资于固定收益类资产、权益类资产、商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000005', '02', '公募开放式产品杠杆', '140', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000006', '02', '现管类产品杠杆', '120', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000007', '02', '私募非分级产品或公募封闭式产品杠杆', '200', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000008', '02', '私募分级产品杠杆', '140', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000009', '08', '现管类产品投资权益类资产占比', '0', '', 'E', 'system', null, sysdate, 'system', sysdate);
+/**数据校验阈值 add by zhengxiaolian 2022-08-12 end**/
+
+-- add by zhengxiaolian 2022-08-12 信披数据校验比较符数据字典 start
+delete from sys_datadict where DICT_CODE='REP_CHECK_TYPE' ;
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REP_CHECK_TYPE', 'DIS', '信披数据校验比较符', null, '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE='REP_CHECK_TYPE' ;
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '01', '小于', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '02', '小于等于', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '03', '大于', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '04', '大于等于', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '05', '范围控制（不包含临界值）', 5, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '06', '范围控制（包含较小的临界值）', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '07', '范围控制（包含较大的临界值）', 7, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '08', '等于', 8, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-08-12 信披数据校验比较符数据字典 end
+
+-- add by zhengxiaolian 2022-08-12 信披数据校验报表预览 start
+delete from sys_page a where a.page_id='ReportCheck003';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportCheck003', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck003', 'disclosure/information/config/repreportcheck/ReportCheck003', null, null, null, '02', '02', '指标阈值配置', 'system', null, '11-8月 -22 09.46.23.000000 上午', 'system', '11-8月 -22 09.46.23.000000 上午');
+-- add by zhengxiaolian 2022-08-12 信披数据校验报表预览 end
