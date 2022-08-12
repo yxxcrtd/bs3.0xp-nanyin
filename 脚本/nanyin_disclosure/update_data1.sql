@@ -680,11 +680,56 @@ INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 --报表披露管理-披露功能不走流程 add by zhouqiang
 update SYS_WFL_BUSINESS_MODULE set MODULE_ID='noneApproval' where PAGE_ID='ReportRevealManage001' and ELEMENT_ID='ReportRevealManage001_btn_submit';
 
--- add by kongzhifang 20220812 行情代码数据字典映射关系更新
-update sys_datadict_list set item_vaule = '中债新综合全价指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '01';
-update sys_datadict_list set item_vaule = '沪深300指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '02';
-update sys_datadict_list set item_vaule = '中债新综合财富指数（1-3年）收益率' where dict_code = 'QUOTA_CODE' and item_code = '03';
-update sys_datadict_list set item_vaule = '中证500指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '04';
 
+-- 新增"合作机构信息维护" 画面按钮 add by zhouqiang
+delete from SYS_PAGE_ELEMENT where PAGE_ID = 'ProdPartner001';
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdPartner001', 'ProdPartner001_TABROW_edit', '01', '01', null, '编辑', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdPartner001', 'ProdPartner001_btn_delete', '01', '01', null, '删除', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdPartner001', 'ProdPartner001_btn_add', '01', '01', null, '新建', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdPartner001', 'ProdPartner001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdPartner001', 'ProdPartner001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdPartner001', 'ProdPartner001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdPartner001', 'ProdPartner001_btn_import', '01', '01', null, '导入', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+-- 新增"产品资产信息维护" 画面按钮 add by zhouqiang
+delete from SYS_PAGE_ELEMENT where PAGE_ID = 'ProdAssetInfo001';
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdAssetInfo001', 'ProdAssetInfo001_TABROW_edit', '01', '01', null, '编辑', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdAssetInfo001', 'ProdAssetInfo001_btn_delete', '01', '01', null, '删除', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdAssetInfo001', 'ProdAssetInfo001_btn_add', '01', '01', null, '新建', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdAssetInfo001', 'ProdAssetInfo001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdAssetInfo001', 'ProdAssetInfo001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdAssetInfo001', 'ProdAssetInfo001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ProdAssetInfo001', 'ProdAssetInfo001_btn_import', '01', '01', null, '导入', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+
+
+-- 新增"代销机构维护" 画面按钮 add by zhouqiang
+delete from SYS_PAGE_ELEMENT where PAGE_ID = 'SaleAgency001';
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('SaleAgency001', 'SaleAgency001_TABROW_edit', '01', '01', null, '编辑', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('SaleAgency001', 'SaleAgency001_btn_delete', '01', '01', null, '删除', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('SaleAgency001', 'SaleAgency001_btn_add', '01', '01', null, '新建', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('SaleAgency001', 'SaleAgency001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('SaleAgency001', 'SaleAgency001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('SaleAgency001', 'SaleAgency001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
 
 commit ;

@@ -19,7 +19,7 @@ public class MatureReportDto extends ReportDto {
 	
 	private Integer runDays;  //期限天数
 	private BigDecimal sumValueAmt;//累计净值
-	private BigDecimal refYearYield;  //参考年化收益率
+	private String refYearYield;  //参考年化收益率
 	private BigDecimal custProfit;   //客户收益
 	
 	private BigDecimal trustFee;  //托管费
@@ -47,10 +47,10 @@ public class MatureReportDto extends ReportDto {
 	public void setSumValueAmt(BigDecimal sumValueAmt) {
 		this.sumValueAmt = sumValueAmt;
 	}
-	public BigDecimal getRefYearYield() {
+	public String getRefYearYield() {
 		return refYearYield;
 	}
-	public void setRefYearYield(BigDecimal refYearYield) {
+	public void setRefYearYield(String refYearYield) {
 		this.refYearYield = refYearYield;
 	}
 	public BigDecimal getCustProfit() {

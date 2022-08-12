@@ -186,7 +186,7 @@ public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, Pro
     }
 
     public String getUpdateTimeStr() {
-        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyyMMddHHmmss");
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
     }
 
 

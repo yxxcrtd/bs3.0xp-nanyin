@@ -58,9 +58,11 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         }
         else if (StringUtil.equals(type, "NEW")) {
             ProFailureInfo001Dto dto1 = proFailureInfoMapper.isRepeated(dto);
-            if (dto!=null && StringUtil.equals(dto1.getDataStatus(),"D")){
-                dto.setDataStatus("E");
-                proFailureInfoMapper.updateByKey(dto);
+            if (dto1!=null){
+                if( StringUtil.equals(dto1.getDataStatus(),"D")){
+                    dto.setDataStatus("E");
+                    proFailureInfoMapper.updateByKey(dto);
+                }
             }else {
             ProFailureInfo001Dto proFailureInfo001Dto = new ProFailureInfo001Dto();
             BeanUtil.copyPropertiesIgnoreNull(proFailureInfo001Dto,dto);

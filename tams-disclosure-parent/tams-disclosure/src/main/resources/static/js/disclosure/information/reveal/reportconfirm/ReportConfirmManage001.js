@@ -80,14 +80,16 @@ $(function () {
            //修改
                 {field:'filename', title: '手动上传',width:350,sort: true
                 	,render: function (data, type, row, meta) {
-						if(editFlag==='true'){
+
 							var str = '<div style="height:28px; overflow:hidden;float:left">'+'<a href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.filepath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName)+ '">' + data + '</a>'+'</div>';
 							//'<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.filepath)+ '">'+ data +'</a>'+'</div>';
-							if(row.filename != null && row.filename != "" ){
+						if(editFlag==='true'){
+						if(row.filename != null && row.filename != "" ){
 								str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'","'+row.confirmStatus+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除文件"></i></a>'+'</div>';
 							}
-							return str;
 						}
+							return str;
+
 
                    }
                 },
@@ -106,14 +108,16 @@ $(function () {
                 {field:'annexPath', title: '路径',visible:false},
                 {field:'annex', title: '附件',width:300, sort: true
                 	,render: function (data, type, row, meta) {
-						if(editFlag==='true'){
+
 							var str = '<div style="width:210px;height:28px; overflow:hidden;float:left">'+'<a style="width:100%" href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.annexPath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName )+ '">'+ data +'</a>'+'</div>';
 							//str += '<a class="fileclass"  href=\'javascript:deletFile("'+3+'","'+row.id+'")\'><i title="删除文件"  visibility="hidden" class="iconfont icon-cloud-upload1"></i></a>';
-							if(row.annex != null && row.annex != "" ){
+						if(editFlag==='true'){
+						if(row.annex != null && row.annex != "" ){
 								str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'","'+row.confirmStatus+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除附件"></i></a>'+'</div>';
 							}
-							return str;
 						}
+							return str;
+
 
                    }
                 },

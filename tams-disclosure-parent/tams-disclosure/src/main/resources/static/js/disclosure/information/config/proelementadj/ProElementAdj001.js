@@ -125,7 +125,7 @@
 
     $('#ProElementAdj001_btn_import').click(function() {
         Joyin.confirm("请确认是否要导入数据？", function () {
-        Joyin.uploadFile({pageId:'ProElementAdjInfo'},function(fileName) {
+        Joyin.uploadFile(function(fileName) {
             Joyin.ajax(basePath + 'disclosure/information/config/proelementadj/ProElementAdj001/checkImportData', {fileName: fileName}, function(checkResult) {
                 if (checkResult) {
                     setTimeout( function () {

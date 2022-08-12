@@ -76,7 +76,7 @@ public class BonusReportDataService implements IReportDataService {
 					BigDecimal abProfit = 
 					report.getCapital().multiply(report.getAchievementBasisProp())
 					.multiply(new BigDecimal(365))
-					.divide(new BigDecimal(report.getRunDays()),14,BigDecimal.ROUND_DOWN);
+					.divide(new BigDecimal(report.getRunDays()),20,BigDecimal.ROUND_DOWN);
 					report.setAchievementBasisProfit(
 							report.getCapital().multiply(report.getAchievementBasisProp())
 							.multiply(new BigDecimal(365))
