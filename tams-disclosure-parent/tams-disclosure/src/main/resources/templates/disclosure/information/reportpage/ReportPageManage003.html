@@ -9,6 +9,8 @@
 	<div layout:fragment="content">
 		<form class="layui-form joyin-form-wrap" id="submitForm">
 			<input type="hidden" id="realName" name="realName" data-th-value="${user?.realName}">
+			<input type="hidden" id="seqno" name="seqno" data-th-value="${entity?.seqno}">
+			<input type="hidden" id="workflowId" name="workflowId" data-th-value="${entity?.workflowId}">
 
 				<div class="layui-collapse" lay-filter="test">
 							<!-- class="layui-colla-content" -->

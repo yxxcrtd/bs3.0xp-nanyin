@@ -91,7 +91,7 @@
         COUNT(1)
         FROM REP_INFO_STATUS
         WHERE (REP_ID = #{startRepId,jdbcType=VARCHAR} OR REP_ID = #{offRepId,jdbcType=VARCHAR})
-        AND REP_STATUS  IN ('01','03')
+        AND REP_STATUS  IN ('01','03') AND WORKFLOW_ID != #{workflowId,jdbcType=VARCHAR}
     </select>
 
     <select id="getInfoStatusBeforeEffdate" parameterType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto" resultType="java.lang.Integer">

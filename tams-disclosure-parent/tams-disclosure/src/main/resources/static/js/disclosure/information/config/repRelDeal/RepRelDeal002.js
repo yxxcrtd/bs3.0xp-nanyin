@@ -50,12 +50,15 @@ var RepRelDeal002 = function() {
             param.uuid = $("#uuid").val();
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repRelDeal/RepRelDeal002/check',param,function(result){
                 if(result){
+                    Joyin.confirm("请确认是否要操作？", function () {
                     if(operateType === 'save') {
                         WorkFlow.doSaveList(basePath + 'disclosure/information/config/repRelDeal/RepRelDeal002/save', param, "RepRelDeal002_btn_save");
                     }
                     else {
                         WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repRelDeal/RepRelDeal002/save', param, "RepRelDeal002_btn_submit");
                     }
+                    },{}, function () {
+                    });
                 }
             })
         },

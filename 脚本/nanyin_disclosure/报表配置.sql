@@ -90,7 +90,7 @@ insert into REP_INFO values ('CP_001_004_016','JESHGG_GM','/CP','巨额赎回公
 insert into REP_INFO values ('CP_001_004_017','JESHGBG_SM','/CP','巨额赎回报告（私募）','巨额赎回报告（私募）','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'04','{prodname}巨额赎回报告{enddate_filename}');
 insert into REP_INFO values ('CP_001_005_001','DLXSJGMDGG','/CP','代理销售机构名单公告','代理销售机构名单公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'05','关于南银理财有限责任公司理财产品代理销售机构名单的公告');
 insert into REP_INFO values ('CP_001_006_001','QSBG','/CP','清算报告','清算报告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'06','{prodname}清算报告');
-insert into REP_INFO values ('CP_001_007_001','FHJSQD','/CP','分红计算清单','分红计算清单','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'07','{prodname}{prodid}{enddate}分红计算清单');
+insert into REP_INFO values ('CP_001_007_001','FHJSQD','/CP','分红计算清单','分红计算清单','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'99','{prodname}{prodid}{enddate}分红计算清单');
 
 -- 报表信息配置
 delete from REP_SCREEN;
