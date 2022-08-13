@@ -45,7 +45,7 @@ $(function () {
     //保存文件
     var saveReport = function(params){
         WebOfficeObj.ServerUrl = webRoot;
-        WebOfficeObj.FileName = "产品说明书.docx";
+        //WebOfficeObj.FileName = "产品说明书.docx";
         WebOfficeObj.FileType = ".docx";
         WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";
         //alert(WebOfficeObj.FileName);
@@ -61,7 +61,6 @@ $(function () {
      * 画面加载完成
      */
     $(function() {
-
         $('#btnSaveReport').click(function() {
             saveReport("");
         });
