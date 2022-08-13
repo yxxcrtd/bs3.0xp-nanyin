@@ -240,7 +240,7 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
             }
         }
         if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+            resultMap.put("confirmMsg2", "系统内已存在该数据，请确认是否覆盖？");
         }
         int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
         if (objects.size() - 1 > maxCount) {

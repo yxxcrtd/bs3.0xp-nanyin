@@ -7,9 +7,13 @@ import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.net.util.IPAddressUtil;
 
 import javax.servlet.ServletOutputStream;
 import java.io.*;
+import java.net.InetAddress;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +23,7 @@ import java.util.Map;
  * 2.实现将docx格式的文件进行转换，包括docx->html，docx->pdf
  */
 public class PoiUtils {
+    private static Logger logger = LoggerFactory.getLogger(PoiUtils.class);
 
     public static void mergeDocx(String tempateFile,OutputStream os,Map<String,Object> params ) throws PoiException {
         PoiUtilsHelper.mergeParasToDocx(tempateFile,os,params);
@@ -33,7 +38,8 @@ public class PoiUtils {
         //服务器安装apache目录
         String tmpImagePath = CacheUtil.getSysParam("POI_APACHE_PATH");
         //安装apache服务器的ip
-        String apacheAddress = CacheUtil.getSysParam("POI_APACHE_ADDRESS");
+//        String apacheAddress = CacheUtil.getSysParam("POI_APACHE_ADDRESS");
+        String apacheAddress = InetAddress.getLocalHost().getHostAddress();
 
         XHTMLOptions options = XHTMLOptions.create();
         options.setImageManager( new ImageManager( new File(tmpImagePath),"")  {
@@ -51,6 +57,7 @@ public class PoiUtils {
                     fos.close();
                     //增加随机数，防止浏览器缓存 modify by zhengbs
                     upload = "http://"+apacheAddress+"/images/" + imagePath+"?fresh="+Math.random();
+                    logger.info("【上传Apache服务器图片地址：{}】",upload);
                 }catch (Exception e) {
                     e.printStackTrace();
                 } finally {
