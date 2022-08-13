@@ -60,4 +60,21 @@
 		and rrc.END_DATE=#{endDate,jdbcType=DATE}
 		and rrc.CHECK_DATE=#{checkDate,jdbcType=DATE}
 	</delete>
+
+	<select id="getRepDataCheckList" resultType="com.joyintech.tams.common.base.entity.RepDataCheck">
+		select
+			CHECK_ID checkId,
+			CHECK_TYPE checkType,
+			CHECK_DESC checkDesc,
+			PARAM_VALUE1 paramValue1,
+			PARAM_VALUE2 paramValue2
+		from REP_DATA_CHECK
+		where status='E'
+	</select>
+
+	<select id="getProdInfo" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
+		select *from REP_PROD_INFO
+		where PROD_ID=#{prodId,jdbcType=VARCHAR}
+		  and status='E'
+	</select>
 </mapper>
