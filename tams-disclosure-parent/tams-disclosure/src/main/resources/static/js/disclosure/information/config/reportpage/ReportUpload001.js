@@ -138,17 +138,18 @@ $(function ($) {
                         rownum ++;
                         var tr = $(['<tr id="upload-'+ file.fileNo +'">',
                             ,'<td>'+rownum+'</td>'
-                            ,'<td><div class="layui-table-cell">'
-                            ,'<a href="'
-                            , JoyinUtil.getRealPath('/framework/download/' + file.fileNo)
-                            ,'">'
-                            ,file.fileName
-                            ,'</a></div></td>'
+                            ,'<td>'+file.fileName+'</td>'
                             ,'<td style="display: none">'+ (file.size/1014).toFixed(1) +'kb</td>'
                             ,'<td>'+file.uploadUser+'</td>'
                             ,'<td>上传成功</td>'
                             ,'<td>'+file.createTimeText+'</td>'
                             ,(disabled ? '' : '<td><button data-ignore="true" data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
+                            ,'<td><div class="layui-table-cell">'
+                            ,'<a href="'
+                            , JoyinUtil.getRealPath('/framework/download/' + file.fileNo)
+                            ,'">'
+                            ,"预览/下载"
+                            ,'</a></div></td>'
                             ,'</tr>'].join(''));
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
@@ -240,9 +241,10 @@ $(function ($) {
                                 ,'<td class="layui-hide">'+ file.size +'</td>'
                                 ,'<td>'+ new Date().format('yyyy-MM-dd hh:mm') +'</td>'
                                 ,'<td>'
-                                ,'<button class="layui-btn layui-btn-mini file-reload layui-hide">重传</button>'
                                 ,'<button class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button>'
                                 ,'</td>'
+                                ,'<td><div class="layui-table-cell">'
+                                ,'</div></td>'
                                 ,'</tr>'].join(''));
                             debugger;
                             // 单个重传
@@ -372,7 +374,7 @@ $(function ($) {
                         if(res!= null){
                             var tr = fileListView.find('tr#upload-'+ file)
                                 ,tds = tr.children();
-                            tds.eq(1).find('.layui-table-cell').html('<a href="' + JoyinUtil.getRealPath('/framework/download/' + res[0].fileNo) + '">' + tds.eq(1).text() + '</a>');
+                            tds.eq(7).find('.layui-table-cell').html('<a href="' + JoyinUtil.getRealPath('/framework/download/' + res[0].fileNo) + '">下载/预览</a>');
                             tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
                             // tds.eq(3).html(''); //清空操作
                             tr.data('file', res[0]);

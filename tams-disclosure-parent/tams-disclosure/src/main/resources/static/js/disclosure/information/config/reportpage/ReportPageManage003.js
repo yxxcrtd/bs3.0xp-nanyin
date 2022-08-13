@@ -11,16 +11,15 @@
 		if(FileCommon && FileCommon.getUploadFileInfo().length >0) {
 			object.uploadFileList = FileCommon.getUploadFileInfo();
 		}
+		object.operationType = operateType;
 		Joyin.ajaxJson(
 			basePath+ 'disclosure/information/reportpage/ReportPageManage003/check',object,
 			function(result) {
 				Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil
 					.getLabel("SysCommon.submit")), function() {
 					if(operateType === 'save'){
-						object.operationType = 'save';
 						WorkFlow.doSaveList(basePath + 'disclosure/information/reportpage/ReportPageManage003/save', object, "ReportPageManage003_btn_save");
 					} else {
-						object.operationType = 'submit';
 						WorkFlow.doSubmitList(basePath + 'disclosure/information/reportpage/ReportPageManage003/save', object, "ReportPageManage003_btn_submit");
 					}
 				});
