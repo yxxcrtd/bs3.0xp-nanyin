@@ -48,8 +48,8 @@ insert into rep_reportinfo values ('1246','CP_001_007_001','FHJSQD','/CP','/joyi
 -- 报表信息
 delete from REP_INFO;
 insert into REP_INFO values ('CP_001_001_001','FXGG','/CP','发行公告','发行公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'01','{prodname}发行公告');
-insert into REP_INFO values ('CP_001_002_001','CPKFQGG','/CP','产品开放期公告','产品开放期公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}{prodid}开放计划公告');
-insert into REP_INFO values ('CP_001_002_002','CPKFQBG','/CP','产品开放期报告','产品开放期报告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}{prodid}开放计划报告');
+insert into REP_INFO values ('CP_001_002_001','CPKFQGG','/CP','产品开放期公告','产品开放期公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{cusFileName}开放计划公告');
+insert into REP_INFO values ('CP_001_002_002','CPKFQBG','/CP','产品开放期报告','产品开放期报告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{cusFileName}开放计划报告');
 insert into REP_INFO values ('CP_001_002_003','RKCPJZ_GMXGL','/CP','日开产品净值公告（公募现管类）','日开产品净值公告（公募现管类）','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}净值公告{enddate}');
 insert into REP_INFO values ('CP_001_002_004','RKCPJZ_GMJZXCP','/CP','日开产品净值公告（公募净值型产品）','日开产品净值公告（公募净值型产品）','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}净值公告{enddate}');
 insert into REP_INFO values ('CP_001_002_005','MZJZGG','/CP','每周净值公告','每周净值公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}{prodid}每周净值公告');
