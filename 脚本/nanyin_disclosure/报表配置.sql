@@ -291,8 +291,10 @@ insert into REP_JOB_RANGE values ('D0000000000000000019','CP_001_002_006','02','
 insert into REP_JOB_RANGE values ('D0000000000000000020','CP_001_002_006','02','RAISE_TYPE','=','02','02','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000022','CP_001_002_007','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000023','CP_001_002_007','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('E0000000000000000023','CP_001_002_007','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000025','CP_001_002_008','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000026','CP_001_002_008','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('E0000000000000000026','CP_001_002_008','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000028','CP_001_002_009','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000029','CP_001_002_009','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000030','CP_001_002_009','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
@@ -369,9 +371,11 @@ insert into REP_JOB_RANGE values ('D0000000000000000121','100000005','02','REP_P
 insert into REP_JOB_RANGE values ('D0000000000000000122','100000006','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000123','100000006','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000124','100000006','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('E0000000000000000124','100000006','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000125','100000007','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000126','100000007','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000127','100000007','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('E0000000000000000127','100000007','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000128','100000008','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000129','100000008','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000130','100000008','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
