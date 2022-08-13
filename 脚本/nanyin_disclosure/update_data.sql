@@ -938,7 +938,6 @@ VALUES ('CONFIRM_STATUS', '2', '已退回', 3, '0', 'system', null,sysdate, 'sys
 delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'ReportConfirmManage004';
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportConfirmManage004', 'ReportConfirmManage004_btn_submit', 'fourprocess', 'system', '0001',SYSDATE, 'system', SYSDATE);
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportConfirmManage004', 'ReportConfirmManage004_btn_save', 'fourprocess', 'system', '0001', SYSDATE, 'system', SYSDATE);
-INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportConfirmManage004', 'RepRelDeal001_btn_delete', 'fourprocess', 'system', '0001', SYSDATE, 'system', SYSDATE);
 /**报表确认管理 add by shengning 2022-08-11 end**/
 
 /**菜单修改 add by shaoxuan 2022-08-11 start**/
