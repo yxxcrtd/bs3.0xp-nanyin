@@ -130,6 +130,13 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 AjaxResult.class);
     }
 
+    public void doBack(ReportConfirmManage001Dto entity) {
+
+        entity.setConfirmStatus("2");
+        reportConfirmManage001Mapper.backUpdate(entity);
+
+    }
+
     /**
      * 删除service <一句话功能简述> <功能详细描述>
      *
