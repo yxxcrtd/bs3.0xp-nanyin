@@ -187,7 +187,7 @@ public class DurationReportDataService implements IReportDataService {
 						listEffRepIndex.add(idx);
 				}
 				if ( listEffRepIndex!=null && listEffRepIndex.size()>0 ) {  //一般只有一条
-					for ( RepIndexSub item:listRepIndex ) {
+					for ( RepIndexSub item:listEffRepIndex ) {
 						if ( "tzclhyzfx".equals(item.getPriId()) ) {
 							reportDto.setTzclhyzfx( item.getIndexValue() );
 						}
