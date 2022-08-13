@@ -1114,3 +1114,8 @@ comment on column REP_DATA_CHECK.update_user
 comment on column REP_DATA_CHECK.update_time
     is '更新时间';
 alter table REP_DATA_CHECK  add constraint P_REP_DATA_CHECK_ID primary key (CHECK_ID, STATUS);
+
+
+/**报表数据校验信息 错误信息字段长度调整 add by zhengxiaolian 2022-08-13 start*/
+ALtER TABLE REP_REPORT_CHECK MODIFY errormsg VARCHAR2(2000);
+/**报表数据校验信息 错误信息字段长度调整 add by zhengxiaolian 2022-08-13 end*/
