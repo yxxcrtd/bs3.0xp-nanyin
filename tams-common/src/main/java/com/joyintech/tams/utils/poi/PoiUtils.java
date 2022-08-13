@@ -1,17 +1,33 @@
 package com.joyintech.tams.utils.poi;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+
 import com.joyintech.framework.util.CacheUtil;
+import com.lowagie.text.pdf.PdfWriter;
+
 import fr.opensagres.poi.xwpf.converter.core.ImageManager;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
-import org.apache.poi.xwpf.usermodel.*;
-
-import javax.servlet.ServletOutputStream;
-import java.io.*;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 功能：
@@ -81,6 +97,7 @@ public class PoiUtils {
         XWPFDocument xwpfDocument = new XWPFDocument(is);
         //setFontType(xwpfDocument);
         PdfOptions pdfOptions = PdfOptions.create();
+        setAlign(xwpfDocument);
         PdfConverter.getInstance().convert(xwpfDocument, os, pdfOptions);
     }
 
@@ -154,6 +171,26 @@ public class PoiUtils {
                             run.setFontFamily("宋体");
                         }
                     }
+                }
+            }
+        }
+    }
+    
+    /***
+     * 将文档的文字设置为宋体 防止其他字体转pdf不显示
+     * @Description:
+     * @param xwpfDocument
+     * @return:
+     */
+    private static void setAlign(XWPFDocument xwpfDocument) {
+        //转换表格里的字体 我也不想俄罗斯套娃但是不套真不能设置字体
+        List<XWPFTable> tables = xwpfDocument.getTables();
+        for (XWPFTable table : tables) {
+            List<XWPFTableRow> rows = table.getRows();
+            for (XWPFTableRow row : rows) {
+                List<XWPFTableCell> tableCells = row.getTableCells();
+                for (XWPFTableCell tableCell : tableCells) {
+                	tableCell.setVerticalAlignment(XWPFVertAlign.CENTER);
                 }
             }
         }
