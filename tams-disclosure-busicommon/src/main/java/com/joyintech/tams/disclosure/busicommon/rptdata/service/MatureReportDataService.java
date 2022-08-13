@@ -139,7 +139,7 @@ public class MatureReportDataService implements IReportDataService {
 	        	//单位分红
 				report.setUnitProfit(
 						report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
-
+				System.out.println("========lvyanan:========"+report.getUnitProfit());
 				// 年化收益率
 				BigDecimal ddProfit = report.getDistributableProfit().subtract(floatFee);
 				report.setYearYield(ddProfit.multiply(new BigDecimal(365))
@@ -162,23 +162,39 @@ public class MatureReportDataService implements IReportDataService {
 			matureReportDto.setRedemFee(BigDecimal.ZERO);
 			for ( RepFeeTrd fee:listFee ) {
 				if ("01".equals(fee.getFeeType()) ) {
-					matureReportDto.setTrustFee(fee.getAccrual());
+					matureReportDto.setTrustFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("02".equals(fee.getFeeType()) ) {
-					matureReportDto.setMgrFee(fee.getAccrual());
+					matureReportDto.setMgrFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("03".equals(fee.getFeeType()) ) {
-					matureReportDto.setFloatFee(fee.getAccrual());
+					matureReportDto.setFloatFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("04".equals(fee.getFeeType()) ) {
-					matureReportDto.setSaleFee(fee.getAccrual());
+					matureReportDto.setSaleFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("05".equals(fee.getFeeType()) ) {
-					matureReportDto.setPurFee(fee.getAccrual());
+					matureReportDto.setPurFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("06".equals(fee.getFeeType()) ) {
-					matureReportDto.setRedemFee(fee.getAccrual());
+					matureReportDto.setRedemFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				}
 			}
 			listResult.add(CollectionUtils.bean2Map(matureReportDto));
+			
+			//费用为null或者等于0 ，用“-”代替
+			if ( matureReportDto.getSaleFee()==null || matureReportDto.getSaleFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("saleFeeStr", "-");
+			} else {
+				listResult.get(0).put("saleFeeStr", matureReportDto.getSaleFee().toPlainString());
+			}
+			if ( matureReportDto.getPurFee()==null || matureReportDto.getPurFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("purFeeStr", "-");
+			} else {
+				listResult.get(0).put("purFeeStr", matureReportDto.getPurFee().toPlainString());
+			}
+			if ( matureReportDto.getRedemFee()==null || matureReportDto.getRedemFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("redemFeeStr", "-");
+			} else {
+				listResult.get(0).put("redemFeeStr", matureReportDto.getRedemFee().toPlainString());
+			}
 		} catch (Exception e) {
 			logger.error("到期报表数据错误", e);
-			e.printStackTrace();
 		}
 
 		return listResult;
