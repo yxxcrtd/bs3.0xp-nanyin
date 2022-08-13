@@ -102,7 +102,7 @@ public class PoiUtils {
         XWPFDocument xwpfDocument = new XWPFDocument(is);
         //setFontType(xwpfDocument);
         PdfOptions pdfOptions = PdfOptions.create();
-        setAlign(xwpfDocument);
+        //setAlign(xwpfDocument);
         PdfConverter.getInstance().convert(xwpfDocument, os, pdfOptions);
     }
 
