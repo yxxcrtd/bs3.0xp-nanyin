@@ -53,7 +53,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 
 /**
  * 金融产品交易查询Service
- * 
+ *
  * @author weipeng
  * @version 1.0 2018年5月16日
  * @see ValFinprodTradeQuery001Service
@@ -91,22 +91,24 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
     /**
      * 根据条件获取表格信息
-     * 
+     *
      * @param params 筛选条件
      * @return 表格信息
      * @throws Exception
      */
     public Page<ReportConfirmManage001Dto> findPage(Map<String, Object> params){
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/findPage",
-            params, ReportConfirmManage001Dto.class);
+                params, ReportConfirmManage001Dto.class);
     }
+
     public Page<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paraMap){
         Page<SelectOptionDto> page =  queryForPageForSelectReturn(()->reportConfirmManage001Mapper.getPrdInfoSelect(paraMap));
         return page;
     }
+
     /**
      * <一句话功能简述> <功能详细描述>
-     * 
+     *
      * @param pageParam
      * @return
      * @see
@@ -114,8 +116,8 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
      */
     public List<ReportConfirmManage001Dto> queryPageList(Map<String, Object> params) {
         return restTemplate.postForList(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/queryPageList", params,
-            ReportConfirmManage001Dto.class);
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/queryPageList", params,
+                ReportConfirmManage001Dto.class);
     }
 
     /**
@@ -124,32 +126,32 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
     @Override
     public void doComplete(ReportConfirmManage001Dto entity, OperationType type) {
         restTemplate.postForObject(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/doComplete/" + type.name(), entity,
-            AjaxResult.class);
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/doComplete/" + type.name(), entity,
+                AjaxResult.class);
     }
 
     /**
      * 删除service <一句话功能简述> <功能详细描述>
-     * 
+     *
      * @param jobId
      * @return
      */
     public int deleteComfirmByPrimaryKey(ReportConfirmManage001Dto dto) {
         return restTemplate.postForObject(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/deleteComfirmByPrimaryKey", dto,
-            Integer.class);
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/deleteComfirmByPrimaryKey", dto,
+                Integer.class);
     }
 
     // add by chendong in 2018-11-18 start
     /**
      * 下载报表信息
-     * 
+     *
      * @param paraMap
      * @return 报表结果集
      * @throws IOException
      */
     public ResponseEntity<byte[]> downLoadReportInfo(Map<String, Object> paraMap)
-        throws IOException {
+            throws IOException {
         List<RepReveal> reportList = reportConfirmManage001Mapper.queryReportInfo(paraMap);
         // 时间戳
         String dateTime = DateUtil.format(new Date(), DateUtil.DEFAULT_OTHER_FORMAT);
@@ -175,11 +177,11 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
                         String fileType = StringUtil.substring(report.getSysFilename(),
-                            report.getSysFilename().lastIndexOf("."));
+                                report.getSysFilename().lastIndexOf("."));
                         String reportName = report.getReportName() + fileType;
                         if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
-                                         + GlobalConstant.UNDER_LINE + reportName;
+                                    + GlobalConstant.UNDER_LINE + reportName;
                         }
                         if (StringUtil.isNotEmpty(report.getProdid())) {
                             reportName = report.getProdid() + GlobalConstant.UNDER_LINE + reportName;
@@ -187,7 +189,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
                         // 报表类别名称
                         String reportCategoryName = reportConfirmManage001Mapper.getReportCategoryName(
-                            report.getReportCategory());
+                                report.getReportCategory());
                         String firstPath = basePath + report.getProdid();
                         // 存在人工上传的报表
                         String downloadPathPeople = null;
@@ -257,7 +259,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                     String sysFileName = downloadFile.getName();
                                     // 报表类型
                                     String sysFileType = sysFileName.substring(sysFileName.lastIndexOf("."),
-                                        sysFileName.length());
+                                            sysFileName.length());
                                     // 重命名。命名规则：产品名称+报表类型+时间戳
                                     String newSysFileName = reportName;
                                     File secondSysFile = null;
@@ -352,13 +354,13 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                         String reportName = report.getReportName();
                         if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
-                                         + GlobalConstant.UNDER_LINE + reportName;
+                                    + GlobalConstant.UNDER_LINE + reportName;
                         }
                         if (StringUtil.isNotEmpty(report.getProdid())) {
                             reportName = report.getProdid() + GlobalConstant.UNDER_LINE + reportName;
                         }
                         String reportCategoryName = reportConfirmManage001Mapper.getReportCategoryName(
-                            report.getReportCategory());
+                                report.getReportCategory());
                         File baseFile = new SafelyFile(basePath);
                         if (!baseFile.exists()) {
                             baseFile.mkdir();
@@ -417,7 +419,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 String sysFileName = downloadFile.getName();
                                 // 文件类型
                                 String sysFileType = sysFileName.substring(sysFileName.lastIndexOf("."),
-                                    sysFileName.length());
+                                        sysFileName.length());
                                 // 命名规则：产品名称+报表类型+时间戳
                                 String newSysFileName = reportName;
                                 File sysFile = null;
@@ -476,7 +478,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                     String sysFileName = downloadFile.getName();
                                     // 文件类型
                                     String sysFileType = sysFileName.substring(sysFileName.lastIndexOf("."),
-                                        sysFileName.length());
+                                            sysFileName.length());
                                     // 命名规则：产品名称+报表类型+时间戳
 
                                     // modifed by zhangyf 2019-04-22 start
@@ -525,25 +527,25 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         }
         return ExportUtil.export(zipFileName, zipFile, true);
     }
- 
+
     /**
      * 中文文件名编码转换
      * @param fileName
      * @return
      */
-	private String getEncodeFileName(String fileName) {
-		try {
-			return StringUtil.isNotEmpty(fileName)
-					? (new String(fileName.getBytes(System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding")), "UTF-8")) : fileName;
-		} catch (UnsupportedEncodingException e) {
+    private String getEncodeFileName(String fileName) {
+        try {
+            return StringUtil.isNotEmpty(fileName)
+                    ? (new String(fileName.getBytes(System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding")), "UTF-8")) : fileName;
+        } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage(),e);
-		}
-		return fileName;
-	}
+        }
+        return fileName;
+    }
 
     /**
      * 删除多余文件
-     * 
+     *
      * @param
      */
     private void deleteFile(File file) {
@@ -561,7 +563,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
     /**
      * 获取报表路径
-     * 
+     *
      * @param Seqno
      * @return 报表路径
      */
@@ -575,49 +577,49 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
     /**
      * 取消确认
-     * 
+     *
      * @param
      * @see
      * @since 1.0
      */
     public int confirmCancle(Map<String, Object> params) {
         return restTemplate.postForObject(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/confirmCancle", params, Integer.class);
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/confirmCancle", params, Integer.class);
     }
 
     /**
      * 删除文件
-     * 
+     *
      * @param
      * @return
      */
     public int deleteFile(Map<String, Object> params) {
         return restTemplate.postForObject(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/deleteFile", params, Integer.class);
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/deleteFile", params, Integer.class);
     }
 
     /**
      * 代办中修改数据时同步更新
-     * 
+     *
      * @param wflList
      * @return
      */
     public ReportConfirmManage001Dto findNewData(ReportConfirmManage001Dto wflList) {
         return restTemplate.postForObject(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/findNewData", wflList,
-            ReportConfirmManage001Dto.class);
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/findNewData", wflList,
+                ReportConfirmManage001Dto.class);
     }
 
     public String getFileName(String sysFilepath) {
         return restTemplate.getForObject(ServiceApplication.VALUATION_SERVICE_NAME
-                                         + "/ReportConfirmManage001/getFileName?sysFilepath=" + sysFilepath,
-            String.class);
+                        + "/ReportConfirmManage001/getFileName?sysFilepath=" + sysFilepath,
+                String.class);
     }
 
     public String getFormate(String sysFilepath) {
         return restTemplate.getForObject(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/getFormate?sysFilepath=" + sysFilepath,
-            String.class);
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/getFormate?sysFilepath=" + sysFilepath,
+                String.class);
     }
 
 
