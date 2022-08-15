@@ -1037,17 +1037,3 @@ alter table DIS_PROD_FEEDISCOUNT drop column AFTER_FEERATE_TMP;
 /**菜单修改 add by shengning 2022-08-15 start**/
 update  SYS_PAGE set menu_id='REPORT_006_004_015' where PAGE_ID='ProdInfo001';
 /**菜单修改 add by shengning 2022-08-15 end**/
-/**新增"信披合规留痕管理" 画面按钮 add by shengning 2022-08-15 start**/
-DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'InfoCompliance001';
-INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'InfoCompliance001_btn_add', '01', '01', null, '新建', 'system', null, sysdate, 'system', sysdate, 'C', null);
-
-INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'InfoCompliance001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
-
-INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'infoCompliance001_btn_update', '01', '01', null, '编辑', 'system', null, sysdate, 'system', sysdate, 'C', null);
-
-INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'InfoCompliance001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
-/**新增"关联交易情况维护" 画面按钮 add by shengning 2022-08-15 end**/
