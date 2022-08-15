@@ -471,7 +471,7 @@ insert into REP_RULE values ('D0000000000000000019','年度报告非指数型产
 insert into REP_RULE values ('D0000000000000000020','到期公告（公募）_规则','到期公告（公募）','CP_001_003_001','A02','','14','01','1','01','','02','2','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000021','到期报告（私募）_规则','到期报告（私募）','CP_001_003_002','A02','','14','01','1','01','','02','2','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000022','清算报告_规则','清算报告','CP_001_006_001','A02','','MDATE','01','1','01','','02','0','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
-insert into REP_RULE values ('D0000000000000000023','分红计算清单_规则','分红计算清单','CP_001_007_001','A02','','14','02','1','01','','02','0','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
+insert into REP_RULE values ('D0000000000000000023','分红计算清单_规则','分红计算清单','CP_001_007_001','A02','','14','02','0','01','','02','0','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000024','代理销售机构名单公告_规则','代理销售机构名单公告','CP_001_005_001','A02','','01','01','0','01','','02','0','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 
 
@@ -499,7 +499,7 @@ insert into REP_JOB values ('100000019','年度报告非指数型产品','01','0
 insert into REP_JOB values ('100000020','到期公告（公募）','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000020','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
 insert into REP_JOB values ('100000021','到期报告（私募）','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000021','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
 insert into REP_JOB values ('100000022','清算报告','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000022','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
-insert into REP_JOB values ('100000023','分红计算清单','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000023','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
+insert into REP_JOB values ('100000023','分红计算清单','01','0 0 23 * * ? *','每年每月每日23时0分','2022-07-23','','D0000000000000000023','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
 insert into REP_JOB values ('100000024','代理销售机构名单公告','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000024','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'N');
 
 -- 校验
