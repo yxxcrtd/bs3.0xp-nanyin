@@ -104,7 +104,7 @@
 
 
 
-	<update id="updateInfo" parameterType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto">
+	<update id="updateInfo" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto">
 		UPDATE REP_REVEAL
 		<set>
 			<if test="filename != null">
@@ -179,5 +179,36 @@
 			concat(concat('%',#{search}),'%')
 			or decode(T1.REP_PROD_TYPE,'03',T2.PROD_NAME,T1.PROD_NAME) like concat(concat('%',#{search}),'%'))
 		</if>
+	</select>
+
+
+
+	<select id="getChbDeadline" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
+		select deadline1.*
+		from(select rownum num, deadline.* from(
+		SELECT
+		A.BUSI_DATE busiDate,
+		A.MARKET_CODE marketCode,
+		A.IS_HOLIDAY isHoliday
+		FROM CHB_MKT_HOLIDAY A
+		<where>
+			<if test="type !=null and type == '01'.toString()">
+				A.BUSI_DATE &lt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+			</if>
+			<if test="type !=null and type == '02'.toString()">
+				A.BUSI_DATE &gt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
+			</if>
+			AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+			AND A.IS_HOLIDAY = '0'
+		</where>
+		<if test="type !=null and type == '01'.toString()">
+			order by A.BUSI_DATE desc
+		</if>
+		<if test="type !=null and type == '02'.toString()">
+			order by A.BUSI_DATE asc
+		</if>
+		)deadline
+		)deadline1
+		where deadline1.num = #{days,jdbcType=INTEGER}
 	</select>
 </mapper>

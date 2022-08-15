@@ -5,7 +5,7 @@
 <title>产品资产组合新建</title>
     <style>
         .form-inline-wrap{
-            width: 49%;
+            width: 48%;
         }
     </style>
 </head>
@@ -19,9 +19,9 @@
                             <div class="pro-module-item">
                                 <input type="text" id="prodAssetId" name="prodAssetId" class="layui-input form-input" data-th-value="${entity?.prodAssetId}" style = "display: none">
                                 <div class="layui-form-item">
-                                        <div class="form-inline-wrap">
-                                            <label class="layui-form-label form-label-wrap mst-lable">产品名称</label>
-                                            <div class="layui-input-inline input-inline">
+                                        <div class="form-inline-wrap" style="width:48%">
+                                            <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">产品名称</label>
+                                            <div class="layui-input-inline input-inline" style="width:45% !important" >
                                                 <select id="prodName" name="prodName"
                                                         class="layui-input form-input input-select"
                                                         data-th-data-url="@{/disclosure/information/config/prodassetinfo/ProdAssetInfo001/queryProdIdInfo}"
@@ -32,9 +32,9 @@
                                             </div>
                                     </div>
 
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">产品主代码</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">产品主代码</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" class="layui-input form-input"
                                                    data-th-placeholder="#{SysCommon.placeholder}" id="prodId"
                                                    name="prodId" data-th-value="${entity?.prodId}" disabled required="required"/>
@@ -43,103 +43,167 @@
                                 </div>
 
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">穿透前固定收益类资产占总资产比例</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">穿透前固定收益类资产占总资产比例</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" id="fixPreRatio" name="fixPreRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" required
-                                                   data-th-value='${entity?.fixPreRatio}' data-textrange="2" maxlength="10">
+                                                   maxlength="5"
+                                                   onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
+                                                   data-th-value='${entity?.fixPreRatio}'>
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">穿透后固定收益类资产占总资产比例</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">穿透后固定收益类资产占总资产比例</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" id="fixAfterRatio" name="fixAfterRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" required
-                                                   data-th-value='${entity?.fixAfterRatio}' data-textrange="2" maxlength="10">
+                                                   maxlength="5"
+                                                   onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
+                                                   data-th-value='${entity?.fixAfterRatio}'>
                                         </div>
                                     </div>
                                 </div>
 
 
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">穿透前权益类资产占总资产比例</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">穿透前权益类资产占总资产比例</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" id="equityPreRatio" name="equityPreRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" required
-                                                   data-th-value='${entity?.equityPreRatio}' data-textrange="2" maxlength="10">
+                                                   maxlength="5"
+                                                   onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
+                                                   data-th-value='${entity?.equityPreRatio}'>
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">穿透后权益类资产占总资产比例</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div    class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">穿透后权益类资产占总资产比例</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" id="equityAfterRatio" name="equityAfterRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" required
-                                                   data-th-value='${entity?.equityAfterRatio}' data-textrange="2" maxlength="10">
+                                                   maxlength="5"
+                                                   onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
+                                                   data-th-value='${entity?.equityAfterRatio}'>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">穿透前商品及金融衍生品类资产占总资产比例</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">穿透前商品及金融衍生品类资产占总资产比例</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" id="fdPreRatio" name="fdPreRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" required
-                                                   data-th-value='${entity?.fdPreRatio}' data-textrange="2" maxlength="10">
+                                                   maxlength="5"
+                                                   onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
+                                                   data-th-value='${entity?.fdPreRatio}'>
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">穿透后商品及金融衍生品类资产占总资产比例</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">穿透后商品及金融衍生品类资产占总资产比例</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" id="fdAfterRatio" name="fdAfterRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" required
-                                                   data-th-value='${entity?.fdAfterRatio}' data-textrange="2" maxlength="10">
+                                                   maxlength="5"
+                                                   onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
+                                                   data-th-value='${entity?.fdAfterRatio}'>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">穿透前混合类资产占总资产比例</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">穿透前混合类资产占总资产比例</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" id="mixPreRatio" name="mixPreRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" required
-                                                   data-th-value='${entity?.mixPreRatio}' data-textrange="2" maxlength="10">
+                                                   maxlength="5"
+                                                   onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
+                                                   data-th-value='${entity?.mixPreRatio}'>
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">穿透后混合类资产占总资产比例</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">穿透后混合类资产占总资产比例</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input type="text" id="mixAfterRatio" name="mixAfterRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" required
-                                                   data-th-value='${entity?.mixAfterRatio}' data-textrange="2" maxlength="10">
+                                                   maxlength="5"
+                                                   onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
+                                                   data-th-value='${entity?.mixAfterRatio}'>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">生效日</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">生效日</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input id="effDate" name="effDate"
                                                    class="layui-input form-input input-dateSelect" required="required"
                                                    data-th-value='${#dates.format(entity?.effDate,"yyyy-MM-dd")}'
                                                    placeholder="请选择时间">
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap mst-lable">生效日截止日期</label>
-                                        <div class="layui-input-inline input-inline">
+                                    <div class="form-inline-wrap" style="width:48%">
+                                        <label class="layui-form-label form-label-wrap mst-lable" style="width:50%">生效日截止日期</label>
+                                        <div class="layui-input-inline input-inline" style="width:45% !important">
                                             <input id="effEndDate" name="effEndDate"
                                                    class="layui-input form-input input-dateSelect" required="required"
                                                    data-th-value='${#dates.format(entity?.effEndDate,"yyyy-MM-dd")}'

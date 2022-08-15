@@ -84,11 +84,12 @@ public class MatureReportDataService implements IReportDataService {
 			}
 
 			//累计净值：分红计算清单：历史累计分红
-			//参考年化收益率：分红计算清单：本期清单年化收益率
-			//客户收益：分红计算清单：历史累计应分配金额
 			BigDecimal accuValue = BigDecimal.ONE;
+			//参考年化收益率：分红计算清单：本期清单年化收益率
 			BigDecimal yearYield = BigDecimal.ZERO;
+			//客户收益：分红计算清单：历史累计应分配金额
 			BigDecimal custProfit = BigDecimal.ZERO;
+        	Date settDate = DateUtil.parse("2000-01-01");
 			for ( BonusReportDto report:listBonusReport ) {  //计算每次分红的累计值
 	        	//上一分配基准日
 	        	if ( "01".equals(report.getIssuingWay()) ) {  //开放式
@@ -105,8 +106,6 @@ public class MatureReportDataService implements IReportDataService {
 	        		report.setLastSettDate(report.geteDate());
 	        	}
 	        	
-	        	Date settDate = DateUtil.parse("2000-01-01");
-
 	        	//运行天数
 	        	if ( report.getLastSettDate().compareTo(report.geteDate())==0 ){
 	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate())+1);
@@ -118,36 +117,43 @@ public class MatureReportDataService implements IReportDataService {
 	        	report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()));
 	
 	        	//业绩比较基准收益
+				BigDecimal abProfit = 
+				report.getCapital().multiply(report.getAchievementBasisProp())
+				.multiply(new BigDecimal(365))
+				.divide(new BigDecimal(report.getRunDays()),20,BigDecimal.ROUND_DOWN);
 				report.setAchievementBasisProfit(
 						report.getCapital().multiply(report.getAchievementBasisProp())
 						.multiply(new BigDecimal(365))
 						.divide(new BigDecimal(report.getRunDays()),2,BigDecimal.ROUND_DOWN) );
 	        	
 	        	//超出收益
+				BigDecimal esProfit = report.getDistributableProfit().subtract(abProfit);
 	        	report.setExcessProfit(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
 	        	
 	        	//业绩报酬
+				BigDecimal floatFee = esProfit.multiply(report.getExcessAchievementProp());
 	        	report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
 	        	
 	        	//应分配利润
 	        	report.setDistributedProfit(report.getDistributableProfit().subtract(report.getFloatFee()));
-	        	
 	        	//单位分红
 				report.setUnitProfit(
 						report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
-
+				System.out.println("========lvyanan:========"+report.getUnitProfit());
 				// 年化收益率
-				report.setYearYield(report.getUnitProfit().multiply(new BigDecimal(365))
-						.divide(new BigDecimal(report.getRunDays()), 4, BigDecimal.ROUND_DOWN));
+				BigDecimal ddProfit = report.getDistributableProfit().subtract(floatFee);
+				report.setYearYield(ddProfit.multiply(new BigDecimal(365))
+						.divide( new BigDecimal(report.getRunDays()).multiply(report.getCapital()), 4, BigDecimal.ROUND_DOWN));
 
 	        	accuValue = accuValue.add(report.getUnitProfit());
 	        	custProfit = custProfit.add(report.getDistributedProfit());
-	        	if ( report.getSettDate().compareTo(settDate)>0 ) //取最近的分红计划的年化收益率
-	        		yearYield = report.getYearYield().setScale(2,BigDecimal.ROUND_DOWN); 
-		        	
+	        	if ( report.getSettDate().compareTo(settDate)>0 ) { //取最近的分红计划的年化收益率
+	        		settDate = report.getSettDate();
+	        		yearYield = report.getYearYield(); 
+	        	}
 			}
 			matureReportDto.setSumValueAmt(accuValue);
-			matureReportDto.setRefYearYield(yearYield);
+			matureReportDto.setRefYearYield(yearYield.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN).toPlainString() );
 			matureReportDto.setCustProfit(custProfit);
 			
 			//查询所有相关费用，通过主产品查找，如果是子产品id，还要找到主产品id
@@ -156,23 +162,39 @@ public class MatureReportDataService implements IReportDataService {
 			matureReportDto.setRedemFee(BigDecimal.ZERO);
 			for ( RepFeeTrd fee:listFee ) {
 				if ("01".equals(fee.getFeeType()) ) {
-					matureReportDto.setTrustFee(fee.getAccrual());
+					matureReportDto.setTrustFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("02".equals(fee.getFeeType()) ) {
-					matureReportDto.setMgrFee(fee.getAccrual());
+					matureReportDto.setMgrFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("03".equals(fee.getFeeType()) ) {
-					matureReportDto.setFloatFee(fee.getAccrual());
+					matureReportDto.setFloatFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("04".equals(fee.getFeeType()) ) {
-					matureReportDto.setSaleFee(fee.getAccrual());
+					matureReportDto.setSaleFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("05".equals(fee.getFeeType()) ) {
-					matureReportDto.setPurFee(fee.getAccrual());
+					matureReportDto.setPurFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("06".equals(fee.getFeeType()) ) {
-					matureReportDto.setRedemFee(fee.getAccrual());
+					matureReportDto.setRedemFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				}
 			}
 			listResult.add(CollectionUtils.bean2Map(matureReportDto));
+			
+			//费用为null或者等于0 ，用“-”代替
+			if ( matureReportDto.getSaleFee()==null || matureReportDto.getSaleFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("saleFeeStr", "-");
+			} else {
+				listResult.get(0).put("saleFeeStr", matureReportDto.getSaleFee().toPlainString());
+			}
+			if ( matureReportDto.getPurFee()==null || matureReportDto.getPurFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("purFeeStr", "-");
+			} else {
+				listResult.get(0).put("purFeeStr", matureReportDto.getPurFee().toPlainString());
+			}
+			if ( matureReportDto.getRedemFee()==null || matureReportDto.getRedemFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("redemFeeStr", "-");
+			} else {
+				listResult.get(0).put("redemFeeStr", matureReportDto.getRedemFee().toPlainString());
+			}
 		} catch (Exception e) {
 			logger.error("到期报表数据错误", e);
-			e.printStackTrace();
 		}
 
 		return listResult;

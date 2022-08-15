@@ -641,4 +641,14 @@
 			<![CDATA[ ${condition}  ]]>
 		</if>
 	</select>
+
+	<update id="backUpdate" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+		UPDATE REP_REVEAL
+		<set>
+			<if test="confirmStatus != null">
+				CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE ID = #{id,jdbcType=VARCHAR}
+	</update>
 </mapper>

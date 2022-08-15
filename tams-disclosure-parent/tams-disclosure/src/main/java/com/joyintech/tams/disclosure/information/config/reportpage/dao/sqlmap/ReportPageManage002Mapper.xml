@@ -75,5 +75,34 @@
             </if>
         </set>
         WHERE WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+        AND REP_ID = #{repId,jdbcType=VARCHAR}
     </update>
+
+    <select id="getInfoStatusAfterSysDate" parameterType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto" resultType="java.lang.Integer">
+        SElECT
+        COUNT(1)
+        FROM REP_INFO_STATUS
+        WHERE (REP_ID = #{startRepId,jdbcType=VARCHAR} OR REP_ID = #{offRepId,jdbcType=VARCHAR})
+        AND EFF_DATE >= SYSDATE
+    </select>
+
+    <select id="getInfoStatusInFlow" parameterType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto" resultType="java.lang.Integer">
+        SElECT
+        COUNT(1)
+        FROM REP_INFO_STATUS
+        WHERE (REP_ID = #{startRepId,jdbcType=VARCHAR} OR REP_ID = #{offRepId,jdbcType=VARCHAR})
+        AND REP_STATUS  IN ('01','03') AND WORKFLOW_ID != #{workflowId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getInfoStatusBeforeEffdate" parameterType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM (
+            SELECT
+            REP_ID,
+            REP_STATUS,
+            rownum RN
+            FROM REP_INFO_STATUS WHERE REP_ID = #{repId,jdbcType=VARCHAR} AND
+            AND EFF_DATE <![CDATA[<=]]> #{effDate,jdbcType=TIMESTAMP}
+            ORDER BY EFF_DATE DESC
+        ) WHERE RN = 1 AND REP_STATUS = #{repStatus,jdbcType=VARCHAR}
+    </select>
 </mapper>

@@ -23,6 +23,7 @@
 		    ,PINDEX.ASSETS_VALUE  /**资产净值**/
 			,PINDEX.CAPITAL            /**期末余额**/
 			,PINDEX.UNIT_VALUE    /**单位净值**/
+			,plan.BONUS_MODE   /**分红方式**/
             ,PLAN.SETT_DATE      /**本期收益结算日**/			
 		    ,PLAN.ACHIEVEMENT_BASIS   /**业绩基准**/
 			,PLAN.ACHIEVEMENT_BASIS_PROP/100  ACHIEVEMENT_BASIS_PROP /**业绩基准比例**/
@@ -45,7 +46,10 @@
 	    WHERE 1=1
 	    and STATUS='E'
 	    <if test="prodid!=null">
-	            AND PROD_ID=#{prodid,jdbcType=VARCHAR}
+	     	AND PROD_ID=#{prodid,jdbcType=VARCHAR}
+		</if>
+		<if test="reportDate!=null">
+			and PAY_DATE=#{reportDate,jdbcType=DATE}
 		</if>
     </select>
     

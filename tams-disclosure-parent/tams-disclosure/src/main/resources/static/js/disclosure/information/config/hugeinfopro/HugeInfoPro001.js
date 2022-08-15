@@ -165,7 +165,7 @@
 
     $('#HugeInfoPro001_btn_import').click(function() {
         Joyin.confirm("请确认是否要导入数据？", function () {
-            Joyin.uploadFile({pageId:'HugeInfoPro'},function(fileName) {
+            Joyin.uploadFile(function(fileName) {
                 Joyin.ajax(basePath + 'disclosure/information/config/hugeinfopro/HugeInfoPro001/checkImportData', {fileName: fileName}, function(checkResult) {
                     if (checkResult) {
                         setTimeout( function () {

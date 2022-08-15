@@ -308,10 +308,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                     StringBuilder errorMsg = new StringBuilder("");
                     List<String> rowData = objects.get(i);
 
-                    if (!StringUtil.isNotEmpty(rowData.get(0))){
+                    if (StringUtil.isEmpty(rowData.get(0))){
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
+                    if (StringUtil.isEmpty(rowData.get(1))){
                         errorMsg.append("子产品代码 必填！");
                     }else{
 //                        ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(1));
@@ -322,31 +322,31 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                             errorMsg.append("子产品代码 不存在");
                         }
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(3))){
+                    if (StringUtil.isEmpty(rowData.get(3))){
                         errorMsg.append("优惠的费用 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(4)) && !isNumber(rowData.get(4))){
+                    if (StringUtil.isNotEmpty(rowData.get(4)) && !isNumber(rowData.get(4))){
                         errorMsg.append("优惠前费率 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(5)) && !isNumber(rowData.get(5))){
+                    if (StringUtil.isNotEmpty(rowData.get(5)) && !isNumber(rowData.get(5))){
                         errorMsg.append("优惠后费率 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(6)) && !this.isDateStr(rowData.get(6))){
+                    if (StringUtil.isNotEmpty(rowData.get(6)) && !this.isDateStr(rowData.get(6))){
                         errorMsg.append("优惠起始时间 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(7)) && !this.isDateStr(rowData.get(7))){
+                    if (StringUtil.isNotEmpty(rowData.get(7)) && !this.isDateStr(rowData.get(7))){
                         errorMsg.append("优惠截止时间 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(8)) && !isNumber(rowData.get(8))){
+                    if (StringUtil.isNotEmpty(rowData.get(8)) && !isNumber(rowData.get(8))){
                         errorMsg.append("本次优惠前费率 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(9)) && !isNumber(rowData.get(9))){
+                    if (StringUtil.isNotEmpty(rowData.get(9)) && !isNumber(rowData.get(9))){
                         errorMsg.append("本次优惠后费率 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(10)) && !isNumber(rowData.get(10))){
+                    if (StringUtil.isNotEmpty(rowData.get(10)) && !isNumber(rowData.get(10))){
                         errorMsg.append("本次优惠结束后费率 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(12))){
+                    if (StringUtil.isEmpty(rowData.get(12))){
                         errorMsg.append("报告发布日期 必填！");
                     }else if(!this.isDateStr(rowData.get(12))){
                         errorMsg.append("报告发布日期 格式不正确！");

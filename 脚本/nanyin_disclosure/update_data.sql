@@ -938,7 +938,6 @@ VALUES ('CONFIRM_STATUS', '2', '已退回', 3, '0', 'system', null,sysdate, 'sys
 delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'ReportConfirmManage004';
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportConfirmManage004', 'ReportConfirmManage004_btn_submit', 'fourprocess', 'system', '0001',SYSDATE, 'system', SYSDATE);
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportConfirmManage004', 'ReportConfirmManage004_btn_save', 'fourprocess', 'system', '0001', SYSDATE, 'system', SYSDATE);
-INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportConfirmManage004', 'RepRelDeal001_btn_delete', 'fourprocess', 'system', '0001', SYSDATE, 'system', SYSDATE);
 /**报表确认管理 add by shengning 2022-08-11 end**/
 
 /**菜单修改 add by shaoxuan 2022-08-11 start**/
@@ -1016,3 +1015,20 @@ delete from sys_page a where a.page_id='ReportCheck003';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportCheck003', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck003', 'disclosure/information/config/repreportcheck/ReportCheck003', null, null, null, '02', '02', '指标阈值配置', 'system', null, '11-8月 -22 09.46.23.000000 上午', 'system', '11-8月 -22 09.46.23.000000 上午');
 -- add by zhengxiaolian 2022-08-12 信披数据校验报表预览 end
+
+-- add by shaoxuan 2022-08-15 费率优惠表字段调整 start
+
+alter table DIS_PROD_FEEDISCOUNT rename column PRE_FEERATE to PRE_FEERATE_TMP;
+alter table DIS_PROD_FEEDISCOUNT add PRE_FEERATE VARCHAR2(30);
+comment on column DIS_PROD_FEEDISCOUNT.PRE_FEERATE is '优惠前费率';
+update DIS_PROD_FEEDISCOUNT set PRE_FEERATE=trim(PRE_FEERATE_TMP);
+alter table DIS_PROD_FEEDISCOUNT drop column PRE_FEERATE_TMP;
+
+
+alter table DIS_PROD_FEEDISCOUNT rename column AFTER_FEERATE to AFTER_FEERATE_TMP;
+alter table DIS_PROD_FEEDISCOUNT add AFTER_FEERATE VARCHAR2(30);
+comment on column DIS_PROD_FEEDISCOUNT.AFTER_FEERATE is '优惠后费率';
+update DIS_PROD_FEEDISCOUNT set AFTER_FEERATE=trim(AFTER_FEERATE_TMP);
+alter table DIS_PROD_FEEDISCOUNT drop column AFTER_FEERATE_TMP;
+
+-- add by shaoxuan 2022-08-15 费率优惠表字段调整 end

@@ -308,6 +308,17 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             dto.setProdId(keyId);
             dto.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
             prodInfoMapper.updateByPrimaryKeySelective(dto);
+            /* NYLCXP-388 子产品全部删除后母产品状态更新为删除 add by kongzhifang 2022-08-12 start */
+            if(StringUtil.isNotEmpty(entity.getpProdId())){
+                List<ProdInfoDto> dtoList = prodInfoMapper.selectListByPprodId(entity.getpProdId());
+                if(StringUtil.isEmptyList(dtoList)){
+                    ProdInfoDto dto2 = new ProdInfoDto();
+                    dto2.setProdId(entity.getpProdId());
+                    dto2.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
+                    prodInfoMapper.updateByPrimaryKeySelective(dto2);
+                }
+            }
+            /* NYLCXP-388 子产品全部删除后母产品状态更新为删除 add by kongzhifang 2022-08-12 start */
         }
     }
 
@@ -513,9 +524,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         /*if (!StringUtils.equals(rowData.get(0), rowData.get(8))) {
                             return new AjaxResult("非分级产品，子产品代码和产品主代码需要一致", MessageType.错误消息);
                         }*/
-                        if (!StringUtils.equals(rowData.get(1), rowData.get(5))) {
+                        // NYLCXP-246 产品基本信息，非分级产品新建时存在错误check modify by kongzhifang 2022-08-12 start
+                        /*if (!StringUtils.equals(rowData.get(1), rowData.get(5))) {
                             errorMsg.append("非分级产品，子产品名称和产品名称需要一致");
-                        }
+                        }*/
+                        // NYLCXP-246 产品基本信息，非分级产品新建时存在错误check modify by kongzhifang 2022-08-12 start
                         if (!StringUtils.equals(rowData.get(2), rowData.get(12))) {
                             errorMsg.append("非分级产品，子产品成立日期和产品成立日期需要一致");
                         }

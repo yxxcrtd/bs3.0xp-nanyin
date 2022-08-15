@@ -252,7 +252,7 @@ public class InfoDisclosureGenService {
 			 {
 		boolean flag = false;
 		// 文件失败即为失败.不再提供不完整文件
-		UploadFile fileInfo;
+		UploadFile fileInfo=null;;
 		try {
 			String fileName=infoDisclosureGenAndSendEntity.getProdid() + GlobalConstant.UNDER_LINE + infoDisclosureGenAndSendEntity.getRepName()
 					+GlobalConstant.UNDER_LINE+DateUtil.getNewSysDate();
@@ -263,6 +263,9 @@ public class InfoDisclosureGenService {
 			infoDisclosureGenAndSendEntity.setFilePathSeqno(fileInfo.getFileNo());
 			infoDisclosureGenAndSendEntity.setLocalPath(fileInfo.getTargetFile().getPath());
 			flag = true;
+			if(fileInfo==null){
+				flag = false;
+			}
 		} catch (Exception e) {
 			logger.error("error:",e);
 			logger.info("=======报表生成失败");
@@ -748,8 +751,11 @@ public class InfoDisclosureGenService {
 			} else if (StringUtil.equals("enddate", repScreen.getScreenKey())) {
 				params.put("enddate", DateUtil.format(infoDisclosureGenAndSendEntity.getEndDate()));
 			}
+
 		}
+		params.put("repid", infoDisclosureGenAndSendEntity.getRepId());
 		params.put("execDate", execDate);
+		params.put("platformDate", execDate);
 		params.put("opttype", "batch");
 		return params;
 	}

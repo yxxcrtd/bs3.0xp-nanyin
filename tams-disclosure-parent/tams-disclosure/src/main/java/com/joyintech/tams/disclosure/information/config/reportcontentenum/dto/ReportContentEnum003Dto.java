@@ -78,7 +78,7 @@ public class ReportContentEnum003Dto extends RepJobRange {
 			value = backCode(DictCode.发行状态, this.getRuleType4());
 
 		} else if ("IS_INDEPE_ACC".equals(key) || "IS_INDEX".equals(key)|| "IS_PERIOD".equals(key)) {
-			value = backCode(DictCode.是否, this.getRuleType4());
+			value = backCode(DictCode.是或否, this.getRuleType4());
 
 		} else if (DisclosureDictCode.产品类型.getValue().equals(key)) {
 			value = backCode(DisclosureDictCode.产品类型, this.getRuleType4());

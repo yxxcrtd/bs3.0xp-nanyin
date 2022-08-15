@@ -40,4 +40,10 @@ public interface ReportPageManage002Mapper {
     ReportStatusDto selectReportInfo(Map<String,String> map);
 
     void updateReportStatus(ReportStatusDto dto);
+
+    int getInfoStatusAfterSysDate(ReportStatusDto dto);
+
+    int getInfoStatusInFlow(ReportStatusDto dto);
+
+    int getInfoStatusBeforeEffdate(ReportStatusDto dto);
 }

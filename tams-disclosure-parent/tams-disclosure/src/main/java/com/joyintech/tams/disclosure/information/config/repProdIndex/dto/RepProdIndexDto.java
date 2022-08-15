@@ -211,7 +211,7 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
         return this.getValueDate()==null?null: DateUtil.format(this.getValueDate(), "yyyy-MM-dd");
     }
     public String getUpdateTimeStr() {
-        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyyMMddHHmm");
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
     }
 
     public String getProdName() {
