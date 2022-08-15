@@ -12,6 +12,7 @@ package com.joyintech.service.disclosure.information.config.reportpage.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -69,12 +70,14 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
         return list;
     }
     public List<ReportPageManage001Dto> findPage(Map<String, Object> param) {
-    	 String reportCategory = (String)param.get("reportCategory");
-         String[] reportCategoryArr = null;
-         if(StringUtil.isNotEmpty(reportCategory)){
-        	 reportCategoryArr = reportCategory.split(",");
-         }
-         param.put("reportCategoryArr", reportCategoryArr);
+        String reportCategory = (String)param.get("reportCategory");
+        String[] reportCategoryArr = null;
+        if(StringUtil.isNotEmpty(reportCategory)){
+            reportCategoryArr = reportCategory.split(",");
+        }
+        param.put("reportCategoryArr", reportCategoryArr);
+        Calendar calendar = Calendar.getInstance();
+        param.put("effDate",calendar.getTime());
         return reportPageManage001Mapper.findPage(param);
     }
     /**
@@ -209,7 +212,7 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
 	/**
      * 根据作业编号查询报表作业范围
      * 
-     * @param jobId
+     * @param repId
      * @return
      */
     public List<RepJobRangeDto> findRulePage(String repId) {
