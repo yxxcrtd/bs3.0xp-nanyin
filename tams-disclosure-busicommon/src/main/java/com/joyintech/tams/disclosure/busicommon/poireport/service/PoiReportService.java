@@ -1144,7 +1144,7 @@ public class PoiReportService {
 				repReportCheck.setProdId(prodId);
 				repReportCheck.setCheckDate((Date)params.get("platformDate"));
 				repReportCheck.setEndDate(repReveal.getEndDate());
-				repReportCheck.setErrormsg(resultSb.toString());
+				repReportCheck.setErrormsg(resultSb.toString().replace("<br>",""));
 				repReportCheck.setFileNo(uploadFile.getFileNo());
 				repReportCheck.setDataStatus("E");
 
