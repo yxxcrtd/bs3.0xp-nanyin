@@ -20,7 +20,7 @@ spring:
     active: CVR_305_XNYH_DEV_P
   application:
     name: tamsyy-serverREPORT#0426
-    dfstype: 2
+    dfstype: 3
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     validationQuery: SELECT 1 FROM DUAL
