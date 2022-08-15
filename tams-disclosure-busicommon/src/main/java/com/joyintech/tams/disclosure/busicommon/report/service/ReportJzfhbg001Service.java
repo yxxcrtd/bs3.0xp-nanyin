@@ -158,9 +158,6 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             /**
                              * 当期净值模块
                              */
-                            //期末每份额净值（元） = 固定值1.000
-                            reportJzfhbg001Dto.setUnitValue("1.0000");
-
                             if (lastBonus == null) {
                                 //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)；
                                 reportJzfhbg001Dto.setUnitValueT(BigDecimal.ONE.add(new BigDecimal(unitProfitStr)).toString());
@@ -191,6 +188,8 @@ public class ReportJzfhbg001Service implements IReportDataService {
                     reportJzfhbg001Dto.setRedValue("1.0000");
                     //申购价格（元/份）
                     reportJzfhbg001Dto.setSubValue("1.0000");
+                    //期末每份额净值（元） = 固定值1.000
+                    reportJzfhbg001Dto.setUnitValue("1.0000");
                     //如果是净值及分红报告（私募开放式）的模板的话，需要多设置以下要素信息
                     if (StringUtil.equals(rptType, DisReportType.JZJFHBG_SMKF)) {
                         //根据产品排期表，展示开放起始日大于当前收益分配基准日的下一个开放周期的信息；若当前已处于最后一个产品周期，则正常生成表格，表格内容置空，由业务老师手工调整
