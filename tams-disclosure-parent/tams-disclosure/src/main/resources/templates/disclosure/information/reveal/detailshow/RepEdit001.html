@@ -27,7 +27,7 @@
             WebOfficeObj.ShowWindow = true;				//true显示进度条//false隐藏进度条
             WebOfficeObj.obj.Style.ShowOpenProgress = true; //开启、关闭打开文档时的进度条
             WebOfficeObj.obj.WebCreateProcess();          //创建空进程避免打开慢
-			WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice?repId=123";
+			WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";
             WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
             WebOfficeObj.Alert(WebOfficeObj.FileName);
 			WebOfficeObj.WebOpen(true);
