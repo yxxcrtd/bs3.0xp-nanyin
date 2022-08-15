@@ -1013,7 +1013,7 @@ values ('REP_CHECK_TYPE', '08', '等于', 8, '0', 'system', null, sysdate, 'syst
 delete from sys_page a where a.page_id='ReportCheck003';
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ReportCheck003', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck003', 'disclosure/information/config/repreportcheck/ReportCheck003', null, null, null, '02', '02', '指标阈值配置', 'system', null, '11-8月 -22 09.46.23.000000 上午', 'system', '11-8月 -22 09.46.23.000000 上午');
+values ('ReportCheck003', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck003', 'disclosure/information/config/repreportcheck/ReportCheck003', null, null, null, '02', '02', '指标阈值配置', 'system', null, sysdate, 'system', sysdate);
 -- add by zhengxiaolian 2022-08-12 信披数据校验报表预览 end
 
 -- add by shaoxuan 2022-08-15 费率优惠表字段调整 start
