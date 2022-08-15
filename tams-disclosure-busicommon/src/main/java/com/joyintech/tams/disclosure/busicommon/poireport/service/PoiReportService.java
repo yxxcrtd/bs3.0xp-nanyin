@@ -836,6 +836,9 @@ public class PoiReportService {
 
 		Map<String, Object> dataMap = null;
 		List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+		if(listReports==null){
+			return "报告期末时点距离当前产品的生成日或者到期日不足90个自然日，无需生成报告<br>";
+		}
 		if (listReports.size() > 0) {
 			dataMap = listReports.get(0);
 			dataMap.put("prodId",repReveal.getProdid());
@@ -1114,12 +1117,17 @@ public class PoiReportService {
 			//对所有报告的通用校验
 			//生成报告时，若存在某个统计项取不到值的情况，需要在本模块进行提示 提示“生成报告所需数据有缺失”
 			for (String key:dataMap.keySet()){
-				if (!StringUtil.isNotEmpty(dataMap.get(key))) {
-					if (!dataMap.containsKey(key+"_xx")) {
-						dataMap.put(key,"xxx");
-						resultSb.append("生成报告所需数据有缺失key="+key+"<br>");
+				if(!key.contains("_xx")){
+					if (!StringUtil.isNotEmpty(dataMap.get(key))) {
+						if (!dataMap.containsKey(key+"_xx")) {
+							if(dataMap.get(key) instanceof String){
+								dataMap.put(key,"xxx");
+							}
+							resultSb.append("生成报告所需数据有缺失key="+key+"<br>");
+						}
 					}
 				}
+
 			}
 
 			//校验完成之后判断有没有错误
