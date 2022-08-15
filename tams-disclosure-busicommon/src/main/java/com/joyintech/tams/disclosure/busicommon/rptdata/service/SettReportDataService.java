@@ -232,13 +232,40 @@ public class SettReportDataService implements IReportDataService {
 				}
 				
 				listResult.add(CollectionUtils.bean2Map(settReportDto));
+				
+	
 			}
 		} catch (Exception e) {
 			logger.error("清算报表数据错误", e);
 			listResult.add(CollectionUtils.bean2Map(settReportDto));
 			//e.printStackTrace();
 		}
-
+		if (listResult!=null && listResult.size()>0 ) {
+			listResult.get(0).put("endDate_xx","");
+			listResult.get(0).put("floatFee_xx","");
+			listResult.get(0).put("trustName_xx","");
+			listResult.get(0).put("assetValue_xx","");
+			listResult.get(0).put("disDate_xx","");
+			listResult.get(0).put("redemAmt_xx","");
+			listResult.get(0).put("trustFee_xx","");
+			listResult.get(0).put("mapBalance_xx","");
+			listResult.get(0).put("repProdType_xx","");
+			listResult.get(0).put("taxFee_xx","");
+			listResult.get(0).put("otherPayAmt_xx","");
+			listResult.get(0).put("profit_xx","");
+			listResult.get(0).put("guarantyAmt_xx","");
+			listResult.get(0).put("sumAssetAmt_xx","");
+			listResult.get(0).put("intAmt_xx","");
+			listResult.get(0).put("reportTitle_xx","");
+			listResult.get(0).put("sumDebtAmt_xx","");
+			listResult.get(0).put("saleFee_xx","");
+			listResult.get(0).put("mgrFee_xx","");
+			listResult.get(0).put("prodTruster_xx","");
+			listResult.get(0).put("prodManager_xx","");
+			listResult.get(0).put("genDate_xx","");
+			listResult.get(0).put("deposit_xx","");
+			listResult.get(0).put("startDate_xx","");			
+		}
 		return listResult;
 	}
 
