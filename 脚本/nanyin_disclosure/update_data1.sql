@@ -733,10 +733,10 @@ insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRA
 values ('SaleAgency001', 'SaleAgency001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
 
 -- add by kongzhifang 20220812 行情代码数据字典更新映射关系
-update sys_datadict_list set item_vaule = '中债新综合全价指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '01';
-update sys_datadict_list set item_vaule = '沪深300指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '02';
-update sys_datadict_list set item_vaule = '中债新综合财富指数（1-3年）收益率' where dict_code = 'QUOTA_CODE' and item_code = '03';
-update sys_datadict_list set item_vaule = '中证500指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '04';
+update sys_datadict_list set item_value = '中债新综合全价指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '01';
+update sys_datadict_list set item_value = '沪深300指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '02';
+update sys_datadict_list set item_value = '中债新综合财富指数（1-3年）收益率' where dict_code = 'QUOTA_CODE' and item_code = '03';
+update sys_datadict_list set item_value = '中证500指数收益率' where dict_code = 'QUOTA_CODE' and item_code = '04';
 
 -- 新增"产品费用交易信息维护" 画面按钮 add by shengning 20220813
 DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SvrProdFeeDealInterf001';
@@ -852,6 +852,12 @@ VALUES ('RepRelDeal001', 'RepRelDeal001_TABROW_edit', '01', '01', null, '编辑'
 
 INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 VALUES ('RepRelDeal001', 'RepRelDeal001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+-- add by kongzhifang 20220812 NYLCXP-557 产品运作方式数据字典更新映射关系
+update sys_datadict_list set item_value = '封闭式净值型' where dict_code = 'DIS_PROFIT_TYPE' and item_code = '01';
+update sys_datadict_list set item_value = '封闭式非净值型' where dict_code = 'DIS_PROFIT_TYPE' and item_code = '02';
+update sys_datadict_list set item_value = '开放式净值型' where dict_code = 'DIS_PROFIT_TYPE' and item_code = '03';
+update sys_datadict_list set item_value = '开放式非净值型' where dict_code = 'DIS_PROFIT_TYPE' and item_code = '04';
 
 
 commit ;
