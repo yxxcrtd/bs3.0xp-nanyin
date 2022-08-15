@@ -48,9 +48,9 @@ public class PoiUtilsHelper {
      * @param os，目标输出流
      * @param params，替换的变量集合
      * @return
-     * @throws PoiException
+     * @throws Exception 
      */
-    public static boolean mergeParasToDocx(String srcFile, OutputStream os, Map<String, Object> params) throws PoiException {
+    public static boolean mergeParasToDocx(String srcFile, OutputStream os, Map<String, Object> params) throws Exception {
         try {
 			XWPFDocument document = new XWPFDocument(
 					POIXMLDocument.openPackage(srcFile));
@@ -170,7 +170,7 @@ public class PoiUtilsHelper {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new PoiException("FileTemplateExceptioin",new Throwable("找不到模板或者模板配置错误，请使用office2010格式编辑."),"" );
+            throw e; //new PoiException("FileTemplateExceptioin",new Throwable("找不到模板或者模板配置错误，请使用office2010格式编辑."),"" );
         }
     }
 

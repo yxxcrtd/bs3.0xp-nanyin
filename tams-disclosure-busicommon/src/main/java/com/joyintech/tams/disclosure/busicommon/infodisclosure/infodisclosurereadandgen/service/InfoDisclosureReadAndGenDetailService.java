@@ -657,7 +657,7 @@ public class InfoDisclosureReadAndGenDetailService{
 			    dateMap.put("endDate", DateUtil.addDay(basicDate, Integer.parseInt(repRule.getDataValue())-dayOfWeek-7));
 			}
 			else if(StringUtil.equals(DictCodeListExt2.取数范围_基准日.getValue(), repRule.getDataRange())){
-			    dateMap.put("endDate", basicDate);
+			    dateMap.put("endDate", DateUtil.addDay(basicDate, 0));
 			}
 		}
 //		return map;
