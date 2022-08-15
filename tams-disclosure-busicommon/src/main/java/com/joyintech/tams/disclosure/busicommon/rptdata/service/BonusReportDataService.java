@@ -108,6 +108,32 @@ public class BonusReportDataService implements IReportDataService {
 				
 				listResult.add(CollectionUtils.bean2Map(report));
 
+				listResult.get(0).put("bonusMode_xx","");
+				listResult.get(0).put("capital_xx","");
+				listResult.get(0).put("endDate_xx","");
+				listResult.get(0).put("floatFee_xx","");
+				listResult.get(0).put("distributableProfit_xx","");
+				listResult.get(0).put("disDate_xx","");
+				listResult.get(0).put("signDate_xx","");
+				listResult.get(0).put("unitProfit_xx","");
+				listResult.get(0).put("distributedProfit_xx","");
+				listResult.get(0).put("settDate_xx","");
+				listResult.get(0).put("achievementBasisProfit_xx","");
+				listResult.get(0).put("reportDate_xx","");
+				listResult.get(0).put("achievementBasis_xx","");
+				listResult.get(0).put("repProdType_xx","");
+				listResult.get(0).put("excessProfit_xx","");
+				listResult.get(0).put("mDate_xx","");
+				listResult.get(0).put("yearYield_xx","");
+				listResult.get(0).put("assetsValue_xx","");
+				listResult.get(0).put("achievementBasisProp_xx","");
+				listResult.get(0).put("unitValue_xx","");
+				listResult.get(0).put("excessAchievementProp_xx","");
+				listResult.get(0).put("prodTruster_xx","");
+				listResult.get(0).put("prodManager_xx","");
+				listResult.get(0).put("genDate_xx","");
+				listResult.get(0).put("startDate_xx","");	
+				
 			}
 		} catch (Exception e) {
 			logger.error("报表数据错误", e);
