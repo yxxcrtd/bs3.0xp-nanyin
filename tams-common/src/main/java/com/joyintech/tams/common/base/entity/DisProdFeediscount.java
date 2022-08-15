@@ -47,14 +47,12 @@ public class DisProdFeediscount extends BaseEntity {
     /**
      * 优惠前费率
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal preFeerate;
+    private String preFeerate;
 
     /**
      * 优惠后费率
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal afterFeerate;
+    private String afterFeerate;
 
     /**
      * 优化起始时间
@@ -205,7 +203,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 优惠前费率
      * @return 优惠前费率
      */
-    public BigDecimal getPreFeerate() {
+    public String getPreFeerate() {
         return preFeerate;
     }
 
@@ -213,7 +211,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 优惠前费率
      * @param preFeerate 优惠前费率
      */
-    public void setPreFeerate(BigDecimal preFeerate) {
+    public void setPreFeerate(String preFeerate) {
         this.preFeerate = preFeerate;
     }
 
@@ -221,7 +219,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 优惠后费率
      * @return 优惠后费率
      */
-    public BigDecimal getAfterFeerate() {
+    public String getAfterFeerate() {
         return afterFeerate;
     }
 
@@ -229,7 +227,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 优惠后费率
      * @param afterFeerate 优惠后费率
      */
-    public void setAfterFeerate(BigDecimal afterFeerate) {
+    public void setAfterFeerate(String afterFeerate) {
         this.afterFeerate = afterFeerate;
     }
 
