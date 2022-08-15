@@ -21,6 +21,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
@@ -28,6 +29,7 @@ import com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.Prod
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -72,7 +74,8 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
 
     @Autowired
     ProdInfoService prodInfoService ;
-
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
 
     public List<ProdFeediscountDto> findAll(Map<String,Object> params) {
@@ -270,6 +273,9 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
 //        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
 //        if (objects.size() - 1 > 50000) {
@@ -504,10 +510,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 feediscountDto.setFeename(rowData.get(3).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(4))) {
-                feediscountDto.setPreFeerate(new BigDecimal(rowData.get(4).toString()));
+                feediscountDto.setPreFeerate(rowData.get(4).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(5))) {
-                feediscountDto.setAfterFeerate( new BigDecimal(rowData.get(5).toString()));
+                feediscountDto.setAfterFeerate( rowData.get(5).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(6))) {
                 feediscountDto.setStartDate(DateUtil.parse(rowData.get(6).toString()));

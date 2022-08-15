@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.constant.DictCodeList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -346,36 +348,45 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
         String option = request.getParameter("option");
         // 文件本地路径
         String filePath = request.getParameter("fileName");
-        //进行文本路径转化
-        String newfilePath = filePath.replace(":\\","://");
-        newfilePath = newfilePath.replace("\\","/");
-        String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
-        if(StringUtil.isNotEmpty(basePath)){
-            newfilePath = newfilePath.replace(basePath,"");
-        }
+        String fileNo = request.getParameter("fileNo");
         String id = request.getParameter("id");
         String fileRealName = request.getParameter("srcName");
-        if(logger.isDebugEnabled()){
-            logger.debug("上传文件开始,上传类型:{},附件名称:{}",option,fileRealName);
-        }
-        FileInputStream fis = null;
-        String fileNo = IDGenerator.generate();
-        try {
-            fis = new FileInputStream(filePath);
-            File localFile = new SafelyFile(newfilePath);
-            UploadFile uploadFile = new UploadFile(fileRealName, fileNo,localFile);
-            minioFileRemoteService.uploadFile(uploadFile,fis);
-        }catch(Exception e){
-            logger.error("上传文件失败",e);
-            return -1;
-        }finally{
-            if(fis != null ){
-                try{
-                    fis.close();
-                }catch (IOException e){
-                    logger.error("关闭流异常",e);
+        if(filePath.toLowerCase(Locale.CHINA).startsWith("http:")||filePath.toLowerCase(Locale.CHINA).startsWith("https:")){
+            //本身就是远程文件存储，不需要特殊处理
+        }else if(minioFileRemoteService.remoteFileExists(filePath)){
+            //此处远程文件已经存在，直接使用即可，不需要重新下载上传处理
+        } else{
+            //进行文本路径转化
+            String newfilePath = filePath.replace(":\\", "://");
+            newfilePath = newfilePath.replace("\\", "/");
+            String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+            if (StringUtil.isNotEmpty(basePath)) {
+                newfilePath = newfilePath.replace(basePath, "");
+            }
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("上传文件开始,上传类型:{},附件名称:{}", option, fileRealName);
+            }
+            FileInputStream fis = null;
+            fileNo = IDGenerator.generate();
+            try {
+                fis = new FileInputStream(filePath);
+                File localFile = new SafelyFile(newfilePath);
+                UploadFile uploadFile = new UploadFile(fileRealName, fileNo, localFile);
+                minioFileRemoteService.uploadFile(uploadFile, fis);
+            } catch (Exception e) {
+                logger.error("上传文件失败", e);
+                return -1;
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        logger.error("关闭流异常", e);
+                    }
                 }
             }
+
         }
         return updateRep(id,fileNo,fileRealName,option);
     }
@@ -387,6 +398,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
         if (StringUtil.equals("1", option)) {
             dto.setFilename(fileName);
             dto.setFilepath(filePath);
+            dto.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
 
             return reportConfirmManage001Mapper.updateRepRevealById(dto);
         }else {

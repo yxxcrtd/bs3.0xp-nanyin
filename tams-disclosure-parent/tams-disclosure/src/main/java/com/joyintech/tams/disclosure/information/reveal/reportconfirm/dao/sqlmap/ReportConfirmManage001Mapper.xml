@@ -145,6 +145,7 @@
 	      ,TIME = #{time,jdbcType=TIMESTAMP}
 	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		  ,UPDATE_TIME = sysdate
+		  ,CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
 	      where 1=1
 	      and id = #{id,jdbcType=VARCHAR}
     </update>

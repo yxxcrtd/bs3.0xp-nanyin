@@ -162,11 +162,17 @@ public class ReportRevealManage001Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect() {
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
+//    public Page<SelectOptionDto> getPrdInfoSelect() {
+//		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
+//        return prdInfoSelect;
+//    }
+    public Page<SelectOptionDto> getPrdInfoSelect(){
+        Page<SelectOptionDto> prdInfoSelect = reportConfirmManage001Service.getPrdInfoSelect(RequestUtil.getPageParam());
+
         return prdInfoSelect;
     }
-    
+
+
     /**
      * 
      * 分页数据查询

@@ -18,6 +18,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -31,6 +32,7 @@ import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.Di
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections4.CollectionUtils;
@@ -72,6 +74,9 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
 
     @Autowired
     ProdInfoService prodInfoService;
+
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
     /**
      * 日志
@@ -160,6 +165,9 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         /*if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();

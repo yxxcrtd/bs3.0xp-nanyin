@@ -688,7 +688,7 @@ $(function () {
 		Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
 			Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
 				JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
-				"60%","85%",params,function(){ }
+				"70%","85%",params,function(){ }
 			);
 		});
 

@@ -237,4 +237,17 @@ public class MinioFileRemoteService implements FileRemoteService {
         }
         return null;
     }
+
+    @Override
+    /**
+     * @Author ZY22350
+     * @Description //判断远程文件是否存在，此处如果是http:远程文件默认存在
+     * @Date 14:06 2022/8/12
+     * @Param [filePath]
+     * @return boolean
+     **/
+    public boolean remoteFileExists(String filePath) {
+
+        return minioTemplate.checkFileIsExist(filePath);
+    }
 }

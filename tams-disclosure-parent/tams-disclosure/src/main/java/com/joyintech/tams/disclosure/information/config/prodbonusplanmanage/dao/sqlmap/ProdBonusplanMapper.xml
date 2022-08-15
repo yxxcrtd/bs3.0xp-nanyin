@@ -91,8 +91,8 @@
                 #{excessAchievementProp,jdbcType=DECIMAL}, #{achievementBasis,jdbcType=VARCHAR},
                 #{achievementBasisProp,jdbcType=DECIMAL}, #{dataStatus,jdbcType=VARCHAR},
                 #{dataSource,jdbcType=VARCHAR},
-                #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
-                #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+                #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective"
             parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
@@ -414,6 +414,43 @@
             and to_char(dpb.SETT_DATE,'yyyy-mm-dd') <![CDATA[=]]> #{settDateStr,jdbcType=VARCHAR}
         </if>
         and rownum <![CDATA[<=]]> 1
+    </select>
+    <select id="getAllPrdInfoSelect2" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+        PROD_ID id,
+        PROD_NAME text
+        from
+        REP_PROD_INFO
+        where STATUS='E' and IS_GRADE = '02'
+        <if test="search != null and search != ''">
+            and (PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+            or PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+        </if>
+        <if test="initValue != null and initValue != ''">
+            and PROD_ID = #{initValue}
+        </if>
+        union all
+        select distinct
+        rp1.PROD_ID id,
+        concat(rp1.PROD_NAME,concat('(',concat(rp2.PROD_NAME,')'))) text
+        from
+        REP_PROD_INFO rp1 left join REP_PROD_INFO rp2 on rp1.P_PROD_ID = rp2.PROD_ID
+        where rp1.STATUS='E' and rp2.IS_GRADE = '01'
+        <if test="search != null and search != ''">
+            and (rp1.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+            or rp2.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+        </if>
+        <!-- 只取母产品 -->
+        <!--		<if test="sonFlag != null and sonFlag != '' and sonFlag == '1'.toString() ">-->
+        <!--			and p_prod_id is null-->
+        <!--		</if>-->
+        <!--		&lt;!&ndash; 只取子产品 &ndash;&gt;-->
+        <!--		<if test="sonFlag != null and sonFlag != '' and sonFlag == '2'.toString() ">-->
+        <!--			and p_prod_id is not null-->
+        <!--		</if>-->
+        <if test="initValue != null and initValue != ''">
+            and rp1.PROD_ID = #{initValue}
+        </if>
     </select>
 
 </mapper>
