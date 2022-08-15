@@ -18,6 +18,7 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.constant.DictCodeList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -397,6 +398,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
         if (StringUtil.equals("1", option)) {
             dto.setFilename(fileName);
             dto.setFilepath(filePath);
+            dto.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
 
             return reportConfirmManage001Mapper.updateRepRevealById(dto);
         }else {
