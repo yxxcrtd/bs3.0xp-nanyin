@@ -20,6 +20,8 @@ $(function () {
 	var currFilename;
 	//var webRoot = "http://192.168.60.186:8081/tamsyy";
 	//var webRoot = "http://localhost:8081/tamsyy";
+	//alert(docH);
+	document.getElementById("OfficeDiv").style.height=docH-60+"px";
 	
     //预览报表信息，用插件编辑器打开word文档，本项目是用html打开，没有用到这个方法
     var showDetail = function(params){
