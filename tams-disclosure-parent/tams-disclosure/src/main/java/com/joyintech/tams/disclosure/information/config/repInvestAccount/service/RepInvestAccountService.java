@@ -8,8 +8,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dao.RepInvestAccount001Mapper;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -27,6 +29,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
 
     @Autowired
     private RepInvestAccount001Mapper repInvestAccountMapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
     /**
      * 根据产品代码模糊查询联系下拉框
      *
@@ -133,6 +137,9 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         String totalMsg = "";
         List<List<String>> jsonArrays = new ArrayList<>();

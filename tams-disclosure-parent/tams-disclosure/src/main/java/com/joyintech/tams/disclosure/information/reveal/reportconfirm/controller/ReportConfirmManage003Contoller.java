@@ -206,7 +206,9 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 // 画面ID
         String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID)==null?"":request.getParameter(GlobalConstant.PAGE_ID));
     	// 获取本地ZIP包路径
-		String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
+//		String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
+		UploadFile sourceFile = fileAttachmentProcess.fetch(request.getParameter("fileNo"));
+		String filePath = sourceFile.getTargetFile().getPath();
 		//获取解压在服务器上的路径
         String localFilePath = CacheUtil.getSysParam(ReportGlobalConstant.DECOMPRESS_FILEPATH);
         File localFilePath1 = new SafelyFile(localFilePath);

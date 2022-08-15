@@ -1126,5 +1126,4 @@ alter table DIS_PROD_ADJUST add (
 ADJ_REASON2 VARCHAR2(512)
 );
 comment on column DIS_PROD_ADJUST.ADJ_REASON2 is '调整原因2';
-select * from REP_PROD_INFO;
 /**产品要素调整表增加字段 add by sunjie 2022-08-14 end*/

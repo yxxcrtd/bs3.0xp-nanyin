@@ -185,6 +185,9 @@ public class ReportConfirmManage004Service extends BaseService<ReportConfirmMana
         if(StringUtil.isNotEmpty(basePath)){
             newfilePath = newfilePath.replace(basePath,"");
         }
+        if(newfilePath.toLowerCase(Locale.CHINA).startsWith("http:")||newfilePath.toLowerCase(Locale.CHINA).startsWith("https:")){
+            return uploadFile;
+        }
 
         if(logger.isDebugEnabled()){
             logger.debug("上传文件开始,文件名称:{}",fileName);
