@@ -511,7 +511,7 @@ date$qryEndDate=(
     select busi_date from(
     select a.busi_date from chb_mkt_holiday a 
     where a.busi_date >= (SELECT trunc(date$qryEndDate,''d'') FROM dual)
-    and a.busi_date <= (SELECT trunc(date$qr yEndDate,''d'') + 7 from dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''d'') + 7 from dual)
     and a.is_holiday=''0''
     and a.market_code=''04''
     order by a.busi_date asc)
