@@ -27,9 +27,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
 import com.joyintech.tams.disclosure.interf.interf.common.dto.FileDisposeResultEntity;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +75,9 @@ public class ReportModelManage002Controller extends BaseController {
 
 	@Autowired
 	ReportModelManage002Service reportModelManage002Service;
+
+	@Autowired
+	private JoyinDFSTemplate joyinDFSTemplate;
 	/**
      * 日志
      */
@@ -267,7 +272,9 @@ public class ReportModelManage002Controller extends BaseController {
 			 
 			 
 			 if(filepath.exists()&&filepath.isDirectory()){
-
+				 SysUploadFileInfo suf = new SysUploadFileInfo();
+				 suf.setPath(this.getParam("fileName"));
+				 joyinDFSTemplate.fetch(suf);
 			//调用解压工具,并解压至指定目录
 			 boolean deczip =  FileUtil.decompressZip(new SafelyFile(this.getParam("fileName")), filepath2.getPath());
 			 if(!deczip){

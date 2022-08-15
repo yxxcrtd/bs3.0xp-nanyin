@@ -10,9 +10,11 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dao.RepProdIndexSMapper;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -34,6 +36,8 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
 
     @Autowired
     private RepProdIndexSMapper repProdIndexSMapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
     /**
      * 根据产品代码模糊查询联系下拉框
      *
@@ -137,6 +141,9 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
 //        if (objects.size() - 1 > 50000) {
 //            Map<String, Object> resultMap = new HashMap<>();

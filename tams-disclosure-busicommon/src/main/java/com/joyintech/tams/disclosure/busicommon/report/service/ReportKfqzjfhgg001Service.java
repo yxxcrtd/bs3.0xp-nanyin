@@ -118,7 +118,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     //产品登记编码
                     reportKfqzjfhgg001Dto.setRegCode(reportCommonProdDto.getRegCode());
                     //内部销售代码
-                    reportKfqzjfhgg001Dto.setProdId(reportCommonProdDto.getProdId());
+                    reportKfqzjfhgg001Dto.setInnerProdId(reportCommonProdDto.getInnerProdId());
                     //历史净值及分红信息
                     if (list != null && list.size() > 0) {
                         ReportKfqHisBonusDto reportKfqHisBonusDto = list.get(0);

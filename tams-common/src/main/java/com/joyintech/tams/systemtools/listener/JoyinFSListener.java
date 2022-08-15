@@ -40,7 +40,7 @@ import com.joyintech.tools.util.FileUtil;
  * @date : 2019/9/4 11:22
  */
 @Component
-@Primary
+//@Primary
 public class JoyinFSListener implements FileUploadListener, FileAttachmentProcess {
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());

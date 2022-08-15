@@ -77,7 +77,7 @@ public class ReportContentEnum003Controller extends BaseController {
 		this.setSelectOptionToModel(model, DictCode.发行方式);
 		this.setSelectOptionToModel(model, DictCode.发行状态);
 		this.setSelectOptionToModel(model, DictCode.开放模式);
-		this.setSelectOptionToModel(model, DictCode.是否);
+		this.setSelectOptionToModel(model, DictCode.是或否);
 		this.setSelectOptionToModel(model, DisclosureDictCode.产品类型);
 		this.setSelectOptionToModel(model, DisclosureDictCode.理财类型);
 		this.setSelectOptionToModel(model, DisclosureDictCode.产品期限类型);

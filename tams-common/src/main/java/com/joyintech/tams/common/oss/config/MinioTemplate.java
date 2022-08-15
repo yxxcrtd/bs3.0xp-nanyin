@@ -10,6 +10,8 @@
  */
 package com.joyintech.tams.common.oss.config;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
 import io.minio.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -265,6 +268,29 @@ public class MinioTemplate {
             logger.error("上传对象{}异常",uuid,e);
             throw new RuntimeException("Minio上传对象异常",e);
         }
+    }
+    /**
+     * @Author ZY22350
+     * @Description //判断文件是否存在
+     * @Date 13:51 2022/8/12
+     * @Param [objectName]
+     * @return java.lang.Boolean
+     **/
+    public Boolean checkFileIsExist(String objectName) {
+        String filePath = systemDiffConvertPath(objectName,false);
+        if(filePath.toLowerCase(Locale.CHINA).startsWith("http:")||filePath.toLowerCase(Locale.CHINA).startsWith("https:")){
+            return true;
+        }
+        String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+        filePath = filePath.replaceAll(basePath,"");
+        try {
+            minioClient.statObject(
+                    StatObjectArgs.builder().bucket(minioProperties.getBucket()).object(filePath).build()
+            );
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
     /**
      * 

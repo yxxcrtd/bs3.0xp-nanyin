@@ -16,7 +16,7 @@ public class ReportRkcpjz001Dto {
     /*产品登记编码*/
     private String regCode;
     /*内部销售代码*/
-    private String prodId;
+    private String innerProdId;
     /*公告日*/
     private String announceT;
     /*增加公告期*/
@@ -64,12 +64,12 @@ public class ReportRkcpjz001Dto {
         this.regCode = regCode;
     }
 
-    public String getProdId() {
-        return prodId;
+    public String getInnerProdId() {
+        return innerProdId;
     }
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
+    public void setInnerProdId(String innerProdId) {
+        this.innerProdId = innerProdId;
     }
 
     public List<ReportValueDto> getList() {

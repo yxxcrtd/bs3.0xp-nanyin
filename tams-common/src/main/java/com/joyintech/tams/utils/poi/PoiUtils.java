@@ -1,18 +1,14 @@
 package com.joyintech.tams.utils.poi;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.common.oss.config.MinioProperties;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.common.oss.service.impl.MinioFileRemoteService;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -49,7 +45,8 @@ public class PoiUtils {
 //        File imageFolderFile = new File(imagePath);
 //        XHTMLOptions options = XHTMLOptions.create().URIResolver(new FileURIResolver(imageFolderFile));
 //        options.setExtractor(new FileImageExtractor(imageFolderFile));
-        //服务器安装apache目录
+        /*由于不使用apache存储图片，所以这里注释掉 edit by zhengbs 20220813 start*/
+       /* //服务器安装apache目录
         String tmpImagePath = CacheUtil.getSysParam("POI_APACHE_PATH");
         //安装apache服务器的ip
 //        String apacheAddress = CacheUtil.getSysParam("POI_APACHE_ADDRESS");
@@ -84,6 +81,39 @@ public class PoiUtils {
             public String resolve(String uri) {
                 return upload;
             }
+        });*/
+        /*由于不使用apache存储图片，所以这里注释掉 edit by zhengbs 20220813 end*/
+        //使用minio存储图片
+        XHTMLOptions options = XHTMLOptions.create();
+        options.setImageManager( new ImageManager(new File(""),"")  {
+            String upload = null;
+
+            @Override
+            public void extract(String imagePath,byte[] imageData ) throws IOException {
+                InputStream fis =null;
+                try {
+                    String tmpImagePath = "echartsImages";
+                    imagePath = imagePath.split("/")[2];
+                    FileRemoteService minioFileRemoteService = SpringContextUtil.getBean(MinioFileRemoteService.class);
+                    MinioProperties minioProperties = (MinioProperties)SpringContextUtil.getBean(MinioProperties.class);
+                    //上传图片到minio服务器
+                    fis = new ByteArrayInputStream(imageData);
+                    minioFileRemoteService.uploadFile(File.separator+tmpImagePath+File.separator+imagePath, fis);
+                    //增加随机数，防止浏览器缓存 modify by zhengbs
+                    upload = minioProperties.getReadPath()+File.separator+minioProperties.getBucket()+File.separator+tmpImagePath+File.separator + imagePath+"?fresh="+Math.random();
+                    logger.info("【上传Minio服务器图片地址：{}】",upload);
+                }catch (Exception e) {
+                    logger.error("【处理图片异常】",e);
+                } finally {
+                    if ( fis!=null )
+                        fis.close();
+                }
+            }
+
+            @Override
+            public String resolve(String uri) {
+                return upload;
+            }
         });
 
         options.setIgnoreStylesIfUnused(false);
@@ -102,7 +132,7 @@ public class PoiUtils {
         XWPFDocument xwpfDocument = new XWPFDocument(is);
         //setFontType(xwpfDocument);
         PdfOptions pdfOptions = PdfOptions.create();
-        setAlign(xwpfDocument);
+        //setAlign(xwpfDocument);
         PdfConverter.getInstance().convert(xwpfDocument, os, pdfOptions);
     }
 

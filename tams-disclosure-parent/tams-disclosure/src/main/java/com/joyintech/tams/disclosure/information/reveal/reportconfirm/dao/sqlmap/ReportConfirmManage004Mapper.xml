@@ -104,7 +104,7 @@
 
 
 
-	<update id="updateInfo" parameterType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto">
+	<update id="updateInfo" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage004Dto">
 		UPDATE REP_REVEAL
 		<set>
 			<if test="filename != null">

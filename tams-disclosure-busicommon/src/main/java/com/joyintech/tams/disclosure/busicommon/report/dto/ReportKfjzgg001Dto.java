@@ -12,7 +12,7 @@ public class ReportKfjzgg001Dto {
     private String openEndDateT;
     private String prodName;
     private String regCode;
-    private String prodId;
+    private String innerProdId;
     private Date setDate;
     private String setDateT;
     private List<ReportOpenPlanDto> openPlanList;
@@ -70,12 +70,12 @@ public class ReportKfjzgg001Dto {
         this.regCode = regCode;
     }
 
-    public String getProdId() {
-        return prodId;
+    public String getInnerProdId() {
+        return innerProdId;
     }
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
+    public void setInnerProdId(String innerProdId) {
+        this.innerProdId = innerProdId;
     }
 
     public Date getSetDate() {

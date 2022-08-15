@@ -27,7 +27,7 @@ public class ReportKfqzjfhgg001Dto {
     /**
      * 子产品代码
      */
-    private String prodId;
+    private String innerProdId;
     /**
      * 子产品成立日：XXXX年XX月XX日
      */
@@ -107,12 +107,12 @@ public class ReportKfqzjfhgg001Dto {
         this.regCode = regCode;
     }
 
-    public String getProdId() {
-        return prodId;
+    public String getInnerProdId() {
+        return innerProdId;
     }
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
+    public void setInnerProdId(String innerProdId) {
+        this.innerProdId = innerProdId;
     }
 
     public String getSetDateT() {
