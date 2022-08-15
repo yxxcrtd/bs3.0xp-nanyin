@@ -91,8 +91,8 @@
                 #{excessAchievementProp,jdbcType=DECIMAL}, #{achievementBasis,jdbcType=VARCHAR},
                 #{achievementBasisProp,jdbcType=DECIMAL}, #{dataStatus,jdbcType=VARCHAR},
                 #{dataSource,jdbcType=VARCHAR},
-                #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
-                #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+                #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective"
             parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
