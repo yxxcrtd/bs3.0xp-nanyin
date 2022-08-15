@@ -132,17 +132,24 @@ public class ProdBonusplanManager002Controller extends BaseController {
      * @return
      * @throws Exception
      */
+//    @RequestMapping("getPrdInfoSelect2")
+//    @ResponseBody
+//    public Page<SelectOptionDto> getPrdInfoSelect2() {
+//
+//        Map<String, Object> param = RequestUtil.getPageParam();
+//        param.put("sonFlag", "2");
+//        Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getAllPrdInfoSelect2(param);
+//        return prdInfoSelect;
+//    }
+
     @RequestMapping("getPrdInfoSelect2")
     @ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect2() {
+    public List<SelectOptionDto> getPrdInfoSelect2() {
 
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("sonFlag", "2");
-        Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getAllPrdInfoSelect2(param);
-        return prdInfoSelect;
+        return prodBonusplanManager002Service.getAllPrdInfoSelect2(param);
     }
-
-
     /**
      * check
      *

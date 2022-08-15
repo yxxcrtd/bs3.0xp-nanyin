@@ -35,7 +35,7 @@ import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
 public class PoiUtils {
     private static Logger logger = LoggerFactory.getLogger(PoiUtils.class);
 
-    public static void mergeDocx(String tempateFile,OutputStream os,Map<String,Object> params ) throws PoiException {
+    public static void mergeDocx(String tempateFile,OutputStream os,Map<String,Object> params ) throws Exception {
         PoiUtilsHelper.mergeParasToDocx(tempateFile,os,params);
     }
 

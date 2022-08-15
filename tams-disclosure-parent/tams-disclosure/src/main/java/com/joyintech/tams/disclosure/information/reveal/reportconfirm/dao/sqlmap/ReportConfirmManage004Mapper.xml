@@ -134,12 +134,10 @@
 		T1.REVEAL_CHANNEL revealChannel,
 		T1.DETAIL detail,
 		T1.REVEAL_END_DATE revealEndDate,
-		T2.COMMENT_REMARK comment_remark,
 		T1.FILEPATH filepath,
 		T1.FILENAME filename,
 		T1.WORKFLOW_ID workflowId
 		FROM REP_REVEAL T1
-		left join REP_REVEAL_COMMENT T2 on T2.INFO_SEQNO = T1.ID
 		<where>
 			<if test="workflowId != null and !workflowId.equals('')">
 				AND WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
