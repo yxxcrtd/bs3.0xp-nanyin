@@ -853,5 +853,11 @@ VALUES ('RepRelDeal001', 'RepRelDeal001_TABROW_edit', '01', '01', null, '编辑'
 INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 VALUES ('RepRelDeal001', 'RepRelDeal001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
 
+-- add by kongzhifang 20220812 NYLCXP-557 产品运作方式数据字典更新映射关系
+update sys_datadict_list set item_value = '封闭式净值型' where dict_code = 'DIS_PROFIT_TYPE' and item_code = '01';
+update sys_datadict_list set item_value = '封闭式非净值型' where dict_code = 'DIS_PROFIT_TYPE' and item_code = '02';
+update sys_datadict_list set item_value = '开放式净值型' where dict_code = 'DIS_PROFIT_TYPE' and item_code = '03';
+update sys_datadict_list set item_value = '开放式非净值型' where dict_code = 'DIS_PROFIT_TYPE' and item_code = '04';
+
 
 commit ;

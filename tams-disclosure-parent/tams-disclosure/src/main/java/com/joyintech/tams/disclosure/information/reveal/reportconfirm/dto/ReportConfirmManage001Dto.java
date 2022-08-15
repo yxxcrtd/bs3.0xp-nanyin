@@ -239,7 +239,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     }
     
     public String getRevealDateStr() {
-        return DateUtil.format(this.getRevealDate(),"yyyy-MM-dd");
+        return DateUtil.format(this.getRevealDate(),"yyyy-MM-dd HH:mm");
     }
 
 	public String getRevealChannelName() {
