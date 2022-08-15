@@ -10,6 +10,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dao.HugeInfoProMapper;
@@ -17,6 +18,7 @@ import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfo
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -43,6 +45,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
 
     @Autowired
     private ProElementAdjMapper proElementAdjMapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
     public Page<HugeInfoPro001Dto> selectForPage(Map<String, Object> param) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         String prodRegistNo = (String)param.get("prodRegistNo");
@@ -111,6 +115,9 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
     public AjaxResult checkImportData(String fileName) {
         List<String> findProdRegistNoList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<String> findProdList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();

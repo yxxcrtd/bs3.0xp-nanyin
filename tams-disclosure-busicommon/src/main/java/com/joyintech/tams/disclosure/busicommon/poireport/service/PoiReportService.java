@@ -16,6 +16,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt5;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +36,6 @@ import com.joyintech.tams.common.base.dao.RepInstallLogDetailMapper;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.dao.RepReportCheckMapper;
 import com.joyintech.tams.common.base.dao.RepRevealMapper;
-import com.joyintech.tams.common.base.entity.RepInstallLogDetail;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
-import com.joyintech.tams.common.base.entity.RepReportCheck;
-import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -835,6 +836,9 @@ public class PoiReportService {
 
 		Map<String, Object> dataMap = null;
 		List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+		if(listReports==null){
+			return "报告期末时点距离当前产品的生成日或者到期日不足90个自然日，无需生成报告<br>";
+		}
 		if (listReports.size() > 0) {
 			dataMap = listReports.get(0);
 			dataMap.put("prodId",repReveal.getProdid());
@@ -844,33 +848,35 @@ public class PoiReportService {
 		}
 
 		String rptType = params.get("uri").toString();
-		String prodId = repReveal.getProdid();
+		String prodId = StringUtil.isNotEmpty(repReveal.getProdid())?repReveal.getProdid():params.get("prodid").toString();
+
 		if (StringUtil.isNotEmpty(rptType)) {
 			if (StringUtil.equals(rptType,DisReportType.FXGG)) {
 				//发行公告
 				//产品募集金额只能是整数，不能出现角和分；
-				BigDecimal raiseAmt=(BigDecimal)dataMap.get("raiseAmtVal");
-				if(!(new BigDecimal(raiseAmt.intValue()).compareTo(raiseAmt)==0)){
-					resultSb.append("产品募集金额只能是整数");
+				if(StringUtil.isNotEmpty(dataMap.get("raiseAmtVal"))){
+					BigDecimal raiseAmt=(BigDecimal)dataMap.get("raiseAmtVal");
+					if(!(new BigDecimal(raiseAmt.intValue()).compareTo(raiseAmt)==0)){
+						resultSb.append("产品募集金额只能是整数"+"<br>");
+					}
 				}
+
 			}else if (StringUtil.equals(rptType,DisReportType.KFJZJFHGG_BNYS)
 					||StringUtil.equals(rptType,DisReportType.KFJZJFHGG_BNYN)){
 				//	开放、净值及分红公告
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
-				//TODO:
 				String baseDate=(String) dataMap.get("baseDate");
 				if(poiReportMapper.checkBaseDate(prodId,baseDate)<1){
-					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日");
+					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
 				}
 
 			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMFB)
 					||StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
 				//净值及分红报告
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
-				//TODO:
 				String settDate=(String) dataMap.get("settDate");
 				if(poiReportMapper.checkBaseDate(prodId,settDate)<1){
-					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日");
+					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
 				}
 			}
 			else if(StringUtil.equals(rptType,DisReportType.JDBG_ZSX)
@@ -879,44 +885,249 @@ public class PoiReportService {
 					||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
 					||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
 					||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
-					//季报、半年报、年报
-					//	当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前及穿透后占比必须大于等于80%；
-					//	当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须大于等于80%；
-					//	当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前及穿透后占比必须大于等于80%；
-					//	当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透前及穿透后占比必须小于80%；
-					//TODO:
+				//先把规则查询出来
+				List<RepDataCheck>checkList=poiReportMapper.getRepDataCheckList();
+				Map<String,List<RepDataCheck>>checkMap=checkList.stream().collect(JoyinCollectors.groupingBy(x->x.getCheckId()));
+				//季报、半年报、年报
+				//获取产品信息
+				RepProdInfo prodInfo=poiReportMapper.getProdInfo(prodId);
+
+				//获取报告期末产品资产组合情况
+				Map<String,Object> prodAssetComb=(Map<String,Object>)dataMap.get("prodAssetComb");
+
+				if(StringUtil.isNotEmpty(prodInfo)){
+					//	当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前及穿透后占比必须大于等于80%； 100000001
+					if(StringUtil.equals(prodInfo.getNatureInvest(), DictCodeListExt5.信披投资性质_固定收益类.getValue())){
+						RepDataCheck repDataCheck=checkMap.get("100000001").get(0);
+						String tips1="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前占比必须";
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fixPreRatio"))){
+							BigDecimal fixPreRatio=(BigDecimal)prodAssetComb.get("fixPreRatio");
+							String s1=this.singleCheck(repDataCheck,fixPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append(s1+"<br>");
+							}
+						}else{
+							resultSb.append("固定受益类穿透前占比未获取到"+"<br>");
+						}
+						//穿透后
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fixAfterRatio"))){
+							String tips2="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透后占比必须";
+							BigDecimal fixAfterRatio=(BigDecimal)prodAssetComb.get("fixAfterRatio");
+							String s2=this.singleCheck(repDataCheck,fixAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append(s2+"<br>");
+							}
+						}else{
+							resultSb.append("固定受益类穿透后占比未获取到"+"<br>");
+						}
+					}
+					//	当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须大于等于80%； 100000002
+					else if(StringUtil.equals(prodInfo.getNatureInvest(), DictCodeListExt5.信披投资性质_权益类.getValue())){
+						RepDataCheck repDataCheck=checkMap.get("100000002").get(0);
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
+							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
+							String tips1="当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透前占比必须";
+							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append(s1+"<br>");
+							}
+						}else{
+							resultSb.append("权益类穿透前占比未获取到"+"<br>");
+						}
+						//穿透后
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
+							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
+							String tips2="当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append(s2+"<br>");
+							}
+						}else{
+							resultSb.append("权益类穿透后占比未获取到"+"<br>");
+						}
+
+					}
+					//	当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前及穿透后占比必须大于等于80%； 100000003
+					else if(StringUtil.equals(prodInfo.getNatureInvest(), DictCodeListExt5.信披投资性质_商品及金融衍生品类.getValue())){
+						RepDataCheck repDataCheck=checkMap.get("100000003").get(0);
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fdPreRatio"))){
+							BigDecimal fdPreRatio=(BigDecimal)prodAssetComb.get("fdPreRatio");
+							String tips1="当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前占比必须";
+							String s1=this.singleCheck(repDataCheck,fdPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append(s1+"<br>");
+							}
+						}else{
+							resultSb.append("商品及衍生品类穿透前占比未获取到"+"<br>");
+						}
+
+						//穿透后
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fdAfterRatio"))){
+							BigDecimal fdAfterRatio=(BigDecimal)prodAssetComb.get("fdAfterRatio");
+							String tips2="当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,fdAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append(s2+"<br>");
+							}
+						}else{
+							resultSb.append("商品及衍生品类穿透后占比未获取到"+"<br>");
+						}
+					}
+					//	当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透前及穿透后占比必须小于80%； 100000004
+					else if(StringUtil.equals(prodInfo.getNatureInvest(), DictCodeListExt5.信披投资性质_混合类.getValue())){
+						RepDataCheck repDataCheck=checkMap.get("100000004").get(0);
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("mixPreRatio"))){
+							BigDecimal mixPreRatio=(BigDecimal)prodAssetComb.get("mixPreRatio");
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透前占比必须";
+							String s1=this.singleCheck(repDataCheck,mixPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append(s1+"<br>");
+							}
+						}else{
+							resultSb.append("固定收益类、权益类、商品及衍生品类穿透前占比未获取到"+"<br>");
+						}
+						if(StringUtil.isNotEmpty(prodAssetComb.get("mixAfterRatio"))){
+							//穿透后
+							BigDecimal mixAfterRatio=(BigDecimal)prodAssetComb.get("mixAfterRatio");
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,mixAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append(s2+"<br>");
+							}
+						}else{
+							resultSb.append("固定收益类、权益类、商品及衍生品类穿透后占比未获取到"+"<br>");
+						}
+
+					}
+				}
 
 					if(StringUtil.equals(rptType,DisReportType.BNDBG_ZSX)
 						||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
 						||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
 						||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
 						//半年报、年报：
-						//	当产品的募集方式为“公募”，发行方式为“开放式”时，“报告期末产品杠杆水平”小于等于140；
-						//	当“产品类型”为“现管类产品”时，“报告期末产品杠杆水平”小于等于120；
-						//	当产品的募集方式为“私募”或产品募集方式为“公募”且发行方式为“封闭式”时，“报告期末产品杠杆水平”小于等于200；
-						//	当产品募集方式为“私募”且“是否是分级产品”为“是”的时候，“报告期末产品杠杆水平”小于等于140；
-						//	当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须等于0%
 						//TODO:
+						//	当产品的募集方式为“公募”，发行方式为“开放式”时，“报告期末产品杠杆水平”小于等于140； 100000005
+						if(StringUtil.equals(prodInfo.getRaiseType(),DictCodeListExt5.信披募集方式_公募.getValue())
+						&&StringUtil.equals(prodInfo.getIssuingWay(),DictCodeListExt5.发行方式_开放式.getValue())){
+							RepDataCheck repDataCheck=checkMap.get("100000005").get(0);
+							if(StringUtil.isNotEmpty(dataMap.get("leverage"))){
+								BigDecimal leverage=(BigDecimal)dataMap.get("leverage");
+								String tips1="当产品的募集方式为“公募”，发行方式为“开放式”时，“报告期末产品杠杆水平”";
+								String s1=this.singleCheck(repDataCheck,leverage,tips1);
+								if (StringUtil.isNotEmpty(s1)) {
+									resultSb.append(s1+"<br>");
+								}
+							}else {
+								resultSb.append("报告期末产品杠杆水平未获取到"+"<br>");
+							}
+
+						}
+
+						//	当“产品类型”为“现管类产品”时，“报告期末产品杠杆水平”小于等于120； 100000006
+						//	当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须等于0% 100000009
+						if(StringUtil.equals(prodInfo.getProdType(),DictCodeListExt5.信披产品类型_现管类产品.getValue())){
+							RepDataCheck repDataCheck=checkMap.get("100000006").get(0);
+							if(StringUtil.isNotEmpty(dataMap.get("leverage"))){
+								BigDecimal leverage=(BigDecimal)dataMap.get("leverage");
+								String tips1="当“产品类型”为“现管类产品”时，“报告期末产品杠杆水平”";
+								String s1=this.singleCheck(repDataCheck,leverage,tips1);
+								if (StringUtil.isNotEmpty(s1)) {
+									resultSb.append(s1+"<br>");
+								}
+							}else {
+								resultSb.append("报告期末产品杠杆水平未获取到"+"<br>");
+							}
+
+							RepDataCheck repDataCheck2=checkMap.get("100000009").get(0);
+							//穿透前
+							if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
+								BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
+								String tips1="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前占比必须";
+								String s1=this.singleCheck(repDataCheck2,equityPreRatio,tips1);
+								if (StringUtil.isNotEmpty(s1)) {
+									resultSb.append(s1+"<br>");
+								}
+							}else{
+								resultSb.append("权益类穿透前占比未获取到"+"<br>");
+							}
+							//穿透后
+							if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
+								BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
+								String tips2="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透后占比必须";
+								String s2=this.singleCheck(repDataCheck2,equityAfterRatio,tips2);
+								if (StringUtil.isNotEmpty(s2)) {
+									resultSb.append(s2+"<br>");
+								}
+							}else{
+								resultSb.append("权益类穿透后占比未获取到"+"<br>");
+							}
+
+						}
+
+						//	当产品的募集方式为“私募”且“是否分级产品”为“否”或产品募集方式为“公募”且发行方式为“封闭式”时，“报告期末产品杠杆水平”小于等于200； 100000007
+						if((StringUtil.equals(prodInfo.getRaiseType(),DictCodeListExt5.信披募集方式_公募.getValue())
+								&&StringUtil.equals(prodInfo.getIssuingWay(),DictCodeListExt5.发行方式_封闭式.getValue())
+						||(StringUtil.equals(prodInfo.getRaiseType(),DictCodeListExt5.信披募集方式_私募.getValue())
+								&&StringUtil.equals(prodInfo.getIsGrade(), DictCodeList.是否_中债_否.getValue())))){
+							RepDataCheck repDataCheck=checkMap.get("100000007").get(0);
+							if(StringUtil.isNotEmpty(dataMap.get("leverage"))){
+								BigDecimal leverage=(BigDecimal)dataMap.get("leverage");
+								String tips1="当产品的募集方式为“私募”且“是否分级产品”为“否”或产品募集方式为“公募”且发行方式为“封闭式”时，“报告期末产品杠杆水平”";
+								String s1=this.singleCheck(repDataCheck,leverage,tips1);
+								if (StringUtil.isNotEmpty(s1)) {
+									resultSb.append(s1+"<br>");
+								}
+							}else {
+								resultSb.append("报告期末产品杠杆水平未获取到"+"<br>");
+							}
+						}
+
+						//	当产品募集方式为“私募”且“是否是分级产品”为“是”的时候，“报告期末产品杠杆水平”小于等于140； 100000008
+						if(StringUtil.equals(prodInfo.getRaiseType(),DictCodeListExt5.信披募集方式_私募.getValue())
+								&&StringUtil.equals(prodInfo.getIsGrade(), DictCodeList.是否_中债_是.getValue())){
+							RepDataCheck repDataCheck=checkMap.get("100000008").get(0);
+							if(StringUtil.isNotEmpty(dataMap.get("leverage"))){
+								BigDecimal leverage=(BigDecimal)dataMap.get("leverage");
+								String tips1="当产品募集方式为“私募”且“是否是分级产品”为“是”的时候，“报告期末产品杠杆水平”";
+								String s1=this.singleCheck(repDataCheck,leverage,tips1);
+								if (StringUtil.isNotEmpty(s1)) {
+									resultSb.append(s1+"<br>");
+								}
+							}else {
+								resultSb.append("报告期末产品杠杆水平未获取到"+"<br>");
+							}
+						}
 					}
 
 					//对于定期报告中需要从【报表指标管理】或“合作机构信息维护”、“产品资产组合情况信息维护”、“非标债权类资产明细信息维护”“关联交易情况信息维护”中取值的统计项，
 					// 若在生成报告时，上述内容取不到值或无有效数据（系统生成报告的日期在数据的生效期及有效截止日期之间），也需要在本界面生成一条对应数据项为空的提示；
 					//TODO:
 
-					//对于开放式产品，若在定期报告的统计期内产品业绩比较基准发生了变更（由非指数型产品变为指数型产品，或指数型产品挂钩的行情代码由A变为B）需要在本模块给出提示：
+				//对于开放式产品，若在定期报告的统计期内产品业绩比较基准发生了变更（由非指数型产品变为指数型产品，或指数型产品挂钩的行情代码由A变为B）需要在本模块给出提示：
+				if(StringUtil.equals(prodInfo.getIssuingWay(),DictCodeListExt5.发行方式_开放式.getValue())){
 					//TODO:
+				}
 			}
 
 			//对所有报告的通用校验
 			//生成报告时，若存在某个统计项取不到值的情况，需要在本模块进行提示 提示“生成报告所需数据有缺失”
-			//TODO:
 			for (String key:dataMap.keySet()){
-				if (!StringUtil.isNotEmpty(dataMap.get(key))) {
-					if (!dataMap.containsKey(key+"_xx")) {
-						resultSb.append("生成报告所需数据有缺失");
-						break;
+				if(!key.contains("_xx")){
+					if (!StringUtil.isNotEmpty(dataMap.get(key))) {
+						if (!dataMap.containsKey(key+"_xx")) {
+							if(dataMap.get(key) instanceof String){
+								dataMap.put(key,"xxx");
+							}
+							resultSb.append("生成报告所需数据有缺失key="+key+"<br>");
+						}
 					}
 				}
+
 			}
 
 			//校验完成之后判断有没有错误
@@ -937,17 +1148,68 @@ public class PoiReportService {
 				repReportCheck.setFileNo(uploadFile.getFileNo());
 				repReportCheck.setDataStatus("E");
 
+				//入库REP_REPORT_CHECK
+				//数据全删全插
 				poiReportMapper.deleteCheckData(repReportCheck);
 
 				repReportCheckMapper.insertSelective(repReportCheck);
-				//入库REP_REPORT_CHECK
-				//TODO:
-				//数据全删全插
-				resultSb.append("提示语");
+
+				resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。点击“确认”按钮，可通过在线编辑的形式对当前报表进行编辑");
 			}
 		}
 
 		return resultSb.toString();
+	}
+
+	private String singleCheck(RepDataCheck repDataCheck,BigDecimal val,String tips){
+		String result="";
+		if(StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于)){
+			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
+			if(val.compareTo(compareVal)>=0){
+				result=tips+"小于"+repDataCheck.getParamValue1();
+			}
+		} else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于等于)) {
+			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
+			if(val.compareTo(compareVal)>0){
+				result=tips+"小于等于"+repDataCheck.getParamValue1();
+			}
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于)) {
+			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
+			if(val.compareTo(compareVal)<=0){
+				result=tips+"大于"+repDataCheck.getParamValue1();
+			}
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于等于)) {
+			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
+			if(val.compareTo(compareVal)<0){
+				result=tips+"大于等于"+repDataCheck.getParamValue1();
+			}
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值)) {
+			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
+			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
+			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<0)){
+				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"内";
+			}
+
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值)) {
+			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
+			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
+			if(!(val.compareTo(paramValue1)>=0&&val.compareTo(paramValue2)<0)){
+				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（含）,"+repDataCheck.getParamValue2()+"内";
+			}
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值)) {
+			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
+			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
+			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<=0)){
+				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"（含）内";
+			}
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_等于)) {
+			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
+			if(val.compareTo(compareVal)!=0){
+				result=tips+"等于"+repDataCheck.getParamValue1();
+			}
+		}
+
+		return result;
 	}
 
 }

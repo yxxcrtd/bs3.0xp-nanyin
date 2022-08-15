@@ -105,6 +105,10 @@ public class ReportKfqgg001Service implements IReportDataService {
         repReveal.setProdid(prodId);
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate(DateUtil.platDateFromCache());
+        ReportKfqgg001Dto reportKfqgg001Dto =  reportKfqgg001Mapper.getProdInfo(paraMap);
+        if(reportKfqgg001Dto != null){
+            paraMap.put("cusFileName", reportKfqgg001Dto.getProdName());
+        }
         return repReveal;
     }
 }

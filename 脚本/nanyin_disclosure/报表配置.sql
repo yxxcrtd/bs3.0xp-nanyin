@@ -48,8 +48,8 @@ insert into rep_reportinfo values ('1246','CP_001_007_001','FHJSQD','/CP','/joyi
 -- 报表信息
 delete from REP_INFO;
 insert into REP_INFO values ('CP_001_001_001','FXGG','/CP','发行公告','发行公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'01','{prodname}发行公告');
-insert into REP_INFO values ('CP_001_002_001','CPKFQGG','/CP','产品开放期公告','产品开放期公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}{prodid}开放计划公告');
-insert into REP_INFO values ('CP_001_002_002','CPKFQBG','/CP','产品开放期报告','产品开放期报告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}{prodid}开放计划报告');
+insert into REP_INFO values ('CP_001_002_001','CPKFQGG','/CP','产品开放期公告','产品开放期公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{cusFileName}开放计划公告');
+insert into REP_INFO values ('CP_001_002_002','CPKFQBG','/CP','产品开放期报告','产品开放期报告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{cusFileName}开放计划报告');
 insert into REP_INFO values ('CP_001_002_003','RKCPJZ_GMXGL','/CP','日开产品净值公告（公募现管类）','日开产品净值公告（公募现管类）','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}净值公告{enddate}');
 insert into REP_INFO values ('CP_001_002_004','RKCPJZ_GMJZXCP','/CP','日开产品净值公告（公募净值型产品）','日开产品净值公告（公募净值型产品）','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}净值公告{enddate}');
 insert into REP_INFO values ('CP_001_002_005','MZJZGG','/CP','每周净值公告','每周净值公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}{prodid}每周净值公告');
@@ -90,7 +90,7 @@ insert into REP_INFO values ('CP_001_004_016','JESHGG_GM','/CP','巨额赎回公
 insert into REP_INFO values ('CP_001_004_017','JESHGBG_SM','/CP','巨额赎回报告（私募）','巨额赎回报告（私募）','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'04','{prodname}巨额赎回报告{enddate_filename}');
 insert into REP_INFO values ('CP_001_005_001','DLXSJGMDGG','/CP','代理销售机构名单公告','代理销售机构名单公告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'05','关于南银理财有限责任公司理财产品代理销售机构名单的公告');
 insert into REP_INFO values ('CP_001_006_001','QSBG','/CP','清算报告','清算报告','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'06','{prodname}清算报告');
-insert into REP_INFO values ('CP_001_007_001','FHJSQD','/CP','分红计算清单','分红计算清单','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'07','{prodname}{prodid}{enddate}分红计算清单');
+insert into REP_INFO values ('CP_001_007_001','FHJSQD','/CP','分红计算清单','分红计算清单','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'99','{prodname}{prodid}{enddate}分红计算清单');
 
 -- 报表信息配置
 delete from REP_SCREEN;
@@ -291,8 +291,10 @@ insert into REP_JOB_RANGE values ('D0000000000000000019','CP_001_002_006','02','
 insert into REP_JOB_RANGE values ('D0000000000000000020','CP_001_002_006','02','RAISE_TYPE','=','02','02','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000022','CP_001_002_007','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000023','CP_001_002_007','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('E0000000000000000023','CP_001_002_007','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000025','CP_001_002_008','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000026','CP_001_002_008','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('E0000000000000000026','CP_001_002_008','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000028','CP_001_002_009','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000029','CP_001_002_009','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000030','CP_001_002_009','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
@@ -369,9 +371,11 @@ insert into REP_JOB_RANGE values ('D0000000000000000121','100000005','02','REP_P
 insert into REP_JOB_RANGE values ('D0000000000000000122','100000006','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000123','100000006','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000124','100000006','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('E0000000000000000124','100000006','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000125','100000007','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000126','100000007','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000127','100000007','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('E0000000000000000127','100000007','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000128','100000008','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000129','100000008','02','ISSUING_WAY','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000130','100000008','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
@@ -460,10 +464,10 @@ insert into REP_RULE values ('D0000000000000000012','净值及分红报告（私
 insert into REP_RULE values ('D0000000000000000013','净值及分红报告（私募开放式）_规则','净值及分红报告（私募开放式）','CP_001_002_014','A02','','14','02','1','01','','02','0','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000014','季度报告指数型产品_规则','季度报告指数型产品','CP_001_002_015','A02','','01','02','3','01','','02','10','01','09:00:00','01','06','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000015','季度报告非指数型产品_规则','季度报告非指数型产品','CP_001_002_016','A02','','01','02','3','01','','02','10','01','09:00:00','01','06','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
-insert into REP_RULE values ('D0000000000000000016','半年度报告指数型产品_规则','半年度报告指数型产品','CP_001_002_017','A02','','01','02','3','01','','','','','','01','06','','','','docx','','/joyintech/disclosure/download/','01','01','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
-insert into REP_RULE values ('D0000000000000000017','半年度报告非指数型产品_规则','半年度报告非指数型产品','CP_001_002_018','A02','','01','02','3','01','','','','','','01','06','','','','docx','','/joyintech/disclosure/download/','01','01','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
-insert into REP_RULE values ('D0000000000000000018','年度报告指数型产品_规则','年度报告指数型产品','CP_001_002_019','A02','','01','02','3','01','','','','','','01','06','','','','docx','','/joyintech/disclosure/download/','01','01','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
-insert into REP_RULE values ('D0000000000000000019','年度报告非指数型产品_规则','年度报告非指数型产品','CP_001_002_020','A02','','01','02','3','01','','','','','','01','06','','','','docx','','/joyintech/disclosure/download/','01','01','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
+insert into REP_RULE values ('D0000000000000000016','半年度报告指数型产品_规则','半年度报告指数型产品','CP_001_002_017','A02','','01','02','3','01','','02','10','01','09:00:00','01','06','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
+insert into REP_RULE values ('D0000000000000000017','半年度报告非指数型产品_规则','半年度报告非指数型产品','CP_001_002_018','A02','','01','02','3','01','','02','10','01','09:00:00','01','06','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
+insert into REP_RULE values ('D0000000000000000018','年度报告指数型产品_规则','年度报告指数型产品','CP_001_002_019','A02','','01','02','3','01','','02','10','01','09:00:00','01','06','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
+insert into REP_RULE values ('D0000000000000000019','年度报告非指数型产品_规则','年度报告非指数型产品','CP_001_002_020','A02','','01','02','3','01','','02','10','01','09:00:00','01','06','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000020','到期公告（公募）_规则','到期公告（公募）','CP_001_003_001','A02','','14','01','1','01','','02','2','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000021','到期报告（私募）_规则','到期报告（私募）','CP_001_003_002','A02','','14','01','1','01','','02','2','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000022','清算报告_规则','清算报告','CP_001_006_001','A02','','MDATE','01','1','01','','02','0','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','02','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
@@ -507,7 +511,7 @@ date$qryEndDate=(
     select busi_date from(
     select a.busi_date from chb_mkt_holiday a 
     where a.busi_date >= (SELECT trunc(date$qryEndDate,''d'') FROM dual)
-    and a.busi_date <= (SELECT trunc(date$qr yEndDate,''d'') + 7 from dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''d'') + 7 from dual)
     and a.is_holiday=''0''
     and a.market_code=''04''
     order by a.busi_date asc)

@@ -12,7 +12,7 @@
 			SETDATE：产品成立日期
 		*/
 		SELECT
-			RPI.PROD_ID prodId,
+			RPI.PROD_ID innerProdId,
 			CASE WHEN RPI.IS_GRADE = '01' THEN
 					 RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
 				 ELSE RPI.PROD_NAME END titleName,

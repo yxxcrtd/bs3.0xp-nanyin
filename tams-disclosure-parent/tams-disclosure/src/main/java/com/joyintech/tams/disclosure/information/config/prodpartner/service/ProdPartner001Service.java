@@ -18,9 +18,11 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dao.ProdPartner001Mapper;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -59,6 +61,8 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
 
     @Autowired
     private ProdPartner001Mapper prodPartner001Mapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
     /**
      * excel2003格式
@@ -161,6 +165,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
      * @return
      */
     public AjaxResult checkImportData(String fileName) throws FileNotFoundException, ParseException {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         AjaxResult wr = new AjaxResult();
         List<JoyinMessage> joyinMessages = new ArrayList<>();
         //获取系统参数：单次导入的最大条数 todo:添加系统参数
@@ -192,6 +199,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
      */
     @Transactional(rollbackFor = Exception.class)
     public List<ExcelValidDto> importData(String fileName) throws Exception {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         // 获取平台日期
         Date platDate = DateUtil.platDateFromCache()==null?new Date():DateUtil.platDateFromCache();
         ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName),

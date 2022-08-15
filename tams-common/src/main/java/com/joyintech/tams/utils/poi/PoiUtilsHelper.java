@@ -61,11 +61,28 @@ public class PoiUtilsHelper {
 
 				XWPFParagraph paragraph = (XWPFParagraph) itPara.next();
 				List<XWPFRun> runs = paragraph.getRuns();
+				//参数变量
+				String paraCode=""; 
 				for (int i = 0; i < runs.size(); i++) {
+					if ( runs.get(i)==null ) continue;
+					
+                    String runString = runs.get(i).getText(runs.get(i).getTextPosition());
+                    if ( runString==null ) continue;
+
+                    //判断获取的参数是否完整
+                    paraCode+=runString;
+//					if ( paracode.equals("<"))
+//						System.out.println("hhhhhhhh");
+                    if ( paracodeIsComplete(paraCode)==false ) {  //不完整的参数变量，删除
+                        runs.get(i).setText("", 0);
+                        continue;
+                    }					
+					
 					//1.2.替换图片
-					replaceImage(runs.get(i),params);
+					replaceImage(paraCode,runs.get(i),params);
 					//1.1替换文本
-					replaceRun(runs.get(i),params);
+					replaceRun(paraCode,runs.get(i),params);
+					paraCode=""; 
 				}
 			}
 
@@ -130,19 +147,19 @@ public class PoiUtilsHelper {
 						List<XWPFParagraph> paragraphs = cell.getParagraphs();
 						for ( XWPFParagraph p:paragraphs ) {
 							List<XWPFRun> listRuns = p.getRuns();
-							String paracode="";
+							String paraCode="";
 							for ( XWPFRun r:listRuns ) {
-//				                  if (r==null ) continue;
-//				                    String rtext = r.getText(r.getTextPosition());  //getTextPosition: 取纯文本的起始位置，本行代码取出本run中的纯文本信息（不含控制符信息）
-//				                    if ( rtext==null ) continue;
-//				                    //判断获取的参数是否完整
-//				                    paracode+=rtext;
-//				                    if ( paracodeIsComplete(paracode)==false ) {  //删除不完整的变量设置，如${xx，但后续没有 }，或者<，后续没有>
-//				                        r.setText("", 0);
-//				                        continue;
-//				                    }
-//				                    if ( paracode==null ) continue;
-								replaceRun(r, params);
+								if (r==null ) continue;
+								    String rtext = r.getText(r.getTextPosition());  //getTextPosition: 取纯文本的起始位置，本行代码取出本run中的纯文本信息（不含控制符信息）
+								if ( rtext==null ) continue;
+								//判断获取的参数是否完整
+								paraCode+=rtext;
+								if ( paracodeIsComplete(paraCode)==false ) {  //删除不完整的变量设置，如${xx，但后续没有 }，或者<，后续没有>
+									r.setText("", 0);
+								    continue;
+								}
+								replaceRun(paraCode,r, params);
+								paraCode=""; 
 							}
 						}
 					}
@@ -163,10 +180,10 @@ public class PoiUtilsHelper {
 	 * @param params
 	 * @return
 	 */
-	private static XWPFRun replaceRun(XWPFRun run,Map<String, Object> params ) {
+	private static XWPFRun replaceRun(String paraCode,XWPFRun run,Map<String, Object> params ) {
 	//	System.out.println("table run1:"+run.toString());
 	//	System.out.println("table run2:"+run.getText(run.getTextPosition()));
-		String text = run.toString();
+		String text = paraCode;
 		List<String> listExp = new ArrayList<String>();
 		String re = "\\$\\{([^\\}]+)\\}";
 	    Pattern p = Pattern.compile(re);
@@ -249,11 +266,11 @@ public class PoiUtilsHelper {
      * @param pic
      * @throws EchartsException
      */
-    private static void replaceImage(XWPFRun run, Map<String, Object> pic) throws EchartsException {
+    private static void replaceImage(String paraCode,XWPFRun run, Map<String, Object> pic) throws EchartsException {
 		// 先判断是否是图片标志
 		String re = "\\$\\{@image:([^\\}]+)\\}";
 		Pattern p = Pattern.compile(re);
-		String text = run.toString();
+		String text = paraCode;
 		Matcher m = p.matcher(text);
 		List<String> imageList = new ArrayList<>();
 		while (m.find()) {

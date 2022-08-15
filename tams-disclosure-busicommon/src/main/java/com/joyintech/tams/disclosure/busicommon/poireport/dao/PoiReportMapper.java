@@ -12,6 +12,8 @@ package com.joyintech.tams.disclosure.busicommon.poireport.dao;
 
 import java.util.List;
 
+import com.joyintech.tams.common.base.entity.RepDataCheck;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReportCheck;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -40,4 +42,8 @@ public interface PoiReportMapper {
     int checkBaseDate(@Param("prodId")String prodId,@Param("baseDate")String baseDate);
 
     int deleteCheckData(RepReportCheck repReportCheck);
+
+    List<RepDataCheck> getRepDataCheckList();
+
+    RepProdInfo getProdInfo(@Param("prodId")String prodId);
 }

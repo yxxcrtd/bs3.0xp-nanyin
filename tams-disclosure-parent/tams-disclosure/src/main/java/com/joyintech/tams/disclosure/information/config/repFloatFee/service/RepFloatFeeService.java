@@ -8,10 +8,12 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dao.RepFloatFee001Mapper;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -32,6 +34,8 @@ import java.util.regex.Pattern;
 public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> implements BaseProcessService<RepFloatFeeDto> {
     @Autowired
     private RepFloatFee001Mapper repFloatFee001Mapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
     public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
 //        return repFloatFee001Mapper.getProdId(map);
@@ -115,6 +119,9 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
 //        if (objects.size() - 1 > 50000) {
 //            Map<String, Object> resultMap = new HashMap<>();
@@ -240,7 +247,7 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
             }
         }
         if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+            resultMap.put("confirmMsg2", "系统内已存在该数据，请确认是否覆盖？");
         }
         int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
         if (objects.size() - 1 > maxCount) {

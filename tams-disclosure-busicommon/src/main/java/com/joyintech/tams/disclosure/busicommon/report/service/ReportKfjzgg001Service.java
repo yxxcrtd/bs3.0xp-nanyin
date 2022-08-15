@@ -114,6 +114,12 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     List<ReportOpenPlanDto> openHisList = reportKfjzgg001Mapper.getOpenHisList(searchparam);
                     int times = 0;
                     String timesStr = "";
+                    //由于私募跟公募报表共用代码，   私募不需要展示： times 、OpenStartDateT、OpenEndDateT几个字段，需要特别隔离
+                    if (StringUtil.equals(rptType, DisReportType.KFJJZGG_SM)) {
+                        reportKfjzgg001Dto.setTimes("避开检测");
+                        reportKfjzgg001Dto.setOpenStartDateT("避开检测");
+                        reportKfjzgg001Dto.setOpenEndDateT("避开检测");
+                    }
                     if (openHisList != null && openHisList.size() > 0) {
                         //当前净值数据
                         ReportOpenPlanDto curOpenPlanDto = openHisList.get(0);

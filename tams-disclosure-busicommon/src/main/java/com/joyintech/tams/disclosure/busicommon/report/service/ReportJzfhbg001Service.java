@@ -187,13 +187,12 @@ public class ReportJzfhbg001Service implements IReportDataService {
                         announceDate = DateUtil.addDay(DateUtil.parse(settDateStr), 1);
                     }
                     reportJzfhbg001Dto.setAnnounceT(DateUtil.format(announceDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-
+                    //赎回价格（元/份）
+                    reportJzfhbg001Dto.setRedValue("1.0000");
+                    //申购价格（元/份）
+                    reportJzfhbg001Dto.setSubValue("1.0000");
                     //如果是净值及分红报告（私募开放式）的模板的话，需要多设置以下要素信息
                     if (StringUtil.equals(rptType, DisReportType.JZJFHBG_SMKF)) {
-                        //赎回价格（元/份）
-                        reportJzfhbg001Dto.setRedValue("1.0000");
-                        //申购价格（元/份）
-                        reportJzfhbg001Dto.setSubValue("1.0000");
                         //根据产品排期表，展示开放起始日大于当前收益分配基准日的下一个开放周期的信息；若当前已处于最后一个产品周期，则正常生成表格，表格内容置空，由业务老师手工调整
                         List<ReportOpenPlanDto> openPlanList = reportJzfhbg001Mapper.getOpenPlanList(searchParam);
 
@@ -225,12 +224,11 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             openPlanList.add(openPlanDto);
                         }
                         reportJzfhbg001Dto.setOpenPlanList(openPlanList);
-                        //生成跑批日
-                        reportJzfhbg001Dto.setEnddate(settDateStr);
-                    } else {
-                        logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】",JsonUtils.object2Json(paraMap));
                     }
-
+                    //生成跑批日
+                    reportJzfhbg001Dto.setEnddate(settDateStr);
+                } else {
+                    logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】",JsonUtils.object2Json(paraMap));
                 }
             }
             logger.info("净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）【{}】生成成功", JsonUtils.object2Json(paraMap));

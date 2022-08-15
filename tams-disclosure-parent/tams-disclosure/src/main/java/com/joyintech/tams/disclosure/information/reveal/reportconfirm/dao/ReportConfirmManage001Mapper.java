@@ -273,4 +273,6 @@ public interface ReportConfirmManage001Mapper {
     String getProcessInstanceId(String workflowId);
 
     List<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paramMap);
+
+    int backUpdate(ReportConfirmManage001Dto dto);
 }

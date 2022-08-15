@@ -40,6 +40,8 @@ public class DFSTemplateAutoConfigure {
 			return new JoyinDFSTemplate(new SftpFileSystemMethod());
 		} else if (NAS_DFS_TYPE == dfstype) {
 			return new JoyinDFSTemplate(new NASFileSystemMethod());
+		}else if(FAST_DFS_TYPE == dfstype){
+			return new JoyinDFSTemplate(new OSSFileSystemMethod());
 		}
 		return null;
 	}

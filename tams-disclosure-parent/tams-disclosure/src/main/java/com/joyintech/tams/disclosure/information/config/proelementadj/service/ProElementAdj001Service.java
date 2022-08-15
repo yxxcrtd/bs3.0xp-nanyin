@@ -10,12 +10,14 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -35,6 +37,8 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
 
     @Autowired
     private ProElementAdjMapper proElementAdjMapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
     public Page<ProElementAdj001Dto> selectForPage(Map<String, Object> param) {
         String prodRegistNo = (String)param.get("prodRegistNo");
@@ -141,6 +145,9 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
     public AjaxResult checkImportData(String fileName) {
         List<String> findProdRegistNoList =  this.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<String> findProdList =  this.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();

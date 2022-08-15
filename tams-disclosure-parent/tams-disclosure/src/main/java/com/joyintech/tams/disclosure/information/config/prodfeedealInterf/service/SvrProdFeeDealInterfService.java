@@ -9,11 +9,13 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao.SvrProdFeeDealInterfMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -42,6 +44,9 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
      * logger
      */
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
+
     /**
      * 根据产品代码模糊查询联系下拉框
      *
@@ -164,6 +169,9 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         String totalMsg = "";
         List<List<String>> jsonArrays = new ArrayList<>();

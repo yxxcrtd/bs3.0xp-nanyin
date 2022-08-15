@@ -29,6 +29,9 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
         }else{
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
                 //新建check
+                if(dto.getUnclaimList().size()==0){
+                    resultList.add(new ValidMessage("请至少维护一条非标资产明细！"));
+                }
                 for (UnClaimAssetDetailDto unClaimAssetDetailDto:dto.getUnclaimList()){
                     if (!StringUtil.isNotEmpty(unClaimAssetDetailDto.getFinancier())){
                         resultList.add(new ValidMessage("融资客户 必填！"));
@@ -109,7 +112,7 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
             }
             //校验同一个产品不能有两条数据的生效区间范围有重叠
             //查询产品所有的合作机构数据
-            if (!StringUtil.isNotEmpty(dto.getProdId())&&dto.getProdId()!="") {
+            if (StringUtil.isNotEmpty(dto.getProdId())&&dto.getProdId()!="") {
                 Map<String, Object> map = new HashMap<>();
                 map.put("prodId", dto.getProdId());
                 if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {

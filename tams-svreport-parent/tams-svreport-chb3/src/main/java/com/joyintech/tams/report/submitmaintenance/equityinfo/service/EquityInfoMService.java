@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 
 	@Autowired
 	private EquityInfo001Service equityInfo001Service;
+	@Autowired
+	private JoyinDFSTemplate joyinDFSTemplate;
 
 	/**
 	 * 查询列表
@@ -151,6 +155,9 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 * @return 处理结果
 	 */
 	public AjaxResult checkConfirmMsgForChbImportData(String fileName) {
+		SysUploadFileInfo suf = new SysUploadFileInfo();
+		suf.setPath(fileName);
+		joyinDFSTemplate.fetch(suf);
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("dataList", ExcelUtil.getDataList(fileName));
 		param.put("tempList", ExcelUtil.getTempList(fileName));
