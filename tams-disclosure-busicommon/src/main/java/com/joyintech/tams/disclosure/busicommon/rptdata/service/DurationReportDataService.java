@@ -90,7 +90,7 @@ public class DurationReportDataService implements IReportDataService {
 				//paraMap.put("prodId",paraMap.get("pprodid"));   //定期报告维度：母产品或者单产品
 			} catch (Exception e ) {
 				logger.error("报表参数错误.");
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 
 			//报表基本产品信息，母产品维度
@@ -137,16 +137,15 @@ public class DurationReportDataService implements IReportDataService {
 				List<RepProdIndex> listDto = durationReportMapper.selectFinIndex(paraMap);
 				List<Map<String,Object>> listFinIndex = new ArrayList<>();
 				listDto.forEach(item->{
-					item.setAssetsValue(item.getAssetsValue().setScale(2,BigDecimal.ROUND_DOWN));
-					item.setUnitValue(item.getUnitValue().setScale(4,BigDecimal.ROUND_DOWN));
-					item.setUnitValueT(item.getUnitValueT().setScale(4,BigDecimal.ROUND_DOWN));
-					item.setOtherFee(item.getOtherFee().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setAssetsValue(item.getAssetsValue()==null?item.getAssetsValue():item.getAssetsValue().setScale(2,BigDecimal.ROUND_DOWN));
+					item.setUnitValue(item.getUnitValue()==null? item.getUnitValue():item.getUnitValue().setScale(4,BigDecimal.ROUND_DOWN));
+					item.setUnitValueT(item.getUnitValueT()==null?item.getUnitValueT():item.getUnitValueT().setScale(4,BigDecimal.ROUND_DOWN));
+					item.setOtherFee(item.getOtherFee()==null? item.getOtherFee():item.getOtherFee().setScale(2,BigDecimal.ROUND_DOWN));
 					listFinIndex.add(CollectionUtils.bean2Map(item));
 				});
 				reportDto.setListFinIndex(listFinIndex);
 			} catch (Exception e) {
-				logger.error("报表财务指标信息错误.");
-				e.printStackTrace();				
+				logger.error("报表财务指标信息错误.",e);		
 			}
 			
 			//业绩基准：子产品维度
