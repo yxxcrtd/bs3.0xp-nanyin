@@ -510,10 +510,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 feediscountDto.setFeename(rowData.get(3).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(4))) {
-                feediscountDto.setPreFeerate(new BigDecimal(rowData.get(4).toString()));
+                feediscountDto.setPreFeerate(rowData.get(4).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(5))) {
-                feediscountDto.setAfterFeerate( new BigDecimal(rowData.get(5).toString()));
+                feediscountDto.setAfterFeerate( rowData.get(5).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(6))) {
                 feediscountDto.setStartDate(DateUtil.parse(rowData.get(6).toString()));
