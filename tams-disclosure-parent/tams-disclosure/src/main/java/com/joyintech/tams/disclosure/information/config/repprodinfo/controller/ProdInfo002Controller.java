@@ -15,8 +15,10 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
@@ -41,9 +43,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 报表模板管理新建
@@ -201,6 +205,19 @@ public class ProdInfo002Controller extends BaseController {
             return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
         }
 
+        /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 start */
+        if(StringUtil.isNotEmpty(dto.getpProdId())){
+            ProdInfoDto pProdInfo = prodInfoService.selectByProdStatus(dto.getpProdId());
+            if(pProdInfo!=null){
+                pProdInfo.setpProdId(pProdInfo.getProdId());
+                pProdInfo.setpProdName(pProdInfo.getProdName());
+                pProdInfo.setpSetDate(pProdInfo.getSetDate());
+                if(!compareField(prodInfoModelToMap(dto),prodInfoModelToMap(pProdInfo))) {
+                    return new AjaxResult("除子产品代码、子产品名称、子产品成立日期外，其余字段必须和已有数据相同", MessageType.错误消息);
+                }
+            }
+        }
+        /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 end */
 
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {
             if (CollectionUtils.isEmpty(dto.getBasicChangeList())) {
@@ -257,5 +274,75 @@ public class ProdInfo002Controller extends BaseController {
         return new AjaxResult(msg);
     }
 
+    /**
+     * 合并父类和子类字段
+     * @param a
+     * @param b
+     * @return
+     */
+    private Field[] getAllField(Field[] a,Field[] b){
+        List list = new ArrayList(Arrays.asList(a));
+        list.addAll(Arrays.asList(b));
+        Field[] str = new Field[list.size()];
+        list.toArray(str);
+        return str;
+    }
+
+    /**
+     * 产品基本信息model(前台页面字段)转换为map
+     * @param dto
+     * @return
+     */
+    private Map<String,Object> prodInfoModelToMap(ProdInfoDto dto){
+        Field[] fields = getAllField(dto.getClass().getDeclaredFields(),dto.getClass().getSuperclass().getDeclaredFields());
+        Map<String,Object> dtoMap = new HashMap<>();
+        for (Field field : fields) {
+            Annotation annotation = field.getAnnotation(NotEmpty.class);//获取@NotEmpty注解的字段，即必填项
+            String name = field.getName();
+            if(StringUtil.equals(name,"prodId")||StringUtil.equals(name,"prodName")
+                    ||StringUtil.equals(name,"setDate")){
+                continue;
+            }
+            if (annotation != null||StringUtil.equals(name,"openFreq")||StringUtil.equals(name,"holdday")) {//开放频率和固定持有天数为非必填项也要判断
+                try {
+                    String replace = name.substring(0, 1).toUpperCase() + name.substring(1);
+                    if(StringUtil.equals(name,"pProdId")||StringUtil.equals(name,"pSetDate")
+                            ||StringUtil.equals(name,"pProdName")){//这三个字段的get方法不遵守驼峰规则
+                        replace = name;
+                    }
+                    Method method = dto.getClass().getMethod("get" + replace);
+                    dtoMap.put(name,method.invoke(dto));
+                }catch (Exception e){
+                    e.getStackTrace();
+                }
+            }
+        }
+        return dtoMap;
+    }
+
+    /**
+     * 比较子产品和母产品字段值是否一致
+     * @param map1
+     * @param map2
+     * @return
+     */
+    private boolean compareField(Map<String, Object> map1, Map<String, Object> map2){
+        for (String key : map1.keySet()) {
+            if(StringUtil.equals(key,"pSetDate")||StringUtil.equals(key,"mdate")
+                    ||StringUtil.equals(key,"raiseStrdate")||StringUtil.equals(key,"raiseEnddate")){/* Date类型特殊处理 */
+                if(DateUtil.compareDate((Date)map1.get(key),(Date)map2.get(key))!=0){
+                    return false;
+                }
+            }else if(StringUtil.equals(key,"raiseAmt")){/* BigDecimal类型特殊处理 */
+                if(((BigDecimal)map1.get(key)).compareTo((BigDecimal)map2.get(key))!=0){
+                    return false;
+                }
+            }else if(!((map1.get(key)==null&&map2.get(key)==null)
+                    ||StringUtil.equals(map1.get(key),map2.get(key)))){
+                return false;
+            }
+        }
+        return true;
+    }
 
 }
