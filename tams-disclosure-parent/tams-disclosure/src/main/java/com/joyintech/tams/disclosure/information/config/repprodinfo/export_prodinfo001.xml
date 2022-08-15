@@ -31,6 +31,9 @@
 			<Cell order="25" name="投资性质">natureInvestName</Cell>
 			<Cell order="26" name="产品托管人名称">acctChnname</Cell>
 			<Cell order="27" name="托管部门">trustpart</Cell>
+			<Cell order="28" name="错误信息">errormsg</Cell>
+			<Cell order="29" name="更新时间">updateDateStr</Cell>
+			<Cell order="30" name="更新人">updateUser</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>
