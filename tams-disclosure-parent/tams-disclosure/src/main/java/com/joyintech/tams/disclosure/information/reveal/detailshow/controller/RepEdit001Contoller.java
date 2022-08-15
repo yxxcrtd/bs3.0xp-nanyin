@@ -88,8 +88,8 @@ public class RepEdit001Contoller extends BaseController {
     @Autowired
     private ReportFileService reportFileService;
 
-    private String editFilename = "";
-    private String saveFilename = "";
+//    private String editFilename = "";
+//    private String saveFilename = "";
     /**
      * 日志
      */
@@ -123,12 +123,11 @@ public class RepEdit001Contoller extends BaseController {
         model.addAttribute("portnum", portnum);
         model.addAttribute("reportId", repId);
         model.addAttribute("webRoot", webRoot);
-        
-        //ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
-        //reportDate = DateUtil.parse("2023-03-01");
-        editFilename = reportFileService.getTempOSSReportFileName(repId, reportDate, params, ReportFileService.FILE_TYPE_DOCX) ;
+
+        String editFilename = reportFileService.getTempOSSReportFileName(repId, reportDate, params, ReportFileService.FILE_TYPE_DOCX) ;
+        model.addAttribute("fileName", editFilename);
 		logger.debug("==================报表下载编辑文件："+editFilename);
-    	saveFilename = editFilename;
+    	//saveFilename = editFilename;
         return super.init(model);
     }
 
@@ -139,13 +138,13 @@ public class RepEdit001Contoller extends BaseController {
         
         
         //TODO:文件操作的根路径,通过系统参数配置实现
-        String mFilePath = editFilename;
+        //String mFilePath = editFilename;
 
         try{
             Map<String,Object> params = JsonUtils.stringToMap( RequestUtil.getPageParam().get("FormData").toString() );
             if(request.getMethod().equalsIgnoreCase("POST"))	{//判断请求方式
                 String mOption = params.get("OPTION").toString();
-                String mFileName = editFilename; //params.get("FILENAME").toString();
+                String mFileName = params.get("FILENAME").toString();
                 WebOfficeObject webOfficeObject = new WebOfficeObject();
                 if(mOption.equalsIgnoreCase("LOADFILE")){
                     webOfficeObject.parse(request,mFileName,poiReportService);
@@ -159,7 +158,7 @@ public class RepEdit001Contoller extends BaseController {
 
                 }
                 else if(mOption.equalsIgnoreCase("SAVEFILE")){
-                    String outputFilename = saveFilename;
+                    String outputFilename =  params.get("FILENAME").toString();
                     int ret = this.saveFile (request,outputFilename );
                     logger.info(mFileName+"文档已经保存成功");
 
