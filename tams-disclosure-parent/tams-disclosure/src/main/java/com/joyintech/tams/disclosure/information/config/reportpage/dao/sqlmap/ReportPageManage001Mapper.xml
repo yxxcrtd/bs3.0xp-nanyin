@@ -21,15 +21,26 @@
 		A.TEMPLATE_PATH templatePath,
 		A.REPORT_NAME reportName,
 		A.UPDATE_USER updateUser,
-		ris.rep_status reportType,
+		nvl(ris1.rep_status,ris2.rep_status) reportType,
 		A.REPORT_CATEGORY reportCategory,
 		rfp.NAME reportCategoryName,
-		ris.eff_date updateTime,
-		ris.REMARK remark
+		nvl(ris1.eff_date,ris2.eff_date) updateTime,
+		nvl(ris1.REMARK,ris2.REMARK) remark
 		from REP_INFO A
 		left join REP_FTP_PATH rfp
 		on A.REPORT_CATEGORY=rfp.ID
-		left join rep_info_status ris ON A.REP_ID = ris.Rep_Id
+		left join (
+			select rep_id,remark,eff_date,rep_status,
+			row_number()over(partition by rep_id order by eff_date desc) rn
+			from rep_info_status
+			where eff_date <![CDATA[<=]]>  #{effDate,jdbcType=TIMESTAMP}
+		) ris1 ON A.REP_ID = ris1.Rep_Id and ris1.rn =1
+			left join (
+			select rep_id,remark,eff_date,rep_status,
+			row_number()over(partition by rep_id order by eff_date asc) rn
+			from rep_info_status
+			where eff_date > #{effDate,jdbcType=TIMESTAMP}
+		) ris2 ON A.REP_ID = ris2.Rep_Id and ris2.rn =1
 	    <where>
 	        <if test="reportName!=null and reportName!=''">
 				A.REPORT_NAME like concat(concat('%',#{reportName,jdbcType=VARCHAR}),'%')
