@@ -99,7 +99,7 @@ $(function() {
 		if (paymentDate && settDate){
 			var days = (Date.ofDate(paymentDate) - Date.ofDate(settDate))/(24*60*60*1000);
 			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("现金红利发放日必须小于收益分配基准日", JoyinUtil.getLabel("ProdBonusplanManager001.settDate")));
+				Joyin.error(JoyinUtil.getMessage("现金红利发放日必须大于等于收益分配基准日", JoyinUtil.getLabel("ProdBonusplanManager001.settDate")));
 				$('#paymentDate').val('');
 				return;
 			}
