@@ -329,9 +329,27 @@ public class DurationReportDataService implements IReportDataService {
 			}
 			
 			listResult.add(CollectionUtils.bean2Map(reportDto));
+			
+			//排除检查项
+			listResult.get(0).put("endDate_xx", "");
+			listResult.get(0).put("leverage_xx", "");
+			listResult.get(0).put("capital_xx", "");
+			listResult.get(0).put("prodId_xx", "");
+			listResult.get(0).put("disDate_xx", "");
+			listResult.get(0).put("signDate_xx", "");
+			listResult.get(0).put("tzclhyzfx_xx", "");
+			listResult.get(0).put("runDays_xx", "");
+			listResult.get(0).put("tgrbg2_xx", "");
+			listResult.get(0).put("tgrbg3_xx", "");
+			listResult.get(0).put("tgrbg1_xx", "");
+			listResult.get(0).put("reportTitle_xx", "");
+			listResult.get(0).put("ldxfxfx_xx", "");
+			listResult.get(0).put("startDate_xx", "");
+			listResult.get(0).put("yjbx_xx", "");
+			listResult.get(0).put("listFinIndex_xx", "");
+			
 		} catch (Exception e) {
 			logger.error("定期报表数据查询错误", e);
-			e.printStackTrace();
 		}
 
 		return listResult;
