@@ -19,11 +19,13 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.util.SysCommDataUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -67,6 +69,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
     @Autowired
     private DisProdBaseInfoMapper prodInfoMapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
 
     public List<ProdInfoDto> findAll(Map<String, Object> params) {
@@ -320,6 +324,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
 //        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {

@@ -14,8 +14,10 @@ spring:
     enabled: false
   thymeleaf:
     cache: false
+  cache:
+    type: redis
   profiles:
-    active: CVR_305_XNYH_TEST_P
+    active: CVR_305_XNYH_DEV_P
   application:
     name: tamsyy-serverREPORT#0426
     dfstype: 2
@@ -49,7 +51,6 @@ spring:
       strategy:
         fixed:
           enabled: true
-      cache: false     
 base:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
@@ -199,7 +200,7 @@ application:
   minLogo: /image/logos/min-logo.png #系统图标，框架中会根据分辨率自动适配
   leftMenuLogo: /image/logos/left-logo.png #系统图标，框架中会根据分辨率自动适配
   topMenuLogo: /image/logos/top-logo.png #系统图标，框架中会根据分辨率自动适配
-  sessionTimeout: -1
+  sessionTimeout: 18000000
   joyinsso: false
   interfMaxCorePoolSize: 20  #上游接口解析读取文件处理最大线程数
   maxDataCountOneTimeForInvestholdInfo: 50  #上游接口解析读取文件处理中持有信息批量查询单次最大查询主键数（江苏银行50）
@@ -329,16 +330,6 @@ application:
 #交易压力测试性能优化开关
 flag: false
 
-#minio配置
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
-
 ---
 spring:
   profiles: allinone
@@ -349,23 +340,23 @@ spring:
     password: joyin!234
     host: 192.168.60.236
     port: 6379
-    timeout: 20000
+    timeout: 20000 
   #  redis:
   #    cluster:
   #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
-    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
+    reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_DEV
-  sqldirpassword: BS30CVR_V306_XP_DEV
+  sqldiruserName: BS30CVR_V306_XP_TEST_02
+  sqldirpassword: BS30CVR_V306_XP_TEST_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -385,37 +376,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -485,22 +476,14 @@ workflow:
   isSentMessage: false
   serviceName: messageService
 
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
-
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
 
+
 ---
 spring:
-  profiles: CVR_305_XNYH_TEST_P
+  profiles: test
   thymeleaf:
     cache: false
   redis:
@@ -509,19 +492,22 @@ spring:
     host: 192.168.60.236
     port: 6379
     timeout: 20000
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
   redislock:
     redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST
-    password: BS30CVR_V306_XP_TEST
-    reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
+    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_TEST
-  sqldirpassword: BS30CVR_V306_XP_TEST
+  sqldiruserName: BS30CVR_V306_XP_TEST_02
+  sqldirpassword: BS30CVR_V306_XP_TEST_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -537,20 +523,20 @@ shiro:
     /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
-    /TrdExchangeWorkflow/**,/invest/trade/api/**,/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice
+    /TrdExchangeWorkflow/**,/invest/trade/api/**
 
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST
-    password: BS30CVR_V306_XP_TEST
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST
-    password: BS30CVR_V306_XP_TEST
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -558,20 +544,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST
-    password: BS30CVR_V306_XP_TEST
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST
-    password: BS30CVR_V306_XP_TEST
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -588,6 +574,7 @@ xinping:
 tx-lcn:
   client:
     managerAddress: 192.168.60.236:8070
+
 # 场内交易使用配置
 netty:
   port: 9190
@@ -640,19 +627,9 @@ workflow:
   isSentMessage: false
   serviceName: messageService
 
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
-
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
-
 ---
 spring:
   profiles: local   #本地启动应用建议修改这块启动
@@ -670,16 +647,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
-    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
+    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_DEV
-  sqldirpassword: BS30CVR_V306_XP_DEV
+  sqldiruserName: BS30CVR_V306_XP_TEST_02
+  sqldirpassword: BS30CVR_V306_XP_TEST_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -699,37 +676,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -798,20 +775,13 @@ position:
 workflow:
   isSentMessage: false
   serviceName: messageService
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
+
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: BS30CVR_V306_XP_DEV_P
+  profiles: BS30CVR_V306_XP_TEST_02_P
   thymeleaf:
     cache: false
   redis:
@@ -819,8 +789,8 @@ spring:
     password: joyin!234
     host: 192.168.60.236
     port: 6379
-    timeout: 20000
-
+    timeout: 20000  
+    
   #redis:
   #  database: 0
   #  cluster:
@@ -831,16 +801,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
-    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
+    reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_DEV
-  sqldirpassword: BS30CVR_V306_XP_DEV
+  sqldiruserName: BS30CVR_V306_XP_TEST_02
+  sqldirpassword: BS30CVR_V306_XP_TEST_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -860,37 +830,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -959,22 +929,17 @@ position:
 workflow:
   isSentMessage: false
   serviceName: messageService
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
+
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: BS30CVR_V306_XP_DEV_P
+  profiles: BS30CVR_V306_XP_TEST_02_P
   thymeleaf:
     cache: false
+  cache:
+    type: redis
   redis:
     database: 1
     password: joyin!234
@@ -991,16 +956,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
-    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
+    reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_DEV
-  sqldirpassword: BS30CVR_V306_XP_DEV
+  sqldiruserName: BS30CVR_V306_XP_TEST_02
+  sqldirpassword: BS30CVR_V306_XP_TEST_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -1020,37 +985,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1119,21 +1084,12 @@ workflow:
   isSentMessage: false
   serviceName: messageService
 
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
-
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: BS30CVR_V306_XP_DEV_P
+  profiles: BS30CVR_V306_XP_TEST_02_P
   thymeleaf:
     cache: false
   redis:
@@ -1141,8 +1097,8 @@ spring:
     password: joyin!234
     host: 192.168.60.236
     port: 6379
-    timeout: 20000
-
+    timeout: 20000  
+    
   #redis:
   # database: 0
   #  cluster:
@@ -1153,16 +1109,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
-    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
+    reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_DEV
-  sqldirpassword: BS30CVR_V306_XP_DEV
+  sqldiruserName: BS30CVR_V306_XP_TEST_02
+  sqldirpassword: BS30CVR_V306_XP_TEST_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -1182,37 +1138,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1281,14 +1237,7 @@ position:
 workflow:
   isSentMessage: false
   serviceName: messageService
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
+
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
@@ -1297,25 +1246,29 @@ spring:
   profiles: CVR_305_XNYH_DEV_P
   thymeleaf:
     cache: false
+  cache:
+    type: redis
   redis:
     database: 1
     password: joyin!234
     host: 192.168.60.236
-    port: 6379
-    timeout: 20000
+    port: 6389
+    timeout: 20000 
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
-    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
+    reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
+  application:
+    dfstype: 3
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_DEV
-  sqldirpassword: BS30CVR_V306_XP_DEV
+  sqldiruserName: BS30CVR_V306_XP_TEST_02
+  sqldirpassword: BS30CVR_V306_XP_TEST_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -1335,37 +1288,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST_02
+    password: BS30CVR_V306_XP_TEST_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1426,6 +1379,17 @@ trade:
       alive: 5000
       capacity: 128
 
+
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: 8vDjhGSwd1gk5pou #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: z0I4CUFtTMFXQDaJLWTln251j6fXmxpo #同access-key
+  bucket: nyxpcluster #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
+
+
+
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
 
@@ -1433,15 +1397,6 @@ position:
 workflow:
   isSentMessage: false
   serviceName: messageService
-
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
 
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
@@ -1456,14 +1411,14 @@ spring:
     password: joyin!234
     host: 192.168.60.236
     port: 6379
-    timeout: 20000
+    timeout: 20000 
   redislock:
     redissonEnabled: false
   datasource:
     url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
   driverClassName: com.mysql.jdbc.Driver
@@ -1586,14 +1541,6 @@ position:
 workflow:
   isSentMessage: false
   serviceName: messageService
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
 
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
@@ -1608,14 +1555,14 @@ spring:
     password: joyin!234
     host: 192.168.60.236
     port: 6379
-    timeout: 20000
+    timeout: 20000 
   redislock:
     redissonEnabled: false
   datasource:
     url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
   driverClassName: com.mysql.jdbc.Driver
@@ -1738,14 +1685,7 @@ position:
 workflow:
   isSentMessage: false
   serviceName: messageService
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
+
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
@@ -1759,14 +1699,14 @@ spring:
     password: joyin!234
     host: 192.168.60.236
     port: 6379
-    timeout: 20000
+    timeout: 20000 
   redislock:
     redissonEnabled: false
   datasource:
     url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
   driverClassName: com.mysql.jdbc.Driver
@@ -1889,14 +1829,7 @@ position:
 workflow:
   isSentMessage: false
   serviceName: messageService
-#minio配置
-minio:
-  enable: true #是否开启minio
-  endpoint: http://192.168.60.236:9000
-  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
-  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
-  bucket: nyxpyy #此处为了预览，建议bucket设置为public
-  read-path: http://192.168.60.236:9000
+
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache

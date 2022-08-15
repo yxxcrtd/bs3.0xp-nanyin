@@ -123,6 +123,13 @@ public interface FileRemoteService {
      * @return com.joyintech.framework.base.dto.UploadFile
      **/
     UploadFile getUploadFileByFileNo(String fileNo);
-
+    /**
+     * @Author ZY22350
+     * @Description //远程文件是否存在校验
+     * @Date 14:03 2022/8/12
+     * @Param [filePath]
+     * @return boolean
+     **/
+    boolean remoteFileExists(String filePath);
 
 }

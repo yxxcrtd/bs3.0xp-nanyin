@@ -10,6 +10,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
@@ -18,6 +19,7 @@ import com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFa
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dao.SubBalanceInfoProMapper;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -42,6 +44,8 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
 
     @Autowired
     private ProElementAdjMapper proElementAdjMapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
     public Page<SubBalanceInfoPro001Dto> selectForPage(Map<String, Object> param) {
         String booksetId = (String)param.get("booksetId");
@@ -152,6 +156,9 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<String> findList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {

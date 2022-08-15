@@ -5,11 +5,13 @@ import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.prodassetinfo.dao.ProdAssetInfo001Mapper;
 import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -41,6 +43,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
 
     @Autowired
     private ProdAssetInfo001Mapper prodAssetInfo001Mapper;
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
     /**
      * 当在做导入前的check就是判断业务数据是否需要覆盖的时候在webresult的data中塞入这个值可以不会弹框两次
@@ -53,6 +57,9 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
      * @return
      */
     public AjaxResult checkImportData(String fileName) throws FileNotFoundException, ParseException {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         AjaxResult wr = new AjaxResult();
         List<JoyinMessage> joyinMessages = new ArrayList<>();
         //获取系统参数：单次导入的最大条数 todo:添加系统参数
@@ -85,6 +92,9 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
     @Transactional(rollbackFor = Exception.class)
     public List<ExcelValidDto> importData(String flieName)
             throws Exception {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(flieName);
+        joyinDFSTemplate.fetch(suf);
         //文件检查结果
         List<ExcelValidDto> checkFileResult = new ArrayList<>();
         // 检查文件名是否为空
