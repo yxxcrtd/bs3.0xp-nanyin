@@ -5,6 +5,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqgg001Dto;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportMzjz001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportMzjz001Dto;
@@ -101,6 +102,15 @@ public class ReportMzjz001Service implements IReportDataService {
         repReveal.setProdid(prodId);
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
+        String valueDate = (String)paraMap.get("enddate");
+        Map<String, Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        searchparam.put("valueDate",valueDate);
+        //封装导出文件名称
+        ReportMzjz001Dto reportMzjz001Dto =  reportMzjz001Mapper.getProdInfo(searchparam);
+        if(reportMzjz001Dto != null){
+            paraMap.put("cusFileName", reportMzjz001Dto.getTitleName());
+        }
         return repReveal;
     }
 }

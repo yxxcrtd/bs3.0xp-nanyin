@@ -245,6 +245,20 @@ public class ReportJzfhbg001Service implements IReportDataService {
         repReveal.setProdid(prodId);
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
+        //封装导出文件名称
+        Map<String, Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        //收益分配基准日
+        String settDateStr = (String) paraMap.get("enddate");
+        searchparam.put("settDate", settDateStr);
+
+        ReportJzfhbg001Dto reportJzfhbg001Dto = reportJzfhbg001Mapper.getProdInfo(searchparam);
+        if(reportJzfhbg001Dto != null){
+            //查询收益分配基准日的产品分红到期表
+            DisProdBonusplan bonusplan = reportJzfhbg001Mapper.getBonusPlanBySettDate(searchparam);
+
+            paraMap.put("cusFileName",reportJzfhbg001Dto.getTitleName()+DateUtil.format(bonusplan.getSettDate(), DateUtil.ABB_DATE_FORMAT_CN));
+        }
         return repReveal;
     }
 }
