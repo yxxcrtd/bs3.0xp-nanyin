@@ -1127,3 +1127,7 @@ ADJ_REASON2 VARCHAR2(512)
 );
 comment on column DIS_PROD_ADJUST.ADJ_REASON2 is '调整原因2';
 /**产品要素调整表增加字段 add by sunjie 2022-08-14 end*/
+
+/**上传文件信息 路径字段长度调整 add by zhengxiaolian 2022-08-15 start*/
+ALTER TABLE SYS_UPLOAD_FILE_INFO MODIFY PATH VARCHAR2(2000);
+/**上传文件信息 路径字段长度调整 add by zhengxiaolian 2022-08-15 end*/

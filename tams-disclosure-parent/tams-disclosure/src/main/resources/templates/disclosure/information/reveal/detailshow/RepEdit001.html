@@ -27,14 +27,14 @@
             WebOfficeObj.ShowWindow = true;				//true显示进度条//false隐藏进度条
             WebOfficeObj.obj.Style.ShowOpenProgress = true; //开启、关闭打开文档时的进度条
             WebOfficeObj.obj.WebCreateProcess();          //创建空进程避免打开慢
-			WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice?repId=123";
+			WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";
             WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
             WebOfficeObj.Alert(WebOfficeObj.FileName);
 			WebOfficeObj.WebOpen(true);
             SetGraySkin();			//设置控件皮肤
             WebOfficeObj.ShowMenuBar(false);
             WebOfficeObj.ShowToolBars(false);
-            WebOfficeObj.ShowTitleBar(false);
+            //WebOfficeObj.ShowTitleBar(false);
             
             if (browser == "chrome"){
                 // 下载文件时访问OfficeServer与其他网页页面session保持一致的说明 （开始）
@@ -183,8 +183,8 @@
 					<i class="iconfont icon-close"></i>关闭
 				</button>				
 			</div>
-			<div class="layui-tab layui-tab-card" style="height: 600px;">
-				<div id="OfficeDiv" style="width: 100%; height: 590px;">
+			<div class="layui-tab layui-tab-card" style="height: 410px;">
+				<div id="OfficeDiv" style="width: 100%; height: auto;">
 					<script data-th-src="@{/js/disclosure/iWebOffice2015.js}"
 						type="text/javascript"></script>
 				</div>
