@@ -13,9 +13,11 @@ package com.joyintech.tams.disclosure.busicommon.rptdata.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.BokBalance;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 
 /**
  * 报表查询
@@ -27,5 +29,7 @@ import com.joyintech.tams.common.base.entity.BokBalance;
 @Repository
 public interface SettReportMapper{
 	public List<BokBalance> selectBokBalance(Map<String,Object> params );
+	
+	public List<RepProdInfo> selectProdInfo(@Param("prodId") String prodId );
 	
 }
