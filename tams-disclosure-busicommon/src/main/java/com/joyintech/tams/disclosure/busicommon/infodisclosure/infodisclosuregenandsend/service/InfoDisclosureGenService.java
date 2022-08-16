@@ -750,6 +750,8 @@ public class InfoDisclosureGenService {
 				params.put("startdate", DateUtil.format(infoDisclosureGenAndSendEntity.getStartDate()));
 			} else if (StringUtil.equals("enddate", repScreen.getScreenKey())) {
 				params.put("enddate", DateUtil.format(infoDisclosureGenAndSendEntity.getEndDate()));
+			}else{
+				params.put("enddate", DateUtil.format(infoDisclosureGenAndSendEntity.getEndDate()));
 			}
 
 		}

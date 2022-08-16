@@ -9,17 +9,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.sql.DataSource;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
+import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,6 +186,32 @@ public class JasparConnectUtilService {
 		//reportManager.exportReport(r1, params, fileType, path+ File.separator+filePathName);
 		//Todo:
 		params.put("uri",r1.getUri());
+		String rptType = params.get("uri").toString();
+
+		Date endDate=DateUtil.parse(params.get("enddate").toString());
+		Date year=DateUtil.addYear(endDate,0);
+		params.put("year",DateUtil.getYear(DateUtil.format(year)));
+		if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+			if(DateUtil.getMonth(params.get("enddate").toString())>11){
+				params.put("quarter","04");
+			} else if (DateUtil.getMonth(params.get("enddate").toString())>8) {
+				params.put("quarter","03");
+			}else if (DateUtil.getMonth(params.get("enddate").toString())>5) {
+				params.put("quarter","02");
+			}else {
+				params.put("quarter","01");
+			}
+
+		} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+			if(DateUtil.getMonth(params.get("enddate").toString())>11){
+				params.put("halfyear","02");
+			}else{
+				params.put("halfyear","01");
+			}
+		} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报
+
+		}
+
 		List<Map<String,Object>> listReports = rptDataService.queryDatas(params);
 		Map<String,Object> dataMap = new HashMap<>();
 		if (CollectionUtils.isNotEmpty(listReports)){

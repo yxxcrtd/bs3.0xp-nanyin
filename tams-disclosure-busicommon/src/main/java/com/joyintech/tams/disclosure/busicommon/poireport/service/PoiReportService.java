@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -20,6 +17,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt5;
+import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dao.DurationReportMapper;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -105,6 +104,9 @@ public class PoiReportService {
 	 * 日志
 	 */
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private DurationReportMapper durationReportMapper;
 
 	/**
 	 * 生成报表：创建服务器文件，创建工作流进行报表确认
@@ -1115,6 +1117,36 @@ public class PoiReportService {
 				//对于开放式产品，若在定期报告的统计期内产品业绩比较基准发生了变更（由非指数型产品变为指数型产品，或指数型产品挂钩的行情代码由A变为B）需要在本模块给出提示：
 				if(StringUtil.equals(prodInfo.getIssuingWay(),DictCodeListExt5.发行方式_开放式.getValue())){
 					//TODO:
+					List<RepProdInfo> listProdChildren = durationReportMapper.selectProdChildren(params);
+					int year = 2022;
+					int quarter = 2;
+					int halfYear =1;
+					year = Integer.parseInt(params.get("year").toString());
+					if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+						quarter= Integer.parseInt(params.get("quarter").toString());
+					} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+						halfYear= Integer.parseInt(params.get("halfyear").toString());
+					}
+
+					boolean changeFlag=false;
+					for (RepProdInfo child:listProdChildren ) {
+						if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+							Date durStartDate = DurationUtil.getQuarterStart(year, quarter);
+							Date durEndDate = DurationUtil.getQuarterEnd(year, quarter);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+							Date durStartDate = DurationUtil.getHalfYearStart(year, halfYear);
+							Date durEndDate = DurationUtil.getHalfYearEnd(year, halfYear);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报
+							Date durStartDate = DurationUtil.getYearStart(year);
+							Date durEndDate = DurationUtil.getYearEnd(year);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						}
+					}
+					if(changeFlag){
+						resultSb.append("报告期内业绩比较基准发生变更，请确认<br>");
+					}
 				}
 			}
 
@@ -1216,4 +1248,32 @@ public class PoiReportService {
 		return result;
 	}
 
+
+	private boolean getChangeFlag(RepProdInfo prod,Date durStartDate,Date durEndDate){
+
+		Date sDate = durStartDate;
+		Date eDate = durEndDate;
+
+		//查询指定的产品在统计区间内的所有业绩基准
+		Map<String,Object> mapParas = new HashMap<>();
+		mapParas.put("prodId", prod.getProdId());
+		List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(mapParas);
+
+		//区间内是否有业绩基准变更的标志
+		boolean changeFlag = false;
+		//查询指定的产品在统计区间内的有效业绩基准
+		List<RepProdBasicChange> listEffBasis = new ArrayList<>();
+		for ( RepProdBasicChange item:listBasis ) {
+			if ( "E".equals(item.getStatus()) ) {
+				listEffBasis.add(item);
+			}
+			//更新日期在统计区间内，且状态为D，说明有变更
+			if(item.getUpdateTime()!=null){
+				if ( item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+					changeFlag=true;
+				}
+			}
+		}
+		return changeFlag;
+	}
 }
