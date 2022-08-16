@@ -211,9 +211,9 @@ public class DurationReportDataService implements IReportDataService {
 				//2.产品是分级产品：
 				//本产品Z10002【子产品代码1】份额净值为1.0108【产品基础指标：子产品1期末单位净值，保留4位小数】元,Z10030【子产品代码2】份额净值为1.0109【子产品2期末单位净值，保留4位小数】元。】
 				try {
-					String perVal = String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
+					String perVal = "";
 					if ( "01".equals(reportDto.getProdType()) ) { //净值型
-						perVal = "份额净值为"+reportDto.getListFinIndex().get(0).get("unitValue").toString();
+						perVal = reportDto.getListFinIndex().get(0).get("unitValue").toString();
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
 							perVal = "";
 							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
@@ -221,11 +221,19 @@ public class DurationReportDataService implements IReportDataService {
 							}
 							perVal = perVal.substring(0, perVal.length()-2);
 						}
+					} else {  //现管类：固定为1.0000
+						perVal = String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
+						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
+							perVal = "";
+							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
+								perVal += map.get("prodId")+"份额净值为"+"1.0000"+"元，";
+							}
+							perVal = perVal.substring(0, perVal.length()-2);
+						}
 					}
 					reportDto.setYjbx(perVal);
 				} catch (Exception e ) {
 					logger.error("报表业绩表现数据错误。",e);
-					e.printStackTrace();
 					reportDto.setYjbx("");
 				}
 				
