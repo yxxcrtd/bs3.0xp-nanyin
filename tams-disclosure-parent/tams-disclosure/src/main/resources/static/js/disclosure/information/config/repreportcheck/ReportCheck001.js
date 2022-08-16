@@ -12,7 +12,8 @@
              checkDateStart:$('#checkDate').startDate(),
              checkDateEnd:$('#checkDate').endDate(),
              prodId:$('#prodId').val() == null ? null : $('#prodId').val().join(","),
-             reportType:$('#reportType').val() == null ? null : $('#reportType').val().join(",")
+             reportType:$('#reportType').val() == null ? null : $('#reportType').val().join(","),
+             reportName:$('#reportName').val() == null ? null : $('#reportName').val().join(",")
          };
     };
     /**

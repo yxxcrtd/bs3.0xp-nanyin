@@ -32,4 +32,6 @@ public interface ReportCheckMapper {
 
     List<SelectOptionDto>getProdIdList(Map<String, Object> params);
 
+    List<SelectOptionDto>getReportNameList(Map<String, Object> params);
+
 }
