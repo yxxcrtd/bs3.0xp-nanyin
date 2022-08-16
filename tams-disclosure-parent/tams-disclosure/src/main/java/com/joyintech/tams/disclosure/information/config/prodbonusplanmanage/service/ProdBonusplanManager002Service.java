@@ -26,6 +26,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -131,6 +132,7 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
      * @return
      */
     public void update(ProdBonusplanDto dto) {
+        dto.setUpdateUser(CommonUtil.getUserName());
         prodBonusplanMapper.updateByPrimaryKeySelective(dto);
     }
 
