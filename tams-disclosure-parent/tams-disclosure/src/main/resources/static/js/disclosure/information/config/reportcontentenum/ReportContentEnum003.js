@@ -8,10 +8,14 @@ $(function() {
 	 * 修改/新建
 	 */
 	var saveOrSubmit = function(operateType) {
+		debugger;
 		var object = $.serializeToObject('#submitForm');
 		object.pageModel = pageModel;
 		object.operateType = operateType;
 		object.indexDetail = $('#indexDetail').val();
+		var indexVal = $('#indexValue').val();
+		indexVal = indexVal.replace(' ','&nbsp;');
+		object.indexValue = indexVal;
 
 		Joyin.ajaxJson(
 					basePath+ 'disclosure/information/config/reportcontentenum/ReportContentEnum003/check',object,
