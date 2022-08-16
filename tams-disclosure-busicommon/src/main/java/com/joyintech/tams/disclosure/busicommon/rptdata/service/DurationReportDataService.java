@@ -97,7 +97,7 @@ public class DurationReportDataService implements IReportDataService {
 			try {
 				DurationReportDto dto= durationReportMapper.selectProdInfo(paraMap);
 				
-				if ( DateUtil.getBetweenDayNumber(reportDate, dto.geteDate())<=90 || DateUtil.getBetweenDayNumber(reportDate, dto.getmDate())<=90 )  //不需要生成定期报表
+				if ( DateUtil.getBetweenDayNumber(dto.geteDate(),reportDate)<=90 || DateUtil.getBetweenDayNumber(reportDate, dto.getmDate())<=90 )  //不需要生成定期报表
 					return null;
 				
 				if ( dto!=null ) {
