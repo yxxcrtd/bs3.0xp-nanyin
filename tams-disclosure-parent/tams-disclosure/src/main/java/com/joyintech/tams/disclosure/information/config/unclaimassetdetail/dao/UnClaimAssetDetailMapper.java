@@ -115,4 +115,6 @@ public interface UnClaimAssetDetailMapper  {
 
 
     int selectCount();
+
+    int updateImport(UnClaimAssetDetailDto existDataDto);
 }

@@ -82,7 +82,7 @@
         select PROD_ID id,
          PROD_NAME text
         from REP_PROD_INFO
-        where  (P_PROD_ID is null or P_PROD_ID = PROD_ID)
+        where 1=1
         <if test="dataStatus != null and dataStatus != ''">
             and STATUS=#{dataStatus,jdbcType=VARCHAR}
         </if>
@@ -276,7 +276,7 @@
         #{projectName,jdbcType=VARCHAR}, #{remFinancingPeriod,jdbcType=VARCHAR}, #{incomeDistribute,jdbcType=VARCHAR},
             #{trdConstruct,jdbcType=VARCHAR}, #{riskInfo,jdbcType=VARCHAR},
             #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-            #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
             )
     </insert>
 
@@ -336,6 +336,72 @@
             </if>
         </set>
         where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateImport">
+        update DIS_NOSTD_CREDITOR
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="effEndDate != null" >
+                EFF_END_DATE = #{effEndDate,jdbcType=DATE},
+            </if>
+            <if test="financier != null" >
+                FINANCIER = #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="projectNo != null" >
+                PROJECT_NO = #{projectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null" >
+                PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="remFinancingPeriod != null" >
+                REM_FINANCING_PERIOD = #{remFinancingPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeDistribute != null" >
+                INCOME_DISTRIBUTE = #{incomeDistribute,jdbcType=VARCHAR},
+            </if>
+            <if test="trdConstruct != null" >
+                TRD_CONSTRUCT = #{trdConstruct,jdbcType=VARCHAR},
+            </if>
+            <if test="riskInfo != null" >
+                RISK_INFO = #{riskInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where 1=1
+        <if test="effDate != null">
+            <![CDATA[AND  EFF_DATE = TO_DATE(#{effDateStr},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="effEndDate != null">
+            <![CDATA[AND  EFF_END_DATE = TO_DATE(#{effEndDateStr},'YYYY-MM-DD')]]>
+        </if>
+        <if test="prodId != null and !prodId.equals('')">
+            AND PROD_ID = #{prodId,jdbcType=VARCHAR}
+        </if>
     </update>
 
     <insert id="insertBtachEquityInfo">
