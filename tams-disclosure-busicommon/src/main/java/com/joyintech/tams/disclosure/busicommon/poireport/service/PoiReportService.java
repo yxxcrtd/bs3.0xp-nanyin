@@ -1208,46 +1208,46 @@ public class PoiReportService {
 
 	private String singleCheck(RepDataCheck repDataCheck,BigDecimal val,String tips){
 		String result="";
-		if(StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于)){
+		if(StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于.getValue())){
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)>=0){
 				result=tips+"小于"+repDataCheck.getParamValue1();
 			}
-		} else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于等于)) {
+		} else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)>0){
 				result=tips+"小于等于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)<=0){
 				result=tips+"大于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于等于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)<0){
 				result=tips+"大于等于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"内";
 			}
 
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>=0&&val.compareTo(paramValue2)<0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（含）,"+repDataCheck.getParamValue2()+"内";
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<=0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"（含）内";
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_等于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)!=0){
 				result=tips+"等于"+repDataCheck.getParamValue1();
