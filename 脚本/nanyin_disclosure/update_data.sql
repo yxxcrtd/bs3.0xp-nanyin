@@ -949,13 +949,13 @@ update  SYS_PAGE set menu_id='REPORT_006_004_006' where PAGE_ID='ProdBonusplanMa
 delete from REP_DATA_CHECK;
 
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('100000001', '03', '固定收益类产品投资固守类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+values ('100000001', '04', '固定收益类产品投资固守类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
 
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('100000002', '03', '权益类产品投资权益类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+values ('100000002', '04', '权益类产品投资权益类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
 
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('100000003', '03', '商品及衍生品类产品投资商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+values ('100000003', '04', '商品及衍生品类产品投资商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
 
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('100000004', '01', '混合类产品产品投资于固定收益类资产、权益类资产、商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
@@ -1037,3 +1037,35 @@ alter table DIS_PROD_FEEDISCOUNT drop column AFTER_FEERATE_TMP;
 /**菜单修改 add by shengning 2022-08-15 start**/
 update  SYS_PAGE set menu_id='REPORT_006_004_015' where PAGE_ID='ProdInfo001';
 /**菜单修改 add by shengning 2022-08-15 end**/
+
+
+/**数据校验阈值 add by zhengxiaolian 2022-08-16 start**/
+delete from REP_DATA_CHECK;
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000001', '04', '固定收益类产品投资固守类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000002', '04', '权益类产品投资权益类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000003', '04', '商品及衍生品类产品投资商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000004', '01', '混合类产品产品投资于固定收益类资产、权益类资产、商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000005', '02', '公募开放式产品杠杆', '140', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000006', '02', '现管类产品杠杆', '120', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000007', '02', '私募非分级产品或公募封闭式产品杠杆', '200', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000008', '02', '私募分级产品杠杆', '140', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000009', '08', '现管类产品投资权益类资产占比', '0', '', 'E', 'system', null, sysdate, 'system', sysdate);
+/**数据校验阈值 add by zhengxiaolian 2022-08-16 end**/

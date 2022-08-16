@@ -385,11 +385,11 @@
         dpb.CREATE_USER, dpb.CREATE_TIME, dpb.UPDATE_USER,
         dpb.UPDATE_TIME, dpb.CREATE_DEPT
         from DIS_PROD_BONUSPLAN dpb
-        where dpb.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where dpb.PROD_ID = #{prodId,jdbcType=VARCHAR} and dpb.BONUS_MODE = '02'
         <if test="dataStatus !=null and dataStatus !='' ">
             AND dpb.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
         </if>
-        and rownum <![CDATA[<=]]> 1
+--         and rownum <![CDATA[<=]]> 1
     </select>
 
 
@@ -407,10 +407,10 @@
         <if test="prodId != null">
            and  dpb.PROD_ID = #{prodId,jdbcType=VARCHAR}
         </if>
-        <if test="bonusMode != null">
-            and dpb.BONUS_MODE = #{bonusMode,jdbcType=VARCHAR}
+        <if test="bonusPlanId != null">
+            and dpb.BONUS_MODE = #{bonusPlanId,jdbcType=VARCHAR}
         </if>
-        <if test="settDate != null">
+        <if test="settDateStr != null">
             and to_char(dpb.SETT_DATE,'yyyy-mm-dd') <![CDATA[=]]> #{settDateStr,jdbcType=VARCHAR}
         </if>
         and rownum <![CDATA[<=]]> 1
@@ -451,6 +451,22 @@
         <if test="initValue != null and initValue != ''">
             and rp1.PROD_ID = #{initValue}
         </if>
+    </select>
+    <select id="selectByProdId2" resultType="java.lang.Integer">
+        select count(1) from(
+        select
+        dpb.BONUS_PLAN_ID, dpb.PROD_ID, dpb.BONUS_MODE,
+        dpb.SETT_DATE, dpb.PAYMENT_DATE, dpb.ACHIEVEMENT,
+        dpb.EXCESS_ACHIEVEMENT_PROP, dpb.ACHIEVEMENT_BASIS,
+        dpb.ACHIEVEMENT_BASIS_PROP, dpb.DATA_STATUS, dpb.DATA_SOURCE,
+        dpb.CREATE_USER, dpb.CREATE_TIME, dpb.UPDATE_USER,
+        dpb.UPDATE_TIME, dpb.CREATE_DEPT
+        from DIS_PROD_BONUSPLAN dpb
+        where dpb.PROD_ID = #{prodId,jdbcType=VARCHAR} and dpb.BONUS_MODE = '02'
+        <if test="dataStatus !=null and dataStatus !='' ">
+            AND dpb.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+        </if>
+        ) a
     </select>
 
 </mapper>

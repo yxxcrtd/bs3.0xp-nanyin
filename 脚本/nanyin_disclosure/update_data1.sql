@@ -991,9 +991,17 @@ INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRA
 VALUES ('InfoCompliance001', 'InfoCompliance001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
 
 INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'infoCompliance001_btn_update', '01', '01', null, '编辑', 'system', null, sysdate, 'system', sysdate, 'C', null);
+VALUES ('InfoCompliance001', 'infoCompliance001_btn_update', '01', '02', null, '编辑', 'system', null, sysdate, 'system', sysdate, 'C', null);
 
 INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 VALUES ('InfoCompliance001', 'InfoCompliance001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
 
+
+-- 我的主页只显示 披露主页 add by sunjie 20220816 start
+update SYS_PAGE set IS_HP_SELECT ='02' where PAGE_ID in('PbcPrdBaseinfoEndSubNew001','PbcPrdBaseinfoSubNew001','PbcPrdAssetDebtSubPreview','PbcPrdAssetDebtSub','SvrG06MonthReport001','SvrBusinessHome','SvreportHome002','PaActiveRemind001','PbcPrdBaseinfoSub','PbcPrdBaseinfoEndSub'
+                                                       ,'PbcPrdCashRaiseSub','PbcPrdInitRaiseSub','PbcMonthReport001','RiskFactor003','SysDataProcessMark001','MstCustomerNature001','SysWflBusinessModule001','SysWflBusinessModule002','Workflow001','SvrChbBotAstPositionRegist001'
+                                                       ,'SysPrebatchResult001','SysPrebatchResult002','SysBatchStart001','ValBatchStart001','SysBatchLog001','SysBatchMonitor001','SysBatchProcess001','CustomerReportShow001','CustomerReportConfig001','SvreportHome001','SysDataDict001'
+                                                       ,'PbcSendZipDatFile','SysInstitution001','WorkflowMonitor001','SellMonthReport001','SvrTransMonthReport001','SvrSubsidiaMonthReport001','SysUser001','InterfaceLog001','SysParaSet001','SysActionLog001','SysActorAssign001'
+                                                       ,'SysActorRole001','AssetTypeSetting001','AssetTypeSetting002','SvrChbAstValueRegist001','PbcPrdAccountSub','PbcPrdAccountEndSub','SysDepartment001','SvrMonthReport001')
+-- 我的主页只显示 披露主页 add by sunjie 20220816 end
 commit ;
