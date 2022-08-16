@@ -26,6 +26,8 @@ $(function () {
 
 	var previewFlag=false;
 
+	var editFlag=true;
+
 	var backParam;
 	
 	/**
@@ -62,7 +64,6 @@ $(function () {
     			}
     		}
     	}
-		console.log(obj)
     	return obj;
     };
 
@@ -206,6 +207,8 @@ $(function () {
 
 							});
                              showSearch(data.repScreenList);
+							backParam={}
+							previewFlag=false;
                         }else{
                             $("#showtable").html('<h2>无报表内容</h2>');
                         }
@@ -528,8 +531,16 @@ $(function () {
 	    }else{
 	    	params['uri'] = modelId;
 	    	params['repid']=repId;
-			console.log(params)
-			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result) {
+			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result1) {
+				console.log(result1);
+				if(result1){
+					if(result1.data){
+						editFlag=false
+					}else{
+						editFlag=true
+					}
+				}
+
 				Joyin.ajax('previewReport', params, function(result) {
 					$container.html(result);
 					previewFlag=true;
@@ -688,7 +699,11 @@ $(function () {
 		Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
 			Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
 				JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
-				"70%","85%",params,function(){ }
+				"70%","85%",params,function(result){
+					if(top.getData){
+						editFlag=true;
+					}
+				}
 			);
 		});
 
@@ -696,10 +711,13 @@ $(function () {
     }
 
 
-
     var submit = function(type){
 		if(!previewFlag){
 			Joyin.alert('生成之前请先预览报表！',2);
+			return;
+		}
+		if(!editFlag){
+			Joyin.alert('报表校验存在错误，请先编辑再生成报表',2);
 			return;
 		}
 
@@ -790,6 +808,7 @@ $(function () {
     	// 绑定查询按钮事件
         $('#RepDetailsShow001_showDetail').click(function() {
 			backParam=getSearchParams();
+			previewFlag=false;
         	showDetail(getSearchParams());
         });
 
