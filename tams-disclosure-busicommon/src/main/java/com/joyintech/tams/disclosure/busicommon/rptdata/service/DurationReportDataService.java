@@ -389,7 +389,7 @@ public class DurationReportDataService implements IReportDataService {
 					listEffBasis.add(item);
 				}
 				//更新日期在统计区间内，且状态为D，说明有变更
-				if ( item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+				if ( item.getUpdateTime()!=null && item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
 					changeFlag=true;
 				}
 			}
