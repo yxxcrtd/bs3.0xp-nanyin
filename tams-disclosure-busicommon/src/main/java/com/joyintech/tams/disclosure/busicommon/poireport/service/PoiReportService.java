@@ -20,6 +20,7 @@ import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dao.DurationReportMapper;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1121,6 +1122,26 @@ public class PoiReportService {
 					//对于定期报告中需要从【报表指标管理】或“合作机构信息维护”、“产品资产组合情况信息维护”、“非标债权类资产明细信息维护”“关联交易情况信息维护”中取值的统计项，
 					// 若在生成报告时，上述内容取不到值或无有效数据（系统生成报告的日期在数据的生效期及有效截止日期之间），也需要在本界面生成一条对应数据项为空的提示；
 					//TODO:
+				if(CollectionUtils.isEmpty((List)dataMap.get("listNostds"))){
+					resultSb.append("非标债权类资产明细信息缺失<br>");
+				}
+				if(((Map<String,Object>)dataMap.get("repRelDeal")).isEmpty()){
+					resultSb.append("关联交易情况信息缺失<br>");
+				}
+				if(prodAssetComb.isEmpty()){
+					resultSb.append("产品资产组合情况信息缺失<br>");
+				}
+				if(StringUtil.equals(dataMap.get("partner"),"-")){
+					resultSb.append("合作机构信息缺失<br>");
+				}
+				if(!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("ldxfxfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg1"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg2"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg3"))){
+					resultSb.append("报表指标信息缺失<br>");
+				}
 
 				//对于开放式产品，若在定期报告的统计期内产品业绩比较基准发生了变更（由非指数型产品变为指数型产品，或指数型产品挂钩的行情代码由A变为B）需要在本模块给出提示：
 				if(StringUtil.equals(prodInfo.getIssuingWay(),DictCodeListExt5.发行方式_开放式.getValue())){
@@ -1162,13 +1183,25 @@ public class PoiReportService {
 			//生成报告时，若存在某个统计项取不到值的情况，需要在本模块进行提示 提示“生成报告所需数据有缺失”
 			for (String key:dataMap.keySet()){
 				if(!key.contains("_xx")){
-					if (!StringUtil.isNotEmpty(dataMap.get(key))) {
-						if (!dataMap.containsKey(key+"_xx")) {
-							if(dataMap.get(key) instanceof String){
-								dataMap.put(key,"xxx");
+					if(dataMap.get(key) instanceof List){
+						if (CollectionUtils.isEmpty((List)dataMap.get(key))) {
+							if (!dataMap.containsKey(key+"_xx")) {
+								if(dataMap.get(key) instanceof String){
+									dataMap.put(key,"xxx");
+								}
+								resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+								break;
 							}
-							resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
-							break;
+						}
+					}else{
+						if (!StringUtil.isNotEmpty(dataMap.get(key))) {
+							if (!dataMap.containsKey(key+"_xx")) {
+								if(dataMap.get(key) instanceof String){
+									dataMap.put(key,"xxx");
+								}
+								resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+								break;
+							}
 						}
 					}
 				}
