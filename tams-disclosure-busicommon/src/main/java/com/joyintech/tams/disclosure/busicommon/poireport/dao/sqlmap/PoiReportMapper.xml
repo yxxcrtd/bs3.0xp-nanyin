@@ -44,12 +44,6 @@
 		    from DIS_PROD_PLAN
 		    where PROD_ID=#{prodId}
 		    and OPEN_END_DATE= TO_DATE(#{baseDate},'yyyy-MM-dd')
-		    union all
-			select  SETT_DATE
-			from DIS_PROD_BONUSPLAN
-			where PROD_ID=#{prodId}
-			  and BONUS_MODE='02'
-			  and SETT_DATE= TO_DATE(#{baseDate},'yyyy-MM-dd')
 		)
 	</select>
 

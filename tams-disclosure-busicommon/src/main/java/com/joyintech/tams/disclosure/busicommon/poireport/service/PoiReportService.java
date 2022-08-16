@@ -9,13 +9,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt5;
+import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dao.DurationReportMapper;
+import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,6 +119,9 @@ public class PoiReportService {
 	 * 日志
 	 */
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private DurationReportMapper durationReportMapper;
 
 	/**
 	 * 生成报表：创建服务器文件，创建工作流进行报表确认
@@ -886,7 +894,7 @@ public class PoiReportService {
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String baseDate=(String) dataMap.get("baseDate");
 				if(poiReportMapper.checkBaseDate(prodId,baseDate)<1){
-					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
+					resultSb.append("分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
 				}
 
 			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
@@ -894,7 +902,15 @@ public class PoiReportService {
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String settDate=(String) dataMap.get("settDate");
 				if(poiReportMapper.checkBaseDate(prodId,settDate)<1){
-					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
+					resultSb.append("分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
+				}
+			}
+			else if (StringUtil.equals(rptType,DisReportType.QSBG)){
+				//清算报告 资产类合计=负债类合计；
+				String sumAssetAmt=(String)dataMap.get("sumAssetAmt");
+				String sumDebtAmt=(String)dataMap.get("sumDebtAmt");;
+				if (!StringUtil.equals(sumAssetAmt,sumDebtAmt)) {
+					resultSb.append("清算报告资产类合计不等于负债类合计"+"<br>");
 				}
 			}
 			else if(StringUtil.equals(rptType,DisReportType.JDBG_ZSX)
@@ -1125,10 +1141,60 @@ public class PoiReportService {
 					//对于定期报告中需要从【报表指标管理】或“合作机构信息维护”、“产品资产组合情况信息维护”、“非标债权类资产明细信息维护”“关联交易情况信息维护”中取值的统计项，
 					// 若在生成报告时，上述内容取不到值或无有效数据（系统生成报告的日期在数据的生效期及有效截止日期之间），也需要在本界面生成一条对应数据项为空的提示；
 					//TODO:
+				if(CollectionUtils.isEmpty((List)dataMap.get("listNostds"))){
+					resultSb.append("非标债权类资产明细信息缺失<br>");
+				}
+				if(((Map<String,Object>)dataMap.get("repRelDeal")).isEmpty()){
+					resultSb.append("关联交易情况信息缺失<br>");
+				}
+				if(prodAssetComb.isEmpty()){
+					resultSb.append("产品资产组合情况信息缺失<br>");
+				}
+				if(StringUtil.equals(dataMap.get("partner"),"-")){
+					resultSb.append("合作机构信息缺失<br>");
+				}
+				if(!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("ldxfxfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg1"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg2"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg3"))){
+					resultSb.append("报表指标信息缺失<br>");
+				}
 
 				//对于开放式产品，若在定期报告的统计期内产品业绩比较基准发生了变更（由非指数型产品变为指数型产品，或指数型产品挂钩的行情代码由A变为B）需要在本模块给出提示：
 				if(StringUtil.equals(prodInfo.getIssuingWay(),DictCodeListExt5.发行方式_开放式.getValue())){
 					//TODO:
+					List<RepProdInfo> listProdChildren = durationReportMapper.selectProdChildren(params);
+					int year = 2022;
+					int quarter = 2;
+					int halfYear =1;
+					year = Integer.parseInt(params.get("year").toString());
+					if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+						quarter= Integer.parseInt(params.get("quarter").toString());
+					} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+						halfYear= Integer.parseInt(params.get("halfyear").toString());
+					}
+
+					boolean changeFlag=false;
+					for (RepProdInfo child:listProdChildren ) {
+						if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+							Date durStartDate = DurationUtil.getQuarterStart(year, quarter);
+							Date durEndDate = DurationUtil.getQuarterEnd(year, quarter);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+							Date durStartDate = DurationUtil.getHalfYearStart(year, halfYear);
+							Date durEndDate = DurationUtil.getHalfYearEnd(year, halfYear);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报
+							Date durStartDate = DurationUtil.getYearStart(year);
+							Date durEndDate = DurationUtil.getYearEnd(year);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						}
+					}
+					if(changeFlag){
+						resultSb.append("报告期内业绩比较基准发生变更，请确认<br>");
+					}
 				}
 			}
 
@@ -1136,12 +1202,25 @@ public class PoiReportService {
 			//生成报告时，若存在某个统计项取不到值的情况，需要在本模块进行提示 提示“生成报告所需数据有缺失”
 			for (String key:dataMap.keySet()){
 				if(!key.contains("_xx")){
-					if (!StringUtil.isNotEmpty(dataMap.get(key))) {
-						if (!dataMap.containsKey(key+"_xx")) {
-							if(dataMap.get(key) instanceof String){
-								dataMap.put(key,"xxx");
+					if(dataMap.get(key) instanceof List){
+						if (CollectionUtils.isEmpty((List)dataMap.get(key))) {
+							if (!dataMap.containsKey(key+"_xx")) {
+								if(dataMap.get(key) instanceof String){
+									dataMap.put(key,"xxx");
+								}
+								resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+								break;
 							}
-							resultSb.append("生成报告所需数据有缺失key="+key+"<br>");
+						}
+					}else{
+						if (!StringUtil.isNotEmpty(dataMap.get(key))) {
+							if (!dataMap.containsKey(key+"_xx")) {
+								if(dataMap.get(key) instanceof String){
+									dataMap.put(key,"xxx");
+								}
+								resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+								break;
+							}
 						}
 					}
 				}
@@ -1172,7 +1251,7 @@ public class PoiReportService {
 
 				repReportCheckMapper.insertSelective(repReportCheck);
 
-				resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。点击“确认”按钮，可通过在线编辑的形式对当前报表进行编辑");
+				resultSb.append("点击“确认”按钮，可通过在线编辑的形式对当前报表进行编辑");
 			}
 		}
 
@@ -1181,46 +1260,46 @@ public class PoiReportService {
 
 	private String singleCheck(RepDataCheck repDataCheck,BigDecimal val,String tips){
 		String result="";
-		if(StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于)){
+		if(StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于.getValue())){
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)>=0){
 				result=tips+"小于"+repDataCheck.getParamValue1();
 			}
-		} else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于等于)) {
+		} else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)>0){
 				result=tips+"小于等于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)<=0){
 				result=tips+"大于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于等于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)<0){
 				result=tips+"大于等于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"内";
 			}
 
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>=0&&val.compareTo(paramValue2)<0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（含）,"+repDataCheck.getParamValue2()+"内";
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<=0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"（含）内";
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_等于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)!=0){
 				result=tips+"等于"+repDataCheck.getParamValue1();
@@ -1230,6 +1309,32 @@ public class PoiReportService {
 		return result;
 	}
 
+	private boolean getChangeFlag(RepProdInfo prod,Date durStartDate,Date durEndDate){
 
-	
+		Date sDate = durStartDate;
+		Date eDate = durEndDate;
+
+		//查询指定的产品在统计区间内的所有业绩基准
+		Map<String,Object> mapParas = new HashMap<>();
+		mapParas.put("prodId", prod.getProdId());
+		List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(mapParas);
+
+		//区间内是否有业绩基准变更的标志
+		boolean changeFlag = false;
+		//查询指定的产品在统计区间内的有效业绩基准
+		List<RepProdBasicChange> listEffBasis = new ArrayList<>();
+		for ( RepProdBasicChange item:listBasis ) {
+			if ( "E".equals(item.getStatus()) ) {
+				listEffBasis.add(item);
+			}
+			//更新日期在统计区间内，且状态为D，说明有变更
+			if(item.getUpdateTime()!=null){
+				if ( item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+					changeFlag=true;
+				}
+			}
+		}
+		return changeFlag;
+	}
+
 }

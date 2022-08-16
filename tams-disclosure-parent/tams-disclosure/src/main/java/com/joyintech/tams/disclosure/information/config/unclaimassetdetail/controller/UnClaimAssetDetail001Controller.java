@@ -152,25 +152,34 @@ public class UnClaimAssetDetail001Controller extends BaseController {
      * @return 处理结果
      * @throws Exception 异常
      */
+//    @ResponseBody
+//    @RequestMapping("checkImportData")
+//    public AjaxResult checkImportData(String fileName) throws FileNotFoundException, ParseException {
+//        return unClaimAssetDetail001Service.checkImportData(fileName);
+//    }
     @ResponseBody
     @RequestMapping("checkImportData")
-    public AjaxResult checkImportData(String fileName) throws FileNotFoundException, ParseException {
+    public AjaxResult checkImportData(String fileName) {
         return unClaimAssetDetail001Service.checkImportData(fileName);
     }
     /**
      * 导入
      *
-     * @param fileName 导入的文件名
+     * @param
      * @return 处理结果
      * @throws Exception 异常
      */
+//    @ResponseBody
+//    @RequestMapping("importFile")
+//    public List<ExcelValidDto> importData(String fileName)
+//            throws Exception{
+//        return this.unClaimAssetDetail001Service.importFile(fileName);
+//    }
     @ResponseBody
     @RequestMapping("importFile")
-    public List<ExcelValidDto> importData(String fileName)
-            throws Exception{
-        return this.unClaimAssetDetail001Service.importData(fileName);
+    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
+        return unClaimAssetDetail001Service.importFile(param);
     }
-
 
 
 
