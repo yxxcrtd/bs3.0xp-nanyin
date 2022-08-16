@@ -18,6 +18,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dao.DurationReportMapper;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -114,6 +115,9 @@ public class PoiReportService {
 	
 	@Autowired
 	private ReportRevealEndDateService reportRevealEndDateService;
+
+	@Autowired
+	private ReportDealService reportDealService;
 
 	/**
 	 * 日志
@@ -363,6 +367,11 @@ public class PoiReportService {
 		//String ReportName,
 		//String reportCategory
 		RepReveal repReveal = reportDataService.getRepReveal(params);
+		//查找之前生成未确认得数据，记录手工上传得数据
+		RepReveal unConfirmRepReveal = reportDealService.getUnConfirmRepReveal(repReveal);
+
+		reportDealService.updateDataStatus(repReveal);  //逻辑删除已生成未确认的
+
 		// 将待组装数据成日志信息
 		RepInstallLogDetail repInstallLogDetail = new RepInstallLogDetail();
 
@@ -446,6 +455,10 @@ public class PoiReportService {
 		repReveal.setIsConfirm(DictCodeListExt1.确认类型_手动.getValue());
 		repReveal.setIsReveal(DictCodeListExt2.披露方式_手动.getValue());
 		repReveal.setReportCategory(reportInfo.getReportCategory());
+		if(unConfirmRepReveal != null){
+			repReveal.setFilepath(unConfirmRepReveal.getFilepath());
+			repReveal.setFilename(unConfirmRepReveal.getFilename());
+		}
 		repRevealMapper.insert(repReveal);
 
 		// 插入日志

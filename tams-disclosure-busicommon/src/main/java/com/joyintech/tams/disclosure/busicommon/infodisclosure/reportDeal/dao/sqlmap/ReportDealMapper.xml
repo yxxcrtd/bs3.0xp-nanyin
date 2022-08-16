@@ -143,4 +143,27 @@
 		AND rr.STATUS='E'
 		AND rr.CONFIRM_STATUS in('0','2')
 	</select>
+
+	<select id="getUnConfirmRepReveal" parameterType="com.joyintech.tams.common.base.entity.RepReveal" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+		SELECT * FROM
+		REP_REVEAL
+		WHERE
+		1=1
+		<if test="repId !=null and repId != ''">
+			AND REP_ID = #{repId,jdbcType=VARCHAR}
+		</if>
+		<if test="reportName !=null and reportName != ''">
+			AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		</if>
+		<if test="prodid !=null and prodid != ''">
+			AND PRODID = #{prodid,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate !=null">
+			AND START_DATE = #{startDate,jdbcType=DATE}
+		</if>
+		<if test="endDate !=null">
+			AND END_DATE = #{endDate,jdbcType=DATE}
+		</if>
+		AND STATUS='E'
+	</select>
 </mapper>
