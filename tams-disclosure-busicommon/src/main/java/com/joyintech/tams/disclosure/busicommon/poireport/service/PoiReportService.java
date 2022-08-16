@@ -874,7 +874,7 @@ public class PoiReportService {
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String baseDate=(String) dataMap.get("baseDate");
 				if(poiReportMapper.checkBaseDate(prodId,baseDate)<1){
-					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
+					resultSb.append("分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
 				}
 
 			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
@@ -882,7 +882,15 @@ public class PoiReportService {
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String settDate=(String) dataMap.get("settDate");
 				if(poiReportMapper.checkBaseDate(prodId,settDate)<1){
-					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
+					resultSb.append("分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
+				}
+			}
+			else if (StringUtil.equals(rptType,DisReportType.QSBG)){
+				//清算报告 资产类合计=负债类合计；
+				String sumAssetAmt=(String)dataMap.get("sumAssetAmt");
+				String sumDebtAmt=(String)dataMap.get("sumDebtAmt");;
+				if (!StringUtil.equals(sumAssetAmt,sumDebtAmt)) {
+					resultSb.append("清算报告资产类合计不等于负债类合计"+"<br>");
 				}
 			}
 			else if(StringUtil.equals(rptType,DisReportType.JDBG_ZSX)
@@ -1159,7 +1167,8 @@ public class PoiReportService {
 							if(dataMap.get(key) instanceof String){
 								dataMap.put(key,"xxx");
 							}
-							resultSb.append("生成报告所需数据有缺失key="+key+"<br>");
+							resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+							break;
 						}
 					}
 				}
@@ -1190,7 +1199,7 @@ public class PoiReportService {
 
 				repReportCheckMapper.insertSelective(repReportCheck);
 
-				resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。点击“确认”按钮，可通过在线编辑的形式对当前报表进行编辑");
+				resultSb.append("点击“确认”按钮，可通过在线编辑的形式对当前报表进行编辑");
 			}
 		}
 
