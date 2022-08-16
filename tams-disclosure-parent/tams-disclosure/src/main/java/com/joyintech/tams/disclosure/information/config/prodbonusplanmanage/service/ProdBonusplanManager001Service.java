@@ -169,7 +169,9 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
     public ProdBonusplanDto selectByProdId(String prodId) {
         return prodBonusplanMapper.selectByProdId(prodId, DictCodeListExt3.信披_数据状态_有效E.getValue());
     }
-
+    public int selectByProdId2(String prodId) {
+        return prodBonusplanMapper.selectByProdId2(prodId, DictCodeListExt3.信披_数据状态_有效E.getValue());
+    }
 
     /**
      * 导入check
@@ -268,9 +270,10 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                         errorMsg.append("业绩比较基准比例 必填！");
                     }
 
-                    ProdBonusplanDto existDto = prodBonusplanManager001Service.selectByProdId(rowData.get(0));
+//                    ProdBonusplanDto existDto = prodBonusplanManager001Service.selectByProdId2(rowData.get(0));
+                    int num = prodBonusplanManager001Service.selectByProdId2(rowData.get(0));
                     if(StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(),rowData.get(1))
-                            && existDto !=null ){
+                            && num > 0){
                         errorMsg.append("当分红方式选择到期兑付时，一个子产品代码只能有一条数据");
                     }
 

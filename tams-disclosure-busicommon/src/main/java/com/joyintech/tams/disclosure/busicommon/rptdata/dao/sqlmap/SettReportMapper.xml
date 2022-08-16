@@ -22,8 +22,19 @@
     </select>
     
     
-    <select id="selectWeekend" parameterType="DATE" resultType="DATE">
+    <select id="selectProdInfo" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
     	select 
+    		info.* 
+    	from REP_PROD_INFO info
+    	where info.STATUS='E'
+    	and exists ( 
+    		select 1 from DIS_PROD_BONUSPLAN plan 
+    		where info.PROD_ID=plan.PROD_ID 
+    		and plan.BONUS_MODE='02' 
+    		and plan.DATA_STATUS='E' )
+		<if test="prodId!=null">
+			and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		</if>
     </select>
     
 </mapper>

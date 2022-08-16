@@ -54,7 +54,7 @@ $(function () {
                         }else if(row.confirmStatus=='0'){
                             return '<span class="layui-badge-rim layui-bg-red">'+row.confirmStatusName+'</span>';
                         }else if(row.confirmStatus=='2'){
-							return '<span class="layui-badge-rim layui-bg-black">'+row.confirmStatusName+'</span>';
+							return '<span class="layui-badge-rim layui-bg-orange">'+row.confirmStatusName+'</span>';
 						}else{
                         	return '';
                         }
