@@ -91,9 +91,10 @@ public class OSSFileSystemMethod implements JoyinFileSystemMethod{
                     fileDir.mkdirs();
                 }
                 f = new SafelyFile(localFilePath);
-                if(!f.exists()){
-                    createLocalFile(f,filePath);
-                }
+
+//                if(!f.exists()){
+                createLocalFile(f,filePath);
+//                }
 
             }else{
                 f = new SafelyFile(filePath);

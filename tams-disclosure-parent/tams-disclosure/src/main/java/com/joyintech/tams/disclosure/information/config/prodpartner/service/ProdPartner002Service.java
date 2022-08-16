@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.information.config.prodpartner.service;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbPrdDeclareInfoErrodataWithBLOBs;
@@ -69,14 +70,14 @@ public class ProdPartner002Service extends CommonExportService<ProdPartnerDto>
 
         if (OperationType.DELETE.equals(type)) {
             //删除
-            //根据workflowId查询流程发起人、发起时间
-            if(StringUtil.isNotEmpty(dto.getWorkflowId())){
+            /*if(StringUtil.isNotEmpty(dto.getWorkflowId())){
                 BaseEntity baseEntity = workflowMapper.selectWflCreateInfo(dto.getWorkflowId());
                 if(baseEntity!=null){
                     dto.setUpdateUser(baseEntity.getCreateUser());
                     dto.setUpdateTime(baseEntity.getCreateTime());
                 }
-            }
+            }*/
+            dto.setUpdateUser(LoginUserUtil.getUserName());
             prodPartner002Mapper.deleteProdPartnerByPrimaryKey(dto);
         }
         else if (OperationType.NEW.equals(type)) {//新建
@@ -84,10 +85,11 @@ public class ProdPartner002Service extends CommonExportService<ProdPartnerDto>
             dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             //数据来源
             dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
-            prodPartner002Mapper.insertProdPartner(dto);
+            prodPartner002Mapper.insert(dto);
         }
         else {
             //更新
+            dto.setUpdateUser(LoginUserUtil.getUserName());
             prodPartner002Mapper.updateByPrimaryKeySelective(dto);
         }
     }

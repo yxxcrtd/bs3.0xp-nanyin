@@ -36,21 +36,31 @@ import com.joyintech.tams.common.base.dao.RepInstallLogDetailMapper;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.dao.RepReportCheckMapper;
 import com.joyintech.tams.common.base.dao.RepRevealMapper;
+import com.joyintech.tams.common.base.entity.RepDataCheck;
+import com.joyintech.tams.common.base.entity.RepInstallLogDetail;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepReportCheck;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.dao.PoiReportMapper;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
+import com.joyintech.tams.disclosure.busicommon.rptdata.service.HolidayService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.utils.poi.PoiUtils;
+import com.joyintech.tools.collectors.JoyinCollectors;
 
 /**
  * poi报表生成服务<br>
@@ -101,6 +111,10 @@ public class PoiReportService {
 
 	@Autowired
 	private RepReportCheckMapper repReportCheckMapper;
+	
+	@Autowired
+	private ReportRevealEndDateService reportRevealEndDateService;
+
 	/**
 	 * 日志
 	 */
@@ -221,8 +235,7 @@ public class PoiReportService {
 			minioFileRemoteService.tempFileCopy(tempRemoteFileName, uploadFile);
 	        
 			// 创建工作流
-			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),
-					reportInfo.getReportName(), reportInfo.getReportCategory());
+			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),reportInfo);
 			if (flag == false) {
 				logger.error("生成信息主表错误!");
 			}
@@ -346,8 +359,9 @@ public class PoiReportService {
 	 * @see
 	 * @since 1.0
 	 */
-	private boolean insertRepReveal(Map<String, Object> params, String fileKey, String fileName, String ReportName,
-			String reportCategory) {
+	private boolean insertRepReveal(Map<String, Object> params, String fileKey, String fileName,ReportInfo reportInfo ) {
+		//String ReportName,
+		//String reportCategory
 		RepReveal repReveal = reportDataService.getRepReveal(params);
 		// 将待组装数据成日志信息
 		RepInstallLogDetail repInstallLogDetail = new RepInstallLogDetail();
@@ -355,7 +369,7 @@ public class PoiReportService {
 		repReveal.setRepId(params.get("repid").toString());
 		repReveal.setSysFilepath(fileKey);
 		repReveal.setSysFilename(fileName);
-		repReveal.setReportName(ReportName);
+		repReveal.setReportName(reportInfo.getReportName());
 		if (StringUtil.isNotEmpty(params.get("prodId"))) {
 			repReveal.setProdid(params.get("prodId").toString());
 		} else {
@@ -379,26 +393,31 @@ public class PoiReportService {
 			repReveal.setEndDate(com.joyintech.framework.util.DateUtil.platDateFromCache());
 		}
 		// 获取产品信息
-		String portnum = params.get("prodId") == null ? "" : params.get("prodId").toString();
-		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(portnum);
+		String busiId = params.get("prodId") == null ? "" : params.get("prodId").toString();
+		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(busiId);
 
-		// TODO:规则信息，重新编写
+		//规则信息，重新编写
+		Date revealEndDate = reportRevealEndDateService.getDisEndDate(repReveal, busiId,reportInfo);
+		if ( revealEndDate ==null )
+			revealEndDate = new Date();
+		repReveal.setRevealEndDate(revealEndDate);
+
 		// 获取规则信息
-       List<RepRuleEntity> repRule = poiReportMapper.getRuleInfo(params.get("repId").toString());
-       if(null!=repRule&&repRule.size()==1){
-           Date basiDate = getBasisDate(prodInfo, repRule.get(0));
-           
-           Date revealEndDate = null;
-           if(StringUtil.isNotEmpty(basiDate)) {
-               revealEndDate = revealDeadLineService.getRevDeadlineByMark(basiDate, repRule.get(0), new HashMap<String, Date>());
-               // 设置披露截止日
-               repReveal.setRevealEndDate(revealEndDate);
-           }else{
-               repReveal.setRevealEndDate(new Date());
-           }
-       }else{
-           repReveal.setRevealEndDate(new Date());
-       }
+//       List<RepRuleEntity> repRule = poiReportMapper.getRuleInfo(params.get("repId").toString());
+//       if(null!=repRule&&repRule.size()==1){
+//           Date basiDate = getBasisDate(prodInfo, repRule.get(0));
+//           
+//           Date revealEndDate = null;
+//           if(StringUtil.isNotEmpty(basiDate)) {
+//               revealEndDate = revealDeadLineService.getRevDeadlineByMark(basiDate, repRule.get(0), new HashMap<String, Date>());
+//               // 设置披露截止日
+//               repReveal.setRevealEndDate(revealEndDate);
+//           }else{
+//               repReveal.setRevealEndDate(new Date());
+//           }
+//       }else{
+//           repReveal.setRevealEndDate(new Date());
+//       }
 
 //       RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repReveal.getRepId());
 
@@ -426,7 +445,7 @@ public class PoiReportService {
 		// 系统生成确认方式和披露方式设置为手动
 		repReveal.setIsConfirm(DictCodeListExt1.确认类型_手动.getValue());
 		repReveal.setIsReveal(DictCodeListExt2.披露方式_手动.getValue());
-		repReveal.setReportCategory(reportCategory);
+		repReveal.setReportCategory(reportInfo.getReportCategory());
 		repRevealMapper.insert(repReveal);
 
 		// 插入日志
@@ -1290,7 +1309,6 @@ public class PoiReportService {
 		return result;
 	}
 
-
 	private boolean getChangeFlag(RepProdInfo prod,Date durStartDate,Date durEndDate){
 
 		Date sDate = durStartDate;
@@ -1318,4 +1336,5 @@ public class PoiReportService {
 		}
 		return changeFlag;
 	}
+
 }

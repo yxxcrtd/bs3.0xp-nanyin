@@ -165,8 +165,8 @@
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null" >
-                UPDATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
         where PROD_PARTENER_ID = #{prodPartenerId,jdbcType=VARCHAR}
