@@ -83,11 +83,10 @@ public class ReportMzjz001Service implements IReportDataService {
                         announceDate = DateUtil.addDay(DateUtil.parse(valueDate), 1);
                     }
                     reportMzjz001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
-                    //跑批日
-                    reportMzjz001Dto.setEnddate(valueDate);
-
                 }
             }
+            //跑批日
+            reportMzjz001Dto.setEnddate(valueDate);
             logger.info("每周净值公告（公募）/（私募）【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("每周净值公告（公募）/（私募）【{}】生成异常", JsonUtils.object2Json(paraMap), e);

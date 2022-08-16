@@ -89,9 +89,8 @@ public class ReportKfqgg001Service implements IReportDataService {
                 reportKfqgg001Dto.setOpenList(openList);
                 //跑批日
                 reportKfqgg001Dto.setEnddate(DateUtil.format(DateUtil.platDateFromCache()));
-
+                logger.info("产品开放期公告/报告【{}】生成成功", JsonUtils.object2Json(paraMap));
             }
-            logger.info("产品开放期公告/报告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("产品开放期公告/报告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }

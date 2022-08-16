@@ -451,11 +451,11 @@ $(function () {
      		for(var i=0; i<rowArr.length; i++) {
      			keyStr = keyStr + rowArr[i].id + ",";
      			if(rowArr[i].confirmStatus=='1') {
-     	     		msg = "只能对未确认或已退回的报表进行删除！";
+     	     		msg = "不能删除已确认的数据！";
      	     	}
      		}
      		if(msg!="") {
-     			Joyin.error(msg);
+				layer.msg(msg);
      		}
      		else {
      			var objectWfl = {}; 
@@ -468,13 +468,8 @@ $(function () {
      			object.id = keyStr;
      	    	object.operateType = "delete";
      	    	object.data = JSON.stringify(rowArr)//将选中行的数据放入object中 zhangyf 20190130
-     	    	Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check3',
+     	    	Joyin.ajax(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check',
      	    			objectWfl, function(result) {
-     	    		debugger;
-     	    		if(result.data.errordata){
-						Joyin.error("只能对未确认或已退回的报表进行删除！");
-						return;
-					}else{
 						Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteCheck', object, function(result) {
 							Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
 								Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/deleteConfirm', object, function(result) {
@@ -482,8 +477,6 @@ $(function () {
 								});
 							});
 						});
-					}
-
      	    	});
      		}
      	}

@@ -156,7 +156,7 @@
         $('#UnClaimAssetDetail001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function () {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetdetail001/checkImportData', {fileName: fileName}, function(checkResult) {
+                    Joyin.ajax(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/checkImportData', {fileName: fileName}, function(checkResult) {
                         if (checkResult) {
                             setTimeout( function () {
                                     if(checkResult.data.errorMsg){
@@ -170,7 +170,7 @@
                                                     var data = {
                                                         tempList: checkResult.data.correctData
                                                     }
-                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetdetail001/importFile', data,
+                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/importFile', data,
                                                         function (resultObj) {
                                                             if (resultObj.statuCode.toString() === '200') {
                                                                 table.reload();
@@ -185,7 +185,7 @@
                                                 var data = {
                                                     tempList: checkResult.data.correctData
                                                 }
-                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetdetail001/importFile', data,
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/importFile', data,
                                                     function (resultObj) {
                                                         if (resultObj.statuCode.toString() === '200') {
                                                             table.reload();
@@ -204,7 +204,7 @@
                                                 var data = {
                                                     tempList: checkResult.data.correctData
                                                 }
-                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetdetail001/importFile', data,
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/importFile', data,
                                                     function (resultObj) {
                                                         if (resultObj.statuCode.toString() === '200') {
                                                             table.reload();
@@ -219,7 +219,7 @@
                                             var data = {
                                                 tempList: checkResult.data.correctData
                                             }
-                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetdetail001/importFile', data,
+                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/importFile', data,
                                                 function (resultObj) {
                                                     if (resultObj.statuCode.toString() === '200') {
                                                         table.reload();
