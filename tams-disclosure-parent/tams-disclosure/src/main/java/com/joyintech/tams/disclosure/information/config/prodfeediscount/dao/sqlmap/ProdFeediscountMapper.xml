@@ -65,7 +65,7 @@
             CREATE_DEPT)
         values (#{prodDiscountId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodRegistNo,jdbcType=VARCHAR}, 
             #{isSalesAgency,jdbcType=VARCHAR}, #{prodDisRemark,jdbcType=VARCHAR}, #{feename,jdbcType=VARCHAR}, 
-            #{preFeerate,jdbcType=DECIMAL}, #{afterFeerate,jdbcType=DECIMAL}, #{startDate,jdbcType=DATE}, 
+            #{preFeerate,jdbcType=VARCHAR}, #{afterFeerate,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, 
             #{endDate,jdbcType=DATE}, #{thisPreFeerate,jdbcType=DECIMAL}, #{thisAfterFeerate,jdbcType=DECIMAL}, 
             #{thisEndFeerate,jdbcType=DECIMAL}, #{feeDisRemark,jdbcType=VARCHAR}, #{rptIssueDate,jdbcType=DATE}, 
             #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
@@ -162,10 +162,10 @@
                 #{feename,jdbcType=VARCHAR},
             </if>
             <if test="preFeerate != null" >
-                #{preFeerate,jdbcType=DECIMAL},
+                #{preFeerate,jdbcType=VARCHAR},
             </if>
             <if test="afterFeerate != null" >
-                #{afterFeerate,jdbcType=DECIMAL},
+                #{afterFeerate,jdbcType=VARCHAR},
             </if>
             <if test="startDate != null" >
                 #{startDate,jdbcType=DATE},
@@ -242,10 +242,10 @@
                 FEENAME = #{feename,jdbcType=VARCHAR},
             </if>
             <if test="preFeerate != null" >
-                PRE_FEERATE = #{preFeerate,jdbcType=DECIMAL},
+                PRE_FEERATE = #{preFeerate,jdbcType=VARCHAR},
             </if>
             <if test="afterFeerate != null" >
-                AFTER_FEERATE = #{afterFeerate,jdbcType=DECIMAL},
+                AFTER_FEERATE = #{afterFeerate,jdbcType=VARCHAR},
             </if>
             <if test="startDate != null" >
                 START_DATE = #{startDate,jdbcType=DATE},
@@ -290,8 +290,8 @@
             IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR},
             PROD_DIS_REMARK = #{prodDisRemark,jdbcType=VARCHAR},
             FEENAME = #{feename,jdbcType=VARCHAR},
-            PRE_FEERATE = #{preFeerate,jdbcType=DECIMAL},
-            AFTER_FEERATE = #{afterFeerate,jdbcType=DECIMAL},
+            PRE_FEERATE = #{preFeerate,jdbcType=VARCHAR},
+            AFTER_FEERATE = #{afterFeerate,jdbcType=VARCHAR},
             START_DATE = #{startDate,jdbcType=DATE},
             END_DATE = #{endDate,jdbcType=DATE},
             THIS_PRE_FEERATE = #{thisPreFeerate,jdbcType=DECIMAL},
@@ -473,13 +473,13 @@
             and PROD_DIS_REMARK is null
         </if>
         <if test="preFeerate != null" >
-            and PRE_FEERATE = #{preFeerate,jdbcType=DECIMAL}
+            and PRE_FEERATE = #{preFeerate,jdbcType=VARCHAR}
         </if>
         <if test="preFeerate == null" >
             and PRE_FEERATE is null
         </if>
         <if test="afterFeerate != null" >
-            and AFTER_FEERATE = #{afterFeerate,jdbcType=DECIMAL}
+            and AFTER_FEERATE = #{afterFeerate,jdbcType=VARCHAR}
         </if>
         <if test="afterFeerate == null" >
             and AFTER_FEERATE is null

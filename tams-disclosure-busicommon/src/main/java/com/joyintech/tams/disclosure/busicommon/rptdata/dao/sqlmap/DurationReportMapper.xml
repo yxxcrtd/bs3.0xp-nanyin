@@ -59,7 +59,7 @@
 		,rindex.UNIT_VALUE_T
 		,nvl(bal.OTHER_FEE,0) otherFee
 		from REP_PROD_INFO info
-		left join REP_PROD_INDEX rindex on info.PROD_ID=rindex.PROD_ID and rindex.VALUE_DATE=#{reportDate,jdbcType=DATE}
+		left join REP_PROD_INDEX rindex on info.PROD_ID=rindex.PROD_ID and rindex.status='E' and rindex.VALUE_DATE=#{reportDate,jdbcType=DATE}
 		left join (
 			SELECT 
 			    bb.BOOKSET_ID

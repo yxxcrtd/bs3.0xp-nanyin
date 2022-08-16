@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.joyintech.framework.annotation.LogMethod;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.DateUtil;
@@ -43,7 +44,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportFileService;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
@@ -132,6 +132,7 @@ public class RepEdit001Contoller extends BaseController {
     }
 
     @RequestMapping(value="/doWebOffice", method = RequestMethod.POST)
+    @LogMethod
     public void doWebOffice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException	{
         //System.out.println("OfficeServer.service Start");
         //System.out.println("OfficeServer.service --- request.getSession().getId() = " + request.getSession().getId());

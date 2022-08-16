@@ -226,51 +226,57 @@ public class ReportConfirmManage003Contoller extends BaseController {
 					continue;
 				}
 				String[] arr = getFileDetail(listFileName.get(i));
-				boolean flag = this.checkUpload(arr);
-				//若为true,则可以上传,若为false,则不能上传文件
-				if(flag){
-					//创建服务器上的上传路径
-					String path = FileNameUtil.createUploadFilePath("");
-					File filepath1 = new SafelyFile(path);
-					if(!filepath1.exists()){
-						filepath1.mkdirs();
-					}
+				if(arr.length>3){
 					String localFileName = getLocalFileName(listFileName.get(i));
-					File file = new SafelyFile(localFileName);
+					String msg = "文件名格式不正确，请检查"+localFileName;
+					checkList.add(new ValidMessage(msg));
+					value = new AjaxResult(msg, MessageType.错误消息);
+				}else{
+					boolean flag = this.checkUpload(arr);
+					//若为true,则可以上传,若为false,则不能上传文件
+					if(flag){
+						//创建服务器上的上传路径
+						String path = FileNameUtil.createUploadFilePath("");
+						File filepath1 = new SafelyFile(path);
+						if(!filepath1.exists()){
+							filepath1.mkdirs();
+						}
+						String localFileName = getLocalFileName(listFileName.get(i));
+						File file = new SafelyFile(localFileName);
 //					String uploadFilePath = dealUploadFilePath(localFileName);
-					String uploadFilePath = dealUploadFileOssPath(localFileName);
-					File localFile = new SafelyFile(uploadFilePath);
-					//读取、写入文件
-					FileInputStream fis = null;
+						String uploadFilePath = dealUploadFileOssPath(localFileName);
+						File localFile = new SafelyFile(uploadFilePath);
+						//读取、写入文件
+						FileInputStream fis = null;
 //					FileOutputStream fos = null;
-					String fileno = IDGenerator.generate();
-					UploadFile uploadFile = new UploadFile(localFileName,fileno,localFile);
-					try {
-						 fis = new FileInputStream(listFileName.get(i));
-//						 fos = new FileOutputStream(uploadFilePath);
-						 uploadFile = minioFileRemoteService.uploadFile(uploadFile,fis);
-//            		copyFile(file.getInputStream(), new FileOutputStream(localFile), file.getSize(), pageId);		
-//						copyFile(fis, fos, file.length(), pageId);
-					} finally {
+						String fileno = IDGenerator.generate();
+						UploadFile uploadFile = new UploadFile(localFileName,fileno,localFile);
 						try {
-							if(fis!=null)
-							{
-								fis.close();
-							}
+							fis = new FileInputStream(listFileName.get(i));
+//						 fos = new FileOutputStream(uploadFilePath);
+							uploadFile = minioFileRemoteService.uploadFile(uploadFile,fis);
+//            		copyFile(file.getInputStream(), new FileOutputStream(localFile), file.getSize(), pageId);
+//						copyFile(fis, fos, file.length(), pageId);
+						} finally {
+							try {
+								if(fis!=null)
+								{
+									fis.close();
+								}
 
 //							if(fos!=null)
 //							{
 //								fos.close();
 //							}
 
-						}
-						catch (Exception e)
-						{
-							logger.error(e.getMessage(),e);
+							}
+							catch (Exception e)
+							{
+								logger.error(e.getMessage(),e);
+							}
+
 						}
 
-					}
-					
 //					String  uuid = IDGenerator.generate();
 //
 //					UploadFile uploadFile = new UploadFile(localFileName,uuid,localFile);
@@ -287,29 +293,31 @@ public class ReportConfirmManage003Contoller extends BaseController {
 //			        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
 //			        joyinDFSTemplate.upload(sysUploadFileInfo);
 //
-					//更新数据库中信息
-					RepReveal repReveal1= updateRepRevealInfo(arr);
-					RepReveal repReveal = new RepReveal();
+						//更新数据库中信息
+						RepReveal repReveal1= updateRepRevealInfo(arr);
+						RepReveal repReveal = new RepReveal();
 //					repReveal.setFilepath(uuid);
-					repReveal.setFilepath(fileno);
-					repReveal.setFilename(localFileName);
-					repReveal.setTime(DateUtil.parse(DateUtil.getCurrentDate()));
-					repReveal.setProdid(repReveal1.getProdid());
-					repReveal.setReportName(repReveal1.getReportName());
-					repReveal.setStartDate(repReveal1.getStartDate());
-					int num = reportConfirmManage003Service.updateRepRevealByInfo(repReveal);
-					if(num>0){
-						String msg = "上传信息入库成功："+localFileName;
-					}else {
-						String msg = "上传信息入库失败："+localFileName;
+						repReveal.setFilepath(fileno);
+						repReveal.setFilename(localFileName);
+						repReveal.setTime(DateUtil.parse(DateUtil.getCurrentDate()));
+						repReveal.setProdid(repReveal1.getProdid());
+						repReveal.setReportName(repReveal1.getReportName());
+						repReveal.setStartDate(repReveal1.getStartDate());
+						int num = reportConfirmManage003Service.updateRepRevealByInfo(repReveal);
+						if(num>0){
+							String msg = "上传信息入库成功："+localFileName;
+						}else {
+							String msg = "上传信息入库失败："+localFileName;
+							checkList.add(new ValidMessage(msg));
+						}
+					}else{
+						String localFileName = getLocalFileName(listFileName.get(i));
+						String msg = "状态为已确认,该文件不可上传："+localFileName;
 						checkList.add(new ValidMessage(msg));
+						value = new AjaxResult(msg, MessageType.错误消息);
 					}
-				}else{
-					String localFileName = getLocalFileName(listFileName.get(i));
-					String msg = "状态为已确认,该文件不可上传："+localFileName;
-					checkList.add(new ValidMessage(msg));
-					value = new AjaxResult(msg, MessageType.错误消息);
 				}
+
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
@@ -544,6 +552,9 @@ public class ReportConfirmManage003Contoller extends BaseController {
 			
 			
     	}
+		else {
+			return false;
+		}
     	//若为true,则可以上传,若为false，则不能上传
     	flag = reportConfirmManage003Service.selectConfirmStatus(repReveal);
 		return flag;

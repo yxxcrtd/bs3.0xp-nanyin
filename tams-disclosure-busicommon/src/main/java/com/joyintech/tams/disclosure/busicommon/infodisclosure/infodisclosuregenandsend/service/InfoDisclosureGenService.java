@@ -259,13 +259,13 @@ public class InfoDisclosureGenService {
 			fileInfo = jasparConnectUtilService.connectJasparAndDownload(url,fileName,
 					infoDisclosureGenAndSendEntity.getFileType(), infoDisclosureGenAndSendEntity.getTemplateId(),
 					infoDisclosureGenAndSendEntity.getProdid(),getParams(infoDisclosureGenAndSendEntity,screenList,execDate));
+			if(fileInfo==null){
+				return false;
+			}
 			infoDisclosureGenAndSendEntity.setFileName(fileInfo.getSrcName());
 			infoDisclosureGenAndSendEntity.setFilePathSeqno(fileInfo.getFileNo());
 			infoDisclosureGenAndSendEntity.setLocalPath(fileInfo.getTargetFile().getPath());
 			flag = true;
-			if(fileInfo==null){
-				flag = false;
-			}
 		} catch (Exception e) {
 			logger.error("error:",e);
 			logger.info("=======报表生成失败");

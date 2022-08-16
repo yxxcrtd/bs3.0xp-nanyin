@@ -832,6 +832,11 @@ public class PoiReportService {
 		String reportId = params.get("repid").toString();   //报表编号
 		ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
 
+		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
+		params.put("prodid", params.get("prodid")==null?params.get("pprodid"):params.get("prodid"));  //单产品只传了pprodid
+		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
+		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
+
 		RepReveal repReveal = poiReportService.getRepReveal(params);
 
 		Map<String, Object> dataMap = null;
@@ -870,8 +875,7 @@ public class PoiReportService {
 					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
 				}
 
-			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMFB)
-					||StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
+			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
 				//净值及分红报告
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String settDate=(String) dataMap.get("settDate");

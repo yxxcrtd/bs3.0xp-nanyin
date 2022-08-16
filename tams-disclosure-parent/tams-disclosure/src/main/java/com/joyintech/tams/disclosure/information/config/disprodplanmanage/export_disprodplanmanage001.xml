@@ -11,6 +11,8 @@
 			<Cell order="7" name="自动赎回日">autoRedeemDateStr</Cell>
 			<Cell order="8" name="实际持有天数">holdDaysStr</Cell>
 			<Cell order="9" name="数据状态">dataStatusName</Cell>
+			<Cell order="10" name="更新时间">updateTime</Cell>
+			<Cell order="11" name="更新人">updateUser</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>
