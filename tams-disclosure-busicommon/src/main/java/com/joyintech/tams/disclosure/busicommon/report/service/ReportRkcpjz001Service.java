@@ -89,8 +89,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     announceDate = DateUtil.addDay(DateUtil.parse(valueDate), 1);
                 }
                 reportRkcpjz001Dto.setAnnounceT(DateUtil.format(announceDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-                //跑批日
-                reportRkcpjz001Dto.setEnddate(valueDate);
+
 
                 //查询净值数据:现管型产品需要展示多条净值数据： 根据上交所日历判断，对于每周第一个工作日生成的净值公告，此部分需要披露自上一工作日至当前第一个工作日-1自然日的净值信息
                 List<ReportValueDto> list = new ArrayList<>();
@@ -168,6 +167,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 }
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
             }
+            //跑批日
+            reportRkcpjz001Dto.setEnddate(valueDate);
             logger.info("日开产品净值公告（公募净值型产品）【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("日开产品净值公告（公募净值型产品）【{}】生成异常", JsonUtils.object2Json(paraMap), e);
