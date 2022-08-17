@@ -1073,3 +1073,11 @@ values ('100000009', '08', '现管类产品投资权益类资产占比', '0', ''
 /**商品及金融衍生品类修改为商品及衍生品类 add by cuiwei 2022-08-16 start**/
 update sys_datadict_list set item_value = '商品及衍生品类' where dict_code ='INVEST_TYPE' AND ITEM_CODE ='03';
 /**商品及金融衍生品类修改为商品及衍生品类 add by cuiwei 2022-08-16 end**/
+
+/**商品及金融衍生品类修改为商品及衍生品类 add by cuiwei 2022-08-16 start**/
+delete from sys_wfl_business_module where page_id ='ReportPageManage003';
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('ReportPageManage003', 'ReportPageManage003_btn_save', 'fourprocess', 'system', '', sysdate, 'system', sysdate, 'ALL', '02');
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('ReportPageManage003', 'ReportPageManage003_btn_submit', 'fourprocess', 'system', '', sysdate, 'system', sysdate, 'ALL', '02');
+/**商品及金融衍生品类修改为商品及衍生品类 add by cuiwei 2022-08-16 end**/
