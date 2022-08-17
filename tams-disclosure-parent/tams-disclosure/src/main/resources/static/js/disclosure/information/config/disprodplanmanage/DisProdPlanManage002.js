@@ -40,6 +40,13 @@ $(function() {
 	 * 修改/新建
 	 */
 	var saveOrSubmit = function(operateType) {
+		var holdDays = $('#holdDays').val();
+		if(holdDays != "" && holdDays != null ){
+			if(holdDays <= 0){
+				Joyin.error("客户实际持有天数只能填写大于0的整数");
+				return;
+			}
+		}
 		var object = $.serializeToObject('#submitForm');
 		if (upFileName) {
 			object.indexValue = upFileName;
@@ -304,13 +311,19 @@ $(function() {
 
 	// 修改 客户实际持有天数
 	function changeHoldDays(){
-		debugger;
 		// 当“是否是开放周期型产品”为“是”时必填，否则置灰不可填，且不能小于该条数据的运作起始日
 		if(issuingWay !=null && issuingWay =='01' && isPeriod !=null && isPeriod =='01' ){
 			$('#holdDays').attr("disabled",false);
 		}else{
 			$('#holdDays').val('');
 			$('#holdDays').attr("disabled",true);
+		}
+		var holdDays = $('#holdDays').val();
+		if(holdDays != "" && holdDays != null ){
+			if(holdDays <= 0){
+				Joyin.error("客户实际持有天数只能填写大于0的整数");
+				$('#holdDays').val('');
+			}
 		}
 		// if(pageModel == PAGE_MODEL_EDIT){
 		// 	if($('#autoRedeemDate').val() != '' && $('#autoRedeemDate').val() != null){
@@ -348,7 +361,9 @@ $(function() {
 	$('#autoRedeemDate').change(function(){
 		changeAutoRedeemDate();
 	});
-
+	$('#holdDays').change(function(){
+		changeHoldDays();
+	});
 
 	$(function() {
 		// 规则1改变事件

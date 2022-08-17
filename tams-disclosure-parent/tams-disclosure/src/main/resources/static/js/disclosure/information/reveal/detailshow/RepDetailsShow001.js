@@ -717,7 +717,7 @@ $(function () {
 			return;
 		}
 		if(!editFlag){
-			Joyin.alert('报表校验存在错误，请先编辑再生成报表',2);
+			Joyin.alert('该单据报表校验不通过，请检查数据或编辑后生成',2);
 			return;
 		}
 
