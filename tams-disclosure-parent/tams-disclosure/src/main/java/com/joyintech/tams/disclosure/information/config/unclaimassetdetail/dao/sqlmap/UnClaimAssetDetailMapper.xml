@@ -206,6 +206,9 @@
             <if test="effEndDateO != null and effEndDateO != ''">
                 AND	EFF_END_DATE != to_date(#{effEndDateO,jdbcType=VARCHAR},'yyyy-MM-dd')
             </if>
+            <if test="effDateO != null and effDateO != ''">
+                AND	EFF_DATE != to_date(#{effDateO,jdbcType=VARCHAR},'yyyy-MM-dd')
+            </if>
         </where>
     </select>
     <select id="selectNostdByProdId" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
@@ -253,8 +256,8 @@
             <if test="dataStatus != null and dataStatus != ''">
                 AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
             </if>
-            <if test="effDate != null">
-                AND  DNDC.EFF_DATE = TO_DATE(#{effDateStr},'YYYY-MM-DD')
+            <if test="effDateO != null">
+                AND  DNDC.EFF_DATE = TO_DATE(#{effDateOStr},'YYYY-MM-DD')
             </if>
             <if test="effEndDateO != null">
                 AND  DNDC.EFF_END_DATE = TO_DATE(#{effEndDateOStr},'YYYY-MM-DD')
