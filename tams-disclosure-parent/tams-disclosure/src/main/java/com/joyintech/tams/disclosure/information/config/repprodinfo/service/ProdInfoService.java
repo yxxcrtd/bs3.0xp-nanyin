@@ -212,6 +212,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @param dto
      */
     public void insert(ProdInfoDto dto) {
+
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         dto.setIssueStatus(DictCodeListExt1.发行状态_确认发行.getValue());
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
@@ -259,7 +260,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         } else {//普通产品
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
         }
-        prodInfoMapper.insert(dto);
+        //重新插入已删除的数据
+        ProdInfoDto prodInfoDto=prodInfoMapper.selectByPrimaryKey(dto.getProdId());
+        if(prodInfoDto !=null && prodInfoDto.getStatus().equals("D")){
+            dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            prodInfoMapper.updateByPrimaryKeySelective(dto);
+        }else {
+            prodInfoMapper.insert(dto);
+        }
 
 
     }
