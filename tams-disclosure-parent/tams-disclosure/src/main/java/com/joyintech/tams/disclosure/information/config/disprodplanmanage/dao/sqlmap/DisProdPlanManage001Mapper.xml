@@ -84,4 +84,17 @@
     <select id="getProdId" resultType="java.lang.String">
         SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId} AND REP_PROD_TYPE != '03'
     </select>
+    <select id="isRepeated"
+            resultType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto">
+        select
+        PROD_PLAN_ID, PROD_ID, OPEN_START_DATE,
+        OPEN_END_DATE, COLLINGOFF_PERIOD, OPERATION_START_DATE,
+        AUTO_REDEEM_DATE, HOLD_DAYS, DATA_STATUS,
+        DATA_SOURCE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+        from DIS_PROD_PLAN
+        <where>
+            PROD_ID = #{prodId} and OPEN_END_DATE = TO_DATE(#{openEndDateStr},'YYYY-MM-DD')
+        </where>
+    </select>
 </mapper>
