@@ -82,6 +82,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         }
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
             entity.setStatus("E");
+            entity.setUpdateUser(CommonUtil.getUserName());
             repProdIndexSMapper.insert(entity);
             repProdIndexSMapper.insert2(entity);
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {

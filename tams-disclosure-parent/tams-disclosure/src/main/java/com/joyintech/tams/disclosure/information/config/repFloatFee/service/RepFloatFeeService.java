@@ -70,6 +70,7 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
         entity.setUpdateTime(DateUtil.now());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
             entity.setStatus("E");
+            entity.setUpdateUser(CommonUtil.getUserName());
             repFloatFee001Mapper.insert(entity);
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {
             entity.setStatus("E");
