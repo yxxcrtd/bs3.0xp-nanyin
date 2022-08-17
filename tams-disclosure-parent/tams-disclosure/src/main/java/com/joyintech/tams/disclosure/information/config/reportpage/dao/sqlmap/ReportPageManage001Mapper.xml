@@ -20,23 +20,23 @@
 		A.TEMPLATE_NAME templateName,
 		A.TEMPLATE_PATH templatePath,
 		A.REPORT_NAME reportName,
-		A.UPDATE_USER updateUser,
+		nvl(ris2.UPDATE_USER,ris1.UPDATE_USER) updateUser,
 		nvl(ris1.rep_status,ris2.rep_status) reportType,
 		A.REPORT_CATEGORY reportCategory,
 		rfp.NAME reportCategoryName,
 		nvl(ris1.eff_date,ris2.eff_date) updateTime,
-		nvl(ris1.REMARK,ris2.REMARK) remark
+		nvl(ris2.REMARK,ris1.REMARK) remark
 		from REP_INFO A
 		left join REP_FTP_PATH rfp
 		on A.REPORT_CATEGORY=rfp.ID
 		left join (
-			select rep_id,remark,eff_date,rep_status,
+			select rep_id,remark,eff_date,rep_status,UPDATE_USER,
 			row_number()over(partition by rep_id order by eff_date desc) rn
 			from rep_info_status
 			where eff_date <![CDATA[<=]]>  #{effDate,jdbcType=TIMESTAMP}
 		) ris1 ON A.REP_ID = ris1.Rep_Id and ris1.rn =1
 			left join (
-			select rep_id,remark,eff_date,rep_status,
+			select rep_id,remark,eff_date,rep_status,UPDATE_USER,
 			row_number()over(partition by rep_id order by eff_date asc) rn
 			from rep_info_status
 			where eff_date > #{effDate,jdbcType=TIMESTAMP}
