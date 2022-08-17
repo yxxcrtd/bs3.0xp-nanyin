@@ -20,6 +20,7 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.constant.DictCodeList;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
@@ -132,7 +133,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
     public void doBack(ReportConfirmManage001Dto entity) {
 
-        entity.setConfirmStatus("2");
+        entity.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
         reportConfirmManage001Mapper.backUpdate(entity);
 
     }
