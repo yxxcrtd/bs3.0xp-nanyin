@@ -284,7 +284,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                         List<String> list2 = objects.get(k);
                         //子产品代码，相同时为重复数据
                         if ((StringUtil.equals(list1.get(0), list2.get(0)))
-                        && (StringUtil.equals(list1.get(4), list2.get(4)))) {
+                                &&(StringUtil.equals(list1.get(2), list2.get(2)))) {
                             isRepeat = true;
                             break;
                         }
@@ -298,11 +298,11 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             }
         }
         if (repeatNum > 0) {
-            totalMsg += "导入文件存在" + String.valueOf(repeatNum) + "条数据重复，重复数据不导入，是否确认？";
+            totalMsg += "导入文件存在" + String.valueOf(repeatNum) + "条数据重复，请检查！";
         }
         Map<String, Object> resultMap = new HashMap<>();
         if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
+            resultMap.put("errorMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
 
@@ -316,7 +316,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             }
         }
         if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+            resultMap.put("confirmMsg2", "系统有重复信息，是否覆盖？");
         }
 
         int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
