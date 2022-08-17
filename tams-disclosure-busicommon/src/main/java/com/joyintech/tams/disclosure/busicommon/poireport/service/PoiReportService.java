@@ -1038,7 +1038,7 @@ public class PoiReportService {
 								resultSb.append((index++)+"："+s1+"<br>");
 							}
 						}else{
-							resultSb.append((index++)+"："+"权益类穿透前占比未获取到"+"<br>");
+							resultSb.append((index++)+"："+"固定收益类穿透前占比未获取到"+"<br>");
 						}
 						//穿透后
 						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
@@ -1049,7 +1049,7 @@ public class PoiReportService {
 								resultSb.append((index++)+"："+s2+"<br>");
 							}
 						}else{
-							resultSb.append((index++)+"："+"权益类穿透后占比未获取到"+"<br>");
+							resultSb.append((index++)+"："+"固定收益类穿透后占比未获取到"+"<br>");
 						}
 
 						//穿透前
