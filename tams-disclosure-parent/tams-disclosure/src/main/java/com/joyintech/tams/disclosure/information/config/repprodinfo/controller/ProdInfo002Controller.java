@@ -18,6 +18,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.*;
@@ -176,7 +177,21 @@ public class ProdInfo002Controller extends BaseController {
                 return new AjaxResult("非分级产品，子产品代码和产品主代码需要一致", MessageType.错误消息);
             }*/
 
+            //产品类型为净值型 01 且开放频率为日开时必填
+            if (StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getValue(), dto.getProdType())
+                    && StringUtils.isNotEmpty( dto.getOpenFreq())
+                    && StringUtils.equals(DictCodeListExt5.开放频率_日开.getValue(), dto.getOpenFreq())
+                    && dto.getHoldday() == null) {
+                return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
+            }
         } else if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {//修改
+            //产品类型为净值型 01 且开放频率为日开时必填
+            if (StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getValue(), dto.getProdType())
+                    && StringUtils.isNotEmpty( dto.getOpenFreq())
+                    && StringUtils.equals(DictCodeListExt5.开放频率_日开.getValue(), dto.getOpenFreq())
+                    && dto.getHoldday() == null) {
+                return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
+            }
 
         }
         if (StringUtils.equals(DictCodeListExt5.信披募集方式_公募.getValue(), dto.getRaiseType())
