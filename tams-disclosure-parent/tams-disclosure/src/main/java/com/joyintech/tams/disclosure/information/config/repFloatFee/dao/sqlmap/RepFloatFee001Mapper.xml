@@ -49,7 +49,7 @@
         #{createUser,jdbcType=VARCHAR} CREATE_USER,
         #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
         #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
-        #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+        #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
         #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
         FROM
         DUAL

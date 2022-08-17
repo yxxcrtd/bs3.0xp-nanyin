@@ -75,7 +75,9 @@
             </if>
         </set>
         WHERE WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
-        AND REP_ID = #{repId,jdbcType=VARCHAR}
+        <if test="repId != null">
+            AND REP_ID = #{repId,jdbcType=VARCHAR}
+        </if>
     </update>
 
     <select id="getInfoStatusAfterSysDate" parameterType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto" resultType="java.lang.Integer">
@@ -104,5 +106,15 @@
             AND EFF_DATE <![CDATA[<=]]> #{effDate,jdbcType=TIMESTAMP}
             ORDER BY EFF_DATE DESC
         ) WHERE RN = 1 AND REP_STATUS = #{repStatus,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getLastedInfoStatus" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        REP_STATUS,
+        ROW_NUMBER()OVER(ORDER BY EFF_DATE DESC) RN
+        FROM REP_INFO_STATUS
+        WHERE REP_STATUS IN('02','04')
+        AND REP_ID = #{startRepId,jdbcType=VARCHAR}
+        AND EFF_DATE <![CDATA[<=]]>  #{effDate,jdbcType=TIMESTAMP}
     </select>
 </mapper>

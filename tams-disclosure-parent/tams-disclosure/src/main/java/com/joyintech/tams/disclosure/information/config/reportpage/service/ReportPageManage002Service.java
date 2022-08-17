@@ -127,6 +127,8 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 	 * */
 	@Override
 	public void doUpdate(ReportStatusDto dto){
+		dto.setRepStatus(null);
+		reportPageManage002Mapper.updateReportStatus(dto);
 		//保存审批意见
 		if(StringUtil.isNotEmpty(dto.getComment())){
 			String infoSeqno = dto.getSeqno();
@@ -215,5 +217,12 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 	public int getInfoStatusBeforeEffdate(ReportStatusDto dto){
 		//查询是否存在生效日之后的流程
 		return reportPageManage002Mapper.getInfoStatusBeforeEffdate(dto);
+	}
+
+	/**
+	 *	模板状态,获取小于当前日期最近一次已生效的模板状态记录
+	 **/
+	public String getLastedInfoStatus(Map<String,Object> paramMap){
+		return reportPageManage002Mapper.getLastedInfoStatus(paramMap);
 	}
 }

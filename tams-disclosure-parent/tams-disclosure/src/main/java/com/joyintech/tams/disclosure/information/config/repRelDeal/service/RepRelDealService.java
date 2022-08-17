@@ -79,6 +79,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
     public void doComplete(RepRelDealDto entity, OperationType type) {
         entity.setOperateType(type.toString());
         entity.setUpdateTime(DateUtil.now());
+        entity.setUpdateUser(CommonUtil.getUserName());
         if(StringUtil.isEmpty(entity.getCreateDept())){
             entity.setCreateDept("");
         }
