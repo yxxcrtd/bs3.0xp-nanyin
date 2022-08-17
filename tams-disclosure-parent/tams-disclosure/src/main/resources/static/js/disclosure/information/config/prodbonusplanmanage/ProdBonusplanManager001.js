@@ -364,6 +364,31 @@
 		   /**
 			* 导入按钮
 			*/
+		   // $('#ProdBonusplanManager001_btn_import').click(function() {
+			//    Joyin.confirm("请确认是否要导入数据？", function () {
+			// 	   Joyin.uploadFile({pageId:'ProdBonusplanManager001'},function(fileName) {
+			// 		   Joyin.ajax(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/checkImportData', {fileName: fileName}, function(checkResult) {
+			// 			   if (checkResult) {
+			// 				   setTimeout( function () {
+			// 						   if(checkResult.data.errorMsg){
+			// 							   Joyin.error(checkResult.data.errorMsg);
+			// 							   return;
+			// 						   }
+			// 							// confirmMsg校验--> confirmMsg2校验-->提交  ,三层嵌套
+			// 						   confirmMsg2ImportExcel(checkResult);
+		   //
+			// 					   }
+			// 					   ,1000);
+			// 			   }
+			// 		   });
+			// 	   },function() {
+			// 		   table.reload();
+			// 	   });
+			//    });
+		   // });
+
+
+
 		   $('#ProdBonusplanManager001_btn_import').click(function() {
 			   Joyin.confirm("请确认是否要导入数据？", function () {
 				   Joyin.uploadFile({pageId:'ProdBonusplanManager001'},function(fileName) {
@@ -374,9 +399,71 @@
 										   Joyin.error(checkResult.data.errorMsg);
 										   return;
 									   }
-										// confirmMsg校验--> confirmMsg2校验-->提交  ,三层嵌套
-									   confirmMsg2ImportExcel(checkResult);
+									   if (checkResult.data.confirmMsg) {
+										   Joyin.confirm(checkResult.data.confirmMsg, function () {
+											   if (checkResult.data.confirmMsg2) {
+												   Joyin.confirm(checkResult.data.confirmMsg2, function () {
+													   var data = {
+														   tempList: checkResult.data.correctData
+													   }
+													   Joyin.ajaxJson(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/importFile', data,
+														   function (resultObj) {
+															   if (resultObj.statuCode.toString() === '200') {
+																   table.reload();
+																   return;
+															   }
+														   });
+												   },{}, function () {
+													   layui.layer.closeAll()
+													   table.reload();
+												   });
+											   }else{
+												   var data = {
+													   tempList: checkResult.data.correctData
+												   }
+												   Joyin.ajaxJson(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/importFile', data,
+													   function (resultObj) {
+														   if (resultObj.statuCode.toString() === '200') {
+															   table.reload();
+															   return;
+														   }
+													   });
+											   }
 
+										   },{}, function () {
+											   layui.layer.closeAll()
+											   table.reload();
+										   });
+									   }else {
+										   if (checkResult.data.confirmMsg2) {
+											   Joyin.confirm(checkResult.data.confirmMsg2, function () {
+												   var data = {
+													   tempList: checkResult.data.correctData
+												   }
+												   Joyin.ajaxJson(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/importFile', data,
+													   function (resultObj) {
+														   if (resultObj.statuCode.toString() === '200') {
+															   table.reload();
+															   return;
+														   }
+													   });
+											   },{}, function () {
+												   layui.layer.closeAll()
+												   table.reload();
+											   });
+										   }else{
+											   var data = {
+												   tempList: checkResult.data.correctData
+											   }
+											   Joyin.ajaxJson(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/importFile', data,
+												   function (resultObj) {
+													   if (resultObj.statuCode.toString() === '200') {
+														   table.reload();
+														   return;
+													   }
+												   });
+										   }
+									   }
 								   }
 								   ,1000);
 						   }
@@ -386,22 +473,6 @@
 				   });
 			   });
 		   });
-
-
-		   // 导入 confirmMsg 校验
-		   function confirmMsgImportExcel(checkResult){
-			   if (checkResult.data.confirmMsg) {
-				   Joyin.confirm(checkResult.data.confirmMsg, function () {
-					   confirmMsg2ImportExcel(checkResult)
-				   },{}, function () {
-					   layui.layer.closeAll();
-					   dataTable.reload();
-					   dataTable2.reload();
-				   });
-			   }else {
-				   confirmMsg2ImportExcel(checkResult);
-			   }
-		   }
 
 		   // 导入 confirmMsg2 校验 数据重复校验
 		   function confirmMsg2ImportExcel(checkResult){
