@@ -78,6 +78,11 @@ public class ReportCheckService extends CommonExportService<ReportCheckDto> impl
             params.put("reportTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, reportType));
         }
 
+        String reportName = (String) params.get("reportName");
+        if (StringUtil.isNotEmpty(reportName)) {
+            params.put("reportNameList", StringUtil.splitToList(GlobalConstant.COMMA, reportName));
+        }
+
         int page=1;
         if(params.get("page") instanceof String){
             page=Integer.parseInt((String) params.get("page"));
@@ -130,6 +135,12 @@ public class ReportCheckService extends CommonExportService<ReportCheckDto> impl
     public Page<SelectOptionDto>getProdIdList(Map<String, Object> param){
         Page<SelectOptionDto> page = queryForPageForSelectReturn(Integer.parseInt((String) param.get("page")), Integer.parseInt((String) param.get("length")), ()
                 -> reportCheckMapper.getProdIdList(param));
+        return page;
+    }
+
+    public Page<SelectOptionDto>getReportNameList(Map<String, Object> param){
+        Page<SelectOptionDto> page = queryForPageForSelectReturn(Integer.parseInt((String) param.get("page")), Integer.parseInt((String) param.get("length")), ()
+                -> reportCheckMapper.getReportNameList(param));
         return page;
     }
 

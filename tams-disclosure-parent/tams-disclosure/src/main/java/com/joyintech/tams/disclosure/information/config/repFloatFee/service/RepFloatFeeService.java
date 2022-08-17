@@ -14,6 +14,7 @@ import com.joyintech.tams.disclosure.information.config.repFloatFee.dao.RepFloat
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -69,12 +70,14 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
         entity.setUpdateTime(DateUtil.now());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
             entity.setStatus("E");
+            entity.setUpdateUser(CommonUtil.getUserName());
             repFloatFee001Mapper.insert(entity);
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {
             entity.setStatus("E");
+            entity.setUpdateUser(CommonUtil.getUserName());
             repFloatFee001Mapper.update(entity);
         } else if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
-
+            entity.setUpdateUser(CommonUtil.getUserName());
             repFloatFee001Mapper.delete(entity);
         }
     }

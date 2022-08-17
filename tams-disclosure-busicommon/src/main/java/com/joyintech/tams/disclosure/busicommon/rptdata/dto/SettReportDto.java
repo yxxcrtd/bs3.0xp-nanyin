@@ -36,6 +36,8 @@ public class SettReportDto extends ReportDto {
 	private String otherPayAmt;  //其他应付紧额
 	private String assetValue;  //资产价值，固定值0
 	
+	private String bonusPlanId;
+	
 	private Date signDate; //报告签字日期
 	
 	public String getProdName() {
@@ -157,6 +159,12 @@ public class SettReportDto extends ReportDto {
 	}
 	public void setAssetValue(String assetValue) {
 		this.assetValue = assetValue;
+	}
+	public String getBonusPlanId() {
+		return bonusPlanId;
+	}
+	public void setBonusPlanId(String bonusPlanId) {
+		this.bonusPlanId = bonusPlanId;
 	}
 	public Date getSignDate() {
 		return signDate;

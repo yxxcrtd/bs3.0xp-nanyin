@@ -49,7 +49,7 @@
         #{createUser,jdbcType=VARCHAR} CREATE_USER,
         #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
         #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
-        #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+        #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
         #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
         FROM
         DUAL
@@ -88,7 +88,9 @@
 
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto"  >
 		update REP_FLOAT_FEE
-		set STATUS = 'D'
+		set STATUS = 'D',
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
 		where PROD_ID = #{prodId,jdbcType=CHAR}
           and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
 	</delete>
@@ -101,7 +103,7 @@
                 AFFIRM_AMT = #{affirmAmt,jdbcType=DECIMAL},
                 ABOVE_AMT = #{aboveAmt,jdbcType=DECIMAL},
                 STATUS = #{status,jdbcType=VARCHAR},
-                UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
                 ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
     where PROD_ID = #{prodId,jdbcType=VARCHAR}

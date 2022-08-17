@@ -213,22 +213,25 @@ public class DurationReportDataService implements IReportDataService {
 				try {
 					String perVal = "";
 					if ( "01".equals(reportDto.getProdType()) ) { //净值型
-						perVal = reportDto.getListFinIndex().get(0).get("unitValue").toString();
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
 							perVal = "";
 							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
+								if ( map.get("unitValue")==null  ) continue;
 								perVal += map.get("prodId")+"份额净值为"+map.get("unitValue").toString()+"元，";
 							}
 							perVal = perVal.substring(0, perVal.length()-2);
+						} else {
+							perVal = reportDto.getListFinIndex().get(0).get("unitValue").toString();
 						}
 					} else {  //现管类：固定为1.0000
-						perVal = String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
 							perVal = "";
 							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
 								perVal += map.get("prodId")+"份额净值为"+"1.0000"+"元，";
 							}
 							perVal = perVal.substring(0, perVal.length()-2);
+						} else {
+							perVal = String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
 						}
 					}
 					reportDto.setYjbx(perVal);
@@ -404,7 +407,7 @@ public class DurationReportDataService implements IReportDataService {
 				//查询是否在区间内有业绩基准变更，变更的判断规则是变更表的数据记录，与需求中的变更判断思路不一样，经过讨论，按变更履历表来
 				//有无业绩基准变更，过滤listBasis状态为D的数据，如果条数减少，就是有变更
 				if ( changeFlag==true ) {  //无业绩基准变更：max(产品成立日，统计周期开始日）
-					sDate = listBasis.get(0).getEffDate();  //最新的变更生效日
+					sDate = listEffBasis.get(0).getEffDate();  //最新的变更生效日
 				} else {  //无业绩基准变更
 					if (prod.getSetDate().compareTo(sDate)>0) {
 						sDate = prod.getSetDate();

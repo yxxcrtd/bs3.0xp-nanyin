@@ -42,4 +42,5 @@ public interface ReportDealMapper {
 
    int checkSameReport(RepReveal repReveal);
 
+    RepReveal getUnConfirmRepReveal(RepReveal repReveal);
 }

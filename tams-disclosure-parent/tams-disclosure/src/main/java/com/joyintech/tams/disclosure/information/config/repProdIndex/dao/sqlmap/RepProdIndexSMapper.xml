@@ -84,13 +84,17 @@
     </select>
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto"  >
 		update REP_PROD_INDEX
-		set STATUS = 'D'
+		set STATUS = 'D',
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
 		where PROD_ID = #{prodId,jdbcType=VARCHAR}
           and VALUE_DATE = #{valueDate,jdbcType=DATE}
 	</delete>
     <delete id="delete2" parameterType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto"  >
 		update REP_PROD_INDEX
-		set STATUS = 'D'
+		set STATUS = 'D',
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
 		where PROD_ID = #{pProdId,jdbcType=VARCHAR}
           and VALUE_DATE = #{valueDate,jdbcType=DATE}
 	</delete>
@@ -104,7 +108,7 @@
     W_YIELD = #{wYield,jdbcType=DECIMAL},
     YIELD_7 = #{yield7,jdbcType=DECIMAL},
     STATUS = #{status,jdbcType=VARCHAR},
-    UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+    UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
     UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
     ERRORMSG = #{errormsg,jdbcType=VARCHAR}
     where PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -121,7 +125,7 @@
     W_YIELD = #{pWYield,jdbcType=DECIMAL},
     YIELD_7 = #{pYield7,jdbcType=DECIMAL},
     STATUS = #{status,jdbcType=VARCHAR},
-    UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+    UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
     UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
     ERRORMSG = #{errormsg,jdbcType=VARCHAR}
     where PROD_ID = #{pProdId,jdbcType=VARCHAR}
@@ -143,7 +147,7 @@
             #{createUser,jdbcType=VARCHAR} CREATE_USER,
             #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
             #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
-            #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
             #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
             FROM
             DUAL
@@ -197,7 +201,7 @@
         #{createUser,jdbcType=VARCHAR} CREATE_USER,
         #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
         #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
-        #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+        #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
         #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
         FROM
         DUAL

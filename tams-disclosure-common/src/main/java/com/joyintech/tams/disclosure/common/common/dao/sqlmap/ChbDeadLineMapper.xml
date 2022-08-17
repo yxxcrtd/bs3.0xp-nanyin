@@ -131,25 +131,26 @@
     <select id="getOpenRevealDate" parameterType="string" resultType="java.util.Date">
   		 select 
   		 <if test="basisDateType !=null and basisDateType == '04'">
-			 OPEN_END_DATE
+			 DPP.OPEN_END_DATE
 	     </if>
 	     <if test="basisDateType !=null and basisDateType == '08'">
-			 OPEN_START_DATE
+			 DPP.OPEN_START_DATE
 	     </if>
 	     <if test="basisDateType !=null and basisDateType == '09'">
-			 OPERATION_START_DATE
+			 DPP.OPERATION_START_DATE
 	     </if>
-	     from DIS_PROD_PLAN
-	     where PROD_ID = #{prodId, jdbcType=VARCHAR}
-	     AND DATA_STATUS = 'E'
+	     from DIS_PROD_PLAN DPP
+		inner join REP_PROD_INFO RPI on DPP.PROD_ID=RPI.P_PROD_ID
+	     where RPI.PROD_ID = #{prodId, jdbcType=VARCHAR}
+	     AND DPP.DATA_STATUS = 'E'
 	     <if test="basisDateType !=null and basisDateType == '04'">
-	     	AND OPEN_END_DATE = #{sysDate, jdbcType=DATE}
+	     	AND DPP.OPEN_END_DATE = #{sysDate, jdbcType=DATE}
 	     </if>
 	     <if test="basisDateType !=null and basisDateType == '08'">
-	        AND OPEN_START_DATE = #{sysDate, jdbcType=DATE}
+	        AND DPP.OPEN_START_DATE = #{sysDate, jdbcType=DATE}
 	     </if>
 	     <if test="basisDateType !=null and basisDateType == '09'">
-	        AND OPERATION_START_DATE = #{sysDate, jdbcType=DATE}
+	        AND DPP.OPERATION_START_DATE = #{sysDate, jdbcType=DATE}
 	     </if>
   </select>
   
