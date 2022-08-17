@@ -130,7 +130,7 @@
         #{orgTransAmt,jdbcType=DECIMAL},#{investTransAmt,jdbcType=DECIMAL},#{relateamount,jdbcType=VARCHAR},
         #{effdate,jdbcType=DATE},#{effdelidate,jdbcType=DATE},#{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP},#{createDept,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},
-        #{createUser,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{uuid,jdbcType=VARCHAR})
+        #{updateUser,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{uuid,jdbcType=VARCHAR})
     </insert>
 
     <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
@@ -144,7 +144,7 @@
     EFFDATE = #{effdate,jdbcType=DATE},
     EFFDELIDATE = #{effdelidate,jdbcType=DATE},
     STATUS = #{status,jdbcType=VARCHAR},
-    UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+    UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
     UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
     ERRORMSG = #{errormsg,jdbcType=VARCHAR}
     where UUID = #{uuid,jdbcType=VARCHAR}
@@ -152,7 +152,9 @@
 
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto"  >
 		update REP_REL_DEAL
-		set STATUS = 'D'
+		set STATUS = 'D',
+		UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+		UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		where UUID = #{uuid,jdbcType=VARCHAR}
 	</delete>
     <select id="selectExist" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >

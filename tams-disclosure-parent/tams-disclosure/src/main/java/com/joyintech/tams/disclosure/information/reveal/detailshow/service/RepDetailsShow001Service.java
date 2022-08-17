@@ -8,14 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.tams.disclosure.information.config.reportpage.service.ReportPageManage002Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +82,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     
     @Autowired
     private ReportDataService reportDataService;
+
+    @Autowired
+    private ReportPageManage002Service reportPageManage002Service;
 
     /**
      * 日志
@@ -430,6 +430,16 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     public AjaxResult check(Map<String, Object> param){
         AjaxResult result = new AjaxResult();
         List<ValidMessage> messages = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        param.put("effDate",calendar.getTime());
+        String repStatus = reportPageManage002Service.getLastedInfoStatus(param);
+        if(repStatus == null || !"02".equals(repStatus)){
+            //存在已确认的数据
+            messages.add(new ValidMessage("模板没有启用,不能生成报表"));
+            result.setErrorList(messages);
+            return result;
+        }
         
         collateParams(param);
         RepReveal repReveal = poiReportService.getRepReveal(param);
