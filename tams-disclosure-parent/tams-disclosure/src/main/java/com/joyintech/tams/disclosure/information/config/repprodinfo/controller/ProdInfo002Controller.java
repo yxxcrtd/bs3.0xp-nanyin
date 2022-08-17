@@ -206,17 +206,18 @@ public class ProdInfo002Controller extends BaseController {
         }
 
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 start */
-        if(StringUtil.isNotEmpty(dto.getpProdId())){
-            ProdInfoDto pProdInfo = prodInfoService.selectByProdStatus(dto.getpProdId());
-            if(pProdInfo!=null){
-                pProdInfo.setpProdId(pProdInfo.getProdId());
-                pProdInfo.setpProdName(pProdInfo.getProdName());
-                pProdInfo.setpSetDate(pProdInfo.getSetDate());
-                if(!compareField(prodInfoModelToMap(dto),prodInfoModelToMap(pProdInfo))) {
-                    return new AjaxResult("除子产品代码、子产品名称、子产品成立日期外，其余字段必须和已有数据相同", MessageType.错误消息);
-                }
-            }
-        }
+        //该check与放大镜功能为二阶段内容，暂不处理
+        // if(StringUtil.isNotEmpty(dto.getpProdId())&&StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade()){
+        //     ProdInfoDto pProdInfo = prodInfoService.selectByProdStatus(dto.getpProdId());
+        //     if(pProdInfo!=null){
+        //         pProdInfo.setpProdId(pProdInfo.getProdId());
+        //         pProdInfo.setpProdName(pProdInfo.getProdName());
+        //         pProdInfo.setpSetDate(pProdInfo.getSetDate());
+        //         if(!compareField(prodInfoModelToMap(dto),prodInfoModelToMap(pProdInfo))) {
+        //             return new AjaxResult("除子产品代码、子产品名称、子产品成立日期外，其余字段必须和已有数据相同", MessageType.错误消息);
+        //         }
+        //     }
+        // }
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 end */
 
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {
