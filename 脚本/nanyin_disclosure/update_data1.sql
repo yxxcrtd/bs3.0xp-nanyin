@@ -1014,4 +1014,8 @@ update sys_datadict_list_link set item_code = '04' where dict_code = 'DIS_PROFIT
 update sys_datadict_list_link set item_code = '03' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE' and item_code = '01';
 update sys_datadict_list_link set item_code = '04' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE' and item_code = '02';
 
+
+-- 删除产品不成立信息表主键 add by sunjie 20220817 start
+alter table DIS_PROD_NOCREATE drop constraint DIS_PROD_NOCREATE_PK;--只能在同一个库中执行一次
+-- 删除产品不成立信息表主键 add by sunjie 20220817 end
 commit ;
