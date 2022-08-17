@@ -416,6 +416,9 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@ResponseBody
 	public Page<SelectOptionDto> getProdIdList(){
 		Map<String, Object> param=RequestUtil.getPageParam();
+		if(param.get("repId")!=null){
+			repDetailsShow001Service.getRandgeRule2(param);
+		}
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getProdIdList(param);
 		return prdInfoSelect;
 	}

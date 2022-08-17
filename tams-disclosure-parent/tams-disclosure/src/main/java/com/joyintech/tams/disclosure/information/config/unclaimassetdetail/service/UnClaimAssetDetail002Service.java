@@ -85,6 +85,8 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
             for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()){
                 String code = IDGenerator.generate(36);
                 unclaimDto.setNostdAssetId(code);
+                unclaimDto.setEffDate(dto.getEffDate());
+                unclaimDto.setEffEndDate(dto.getEffEndDate());
                 unClaimAssetDetailMapper.insert(unclaimDto);
             }
         }

@@ -31,6 +31,7 @@
             $("#issuingWay").attr("disabled", true);
             $("#openFreq").attr("disabled", true);
             $("#profitType").attr("disabled", true);
+            $("#holdday").attr("disabled", true);
         } else {
             $("#issuingWay").attr("disabled", false);
             $("#openFreq").attr("disabled", false);

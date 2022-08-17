@@ -190,6 +190,17 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                         errorMsg.append("生效截止日期 要大于等于平台日！");
                     }else if (rowData.get(8).compareTo(rowData.get(7)) < 0){
                         errorMsg.append("生效截止日期 要大于等于生效日！");
+                    }else if(StringUtil.isNotEmpty(rowData.get(0))){
+                        List<UnClaimAssetDetailDto> dtos = unClaimAssetDetailMapper.selectNostdByProdId(rowData.get(0).trim());
+                        for (UnClaimAssetDetailDto dto : dtos) {
+                            if(!((DateUtil.compareDate(rowData.get(7),dto.getEffDateStr())<0 && DateUtil.compareDate(rowData.get(8),dto.getEffDateStr())<0)
+                                    || (DateUtil.compareDate(rowData.get(7),dto.getEffEndDateStr())>0 && DateUtil.compareDate(rowData.get(8),dto.getEffEndDateStr())>0))){
+                                errorMsg.append(new ExcelValidDto(rowData.get(0), String.valueOf(i+1),
+                                        "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyy-MM-dd")
+                                                +"-"+DateUtil.format(dto.getEffEndDate(),"yyyy-MM-dd")));
+                                break;
+                            }
+                        }
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");

@@ -102,8 +102,22 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     public String effDateStr;
     public String effEndDateStr;
 
-    public Date effEndDateO;
 
+    public Date effEndDateO;
+    public Date effDateO;
+    public Date effDateOStr;
+
+    public Date getEffDateO() {
+        return effDateO;
+    }
+
+    public void setEffDateO(Date effDateO) {
+        this.effDateO = effDateO;
+    }
+
+    public String getEffDateOStr() {
+        return DateUtil.format(this.getEffDateO());
+    }
     public String effEndDateOStr;
 
     public String getEffEndDateStr() {

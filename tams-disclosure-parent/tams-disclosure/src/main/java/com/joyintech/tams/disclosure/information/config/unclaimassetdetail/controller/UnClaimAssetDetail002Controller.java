@@ -72,6 +72,7 @@ public class UnClaimAssetDetail002Controller extends BaseController {
             dto.setProdName(unclaimList.get(0).getProdName());
             dto.setDataStatus(unclaimList.get(0).getDataStatus());
             dto.setUnclaimList(unclaimList);
+            dto.setEffDateO(unclaimList.get(0).getEffDate());
             dto.setEffEndDateO(unclaimList.get(0).getEffEndDate());
             model.addAttribute("unclaimList",unclaimList);
             model.addAttribute("entity", dto);

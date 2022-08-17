@@ -8,14 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.tams.disclosure.information.config.reportpage.service.ReportPageManage002Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +82,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     
     @Autowired
     private ReportDataService reportDataService;
+
+    @Autowired
+    private ReportPageManage002Service reportPageManage002Service;
 
     /**
      * 日志
@@ -291,6 +291,46 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         }
         params.put("condition", sb.toString());
     }
+
+    public void getRandgeRule2(Map<String, Object> params){
+        String repId =(String)params.get("repId");
+        //根据报表编码查询规则数据
+        List<RepJobRange> ruleList = repDetailsShow001Mapper.getRepJobRangeInfo(repId);
+//        //根据规则数据设置查询条件
+        StringBuffer sb = new StringBuffer();
+        if(!StringUtil.isEmptyList(ruleList)){
+            for(RepJobRange dto:ruleList){
+                if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_募集方式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_发行方式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_发行状态.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放模式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否独立开户.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_理财类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品期限类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())){
+                    sb.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
+                            .append(dto.getRuleType4()).append("'");
+                }else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_到期日.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_清盘日.getValue())){
+                    String sysDate=DateUtil.getCurrentDate();
+                    if(dto.getRuleType4()==null||StringUtil.isEmpty(dto.getRuleType4())){
+                        sb.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')").append(dto.getRuleType2()).append("'")
+                                .append(sysDate).append("'");
+                    }
+                    else{
+                        sb.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')").append(dto.getRuleType2()).append("'")
+                                .append(dto.getRuleType4()).append("'");
+                    }
+                }
+            }
+        }
+        params.put("condition", sb.toString());
+    }
     
     /**
      * 显示报表：1.用于单击报表显示报表模板，2.指定报表查询条件后预览报表； 
@@ -430,6 +470,16 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     public AjaxResult check(Map<String, Object> param){
         AjaxResult result = new AjaxResult();
         List<ValidMessage> messages = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        param.put("effDate",calendar.getTime());
+        String repStatus = reportPageManage002Service.getLastedInfoStatus(param);
+        if(repStatus == null || !"02".equals(repStatus)){
+            //存在已确认的数据
+            messages.add(new ValidMessage("模板没有启用,不能生成报表"));
+            result.setErrorList(messages);
+            return result;
+        }
         
         collateParams(param);
         RepReveal repReveal = poiReportService.getRepReveal(param);
