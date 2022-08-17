@@ -1004,4 +1004,14 @@ update SYS_PAGE set IS_HP_SELECT ='02' where PAGE_ID in('PbcPrdBaseinfoEndSubNew
                                                        ,'PbcSendZipDatFile','SysInstitution001','WorkflowMonitor001','SellMonthReport001','SvrTransMonthReport001','SvrSubsidiaMonthReport001','SysUser001','InterfaceLog001','SysParaSet001','SysActionLog001','SysActorAssign001'
                                                        ,'SysActorRole001','AssetTypeSetting001','AssetTypeSetting002','SvrChbAstValueRegist001','PbcPrdAccountSub','PbcPrdAccountEndSub','SysDepartment001','SvrMonthReport001')
 -- 我的主页只显示 披露主页 add by sunjie 20220816 end
+
+--NYLCXP-702 产品基本信息页面产品运作方式联动调整 add by kongzhifang 2022-08-17
+update sys_datadict_list_link set item_code = '01' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'ISSUING_WAY' and item_code = '04';
+update sys_datadict_list_link set item_code = '02' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'ISSUING_WAY' and item_code = '03';
+update sys_datadict_list_link set item_code = '03' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'ISSUING_WAY' and item_code = '02';
+update sys_datadict_list_link set item_code = '04' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'ISSUING_WAY' and item_code = '01';
+
+update sys_datadict_list_link set item_code = '03' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE' and item_code = '01';
+update sys_datadict_list_link set item_code = '04' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE' and item_code = '02';
+
 commit ;
