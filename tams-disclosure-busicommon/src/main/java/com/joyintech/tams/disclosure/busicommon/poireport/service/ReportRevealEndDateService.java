@@ -90,20 +90,22 @@ public class ReportRevealEndDateService {
 				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
 				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)) { // 定期公告-季度/半年度/年度报告指数型和非指数型
 			map.put(周期结束日, repReveal.getEndDate());
-		} else if (rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
+		}else if (rptType.equals(DisReportType.CPKFQGG)||rptType.equals(DisReportType.CPKFQBG)) { // 产品开发期报告/公告
+			map.put("enddate", repReveal.getEndDate());
+		}else if (rptType.equals(DisReportType.RKCPJZ_GMXGL)||rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品
 			map.put("", null);
-		} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
-			map.put(运作起始日, prodInfo.getVdate());
+		}else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
+			map.put(运作起始日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) {
-			map.put(自动赎回日, prodInfo.getVdate());
+			map.put(自动赎回日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
-			map.put("当期收益分配基准日", null);
+			map.put(当期收益分配基准日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
-			map.put("当期收益分配基准日", null);
+			map.put(当期收益分配基准日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
-			map.put(周期结束日, null);
+			map.put(周期结束日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
-			map.put("当期收益分配基准日", null);
+			map.put(当期收益分配基准日, repReveal.getEndDate());
 		}
 
 		return map;
@@ -120,6 +122,10 @@ public class ReportRevealEndDateService {
 		if (listRepRule != null && listRepRule.size() > 0) {
 			repRule = listRepRule.get(0);
 		}
+		//防止有一些报表没有设置规则（只手工生成） 默认取map.get("endDate");
+		if(repRule == null){
+			return mapDates.get("enddate");
+		}
 		days = Integer.parseInt(repRule.getRevealValue());
 
 		Date baseDate = null;
@@ -130,9 +136,9 @@ public class ReportRevealEndDateService {
 		} catch (Exception e) {
 			logger.error("获取基准日错误。", e);
 		}
-		if ( baseDate==null ) 
+		if ( baseDate==null )
 			baseDate = commonPlatformDateService.getSysDate();
-		
+
 		// 披露截止日期
 		if (StringUtil.equals(DictCodeListExt1.日期类型_信批_自然日.getValue(), repRule.getRevealDateType())) {
 			if (StringUtil.equals(DictCodeListExt2.时点类型_基准日前.getValue(), repRule.getRevealType())) {
