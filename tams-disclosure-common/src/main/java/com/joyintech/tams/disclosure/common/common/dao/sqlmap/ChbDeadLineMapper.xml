@@ -248,15 +248,17 @@
 	<select id="getZDSHDate" resultType="java.util.Date">
 		SELECT DISTINCT T.AUTO_REDEEM_DATE
 		FROM DIS_PROD_PLAN T
+		left join rep_prod_info t2 on t.prod_id=t2.p_prod_id
 		WHERE
 			1=1
-		  AND AUTO_REDEEM_DATE = #{sysDate, jdbcType=DATE}
-		  AND PROD_ID= #{prodId, jdbcType=VARCHAR}
+		  AND t.AUTO_REDEEM_DATE = #{sysDate, jdbcType=DATE}
+		  AND t2.PROD_ID= #{prodId, jdbcType=VARCHAR}
 		  AND EXISTS(
 				SELECT 1 FROM DIS_PROD_PLAN T1
+				left join rep_prod_info t3 on t1.prod_id=t3.p_prod_id
 				WHERE
 					T1.OPEN_START_DATE > T.OPEN_START_DATE
-				    AND T1.PROD_ID= #{prodId, jdbcType=VARCHAR}
+				    AND t3.PROD_ID= #{prodId, jdbcType=VARCHAR}
 				    AND T.AUTO_REDEEM_DATE!=T1.OPERATION_START_DATE
 			)
 	</select>
