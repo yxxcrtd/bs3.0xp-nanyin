@@ -30,9 +30,11 @@ import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.Di
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections4.CollectionUtils;
@@ -303,6 +305,20 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+
+        String tempList = (String) resultMap.get("correctData");
+        DisProdPlanManage002Dto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<DisProdPlanManage002Dto> selectedItem = dto.getSelectedItem();
+        List<DisProdPlanManage002Dto>  existData = new ArrayList<>();
+        for (DisProdPlanManage002Dto temp:selectedItem) {
+            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
+
         int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
         if (objects.size() - 1 > maxCount) {
             resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
@@ -311,6 +327,11 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         wr.setData(resultMap);
         return wr;
     }
+
+    private DisProdPlanManage002Dto isRepeated(DisProdPlanManage002Dto dto) {
+        return disProdPlanManage001Mapper.isRepeated(dto);
+    }
+
 
     public static boolean isDateStr(String str) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -331,15 +352,27 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         List<DisProdPlanManage002Dto> selectedItem = dto.getSelectedItem();
         List<DisProdPlanManage002Dto> existData = new ArrayList<>();
         List<DisProdPlanManage002Dto> newData = new ArrayList<>();
-        for (DisProdPlanManage002Dto temp : selectedItem) {
-            //数据已存在 【产品编码 相同】，做更新操作。
-            /*if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))) {
+//        for (DisProdPlanManage002Dto temp : selectedItem) {
+//            //数据已存在 【产品编码 相同】，做更新操作。
+//            /*if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))) {
+//                existData.add(temp);
+//            } else {*/
+//                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
+//                temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+//                newData.add(temp);
+//           // }
+//        }
+
+        for (DisProdPlanManage002Dto temp:selectedItem) {
+            //数据已存在 【产品登记编码 相同】，做更新操作。
+            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
                 existData.add(temp);
-            } else {*/
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
+            }else {
+                temp.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                temp.setUpdateUser(CommonUtil.getUserName());
                 newData.add(temp);
-           // }
+            }
         }
         //更新操作
         for (DisProdPlanManage002Dto existDataDto : existData) {
