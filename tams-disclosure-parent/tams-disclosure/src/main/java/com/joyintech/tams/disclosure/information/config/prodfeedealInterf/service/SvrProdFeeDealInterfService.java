@@ -16,6 +16,7 @@ import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.Sv
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -81,6 +82,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
     public void doComplete(SvrProdFeeDealInterfDto entity, OperationType type) {
         entity.setOperateType(type.toString());
         entity.setUpdateTime(DateUtil.now());
+        entity.setUpdateUser(CommonUtil.getUserName());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
             entity.setStatus("E");
             svrProdFeeDealInterfMapper.insertPrdFeeDeal(entity);

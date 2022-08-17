@@ -18,6 +18,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.*;
@@ -176,7 +177,21 @@ public class ProdInfo002Controller extends BaseController {
                 return new AjaxResult("非分级产品，子产品代码和产品主代码需要一致", MessageType.错误消息);
             }*/
 
+            //产品类型为净值型 01 且开放频率为日开时必填
+            if (StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getValue(), dto.getProdType())
+                    && StringUtils.isNotEmpty( dto.getOpenFreq())
+                    && StringUtils.equals(DictCodeListExt5.开放频率_日开.getValue(), dto.getOpenFreq())
+                    && dto.getHoldday() == null) {
+                return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
+            }
         } else if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {//修改
+            //产品类型为净值型 01 且开放频率为日开时必填
+            if (StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getValue(), dto.getProdType())
+                    && StringUtils.isNotEmpty( dto.getOpenFreq())
+                    && StringUtils.equals(DictCodeListExt5.开放频率_日开.getValue(), dto.getOpenFreq())
+                    && dto.getHoldday() == null) {
+                return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
+            }
 
         }
         if (StringUtils.equals(DictCodeListExt5.信披募集方式_公募.getValue(), dto.getRaiseType())
@@ -206,17 +221,18 @@ public class ProdInfo002Controller extends BaseController {
         }
 
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 start */
-        if(StringUtil.isNotEmpty(dto.getpProdId())){
-            ProdInfoDto pProdInfo = prodInfoService.selectByProdStatus(dto.getpProdId());
-            if(pProdInfo!=null){
-                pProdInfo.setpProdId(pProdInfo.getProdId());
-                pProdInfo.setpProdName(pProdInfo.getProdName());
-                pProdInfo.setpSetDate(pProdInfo.getSetDate());
-                if(!compareField(prodInfoModelToMap(dto),prodInfoModelToMap(pProdInfo))) {
-                    return new AjaxResult("除子产品代码、子产品名称、子产品成立日期外，其余字段必须和已有数据相同", MessageType.错误消息);
-                }
-            }
-        }
+        //该check与放大镜功能为二阶段内容，暂不处理
+        // if(StringUtil.isNotEmpty(dto.getpProdId())&&StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade()){
+        //     ProdInfoDto pProdInfo = prodInfoService.selectByProdStatus(dto.getpProdId());
+        //     if(pProdInfo!=null){
+        //         pProdInfo.setpProdId(pProdInfo.getProdId());
+        //         pProdInfo.setpProdName(pProdInfo.getProdName());
+        //         pProdInfo.setpSetDate(pProdInfo.getSetDate());
+        //         if(!compareField(prodInfoModelToMap(dto),prodInfoModelToMap(pProdInfo))) {
+        //             return new AjaxResult("除子产品代码、子产品名称、子产品成立日期外，其余字段必须和已有数据相同", MessageType.错误消息);
+        //         }
+        //     }
+        // }
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 end */
 
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {

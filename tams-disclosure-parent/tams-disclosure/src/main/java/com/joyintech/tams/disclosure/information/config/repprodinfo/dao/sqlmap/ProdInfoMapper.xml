@@ -542,9 +542,9 @@
             <if test="repProdType != null">
                 REP_PROD_TYPE = #{repProdType,jdbcType=VARCHAR},
             </if>
-            <if test="holdday != null">
+            <!--支持导入固定持有天数为空-->
                 HOLDDAY = #{holdday,jdbcType=DECIMAL},
-            </if>
+
             <if test="trustpart != null">
                 TRUSTPART = #{trustpart,jdbcType=VARCHAR},
             </if>
