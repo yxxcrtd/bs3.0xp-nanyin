@@ -35,6 +35,9 @@
 	function getParam(node, params) {
 		if (node) {
 			if(node.id != null && node.pId !=null && node.pId.length>4 && $.inArray(node.id, params) < 0){
+				if(node.id.startsWith("02") || node.id.startsWith("03")){
+					return false;
+				}
 				params.push(node.id);
 			}
 			getParam(node.getParentNode(), params);
@@ -46,7 +49,11 @@
 		var nodes = treeObj.getCheckedNodes();
 		var params = new Array();
 		for (var i = 0; i < nodes.length; i++) {
-			getParam(nodes[i], params);
+			var flag = getParam(nodes[i], params);
+			if(!flag){
+				Joyin.error("产品中包含“产品状态”为“已到期”或“已销户”的产品,不能提交");
+				return;
+			}
 		}
 		if(params.length == 0){
 			Joyin.error("请选择产品");
