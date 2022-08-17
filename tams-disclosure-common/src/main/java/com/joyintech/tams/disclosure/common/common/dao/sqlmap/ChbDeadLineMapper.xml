@@ -276,4 +276,13 @@
 		      	and t2.SET_DATE &lt; #{sysDate, jdbcType=DATE}
 			)
 	</select>
+
+	<select id="getMDATE" resultType="java.util.Date">
+		SELECT DISTINCT T.MDATE
+		FROM REP_PROD_INFO T
+		WHERE
+			1=1
+		  AND T.MDATE = #{sysDate, jdbcType=DATE}
+		  AND T.PROD_ID= #{prodId, jdbcType=VARCHAR}
+	</select>
 </mapper>
