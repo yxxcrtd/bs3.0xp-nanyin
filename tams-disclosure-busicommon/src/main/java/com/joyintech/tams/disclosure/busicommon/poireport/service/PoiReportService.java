@@ -1013,27 +1013,74 @@ public class PoiReportService {
 					//	当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透前及穿透后占比必须小于80%； 100000004
 					else if(StringUtil.equals(prodInfo.getNatureInvest(), DictCodeListExt5.信披投资性质_混合类.getValue())){
 						RepDataCheck repDataCheck=checkMap.get("100000004").get(0);
+
 						//穿透前
-						if(StringUtil.isNotEmpty(prodAssetComb.get("mixPreRatio"))){
-							BigDecimal mixPreRatio=(BigDecimal)prodAssetComb.get("mixPreRatio");
-							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透前占比必须";
-							String s1=this.singleCheck(repDataCheck,mixPreRatio,tips1);
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
+							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透前及穿透后占比必须";
+							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
 							if (StringUtil.isNotEmpty(s1)) {
 								resultSb.append(s1+"<br>");
 							}
 						}else{
-							resultSb.append("固定收益类、权益类、商品及衍生品类穿透前占比未获取到"+"<br>");
+							resultSb.append("权益类穿透前占比未获取到"+"<br>");
 						}
-						if(StringUtil.isNotEmpty(prodAssetComb.get("mixAfterRatio"))){
-							//穿透后
-							BigDecimal mixAfterRatio=(BigDecimal)prodAssetComb.get("mixAfterRatio");
-							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透后占比必须";
-							String s2=this.singleCheck(repDataCheck,mixAfterRatio,tips2);
+						//穿透后
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
+							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append(s2+"<br>");
 							}
 						}else{
-							resultSb.append("固定收益类、权益类、商品及衍生品类穿透后占比未获取到"+"<br>");
+							resultSb.append("权益类穿透后占比未获取到"+"<br>");
+						}
+
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
+							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-权益类穿透前占比必须";
+							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append(s1+"<br>");
+							}
+						}else{
+							resultSb.append("权益类穿透前占比未获取到"+"<br>");
+						}
+						//穿透后
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
+							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-权益类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append(s2+"<br>");
+							}
+						}else{
+							resultSb.append("权益类穿透后占比未获取到"+"<br>");
+						}
+
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fdPreRatio"))){
+							BigDecimal fdPreRatio=(BigDecimal)prodAssetComb.get("fdPreRatio");
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前占比必须";
+							String s1=this.singleCheck(repDataCheck,fdPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append(s1+"<br>");
+							}
+						}else{
+							resultSb.append("商品及衍生品类穿透前占比未获取到"+"<br>");
+						}
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fdAfterRatio"))){
+							//穿透后
+							BigDecimal fdAfterRatio=(BigDecimal)prodAssetComb.get("fdAfterRatio");
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,fdAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append(s2+"<br>");
+							}
+						}else{
+							resultSb.append("商品及衍生品类穿透后占比未获取到"+"<br>");
 						}
 
 					}
