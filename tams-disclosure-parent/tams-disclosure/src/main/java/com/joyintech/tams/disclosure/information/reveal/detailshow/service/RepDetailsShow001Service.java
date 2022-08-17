@@ -471,6 +471,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         if(StringUtil.isNotEmpty(restltStr)){
             //数据有问题
             ajaxResult.setMessage(restltStr,MessageType.确认消息);
+            ajaxResult.setData("data");
         }
 
         return ajaxResult;

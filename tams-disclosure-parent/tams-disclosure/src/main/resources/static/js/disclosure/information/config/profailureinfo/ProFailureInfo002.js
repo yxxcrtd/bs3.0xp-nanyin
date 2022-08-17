@@ -46,12 +46,14 @@ $(function() {
 						},{}, function () {
 						});
 					}else{
+						Joyin.confirm("请确认是否要操作？", function () {
 						if(operateType === 'save') {
 							WorkFlow.doSaveList(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save', object, "ProFailureInfo002_btn_save");
 						}
 						else {
 							WorkFlow.doSubmitList(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo002/save', object, "ProFailureInfo002_btn_submit");
 						}
+						})
 					}
 				})
 

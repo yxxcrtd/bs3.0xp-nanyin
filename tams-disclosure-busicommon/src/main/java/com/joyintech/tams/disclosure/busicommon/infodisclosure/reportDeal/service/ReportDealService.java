@@ -147,4 +147,8 @@ public class ReportDealService {
 //        }
         return josnString;
     }
+
+	public RepReveal getUnConfirmRepReveal(RepReveal repReveal) {
+		return reportDealMapper.getUnConfirmRepReveal(repReveal);
+	}
 }

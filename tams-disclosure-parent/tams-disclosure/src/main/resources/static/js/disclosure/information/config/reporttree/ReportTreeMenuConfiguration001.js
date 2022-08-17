@@ -81,12 +81,12 @@ $(function () {
                            function(){
                                    $('#typeDatatree').reloadTree(null);
                                });
-               }if(target.indexOf('上移') != -1) {
+               }else if(target.indexOf('上移') != -1) {
                    Joyin.ajax('moveFlag',
             			   {Id:id,PId:pid,flag:0},function(){
             				   $('#typeDatatree').reloadTree(null);
             			   });
-               }if(target.indexOf('下移') != -1) {
+               }else if(target.indexOf('下移') != -1) {
             	   Joyin.ajax('moveFlag',
             			   {Id:id,PId:pid,flag:1},function(){
             				   $('#typeDatatree').reloadTree(null);

@@ -32,8 +32,8 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 @Service
 public class SettReportDataService implements IReportDataService {
 
-	@Autowired
-	private RepProdInfoMapper repProdInfoMapper;
+//	@Autowired
+//	private RepProdInfoMapper repProdInfoMapper;
 
 	@Autowired
 	private SettReportMapper settReportMapper;
@@ -65,11 +65,14 @@ public class SettReportDataService implements IReportDataService {
 			//reportDate = DateUtil.parse("2023-03-01");
 			
 			// 查找产品
-			RepProdInfo prodInfo = null;
 			Map<String, BigDecimal> mapBalance = new HashMap<String, BigDecimal>();
 
-			if (prodId != null) {
-				prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
+			List<SettReportDto> list = settReportMapper.selectProdInfo(prodId);
+			if ( list.size()>0 ) 
+				settReportDto = list.get(0);
+			
+			if (settReportDto.getBonusPlanId() != null) {
+				
 				Map<String,Object> paras = new HashMap<>();
 				paras.put("prodId",prodId);
 				paras.put("reportDate",reportDate);
@@ -83,26 +86,26 @@ public class SettReportDataService implements IReportDataService {
 					return x;
 				}).collect(Collectors.toMap(BokBalance::getSubjectNo, BokBalance::getoAmt, (key1, key2) -> key2));
 				settReportDto.setReportDate(reportDate);
-				settReportDto.setProdId(prodInfo.getProdId());
-				settReportDto.setProdName(prodInfo.getProdName());
-				settReportDto.setProdRe(prodInfo.getProdRe());
-				settReportDto.seteDate(prodInfo.getSetDate());
-				settReportDto.setTrustName(prodInfo.getAcctChnname());
-				settReportDto.setmDate(prodInfo.getMdate());
+//				settReportDto.setProdId(prodInfo.getProdId());
+//				settReportDto.setProdName(prodInfo.getProdName());
+//				settReportDto.setProdRe(prodInfo.getProdRe());
+//				settReportDto.seteDate(prodInfo.getSetDate());
+//				settReportDto.setTrustName(prodInfo.getAcctChnname());
+				settReportDto.setmDate(holidayService.getNextWorkDate(settReportDto.getmDate()));
 
 				//签字日期
-				Date signDate = DateUtil.addDay(prodInfo.getMdate(),1);
 				try {
-					signDate = holidayService.getLastWordDateOfWeek( holidayService.getNextWorkDate(prodInfo.getMdate()) );
+					Date signDate = holidayService.getLastWordDateOfWeek( holidayService.getNextWorkDate(settReportDto.getmDate()) );
+					settReportDto.setSignDate(signDate);  //产品到期日+1工作日所在周的最后一个工作日
 				} catch( Exception e ) {
 					logger.error("获取签字日期错误.");
 				}
-				settReportDto.setSignDate(signDate);  //产品到期日+1工作日所在周的最后一个工作日
 				
 				BigDecimal sumAssetAmt = BigDecimal.ZERO;
 				// 银行存款
-				BigDecimal amt = mapBalance.get("100201").setScale(2,BigDecimal.ROUND_DOWN);
+				BigDecimal amt = mapBalance.get("100201");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setDeposit(amt.toString()); // 银行存款
 					sumAssetAmt = sumAssetAmt.add(amt);
 				} else {
@@ -111,9 +114,10 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setDeposit(mapBalance.get("100201")==null?"-":mapBalance.get("100201").toString()); // 银行存款
 				
 				// 保证金
-				amt = mapBalance.get("103106").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("103106");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
-					settReportDto.setGuarantyAmt(amt.toString()); // 银行存款
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
+					settReportDto.setGuarantyAmt(amt.toString()); //保证金
 					sumAssetAmt = sumAssetAmt.add(amt);
 				} else {
 					settReportDto.setGuarantyAmt("-");  
@@ -121,9 +125,10 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setGuarantyAmt(mapBalance.get("103106")); // 保证金
 
 				// 应计利息
-				amt = mapBalance.get("10020601").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("10020601");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
-					settReportDto.setIntAmt(amt.toString()); // 银行存款
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
+					settReportDto.setIntAmt(amt.toString()); //利息
 					sumAssetAmt = sumAssetAmt.add(amt);
 				} else {
 					settReportDto.setIntAmt("-");  
@@ -140,8 +145,9 @@ public class SettReportDataService implements IReportDataService {
 
 				// 管理费
 				BigDecimal sumDebtAmt = BigDecimal.ZERO;
-				amt = mapBalance.get("220601").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("220601");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setMgrFee(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
@@ -150,8 +156,9 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setMgrFee(mapBalance.get("220601")); // 管理费
 				
 				// 应付管理人业绩报酬
-				amt = mapBalance.get("220602").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("220602");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setFloatFee(amt.toString()); 
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
@@ -160,8 +167,9 @@ public class SettReportDataService implements IReportDataService {
 				// settReportDto.setFloatFee(mapBalance.get("220602"));
 				
 				// 应付托管费
-				amt = mapBalance.get("2207").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("2207");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setTrustFee(amt.toString()); 
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
@@ -170,8 +178,9 @@ public class SettReportDataService implements IReportDataService {
 				// settReportDto.setTrustFee(mapBalance.get("2207")); // 托管费
 				
 				//  销售费
-				amt = mapBalance.get("2208").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("2208");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setSaleFee(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
@@ -180,8 +189,9 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setSaleFee(mapBalance.get("2208")); // 销售费
 				
 				// 应付赎回款
-				amt = mapBalance.get("2203").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("2203");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setRedemAmt(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
@@ -190,8 +200,9 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setPayAmt(mapBalance.get("2203")==null?BigDecimal.ZERO:mapBalance.get("2203")); // 应付款回款
 				
 				// 税费
-				amt = mapBalance.get("2221").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("2221");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setTaxFee(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
@@ -200,8 +211,9 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setTaxFee(mapBalance.get("2221")); 
 				
 				// 应付利润
-				amt = mapBalance.get("2232").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("2232");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setProfit(amt.toString()); 
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
@@ -210,8 +222,9 @@ public class SettReportDataService implements IReportDataService {
 				//settReportDto.setProfit(mapBalance.get("2232"));
 				
 				// 其他应付款
-				amt = mapBalance.get("2241").setScale(2,BigDecimal.ROUND_DOWN);
+				amt = mapBalance.get("2241");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
 					settReportDto.setOtherPayAmt(amt.toString()); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
@@ -230,15 +243,11 @@ public class SettReportDataService implements IReportDataService {
 				} else {
 					settReportDto.setSumDebtAmt("-");  
 				}
-				
-				listResult.add(CollectionUtils.bean2Map(settReportDto));
-				
-	
-			}
+			} 
+			listResult.add(CollectionUtils.bean2Map(settReportDto));
 		} catch (Exception e) {
 			logger.error("清算报表数据错误", e);
 			listResult.add(CollectionUtils.bean2Map(settReportDto));
-			//e.printStackTrace();
 		}
 		if (listResult!=null && listResult.size()>0 ) {
 			listResult.get(0).put("endDate_xx","");

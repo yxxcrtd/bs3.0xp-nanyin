@@ -57,7 +57,7 @@
             {field:'prodRegistNo',  title: 'ProElementAdj001.prodRegistNo',sortField:"prodRegistNo"},//产品登记编码
             {field:'nocreateReason',  title: '不成立原因',sortField:"nocreateReason"}//不成立原因
             ,{field:'reportIssueDate',  title: '报告发布日期',sortField:"reportIssueDate",type:'date'}//报告发布日期
-            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'date'} //更新时间
+            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {

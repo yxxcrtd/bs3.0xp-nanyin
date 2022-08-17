@@ -41,7 +41,7 @@
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="prodId" name="prodId" class="input-select"
-                                                data-th-initValue="${entity?.prodId}"
+                                                data-th-initValue="${entity?.prodId}" formatoption="false"
                                                 data-th-data-url="@{/disclosure/information/config/hugeinfopro/HugeInfoPro002/getProdId}"
                                                 parentIds="prodRegistNo" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
                                                 allowClear="true" required>
@@ -68,10 +68,9 @@
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="触发的情形说明文字">触发的情形说明文字</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" maxlength="500" id="triggerRemark" name="triggerRemark"
-                                               class="layui-input form-input" placeholder="请输入内容" required
-                                               data-th-placeholder="#{SysCommon.placeholder}"
-                                               data-th-value="${entity?.triggerRemark}">
+                                        <textarea id="triggerRemark" name="triggerRemark" maxlength="500" th:text="${entity?.triggerRemark}"
+                                                  class="layui-textarea" placeholder="请输入内容"  required data-th-value="${entity?.triggerRemark}"
+                                                  th:placeholder="#{SysCommon.placeholder}"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -80,10 +79,9 @@
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{HugeInfoPro002.rejectRemark}">拒绝赎回说明（文字）</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" maxlength="500" id="rejectRemark" name="rejectRemark"
-                                               class="layui-input form-input" placeholder="请输入内容" required
-                                               data-th-placeholder="#{SysCommon.placeholder}"
-                                               data-th-value="${entity?.rejectRemark}">
+                                        <textarea id="rejectRemark" name="rejectRemark" maxlength="500" th:text="${entity?.rejectRemark}"
+                                                  class="layui-textarea" placeholder="请输入内容"  required data-th-value="${entity?.rejectRemark}"
+                                                  th:placeholder="#{SysCommon.placeholder}"></textarea>
                                     </div>
                                 </div>
                             </div>

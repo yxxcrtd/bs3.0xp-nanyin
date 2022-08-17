@@ -6,6 +6,7 @@ import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.Sv
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,4 +41,5 @@ public interface SubBalanceInfoProMapper {
     List<SelectOptionDto> findSubjectNo(Map<String, Object> pageParam);
 
 
+    List<SelectOptionDto> getProdId1(Map<String, Object> map);
 }

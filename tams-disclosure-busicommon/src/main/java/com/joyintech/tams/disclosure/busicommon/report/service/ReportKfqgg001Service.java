@@ -89,9 +89,8 @@ public class ReportKfqgg001Service implements IReportDataService {
                 reportKfqgg001Dto.setOpenList(openList);
                 //跑批日
                 reportKfqgg001Dto.setEnddate(DateUtil.format(DateUtil.platDateFromCache()));
-
+                logger.info("产品开放期公告/报告【{}】生成成功", JsonUtils.object2Json(paraMap));
             }
-            logger.info("产品开放期公告/报告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("产品开放期公告/报告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
@@ -105,7 +104,10 @@ public class ReportKfqgg001Service implements IReportDataService {
         repReveal.setProdid(prodId);
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate(DateUtil.platDateFromCache());
-        ReportKfqgg001Dto reportKfqgg001Dto =  reportKfqgg001Mapper.getProdInfo(paraMap);
+        //封装导出文件名称
+        Map<String, Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        ReportKfqgg001Dto reportKfqgg001Dto =  reportKfqgg001Mapper.getProdInfo(searchparam);
         if(reportKfqgg001Dto != null){
             paraMap.put("cusFileName", reportKfqgg001Dto.getProdName());
         }

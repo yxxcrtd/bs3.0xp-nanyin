@@ -658,7 +658,7 @@ VALUES ('COMMON_BUSINESS_TYPE', 'SVR15', '关联交易情况维护', 1400, '0', 
 delete from sys_page where page_id='RepEdit001';
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RepEdit001', 'DIS', '/disclosure/information/reveal/detailshow/RepEdit001', 'disclosure/information/reveal/detailshow/RepEdit001', null, null, null, '02', '02', '报表编辑', 'system', null, '07-7月 -22 06.39.05.966000 下午', 'system', '07-7月 -22 06.39.14.306000 下午');
+values ('RepEdit001', 'DIS', '/disclosure/information/reveal/detailshow/RepEdit001', 'disclosure/information/reveal/detailshow/RepEdit001', null, null, null, '02', '02', '报表编辑', 'system', null, SYSDATE, 'system', SYSDATE);
 
 -- add by zhengxiaolian 20220801 报表编辑页面脚本 start
 
@@ -949,13 +949,13 @@ update  SYS_PAGE set menu_id='REPORT_006_004_006' where PAGE_ID='ProdBonusplanMa
 delete from REP_DATA_CHECK;
 
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('100000001', '03', '固定收益类产品投资固守类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+values ('100000001', '04', '固定收益类产品投资固守类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
 
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('100000002', '03', '权益类产品投资权益类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+values ('100000002', '04', '权益类产品投资权益类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
 
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('100000003', '03', '商品及衍生品类产品投资商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+values ('100000003', '04', '商品及衍生品类产品投资商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
 
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('100000004', '01', '混合类产品产品投资于固定收益类资产、权益类资产、商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
@@ -1013,7 +1013,7 @@ values ('REP_CHECK_TYPE', '08', '等于', 8, '0', 'system', null, sysdate, 'syst
 delete from sys_page a where a.page_id='ReportCheck003';
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ReportCheck003', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck003', 'disclosure/information/config/repreportcheck/ReportCheck003', null, null, null, '02', '02', '指标阈值配置', 'system', null, '11-8月 -22 09.46.23.000000 上午', 'system', '11-8月 -22 09.46.23.000000 上午');
+values ('ReportCheck003', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck003', 'disclosure/information/config/repreportcheck/ReportCheck003', null, null, null, '02', '02', '指标阈值配置', 'system', null, sysdate, 'system', sysdate);
 -- add by zhengxiaolian 2022-08-12 信披数据校验报表预览 end
 
 -- add by shaoxuan 2022-08-15 费率优惠表字段调整 start
@@ -1037,17 +1037,35 @@ alter table DIS_PROD_FEEDISCOUNT drop column AFTER_FEERATE_TMP;
 /**菜单修改 add by shengning 2022-08-15 start**/
 update  SYS_PAGE set menu_id='REPORT_006_004_015' where PAGE_ID='ProdInfo001';
 /**菜单修改 add by shengning 2022-08-15 end**/
-/**新增"信披合规留痕管理" 画面按钮 add by shengning 2022-08-15 start**/
-DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'InfoCompliance001';
-INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'InfoCompliance001_btn_add', '01', '01', null, '新建', 'system', null, sysdate, 'system', sysdate, 'C', null);
 
-INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'InfoCompliance001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
 
-INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'infoCompliance001_btn_update', '01', '01', null, '编辑', 'system', null, sysdate, 'system', sysdate, 'C', null);
+/**数据校验阈值 add by zhengxiaolian 2022-08-16 start**/
+delete from REP_DATA_CHECK;
 
-INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
-VALUES ('InfoCompliance001', 'InfoCompliance001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
-/**新增"关联交易情况维护" 画面按钮 add by shengning 2022-08-15 end**/
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000001', '04', '固定收益类产品投资固守类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000002', '04', '权益类产品投资权益类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000003', '04', '商品及衍生品类产品投资商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000004', '01', '混合类产品产品投资于固定收益类资产、权益类资产、商品及衍生品类资产穿透前及穿透后占比', '80', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000005', '02', '公募开放式产品杠杆', '140', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000006', '02', '现管类产品杠杆', '120', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000007', '02', '私募非分级产品或公募封闭式产品杠杆', '200', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000008', '02', '私募分级产品杠杆', '140', '', 'E', 'system', null, sysdate, 'system', sysdate);
+
+insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('100000009', '08', '现管类产品投资权益类资产占比', '0', '', 'E', 'system', null, sysdate, 'system', sysdate);
+/**数据校验阈值 add by zhengxiaolian 2022-08-16 end**/

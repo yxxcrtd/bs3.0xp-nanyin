@@ -15,6 +15,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -25,6 +26,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -130,6 +132,7 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
      * @return
      */
     public void update(ProdBonusplanDto dto) {
+        dto.setUpdateUser(CommonUtil.getUserName());
         prodBonusplanMapper.updateByPrimaryKeySelective(dto);
     }
 
@@ -169,5 +172,9 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
 
         }
 
+    }
+
+    public List<SelectOptionDto> getAllPrdInfoSelect2(Map<String, Object> param) {
+        return prodBonusplanMapper.getAllPrdInfoSelect2(param);
     }
 }

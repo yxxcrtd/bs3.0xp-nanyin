@@ -102,6 +102,10 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     public String effDateStr;
     public String effEndDateStr;
 
+    public Date effEndDateO;
+
+    public String effEndDateOStr;
+
     public String getEffEndDateStr() {
         return DateUtil.format(super.getEffEndDate());
     }
@@ -159,5 +163,14 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
     }
 
+    public Date getEffEndDateO() {
+        return effEndDateO;
+    }
 
+    public void setEffEndDateO(Date effEndDateO) {
+        this.effEndDateO = effEndDateO;
+    }
+    public String getEffEndDateOStr() {
+        return DateUtil.format(this.getEffEndDateO());
+    }
 }

@@ -158,9 +158,6 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             /**
                              * 当期净值模块
                              */
-                            //期末每份额净值（元） = 固定值1.000
-                            reportJzfhbg001Dto.setUnitValue("1.0000");
-
                             if (lastBonus == null) {
                                 //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)；
                                 reportJzfhbg001Dto.setUnitValueT(BigDecimal.ONE.add(new BigDecimal(unitProfitStr)).toString());
@@ -191,6 +188,8 @@ public class ReportJzfhbg001Service implements IReportDataService {
                     reportJzfhbg001Dto.setRedValue("1.0000");
                     //申购价格（元/份）
                     reportJzfhbg001Dto.setSubValue("1.0000");
+                    //期末每份额净值（元） = 固定值1.000
+                    reportJzfhbg001Dto.setUnitValue("1.0000");
                     //如果是净值及分红报告（私募开放式）的模板的话，需要多设置以下要素信息
                     if (StringUtil.equals(rptType, DisReportType.JZJFHBG_SMKF)) {
                         //根据产品排期表，展示开放起始日大于当前收益分配基准日的下一个开放周期的信息；若当前已处于最后一个产品周期，则正常生成表格，表格内容置空，由业务老师手工调整
@@ -227,11 +226,11 @@ public class ReportJzfhbg001Service implements IReportDataService {
                     }
                     //生成跑批日
                     reportJzfhbg001Dto.setEnddate(settDateStr);
+                    logger.info("净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）【{}】生成成功", JsonUtils.object2Json(paraMap));
                 } else {
                     logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】",JsonUtils.object2Json(paraMap));
                 }
             }
-            logger.info("净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
@@ -245,6 +244,20 @@ public class ReportJzfhbg001Service implements IReportDataService {
         repReveal.setProdid(prodId);
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
+        //封装导出文件名称
+        Map<String, Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        //收益分配基准日
+        String settDateStr = (String) paraMap.get("enddate");
+        searchparam.put("settDate", settDateStr);
+
+        ReportJzfhbg001Dto reportJzfhbg001Dto = reportJzfhbg001Mapper.getProdInfo(searchparam);
+        if(reportJzfhbg001Dto != null){
+            //查询收益分配基准日的产品分红到期表
+            DisProdBonusplan bonusplan = reportJzfhbg001Mapper.getBonusPlanBySettDate(searchparam);
+
+            paraMap.put("cusFileName",reportJzfhbg001Dto.getTitleName()+DateUtil.format(bonusplan.getSettDate(), DateUtil.ABB_DATE_FORMAT_CN));
+        }
         return repReveal;
     }
 }

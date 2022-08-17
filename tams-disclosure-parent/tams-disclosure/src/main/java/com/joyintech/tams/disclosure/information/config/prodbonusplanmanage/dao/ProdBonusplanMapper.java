@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -64,4 +65,7 @@ public interface ProdBonusplanMapper {
 
 	ProdBonusplanDto selectByCondition(ProdBonusplanDto record);
 
+	List<SelectOptionDto> getAllPrdInfoSelect2(Map<String, Object> param);
+
+	int selectByProdId2(@Param("prodId") String prodId, @Param("dataStatus")String dataStatus);
 }

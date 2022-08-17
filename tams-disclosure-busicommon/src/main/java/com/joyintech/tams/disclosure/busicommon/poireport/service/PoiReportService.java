@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -20,7 +17,11 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt5;
+import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dao.DurationReportMapper;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,21 +37,31 @@ import com.joyintech.tams.common.base.dao.RepInstallLogDetailMapper;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.dao.RepReportCheckMapper;
 import com.joyintech.tams.common.base.dao.RepRevealMapper;
+import com.joyintech.tams.common.base.entity.RepDataCheck;
+import com.joyintech.tams.common.base.entity.RepInstallLogDetail;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepReportCheck;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.dao.PoiReportMapper;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
+import com.joyintech.tams.disclosure.busicommon.rptdata.service.HolidayService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.utils.poi.PoiUtils;
+import com.joyintech.tools.collectors.JoyinCollectors;
 
 /**
  * poi报表生成服务<br>
@@ -101,10 +112,20 @@ public class PoiReportService {
 
 	@Autowired
 	private RepReportCheckMapper repReportCheckMapper;
+	
+	@Autowired
+	private ReportRevealEndDateService reportRevealEndDateService;
+
+	@Autowired
+	private ReportDealService reportDealService;
+
 	/**
 	 * 日志
 	 */
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private DurationReportMapper durationReportMapper;
 
 	/**
 	 * 生成报表：创建服务器文件，创建工作流进行报表确认
@@ -218,8 +239,7 @@ public class PoiReportService {
 			minioFileRemoteService.tempFileCopy(tempRemoteFileName, uploadFile);
 	        
 			// 创建工作流
-			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),
-					reportInfo.getReportName(), reportInfo.getReportCategory());
+			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),reportInfo);
 			if (flag == false) {
 				logger.error("生成信息主表错误!");
 			}
@@ -343,16 +363,22 @@ public class PoiReportService {
 	 * @see
 	 * @since 1.0
 	 */
-	private boolean insertRepReveal(Map<String, Object> params, String fileKey, String fileName, String ReportName,
-			String reportCategory) {
+	private boolean insertRepReveal(Map<String, Object> params, String fileKey, String fileName,ReportInfo reportInfo ) {
+		//String ReportName,
+		//String reportCategory
 		RepReveal repReveal = reportDataService.getRepReveal(params);
+		//查找之前生成未确认得数据，记录手工上传得数据
+		RepReveal unConfirmRepReveal = reportDealService.getUnConfirmRepReveal(repReveal);
+
+		reportDealService.updateDataStatus(repReveal);  //逻辑删除已生成未确认的
+
 		// 将待组装数据成日志信息
 		RepInstallLogDetail repInstallLogDetail = new RepInstallLogDetail();
 
 		repReveal.setRepId(params.get("repid").toString());
 		repReveal.setSysFilepath(fileKey);
 		repReveal.setSysFilename(fileName);
-		repReveal.setReportName(ReportName);
+		repReveal.setReportName(reportInfo.getReportName());
 		if (StringUtil.isNotEmpty(params.get("prodId"))) {
 			repReveal.setProdid(params.get("prodId").toString());
 		} else {
@@ -376,26 +402,31 @@ public class PoiReportService {
 			repReveal.setEndDate(com.joyintech.framework.util.DateUtil.platDateFromCache());
 		}
 		// 获取产品信息
-		String portnum = params.get("prodId") == null ? "" : params.get("prodId").toString();
-		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(portnum);
+		String busiId = params.get("prodId") == null ? "" : params.get("prodId").toString();
+		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(busiId);
 
-		// TODO:规则信息，重新编写
+		//规则信息，重新编写
+		Date revealEndDate = reportRevealEndDateService.getDisEndDate(repReveal, busiId,reportInfo);
+		if ( revealEndDate ==null )
+			revealEndDate = new Date();
+		repReveal.setRevealEndDate(revealEndDate);
+
 		// 获取规则信息
-       List<RepRuleEntity> repRule = poiReportMapper.getRuleInfo(params.get("repId").toString());
-       if(null!=repRule&&repRule.size()==1){
-           Date basiDate = getBasisDate(prodInfo, repRule.get(0));
-           
-           Date revealEndDate = null;
-           if(StringUtil.isNotEmpty(basiDate)) {
-               revealEndDate = revealDeadLineService.getRevDeadlineByMark(basiDate, repRule.get(0), new HashMap<String, Date>());
-               // 设置披露截止日
-               repReveal.setRevealEndDate(revealEndDate);
-           }else{
-               repReveal.setRevealEndDate(new Date());
-           }
-       }else{
-           repReveal.setRevealEndDate(new Date());
-       }
+//       List<RepRuleEntity> repRule = poiReportMapper.getRuleInfo(params.get("repId").toString());
+//       if(null!=repRule&&repRule.size()==1){
+//           Date basiDate = getBasisDate(prodInfo, repRule.get(0));
+//           
+//           Date revealEndDate = null;
+//           if(StringUtil.isNotEmpty(basiDate)) {
+//               revealEndDate = revealDeadLineService.getRevDeadlineByMark(basiDate, repRule.get(0), new HashMap<String, Date>());
+//               // 设置披露截止日
+//               repReveal.setRevealEndDate(revealEndDate);
+//           }else{
+//               repReveal.setRevealEndDate(new Date());
+//           }
+//       }else{
+//           repReveal.setRevealEndDate(new Date());
+//       }
 
 //       RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repReveal.getRepId());
 
@@ -423,7 +454,11 @@ public class PoiReportService {
 		// 系统生成确认方式和披露方式设置为手动
 		repReveal.setIsConfirm(DictCodeListExt1.确认类型_手动.getValue());
 		repReveal.setIsReveal(DictCodeListExt2.披露方式_手动.getValue());
-		repReveal.setReportCategory(reportCategory);
+		repReveal.setReportCategory(reportInfo.getReportCategory());
+		if(unConfirmRepReveal != null){
+			repReveal.setFilepath(unConfirmRepReveal.getFilepath());
+			repReveal.setFilename(unConfirmRepReveal.getFilename());
+		}
 		repRevealMapper.insert(repReveal);
 
 		// 插入日志
@@ -832,6 +867,11 @@ public class PoiReportService {
 		String reportId = params.get("repid").toString();   //报表编号
 		ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
 
+		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
+		params.put("prodid", params.get("prodid")==null?params.get("pprodid"):params.get("prodid"));  //单产品只传了pprodid
+		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
+		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
+
 		RepReveal repReveal = poiReportService.getRepReveal(params);
 
 		Map<String, Object> dataMap = null;
@@ -867,16 +907,23 @@ public class PoiReportService {
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String baseDate=(String) dataMap.get("baseDate");
 				if(poiReportMapper.checkBaseDate(prodId,baseDate)<1){
-					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
+					resultSb.append("分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
 				}
 
-			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMFB)
-					||StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
+			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
 				//净值及分红报告
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String settDate=(String) dataMap.get("settDate");
 				if(poiReportMapper.checkBaseDate(prodId,settDate)<1){
-					resultSb.append("分红权益登记日必须对应产品某一开放周期的开放结束日或产品的到期日"+"<br>");
+					resultSb.append("分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
+				}
+			}
+			else if (StringUtil.equals(rptType,DisReportType.QSBG)){
+				//清算报告 资产类合计=负债类合计；
+				String sumAssetAmt=(String)dataMap.get("sumAssetAmt");
+				String sumDebtAmt=(String)dataMap.get("sumDebtAmt");;
+				if (!StringUtil.equals(sumAssetAmt,sumDebtAmt)) {
+					resultSb.append("清算报告资产类合计不等于负债类合计"+"<br>");
 				}
 			}
 			else if(StringUtil.equals(rptType,DisReportType.JDBG_ZSX)
@@ -979,27 +1026,74 @@ public class PoiReportService {
 					//	当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透前及穿透后占比必须小于80%； 100000004
 					else if(StringUtil.equals(prodInfo.getNatureInvest(), DictCodeListExt5.信披投资性质_混合类.getValue())){
 						RepDataCheck repDataCheck=checkMap.get("100000004").get(0);
+
 						//穿透前
-						if(StringUtil.isNotEmpty(prodAssetComb.get("mixPreRatio"))){
-							BigDecimal mixPreRatio=(BigDecimal)prodAssetComb.get("mixPreRatio");
-							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透前占比必须";
-							String s1=this.singleCheck(repDataCheck,mixPreRatio,tips1);
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
+							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透前及穿透后占比必须";
+							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
 							if (StringUtil.isNotEmpty(s1)) {
 								resultSb.append(s1+"<br>");
 							}
 						}else{
-							resultSb.append("固定收益类、权益类、商品及衍生品类穿透前占比未获取到"+"<br>");
+							resultSb.append("权益类穿透前占比未获取到"+"<br>");
 						}
-						if(StringUtil.isNotEmpty(prodAssetComb.get("mixAfterRatio"))){
-							//穿透后
-							BigDecimal mixAfterRatio=(BigDecimal)prodAssetComb.get("mixAfterRatio");
-							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类、权益类、商品及衍生品类穿透后占比必须";
-							String s2=this.singleCheck(repDataCheck,mixAfterRatio,tips2);
+						//穿透后
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
+							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append(s2+"<br>");
 							}
 						}else{
-							resultSb.append("固定收益类、权益类、商品及衍生品类穿透后占比未获取到"+"<br>");
+							resultSb.append("权益类穿透后占比未获取到"+"<br>");
+						}
+
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
+							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-权益类穿透前占比必须";
+							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append(s1+"<br>");
+							}
+						}else{
+							resultSb.append("权益类穿透前占比未获取到"+"<br>");
+						}
+						//穿透后
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
+							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-权益类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append(s2+"<br>");
+							}
+						}else{
+							resultSb.append("权益类穿透后占比未获取到"+"<br>");
+						}
+
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fdPreRatio"))){
+							BigDecimal fdPreRatio=(BigDecimal)prodAssetComb.get("fdPreRatio");
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前占比必须";
+							String s1=this.singleCheck(repDataCheck,fdPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append(s1+"<br>");
+							}
+						}else{
+							resultSb.append("商品及衍生品类穿透前占比未获取到"+"<br>");
+						}
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fdAfterRatio"))){
+							//穿透后
+							BigDecimal fdAfterRatio=(BigDecimal)prodAssetComb.get("fdAfterRatio");
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透后占比必须";
+							String s2=this.singleCheck(repDataCheck,fdAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append(s2+"<br>");
+							}
+						}else{
+							resultSb.append("商品及衍生品类穿透后占比未获取到"+"<br>");
 						}
 
 					}
@@ -1107,10 +1201,60 @@ public class PoiReportService {
 					//对于定期报告中需要从【报表指标管理】或“合作机构信息维护”、“产品资产组合情况信息维护”、“非标债权类资产明细信息维护”“关联交易情况信息维护”中取值的统计项，
 					// 若在生成报告时，上述内容取不到值或无有效数据（系统生成报告的日期在数据的生效期及有效截止日期之间），也需要在本界面生成一条对应数据项为空的提示；
 					//TODO:
+				if(CollectionUtils.isEmpty((List)dataMap.get("listNostds"))){
+					resultSb.append("非标债权类资产明细信息缺失<br>");
+				}
+				if(((Map<String,Object>)dataMap.get("repRelDeal")).isEmpty()){
+					resultSb.append("关联交易情况信息缺失<br>");
+				}
+				if(prodAssetComb.isEmpty()){
+					resultSb.append("产品资产组合情况信息缺失<br>");
+				}
+				if(StringUtil.equals(dataMap.get("partner"),"-")){
+					resultSb.append("合作机构信息缺失<br>");
+				}
+				if(!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("ldxfxfx"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg1"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg2"))
+						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg3"))){
+					resultSb.append("报表指标信息缺失<br>");
+				}
 
 				//对于开放式产品，若在定期报告的统计期内产品业绩比较基准发生了变更（由非指数型产品变为指数型产品，或指数型产品挂钩的行情代码由A变为B）需要在本模块给出提示：
 				if(StringUtil.equals(prodInfo.getIssuingWay(),DictCodeListExt5.发行方式_开放式.getValue())){
 					//TODO:
+					List<RepProdInfo> listProdChildren = durationReportMapper.selectProdChildren(params);
+					int year = 2022;
+					int quarter = 2;
+					int halfYear =1;
+					year = Integer.parseInt(params.get("year").toString());
+					if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+						quarter= Integer.parseInt(params.get("quarter").toString());
+					} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+						halfYear= Integer.parseInt(params.get("halfyear").toString());
+					}
+
+					boolean changeFlag=false;
+					for (RepProdInfo child:listProdChildren ) {
+						if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+							Date durStartDate = DurationUtil.getQuarterStart(year, quarter);
+							Date durEndDate = DurationUtil.getQuarterEnd(year, quarter);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+							Date durStartDate = DurationUtil.getHalfYearStart(year, halfYear);
+							Date durEndDate = DurationUtil.getHalfYearEnd(year, halfYear);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报
+							Date durStartDate = DurationUtil.getYearStart(year);
+							Date durEndDate = DurationUtil.getYearEnd(year);
+							changeFlag=this.getChangeFlag(child,durStartDate,durEndDate);
+						}
+					}
+					if(changeFlag){
+						resultSb.append("报告期内业绩比较基准发生变更，请确认<br>");
+					}
 				}
 			}
 
@@ -1118,12 +1262,25 @@ public class PoiReportService {
 			//生成报告时，若存在某个统计项取不到值的情况，需要在本模块进行提示 提示“生成报告所需数据有缺失”
 			for (String key:dataMap.keySet()){
 				if(!key.contains("_xx")){
-					if (!StringUtil.isNotEmpty(dataMap.get(key))) {
-						if (!dataMap.containsKey(key+"_xx")) {
-							if(dataMap.get(key) instanceof String){
-								dataMap.put(key,"xxx");
+					if(dataMap.get(key) instanceof List){
+						if (CollectionUtils.isEmpty((List)dataMap.get(key))) {
+							if (!dataMap.containsKey(key+"_xx")) {
+								if(dataMap.get(key) instanceof String){
+									dataMap.put(key,"xxx");
+								}
+								resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+								break;
 							}
-							resultSb.append("生成报告所需数据有缺失key="+key+"<br>");
+						}
+					}else{
+						if (!StringUtil.isNotEmpty(dataMap.get(key))) {
+							if (!dataMap.containsKey(key+"_xx")) {
+								if(dataMap.get(key) instanceof String){
+									dataMap.put(key,"xxx");
+								}
+								resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+								break;
+							}
 						}
 					}
 				}
@@ -1144,7 +1301,7 @@ public class PoiReportService {
 				repReportCheck.setProdId(prodId);
 				repReportCheck.setCheckDate((Date)params.get("platformDate"));
 				repReportCheck.setEndDate(repReveal.getEndDate());
-				repReportCheck.setErrormsg(resultSb.toString());
+				repReportCheck.setErrormsg(resultSb.toString().replace("<br>",""));
 				repReportCheck.setFileNo(uploadFile.getFileNo());
 				repReportCheck.setDataStatus("E");
 
@@ -1154,7 +1311,7 @@ public class PoiReportService {
 
 				repReportCheckMapper.insertSelective(repReportCheck);
 
-				resultSb.append("生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。点击“确认”按钮，可通过在线编辑的形式对当前报表进行编辑");
+				resultSb.append("点击“确认”按钮，可通过在线编辑的形式对当前报表进行编辑");
 			}
 		}
 
@@ -1163,46 +1320,46 @@ public class PoiReportService {
 
 	private String singleCheck(RepDataCheck repDataCheck,BigDecimal val,String tips){
 		String result="";
-		if(StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于)){
+		if(StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于.getValue())){
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)>=0){
 				result=tips+"小于"+repDataCheck.getParamValue1();
 			}
-		} else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于等于)) {
+		} else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)>0){
 				result=tips+"小于等于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)<=0){
 				result=tips+"大于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于等于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)<0){
 				result=tips+"大于等于"+repDataCheck.getParamValue1();
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"内";
 			}
 
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>=0&&val.compareTo(paramValue2)<0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（含）,"+repDataCheck.getParamValue2()+"内";
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<=0)){
 				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"（含）内";
 			}
-		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_等于)) {
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)!=0){
 				result=tips+"等于"+repDataCheck.getParamValue1();
@@ -1210,6 +1367,34 @@ public class PoiReportService {
 		}
 
 		return result;
+	}
+
+	private boolean getChangeFlag(RepProdInfo prod,Date durStartDate,Date durEndDate){
+
+		Date sDate = durStartDate;
+		Date eDate = durEndDate;
+
+		//查询指定的产品在统计区间内的所有业绩基准
+		Map<String,Object> mapParas = new HashMap<>();
+		mapParas.put("prodId", prod.getProdId());
+		List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(mapParas);
+
+		//区间内是否有业绩基准变更的标志
+		boolean changeFlag = false;
+		//查询指定的产品在统计区间内的有效业绩基准
+		List<RepProdBasicChange> listEffBasis = new ArrayList<>();
+		for ( RepProdBasicChange item:listBasis ) {
+			if ( "E".equals(item.getStatus()) ) {
+				listEffBasis.add(item);
+			}
+			//更新日期在统计区间内，且状态为D，说明有变更
+			if(item.getUpdateTime()!=null){
+				if ( item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+					changeFlag=true;
+				}
+			}
+		}
+		return changeFlag;
 	}
 
 }

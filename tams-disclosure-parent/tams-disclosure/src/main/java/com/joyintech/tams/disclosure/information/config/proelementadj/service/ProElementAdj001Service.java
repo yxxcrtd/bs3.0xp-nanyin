@@ -74,6 +74,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
         }
         else {
             dto.setDataStatus("E");
+            dto.setUpdateUser(CommonUtil.getUserName());
             proElementAdjMapper.updateByKey(dto);
         }
 

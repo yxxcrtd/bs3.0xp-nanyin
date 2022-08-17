@@ -97,7 +97,7 @@ public class DurationReportDataService implements IReportDataService {
 			try {
 				DurationReportDto dto= durationReportMapper.selectProdInfo(paraMap);
 				
-				if ( DateUtil.getBetweenDayNumber(reportDate, dto.getmDate())<=90 )  //不需要生成定期报表
+				if ( DateUtil.getBetweenDayNumber(dto.geteDate(),reportDate)<=90 || DateUtil.getBetweenDayNumber(reportDate, dto.getmDate())<=90 )  //不需要生成定期报表
 					return null;
 				
 				if ( dto!=null ) {
@@ -211,21 +211,32 @@ public class DurationReportDataService implements IReportDataService {
 				//2.产品是分级产品：
 				//本产品Z10002【子产品代码1】份额净值为1.0108【产品基础指标：子产品1期末单位净值，保留4位小数】元,Z10030【子产品代码2】份额净值为1.0109【子产品2期末单位净值，保留4位小数】元。】
 				try {
-					String perVal = "份额净值为"+String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
+					String perVal = "";
 					if ( "01".equals(reportDto.getProdType()) ) { //净值型
-						perVal = "份额净值为"+reportDto.getListFinIndex().get(0).get("unitValue").toString();
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
 							perVal = "";
 							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
+								if ( map.get("unitValue")==null  ) continue;
 								perVal += map.get("prodId")+"份额净值为"+map.get("unitValue").toString()+"元，";
 							}
 							perVal = perVal.substring(0, perVal.length()-2);
+						} else {
+							perVal = reportDto.getListFinIndex().get(0).get("unitValue").toString();
+						}
+					} else {  //现管类：固定为1.0000
+						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
+							perVal = "";
+							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
+								perVal += map.get("prodId")+"份额净值为"+"1.0000"+"元，";
+							}
+							perVal = perVal.substring(0, perVal.length()-2);
+						} else {
+							perVal = String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
 						}
 					}
 					reportDto.setYjbx(perVal);
 				} catch (Exception e ) {
 					logger.error("报表业绩表现数据错误。",e);
-					e.printStackTrace();
 					reportDto.setYjbx("");
 				}
 				
@@ -381,7 +392,7 @@ public class DurationReportDataService implements IReportDataService {
 					listEffBasis.add(item);
 				}
 				//更新日期在统计区间内，且状态为D，说明有变更
-				if ( item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+				if ( item.getUpdateTime()!=null && item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
 					changeFlag=true;
 				}
 			}
@@ -396,11 +407,11 @@ public class DurationReportDataService implements IReportDataService {
 				//查询是否在区间内有业绩基准变更，变更的判断规则是变更表的数据记录，与需求中的变更判断思路不一样，经过讨论，按变更履历表来
 				//有无业绩基准变更，过滤listBasis状态为D的数据，如果条数减少，就是有变更
 				if ( changeFlag==true ) {  //无业绩基准变更：max(产品成立日，统计周期开始日）
+					sDate = listEffBasis.get(0).getEffDate();  //最新的变更生效日
+				} else {  //无业绩基准变更
 					if (prod.getSetDate().compareTo(sDate)>0) {
 						sDate = prod.getSetDate();
 					}
-				} else {  //有业绩基准变更
-					sDate = listBasis.get(0).getEffDate();  //最新的变更生效日
 				}
 			}
 			
@@ -424,9 +435,10 @@ public class DurationReportDataService implements IReportDataService {
 					continue;
 				}
 				val = ( eConus.getMarketInfo().divide(sConus.getMarketInfo(),20,BigDecimal.ROUND_DOWN ).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
-				val = val.multiply(percent2BigDecimal(basis.getProportion())).divide(new BigDecimal(days),2,BigDecimal.ROUND_DOWN);
+				val = val.multiply(percent2BigDecimal(basis.getProportion())).divide(new BigDecimal(days),20,BigDecimal.ROUND_DOWN);
 				basisValue = basisValue.add(val);
 			}
+			basisValue = basisValue.setScale(2, BigDecimal.ROUND_DOWN);
 		} catch (Exception e) {
 			logger.error("业绩比较基准计算错误！",e);
 		}
