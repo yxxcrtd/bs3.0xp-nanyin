@@ -742,6 +742,7 @@ public class InfoDisclosureGenService {
 			// repScreen.getScreenKey());
 			if (StringUtil.equals("pprodid", repScreen.getScreenKey())) {
 				params.put("prodid", infoDisclosureGenAndSendEntity.getProdid());
+				params.put("pprodid", infoDisclosureGenAndSendEntity.getProdid());
 			}
 			else if (StringUtil.equals("prodid", repScreen.getScreenKey())) {
 				params.put("prodid", infoDisclosureGenAndSendEntity.getProdid());

@@ -345,6 +345,8 @@ public class ReportDataService {
 	        
 	        String repId=(String)params.get("repid").toString();
 	        repReveal.setRepId(repId);
+
+		 	repReveal.setProdid(params.get("prodid").toString());
 	        return repReveal;
 	    }
 	 

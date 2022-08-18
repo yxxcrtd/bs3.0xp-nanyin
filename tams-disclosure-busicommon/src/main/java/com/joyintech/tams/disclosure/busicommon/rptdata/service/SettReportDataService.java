@@ -58,8 +58,12 @@ public class SettReportDataService implements IReportDataService {
 				prodId = (paraMap.get("pprodid") == null ? null : paraMap.get("pprodid").toString());
 			}
 			Date reportDate = new Date();
-			if ( paraMap.get("platformDate") != null ) {
-				reportDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+			if ( paraMap.get("reportDate") != null ) {
+				reportDate = ((Date)paraMap.get("reportDate"));
+			} else {
+				if ( paraMap.get("platformDate") != null ) {
+					reportDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+				}
 			}
 
 			//reportDate = DateUtil.parse("2023-03-01");
@@ -274,18 +278,26 @@ public class SettReportDataService implements IReportDataService {
 			listResult.get(0).put("genDate_xx","");
 			listResult.get(0).put("deposit_xx","");
 			listResult.get(0).put("startDate_xx","");			
+			listResult.get(0).put("eDate_xx","");
 		}
 		return listResult;
 	}
 
 	public RepReveal getRepReveal(Map<String, Object> paraMap) {
+		
 		RepReveal repReveal = new RepReveal();
 		repReveal.setRepId(paraMap.get("repId").toString());
 		repReveal.setProdid(paraMap.get("prodId").toString());
 		
+		//结束日是是产品到期日
 		Date eDate = new Date();
-		if ( paraMap.get("platformDate") != null ) {
-			eDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+		List<SettReportDto> list = settReportMapper.selectProdInfo(paraMap.get("prodId").toString());
+		if ( list!=null && list.size()>0 ) {
+			eDate = holidayService.getNextWorkDate(list.get(0).getmDate());
+		} else {
+			if ( paraMap.get("platformDate") != null ) {
+				eDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+			}
 		}
 		repReveal.setEndDate(eDate);
 		return repReveal;

@@ -101,7 +101,7 @@ $(function() {
             return;
         }
         Joyin.dialog(JoyinUtil.getLabel('预览'), basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow002/init',
-            '70%', '90%', {repId:data.repId,repName:data.reportName},function() {
+            '1220px', '90%', {repId:data.repId,repName:data.reportName},function() {
             });
 
     };

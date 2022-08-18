@@ -376,7 +376,23 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             } else {
                 StringBuilder returnerrorMsg = new StringBuilder("");
                 for (int i = 1; i < objects.size(); i++) {
+
                     StringBuilder errorMsg = new StringBuilder("");
+                    for(int j=i+1;j<objects.size();j++){
+                        if(objects.get(i).get(8).equals(objects.get(j).get(8))){
+                            for(int k=3;k<27;k++){
+                                if(!objects.get(i).get(k).equals(objects.get(j).get(k))){
+                                    errorMsg.append("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+                                    if (StringUtil.isNotEmpty(errorMsg.toString())) {
+                                        break;
+                                    }
+                                }
+                                if (StringUtil.isNotEmpty(errorMsg.toString())) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     List<String> rowData = objects.get(i);
                     if (StringUtil.isEmpty(rowData.get(0))) {
                         errorMsg.append("子产品代码 必填！");
@@ -576,6 +592,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         returnerrorMsg.append("第" + (i + 1) + "行数据：" + errorMsg.toString());
                     }
                 }
+
                 if (StringUtil.isNotEmpty(returnerrorMsg.toString())) {
                     Map<String, Object> resultMap = new HashMap<>();
                     resultMap.put("errorMsg", returnerrorMsg.toString());
