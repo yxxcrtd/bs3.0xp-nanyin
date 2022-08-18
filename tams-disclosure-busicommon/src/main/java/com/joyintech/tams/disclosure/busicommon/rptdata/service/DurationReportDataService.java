@@ -377,7 +377,7 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//查询指定的产品在统计区间内的所有业绩基准
 			Map<String,Object> mapParas = new HashMap<>();
-			mapParas.put("prodId", prod.getProdId());
+			mapParas.put("prodId", prod.getpProdId());   //这里传入母产品id（P_PROD_ID)，业绩基准明细绑定在母产品上
 //			mapParas.put("sDate", sDate);
 //			mapParas.put("eDate",eDate);
 			List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(mapParas);
