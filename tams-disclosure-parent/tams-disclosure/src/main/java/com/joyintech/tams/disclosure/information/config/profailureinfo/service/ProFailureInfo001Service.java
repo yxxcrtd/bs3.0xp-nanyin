@@ -163,7 +163,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 3) {
+            if (null == objects.get(1) || objects.get(1).size() < 3) {//NYLCXP-599
                 Map<String, Object> resultMap = new HashMap<>();
                 resultMap.put("errorMsg", "数据格式错误，数据格式需要3列。");
                 AjaxResult wr = new AjaxResult();

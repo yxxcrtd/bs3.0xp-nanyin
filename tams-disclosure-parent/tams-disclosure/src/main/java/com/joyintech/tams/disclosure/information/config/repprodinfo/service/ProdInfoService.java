@@ -22,6 +22,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.util.SysCommDataUtil;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
@@ -212,6 +213,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @param dto
      */
     public void insert(ProdInfoDto dto) {
+
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         dto.setIssueStatus(DictCodeListExt1.发行状态_确认发行.getValue());
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
@@ -259,7 +261,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         } else {//普通产品
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
         }
-        prodInfoMapper.insert(dto);
+        //重新插入已删除的数据
+        ProdInfoDto prodInfoDto=prodInfoMapper.selectByPrimaryKey(dto.getProdId());
+        if(prodInfoDto !=null && prodInfoDto.getStatus().equals("D")){
+            dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            prodInfoMapper.updateByPrimaryKeySelective(dto);
+        }else {
+            prodInfoMapper.insert(dto);
+        }
 
 
     }
@@ -367,7 +376,23 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             } else {
                 StringBuilder returnerrorMsg = new StringBuilder("");
                 for (int i = 1; i < objects.size(); i++) {
+
                     StringBuilder errorMsg = new StringBuilder("");
+                    for(int j=i+1;j<objects.size();j++){
+                        if(objects.get(i).get(8).equals(objects.get(j).get(8))){
+                            for(int k=3;k<27;k++){
+                                if(!objects.get(i).get(k).equals(objects.get(j).get(k))){
+                                    errorMsg.append("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+                                    if (StringUtil.isNotEmpty(errorMsg.toString())) {
+                                        break;
+                                    }
+                                }
+                                if (StringUtil.isNotEmpty(errorMsg.toString())) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     List<String> rowData = objects.get(i);
                     if (StringUtil.isEmpty(rowData.get(0))) {
                         errorMsg.append("子产品代码 必填！");
@@ -567,6 +592,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         returnerrorMsg.append("第" + (i + 1) + "行数据：" + errorMsg.toString());
                     }
                 }
+
                 if (StringUtil.isNotEmpty(returnerrorMsg.toString())) {
                     Map<String, Object> resultMap = new HashMap<>();
                     resultMap.put("errorMsg", returnerrorMsg.toString());
@@ -642,6 +668,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         List<ProdInfoDto> selectedItem = dto.getSelectedItem();
         List<ProdInfoDto> existData = new ArrayList<>();
         List<ProdInfoDto> newData = new ArrayList<>();
+        List<ProdInfoDto> existDelData = new ArrayList<>();
         // for (ProdInfoDto temp : selectedItem) {
         //     //数据已存在 【产品编码 相同】，数据被过滤。
         //     ProdInfoDto prodInfo = this.selectByProdStatus(temp.getProdId());
@@ -653,7 +680,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         // NYLCXP-580 两次判断都为空会导致newData中重复塞入数据 modify by kongzhifang 2022-08-11
         for (ProdInfoDto temp:selectedItem) {
             if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))){
-                existData.add(temp);
+                if(StringUtil.equals(DictCodeListExt1.维护数据状态_删除.getValue(),this.selectByProdId(temp.getProdId()).getStatus())){
+                    existDelData.add(temp);
+                }else{
+                    existData.add(temp);
+                }
             }
             else if(!StringUtil.isNotEmpty(this.selectByProdStatus(temp.getProdId()))) {
                 temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -664,6 +695,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         for (ProdInfoDto existDataDto : existData) {
             //this.doComplete(existDataDto, OperationType.MODIFY);
             this.update(existDataDto);
+        }
+        //删除操作 NYLCXP-263 导入一条数据的数据状态为“删除” ，导入同样的数据只展示第二次新增的数据，第一条删除状态的数据不展示
+        for (ProdInfoDto existDelDataDto : existDelData) {
+            this.delete(existDelDataDto);
         }
         //插入操作
         for (ProdInfoDto newDataDto : newData
@@ -853,6 +888,19 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
                 -> prodInfoMapper.queryPprodIds(map));
+        return result;
+    }
+
+    /**
+     * 获取所有的正常状态的产品信息，包含母产品和子产品，支持根据产品代码和产品名称 进行模糊查询
+     * 支持筛选只查询 母产品 sonFlag 标识不为空
+     * @param paraMap
+     * @return
+     */
+    public Page<SelectOptionDto> queryPprodName(Map<String, Object> paraMap){
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> prodInfoMapper.queryPprodName(paraMap));
         return result;
     }
 }

@@ -12,7 +12,8 @@
              checkDateStart:$('#checkDate').startDate(),
              checkDateEnd:$('#checkDate').endDate(),
              prodId:$('#prodId').val() == null ? null : $('#prodId').val().join(","),
-             reportType:$('#reportType').val() == null ? null : $('#reportType').val().join(",")
+             reportType:$('#reportType').val() == null ? null : $('#reportType').val().join(","),
+             reportName:$('#reportName').val() == null ? null : $('#reportName').val().join(",")
          };
     };
     /**
@@ -35,7 +36,8 @@
             ,{field:'reportTypeName',  title: '报表类别 ',sortField:"reportType",width:200,sortable:false}
             ,{field:'reportName',  title: '报表名称',sortField:"reportName",width:200,sortable:false}
             , {field:'prodName',  title: '产品名称',sortField:"prodName",width:300,sortable:false}
-            , {field:'prodId',  title: '产品代码',sortField:"prodId",width:200,sortable:false}
+            , {field:'pprodId',  title: '产品主代码',sortField:"pprodId",width:200,sortable:false}
+            , {field:'prodId',  title: '子产品代码',sortField:"prodId",width:200,sortable:false}
             ,{field:'checkDate',  title: '检查日期',sortField:"checkDate",type:'date',width:120,sortable:false}
             ,{field:'errormsg',  title: '错误信息',sortField:"errormsg",width:400,sortable:false}
             ,{field:'fileNo',  visible: false}

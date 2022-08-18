@@ -742,6 +742,7 @@ public class InfoDisclosureGenService {
 			// repScreen.getScreenKey());
 			if (StringUtil.equals("pprodid", repScreen.getScreenKey())) {
 				params.put("prodid", infoDisclosureGenAndSendEntity.getProdid());
+				params.put("pprodid", infoDisclosureGenAndSendEntity.getProdid());
 			}
 			else if (StringUtil.equals("prodid", repScreen.getScreenKey())) {
 				params.put("prodid", infoDisclosureGenAndSendEntity.getProdid());
@@ -755,6 +756,9 @@ public class InfoDisclosureGenService {
 			}
 
 		}
+
+		params.put("prodId", infoDisclosureGenAndSendEntity.getProdid());
+		params.put("reportDate", infoDisclosureGenAndSendEntity.getEndDate() );
 		params.put("repid", infoDisclosureGenAndSendEntity.getRepId());
 		params.put("execDate", execDate);
 		params.put("platformDate", execDate);

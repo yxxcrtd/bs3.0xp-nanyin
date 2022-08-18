@@ -32,8 +32,8 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 @Service
 public class SettReportDataService implements IReportDataService {
 
-	@Autowired
-	private RepProdInfoMapper repProdInfoMapper;
+//	@Autowired
+//	private RepProdInfoMapper repProdInfoMapper;
 
 	@Autowired
 	private SettReportMapper settReportMapper;
@@ -58,21 +58,24 @@ public class SettReportDataService implements IReportDataService {
 				prodId = (paraMap.get("pprodid") == null ? null : paraMap.get("pprodid").toString());
 			}
 			Date reportDate = new Date();
-			if ( paraMap.get("platformDate") != null ) {
-				reportDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+			if ( paraMap.get("reportDate") != null ) {
+				reportDate = ((Date)paraMap.get("reportDate"));
+			} else {
+				if ( paraMap.get("platformDate") != null ) {
+					reportDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+				}
 			}
 
 			//reportDate = DateUtil.parse("2023-03-01");
 			
 			// 查找产品
-			RepProdInfo prodInfo = null;
 			Map<String, BigDecimal> mapBalance = new HashMap<String, BigDecimal>();
 
-			List<RepProdInfo> list = settReportMapper.selectProdInfo(prodId);
+			List<SettReportDto> list = settReportMapper.selectProdInfo(prodId);
 			if ( list.size()>0 ) 
-				prodInfo = list.get(0);
+				settReportDto = list.get(0);
 			
-			if (prodInfo != null) {
+			if (settReportDto.getBonusPlanId() != null) {
 				
 				Map<String,Object> paras = new HashMap<>();
 				paras.put("prodId",prodId);
@@ -87,21 +90,20 @@ public class SettReportDataService implements IReportDataService {
 					return x;
 				}).collect(Collectors.toMap(BokBalance::getSubjectNo, BokBalance::getoAmt, (key1, key2) -> key2));
 				settReportDto.setReportDate(reportDate);
-				settReportDto.setProdId(prodInfo.getProdId());
-				settReportDto.setProdName(prodInfo.getProdName());
-				settReportDto.setProdRe(prodInfo.getProdRe());
-				settReportDto.seteDate(prodInfo.getSetDate());
-				settReportDto.setTrustName(prodInfo.getAcctChnname());
-				settReportDto.setmDate(prodInfo.getMdate());
+//				settReportDto.setProdId(prodInfo.getProdId());
+//				settReportDto.setProdName(prodInfo.getProdName());
+//				settReportDto.setProdRe(prodInfo.getProdRe());
+//				settReportDto.seteDate(prodInfo.getSetDate());
+//				settReportDto.setTrustName(prodInfo.getAcctChnname());
+				settReportDto.setmDate(holidayService.getNextWorkDate(settReportDto.getmDate()));
 
 				//签字日期
-				Date signDate = DateUtil.addDay(prodInfo.getMdate(),1);
 				try {
-					signDate = holidayService.getLastWordDateOfWeek( holidayService.getNextWorkDate(prodInfo.getMdate()) );
+					Date signDate = holidayService.getLastWordDateOfWeek( holidayService.getNextWorkDate(settReportDto.getmDate()) );
+					settReportDto.setSignDate(signDate);  //产品到期日+1工作日所在周的最后一个工作日
 				} catch( Exception e ) {
 					logger.error("获取签字日期错误.");
 				}
-				settReportDto.setSignDate(signDate);  //产品到期日+1工作日所在周的最后一个工作日
 				
 				BigDecimal sumAssetAmt = BigDecimal.ZERO;
 				// 银行存款
@@ -276,18 +278,26 @@ public class SettReportDataService implements IReportDataService {
 			listResult.get(0).put("genDate_xx","");
 			listResult.get(0).put("deposit_xx","");
 			listResult.get(0).put("startDate_xx","");			
+			listResult.get(0).put("eDate_xx","");
 		}
 		return listResult;
 	}
 
 	public RepReveal getRepReveal(Map<String, Object> paraMap) {
+		
 		RepReveal repReveal = new RepReveal();
 		repReveal.setRepId(paraMap.get("repId").toString());
 		repReveal.setProdid(paraMap.get("prodId").toString());
 		
+		//结束日是是产品到期日
 		Date eDate = new Date();
-		if ( paraMap.get("platformDate") != null ) {
-			eDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+		List<SettReportDto> list = settReportMapper.selectProdInfo(paraMap.get("prodId").toString());
+		if ( list!=null && list.size()>0 ) {
+			eDate = holidayService.getNextWorkDate(list.get(0).getmDate());
+		} else {
+			if ( paraMap.get("platformDate") != null ) {
+				eDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+			}
 		}
 		repReveal.setEndDate(eDate);
 		return repReveal;

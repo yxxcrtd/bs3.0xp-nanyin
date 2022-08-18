@@ -1131,3 +1131,9 @@ comment on column DIS_PROD_ADJUST.ADJ_REASON2 is '调整原因2';
 /**上传文件信息 路径字段长度调整 add by zhengxiaolian 2022-08-15 start*/
 ALTER TABLE SYS_UPLOAD_FILE_INFO MODIFY PATH VARCHAR2(2000);
 /**上传文件信息 路径字段长度调整 add by zhengxiaolian 2022-08-15 end*/
+
+
+-- 删除产品不成立信息表主键 add by sunjie 20220817 start
+alter table DIS_PROD_NOCREATE drop constraint DIS_PROD_NOCREATE_PK;--只能在同一个库中执行一次
+-- 删除产品不成立信息表主键 add by sunjie 20220817 end
+commit ;

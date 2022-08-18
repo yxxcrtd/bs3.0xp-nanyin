@@ -1,10 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscgenfiledetail.service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -281,6 +278,23 @@ public class InfoDiscGenFileDetailService {
 				}
 			}
 		}
+		else if (StringUtil.equals(DictCodeListExt2.基准日_到期日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenMDATE(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取开始日结束日方法
+					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
 		else{
 			ProdInfoListEntity prodInfo = null;
 			for (ProdInfoListEntity prodInfoListEntity : prodList) {
@@ -324,7 +338,7 @@ public class InfoDiscGenFileDetailService {
 	 * @throws Exception
 	 */
 	public boolean doInsert(List<ProdInfoListEntity> list, InfoDisclosureReadAndGenEntity infoDisclosureReadAndGenEntity,RepRuleEntity repRule,
-			Map<String, Date> dateMap, boolean runAgainFlag) {
+			Map<String, Date> dateMap, boolean runAgainFlag) throws ParseException {
 	    
 	    boolean flag = false;
 		List<RepInstallFile> revealList = new ArrayList<RepInstallFile>();
@@ -344,6 +358,42 @@ public class InfoDiscGenFileDetailService {
 						||DateUtil.getBetweenDayNumber(repInstallFile.getEndDate(), prodInfoListEntity.getMdate())<90)
 						&&DateUtil.compareDate(prodInfoListEntity.getMdate(), repInstallFile.getEndDate())>0){
 					revealList.add(repInstallFile);
+					if(StringUtil.equals("CP_001_002_015", repRule.getRepId())
+							||StringUtil.equals("CP_001_002_016", repRule.getRepId())){
+						//季报startDate取季度第一天
+						Date endDate=repInstallFile.getEndDate();
+						Date startDate=DateUtil.getFirstDayOfQuarter(endDate);
+						repInstallFile.setStartDate(startDate);
+					}
+
+					if(StringUtil.equals("CP_001_002_017", repRule.getRepId())
+							||StringUtil.equals("CP_001_002_018", repRule.getRepId())){
+						//半年报startDate取半年初第一天
+						Date endDate=repInstallFile.getEndDate();
+
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(endDate);
+						int halfOfYear = calendar.get(2) / 6 + 1;
+						int month = 1;
+						switch (halfOfYear) {
+							case 1:
+								month = 1;
+								break;
+							case 2:
+								month = 7;
+								break;
+						}
+						calendar.set(calendar.get(1), month, 1);
+						repInstallFile.setStartDate(calendar.getTime());
+					}
+
+					if(StringUtil.equals("CP_001_002_019", repRule.getRepId())
+							||StringUtil.equals("CP_001_002_020", repRule.getRepId())){
+						//年报startDate取年初第一天
+						Date endDate=repInstallFile.getEndDate();
+						Date startDate=DateUtil.getFirstDayOfYear(endDate);
+						repInstallFile.setStartDate(startDate);
+					}
 				}
 			}
 //			else if(StringUtil.equals(DictCodeListExt2.报表类别_净值披露.getValue(), repRule.getReportCategory())){
@@ -438,15 +488,15 @@ public class InfoDiscGenFileDetailService {
 		}
 		
 		//TODO 添加根据报表类型直接更改报告期的方法
-		RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repInstallFile.getRepId());
-		if(StringUtil.isNotEmpty(repInfo)&&StringUtil.isNotEmpty(repInfo.getTemplateId())){
-            String temllateId = repInfo.getTemplateId();
-            if(temllateId.equals("CLGG_zx")){
-                repInstallFile.setEndDate(prodInfoListEntity.getVdate());
-            }else if(temllateId.equals("DQGGHB_zx")||temllateId.equals("DQGGJZ_zx")||temllateId.equals("DQGGYQ_zx")){
-                repInstallFile.setEndDate(prodInfoListEntity.getMdate());
-            }
-        }
+//		RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repInstallFile.getRepId());
+//		if(StringUtil.isNotEmpty(repInfo)&&StringUtil.isNotEmpty(repInfo.getTemplateId())){
+//            String temllateId = repInfo.getTemplateId();
+//            if(temllateId.equals("CLGG_zx")){
+//                repInstallFile.setEndDate(prodInfoListEntity.getVdate());
+//            }else if(temllateId.equals("DQGGHB_zx")||temllateId.equals("DQGGJZ_zx")||temllateId.equals("DQGGYQ_zx")){
+//                repInstallFile.setEndDate(prodInfoListEntity.getMdate());
+//            }
+//        }
 		return repInstallFile;
 		
 	}

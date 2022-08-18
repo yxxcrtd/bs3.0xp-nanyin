@@ -119,4 +119,13 @@ public class ReportCheck001Controller extends BaseController {
         return prdInfoSelect;
     }
 
+    @RequestMapping("getReportNameList")
+    @ResponseBody
+    public Page<SelectOptionDto> getReportNameList(){
+        Map<String, Object> param=RequestUtil.getPageParam();
+        Page<SelectOptionDto> prdInfoSelect = reportCheckService.getReportNameList(param);
+        return prdInfoSelect;
+    }
+
+
 }

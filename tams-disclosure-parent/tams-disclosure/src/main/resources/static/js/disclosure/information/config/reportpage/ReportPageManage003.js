@@ -28,13 +28,17 @@
 	}
 
 	$(function() {
+		debugger;
 		var workflowType = $("#workflowType").val();
 		//禁用界面
 		if(workflowType !='01'){
 
 			$("#offRepId").attr("disabled",true);
 			//启用下拉框,不可见
-			$("#startDiv").attr("style","display:none")
+			$("#startDiv").attr("style","display:none");
+			$("#jinyongbitian").attr("style","display:inline");
+		} else {
+			$("#jinyongLabel").attr("style","padding-right:20px");
 		}
 
 		//修建,修改

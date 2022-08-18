@@ -115,6 +115,11 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
             if (StringUtil.isNotEmpty(dto.getProdId())&&dto.getProdId()!="") {
                 Map<String, Object> map = new HashMap<>();
                 map.put("prodId", dto.getProdId());
+                if(StringUtil.isNotEmpty(dto.getEffDateO())){
+                    map.put("effDateO", DateUtil.format(dto.getEffDateO()));
+                }else{
+                    map.put("effDateO", "");
+                }
                 if(StringUtil.isNotEmpty(dto.getEffEndDateO())){
                     map.put("effEndDateO", DateUtil.format(dto.getEffEndDateO()));
                 }else{

@@ -154,8 +154,8 @@ public class ProdAssetInfo001Controller extends BaseController{
         }
         File outFile = commonExportService.makeFile(
                 "/com/joyintech/tams/disclosure/information/config/prodassetinfo/conf/export_conf.xml", prodAssetInfoDtos);
-        String exportFileName=DictCodeListExt3.共通业务类型_产品资产组合情况维护.getCodeName() + GlobalConstant.UNDER_LINE
-                + DateUtil.format(sysDate,"yyyyMMdd") +"."+ FileNameUtil.getFileExtName(outFile);
+        String exportFileName=DictCodeListExt3.共通业务类型_产品资产组合情况维护.getCodeName() + GlobalConstant.OPEN_PARENTHESIS
+                + DateUtil.format(sysDate,"yyyy-MM-dd")+ GlobalConstant.CLOSE_PARENTHESIS +"."+ FileNameUtil.getFileExtName(outFile);
         return ExportUtil.export(exportFileName, outFile, true);
     }
 

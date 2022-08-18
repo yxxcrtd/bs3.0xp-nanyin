@@ -12,6 +12,7 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dao.RepInvestAccount001Mapper;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -78,6 +79,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
     public void doComplete(RepInvestAccountDto entity, OperationType type) {
         entity.setOperateType(type.toString());
         entity.setUpdateTime(DateUtil.now());
+        entity.setUpdateUser(CommonUtil.getUserName());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
             entity.setStatus("E");
             repInvestAccountMapper.insert(entity);

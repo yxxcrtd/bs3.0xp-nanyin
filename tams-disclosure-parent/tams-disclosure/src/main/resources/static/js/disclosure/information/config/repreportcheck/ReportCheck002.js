@@ -14,7 +14,7 @@
                     type: 'select', multiple: false, searchable: true, result: REP_CHECK_TYPE
                 }
             }
-            , { field: 'paramValue', sortable: false, edit: true, title: '阈值' }
+            , { field: 'paramValue', width: 250,sortable: false, edit: true, title: '阈值' }
         ],
         done: function () {
         }

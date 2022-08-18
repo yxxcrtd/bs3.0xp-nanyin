@@ -44,7 +44,7 @@ public interface ReportPageManage001Mapper {
     //删除记录
   	void deleteFromRepScreen(String repId);
 
-	List<ReportPageManage001Dto> getReportInfo();
+	List<ReportPageManage001Dto> getReportInfo(Map<String,String> param);
     
 	ReportPageManage001Dto getReportInputsNew(Map<String, Object> pageParam);
 	/**

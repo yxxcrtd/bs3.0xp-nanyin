@@ -90,6 +90,8 @@
 			   Joyin.alert("请输入参数类型",7);
 			   return;
 		   }
+		   var paramType1Str=$('#paramType1').text();
+		   console.log(paramType1Str)
 
 		   if($('#paramMultiFlag').val()){
 			   param.paramMultiFlag=$('#paramMultiFlag').val();
@@ -98,6 +100,8 @@
 			   Joyin.alert("请输入参数类型",7);
 			   return;
 		   }
+		   var paramMultiFlagStr=$('#paramMultiFlag').text();
+		   console.log(paramMultiFlagStr)
 
 		   var obj = addParam.getAllRows();
 		   var index = 0;

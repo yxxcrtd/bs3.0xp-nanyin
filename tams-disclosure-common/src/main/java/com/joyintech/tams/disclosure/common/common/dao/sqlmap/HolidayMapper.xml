@@ -22,4 +22,15 @@
 	  	) where rownum = 1
 	</select>
 
+	<select id="getAferNWorkDay" resultType="java.util.Date">
+		select busi_date from (
+			select busi_date ,rownum rnm from (
+			  select h.busi_date from CHB_MKT_HOLIDAY h
+			  where h.busi_date &gt; #{busi_date}
+				and h.is_holiday = #{is_holiday}
+				and h.market_code = #{market_code}
+			  order by h.busi_date)
+	  	) where rnm = #{days}
+	</select>
+
 </mapper>

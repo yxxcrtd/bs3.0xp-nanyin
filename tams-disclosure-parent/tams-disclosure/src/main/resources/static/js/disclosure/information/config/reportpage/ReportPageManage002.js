@@ -219,6 +219,7 @@ var ReportPageManage003 = function(global) {
 						searchOnInit : true,
 						loadonce : true,
 						page : false,
+						height:160,
 						cols : [ {
 							field : 'ruleType1Name',
 							title : '字段值',

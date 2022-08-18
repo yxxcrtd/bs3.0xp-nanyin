@@ -1069,3 +1069,23 @@ values ('100000008', '02', '私募分级产品杠杆', '140', '', 'E', 'system',
 insert into REP_DATA_CHECK (CHECK_ID, CHECK_TYPE, CHECK_DESC, PARAM_VALUE1, PARAM_VALUE2,STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('100000009', '08', '现管类产品投资权益类资产占比', '0', '', 'E', 'system', null, sysdate, 'system', sysdate);
 /**数据校验阈值 add by zhengxiaolian 2022-08-16 end**/
+
+/**商品及金融衍生品类修改为商品及衍生品类 add by cuiwei 2022-08-16 start**/
+update sys_datadict_list set item_value = '商品及衍生品类' where dict_code ='INVEST_TYPE' AND ITEM_CODE ='03';
+/**商品及金融衍生品类修改为商品及衍生品类 add by cuiwei 2022-08-16 end**/
+
+/**商品及金融衍生品类修改为商品及衍生品类 add by cuiwei 2022-08-16 start**/
+delete from sys_wfl_business_module where page_id ='ReportPageManage003';
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('ReportPageManage003', 'ReportPageManage003_btn_save', 'fourprocess', 'system', '', sysdate, 'system', sysdate, 'ALL', '02');
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('ReportPageManage003', 'ReportPageManage003_btn_submit', 'fourprocess', 'system', '', sysdate, 'system', sysdate, 'ALL', '02');
+/**商品及金融衍生品类修改为商品及衍生品类 add by cuiwei 2022-08-16 end**/
+
+
+-- add by zhengxiaolian 2022-08-18 信披数据校验比较符数据字典 start
+delete from sys_datadict_list where DICT_CODE='REP_CHECK_TYPE' and ITEM_CODE='09';
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_CHECK_TYPE', '09', '范围控制（同时包含较小和较大的临界值）', 9, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-08-18 信披数据校验比较符数据字典 end

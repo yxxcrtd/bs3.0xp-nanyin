@@ -29,7 +29,8 @@
     		rr.FTP_ID ftpId,
     		rr.IS_REVEAL isReveal,
     		rr.IS_CONFIRM isConfirm,
-    		rr.DETAIL detail
+    		rr.DETAIL detail,
+			rr.MARKET_CODE marketCode
 		FROM
     		REP_RULE rr
 		WHERE
@@ -40,10 +41,11 @@
 	<select id="checkBaseDate" resultType="int">
 		select count(1)
 		from (
-		    select  OPEN_END_DATE
-		    from DIS_PROD_PLAN
-		    where PROD_ID=#{prodId}
-		    and OPEN_END_DATE= TO_DATE(#{baseDate},'yyyy-MM-dd')
+		    select  DPP.OPEN_END_DATE
+		    from DIS_PROD_PLAN DPP
+		    inner join REP_PROD_INFO RPI on DPP.PROD_ID=RPI.P_PROD_ID
+		    where RPI.PROD_ID=#{prodId}
+		    and DPP.OPEN_END_DATE= TO_DATE(#{baseDate},'yyyy-MM-dd')
 		)
 	</select>
 

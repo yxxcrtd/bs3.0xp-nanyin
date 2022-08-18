@@ -339,7 +339,7 @@ public class RepDetailsShow001Contoller extends BaseController {
         	RepReveal repReveal = repDetailsShow001Service.getRepReveal(params);
 			confirmFlag = reportDealService.selectConfirmStatus(repReveal);  
     		if(confirmFlag == true) {  //检查通过：不存在相同的已确认的报告
-    			reportDealService.updateDataStatus(repReveal);  //逻辑删除已生成未确认的
+
     			repDetailsShow001Service.genReport(params);
    				value.setMessage("生成成功", MessageType.提示消息);
     		}else {
@@ -416,6 +416,9 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@ResponseBody
 	public Page<SelectOptionDto> getProdIdList(){
 		Map<String, Object> param=RequestUtil.getPageParam();
+		if(param.get("repId")!=null){
+			repDetailsShow001Service.getRandgeRule2(param);
+		}
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getProdIdList(param);
 		return prdInfoSelect;
 	}

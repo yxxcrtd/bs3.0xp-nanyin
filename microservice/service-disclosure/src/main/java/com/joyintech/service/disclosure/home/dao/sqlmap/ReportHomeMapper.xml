@@ -321,7 +321,7 @@
 		FROM  REP_FTP_PATH  EP 
 		LEFT JOIN (
 			select * from rep_reveal 
-			where CONFIRM_STATUS ='01'
+			where CONFIRM_STATUS ='1'
 			and REVEAL_STATUS='01'
 			and STATUS='E'
 			and to_char(REVEAL_DATE,'yyyy-mm-dd') = #{sysDate,jdbcType=VARCHAR}

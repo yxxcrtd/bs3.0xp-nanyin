@@ -103,7 +103,8 @@ public class SvrProdFeeDealInterf002Controller extends BaseController {
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
 
-        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期
+//        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期
+        Date sysDate = new Date();
         dto.setCreateTime(sysDate);
         dto.setUpdateTime(sysDate);
         dto.setCreateUser(CommonUtil.getUserName());

@@ -542,9 +542,9 @@
             <if test="repProdType != null">
                 REP_PROD_TYPE = #{repProdType,jdbcType=VARCHAR},
             </if>
-            <if test="holdday != null">
+            <!--支持导入固定持有天数为空-->
                 HOLDDAY = #{holdday,jdbcType=DECIMAL},
-            </if>
+
             <if test="trustpart != null">
                 TRUSTPART = #{trustpart,jdbcType=VARCHAR},
             </if>
@@ -776,6 +776,22 @@
             and (PROD_ID like
             concat(concat('%',#{search}),'%')
             or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+
+    <select id="queryPprodName" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+        prod.PROD_ID id,
+        case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        else prod.PROD_NAME end text
+        from
+        REP_PROD_INFO prod
+        left join REP_PROD_INFO pprod
+        on prod.p_prod_id = pprod.prod_id
+        where prod.STATUS='E'
+        <if test="search != null and search != ''">
+            and (prod.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+            or prod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
         </if>
     </select>
 

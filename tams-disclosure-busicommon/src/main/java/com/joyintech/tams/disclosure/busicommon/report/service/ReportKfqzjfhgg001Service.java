@@ -235,8 +235,6 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         announceDate = DateUtil.addDay(DateUtil.parse(baseDate), 1);
                     }
                     reportKfqzjfhgg001Dto.setAnnounceT(DateUtil.format(announceDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-                    //跑批日
-                    reportKfqzjfhgg001Dto.setEnddate(DateUtil.format(announceDate));
                     logger.info("开放、净值及分红公告【{}】生成成功", JsonUtils.object2Json(paraMap));
                 } else {
                     logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】", JsonUtils.object2Json(paraMap));
@@ -245,6 +243,8 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
         } catch (Exception e) {
             logger.error("开放、净值及分红公告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
+        //跑批日
+        reportKfqzjfhgg001Dto.setEnddate(baseDate);
         resultMap.add(ReportCollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
         return resultMap;
     }

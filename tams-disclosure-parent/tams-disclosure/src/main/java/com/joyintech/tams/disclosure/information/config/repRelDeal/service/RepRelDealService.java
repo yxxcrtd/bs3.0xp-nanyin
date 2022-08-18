@@ -79,6 +79,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
     public void doComplete(RepRelDealDto entity, OperationType type) {
         entity.setOperateType(type.toString());
         entity.setUpdateTime(DateUtil.now());
+        entity.setUpdateUser(CommonUtil.getUserName());
         if(StringUtil.isEmpty(entity.getCreateDept())){
             entity.setCreateDept("");
         }
@@ -297,11 +298,11 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             }
         }
         if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
+            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，请检查文件！";
         }
         Map<String, Object> resultMap = new HashMap<>();
         if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
+            resultMap.put("errorMsg", totalMsg);
         }
 
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));

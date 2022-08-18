@@ -46,4 +46,9 @@ public interface ReportPageManage002Mapper {
     int getInfoStatusInFlow(ReportStatusDto dto);
 
     int getInfoStatusBeforeEffdate(ReportStatusDto dto);
+
+    /**
+     *	模板状态,获取小于当前日期最近一次已生效的模板状态记录
+     **/
+    String getLastedInfoStatus(Map<String,Object> paramMap);
 }

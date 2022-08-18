@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.BokBalance;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dto.SettReportDto;
 
 /**
  * 报表查询
@@ -30,6 +30,6 @@ import com.joyintech.tams.common.base.entity.RepProdInfo;
 public interface SettReportMapper{
 	public List<BokBalance> selectBokBalance(Map<String,Object> params );
 	
-	public List<RepProdInfo> selectProdInfo(@Param("prodId") String prodId );
+	public List<SettReportDto> selectProdInfo(@Param("prodId") String prodId );
 	
 }

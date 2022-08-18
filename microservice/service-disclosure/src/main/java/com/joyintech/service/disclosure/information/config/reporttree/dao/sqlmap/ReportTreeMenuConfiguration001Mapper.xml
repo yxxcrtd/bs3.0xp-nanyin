@@ -147,7 +147,7 @@
 			AND REPORT_NAME LIKE '%' || #{reportName,jdbcType=VARCHAR}
 			|| '%'
 		</if>
-		ORDER BY REP_INFO.CREATE_TIME desc
+		ORDER BY REP_INFO.CREATE_TIME desc,REP_INFO.REP_ID
 	</select>
 	<insert id="getAddAll">
 		insert into REP_TREE

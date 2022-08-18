@@ -100,30 +100,30 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(flieName)) {
             // 检查文件名是否包含产品资产组合情况导入
-            if (flieName.indexOf("产品资产组合情况导入") != -1) {
-                ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(flieName),
-                        null);
-                List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
-                // 检查读出信息是否为空
-                if (null != dataList && dataList.size() > 0) {
-                    // 文件内容检查
-                    List<ExcelValidDto> checkResult = new ArrayList<>();
-                    List<ProdAssetInfoDto> entities = new ArrayList<>(dataList.size());
-                    checkResult = convertToEntity(dataList, entities);
-                    if (checkResult.isEmpty()) {
-                        dealAfterCheck(entities);
-                    }
-                    return checkResult;
-                }else{
-                    checkFileResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-                            "文件内容为空,没有需要导入的数据！"));
-                    return checkFileResult;
+//            if (flieName.indexOf("产品资产组合情况导入") != -1) {
+            ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(flieName),
+                    null);
+            List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
+            // 检查读出信息是否为空
+            if (null != dataList && dataList.size() > 0) {
+                // 文件内容检查
+                List<ExcelValidDto> checkResult = new ArrayList<>();
+                List<ProdAssetInfoDto> entities = new ArrayList<>(dataList.size());
+                checkResult = convertToEntity(dataList, entities);
+                if (checkResult.isEmpty()) {
+                    dealAfterCheck(entities);
                 }
-            } else {
+                return checkResult;
+            }else{
+                checkFileResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                        "文件内容为空,没有需要导入的数据！"));
+                return checkFileResult;
+            }
+            /*} else {
                 checkFileResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                         getMessage("BUSS_COM_E_0002", "产品资产组合情况导入")));
                 return checkFileResult;
-            }
+            }*/
         }
         return null;
     }

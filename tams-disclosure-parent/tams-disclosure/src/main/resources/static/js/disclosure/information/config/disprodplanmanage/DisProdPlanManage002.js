@@ -40,6 +40,13 @@ $(function() {
 	 * 修改/新建
 	 */
 	var saveOrSubmit = function(operateType) {
+		var holdDays = $('#holdDays').val();
+		if(holdDays != "" && holdDays != null ){
+			if(holdDays <= 0){
+				Joyin.error("客户实际持有天数只能填写大于0的整数");
+				return;
+			}
+		}
 		var object = $.serializeToObject('#submitForm');
 		if (upFileName) {
 			object.indexValue = upFileName;
@@ -204,7 +211,7 @@ $(function() {
 		if (openStartDate && openEndDate){
 			var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate))/(24*60*60*1000);
 			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("开放结束日必须小于开放开始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+				Joyin.error(JoyinUtil.getMessage("开放结束日必须大于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
 				$('#openEndDate').val('');
 			}
 		}
@@ -254,10 +261,16 @@ $(function() {
 		// 	}
 		// }
 		var openStartDate = $('#openStartDate').val();
-		if(operationStartDate){
-			if($('#operationStartDate').val() < platDate){
-				Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-				$('#operationStartDate').val('');
+		if(pageModel == PAGE_MODEL_EDIT){
+			if(operationStartDate < platDate){
+				// if($('#operationStartDate').val() < platDate){
+				// 	Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+				// 	$('#operationStartDate').val('');
+				// }
+				$('#openStartDate').prop('disabled',true);
+				$('#openEndDate').prop('disabled',true);
+				$('#operationStartDate').prop('disabled',true);
+				$('#collingoffPeriod').prop('disabled',true);
 			}
 		}
 		if(operationStartDate && openStartDate){
@@ -304,13 +317,19 @@ $(function() {
 
 	// 修改 客户实际持有天数
 	function changeHoldDays(){
-		debugger;
 		// 当“是否是开放周期型产品”为“是”时必填，否则置灰不可填，且不能小于该条数据的运作起始日
 		if(issuingWay !=null && issuingWay =='01' && isPeriod !=null && isPeriod =='01' ){
 			$('#holdDays').attr("disabled",false);
 		}else{
 			$('#holdDays').val('');
 			$('#holdDays').attr("disabled",true);
+		}
+		var holdDays = $('#holdDays').val();
+		if(holdDays != "" && holdDays != null ){
+			if(holdDays <= 0){
+				Joyin.error("客户实际持有天数只能填写大于0的整数");
+				$('#holdDays').val('');
+			}
 		}
 		// if(pageModel == PAGE_MODEL_EDIT){
 		// 	if($('#autoRedeemDate').val() != '' && $('#autoRedeemDate').val() != null){
@@ -348,7 +367,9 @@ $(function() {
 	$('#autoRedeemDate').change(function(){
 		changeAutoRedeemDate();
 	});
-
+	$('#holdDays').change(function(){
+		changeHoldDays();
+	});
 
 	$(function() {
 		// 规则1改变事件
@@ -361,6 +382,22 @@ $(function() {
 			saveOrSubmit('submit');
 		});
 
+		$('#operationStartDate,#openEndDate').change(function () {
+			if ($('#operationStartDate').val() && $('#openEndDate').val()){
+				if ($('#operationStartDate').val() <$('#openEndDate').val() ){
+					Joyin.error("产品运作起始日不能小于开放期结束日！");
+				}
+			}
+		});
+		$('#operationStartDate,#autoRedeemDate').change(function () {
+			debugger;
+			if ($('#operationStartDate').val() && $('#autoRedeemDate').val()){
+				if ($('#operationStartDate').val() <platDate && platDate < $('#autoRedeemDate').val() ){
+					$('#collingoffPeriod').attr('disabled',true);
+				}
+			}
+
+		});
 		var finprodId = $('#finprodId').val();
 		if(finprodId !=null && finprodId !='' && finprodId.length>0){
 			finprodIdChange();
