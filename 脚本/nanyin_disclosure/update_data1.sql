@@ -1076,3 +1076,76 @@ update sys_datadict_list_link set item_code = '04' where dict_code = 'DIS_PROFIT
 
 update sys_datadict_list_link set item_code = '03' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE' and item_code = '01';
 update sys_datadict_list_link set item_code = '04' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE' and item_code = '02';
+
+-- NYLCXP-741 信息披露菜单放置路径及导航请根据需求提供文档调整 add by sunjie 20220818 start
+delete from SYS_MENU where MENU_ID ='REPORT_006_003';
+update SYS_MENU set ORDER_NO =1 , REMARK = '信披合规管理' WHERE MENU_ID = 'REPORT_006_005'; --信披合规管理二级菜单
+
+delete from SYS_MENU where MENU_ID = 'REPORT_006_001_005';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_005_100', 'DIS', null, 'REPORT_006_005', 'ReportPageManage001', 2, '02', '模板启用管理', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_005_100' where PAGE_ID = 'ReportPageManage001';
+
+update SYS_MENU set ORDER_NO =2  WHERE MENU_ID = 'REPORT_006_001'; --报表配置二级菜单
+delete from SYS_MENU where MENU_ID = 'REPORT_006_002_003';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_001_100', 'DIS', null, 'REPORT_006_001', 'ReportRule001', 50, '02', '报表规则设置', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_001_100' where PAGE_ID = 'ReportRule001';
+
+delete from SYS_MENU where MENU_ID = 'REPORT_006_002_001';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_001_101', 'DIS', null, 'REPORT_006_001', 'ReportWorkManage001', 50, '02', '报表作业管理', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_001_101' where PAGE_ID = 'ReportWorkManage001';
+
+delete from SYS_MENU where MENU_ID = 'REPORT_006_002_002';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_001_102', 'DIS', null, 'REPORT_006_001', 'ReportWorkMonitor001', 50, '02', '报表作业监控', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_001_102' where PAGE_ID = 'ReportWorkMonitor001';
+
+update SYS_MENU set ORDER_NO =3 , REMARK = '数据维护' WHERE MENU_ID = 'REPORT_006_004';--数据维护二级菜单
+
+delete from SYS_MENU where MENU_ID = 'REPORT_006_001_003';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_100', 'DIS', null, 'REPORT_006_004', 'ReportContentEnum001', 50, '02', '报表指标管理', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_004_100' where PAGE_ID = 'ReportContentEnum001';
+
+update SYS_MENU set ORDER_NO =4  WHERE MENU_ID = 'REPORT_006_002'; --报表管理二级菜单
+delete from SYS_MENU where MENU_ID = 'REPORT_006_003_001';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_100', 'DIS', null, 'REPORT_006_002', 'RepDetailsShow001', 1, '02', '报表生成管理', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_MENU where MENU_ID = 'REPORT_006_003_005';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_101', 'DIS', null, 'REPORT_006_002', 'ReportCheck001', 2, '02', '报表数据校验', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_002_101' where PAGE_ID = 'ReportCheck001';
+
+delete from SYS_MENU where MENU_ID = 'REPORT_006_003_002';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_102', 'DIS', null, 'REPORT_006_002', 'ReportConfirmManage001', 3, '02', '报表确认管理', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_002_102' where PAGE_ID = 'ReportConfirmManage001';
+
+delete from SYS_MENU where MENU_ID = 'REPORT_006_003_003';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_103', 'DIS', null, 'REPORT_006_002', 'ReportRevealManage001', 4, '02', '报表披露管理', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_002_103' where PAGE_ID = 'ReportRevealManage001';
+
+delete from SYS_MENU where MENU_ID = 'REPORT_006_003_004';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_004', 'DIS', null, 'REPORT_006_002', 'EstimateReveal001', 5, '02', '预计披露', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'REPORT_006_002_004' where PAGE_ID = 'EstimateReveal001';
+
+update SYS_MENU set ORDER_NO =1 , REMARK = '权限管理' WHERE MENU_ID = 'SYSTEM_001_001';
+update SYS_MENU set ORDER_NO =3 , REMARK = '投组批处理' WHERE MENU_ID = 'SYSTEM_001_003';
+
+delete from SYS_MENU where MENU_ID = 'SYSTEM_001_005_001';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('SYSTEM_001_003_100', 'DIS', null, 'SYSTEM_001_003', 'Workflow001', 1, '02', '工作流配置', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'SYSTEM_001_003_100' where PAGE_ID = 'Workflow001';
+
+delete from SYS_MENU where MENU_ID = 'SYSTEM_001_004_001';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('SYSTEM_001_003_101', 'DIS', null, 'SYSTEM_001_003', 'SysDataDict001', 2, '02', '数据字典管理', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'SYSTEM_001_003_101' where PAGE_ID = 'SysDataDict001';
+
+delete from SYS_MENU where MENU_ID = 'SYSTEM_001_005_002';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('SYSTEM_001_003_102', 'DIS', null, 'SYSTEM_001_003', 'SysWflBusinessModule001', 3, '02', '工作流管理', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'SYSTEM_001_003_102' where PAGE_ID = 'SysWflBusinessModule001';
+
+update SYS_MENU set ORDER_NO =4 , REMARK = '批处理配置' WHERE MENU_ID = 'SYSTEM_001_005';
+delete from SYS_MENU where MENU_ID = 'SYSTEM_001_003_004';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('SYSTEM_001_005_100', 'DIS', null, 'SYSTEM_001_005', 'SysBatchProcess001', 3, '02', '批处理配置', 'system', null, sysdate, 'system', sysdate);
+update SYS_PAGE set MENU_ID = 'SYSTEM_001_005_100' where PAGE_ID = 'SysBatchProcess001';
+update SYS_MENU set ORDER_NO =5   WHERE MENU_ID = 'SYSTEM_001_004';
+
+delete from SYS_MENU where MENU_ID ='SYSTEM_001_012';--删除自定义报表二级菜单
+-- NYLCXP-741 信息披露菜单放置路径及导航请根据需求提供文档调整 add by sunjie 20220818 end
+
+commit;
