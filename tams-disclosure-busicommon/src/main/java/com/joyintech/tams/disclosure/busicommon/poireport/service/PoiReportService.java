@@ -1099,6 +1099,33 @@ public class PoiReportService {
 						}
 
 					}
+					//	当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须等于0% 100000009
+					if(StringUtil.equals(prodInfo.getProdType(),DictCodeListExt5.信披产品类型_现管类产品.getValue())){
+						RepDataCheck repDataCheck2=checkMap.get("100000009").get(0);
+						//穿透前
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
+							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
+							String tips1="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前占比";
+							String s1=this.singleCheck(repDataCheck2,equityPreRatio,tips1);
+							if (StringUtil.isNotEmpty(s1)) {
+								resultSb.append((index++)+"："+s1+"<br>");
+							}
+						}else{
+							resultSb.append((index++)+"："+"权益类穿透前占比未获取到"+"<br>");
+						}
+						//穿透后
+						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
+							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
+							String tips2="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透后占比";
+							String s2=this.singleCheck(repDataCheck2,equityAfterRatio,tips2);
+							if (StringUtil.isNotEmpty(s2)) {
+								resultSb.append((index++)+"："+s2+"<br>");
+							}
+						}else{
+							resultSb.append((index++)+"："+"权益类穿透后占比未获取到"+"<br>");
+						}
+					}
+
 				}
 
 					if(StringUtil.equals(rptType,DisReportType.BNDBG_ZSX)
@@ -1125,7 +1152,6 @@ public class PoiReportService {
 						}
 
 						//	当“产品类型”为“现管类产品”时，“报告期末产品杠杆水平”小于等于120； 100000006
-						//	当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须等于0% 100000009
 						if(StringUtil.equals(prodInfo.getProdType(),DictCodeListExt5.信披产品类型_现管类产品.getValue())){
 							RepDataCheck repDataCheck=checkMap.get("100000006").get(0);
 							if(StringUtil.isNotEmpty(dataMap.get("leverage"))){
@@ -1137,30 +1163,6 @@ public class PoiReportService {
 								}
 							}else {
 								resultSb.append((index++)+"："+"报告期末产品杠杆水平未获取到"+"<br>");
-							}
-
-							RepDataCheck repDataCheck2=checkMap.get("100000009").get(0);
-							//穿透前
-							if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
-								BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
-								String tips1="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前占比";
-								String s1=this.singleCheck(repDataCheck2,equityPreRatio,tips1);
-								if (StringUtil.isNotEmpty(s1)) {
-									resultSb.append((index++)+"："+s1+"<br>");
-								}
-							}else{
-								resultSb.append((index++)+"："+"权益类穿透前占比未获取到"+"<br>");
-							}
-							//穿透后
-							if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
-								BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
-								String tips2="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透后占比";
-								String s2=this.singleCheck(repDataCheck2,equityAfterRatio,tips2);
-								if (StringUtil.isNotEmpty(s2)) {
-									resultSb.append((index++)+"："+s2+"<br>");
-								}
-							}else{
-								resultSb.append((index++)+"："+"权益类穿透后占比未获取到"+"<br>");
 							}
 
 						}
