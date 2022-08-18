@@ -84,11 +84,11 @@ public class ReportRevealEndDateService {
 		if (rptType.equals(DisReportType.FHJSQD)) { // 分红计算清单，当期收益分配基准日
 			Map<String,Object> paraMap = new HashMap<>();
 			paraMap.put("prodId", busiId);
-			map.put("当期收益分配基准日", repReveal.getEndDate());
+			map.put(当期收益分配基准日, repReveal.getEndDate());
         } else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
         	map.put(到期日, repReveal.getEndDate());	
 		} else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
-			map.put("当期收益分配基准日", repReveal.getEndDate());
+			map.put(当期收益分配基准日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
 				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
 				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)) { // 定期公告-季度/半年度/年度报告指数型和非指数型

@@ -278,6 +278,7 @@ public class SettReportDataService implements IReportDataService {
 			listResult.get(0).put("genDate_xx","");
 			listResult.get(0).put("deposit_xx","");
 			listResult.get(0).put("startDate_xx","");			
+			listResult.get(0).put("eDate_xx","");
 		}
 		return listResult;
 	}

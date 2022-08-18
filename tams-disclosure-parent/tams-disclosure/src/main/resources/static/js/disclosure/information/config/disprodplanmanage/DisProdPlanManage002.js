@@ -261,10 +261,12 @@ $(function() {
 		// 	}
 		// }
 		var openStartDate = $('#openStartDate').val();
-		if(operationStartDate){
-			if($('#operationStartDate').val() < platDate){
-				Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-				$('#operationStartDate').val('');
+		if(pageModel == PAGE_MODEL_EDIT){
+			if(operationStartDate){
+				if($('#operationStartDate').val() < platDate){
+					Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+					$('#operationStartDate').val('');
+				}
 			}
 		}
 		if(operationStartDate && openStartDate){
