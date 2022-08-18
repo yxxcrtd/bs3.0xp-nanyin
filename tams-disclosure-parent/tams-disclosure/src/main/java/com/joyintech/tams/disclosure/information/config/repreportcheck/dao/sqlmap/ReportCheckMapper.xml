@@ -314,7 +314,7 @@
         rrc.UPDATE_TIME updateTime,
         rrc.CREATE_TIME createTime
         FROM REP_REPORT_CHECK rrc
-        inner join REP_PROD_INFO rri on rrc.PROD_ID=rri.P_PROD_ID and rri.REP_PROD_TYPE in('01')
+        inner join REP_PROD_INFO rri on rrc.PROD_ID=rri.PROD_ID and rri.REP_PROD_TYPE in('01')
         where rrc.DATA_STATUS ='E'
         <if test="prodIdArr != null and prodIdArr.size > 0">
             AND (rri.PROD_ID IN
