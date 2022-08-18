@@ -262,11 +262,15 @@ $(function() {
 		// }
 		var openStartDate = $('#openStartDate').val();
 		if(pageModel == PAGE_MODEL_EDIT){
-			if(operationStartDate){
-				if($('#operationStartDate').val() < platDate){
-					Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-					$('#operationStartDate').val('');
-				}
+			if(operationStartDate < platDate){
+				// if($('#operationStartDate').val() < platDate){
+				// 	Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+				// 	$('#operationStartDate').val('');
+				// }
+				$('#openStartDate').prop('disabled',true);
+				$('#openEndDate').prop('disabled',true);
+				$('#operationStartDate').prop('disabled',true);
+				$('#collingoffPeriod').prop('disabled',true);
 			}
 		}
 		if(operationStartDate && openStartDate){
