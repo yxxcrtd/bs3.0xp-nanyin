@@ -36,6 +36,7 @@
 	<select id="selectProdChildren" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
 		select
 		info.PROD_ID
+		,info.P_PROD_ID
 		,INFO.PROD_NAME
 		,INFO.PROD_RE
 		,INFO.ISSUING_WAY
@@ -222,7 +223,7 @@
 		from REP_PROD_INFO info
 		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID 
 		where 1=1
-			and info.REP_PROD_TYPE in ('02','03')  /**单产品或者子产品**/
+			and info.REP_PROD_TYPE in ('01','02')  /**目产品或单产品**/
 		<if test="prodId!=null">
 			and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
