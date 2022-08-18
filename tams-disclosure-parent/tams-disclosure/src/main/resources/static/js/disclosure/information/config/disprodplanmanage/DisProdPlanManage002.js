@@ -384,6 +384,14 @@ $(function() {
 					Joyin.error("产品运作起始日不能小于开放期结束日！");
 				}
 			}
+		});
+		$('#operationStartDate,#autoRedeemDate').change(function () {
+			debugger;
+			if ($('#operationStartDate').val() && $('#autoRedeemDate').val()){
+				if ($('#operationStartDate').val() <platDate && platDate < $('#autoRedeemDate').val() ){
+					$('#collingoffPeriod').attr('disabled',true);
+				}
+			}
 
 		});
 		var finprodId = $('#finprodId').val();

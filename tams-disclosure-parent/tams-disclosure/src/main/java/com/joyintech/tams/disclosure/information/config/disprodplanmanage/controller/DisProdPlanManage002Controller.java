@@ -206,7 +206,7 @@ public class DisProdPlanManage002Controller extends BaseController {
 			if(DateUtil.compareDate(dto.getCollingoffPeriod(),dto.getOpenEndDate()) <= 0 ){
 				return new AjaxResult("产品冷静期必须大于开放结束日！", MessageType.错误消息);
 			}
-			if(DateUtil.compareDate(dto.getOperationStartDate(),dto.getCollingoffPeriod()) <= 0 ){
+			if(dto.getOperationStartDate()!=null &&DateUtil.compareDate(dto.getOperationStartDate(),dto.getCollingoffPeriod()) <= 0 ){
 				return new AjaxResult("产品冷静期必须小于运作起始日！", MessageType.错误消息);
 			}
 		}
