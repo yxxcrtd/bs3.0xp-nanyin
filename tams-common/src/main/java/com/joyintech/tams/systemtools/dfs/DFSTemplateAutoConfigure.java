@@ -13,6 +13,7 @@ package com.joyintech.tams.systemtools.dfs;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 /**
  *  自动装配文件配置
@@ -34,6 +35,7 @@ public class DFSTemplateAutoConfigure {
 	private int dfstype;
 
 	@Bean
+	@DependsOn({"springContextUtil"})
 	public JoyinDFSTemplate getJoyinFileSystemMethod() {
 		if (SFTP_DFS_TYPE == dfstype) {
 			// 使用SFTP存储
