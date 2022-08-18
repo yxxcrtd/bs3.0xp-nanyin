@@ -948,7 +948,7 @@ public class PoiReportService {
 					//	当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前及穿透后占比必须大于等于80%； 100000001
 					if(StringUtil.equals(prodInfo.getNatureInvest(), DictCodeListExt5.信披投资性质_固定收益类.getValue())){
 						RepDataCheck repDataCheck=checkMap.get("100000001").get(0);
-						String tips1="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前占比必须";
+						String tips1="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前占比";
 						//穿透前
 						if(StringUtil.isNotEmpty(prodAssetComb.get("fixPreRatio"))){
 							BigDecimal fixPreRatio=(BigDecimal)prodAssetComb.get("fixPreRatio");
@@ -961,7 +961,7 @@ public class PoiReportService {
 						}
 						//穿透后
 						if(StringUtil.isNotEmpty(prodAssetComb.get("fixAfterRatio"))){
-							String tips2="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透后占比必须";
+							String tips2="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透后占比";
 							BigDecimal fixAfterRatio=(BigDecimal)prodAssetComb.get("fixAfterRatio");
 							String s2=this.singleCheck(repDataCheck,fixAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
@@ -977,7 +977,7 @@ public class PoiReportService {
 						//穿透前
 						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
 							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
-							String tips1="当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透前占比必须";
+							String tips1="当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透前占比";
 							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
 							if (StringUtil.isNotEmpty(s1)) {
 								resultSb.append((index++)+"："+s1+"<br>");
@@ -988,7 +988,7 @@ public class PoiReportService {
 						//穿透后
 						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
 							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
-							String tips2="当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透后占比必须";
+							String tips2="当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透后占比";
 							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append((index++)+"："+s2+"<br>");
@@ -1004,7 +1004,7 @@ public class PoiReportService {
 						//穿透前
 						if(StringUtil.isNotEmpty(prodAssetComb.get("fdPreRatio"))){
 							BigDecimal fdPreRatio=(BigDecimal)prodAssetComb.get("fdPreRatio");
-							String tips1="当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前占比必须";
+							String tips1="当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前占比";
 							String s1=this.singleCheck(repDataCheck,fdPreRatio,tips1);
 							if (StringUtil.isNotEmpty(s1)) {
 								resultSb.append((index++)+"："+s1+"<br>");
@@ -1016,7 +1016,7 @@ public class PoiReportService {
 						//穿透后
 						if(StringUtil.isNotEmpty(prodAssetComb.get("fdAfterRatio"))){
 							BigDecimal fdAfterRatio=(BigDecimal)prodAssetComb.get("fdAfterRatio");
-							String tips2="当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透后占比必须";
+							String tips2="当产品的“投资性质”为“商品及衍生品类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透后占比";
 							String s2=this.singleCheck(repDataCheck,fdAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append((index++)+"："+s2+"<br>");
@@ -1032,7 +1032,7 @@ public class PoiReportService {
 						//穿透前
 						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
 							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
-							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透前占比必须";
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透前占比";
 							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
 							if (StringUtil.isNotEmpty(s1)) {
 								resultSb.append((index++)+"："+s1+"<br>");
@@ -1043,7 +1043,7 @@ public class PoiReportService {
 						//穿透后
 						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
 							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
-							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透后占比必须";
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透后占比";
 							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append((index++)+"："+s2+"<br>");
@@ -1055,7 +1055,7 @@ public class PoiReportService {
 						//穿透前
 						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
 							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
-							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-权益类穿透前占比必须";
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-权益类穿透前占比";
 							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
 							if (StringUtil.isNotEmpty(s1)) {
 								resultSb.append((index++)+"："+s1+"<br>");
@@ -1066,7 +1066,7 @@ public class PoiReportService {
 						//穿透后
 						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
 							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
-							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-权益类穿透后占比必须";
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-权益类穿透后占比";
 							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append((index++)+"："+s2+"<br>");
@@ -1078,7 +1078,7 @@ public class PoiReportService {
 						//穿透前
 						if(StringUtil.isNotEmpty(prodAssetComb.get("fdPreRatio"))){
 							BigDecimal fdPreRatio=(BigDecimal)prodAssetComb.get("fdPreRatio");
-							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前占比必须";
+							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透前占比";
 							String s1=this.singleCheck(repDataCheck,fdPreRatio,tips1);
 							if (StringUtil.isNotEmpty(s1)) {
 								resultSb.append((index++)+"："+s1+"<br>");
@@ -1089,7 +1089,7 @@ public class PoiReportService {
 						if(StringUtil.isNotEmpty(prodAssetComb.get("fdAfterRatio"))){
 							//穿透后
 							BigDecimal fdAfterRatio=(BigDecimal)prodAssetComb.get("fdAfterRatio");
-							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透后占比必须";
+							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-商品及衍生品类穿透后占比";
 							String s2=this.singleCheck(repDataCheck,fdAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append((index++)+"："+s2+"<br>");
@@ -1143,7 +1143,7 @@ public class PoiReportService {
 							//穿透前
 							if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
 								BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
-								String tips1="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前占比必须";
+								String tips1="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透前占比";
 								String s1=this.singleCheck(repDataCheck2,equityPreRatio,tips1);
 								if (StringUtil.isNotEmpty(s1)) {
 									resultSb.append((index++)+"："+s1+"<br>");
@@ -1154,7 +1154,7 @@ public class PoiReportService {
 							//穿透后
 							if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
 								BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
-								String tips2="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透后占比必须";
+								String tips2="当“产品类型”为“现管类”时，【报告期末产品资产组合情况】-权益类穿透后占比";
 								String s2=this.singleCheck(repDataCheck2,equityAfterRatio,tips2);
 								if (StringUtil.isNotEmpty(s2)) {
 									resultSb.append((index++)+"："+s2+"<br>");
@@ -1313,7 +1313,7 @@ public class PoiReportService {
 
 				repReportCheckMapper.insertSelective(repReportCheck);
 
-				resultSb.append("点击“确认”按钮，可通过在线编辑的形式对当前报表进行编辑");
+				resultSb.append("<br>点击“确认”按钮，可对当前报表详情进行预览");
 			}
 		}
 
@@ -1325,46 +1325,52 @@ public class PoiReportService {
 		if(StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于.getValue())){
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)>=0){
-				result=tips+"小于"+repDataCheck.getParamValue1();
+				result=tips+"必须小于"+repDataCheck.getParamValue1();
 			}
 		} else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_小于等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)>0){
-				result=tips+"小于等于"+repDataCheck.getParamValue1();
+				result=tips+"必须小于等于"+repDataCheck.getParamValue1();
 			}
 		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)<=0){
-				result=tips+"大于"+repDataCheck.getParamValue1();
+				result=tips+"必须大于"+repDataCheck.getParamValue1();
 			}
 		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_大于等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)<0){
-				result=tips+"大于等于"+repDataCheck.getParamValue1();
+				result=tips+"必须大于等于"+repDataCheck.getParamValue1();
 			}
 		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_不包含临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<0)){
-				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"内";
+				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（不含）,"+repDataCheck.getParamValue2()+"（不含）内";
 			}
 
 		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较小的临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>=0&&val.compareTo(paramValue2)<0)){
-				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（含）,"+repDataCheck.getParamValue2()+"内";
+				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（含）,"+repDataCheck.getParamValue2()+"（不含）内";
 			}
 		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_包含较大的临界值.getValue())) {
 			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
 			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
 			if(!(val.compareTo(paramValue1)>0&&val.compareTo(paramValue2)<=0)){
-				result=tips+"不在区间"+repDataCheck.getParamValue1()+","+repDataCheck.getParamValue2()+"（含）内";
+				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（不含）,"+repDataCheck.getParamValue2()+"（含）内";
 			}
 		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_等于.getValue())) {
 			BigDecimal compareVal=new BigDecimal(repDataCheck.getParamValue1());
 			if(val.compareTo(compareVal)!=0){
-				result=tips+"等于"+repDataCheck.getParamValue1();
+				result=tips+"必须等于"+repDataCheck.getParamValue1();
+			}
+		}else if (StringUtil.equals(repDataCheck.getCheckType(),DictCodeListExt5.信披数据校验比较符_范围控制_同时包含较小和较大的临界值.getValue())) {
+			BigDecimal paramValue1=new BigDecimal(repDataCheck.getParamValue1());
+			BigDecimal paramValue2=new BigDecimal(repDataCheck.getParamValue2());
+			if(!(val.compareTo(paramValue1)>=0&&val.compareTo(paramValue2)<=0)){
+				result=tips+"不在区间"+repDataCheck.getParamValue1()+"（含）,"+repDataCheck.getParamValue2()+"（含）内";
 			}
 		}
 
