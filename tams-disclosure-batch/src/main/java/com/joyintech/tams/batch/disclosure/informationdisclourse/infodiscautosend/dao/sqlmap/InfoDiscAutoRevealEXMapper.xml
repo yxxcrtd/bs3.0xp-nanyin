@@ -2,8 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautosend.dao.InfoDiscAutoRevealEXMapper">
+
 	<select id="getRepRevealList" resultType="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautosend.dao.dto.InfoDiscAutoRevealDto">
-SELECT
+	SELECT
+		reveal.ID id,
+		reveal.REP_ID repId,
+		reveal.REPORT_NAME reportName,
+		reveal.REPORT_CATEGORY reportCategory,
+		reveal.PROD_NAME prodName,
+		reveal.PRODID prodid,
+		reveal.END_DATE endDate,
+		reveal.START_DATE startDate,
+		reveal.SYS_FILENAME sysFilename,
+		reveal.SYS_FILEPATH sysFilepath,
+		reveal.SYS_FILENAME_DATE sysFilenameDate,
+		reveal.FILEPATH filepath,
+		reveal.TIME time,
+		reveal.FILENAME filename,
+		reveal.CONFIRM_STATUS confirmStatus,
+		reveal.CONFIRM_USER confirmUser,
+		reveal.CONFIRM_DATE confirmDate,
+		reveal.REVEAL_STATUS revealStatus,
+		reveal.REVEAL_DATE revealDate,
+		reveal.REVEAL_USER revealUser,
+		reveal.IS_REVEAL isReveal,
+		reveal.IS_CONFIRM isConfirm,
+		reveal.DETAIL detail,
+		reveal.REVEAL_CHANNEL revealChannel,
+		reveal.STATUS status,
+		reveal.REVEAL_END_DATE revealEndDate
+	FROM
+	REP_REVEAL reveal
+	WHERE 1=1
+	and reveal.REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR}
+	AND reveal.CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
+	AND reveal.STATUS = 'E'
+	AND reveal.IS_REVEAL = #{isReveal,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="getRepRevealListWithSaleAgency" resultType="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautosend.dao.dto.InfoDiscAutoRevealDto">
+	SELECT
 		reveal.ID id,
 		reveal.REP_ID repId,
 		reveal.REPORT_NAME reportName,
@@ -31,16 +70,19 @@ SELECT
 		reveal.STATUS status,
 		reveal.REVEAL_END_DATE revealEndDate,
 		dsa.AGENCY_NAME saleAgency
-		FROM
-		REP_REVEAL reveal
-		LEFT JOIN DIS_PROD_AGENCY dpa on dpa.PROD_ID = reveal.PRODID
-		LEFT JOIN DIS_SALE_AGENCY dsa on dsa.SEQUENCE_NO = dpa.AGENCY_ID
-		WHERE 1=1
-		and dsa.AGENCY_NAME is not null
-		and reveal.REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR}
-		AND reveal.CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
-		AND reveal.STATUS = 'E'
-		AND reveal.IS_REVEAL = #{isReveal,jdbcType=VARCHAR}
+	FROM REP_REVEAL reveal
+	left join REP_PROD_INFO info on reveal.PRODID=info.PROD_ID
+	LEFT JOIN DIS_PROD_AGENCY dpa on dpa.PROD_ID = nvl(info.P_PROD_ID,info.PROD_ID)
+	LEFT JOIN DIS_SALE_AGENCY dsa on dsa.SEQUENCE_NO = dpa.AGENCY_ID
+	WHERE 1=1
+	and dsa.AGENCY_NAME is not null
+	<if test="ids != null and ids.size()>0">
+		AND	reveal.id in
+		<foreach collection="ids" item="item" open="(" close=")"
+				 separator=",">
+			#{item}
+		</foreach>
+	</if>
 	</select>
 	<!-- 更新披露状态 -->
 	<update id="updateRevealStatusById" parameterType="com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautosend.dao.dto.InfoDiscAutoRevealDto" >

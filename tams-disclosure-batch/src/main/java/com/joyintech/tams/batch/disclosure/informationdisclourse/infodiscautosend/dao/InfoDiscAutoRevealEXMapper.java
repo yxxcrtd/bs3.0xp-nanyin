@@ -18,6 +18,7 @@ import com.joyintech.tams.batch.disclosure.informationdisclourse.infodiscautosen
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -30,16 +31,19 @@ import java.util.List;
  */
 @Repository
 public interface InfoDiscAutoRevealEXMapper {
+
+
+
+	List<InfoDiscAutoRevealDto> getRepRevealList(@Param("revealStatus") String revealStatus,
+															   @Param("confirmStatus") String confirmStatus,
+															   @Param("isReveal") String isReveal);
+
 	/**
 	 * 获取所有未披露、已确认的自动披露数据
-	 * @param revealStatus 披露状态
-	 * @param confirmStatus 确认状态
-	 * @param isReveal 是否自动披露
+	 * @param map ids
 	 * @return返回查询结果
 	 */
-	List<InfoDiscAutoRevealDto> getRepRevealList(@Param("revealStatus") String revealStatus,
-												 @Param("confirmStatus") String confirmStatus,
-												 @Param("isReveal") String isReveal);
+	List<InfoDiscAutoRevealDto> getRepRevealListWithSaleAgency(HashMap<String, Object> map);
 	//@Param("revealChannel") String revealChannel);
 	/**
 	 * 自动披露更新状态
