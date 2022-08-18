@@ -28,22 +28,32 @@
 						field : 'paramName',
 						title : '参数名称',
 						width : 250,
-						fixed : true
 					},{
 						field : 'name',
 						title : '中文描述',
 						width : 325,
-						fixed : true
-					},{
+					},
+						{
+							field : 'paramTypeStr',
+							title : '参数类型',
+							width : 170,
+						},
+						{
 						field : 'paramType',
 						title : '参数类型',
 						width : 170,
-						fixed : true
-					},{
+							visible:false,
+					},
+						{
+							field : 'paramMultiFlagStr',
+							title : '是否多选',
+							width : 170,
+						},
+						{
 						field : 'paramMultiFlag',
 						title : '是否多选',
 						width : 170,
-						fixed : true
+							visible:false,
 					},{
 						field : 'operation',
 						title : 'SysCommon.operation',
@@ -90,8 +100,8 @@
 			   Joyin.alert("请输入参数类型",7);
 			   return;
 		   }
-		   var paramType1Str=$('#paramType1').text();
-		   console.log(paramType1Str)
+		   var paramTypeStr=$('#paramType1').find("option:selected").text();
+		   param.paramTypeStr=paramTypeStr;
 
 		   if($('#paramMultiFlag').val()){
 			   param.paramMultiFlag=$('#paramMultiFlag').val();
@@ -100,9 +110,8 @@
 			   Joyin.alert("请输入参数类型",7);
 			   return;
 		   }
-		   var paramMultiFlagStr=$('#paramMultiFlag').text();
-		   console.log(paramMultiFlagStr)
-
+		   var paramMultiFlagStr=$('#paramMultiFlag').find("option:selected").text();
+		   param.paramMultiFlagStr=paramMultiFlagStr;
 		   var obj = addParam.getAllRows();
 		   var index = 0;
 		   for ( var i in obj) {

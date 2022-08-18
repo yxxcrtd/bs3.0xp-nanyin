@@ -31,6 +31,8 @@ public class ReportParamDto {
      */
     private String paramMultiFlag;
 
+    private String paramMultiFlagStr;
+
     public int getParamNum() {
         return paramNum;
     }
@@ -78,5 +80,13 @@ public class ReportParamDto {
 
     public void setParamTypeStr(String paramTypeStr) {
         this.paramTypeStr = paramTypeStr;
+    }
+
+    public String getParamMultiFlagStr() {
+        return paramMultiFlagStr;
+    }
+
+    public void setParamMultiFlagStr(String paramMultiFlagStr) {
+        this.paramMultiFlagStr = paramMultiFlagStr;
     }
 }
