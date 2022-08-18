@@ -92,17 +92,25 @@ insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRA
 values ('DisProdPlanManage001', 'DisProdPlanManage001_btn_import', '01', '01', null, '导入', 'system', null, sysdate, 'system', sysdate, 'C', null);
 
 -- 新增"数据状态"字典信息
+delete from sys_datadict where DICT_CODE='DIS_DATA_STATUS';
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_DATA_STATUS', 'DIS', '数据状态', 'DIS_DATA_STATUS', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE='DIS_DATA_STATUS';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_DATA_STATUS', '01', '有效', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_DATA_STATUS', '02', '删除', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- "共通业务类型" 字典信息
+
+delete from SYS_DATADICT_LIST where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CODE='DISPLAN';
+
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 VALUES ('COMMON_BUSINESS_TYPE', 'DISPLAN', '产品计划排期', 355, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- 新增"产品计划排期" 流程模板
+delete from sys_wfl_business_module where PAGE_ID='DisProdPlanManage002';
+
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('DisProdPlanManage002', 'DisProdPlanManage002_btn_submit', 'oneApproval', 'system', null, SYSDATE, 'system', SYSDATE, 'ALL', '02');
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
@@ -151,17 +159,27 @@ insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRA
 values ('ProdBonusplanManager001', 'ProdBonusplanManager001_btn_import', '01', '01', null, '导入', 'system', null, sysdate, 'system', sysdate, 'C', null);
 
 -- 新增"分红方式"字典信息
+delete from sys_datadict where DICT_CODE='DIS_BONUS_MODE';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_BONUS_MODE', 'DIS', '分红方式', 'DIS_BONUS_MODE', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE='DIS_BONUS_MODE';
+
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_BONUS_MODE', '01', '份额分红后净值为1', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_BONUS_MODE', '02', '到期兑付', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- "共通业务类型" 字典信息
+
+delete from sys_datadict_list where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CODE='DISBond';
+
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 VALUES ('COMMON_BUSINESS_TYPE', 'DISBond', '产品分红到期计划', 354, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- 新增"产品分红到期计划" 流程模板
+delete from sys_wfl_business_module where PAGE_ID='ProdBonusplanManager002';
+
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('ProdBonusplanManager002', 'ProdBonusplanManager002_btn_submit', 'oneApproval', 'system', null, SYSDATE, 'system', SYSDATE, 'ALL', '02');
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
@@ -210,10 +228,14 @@ values ('ProdFeediscount001', 'ProdFeediscount001_btn_import', '01', '01', null,
 
 
 -- "共通业务类型" 字典信息
+delete from sys_datadict_list where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CODE='DISFEEDISCOUNT';
+
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 VALUES ('COMMON_BUSINESS_TYPE', 'DISFEEDISCOUNT', '产品费率优惠', 356, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- 新增"产品费率优惠" 流程模板
+delete from sys_wfl_business_module where PAGE_ID='ProdFeediscount002';
+
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('ProdFeediscount002', 'ProdFeediscount002_btn_submit', 'oneApproval', 'system', null, SYSDATE, 'system', SYSDATE, 'ALL', '02');
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
@@ -269,10 +291,14 @@ values ('ProdInfo001', 'ProdInfo001_btn_import', '01', '01', null, '导入', 'sy
 
 
 -- "共通业务类型" 字典信息
+delete from SYS_DATADICT_LIST where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CODE='DISPROD';
+
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 VALUES ('COMMON_BUSINESS_TYPE', 'DISPROD', '产品基本信息', 356, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- 新增"产品基本信息" 流程模板
+delete from sys_wfl_business_module where PAGE_ID='ProdInfo002';
+
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('ProdInfo002', 'ProdInfo002_btn_submit', 'oneApproval', 'system', null, SYSDATE, 'system', SYSDATE, 'ALL', '02');
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
@@ -288,8 +314,12 @@ values ('ProdInfo002', 'ProdInfo001_btn_delete', 'oneApproval', 'system', null, 
 -- insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 -- values ('GRADE_PROD_TYPE', '02', '否', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- 新增"产品运作方式"字典信息
+delete from sys_datadict where DICT_CODE='DIS_PROFIT_TYPE';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_PROFIT_TYPE', 'DIS', '产品运作方式', 'DIS_PROFIT_TYPE', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE='DIS_PROFIT_TYPE';
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_PROFIT_TYPE', '01', '开放式净值型', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
@@ -302,8 +332,13 @@ values ('DIS_PROFIT_TYPE', '04', '封闭式非净值型', 4, '0', 'system', null
 
 
 -- 新增"产品状态"字典信息
+delete from sys_datadict where DICT_CODE='DIS_PROD_STATUS';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_PROD_STATUS', 'DIS', '产品状态', 'DIS_PROD_STATUS', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE='DIS_PROD_STATUS';
+
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_PROD_STATUS', '01', '运行中', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -312,8 +347,13 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('DIS_PROD_STATUS', '03', '已销户', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- 新增"募集方式"字典信息
+delete from sys_datadict where DICT_CODE='DIS_RAISE_TYPE';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_RAISE_TYPE', 'DIS', '募集方式', 'DIS_RAISE_TYPE', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE='DIS_RAISE_TYPE';
+
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_RAISE_TYPE', '01', '公募', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -321,16 +361,25 @@ values ('DIS_RAISE_TYPE', '02', '私募', 2, '0', 'system', null, sysdate, 'syst
 
 
 -- 新增"产品类型"字典信息
+delete from sys_datadict where DICT_CODE='DIS_PROD_TYPE';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_PROD_TYPE', 'DIS', '产品类型', 'DIS_PROD_TYPE', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE='DIS_PROD_TYPE';
+
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_PROD_TYPE', 'N', '净值型产品', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_PROD_TYPE', 'M', '现管类产品', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- 新增"投资性质"字典信息
+delete from sys_datadict where DICT_CODE='DIS_INVEST_TYPE';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_INVEST_TYPE', 'DIS', '投资性质', 'DIS_INVEST_TYPE', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE='DIS_INVEST_TYPE';
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_INVEST_TYPE', '01', '固定收益类', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
@@ -342,8 +391,13 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('DIS_INVEST_TYPE', '04', '混合类', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- 新增"发行状态"字典信息
+delete from sys_datadict where DICT_CODE='DIS_ISSUE_STATUS';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_ISSUE_STATUS', 'DIS', '发行状态', 'DIS_ISSUE_STATUS', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE='DIS_ISSUE_STATUS';
+
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_ISSUE_STATUS', '01', '发行成功', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -353,8 +407,13 @@ values ('DIS_ISSUE_STATUS', '03', '确认发行', 3, '0', 'system', null, sysdat
 
 
 -- 新增"行情代码"字典信息
+delete from sys_datadict where DICT_CODE='QUOTA_CODE';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('QUOTA_CODE', 'DIS', '行情代码', 'QUOTA_CODE', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE='QUOTA_CODE';
+
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('QUOTA_CODE', '01', '中证500指数收益率', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -370,8 +429,12 @@ values ('QUOTA_CODE', '04', '中债新综合财富指数（1-3年）收益率', 
 
 -- add by dingrui 20220727  start
 -- 新增"信披数据状态"字典信息
+delete from sys_datadict where DICT_CODE='DIS_DATA_STATUS_ED';
+
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DIS_DATA_STATUS_ED', 'DIS', '信披数据状态', 'DIS_DATA_STATUS_ED', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT_LIST where DICT_CODE='DIS_DATA_STATUS_ED';
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_DATA_STATUS_ED', 'E', '有效', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
@@ -490,9 +553,9 @@ Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CR
 
 -- add by dingrui 2022-08-01  start
 -- "产品类型"与“发行方式”联动 字典信息
-delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '01' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'N';
-delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'N';
-delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'M';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '01' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = '01';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = '01';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = '04';
 
 INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('DIS_PROFIT_TYPE', '01', 'DIS_PROD_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
@@ -559,7 +622,7 @@ DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004' AND SYS_MENU.REMA
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('REPORT_006_004', 'DIS', null, 'REPORT_006', '', 1, '02', '信披数据维护', 'system', null, SYSDATE, 'system', SYSDATE);
 
-DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004_001' AND SYS_MENU.REMARK = '产品计划排期';
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004_001' and page_id='DisProdPlanManage001';
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('REPORT_006_004_001', 'DIS', null, 'REPORT_006_004', 'DisProdPlanManage001', 1, '02', '产品排期计划', 'system', null, SYSDATE, 'system', SYSDATE);
 
@@ -1002,7 +1065,7 @@ update SYS_PAGE set IS_HP_SELECT ='02' where PAGE_ID in('PbcPrdBaseinfoEndSubNew
                                                        ,'PbcPrdCashRaiseSub','PbcPrdInitRaiseSub','PbcMonthReport001','RiskFactor003','SysDataProcessMark001','MstCustomerNature001','SysWflBusinessModule001','SysWflBusinessModule002','Workflow001','SvrChbBotAstPositionRegist001'
                                                        ,'SysPrebatchResult001','SysPrebatchResult002','SysBatchStart001','ValBatchStart001','SysBatchLog001','SysBatchMonitor001','SysBatchProcess001','CustomerReportShow001','CustomerReportConfig001','SvreportHome001','SysDataDict001'
                                                        ,'PbcSendZipDatFile','SysInstitution001','WorkflowMonitor001','SellMonthReport001','SvrTransMonthReport001','SvrSubsidiaMonthReport001','SysUser001','InterfaceLog001','SysParaSet001','SysActionLog001','SysActorAssign001'
-                                                       ,'SysActorRole001','AssetTypeSetting001','AssetTypeSetting002','SvrChbAstValueRegist001','PbcPrdAccountSub','PbcPrdAccountEndSub','SysDepartment001','SvrMonthReport001')
+                                                       ,'SysActorRole001','AssetTypeSetting001','AssetTypeSetting002','SvrChbAstValueRegist001','PbcPrdAccountSub','PbcPrdAccountEndSub','SysDepartment001','SvrMonthReport001');
 -- 我的主页只显示 披露主页 add by sunjie 20220816 end
 
 --NYLCXP-702 产品基本信息页面产品运作方式联动调整 add by kongzhifang 2022-08-17
@@ -1013,9 +1076,3 @@ update sys_datadict_list_link set item_code = '04' where dict_code = 'DIS_PROFIT
 
 update sys_datadict_list_link set item_code = '03' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE' and item_code = '01';
 update sys_datadict_list_link set item_code = '04' where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE' and item_code = '02';
-
-
--- 删除产品不成立信息表主键 add by sunjie 20220817 start
-alter table DIS_PROD_NOCREATE drop constraint DIS_PROD_NOCREATE_PK;--只能在同一个库中执行一次
--- 删除产品不成立信息表主键 add by sunjie 20220817 end
-commit ;

@@ -163,7 +163,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 3) {
+            if (null == objects.get(1) || objects.get(1).size() < 3) {//NYLCXP-599
                 Map<String, Object> resultMap = new HashMap<>();
                 resultMap.put("errorMsg", "数据格式错误，数据格式需要3列。");
                 AjaxResult wr = new AjaxResult();
@@ -176,18 +176,18 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
                     List<String> rowData = objects.get(i);
 
 
-                    if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
+                    if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    else if(!findList.contains(rowData.get(0).trim())){
+                    else if(!findList.contains(rowData.get(1).trim())){
                         errorMsg.append("产品登记编码不存在！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
+                    if (!StringUtil.isNotEmpty(rowData.get(2).trim())){
                         errorMsg.append("不成立原因 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
+                    if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("报告发布日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(2))){
+                    }else if(!this.isDateStr(rowData.get(3))){
                         errorMsg.append("报告发布日期 格式不正确！");
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){

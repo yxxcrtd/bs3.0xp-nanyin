@@ -39,7 +39,7 @@
 							</div>
 							<div class="layui-form-item">
 								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap">禁用模板<i class="iconfont must" style="display: inline;">*</i></label>
+									<label id="jinyongLabel" class="layui-form-label form-label-wrap">禁用模板<i class="iconfont must" id="jinyongbitian" style="display: none;">*</i></label>
 									<div class="layui-input-inline input-inline">
 										<select id="offRepId" name="offRepId"
 											class="layui-input form-input input-select" placeholder="请选择"
@@ -63,7 +63,7 @@
 								</div>
 							</div>
 					<div class="layui-form-item">
-						<label style="float: left">备注说明<i class="iconfont must" style="display: inline;">*</i></label>
+						<label style="float: left;margin-right: 20px">备注说明</label>
 						<div class="layui-input-inline input-inline" style="margin:0 10px;width: 80%!important;">
                             <textarea id="remark" name="remark" maxlength="1000" th:text="${entity?.remark}"
 									  class="layui-textarea" placeholder="请输入内容"

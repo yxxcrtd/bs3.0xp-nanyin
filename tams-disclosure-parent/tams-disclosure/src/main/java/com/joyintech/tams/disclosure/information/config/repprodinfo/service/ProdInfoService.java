@@ -22,6 +22,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.util.SysCommDataUtil;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
@@ -861,6 +862,19 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
                 -> prodInfoMapper.queryPprodIds(map));
+        return result;
+    }
+
+    /**
+     * 获取所有的正常状态的产品信息，包含母产品和子产品，支持根据产品代码和产品名称 进行模糊查询
+     * 支持筛选只查询 母产品 sonFlag 标识不为空
+     * @param paraMap
+     * @return
+     */
+    public Page<SelectOptionDto> queryPprodName(Map<String, Object> paraMap){
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> prodInfoMapper.queryPprodName(paraMap));
         return result;
     }
 }

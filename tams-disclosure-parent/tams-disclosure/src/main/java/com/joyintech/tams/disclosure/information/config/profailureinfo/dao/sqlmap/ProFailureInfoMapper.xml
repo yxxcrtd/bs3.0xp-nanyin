@@ -175,6 +175,7 @@
             and (dp.PROD_REGIST_NO like concat(concat('%',#{search}),'%')
             or rp.PROD_NAME like concat(concat('%',#{search}),'%'))
         </if>
+        where rp.STATUS='E'
     </select>
     <select id="hasRepeatedData" resultType="java.lang.Integer">
         select count (1) from DIS_PROD_NOCREATE where

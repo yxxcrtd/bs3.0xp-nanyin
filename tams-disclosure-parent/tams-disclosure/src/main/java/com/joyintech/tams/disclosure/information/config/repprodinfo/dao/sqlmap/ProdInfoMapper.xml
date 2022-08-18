@@ -779,4 +779,20 @@
         </if>
     </select>
 
+    <select id="queryPprodName" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+        prod.PROD_ID id,
+        case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        else prod.PROD_NAME end text
+        from
+        REP_PROD_INFO prod
+        left join REP_PROD_INFO pprod
+        on prod.p_prod_id = pprod.prod_id
+        where prod.STATUS='E'
+        <if test="search != null and search != ''">
+            and (prod.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+            or prod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+        </if>
+    </select>
+
 </mapper>

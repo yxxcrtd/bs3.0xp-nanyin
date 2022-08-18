@@ -12,9 +12,7 @@ package com.joyintech.tams.disclosure.information.config.reportpage.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -74,8 +72,10 @@ public class ReportPageManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getReportNameList")
     private List<SelectOptionDto> getReportNameList() {
-		
-    	return reportPageManage001Service.getReportInfo();
+		String search = this.getParam("search");
+		Map<String,String> param = new HashMap<String,String>();
+        param.put("search",search);
+    	return reportPageManage001Service.getReportInfo(param);
 	}
 	@ResponseBody
     @RequestMapping("getPageName")
@@ -86,7 +86,10 @@ public class ReportPageManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public List<ReportPageManage001Dto> findPage(Map<String, Object> param){
-        return reportPageManage001Service.findPage(RequestUtil.getPageParam());
+        Calendar calendar = Calendar.getInstance();
+        Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("effDate",calendar.getTime());
+        return reportPageManage001Service.findPage(map);
         
     }
    
