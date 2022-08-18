@@ -30,6 +30,7 @@
     <select id="getRepRevealList"
             resultType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
     SELECT
+		distinct
 		reveal.ID id,
 		reveal.REP_ID repId,
 		reveal.REPORT_NAME reportName,
@@ -57,7 +58,8 @@
 		reveal.REVEAL_END_DATE revealEndDate,
 		dsa.AGENCY_NAME agencyName
 	FROM REP_REVEAL reveal
-    LEFT JOIN DIS_PROD_AGENCY dpa on dpa.PROD_ID = reveal.PRODID
+	left join REP_PROD_INFO info on reveal.PRODID=info.PROD_ID
+    LEFT JOIN DIS_PROD_AGENCY dpa on dpa.PROD_ID = nvl(info.P_PROD_ID,info.PROD_ID)
     LEFT JOIN DIS_SALE_AGENCY dsa on dsa.SEQUENCE_NO = dpa.AGENCY_ID
     WHERE 1=1
     and dsa.AGENCY_NAME is not null
