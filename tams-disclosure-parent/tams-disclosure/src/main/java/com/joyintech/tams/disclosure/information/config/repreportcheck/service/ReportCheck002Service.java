@@ -119,6 +119,7 @@ public class ReportCheck002Service {
                 repDataCheck.setParamValue2(aa.get(1));
             }else{
                 repDataCheck.setParamValue1(paramValue);
+                repDataCheck.setParamValue2(null);
             }
             repDataCheck.setStatus("E");
             repDataCheckMapper.deleteByPrimaryKey(repDataCheck);

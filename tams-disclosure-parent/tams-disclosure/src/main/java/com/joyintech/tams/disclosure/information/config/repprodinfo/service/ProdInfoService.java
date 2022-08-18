@@ -668,6 +668,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         List<ProdInfoDto> selectedItem = dto.getSelectedItem();
         List<ProdInfoDto> existData = new ArrayList<>();
         List<ProdInfoDto> newData = new ArrayList<>();
+        List<ProdInfoDto> existDelData = new ArrayList<>();
         // for (ProdInfoDto temp : selectedItem) {
         //     //数据已存在 【产品编码 相同】，数据被过滤。
         //     ProdInfoDto prodInfo = this.selectByProdStatus(temp.getProdId());
@@ -679,7 +680,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         // NYLCXP-580 两次判断都为空会导致newData中重复塞入数据 modify by kongzhifang 2022-08-11
         for (ProdInfoDto temp:selectedItem) {
             if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))){
-                existData.add(temp);
+                if(StringUtil.equals(DictCodeListExt1.维护数据状态_删除.getValue(),this.selectByProdId(temp.getProdId()).getStatus())){
+                    existDelData.add(temp);
+                }else{
+                    existData.add(temp);
+                }
             }
             else if(!StringUtil.isNotEmpty(this.selectByProdStatus(temp.getProdId()))) {
                 temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -690,6 +695,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         for (ProdInfoDto existDataDto : existData) {
             //this.doComplete(existDataDto, OperationType.MODIFY);
             this.update(existDataDto);
+        }
+        //删除操作 NYLCXP-263 导入一条数据的数据状态为“删除” ，导入同样的数据只展示第二次新增的数据，第一条删除状态的数据不展示
+        for (ProdInfoDto existDelDataDto : existDelData) {
+            this.delete(existDelDataDto);
         }
         //插入操作
         for (ProdInfoDto newDataDto : newData
