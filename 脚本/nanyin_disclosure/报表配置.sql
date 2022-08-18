@@ -424,6 +424,7 @@ insert into REP_JOB_RANGE values ('D0000000000000000172','100000020','02','RAISE
 insert into REP_JOB_RANGE values ('D0000000000000000173','100000020','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000174','100000021','02','RAISE_TYPE','=','02','02','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000175','100000021','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D0000000000000000176','100000022','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 
 
 -- 披露指标
