@@ -374,7 +374,7 @@ $(function ($) {
                         if(res!= null){
                             var tr = fileListView.find('tr#upload-'+ file)
                                 ,tds = tr.children();
-                            tds.eq(7).find('.layui-table-cell').html('<a href="' + JoyinUtil.getRealPath('/framework/download/' + res[0].fileNo) + '">下载/预览</a>');
+                            tds.eq(7).find('.layui-table-cell').html('<a href="' + JoyinUtil.getRealPath('/framework/download/' + res[0].fileNo) + '">预览/下载</a>');
                             tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
                             // tds.eq(3).html(''); //清空操作
                             tr.data('file', res[0]);
