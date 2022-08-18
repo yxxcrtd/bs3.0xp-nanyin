@@ -211,7 +211,7 @@ $(function() {
 		if (openStartDate && openEndDate){
 			var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate))/(24*60*60*1000);
 			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("开放结束日必须小于开放开始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+				Joyin.error(JoyinUtil.getMessage("开放结束日必须大于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
 				$('#openEndDate').val('');
 			}
 		}
@@ -261,10 +261,12 @@ $(function() {
 		// 	}
 		// }
 		var openStartDate = $('#openStartDate').val();
-		if(operationStartDate){
-			if($('#operationStartDate').val() < platDate){
-				Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-				$('#operationStartDate').val('');
+		if(pageModel == PAGE_MODEL_EDIT){
+			if(operationStartDate){
+				if($('#operationStartDate').val() < platDate){
+					Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+					$('#operationStartDate').val('');
+				}
 			}
 		}
 		if(operationStartDate && openStartDate){

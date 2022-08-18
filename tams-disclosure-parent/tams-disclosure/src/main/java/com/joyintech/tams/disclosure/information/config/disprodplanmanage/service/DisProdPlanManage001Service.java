@@ -311,7 +311,10 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         List<DisProdPlanManage002Dto> selectedItem = dto.getSelectedItem();
         List<DisProdPlanManage002Dto>  existData = new ArrayList<>();
         for (DisProdPlanManage002Dto temp:selectedItem) {
-            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
+//            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
+//                existData.add(temp);
+//            }
+            if (this.isRepeated(temp).size()>0){
                 existData.add(temp);
             }
         }
@@ -328,10 +331,13 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         return wr;
     }
 
-    private DisProdPlanManage002Dto isRepeated(DisProdPlanManage002Dto dto) {
+//    private DisProdPlanManage002Dto isRepeated(DisProdPlanManage002Dto dto) {
+//        return disProdPlanManage001Mapper.isRepeated(dto);
+//    }
+
+    private List<DisProdPlanManage002Dto> isRepeated(DisProdPlanManage002Dto dto) {
         return disProdPlanManage001Mapper.isRepeated(dto);
     }
-
 
     public static boolean isDateStr(String str) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -365,7 +371,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
 
         for (DisProdPlanManage002Dto temp:selectedItem) {
             //数据已存在 【产品登记编码 相同】，做更新操作。
-            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
+            if (this.isRepeated(temp).size()>0){
                 existData.add(temp);
             }else {
                 temp.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());

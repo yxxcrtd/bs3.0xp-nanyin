@@ -3,17 +3,14 @@
  */
 package com.joyintech.tams.disclosure.busicommon.poireport.service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ibm.icu.util.Calendar;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
@@ -24,7 +21,6 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurerea
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.dao.PoiReportMapper;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
-import com.joyintech.tams.disclosure.busicommon.rptdata.service.HolidayService;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 
@@ -84,19 +80,28 @@ public class ReportRevealEndDateService {
 		if (rptType.equals(DisReportType.FHJSQD)) { // 分红计算清单，当期收益分配基准日
 			Map<String,Object> paraMap = new HashMap<>();
 			paraMap.put("prodId", busiId);
-			map.put("当期收益分配基准日", repReveal.getEndDate());
+			map.put(当期收益分配基准日, repReveal.getEndDate());
         } else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
         	map.put(到期日, repReveal.getEndDate());	
 		} else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
-			map.put("当期收益分配基准日", repReveal.getEndDate());
+			map.put(当期收益分配基准日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
 				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
 				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)) { // 定期公告-季度/半年度/年度报告指数型和非指数型
 			map.put(周期结束日, repReveal.getEndDate());
 		}else if (rptType.equals(DisReportType.CPKFQGG)||rptType.equals(DisReportType.CPKFQBG)) { // 产品开发期报告/公告
-			map.put("enddate", repReveal.getEndDate());
-		}else if (rptType.equals(DisReportType.RKCPJZ_GMXGL)||rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品
-			map.put("", null);
+			Map<String, Object> searchparam = new HashMap<>();
+			searchparam.put("busi_date", repReveal.getEndDate());
+			searchparam.put("is_holiday", "0");
+			searchparam.put("market_code", "01");
+			searchparam.put("days", 30);
+			map.put("enddate", holidayService.getAferNWorkDay(searchparam));
+		}else if (rptType.equals(DisReportType.RKCPJZ_GMXGL)||rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
+			Map<String, Object> searchparam = new HashMap<>();
+			searchparam.put("busi_date", repReveal.getEndDate());
+			searchparam.put("is_holiday", "0");
+			searchparam.put("market_code", "04");
+			map.put(平台日, holidayService.getNextWorkDay(searchparam));
 		}else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
 			map.put(运作起始日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) {
@@ -106,7 +111,11 @@ public class ReportRevealEndDateService {
 		} else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
 			map.put(当期收益分配基准日, repReveal.getEndDate());
 		} else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
-			map.put(周期结束日, repReveal.getEndDate());
+			Map<String, Object> searchparam = new HashMap<>();
+			searchparam.put("busi_date", repReveal.getEndDate());
+			searchparam.put("is_holiday", "0");
+			searchparam.put("market_code", "04");
+			map.put(平台日, holidayService.getNextWorkDay(searchparam));
 		} else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
 			map.put(当期收益分配基准日, repReveal.getEndDate());
 		}
@@ -152,10 +161,14 @@ public class ReportRevealEndDateService {
 		} else {
 			Date iDate = baseDate;
 			for (int i = 0; i < days; i++) {
+				Map<String, Object> searchparam = new HashMap<>();
+				searchparam.put("busi_date", iDate);
+				searchparam.put("is_holiday", "0");
+				searchparam.put("market_code", repRule.getMarketCode());
 				if (StringUtil.equals(DictCodeListExt2.时点类型_基准日前.getValue(), repRule.getRevealType())) {
-					iDate = holidayService.getPreWorkDate(iDate);
+					iDate = holidayService.getLastWorkDay(searchparam);
 				} else {
-					iDate = holidayService.getNextWorkDate(iDate);
+					iDate = holidayService.getNextWorkDay(searchparam);
 				}
 			}
 			disEndDate = iDate;

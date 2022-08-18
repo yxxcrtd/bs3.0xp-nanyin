@@ -173,8 +173,6 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                         }
                         reportZqxkfgg001Dto.setOpenHisList(openHisList);
                     }
-                    //跑批日
-                    reportZqxkfgg001Dto.setEnddate(announceDate);
                     logger.info("周期型产品开放公告【{}】生成成功", JsonUtils.object2Json(paraMap));
                 }else{
                     logger.warn("周期型产品开放公告（公募产品-单赎回）:客户周期型产品的自动赎回日大多是后续某一开放周期的运作起始日，根据产品排期表进行判断，若某一自动赎回日不是该产品未来某开放周期的运作起始日，则需要为该条赎回信息生成此公告；" +
@@ -184,6 +182,8 @@ public class ReportZqxkfgg001Service implements IReportDataService {
         } catch (Exception e) {
             logger.error("周期型产品开放公告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
+        //跑批日
+        reportZqxkfgg001Dto.setEnddate(announceDate);
         resultMap.add(ReportCollectionUtils.bean2Map(reportZqxkfgg001Dto));
         return resultMap;
     }

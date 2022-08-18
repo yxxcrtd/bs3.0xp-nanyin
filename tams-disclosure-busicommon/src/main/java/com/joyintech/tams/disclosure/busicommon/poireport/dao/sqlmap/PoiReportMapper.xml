@@ -29,7 +29,8 @@
     		rr.FTP_ID ftpId,
     		rr.IS_REVEAL isReveal,
     		rr.IS_CONFIRM isConfirm,
-    		rr.DETAIL detail
+    		rr.DETAIL detail,
+			rr.MARKET_CODE marketCode
 		FROM
     		REP_RULE rr
 		WHERE
