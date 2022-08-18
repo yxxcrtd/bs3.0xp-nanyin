@@ -167,12 +167,12 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 }
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
             }
-            //跑批日
-            reportRkcpjz001Dto.setEnddate(valueDate);
             logger.info("日开产品净值公告（公募净值型产品）【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("日开产品净值公告（公募净值型产品）【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
+        //跑批日
+        reportRkcpjz001Dto.setEnddate(valueDate);
         dataMap = ReportCollectionUtils.bean2Map(reportRkcpjz001Dto);
         //近一个月（工作日）份额净值走势图或近一个月(自然日)万份收益走势图
         Map<String, Object> prodValueChart = getImageMap(imagePath1);
