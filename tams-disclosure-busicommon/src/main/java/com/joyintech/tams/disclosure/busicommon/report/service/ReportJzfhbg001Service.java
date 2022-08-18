@@ -223,6 +223,11 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             openPlanList.add(openPlanDto);
                         }
                         reportJzfhbg001Dto.setOpenPlanList(openPlanList);
+                    }else{
+                        List<ReportOpenPlanDto> openPlanList=new ArrayList<ReportOpenPlanDto>();
+                        ReportOpenPlanDto openPlanDto = new ReportOpenPlanDto();
+                        openPlanList.add(openPlanDto);
+                        reportJzfhbg001Dto.setOpenPlanList(openPlanList);
                     }
                     //生成跑批日
                     reportJzfhbg001Dto.setEnddate(settDateStr);
