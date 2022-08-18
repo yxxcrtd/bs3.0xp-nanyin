@@ -136,6 +136,15 @@ public class ReportRevealEndDateService {
 		}
 		//防止有一些报表没有设置规则（只手工生成） 默认取map.get("endDate");
 		if(repRule == null){
+			if(StringUtil.equals(repReveal.getRepId(),"CP_001_002_001")
+			||StringUtil.equals(repReveal.getRepId(),"CP_001_002_002")){
+				Map<String, Object> searchparam = new HashMap<>();
+				searchparam.put("busi_date", repReveal.getEndDate());
+				searchparam.put("is_holiday", "0");
+				searchparam.put("market_code", "01");
+				searchparam.put("days", 30);
+				return holidayService.getAferNWorkDay(searchparam);
+			}
 			return mapDates.get("enddate");
 		}
 		days = Integer.parseInt(repRule.getRevealValue());
