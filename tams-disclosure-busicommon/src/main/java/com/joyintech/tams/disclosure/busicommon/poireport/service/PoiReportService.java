@@ -945,10 +945,10 @@ public class PoiReportService {
 				Map<String,Object> prodAssetComb=(Map<String,Object>)dataMap.get("prodAssetComb");
 
 				if(StringUtil.isNotEmpty(prodInfo)){
-					//	当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前及穿透后占比必须大于等于80%； 100000001
+					//	当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定收益类穿透前及穿透后占比必须大于等于80%； 100000001
 					if(StringUtil.equals(prodInfo.getNatureInvest(), DictCodeListExt5.信披投资性质_固定收益类.getValue())){
 						RepDataCheck repDataCheck=checkMap.get("100000001").get(0);
-						String tips1="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透前占比";
+						String tips1="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定收益类穿透前占比";
 						//穿透前
 						if(StringUtil.isNotEmpty(prodAssetComb.get("fixPreRatio"))){
 							BigDecimal fixPreRatio=(BigDecimal)prodAssetComb.get("fixPreRatio");
@@ -957,18 +957,18 @@ public class PoiReportService {
 								resultSb.append((index++)+"："+s1+"<br>");
 							}
 						}else{
-							resultSb.append((index++)+"："+"固定受益类穿透前占比未获取到"+"<br>");
+							resultSb.append((index++)+"："+"固定收益类穿透前占比未获取到"+"<br>");
 						}
 						//穿透后
 						if(StringUtil.isNotEmpty(prodAssetComb.get("fixAfterRatio"))){
-							String tips2="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定受益类穿透后占比";
+							String tips2="当产品的“投资性质”为“固定收益类”时，【报告期末产品资产组合情况】-固定收益类穿透后占比";
 							BigDecimal fixAfterRatio=(BigDecimal)prodAssetComb.get("fixAfterRatio");
 							String s2=this.singleCheck(repDataCheck,fixAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append((index++)+"："+s2+"<br>");
 							}
 						}else{
-							resultSb.append((index++)+"："+"固定受益类穿透后占比未获取到"+"<br>");
+							resultSb.append((index++)+"："+"固定收益类穿透后占比未获取到"+"<br>");
 						}
 					}
 					//	当产品的“投资性质”为“权益类”时，【报告期末产品资产组合情况】-权益类穿透前及穿透后占比必须大于等于80%； 100000002
@@ -1030,10 +1030,10 @@ public class PoiReportService {
 						RepDataCheck repDataCheck=checkMap.get("100000004").get(0);
 
 						//穿透前
-						if(StringUtil.isNotEmpty(prodAssetComb.get("equityPreRatio"))){
-							BigDecimal equityPreRatio=(BigDecimal)prodAssetComb.get("equityPreRatio");
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fixPreRatio"))){
+							BigDecimal fixPreRatio=(BigDecimal)prodAssetComb.get("fixPreRatio");
 							String tips1="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透前占比";
-							String s1=this.singleCheck(repDataCheck,equityPreRatio,tips1);
+							String s1=this.singleCheck(repDataCheck,fixPreRatio,tips1);
 							if (StringUtil.isNotEmpty(s1)) {
 								resultSb.append((index++)+"："+s1+"<br>");
 							}
@@ -1041,10 +1041,10 @@ public class PoiReportService {
 							resultSb.append((index++)+"："+"固定收益类穿透前占比未获取到"+"<br>");
 						}
 						//穿透后
-						if(StringUtil.isNotEmpty(prodAssetComb.get("equityAfterRatio"))){
-							BigDecimal equityAfterRatio=(BigDecimal)prodAssetComb.get("equityAfterRatio");
+						if(StringUtil.isNotEmpty(prodAssetComb.get("fixAfterRatio"))){
+							BigDecimal fixAfterRatio=(BigDecimal)prodAssetComb.get("fixAfterRatio");
 							String tips2="当产品的“投资性质”为“混合类”时，【报告期末产品资产组合情况】-固定收益类穿透后占比";
-							String s2=this.singleCheck(repDataCheck,equityAfterRatio,tips2);
+							String s2=this.singleCheck(repDataCheck,fixAfterRatio,tips2);
 							if (StringUtil.isNotEmpty(s2)) {
 								resultSb.append((index++)+"："+s2+"<br>");
 							}
