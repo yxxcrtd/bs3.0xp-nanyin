@@ -378,6 +378,14 @@ $(function() {
 			saveOrSubmit('submit');
 		});
 
+		$('#operationStartDate,#openEndDate').change(function () {
+			if ($('#operationStartDate').val() && $('#openEndDate').val()){
+				if ($('#operationStartDate').val() <$('#openEndDate').val() ){
+					Joyin.error("产品运作起始日不能小于开放期结束日！");
+				}
+			}
+
+		});
 		var finprodId = $('#finprodId').val();
 		if(finprodId !=null && finprodId !='' && finprodId.length>0){
 			finprodIdChange();
