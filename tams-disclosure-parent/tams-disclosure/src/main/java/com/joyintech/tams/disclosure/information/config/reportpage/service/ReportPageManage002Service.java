@@ -15,6 +15,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.RepInfo;
 import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
 import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
@@ -36,10 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 〈一句话功能简述〉
@@ -219,10 +217,29 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 		return reportPageManage002Mapper.getInfoStatusBeforeEffdate(dto);
 	}
 
-	/**
-	 *	模板状态,获取小于当前日期最近一次已生效的模板状态记录
-	 **/
-	public String getLastedInfoStatus(Map<String,Object> paramMap){
-		return reportPageManage002Mapper.getLastedInfoStatus(paramMap);
+	/***
+	 *  同步模板状态
+	 */
+	public void synchroRepInfoStatus(){
+
+		Calendar calendar = Calendar.getInstance();
+		Date sysDate = calendar.getTime();
+		List<ReportStatusDto> reportStatusDtoList = reportPageManage002Mapper.getLastedInfoListStatus(sysDate);
+		for(ReportStatusDto dto:reportStatusDtoList){
+			RepInfo repInfo = new RepInfo();
+			repInfo.setRepId(dto.getRepId());
+			if("02".equals(dto.getRepStatus())){
+				repInfo.setReportType("Y");
+			}
+			if("04".equals(dto.getRepStatus())){
+				repInfo.setReportType("N");
+			}
+			//更新模板状态
+			reportPageManage002Mapper.updateReportType(repInfo);
+			//更新状态记录表,设置为已同步
+			dto.setIsSynchro("Y");
+			dto.setEffDate(sysDate);
+			reportPageManage002Mapper.updateReportStatus(dto);
+		}
 	}
 }

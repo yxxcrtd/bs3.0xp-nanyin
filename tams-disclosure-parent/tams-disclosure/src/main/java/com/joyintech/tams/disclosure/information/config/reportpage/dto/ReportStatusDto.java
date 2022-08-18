@@ -82,6 +82,11 @@ public class ReportStatusDto extends BaseEntity implements ProcessEntity {
      */
     private String operateType;
 
+    /**
+     *  是否已同步:记录REP_INTO_STATUS记录的状态是否已同步到REP_INFO表
+     * */
+    private String isSynchro;
+
     public String getSeqno() {
         return seqno;
     }
@@ -221,5 +226,13 @@ public class ReportStatusDto extends BaseEntity implements ProcessEntity {
 
     public void setEffDateStr(String effDateStr) {
         this.effDateStr = effDateStr;
+    }
+
+    public String getIsSynchro() {
+        return isSynchro;
+    }
+
+    public void setIsSynchro(String isSynchro) {
+        this.isSynchro = isSynchro;
     }
 }
