@@ -39,4 +39,11 @@ public interface HolidayMapper {
      * @return 下一工作日
      */
     Date getNextWorkDay(Map<String, Object> params);
+
+    /**
+     * 获取下N工作日
+     * @param params 参数
+     * @return 下N工作日
+     */
+    Date getAferNWorkDay(Map<String, Object> params);
 }
