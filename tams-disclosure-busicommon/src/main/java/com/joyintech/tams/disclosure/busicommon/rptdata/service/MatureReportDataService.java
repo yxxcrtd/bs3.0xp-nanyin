@@ -139,7 +139,7 @@ public class MatureReportDataService implements IReportDataService {
 	        	//单位分红
 				report.setUnitProfit(
 						report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
-				System.out.println("========lvyanan:========"+report.getUnitProfit());
+
 				// 年化收益率
 				BigDecimal ddProfit = report.getDistributableProfit().subtract(floatFee);
 				report.setYearYield(ddProfit.multiply(new BigDecimal(365))
@@ -230,7 +230,7 @@ public class MatureReportDataService implements IReportDataService {
 		List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
 		if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
 			BonusReportDto dto = listBonusReport.get(0);
-			eDate = dto.getSettDate();
+			eDate =holidayService.getNextWorkDate(dto.getSettDate());
 		}
 		repReveal.setEndDate(eDate);
 		return repReveal;

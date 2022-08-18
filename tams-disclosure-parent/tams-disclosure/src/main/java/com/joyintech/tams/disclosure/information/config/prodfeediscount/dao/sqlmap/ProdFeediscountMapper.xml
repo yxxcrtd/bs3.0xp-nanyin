@@ -455,11 +455,15 @@
         from DIS_PROD_FEEDISCOUNT
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
             and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
-            and START_DATE = #{startDate,jdbcType=DATE}
-            and END_DATE = #{endDate,jdbcType=DATE}
             and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
             and FEENAME = #{feename,jdbcType=VARCHAR}
             and DATA_STATUS = 'E'
+        <if test="startDate != null" >
+            and START_DATE = #{startDate,jdbcType=DATE}
+        </if>
+        <if test="endDate != null" >
+            and END_DATE = #{endDate,jdbcType=DATE}
+        </if>
         <if test="isSalesAgency != null" >
             and IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR}
         </if>
