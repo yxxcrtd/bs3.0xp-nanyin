@@ -375,17 +375,6 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 return wr;
             } else {
                 StringBuilder returnerrorMsg = new StringBuilder("");
-//                for (int i=1;i<objects.size(); i++) {
-//                    for(int j=i+1;j<objects.size();j++){
-//                        if(objects.get(i).get(1).equals(objects.get(j).get(1))){
-//                            for(int k=3;k<objects.size();k++){
-//                                if(!objects.get(i).get(k).equals(equals(objects.get(j).get(k)))){
-//
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
                 for (int i = 1; i < objects.size(); i++) {
 
                     StringBuilder errorMsg = new StringBuilder("");
