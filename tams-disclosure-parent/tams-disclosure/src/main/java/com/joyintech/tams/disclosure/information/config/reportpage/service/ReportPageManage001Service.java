@@ -201,8 +201,8 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
     * 查询报表名称
     * @return 报表名称
     */
-	public List<SelectOptionDto> getReportInfo() {
-		List<ReportPageManage001Dto> reportInfoList = reportPageManage001Mapper.getReportInfo();
+	public List<SelectOptionDto> getReportInfo(Map<String,String> param) {
+		List<ReportPageManage001Dto> reportInfoList = reportPageManage001Mapper.getReportInfo(param);
 		List<SelectOptionDto> listSelectDto = new ArrayList<SelectOptionDto>();
 		for (ReportPageManage001Dto reportInfo : reportInfoList) {
 			SelectOptionDto dto = new SelectOptionDto();

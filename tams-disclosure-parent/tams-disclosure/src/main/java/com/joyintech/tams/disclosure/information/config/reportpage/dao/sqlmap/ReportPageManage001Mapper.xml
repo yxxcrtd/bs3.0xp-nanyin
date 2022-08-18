@@ -110,6 +110,14 @@
 		    ri.REPORT_NAME as reportName
 		FROM
 		    REP_INFO ri
+		<where>
+			<if test="search != null">
+				AND (
+					ri.TEMPLATE_NAME LIKE concat(concat('%',#{search}),'%')
+					OR REPORT_NAME LIKE concat(concat('%',#{search}),'%')
+				)
+			</if>
+		</where>
     </select>
     <select id="getReportInputsNew" parameterType="java.util.Map" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto">
 	    SELECT 

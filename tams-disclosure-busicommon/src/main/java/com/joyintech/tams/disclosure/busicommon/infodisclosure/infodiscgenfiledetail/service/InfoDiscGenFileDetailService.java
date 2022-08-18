@@ -281,6 +281,23 @@ public class InfoDiscGenFileDetailService {
 				}
 			}
 		}
+		else if (StringUtil.equals(DictCodeListExt2.基准日_到期日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenMDATE(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取开始日结束日方法
+					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
 		else{
 			ProdInfoListEntity prodInfo = null;
 			for (ProdInfoListEntity prodInfoListEntity : prodList) {

@@ -46,4 +46,5 @@ public interface DisProdBaseInfoMapper  {
 
     List<SelectOptionDto> queryPprodIds(Map<String, Object> paramMap);
 
+    List<SelectOptionDto> queryPprodName(Map<String, Object> paramMap);
 }

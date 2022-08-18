@@ -102,6 +102,18 @@ public class ProdInfo001Controller extends BaseController {
     }
 
     /**
+     * 分页查询产品下拉框
+     *
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("queryPprodName")
+    @ResponseBody
+    public Page<SelectOptionDto> queryPprodName() {
+        Map<String, Object> param= RequestUtil.getPageParam();
+        return  prodInfoService.queryPprodName(param);
+    }
+    /**
      * 删除
      *
      * @param dto 页面选中的数据

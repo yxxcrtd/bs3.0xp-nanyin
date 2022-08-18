@@ -29,6 +29,11 @@ public class RepReportCheck extends BaseEntity {
     /**
      * 产品代码
      */
+    private String pprodId;
+
+    /**
+     * 子产品代码
+     */
     private String prodId;
 
     /**
@@ -259,5 +264,13 @@ public class RepReportCheck extends BaseEntity {
      */
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource == null ? null : dataSource.trim();
+    }
+
+    public String getPprodId() {
+        return pprodId;
+    }
+
+    public void setPprodId(String pprodId) {
+        this.pprodId = pprodId;
     }
 }

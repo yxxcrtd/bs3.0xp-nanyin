@@ -6,6 +6,7 @@
         <result column="REP_ID" property="repId" jdbcType="VARCHAR" />
         <result column="REPORT_TYPE" property="reportType" jdbcType="VARCHAR" />
         <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+        <result column="P_PROD_ID" property="pprodId" jdbcType="VARCHAR" />
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
         <result column="CHECK_DATE" property="checkDate" jdbcType="DATE" />
         <result column="START_DATE" property="startDate" jdbcType="DATE" />
@@ -247,25 +248,86 @@
 
     <select id="searchList" parameterType="java.util.Map"
             resultType="com.joyintech.tams.disclosure.information.config.repreportcheck.dto.ReportCheckDto">
+    select * from (
         SELECT
         rrc.REPORT_CHECK_ID reportCheckId,
         rrc.REP_ID repId,
         rrc.REPORT_TYPE reportType,
         rrc.REPORT_NAME reportName ,
-        rrc.PROD_ID prodId,
+        rri.P_PROD_ID pprodId,
+        rri.PROD_ID prodId,
         rri.PROD_NAME prodName,
         rrc.CHECK_DATE checkDate,
         rrc.ERRORMSG errormsg,
-        rrc.FILE_NO  fileNo
+        rrc.FILE_NO  fileNo,
+        rrc.UPDATE_TIME updateTime,
+        rrc.CREATE_TIME createTime
         FROM REP_REPORT_CHECK rrc
-        left join REP_PROD_INFO rri on rrc.PROD_ID=rri.PROD_ID
+        inner join REP_PROD_INFO rri on rrc.PROD_ID=rri.PROD_ID and rri.REP_PROD_TYPE in('02','03')
         where rrc.DATA_STATUS ='E'
         <if test="prodIdArr != null and prodIdArr.size > 0">
-            AND rrc.PROD_ID IN
+            AND (rri.PROD_ID IN
             <foreach item="item" collection="prodIdArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>
+            or
+            rri.P_PROD_ID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+                </foreach>)
+         </if>
+        <if test="reportTypeArr != null and reportTypeArr.size > 0">
+            AND rrc.REPORT_TYPE IN
+            <foreach item="item" collection="reportTypeArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="reportNameList != null and reportNameList.size > 0">
+            AND rrc.REPORT_NAME IN
+            <foreach item="item" collection="reportNameList" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="checkDateStart != null and checkDateStart != ''">
+            <![CDATA[AND  rrc.CHECK_DATE >= TO_DATE(#{checkDateStart},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="checkDateEnd != null and checkDateEnd != ''">
+            <![CDATA[AND  rrc.CHECK_DATE <= TO_DATE(#{checkDateEnd},'YYYY-MM-DD')]]>
+        </if>
+
+        union all
+        SELECT
+        rrc.REPORT_CHECK_ID reportCheckId,
+        rrc.REP_ID repId,
+        rrc.REPORT_TYPE reportType,
+        rrc.REPORT_NAME reportName ,
+        rri.PROD_ID pprodId,
+        '' prodId,
+        rri.PROD_NAME prodName,
+        rrc.CHECK_DATE checkDate,
+        rrc.ERRORMSG errormsg,
+        rrc.FILE_NO  fileNo,
+        rrc.UPDATE_TIME updateTime,
+        rrc.CREATE_TIME createTime
+        FROM REP_REPORT_CHECK rrc
+        inner join REP_PROD_INFO rri on rrc.PROD_ID=rri.P_PROD_ID and rri.REP_PROD_TYPE in('01')
+        where rrc.DATA_STATUS ='E'
+        <if test="prodIdArr != null and prodIdArr.size > 0">
+            AND (rri.PROD_ID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            or
+            rri.P_PROD_ID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>)
         </if>
         <if test="reportTypeArr != null and reportTypeArr.size > 0">
             AND rrc.REPORT_TYPE IN
@@ -287,7 +349,9 @@
         <if test="checkDateEnd != null and checkDateEnd != ''">
             <![CDATA[AND  rrc.CHECK_DATE <= TO_DATE(#{checkDateEnd},'YYYY-MM-DD')]]>
         </if>
-        order by NVL(rrc.UPDATE_TIME,rrc.CREATE_TIME) desc
+
+        )
+        order by NVL(updateTime,createTime) desc
     </select>
 
     <select id="getRepDataCheckList" resultType="com.joyintech.tams.common.base.entity.RepDataCheck">
@@ -339,7 +403,7 @@
         where
         1=1
         <if test="search != null and search != ''">
-            REPORT_NAME like concat(concat('%',#{search}),'%')
+           and REPORT_NAME like concat(concat('%',#{search}),'%')
         </if>)
         where NUM=1
     </select>

@@ -147,7 +147,7 @@ $(function() {
         }
         if(selRows != null && selRows.length == 1){
             Joyin.confirm(confirmMessage, function(){
-                Joyin.dialog("信披模板启用禁用",basePath+"disclosure/information/reportpage/ReportPageManage003/init","70%","70%",
+                Joyin.dialog("信披模板启用禁用",basePath+"disclosure/information/reportpage/ReportPageManage003/init","1220px","70%",
                     {repId:selRows[0].repId,workflowType:workflowType},function () {
                             table.reload();
                 })

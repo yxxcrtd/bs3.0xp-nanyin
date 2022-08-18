@@ -291,6 +291,46 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         }
         params.put("condition", sb.toString());
     }
+
+    public void getRandgeRule2(Map<String, Object> params){
+        String repId =(String)params.get("repId");
+        //根据报表编码查询规则数据
+        List<RepJobRange> ruleList = repDetailsShow001Mapper.getRepJobRangeInfo(repId);
+//        //根据规则数据设置查询条件
+        StringBuffer sb = new StringBuffer();
+        if(!StringUtil.isEmptyList(ruleList)){
+            for(RepJobRange dto:ruleList){
+                if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_募集方式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_发行方式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_发行状态.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放模式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否独立开户.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_理财类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品期限类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())){
+                    sb.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
+                            .append(dto.getRuleType4()).append("'");
+                }else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_到期日.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_清盘日.getValue())){
+                    String sysDate=DateUtil.getCurrentDate();
+                    if(dto.getRuleType4()==null||StringUtil.isEmpty(dto.getRuleType4())){
+                        sb.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')").append(dto.getRuleType2()).append("'")
+                                .append(sysDate).append("'");
+                    }
+                    else{
+                        sb.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')").append(dto.getRuleType2()).append("'")
+                                .append(dto.getRuleType4()).append("'");
+                    }
+                }
+            }
+        }
+        params.put("condition", sb.toString());
+    }
     
     /**
      * 显示报表：1.用于单击报表显示报表模板，2.指定报表查询条件后预览报表； 

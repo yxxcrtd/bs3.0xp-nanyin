@@ -395,10 +395,6 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		//一级：产品状态
 		if (prodStatusList!=null && prodStatusList.size() > 0) {
 			for (DataDictItem map_1 : prodStatusList) {
-				//只显示运行中的产品
-				if(!"01".equals(map_1.getItemCode())){
-					continue;
-				}
 				//查询产品系列的条件
 				Map<String,Object> param=new HashMap<>();
 				TreeNode treeDto = new TreeNode();

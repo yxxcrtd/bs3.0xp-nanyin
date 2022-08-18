@@ -412,6 +412,28 @@
     		   addNew();
     	   });
 		   // 导入按钮
+		   // $('#DisProdPlanManage001_btn_import').click(function() {
+			//    Joyin.confirm("请确认是否要导入数据？", function () {
+			// 	   Joyin.uploadFile(function(fileName) {
+			// 		   Joyin.ajax(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/checkImportData', {fileName: fileName}, function(checkResult) {
+			// 			   if (checkResult) {
+			// 				   setTimeout( function () {
+			// 						   if(checkResult.data.errorMsg){
+			// 							   Joyin.error(checkResult.data.errorMsg);
+			// 							   return;
+			// 						   }
+			// 						   // confirmMsg3校验-->confirmMsg校验-->提交  ,三层嵌套
+			// 						   confirmMsg3ImportExcel(checkResult);
+			// 					   }
+			// 					   ,1000);
+			// 			   }
+			// 		   });
+			// 	   },function() {
+			// 		   table.reload();
+			// 	   });
+			//    });
+		   // });
+
 		   $('#DisProdPlanManage001_btn_import').click(function() {
 			   Joyin.confirm("请确认是否要导入数据？", function () {
 				   Joyin.uploadFile(function(fileName) {
@@ -422,8 +444,71 @@
 										   Joyin.error(checkResult.data.errorMsg);
 										   return;
 									   }
-									   // confirmMsg3校验-->confirmMsg校验-->提交  ,三层嵌套
-									   confirmMsg3ImportExcel(checkResult);
+									   if (checkResult.data.confirmMsg) {
+										   Joyin.confirm(checkResult.data.confirmMsg, function () {
+											   if (checkResult.data.confirmMsg2) {
+												   Joyin.confirm(checkResult.data.confirmMsg2, function () {
+													   var data = {
+														   tempList: checkResult.data.correctData
+													   }
+													   Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/importFile', data,
+														   function (resultObj) {
+															   if (resultObj.statuCode.toString() === '200') {
+																   table.reload();
+																   return;
+															   }
+														   });
+												   },{}, function () {
+													   layui.layer.closeAll()
+													   table.reload();
+												   });
+											   }else{
+												   var data = {
+													   tempList: checkResult.data.correctData
+												   }
+												   Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/importFile', data,
+													   function (resultObj) {
+														   if (resultObj.statuCode.toString() === '200') {
+															   table.reload();
+															   return;
+														   }
+													   });
+											   }
+
+										   },{}, function () {
+											   layui.layer.closeAll()
+											   table.reload();
+										   });
+									   }else {
+										   if (checkResult.data.confirmMsg2) {
+											   Joyin.confirm(checkResult.data.confirmMsg2, function () {
+												   var data = {
+													   tempList: checkResult.data.correctData
+												   }
+												   Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/importFile', data,
+													   function (resultObj) {
+														   if (resultObj.statuCode.toString() === '200') {
+															   table.reload();
+															   return;
+														   }
+													   });
+											   },{}, function () {
+												   layui.layer.closeAll()
+												   table.reload();
+											   });
+										   }else{
+											   var data = {
+												   tempList: checkResult.data.correctData
+											   }
+											   Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/importFile', data,
+												   function (resultObj) {
+													   if (resultObj.statuCode.toString() === '200') {
+														   table.reload();
+														   return;
+													   }
+												   });
+										   }
+									   }
 								   }
 								   ,1000);
 						   }
@@ -433,6 +518,8 @@
 				   });
 			   });
 		   });
+
+
 
 		   // 导入 confirmMsg3 校验
 		   function confirmMsg3ImportExcel(checkResult){

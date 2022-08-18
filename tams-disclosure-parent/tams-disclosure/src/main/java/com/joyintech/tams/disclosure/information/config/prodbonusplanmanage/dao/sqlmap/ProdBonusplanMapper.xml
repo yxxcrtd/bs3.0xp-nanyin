@@ -432,7 +432,7 @@
         union all
         select distinct
         rp1.PROD_ID id,
-        concat(rp1.PROD_NAME,concat('(',concat(rp2.PROD_NAME,')'))) text
+        concat(rp2.PROD_NAME,concat('(',concat(rp1.PROD_NAME,')'))) text
         from
         REP_PROD_INFO rp1 left join REP_PROD_INFO rp2 on rp1.P_PROD_ID = rp2.PROD_ID
         where rp1.STATUS='E' and rp2.IS_GRADE = '01'

@@ -755,6 +755,7 @@ public class InfoDisclosureGenService {
 			}
 
 		}
+		params.put("enddate", DateUtil.format(infoDisclosureGenAndSendEntity.getEndDate()));
 		params.put("repid", infoDisclosureGenAndSendEntity.getRepId());
 		params.put("execDate", execDate);
 		params.put("platformDate", execDate);
