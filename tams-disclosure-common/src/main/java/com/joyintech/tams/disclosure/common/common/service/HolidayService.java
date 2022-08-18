@@ -33,4 +33,8 @@ public class HolidayService extends BaseService {
     public Date getNextWorkDay(Map<String, Object> params) {
         return holidayMapper.getNextWorkDay(params);
     }
+
+    public Date getAferNWorkDay(Map<String, Object> params) {
+        return holidayMapper.getAferNWorkDay(params);
+    }
 }
