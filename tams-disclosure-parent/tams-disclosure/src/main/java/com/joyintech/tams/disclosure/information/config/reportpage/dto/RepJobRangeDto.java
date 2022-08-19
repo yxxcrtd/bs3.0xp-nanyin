@@ -117,10 +117,10 @@ public class RepJobRangeDto extends RepJobRange {
             value = backCode(DictCodeExt1.开放频率, this.getRuleType4());
         }
         else if (DictCodeExt1.是否是指数型产品.getValue().equals(key)) {
-            value = backCode(DisclosureDictCode.是否, this.getRuleType4());
+            value = backCode(DictCode.是或否, this.getRuleType4());
         }
         else if (DictCodeExt1.是否是客户周期型产品.getValue().equals(key)) {
-            value = backCode(DisclosureDictCode.是否, this.getRuleType4());
+            value = backCode(DictCode.是或否, this.getRuleType4());
         }
         else if (DictCodeExt1.信批产品类别.getValue().equals(key)) {
             value = backCode(DictCodeExt1.信批产品类别, this.getRuleType4());
