@@ -239,6 +239,23 @@
     <select id="selectCount" resultType="int">
        select count(*) from DIS_NOSTD_CREDITOR where DATA_STATUS='E'
     </select>
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_ID text,
+        PROD_RE object
+        FROM
+        rep_prod_info
+        <where>
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+    </select>
 
     <delete id="deleteOnStatus" parameterType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto" >
         update DIS_NOSTD_CREDITOR DNDC set DATA_STATUS = 'D'
