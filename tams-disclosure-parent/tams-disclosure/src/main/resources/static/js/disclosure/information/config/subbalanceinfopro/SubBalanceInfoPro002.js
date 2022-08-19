@@ -63,7 +63,7 @@ $(function() {
 	var init = function() {
 		$('#booksetId').change(function () {
 			var prodId = $('#booksetId').val();
-			var data = $('#booksetId').select2("data")[0].object;
+			var data = $('#booksetId').select2("data")[0].id;
 			$('#prodName').val(data);
 		});
 
