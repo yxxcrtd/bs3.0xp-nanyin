@@ -28,8 +28,8 @@
             WebOfficeObj.obj.Style.ShowOpenProgress = true; //开启、关闭打开文档时的进度条
             WebOfficeObj.obj.WebCreateProcess();          //创建空进程避免打开慢
 			WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";
-            WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
-            WebOfficeObj.Alert(WebOfficeObj.FileName);
+            // WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
+            // WebOfficeObj.Alert(WebOfficeObj.FileName);
 			WebOfficeObj.WebOpen(true);
             SetGraySkin();			//设置控件皮肤
             WebOfficeObj.ShowMenuBar(false);
