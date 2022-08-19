@@ -117,8 +117,8 @@ public class UnClaimAssetDetail001Controller extends BaseController {
         params.setBusinessType(DictCodeListExt4.共通业务类型_非标债权类资产明细维护.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> SpringContextUtil.getTextValue("产品主代码") + "(" + entity.getProdId() + ")" + "-"
-                + SpringContextUtil.getTextValue("生效日") + "("+entity.getEffDate()+")" + "-"
-                + SpringContextUtil.getTextValue("生效截止日期") + "("+entity.getEffEndDate()+")" );
+                + SpringContextUtil.getTextValue("生效日") + "("+DateUtil.format(entity.getEffDate())+")" + "-"
+                + SpringContextUtil.getTextValue("生效截止日期") + "("+DateUtil.format(entity.getEffEndDate())+")" );
         processParameter.setWorkFlowParameter(params);
         String msg = unClaimAssetDetail002Service.start(processParameter,
                 dto.getSelectedItem().toArray(new UnClaimAssetDetailDto[dto.getSelectedItem().size()]));
@@ -181,8 +181,11 @@ public class UnClaimAssetDetail001Controller extends BaseController {
         return unClaimAssetDetail001Service.importFile(param);
     }
 
-
-
-
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody @Validated({
+            ValidateGroupDelete.class}) UnClaimAssetDetailDto dto, BindingResult br)  {
+        return commonCheck(br, dto.getOperateType());
+    }
 
 }

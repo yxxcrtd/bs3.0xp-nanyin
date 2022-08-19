@@ -82,6 +82,7 @@
                 </foreach>
             </if>
         </where>
+        ORDER BY DNDC.PROJECT_NO
     </select>
 <!--产品代码产品名称模糊查询-->
     <select id="getProdInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -187,6 +188,7 @@
                 AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
             </if>
         </where>
+        ORDER BY DNDC.PROJECT_NO
     </select>
     <select id="checkNostdExistByProdId" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
         select
