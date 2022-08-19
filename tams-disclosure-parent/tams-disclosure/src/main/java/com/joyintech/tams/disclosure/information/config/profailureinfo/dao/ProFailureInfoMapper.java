@@ -35,5 +35,7 @@ public interface ProFailureInfoMapper {
 
     int hasRepeatedData(ProFailureInfo001Dto dto);
 
-    ProFailureInfo001Dto isRepeated(ProFailureInfo001Dto dto);
+    List<ProFailureInfo001Dto> isRepeated(ProFailureInfo001Dto dto);
+
+    ProFailureInfo001Dto isRepeated2(ProFailureInfo001Dto dto);
 }
