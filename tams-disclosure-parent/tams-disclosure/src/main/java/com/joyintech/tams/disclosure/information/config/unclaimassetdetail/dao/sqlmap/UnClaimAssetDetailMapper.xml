@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper" >
 <select id="selectForPage" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
-    SELECT distinct
-        DNDC.NOSTD_ASSET_ID,
+    SELECT
+        /*DNDC.NOSTD_ASSET_ID,*/
         DNDC.PROD_ID prodId,
         RPI.PROD_NAME prodName,
         DNDC.DATA_STATUS dataStatus,
         DNDC.EFF_DATE effDate,
         DNDC.EFF_END_DATE effEndDate,
          DNDC.UPDATE_USER updateUser,
-         DNDC.UPDATE_TIME updateTime
+        max(dndc.update_time ) updatetime
     FROM DIS_NOSTD_CREDITOR DNDC
     LEFT JOIN REP_PROD_INFO RPI
     on DNDC.PROD_ID = RPI.PROD_ID
@@ -37,6 +37,12 @@
             </foreach>
         </if>
     </where>
+    group by dndc.prod_id ,
+        rpi.prod_name ,
+        dndc.data_status ,
+        dndc.eff_date ,
+        dndc.eff_end_date ,
+        dndc.update_user
 </select>
     <select id="selectDetail" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
         SELECT

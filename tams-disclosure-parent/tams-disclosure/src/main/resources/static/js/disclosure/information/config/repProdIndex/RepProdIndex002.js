@@ -41,24 +41,30 @@ var RepProdIndex002 = function() {
                                 if($('#isGrade').val() == "01" && pageModel === PAGE_MODEL_EDIT){
                                     Joyin.alert('修改后的母产品信息会同步至母产品下其它子产品数据中！');
                                 }
+                                /* NYLCXP-860 提示框存在时间太短做延迟处理 modify by kongzhifang 2022-08-19 */
+                                setTimeout(()=>{
                                 if(operateType === 'save') {
-                                    WorkFlow.doSaveList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_save");
-                                }
-                                else {
-                                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_submit");
-                                }
+                                        WorkFlow.doSaveList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_save");
+                                    }
+                                    else {
+                                        WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_submit");
+                                    }
+                                },2000);
                             },{}, function () {
                             });
                         }else{
                             if($('#isGrade').val() == "01" && pageModel === PAGE_MODEL_EDIT){
                                 Joyin.alert('修改后的母产品信息会同步至母产品下其它子产品数据中！');
                             }
+                            /* NYLCXP-860 提示框存在时间太短做延迟处理 modify by kongzhifang 2022-08-19 */
+                            setTimeout(()=>{
                             if(operateType === 'save') {
-                                WorkFlow.doSaveList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_save");
-                            }
-                            else {
-                                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_submit");
-                            }
+                                    WorkFlow.doSaveList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_save");
+                                }
+                                else {
+                                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_submit");
+                                }
+                            },2000);
                         }
                     })
 
