@@ -145,8 +145,8 @@
 <!--                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},-->
 <!--            </if>-->
         </set>
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
-        <![CDATA[AND  DEAL_DATE = TO_DATE(#{dealDateStr},'YYYY-MM-DD') ]]>
+        where PROD_ID = #{prodId,jdbcType=VARCHAR} and
+        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
     </update>
 
 
@@ -211,7 +211,8 @@
            CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
            CREATE_DEPT CREATE_DEPT
            from DIS_LARGE_REDEMPTION
-           where PROD_ID = #{prodId,jdbcType=VARCHAR} and DEAL_DATE = to_date(#{dealDate},'YYYY-MM-DD')
+           where PROD_ID = #{prodId,jdbcType=VARCHAR} and
+            PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
 
     </select>
 
