@@ -17,6 +17,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
 import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage001Mapper;
+import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage002Mapper;
 import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
 
     @Autowired
 	private ReportPageManage001Mapper reportPageManage001Mapper;
+
+	@Autowired
+	private ReportPageManage002Mapper reportPageManage002Mapper;
     /**
      */
 //    @Autowired
@@ -192,7 +196,8 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
 //        reportPageManage001Mapper.deleteRangeInfo(param.get("repId").toString());
 //        repInfoMapper.deleteByPrimaryKey(param.get("repId").toString());
 //        reportPageManage001Mapper.deleteRepScreen(param);
-//        
+//
+		reportPageManage002Mapper.deleteReportStatus(param);
         restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ReportPageManage001/deleteReport",
                 param, Integer.class);

@@ -137,7 +137,7 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 
 	//流程作废
 	public void doDelete(String workflowId) {
-		Map<String,String> param = new HashMap<>();
+		Map<String,Object> param = new HashMap<>();
 		param.put("workflowId",workflowId);
 		reportPageManage002Mapper.deleteReportStatus(param);
 	}
