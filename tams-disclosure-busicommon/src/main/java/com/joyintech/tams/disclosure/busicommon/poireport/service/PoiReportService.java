@@ -1386,7 +1386,7 @@ public class PoiReportService {
 
 		//查询指定的产品在统计区间内的所有业绩基准
 		Map<String,Object> mapParas = new HashMap<>();
-		mapParas.put("prodId", prod.getProdId());
+		mapParas.put("prodId", prod.getpProdId());
 		List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(mapParas);
 
 		//区间内是否有业绩基准变更的标志

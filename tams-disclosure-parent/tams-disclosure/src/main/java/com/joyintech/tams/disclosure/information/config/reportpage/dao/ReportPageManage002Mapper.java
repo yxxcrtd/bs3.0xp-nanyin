@@ -38,7 +38,7 @@ public interface ReportPageManage002Mapper {
 
     List<ReportPageManage001Dto> getReportInfo();
 
-    void deleteReportStatus(Map<String,String> map);
+    void deleteReportStatus(Map<String,Object> map);
 
     ReportStatusDto selectReportInfo(Map<String,String> map);
 

@@ -125,6 +125,9 @@
      * 画面加载完成
      */
     $(function() {
+        // 去掉工作流框架的“意见和说明”
+        $('#wfl_comment').val('无').parent().hide();
+
         // 绑定按钮事件
         $('#InfoCompliance002_btn_save').click(function() {
             saveOrSubmit('save');
