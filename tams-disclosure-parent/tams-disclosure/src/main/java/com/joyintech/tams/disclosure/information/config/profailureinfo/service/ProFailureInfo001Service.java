@@ -47,7 +47,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             param.put("prodRegistNoList", StringUtil.splitToList(GlobalConstant.COMMA,prodId));
         }
         Map<String, Object> pageParam = RequestUtil.getPageParam();
-        Page<ProFailureInfo001Dto> result = queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+        Page<ProFailureInfo001Dto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), ()
                 -> proFailureInfoMapper.select(param));
         return result;
     }
@@ -94,8 +94,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
 
     @Override
     public Page<ProFailureInfo001Dto> selectPageData(Map<String, Object> selectParam) {
-        return queryForPage(Integer.parseInt(selectParam.get("page").toString()),  Integer.parseInt(selectParam.get("length").toString()), ()
-                -> proFailureInfoMapper.select(selectParam));
+        return this.selectForPage(selectParam);
     }
 
     public ProFailureInfo001Dto selectByPrimaryKey(String prodRegistNo) {
