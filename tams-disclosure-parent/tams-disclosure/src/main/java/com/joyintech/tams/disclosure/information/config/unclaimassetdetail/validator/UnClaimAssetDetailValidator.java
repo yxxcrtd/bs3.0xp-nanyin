@@ -7,6 +7,7 @@ import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.service.UnClaimAssetDetail002Service;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,8 @@ import java.util.*;
 
 @Component
 public class UnClaimAssetDetailValidator implements BeanValidator {
+
+
 
     @Autowired
     private UnClaimAssetDetail002Service unClaimAssetDetail002Service;
@@ -24,8 +27,7 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
         Date platDate = DateUtil.platDateFromCache();
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
-            //删除check
-
+            // 删除校验
         }else{
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
                 //新建check
@@ -59,13 +61,13 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
                 }
                 if(StringUtil.isNotEmpty(dto.getEffEndDate())){
                     if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-                        resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+                        resultList.add(new ValidMessage("生效截止日期要大于等于平台日期！"));
                     }
                 }
                 //生效日截止日期要大于等于生效日
                 if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
                     if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
-                        resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
+                        resultList.add(new ValidMessage("生效截止日期要大于等于生效日！"));
                     }
                 }
             }else{
@@ -84,26 +86,26 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
                         }
                         if(StringUtil.isNotEmpty(dto.getEffEndDate())){
                             if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+                                resultList.add(new ValidMessage("生效截止日期要大于等于平台日期！"));
                             }
                         }
                         //生效日截止日期要大于等于生效日
                         if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
                             if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
-                                resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
+                                resultList.add(new ValidMessage("生效截止日期要大于等于生效日！"));
                             }
                         }
                     }else if(DateUtil.compareDate(unClaimAssetDetailDto.getEffEndDate(),platDate)>0){
                         //前台生效截止日可修改，要检验生效截止日
                         if(StringUtil.isNotEmpty(dto.getEffEndDate())){
                             if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+                                resultList.add(new ValidMessage("生效截止日期要大于等于平台日期！"));
                             }
                         }
                         //生效日截止日期要大于等于生效日
                         if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
                             if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
-                                resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
+                                resultList.add(new ValidMessage("生效截止日期要大于等于生效日！"));
                             }
                         }
                     }
