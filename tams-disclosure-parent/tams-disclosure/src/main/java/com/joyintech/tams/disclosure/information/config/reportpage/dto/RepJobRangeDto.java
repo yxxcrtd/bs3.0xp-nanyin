@@ -100,8 +100,8 @@ public class RepJobRangeDto extends RepJobRange {
             value = backCode(DictCode.发行状态, this.getRuleType4());
 
         }
-        else if ("IS_INDEPE_ACC".equals(key) || "IS_INDEX".equals(key)|| "IS_PERIOD".equals(key)) {
-            value = backCode(DictCode.是否, this.getRuleType4());
+        else if ("IS_INDEPE_ACC".equals(key)) {
+            value = backCode(DictCode.是或否, this.getRuleType4());
 
         }
         else if (DisclosureDictCode.产品类型.getValue().equals(key)) {
@@ -117,10 +117,10 @@ public class RepJobRangeDto extends RepJobRange {
             value = backCode(DictCodeExt1.开放频率, this.getRuleType4());
         }
         else if (DictCodeExt1.是否是指数型产品.getValue().equals(key)) {
-            value = backCode(DisclosureDictCode.是否, this.getRuleType4());
+            value = backCode(DictCode.是或否, this.getRuleType4());
         }
         else if (DictCodeExt1.是否是客户周期型产品.getValue().equals(key)) {
-            value = backCode(DisclosureDictCode.是否, this.getRuleType4());
+            value = backCode(DictCode.是或否, this.getRuleType4());
         }
         else if (DictCodeExt1.信批产品类别.getValue().equals(key)) {
             value = backCode(DictCodeExt1.信批产品类别, this.getRuleType4());

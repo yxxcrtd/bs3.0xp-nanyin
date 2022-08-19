@@ -255,16 +255,10 @@
                 Joyin.error(JoyinUtil.getMessage("请至少选择一条记录"));
                 return;
             }
-            var selArrUseful =[];
-            selArr.forEach(v => {
-                if(v.dataStatus == 'E'){
-                    //selArr.remove();
-                    selArrUseful.push(v);
+            for(var i=0;i<selArr.length;i++){
+                if(selArr[i].dataStatus =="D"){
+                    return Joyin.error("只能删除有效数据，请重新选择");
                 }
-            })
-            if (!selArrUseful || selArrUseful.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
-                return;
             }
             var object = {selectedItem: selArrUseful, operateType: "delete"};//请求参数
             //Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/check', object, function (result) {
