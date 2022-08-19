@@ -62,7 +62,7 @@ public class ReportCheck002Service {
                 //若阈值是一个范围，需要以分号分隔分别输入两边的临界值，例：控制的区间是50-80，此处需要“50;80”
                 List<String>strList=StringUtil.splitToList("；",paramValue);
                 if(CollectionUtils.isEmpty(strList)||strList.size() != 2){
-                    ValidMessage validMessage = new ValidMessage("第"+index+"输入格式错误，需要以分号分隔分别输入两边的临界值");
+                    ValidMessage validMessage = new ValidMessage("第"+index+"行输入格式错误，需要以中文分号分隔分别输入两边的临界值");
                     errorList.add(validMessage);
                 }else{
                     String s1=strList.get(0);
@@ -72,12 +72,12 @@ public class ReportCheck002Service {
                         BigDecimal paramValue2=new BigDecimal(s2);
 
                         if(paramValue1.compareTo(paramValue2)>=0){
-                            ValidMessage validMessage = new ValidMessage("第"+index+"分号左边的阈值一定要小于分号右边的阈值");
+                            ValidMessage validMessage = new ValidMessage("第"+index+"行分号左边的阈值一定要小于分号右边的阈值");
                             errorList.add(validMessage);
                         }
 
                     }catch (Exception e) {
-                        ValidMessage validMessage = new ValidMessage("第"+index+"输入值错误，请输入正确的数字");
+                        ValidMessage validMessage = new ValidMessage("第"+index+"行输入值错误，请输入正确的数字");
                         errorList.add(validMessage);
                     }
                 }
@@ -88,7 +88,7 @@ public class ReportCheck002Service {
                         BigDecimal paramValueTmp=new BigDecimal(paramValue);
 
                     }catch (Exception e) {
-                        ValidMessage validMessage = new ValidMessage("第"+index+"输入值错误，请输入正确的数字");
+                        ValidMessage validMessage = new ValidMessage("第"+index+"行输入值错误，请输入正确的数字");
                         errorList.add(validMessage);
                     }
                 }else {
