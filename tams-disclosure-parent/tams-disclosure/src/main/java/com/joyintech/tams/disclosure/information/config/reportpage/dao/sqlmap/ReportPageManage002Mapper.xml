@@ -59,6 +59,9 @@
         <if test="workflowId != null">
             AND WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
         </if>
+        <if test="repId != null">
+            AND REP_ID = #{repId,jdbcType=VARCHAR}
+        </if>
     </delete>
 
     <update id="updateReportStatus" parameterType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto">

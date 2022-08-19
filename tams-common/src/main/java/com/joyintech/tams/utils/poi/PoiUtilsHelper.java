@@ -3,9 +3,7 @@ package com.joyintech.tams.utils.poi;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -382,17 +380,19 @@ public class PoiUtilsHelper {
 //		System.out.println("==================");
 		String fontFamily = "方正仿宋简体";
 		int fontSize = 11;
-		if ( styleRow!=null  ) {
+		if ( styleRow!=null  ) {  //从规则行里面拿格式
 			fontFamily = table.getRow(0).getCell(0).getParagraphs().get(0).getRuns().get(0).getFontFamily();
 			fontSize = table.getRow(0).getCell(0).getParagraphs().get(0).getRuns().get(0).getFontSize();
 		}
 		//获取明细列的规则
 		if ( "row".equals(rule.getLoopMode()) ) {
-			table.removeRow(0);  //删除规则行1
-			int rowNo = rule.getStartRow()-1;
+			XWPFTableRow templateRow = table.getRow(rule.getStartRow());  //起始行（空白行）作为样板行，并且起始行输入样板字体，否则只能用默认的宋体
+			int rowNo = rule.getStartRow();
 			for ( int i=0;i<listData.size();i++ ) {
 				Map<String,Object> data = listData.get(i);
-				XWPFTableRow dataRow = table.insertNewTableRow(i+1);
+				XWPFTableRow dataRow = table.insertNewTableRow(rowNo++);
+				createCellsAndCopyStyles(dataRow,templateRow,fontFamily,fontSize);
+				
 				for ( int j=0;j<rule.getFields().size();j++ ) {
 					String f = rule.getFields().get(j);
 					Object o = (f==null?"null":data.get(f));
@@ -401,30 +401,39 @@ public class PoiUtilsHelper {
 					}
 					String content = (o==null?"":o.toString());
 					
-					XWPFTableCell cell = dataRow.createCell();
+					XWPFTableCell cell = dataRow.getCell(j);  //createCell();
 					cell.setVerticalAlignment(XWPFVertAlign.CENTER);
-					XWPFParagraph paragraph = cell.addParagraph();
-					paragraph.setAlignment(styleRow.getCell(j).getParagraphs().get(0).getAlignment());
-					paragraph.setVerticalAlignment(TextAlignment.CENTER);  //没有效果
-					XWPFRun run = paragraph.createRun();
-					run.setFontFamily(fontFamily);
-					if ( fontSize!=-1 )
-						run.setFontSize( fontSize);
-					if ( cell.getParagraphs().size()>0 ) 
-						cell.removeParagraph(0);					
+					
+					XWPFParagraph paragraph = null;
+					List<XWPFParagraph> listParagraph = cell.getParagraphs();
+					if ( listParagraph.size()>0 ) {
+						paragraph = listParagraph.get(0);
+					} else {
+						paragraph = cell.addParagraph();
+					}
+					paragraph.setVerticalAlignment(TextAlignment.CENTER);
+					
+					XWPFRun run = null;
+					if ( paragraph.getRuns() !=null && paragraph.getIRuns().size()>0 )
+						run = paragraph.getRuns().get(0);
+					else
+						run= paragraph.createRun();
+
+//					if ( cell.getParagraphs().size()>0 ) 
+//						cell.removeParagraph(0);					
 					run.setText(content,0);					
 				}
-
-				rowNo++;
 			}
-			table.removeRow(rowNo);  //删除最后一行
+			table.removeRow(0);  //删除规则行1
+			table.removeRow(rowNo-1);  //删除最后一行
 		}
 		
 		if ( "col".equals(rule.getLoopMode()) && listData!=null ) {
 			Iterator itr = listData.iterator();
 			int colNo = rule.getStartCol();   //列号
-			int initWidth = table.getRow(rule.getStartRow()).getCell(rule.getStartCol()-1).getWidth()/100;
-			int newColWidth = (100-initWidth)/(listData.size()+1);
+			int tableWidth = table.getRow(0).getCell(0).getWidth();
+			int initWidth = table.getRow(rule.getStartRow()).getCell(rule.getStartCol()-1).getWidth();
+			int newColWidth = (tableWidth-initWidth)/(listData.size()+1);
 			while ( itr.hasNext() ) {
 				Map<String,Object> data = (Map)itr.next();  //取出一条数据
 				for ( int rowNo=0;rowNo<table.getNumberOfRows();rowNo++ ) {  //
@@ -433,10 +442,10 @@ public class PoiUtilsHelper {
 					XWPFTableCell cell = null;           //取出该行的相应单元格
 					if ( colNo<cells.size() ) {
 						cell = cells.get(colNo);
-						cell.setWidth(newColWidth+"%");
+						cell.setWidth(newColWidth+"");
 					} else {
 						cell = dataRow.createCell();
-						cell.setWidth( newColWidth+"%" );
+						cell.setWidth( newColWidth+"" );
 					}
 					cell.setVerticalAlignment(XWPFVertAlign.CENTER);
 					//填充数据
@@ -474,7 +483,7 @@ public class PoiUtilsHelper {
 		return listData==null?0:listData.size();
 	}
 
-    private static void createCellsAndCopyStyles(XWPFTableRow targetRow, XWPFTableRow sourceRow) {
+    public static void createCellsAndCopyStyles(XWPFTableRow targetRow, XWPFTableRow sourceRow,String defaultFontFamily,int defaultFontSize) {
         targetRow.getCtRow().setTrPr(sourceRow.getCtRow().getTrPr());
         List<XWPFTableCell> tableCells = sourceRow.getTableCells();
         if (CollectionUtils.isEmpty(tableCells)) {
@@ -493,12 +502,32 @@ public class PoiUtilsHelper {
                 XWPFParagraph p = newCell.addParagraph();
                 p.getCTP().setPPr(sourceParagraph.getCTP().getPPr());
                 XWPFRun run = p.getRuns().isEmpty() ? p.createRun() : p.getRuns().get(0);
-                run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
+                if ( sourceParagraph.getRuns()!=null && sourceParagraph.getRuns().size()>0 ) {
+                	run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
+                	int fontSzie = sourceParagraph.getRuns().get(0).getFontSize();
+					if ( fontSzie!=-1 )
+						run.setFontSize(fontSzie);                	
+                }
+                else {
+                	run.setFontFamily(defaultFontFamily);
+                	if ( defaultFontSize!=-1 )
+                		run.setFontSize(defaultFontSize);
+                }
             } else {
                 XWPFParagraph p = targetParagraphs.get(0);
                 p.getCTP().setPPr(sourceParagraph.getCTP().getPPr());
                 XWPFRun run = p.getRuns().isEmpty() ? p.createRun() : p.getRuns().get(0);
-                run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
+                if ( sourceParagraph.getRuns()!=null && sourceParagraph.getRuns().size()>0 ) {
+                	run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
+                	int fontSzie = sourceParagraph.getRuns().get(0).getFontSize();
+					if ( fontSzie!=-1 )
+						run.setFontSize(fontSzie);                	
+                }
+                else {
+                	run.setFontFamily(defaultFontFamily);
+                	if ( defaultFontSize!=-1 )
+                		run.setFontSize(defaultFontSize);
+                }
             }
         }
     }

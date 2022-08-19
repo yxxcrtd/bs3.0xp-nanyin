@@ -130,7 +130,7 @@ public class PoiUtils {
 
     public static void docxToPdf(InputStream is, OutputStream os) throws IOException {
         XWPFDocument xwpfDocument = new XWPFDocument(is);
-        //setFontType(xwpfDocument);
+        setFontType(xwpfDocument);
         PdfOptions pdfOptions = PdfOptions.create();
         //setAlign(xwpfDocument);
         PdfConverter.getInstance().convert(xwpfDocument, os, pdfOptions);
