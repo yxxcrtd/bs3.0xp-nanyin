@@ -208,7 +208,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
                     for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //产品登记编码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(1), list2.get(1)))) {
+                        if ((StringUtil.equals(list1.get(0), list2.get(0)))&&(StringUtil.equals(list1.get(1), list2.get(1)))&&(StringUtil.equals(list1.get(2), list2.get(2)))) {
                             isRepeat = true;
                             break;
                         }
@@ -222,11 +222,11 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             }
         }
         if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
+            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，请检查文件!";
         }
         Map<String, Object> resultMap = new HashMap<>();
         if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
+            resultMap.put("errorMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
 
