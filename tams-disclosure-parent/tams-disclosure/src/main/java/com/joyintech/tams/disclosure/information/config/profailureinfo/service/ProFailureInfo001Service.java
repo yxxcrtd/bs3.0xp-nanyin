@@ -60,7 +60,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             proFailureInfoMapper.deleteByKey(dto.getProdRegistNo());
         }
         else if (StringUtil.equals(type, "NEW")) {
-            ProFailureInfo001Dto dto1 = proFailureInfoMapper.isRepeated(dto);
+            ProFailureInfo001Dto dto1 = proFailureInfoMapper.isRepeated2(dto);
             if (dto1!=null){
                 if( StringUtil.equals(dto1.getDataStatus(),"D")){
                     dto.setDataStatus("E");
@@ -208,7 +208,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
                     for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //产品登记编码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(1), list2.get(1)))) {
+                        if ((StringUtil.equals(list1.get(0), list2.get(0)))&&(StringUtil.equals(list1.get(1), list2.get(1)))&&(StringUtil.equals(list1.get(2), list2.get(2)))) {
                             isRepeat = true;
                             break;
                         }
@@ -222,11 +222,11 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             }
         }
         if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
+            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，请检查文件!";
         }
         Map<String, Object> resultMap = new HashMap<>();
         if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
+            resultMap.put("errorMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
 
@@ -235,7 +235,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         List<ProFailureInfo001Dto> selectedItem = dto.getSelectedItem();
         List<ProFailureInfo001Dto>  existData = new ArrayList<>();
         for (ProFailureInfo001Dto temp:selectedItem) {
-            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
+            if (this.isRepeated(temp).size()>0){
                 existData.add(temp);
             }
         }
@@ -271,7 +271,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
 
         for (ProFailureInfo001Dto temp:selectedItem) {
             //数据已存在 【产品登记编码 相同】，做更新操作。
-            if (StringUtil.isNotEmpty(this.isRepeated(temp))){
+            if (this.isRepeated(temp).size()>0){
                 existData.add(temp);
             }else {
                 temp.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -329,7 +329,11 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         return proFailureInfoMapper.hasRepeatedData(dto);
     }
 
-    public ProFailureInfo001Dto isRepeated(ProFailureInfo001Dto dto) {
+    public List<ProFailureInfo001Dto> isRepeated(ProFailureInfo001Dto dto) {
         return proFailureInfoMapper.isRepeated(dto);
+    }
+
+    public ProFailureInfo001Dto isRepeated2(ProFailureInfo001Dto dto) {
+        return proFailureInfoMapper.isRepeated2(dto);
     }
 }

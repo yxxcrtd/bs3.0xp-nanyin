@@ -5,14 +5,14 @@
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="产品主代码">prodId</Cell>
             <Cell order="3" name="产品名称">prodName</Cell>
-            <Cell order="4" name="穿透前固定收益类资产占总资产比例">fixPreRatio</Cell>
-            <Cell order="5" name="穿透后固定收益类资产占总资产比例">fixAfterRatio</Cell>
-            <Cell order="6" name="穿透前权益类资产占总资产比例">equityPreRatio</Cell>
-            <Cell order="7" name="穿透后权益类资产占总资产比例">equityAfterRatio</Cell>
-            <Cell order="8" name="穿透前商品及金融衍生品类资产占总资产比例">fdPreRatio</Cell>
-            <Cell order="9" name="穿透后商品及金融衍生品类资产占总资产比例">fdAfterRatio</Cell>
-            <Cell order="10" name="穿透前混合类资产占总资产比例">mixPreRatio</Cell>
-            <Cell order="11" name="穿透后混合类资产占总资产比例">mixAfterRatio</Cell>
+            <Cell order="4" name="穿透前固定收益类资产占总资产比例">fixPreRatioStr</Cell>
+            <Cell order="5" name="穿透后固定收益类资产占总资产比例">fixAfterRatioStr</Cell>
+            <Cell order="6" name="穿透前权益类资产占总资产比例">equityPreRatioStr</Cell>
+            <Cell order="7" name="穿透后权益类资产占总资产比例">equityAfterRatioStr</Cell>
+            <Cell order="8" name="穿透前商品及金融衍生品类资产占总资产比例">fdPreRatioStr</Cell>
+            <Cell order="9" name="穿透后商品及金融衍生品类资产占总资产比例">fdAfterRatioStr</Cell>
+            <Cell order="10" name="穿透前混合类资产占总资产比例">mixPreRatioStr</Cell>
+            <Cell order="11" name="穿透后混合类资产占总资产比例">mixAfterRatioStr</Cell>
             <Cell order="12" name="生效日">effDateStr</Cell>
             <Cell order="13" name="生效截止日期">effEndDateStr</Cell>
             <Cell order="14" name="更新时间">updateTimeStr</Cell>
