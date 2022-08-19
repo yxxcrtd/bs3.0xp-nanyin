@@ -210,6 +210,12 @@ public class DisProdPlanManage002Controller extends BaseController {
 				return new AjaxResult("产品冷静期必须小于运作起始日！", MessageType.错误消息);
 			}
 		}
+		//开放结束日＜运作起始日 NYLCXP-874 add by kongzhifang 2022-08-19
+		if(dto.getOperationStartDate()!=null && dto.getOpenEndDate()!=null){
+			if(DateUtil.compareDate(dto.getOperationStartDate(),dto.getOpenEndDate()) <= 0 ){
+				return new AjaxResult("运作起始日必须大于开放结束日！", MessageType.错误消息);
+			}
+		}
 
 		if(StringUtils.isNotBlank(dto.getProdId()) && dto.getOperationStartDate() != null ){
 		     List<DisProdPlanManage002Dto> list = disProdPlanManage002Service.checkInfo(dto);
