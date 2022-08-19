@@ -18,7 +18,7 @@ public class DisNostdCreditor extends BaseEntity{
     /**
      * 非标资产编号
      */
-    @PrimaryKey(value = PrimaryKey.Field.PK_1)
+    //@PrimaryKey(value = PrimaryKey.Field.PK_1)
     private String nostdAssetId;
 
     /**
