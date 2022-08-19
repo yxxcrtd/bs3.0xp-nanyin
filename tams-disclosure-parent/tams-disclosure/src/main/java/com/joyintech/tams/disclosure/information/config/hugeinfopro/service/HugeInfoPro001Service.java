@@ -224,7 +224,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         for (HugeInfoPro001Dto temp:selectedItem) {
             Map<String, Object> map = new HashMap<>();
             map.put("prodId",temp.getProdId());
-            map.put("dealDate",DateUtil.format(temp.getDealDate()));
+            map.put("prodRegistNo",temp.getProdRegistNo());
             if (StringUtil.isNotEmpty(this.selectByBusPK(map))){
                 existData.add(temp);
             }
@@ -271,7 +271,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
 //            }
             Map<String, Object> map = new HashMap<>();
             map.put("prodId", temp.getProdId());
-            map.put("dealDate", DateUtil.format(temp.getDealDate()));
+            map.put("prodRegistNo",temp.getProdRegistNo());
             if (StringUtil.isNotEmpty(this.selectByBusPK(map))) {
                 existData.add(temp);
             } else {
