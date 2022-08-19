@@ -31,8 +31,7 @@
         <!--         REP_PROD_TYPE = '03'-->
         <if test="search != null and search != ''">
             and (T1.PROD_ID like
-            concat(concat('%',#{search}),'%')
-            or nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') like concat(concat('%',#{search}),'%'))
+            concat(concat('%',#{search}),'%'))
         </if>
     </select>
     <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
