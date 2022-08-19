@@ -1149,4 +1149,19 @@ update SYS_MENU set ORDER_NO =5   WHERE MENU_ID = 'SYSTEM_001_004';
 delete from SYS_MENU where MENU_ID ='SYSTEM_001_012';--删除自定义报表二级菜单
 -- NYLCXP-741 信息披露菜单放置路径及导航请根据需求提供文档调整 add by sunjie 20220818 end
 
+-- NYLCXP-875 产品排期计划待办事项查看业务类型不正确 add by kongzhifang 2022-08-19
+update sys_datadict_list set item_value = '产品排期计划' where dict_code  = 'COMMON_BUSINESS_TYPE' and item_code = 'DISPLAN';
+
+-- NYLCXP-897 产品类型和产品运作方式联动调整 add by kongzhifang 2022-08-19
+delete from sys_datadict_list_link where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE';
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '01', 'DIS_PROD_TYPE', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '03', 'DIS_PROD_TYPE', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '03', 'DIS_PROD_TYPE', '04', 'system', NULL, sysdate, 'system', sysdate);
+
 commit;

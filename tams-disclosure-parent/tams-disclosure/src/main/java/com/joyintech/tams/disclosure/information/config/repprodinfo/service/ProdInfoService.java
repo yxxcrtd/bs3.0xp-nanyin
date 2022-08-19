@@ -259,6 +259,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             dto.setProdSeries(null);*/
 
         } else {//普通产品
+            /* NYLCXP-895 普通和分层指数型产品都要处理业绩比较基准 modify by kongzhifang 2022-08-19 */
+            //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
+            if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex()) && StringUtils.isNotEmpty(dto.getPerformCompare())) {
+                if (prodBasicChangeService.insertProdBasicChangeFromExcel(dto.getPerformCompare(), dto.getProdId())) {
+                    //成功之后清空产品业绩比较基准
+                    dto.setPerformCompare(null);
+                }
+            }
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
         }
         //重新插入已删除的数据
