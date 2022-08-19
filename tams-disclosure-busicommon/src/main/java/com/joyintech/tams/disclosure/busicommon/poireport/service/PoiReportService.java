@@ -20,6 +20,8 @@ import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dao.DurationReportMapper;
+import com.joyintech.tams.disclosure.common.common.dao.ChbDeadLineMapper;
+import com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -126,6 +128,9 @@ public class PoiReportService {
 
 	@Autowired
 	private DurationReportMapper durationReportMapper;
+
+	@Autowired
+	private ChbDeadLineMapper chbDeadLineMapper;
 
 	/**
 	 * 生成报表：创建服务器文件，创建工作流进行报表确认
@@ -409,6 +414,16 @@ public class PoiReportService {
 		Date revealEndDate = reportRevealEndDateService.getDisEndDate(repReveal, busiId,reportInfo);
 		if ( revealEndDate ==null )
 			revealEndDate = new Date();
+
+		if(StringUtil.equals(repReveal.getRepId(),"CP_001_003_001")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_003_002")){
+			ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadline("01",
+					com.joyintech.framework.util.DateUtil.format(revealEndDate), "01", 1);
+			if(holidaymarket001Dto!=null){
+				revealEndDate=holidaymarket001Dto.getBusiDate();
+			}
+		}
+
 		repReveal.setRevealEndDate(revealEndDate);
 
 		// 获取规则信息
