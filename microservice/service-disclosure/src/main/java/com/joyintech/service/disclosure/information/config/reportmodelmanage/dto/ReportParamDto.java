@@ -1,5 +1,9 @@
 package com.joyintech.service.disclosure.information.config.reportmodelmanage.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
+
 public class ReportParamDto {
     /**
      * 参数编号
@@ -60,5 +64,12 @@ public class ReportParamDto {
 
     public void setParamMultiFlag(String paramMultiFlag) {
         this.paramMultiFlag = paramMultiFlag;
+    }
+    public String getParamTypeStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.报表数据格式类型,getParamType());
+    }
+
+    public String getParamMultiFlagStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.是否,getParamMultiFlag());
     }
 }

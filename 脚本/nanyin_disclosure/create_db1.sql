@@ -1137,3 +1137,8 @@ ALTER TABLE SYS_UPLOAD_FILE_INFO MODIFY PATH VARCHAR2(2000);
 alter table DIS_PROD_NOCREATE drop constraint DIS_PROD_NOCREATE_PK;--只能在同一个库中执行一次
 -- 删除产品不成立信息表主键 add by sunjie 20220817 end
 commit ;
+
+-- 增加模板状态是否同步到模板表标识 add by cuiwei 20220819 start
+ALTER TABLE REP_INFO_STATUS ADD IS_SYNCHRO VARCHAR2(1);
+comment on column REP_INFO_STATUS.IS_SYNCHRO is '模板状态是否同步到REP_INFO表:Y是;N否';
+-- 增加模板状态是否同步到模板表标识 add by cuiwei 20220819 end

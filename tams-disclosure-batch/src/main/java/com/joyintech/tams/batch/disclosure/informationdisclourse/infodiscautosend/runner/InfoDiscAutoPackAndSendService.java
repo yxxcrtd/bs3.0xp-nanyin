@@ -53,7 +53,7 @@ public class InfoDiscAutoPackAndSendService extends BatchBaseService {
             return result;
         }
         try {
-            mainService.generateData(batchExecuteInfo);
+            mainService.updateRevealStatusEX(batchExecuteInfo);
         }
         catch (Exception e) {
             logger.error(e.getMessage());

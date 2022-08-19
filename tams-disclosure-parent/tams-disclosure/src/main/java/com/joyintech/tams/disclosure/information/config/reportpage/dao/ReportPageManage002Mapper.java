@@ -10,11 +10,14 @@
  
 package com.joyintech.tams.disclosure.information.config.reportpage.dao;
 
+import com.joyintech.tams.common.base.entity.RepInfo;
 import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
 import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto;
 import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +50,7 @@ public interface ReportPageManage002Mapper {
 
     int getInfoStatusBeforeEffdate(ReportStatusDto dto);
 
-    /**
-     *	模板状态,获取小于当前日期最近一次已生效的模板状态记录
-     **/
-    String getLastedInfoStatus(Map<String,Object> paramMap);
+    List<ReportStatusDto> getLastedInfoListStatus(@Param("sysdate") Date sysdate);
+
+    void updateReportType(RepInfo dto);
 }
