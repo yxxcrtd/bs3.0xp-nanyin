@@ -11,9 +11,11 @@ package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.config.ShiroProperties;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
@@ -119,6 +121,7 @@ public class RepEdit001Contoller extends BaseController {
         model.addAttribute("fileName", editFilename);
 		logger.debug("==================报表下载编辑文件："+editFilename);
     	//saveFilename = editFilename;
+        model.addAttribute("shiroCookie", SpringContextUtil.getBean(ShiroProperties.class).getSessionId());
         return super.init(model);
     }
 
