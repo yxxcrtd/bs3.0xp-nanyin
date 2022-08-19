@@ -299,6 +299,20 @@ $(function () {
 					return;
 				}
 			}
+			if(modelId==="MZJZGG" || modelId==='MZJJBG') {
+				var checkflg = false;
+				var msg;
+				Joyin.ajaxSync('dateCheck', params, function (result) {
+					if(result){
+						msg = result;
+						checkflg = true;
+					}
+				});
+				if (checkflg) {
+					Joyin.alert(msg,2);
+					return;
+				}
+			}
 			if(modelId==="ZQXCPKFGG_GMCP"||modelId==='ZQXCPKFGG_GMCPDSH'){
 				if (params['prodid']===null||params['prodid']===undefined) {
 					Joyin.alert('子产品代码必填!',2);
@@ -852,7 +866,7 @@ $(function () {
         	exportfile("pdf");
         });
         
-        $('#htmlExport').click(function(){
+        $('#htmlExport').click(function(){mei
         	exportfile("html");
         });
         

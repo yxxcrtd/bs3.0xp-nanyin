@@ -11,6 +11,9 @@
 package com.joyintech.tams.disclosure.common.common.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.tams.common.base.dao.ChbMktHolidayMapper;
+import com.joyintech.tams.common.base.entity.ChbMktHoliday;
+import com.joyintech.tams.common.base.entity.ChbMktHolidayKey;
 import com.joyintech.tams.disclosure.common.common.dao.HolidayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,9 @@ public class HolidayService extends BaseService {
     @Autowired
     private HolidayMapper holidayMapper;
 
+    @Autowired
+    private ChbMktHolidayMapper chbMktHolidayMapper;
+
     public Date getLastWorkDay(Map<String, Object> params) {
         return holidayMapper.getLastWorkDay(params);
     }
@@ -36,5 +42,17 @@ public class HolidayService extends BaseService {
 
     public Date getAferNWorkDay(Map<String, Object> params) {
         return holidayMapper.getAferNWorkDay(params);
+    }
+
+    public boolean isHoliday(Date date, String marketCode) {
+        ChbMktHolidayKey key = new ChbMktHolidayKey();
+        key.setBusiDate(date);
+        key.setMarketCode(marketCode);
+        ChbMktHoliday holiday = chbMktHolidayMapper.selectByPrimaryKey(key);
+        if ("0".equals(holiday.getIsHoliday()))  {//工作日
+            return false;
+        } else {
+            return true;
+        }
     }
 }
