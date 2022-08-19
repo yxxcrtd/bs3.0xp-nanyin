@@ -208,9 +208,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 null);
         List<List<String>> dataList = excelUtil.readToList(0, 0, 0);
         List<ExcelValidDto> excelValidDtolist=new ArrayList<>();
-        if(dataList.size()<1){
+        if(dataList.size()<2){
             excelValidDtolist.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-                      "导入文件为空！"));
+                      "文件内容为空,没有需要导入的数据！"));
             return excelValidDtolist;
         }
         if(null == dataList.get(0) || dataList.get(0).size() != 4){
