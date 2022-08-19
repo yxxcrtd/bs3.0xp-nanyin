@@ -83,10 +83,15 @@ $(function () {
 			}
 			//产品名称下拉框
 			if(data[i].screenType==='01'){
-				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select select2-hidden-accessible" placeholder="请选择" data-url="getPProdIdList"'
-					+'parentIds="repId,prodid" allowClear="true"';
+			    var datas = '{}';
+			    Joyin.ajaxSync('getPProdIdList1', {}, function(res) {
+			        datas = JSON.stringify(res);
+			    });
+
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select select2-hidden-accessible" placeholder="请选择" data-result=\'' + datas
+					+'\' parentIds="repId,prodid" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
-					SearchHtml+= 'multiple="true" >' +'</select>';
+                        SearchHtml+= ' multiple showAll="true" >' +'</select>';
 				}else{
 					SearchHtml+= 'onchange=pprodIdChange()>' +'</select>';
 				}
@@ -113,10 +118,14 @@ $(function () {
 			}
 			//要素名称下拉框
 			else if(data[i].screenType==='04'){
-				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getElementNameList"'
-					+'parentIds="repId,pprodid" allowClear="true" formatoption="false"';
+			    var datas = '{}';
+			    Joyin.ajaxSync('getElementNameList1', {}, function(res) {
+			        datas = JSON.stringify(res);
+			    });
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-result=\'' + datas
+					+'\' parentIds="repId,pprodid" allowClear="true" formatoption="false"';
 				if(data[i].multiFlag==='Y'){
-					SearchHtml+= 'multiple="true">' +'</select>';
+					SearchHtml+= ' multiple showAll="true">' +'</select>';
 				}else{
 					SearchHtml+= 'onchange=elementNameChange("'+modelId+'")>' +'</select>';
 				}
@@ -168,7 +177,20 @@ $(function () {
 				}
 				//文本框
 			} else {
-				$('#'+ids[i].key+'').textSelect();
+				var $elem = $('#'+ids[i].key+'');
+				$elem.textSelect();
+				if($elem.attr('showAll') === 'true') {
+                    // 自动全选
+                    $elem.data('select2').open();
+                    $elem.data('select2').$results.find('li.select2-results__option').each(function() {
+                        var d = $(this).data('data');
+                        if(d.id === '-1_all') {
+                            $(this).trigger('mouseup');
+                            return;
+                        }
+                    });
+                    $elem.data('select2').close();
+				}
 			}
 		}
 	}
