@@ -235,4 +235,11 @@
             </if>
         </where>
     </select>
+    <select id="isRelate" resultType="java.lang.Integer">
+        select count(1) from (
+             select * from rep_prod_info where
+             PROD_ID = #{prodId,jdbcType=VARCHAR} and
+            PROD_RE = #{prodRegistNo,jdbcType=VARCHAR}
+        ) aa
+    </select>
 </mapper>
