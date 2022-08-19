@@ -3,6 +3,8 @@ package com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscgenfiled
 import java.text.ParseException;
 import java.util.*;
 
+import com.joyintech.tams.disclosure.common.common.dao.ChbDeadLineMapper;
+import com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +63,9 @@ public class InfoDiscGenFileDetailService {
 	 */
 	@Autowired
 	private RevealDeadLineService revealDeadLineService;
+
+	@Autowired
+	private ChbDeadLineMapper chbDeadLineMapper;
 	/**
 	 * 生成待处理详细
 	 * @param executeDateStr 跑批日期
@@ -395,6 +400,15 @@ public class InfoDiscGenFileDetailService {
 						repInstallFile.setStartDate(startDate);
 					}
 				}
+			}else if(StringUtil.equals(repRule.getRepId(),"CP_001_003_001")
+					||StringUtil.equals(repRule.getRepId(),"CP_001_003_002")){
+				Date endDate=repInstallFile.getEndDate();
+				ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+						DateUtil.format(endDate), "02", 1);
+				if(holidaymarket001Dto!=null){
+					repInstallFile.setEndDate(holidaymarket001Dto.getBusiDate());
+				}
+				revealList.add(repInstallFile);
 			}
 //			else if(StringUtil.equals(DictCodeListExt2.报表类别_净值披露.getValue(), repRule.getReportCategory())){
 //				if(repInstallFile.getEndDate()!=null&&DateUtil.compareDate(prodInfoListEntity.getActMdate(), repInstallFile.getEndDate())>0
