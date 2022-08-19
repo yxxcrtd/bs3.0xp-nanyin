@@ -260,7 +260,7 @@
                     return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }
-            var object = {selectedItem: selArrUseful, operateType: "delete"};//请求参数
+            var object = {selectedItem: selArr, operateType: "delete"};
             //Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
                     WorkFlow.doDeleteList(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/delete', object,

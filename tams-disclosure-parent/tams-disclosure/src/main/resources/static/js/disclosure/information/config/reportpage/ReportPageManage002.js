@@ -14,9 +14,9 @@ var ReportPageManage003 = function(global) {
     function getSelectData(){
     	var object = $.serializeToObject('#submitForm');
     	// 启用状态   	
-    	if(!object.reportType){
+    	/*if(!object.reportType){
         	object.reportType = 'Y';
-		}
+		}*/
     	var tableData = table.getAllRows();
     	// layui-form-checkbox
     	$(".layui-table-fixed tbody .layui-unselect.layui-form-checkbox").each(function(i){                
