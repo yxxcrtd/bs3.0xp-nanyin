@@ -155,16 +155,20 @@ public class ReportPageManage003Controller extends BaseController {
         if("01".equals(dto.getStartOff())){
             dto.setRepStatus("02");
             int startCount = reportPageManage002Service.getInfoStatusBeforeEffdate(dto);
-            msg = "启用流程已生效,不能再次启用";
-            return new AjaxResult(msg, MessageType.错误消息);
+            if(startCount > 0){
+                msg = "启用流程已生效,不能再次启用";
+                return new AjaxResult(msg, MessageType.错误消息);
+            }
         }
 
         if("02".equals(dto.getStartOff()) || ("01".equals(dto.getStartOff()) && StringUtil.isNotEmpty(dto.getOffRepId()))){
             dto.setRepId(dto.getOffRepId());
-            dto.setRepStatus("02");
+            dto.setRepStatus("04");
             int startCount = reportPageManage002Service.getInfoStatusBeforeEffdate(dto);
-            msg = "禁用流程已生效,不能再次禁用";
-            return new AjaxResult(msg, MessageType.错误消息);
+            if(startCount > 0){
+                msg = "禁用流程已生效,不能再次禁用";
+                return new AjaxResult(msg, MessageType.错误消息);
+            }
         }
 
         return commonCheck(bindingResult, operateType);

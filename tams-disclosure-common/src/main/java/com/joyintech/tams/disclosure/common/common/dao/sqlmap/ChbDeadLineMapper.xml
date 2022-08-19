@@ -239,7 +239,7 @@
 		SELECT DISTINCT T.SETT_DATE
 		FROM DIS_PROD_BONUSPLAN T
 		WHERE
-			BONUS_MODE='01'
+			BONUS_MODE=#{type, jdbcType=VARCHAR}
 		  AND SETT_DATE = #{sysDate, jdbcType=DATE}
 		  AND PROD_ID= #{prodId, jdbcType=VARCHAR}
 	</select>

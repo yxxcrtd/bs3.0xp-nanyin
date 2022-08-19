@@ -124,7 +124,7 @@ public interface ChbDeadLineMapper {
    Date getMJTZLARGESHDATE(@Param("prodId") String prodId,@Param("sysDate") Date sysDate,
    		@Param("basisDateType") String basisDateType);
 
-    Date getDQSYFPDate(@Param("prodId") String prodId,@Param("sysDate") Date sysDate);
+    Date getDQSYFPDate(@Param("prodId") String prodId,@Param("sysDate") Date sysDate,@Param("type") String type);
 
     Date getZDSHDate(@Param("prodId") String prodId,@Param("sysDate") Date sysDate);
 

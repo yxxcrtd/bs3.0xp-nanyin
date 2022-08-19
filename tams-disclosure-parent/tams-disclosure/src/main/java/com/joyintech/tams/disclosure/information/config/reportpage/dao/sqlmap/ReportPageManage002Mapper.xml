@@ -73,10 +73,19 @@
             <if test="updateTime != null">
                 UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
             </if>
+            <if test="isSynchro != null">
+                IS_SYNCHRO = #{isSynchro,jdbcType=VARCHAR},
+            </if>
         </set>
-        WHERE WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+        WHERE 1 = 1
+        <if test="workflowId != null">
+            AND WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+        </if>
         <if test="repId != null">
             AND REP_ID = #{repId,jdbcType=VARCHAR}
+        </if>
+        <if test="effDate != null">
+            AND EFF_DATE <![CDATA[<=]]> #{effDate,jdbcType=TIMESTAMP}
         </if>
     </update>
 
@@ -107,17 +116,34 @@
             ORDER BY EFF_DATE DESC
         ) WHERE RN = 1 AND REP_STATUS = #{repStatus,jdbcType=VARCHAR}
     </select>
-
-    <select id="getLastedInfoStatus" resultType="java.lang.String">
-        SELECT REP_STATUS
+    
+    <select id="getLastedInfoListStatus" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto">
+        SELECT
+        REP_ID,
+        REP_STATUS
         FROM(
             SELECT
-            REP_STATUS,
+            REP_ID,REP_STATUS,
             ROW_NUMBER()OVER(ORDER BY EFF_DATE DESC) RN
-            FROM REP_INFO_STATUS
-            WHERE REP_STATUS IN('02','04')
-            AND REP_ID = #{repid,jdbcType=VARCHAR}
-            AND EFF_DATE <![CDATA[<=]]>  #{effDate,jdbcType=TIMESTAMP}
+            FROM REP_INFO_STATUS r1
+            WHERE r1.REP_STATUS IN('02','04')
+            AND (r1.Is_Synchro != 'Y' OR r1.is_synchro IS NULL)
+            AND NOT EXISTS(
+            SELECT 1 FROM REP_INFO_STATUS r2
+            WHERE r1.REP_ID = r2.REP_ID AND r2.REP_STATUS IN('02','04') AND r2.Is_Synchro ='Y'
+            AND r1.eff_date <![CDATA[<]]> r2.eff_date
+            )
+            AND r1.EFF_DATE <![CDATA[<=]]>  #{sysdate,jdbcType=TIMESTAMP}
         ) WHERE RN = 1
     </select>
+
+    <update id="updateReportType" parameterType="com.joyintech.tams.common.base.entity.RepInfo">
+        update REP_INFO
+        set REPORT_TYPE = #{reportType,jdbcType=VARCHAR}
+        <where>
+            <if test="repId != null">
+               AND REP_ID =#{repId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </update>
 </mapper>

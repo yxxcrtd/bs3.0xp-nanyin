@@ -586,10 +586,15 @@ public class RevealDeadLineService {
 		}
 		//将传入加减个规则日期获取基准日
 //		   Date openDate = null;
+		String type="01";
+		if(StringUtil.equals(repRule.getRepId(),"CP_001_003_001")
+			||StringUtil.equals(repRule.getRepId(),"CP_001_003_002")){
+			type="02";
+		}
 		for (Date execDate : listDate) {
 			//修改查询
 			if(execDate!=null){
-				Date openDate = chbDeadLineMapper.getDQSYFPDate(prodId, execDate);
+				Date openDate = chbDeadLineMapper.getDQSYFPDate(prodId, execDate,type);
 				if(openDate!=null){
 					return openDate;
 				}

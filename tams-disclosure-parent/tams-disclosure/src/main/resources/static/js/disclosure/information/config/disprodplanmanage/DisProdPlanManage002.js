@@ -262,11 +262,15 @@ $(function() {
 		// }
 		var openStartDate = $('#openStartDate').val();
 		if(pageModel == PAGE_MODEL_EDIT){
-			if(operationStartDate){
-				if($('#operationStartDate').val() < platDate){
-					Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-					$('#operationStartDate').val('');
-				}
+			if(operationStartDate < platDate){
+				// if($('#operationStartDate').val() < platDate){
+				// 	Joyin.error(JoyinUtil.getMessage("运作起始日要大于等于平台日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+				// 	$('#operationStartDate').val('');
+				// }
+				$('#openStartDate').prop('disabled',true);
+				$('#openEndDate').prop('disabled',true);
+				$('#operationStartDate').prop('disabled',true);
+				$('#collingoffPeriod').prop('disabled',true);
 			}
 		}
 		if(operationStartDate && openStartDate){
@@ -378,6 +382,22 @@ $(function() {
 			saveOrSubmit('submit');
 		});
 
+		$('#operationStartDate,#openEndDate').change(function () {
+			if ($('#operationStartDate').val() && $('#openEndDate').val()){
+				if ($('#operationStartDate').val() <$('#openEndDate').val() ){
+					Joyin.error("产品运作起始日不能小于开放期结束日！");
+				}
+			}
+		});
+		$('#operationStartDate,#autoRedeemDate').change(function () {
+			debugger;
+			if ($('#operationStartDate').val() && $('#autoRedeemDate').val()){
+				if ($('#operationStartDate').val() <platDate && platDate < $('#autoRedeemDate').val() ){
+					$('#collingoffPeriod').attr('disabled',true);
+				}
+			}
+
+		});
 		var finprodId = $('#finprodId').val();
 		if(finprodId !=null && finprodId !='' && finprodId.length>0){
 			finprodIdChange();
