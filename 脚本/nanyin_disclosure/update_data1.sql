@@ -730,7 +730,8 @@ values ('VAL','SFTP_DIS_FPATH','/home/dis/','0',null,'发送信披单据服务�
 --批处理
 delete from SYS_BATCH_TASK where task_id='100401';
 insert into SYS_BATCH_TASK (task_id, system_code, task_name, ftask_id, bean_name, task_pri, create_user, create_time, update_user, update_time, create_dept)
-values ('100401','VAL','信披单据zip包生成发送批处理','','infoDiscAutoPackAndSendService','900','system',sysdate, 'system',sysdate, '');
+values ('100401','VAL','自动披露批处理','','infoDiscAutoPackAndSendService','900','system',sysdate, 'system',sysdate, '');
+update SYS_BATCH_TASK set TASK_NAME='自动披露批处理(已废弃)' where TASK_ID='1004';
 --信披单户自动打包功能脚本  add by zhouqiang end
 
 -- add by sunjie 20220809 巨额赎回信息数据状态下拉框改成ED start
