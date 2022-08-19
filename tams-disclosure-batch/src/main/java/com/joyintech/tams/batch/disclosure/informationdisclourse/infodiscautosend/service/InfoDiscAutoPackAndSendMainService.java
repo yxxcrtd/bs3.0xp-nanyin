@@ -130,7 +130,7 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 			for (InfoDiscAutoRevealDto entity : listdto) {
 				if(entity!=null){
 					//披露操作用户
-					entity.setRevealUser(LoginUserUtil.getUserName());
+					entity.setRevealUser("system");
 					entity.setRevealStatus(DictCodeListExt2.披露状态_已披露.getValue());
 					entity.setRevealDate(new Date());
 					FtpDetailDto ftpDetailDto = new FtpDetailDto();
@@ -138,7 +138,7 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 					ftpDetailDto.setProdId(entity.getProdid());
 					ftpDetailDto.setReportId(entity.getRepId());
 					ftpDetailDto.setReportCategory(entity.getReportCategory()); // 获取ftp路径用
-					ftpDetailDto.setOption(DictCodeListExt2.披露方式_手动.getValue()); //手工操作
+					ftpDetailDto.setOption(DictCodeListExt2.披露方式_自动.getValue()); //自动披露
 					if(StringUtil.isNotEmpty(entity.getStartDate())) {
 						ftpDetailDto.setStatrDate(entity.getStartDate());
 					}
