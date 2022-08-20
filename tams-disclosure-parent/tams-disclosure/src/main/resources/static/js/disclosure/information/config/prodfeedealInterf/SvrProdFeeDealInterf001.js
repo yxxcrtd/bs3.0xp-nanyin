@@ -63,14 +63,14 @@ $(function() {
             field : 'feeType',width:'10%',
             visible :false
         },  {
-            field : 'paidFee',width:'10%',
+            field : 'paidFee',width:'10%',type: 'number',digit:2,
             title : '费用金额'
         }, {
             field : 'payDateStr',width:'10%',
             title : '支付日',
             sortField : 'PAY_DATE'
         }, {
-            field : 'accrual',width:'10%',
+            field : 'accrual',width:'10%',type: 'number',digit:2,
             title : '自成立以来发生额（贷方）'
         }, {
             field : 'errmsg',width:'10%',
@@ -147,10 +147,11 @@ $(function() {
                 // selArr[i].operateType =  "delete";
             }
             var object = {selectedItem: selArr, operateType: "delete"};//请求参数
-
-            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/deleteData', object, "SvrProdFeeDealInterf001_btn_delete", "SvrProdFeeDealInterf002", function () {
-                    table.reload();//删除事件请求及回调函数
+            Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/check', object, function(result) {
+                Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                    WorkFlow.doDeleteList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/deleteData', object, "SvrProdFeeDealInterf001_btn_delete", "SvrProdFeeDealInterf002", function () {
+                        table.reload();//删除事件请求及回调函数
+                    });
                 });
             });
         });
@@ -163,13 +164,15 @@ $(function() {
                 prodId: data.prodId,
                 feeType: data.feeType,
                 payDate: data.payDateStr,
-                operateType: PAGE_MODEL_EDIT};//请求参数
-            Joyin.dialog(JoyinUtil.getLabel("产品费用交易信息维护编辑"),
-                JoyinUtil.getRealPath("disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/init"),
-                "100%", "100%", object,
-                function(data){
-                    table.reload();
-                });
+                operateType: "edit"};//请求参数
+            Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/check', object, function(result) {
+                Joyin.dialog(JoyinUtil.getLabel("产品费用交易信息维护编辑"),
+                    JoyinUtil.getRealPath("disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/init"),
+                    "100%", "100%", object,
+                    function(data){
+                        table.reload();
+                    });
+            });
         });
         // $('#SvrProdFeeDealInterf001_btn_import').click(function() {
         //     Joyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据？"), function() {

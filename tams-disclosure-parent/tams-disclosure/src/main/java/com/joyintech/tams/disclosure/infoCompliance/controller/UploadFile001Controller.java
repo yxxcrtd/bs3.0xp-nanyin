@@ -179,6 +179,7 @@ public class UploadFile001Controller extends BaseController {
                     sysFile.setFileType("03");
                     infoComplianceMapper.updateUplodFile(sysFile);
                 }
+                fileInfo.setFileName(fileInfo.getSrcName());
                 result.add(fileInfo);
             }
         } else {

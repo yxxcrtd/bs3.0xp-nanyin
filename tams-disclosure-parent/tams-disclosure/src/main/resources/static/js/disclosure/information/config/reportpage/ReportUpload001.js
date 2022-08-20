@@ -407,7 +407,7 @@ $(function ($) {
                         if(res!= null){
                             var tr = fileListView.find('tr#upload-'+ file)
                                 ,tds = tr.children();
-                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览/下载</a>');
+                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+res[0].fileNo+'\',\''+res[0].fileName+'\')">预览/下载</a>');
                             tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
                             // tds.eq(3).html(''); //清空操作
                             tr.data('file', res[0]);

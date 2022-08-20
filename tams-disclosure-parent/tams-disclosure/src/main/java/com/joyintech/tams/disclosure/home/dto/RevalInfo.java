@@ -90,6 +90,9 @@ public class RevalInfo extends BaseEntity{
     /** REP_FTP_PATH.ID= 20 */
     private String repId20;
 
+    /** REP_FTP_PATH.ID= 99 */
+    private String repId99;
+
     /**
      * 获取 repId01
      * 
@@ -469,4 +472,11 @@ public class RevalInfo extends BaseEntity{
         this.repId20 = repId20;
     }
 
+    public String getRepId99() {
+        return repId99;
+    }
+
+    public void setRepId99(String repId99) {
+        this.repId99 = repId99;
+    }
 }

@@ -1192,4 +1192,30 @@ VALUES('RepEdit001', 'btnSaveReport', '01', '02', NULL, '保存', 'system', NULL
 -- 密码错误次数过多导致的用户锁定时间不允许为0
 UPDATE SYS_PARA SET PARAM_VALUE = '1800' WHERE PARA_CODE = 'login_fail_lock_time';
 
+--密码输入错误次数为3次后进行提示
+UPDATE SYS_PARA SET PARAM_VALUE = '3' WHERE PARA_CODE = 'login_fail_count';
 commit;
+
+
+--密码规则提示语 NYLCXP-769
+UPDATE SYS_PARA
+SET PARAM_VALUE  = '数字+大写字母+小写字母+特殊符号且至少为9位'
+where PARA_CODE  = 'pw_rule_tip';
+
+
+--NYLCXP-773、 NYLCXP-771
+--密码符合的规则（至少9个字符，至少1个大写字母，1个小写字母，1个数字和1个特殊字符）
+UPDATE SYS_PARA
+SET PARAM_VALUE  = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[`~!@#$%^&*()\-_+=\[\]\\;'',./{}|:"<>?])[A-Za-z\d`~!@#$%^&*()\-_+=\[\]\\;'',./{}|:"<>?]{9,}'
+where PARA_CODE  = 'pw_rule';
+
+
+--NYLCXP-796 用户密码重置-密码有效期90天之后应有修改密码提示 （修改参数后，平台日与现实日差值不要超过90天）
+UPDATE SYS_PARA
+SET PARAM_VALUE  = '90'
+where PARA_CODE  = 'pw_cycle';
+
+--新建用户强制修改密码
+UPDATE SYS_PARA
+SET PARAM_VALUE  = '01'
+where PARA_CODE  = 'pw_initEdit';
