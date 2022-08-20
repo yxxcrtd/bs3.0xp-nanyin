@@ -291,8 +291,9 @@
                     ,value: pSetDate //必须遵循format参数设定的格式
                 });
             }else{
-                $("#pProdName").attr("disabled", false);
-                $("#pSetDate").attr("disabled", false);
+                //NYLCXP-931 是否分层产品否转是时，取消置灰
+                $("#prodName").attr("disabled", false);
+                $("#setDate").attr("disabled", false);
             }
         }
 
