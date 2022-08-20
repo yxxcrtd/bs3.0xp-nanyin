@@ -120,6 +120,7 @@ public class InfoCompliance002Controller extends BaseController {
             List<UploadFileDto> fileList = infoCompliance002Service.getFileByBusinessCode(param);
             Map<String,Object> commentMap = new HashMap<String,Object>();
             commentMap.put("comment",commentDto.getCommentRemark());
+            commentMap.put("createUser",commentDto.getCreateUser());
             commentMap.put("fileList",fileList);
             commentList.add(commentMap);
         }
