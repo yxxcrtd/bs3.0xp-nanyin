@@ -9,10 +9,8 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
-import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dao.RepFloatFee001Mapper;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
-import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -51,8 +49,12 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
 
     public Page<RepFloatFeeDto> selectInfo(Map<String, Object> param) {
         param.put("prodList", StringUtil.isNotEmpty(param.get("prodId"))?(param.get("prodId").toString().split(",")):null);
-        Page<RepFloatFeeDto> result = queryForPage(Integer.parseInt((String) param.get("page")), Integer.parseInt((String) param.get("length")), ()
-                -> repFloatFee001Mapper.selectInfo(param));
+//        Page<RepFloatFeeDto> result = queryForPage(Integer.parseInt((String) param.get("page")), Integer.parseInt((String) param.get("length")), ()
+//                -> repFloatFee001Mapper.selectInfo(param));
+        Page<RepFloatFeeDto> result = super.queryForPageForSelectReturn(
+                Integer.parseInt(param.get("page").toString()),
+                Integer.parseInt(param.get("length").toString())
+                , () -> repFloatFee001Mapper.selectInfo(param));
         return result;
     }
     /**
@@ -109,10 +111,11 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
     }
 
     public Page<RepFloatFeeDto> selectForExport(Map<String, Object> param) {
-        param.put("prodList", StringUtil.isNotEmpty(param.get("prodId"))?(param.get("prodId").toString().split(",")):null);
+        /*param.put("prodList", StringUtil.isNotEmpty(param.get("prodId"))?(param.get("prodId").toString().split(",")):null);
         Page<RepFloatFeeDto> result = queryForPage(()
                 -> repFloatFee001Mapper.selectInfo(param));
-        return result;
+        this.selectInfo(param);*/
+        return this.selectInfo(param);
     }
 
 

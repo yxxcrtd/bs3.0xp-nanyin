@@ -178,29 +178,31 @@ $(function() {
 		var openStartDate = $('#openStartDate').val();
 		var openEndDate = $('#openEndDate').val();
 		var operationStartDate = $('#operationStartDate').val();
-		if(prodSetDate != null){
-			if (openStartDate && prodSetDate){
-				var days = (Date.ofDate(openStartDate) - Date.ofDate(prodSetDate))/(24*60*60*1000);
-				if(days<0){
-					Joyin.error(JoyinUtil.getMessage("开放开始日必须大于等于产品成立日"+prodSetDate, JoyinUtil.getLabel("DisProdPlanManage002.prodSetDate")));
-					$('#openStartDate').val('');
+		if(pageModel != PAGE_MODEL_REFERENCE) {
+			if (prodSetDate != null) {
+				if (openStartDate && prodSetDate) {
+					var days = (Date.ofDate(openStartDate) - Date.ofDate(prodSetDate)) / (24 * 60 * 60 * 1000);
+					if (days < 0) {
+						Joyin.error(JoyinUtil.getMessage("开放开始日必须大于等于产品成立日" + prodSetDate, JoyinUtil.getLabel("DisProdPlanManage002.prodSetDate")));
+						$('#openStartDate').val('');
+					}
 				}
 			}
-		}
 
-		if (openStartDate && openEndDate){
-			var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate))/(24*60*60*1000);
-			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("开放结束日不能小于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-				$('#openEndDate').val('');
+			if (openStartDate && openEndDate) {
+				var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate)) / (24 * 60 * 60 * 1000);
+				if (days < 0) {
+					Joyin.error(JoyinUtil.getMessage("开放结束日不能小于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+					$('#openEndDate').val('');
+				}
 			}
-		}
 
-		if (openStartDate && operationStartDate){
-			var days = (Date.ofDate(operationStartDate) - Date.ofDate(openStartDate))/(24*60*60*1000);
-			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("运作起始日不能小于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-				$('#operationStartDate').val('');
+			if (openStartDate && operationStartDate) {
+				var days = (Date.ofDate(operationStartDate) - Date.ofDate(openStartDate)) / (24 * 60 * 60 * 1000);
+				if (days < 0) {
+					Joyin.error(JoyinUtil.getMessage("运作起始日不能小于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+					$('#operationStartDate').val('');
+				}
 			}
 		}
 	}
@@ -208,11 +210,13 @@ $(function() {
 	function changeOpenEndDate(){
 		var openStartDate = $('#openStartDate').val();
 		var openEndDate = $('#openEndDate').val();
-		if (openStartDate && openEndDate){
-			var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate))/(24*60*60*1000);
-			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("开放结束日必须大于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-				$('#openEndDate').val('');
+		if(pageModel != PAGE_MODEL_REFERENCE) {
+			if (openStartDate && openEndDate) {
+				var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate)) / (24 * 60 * 60 * 1000);
+				if (days < 0) {
+					Joyin.error(JoyinUtil.getMessage("开放结束日必须大于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+					$('#openEndDate').val('');
+				}
 			}
 		}
 	}
@@ -222,13 +226,14 @@ $(function() {
 		// 若募集方式为“私募”必填，否则置灰不允许填写；
 		if(raiseType == '02'){ //私募
 			var collingoffPeriod = $('#collingoffPeriod').val();
-
-			if(prodSetDate != null){
-				if (collingoffPeriod && prodSetDate){
-					var days = (Date.ofDate(collingoffPeriod) - Date.ofDate(prodSetDate))/(24*60*60*1000);
-					if(days<0){
-						Joyin.error(JoyinUtil.getMessage("产品冷静期必须大于产品成立日"+prodSetDate, JoyinUtil.getLabel("DisProdPlanManage002.prodSetDate")));
-						$('#collingoffPeriod').val('');
+			if(pageModel != PAGE_MODEL_REFERENCE) {
+				if (prodSetDate != null) {
+					if (collingoffPeriod && prodSetDate) {
+						var days = (Date.ofDate(collingoffPeriod) - Date.ofDate(prodSetDate)) / (24 * 60 * 60 * 1000);
+						if (days < 0) {
+							Joyin.error(JoyinUtil.getMessage("产品冷静期必须大于产品成立日" + prodSetDate, JoyinUtil.getLabel("DisProdPlanManage002.prodSetDate")));
+							$('#collingoffPeriod').val('');
+						}
 					}
 				}
 			}
@@ -273,11 +278,13 @@ $(function() {
 				$('#collingoffPeriod').prop('disabled',true);
 			}
 		}
-		if(operationStartDate && openStartDate){
-			var days = (Date.ofDate(operationStartDate) - Date.ofDate(openStartDate))/(24*60*60*1000);
-			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("运作起始日不能小于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
-				$('#operationStartDate').val('');
+		if(pageModel != PAGE_MODEL_REFERENCE) {
+			if (operationStartDate && openStartDate) {
+				var days = (Date.ofDate(operationStartDate) - Date.ofDate(openStartDate)) / (24 * 60 * 60 * 1000);
+				if (days < 0) {
+					Joyin.error(JoyinUtil.getMessage("运作起始日不能小于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+					$('#operationStartDate').val('');
+				}
 			}
 		}
 	}
@@ -287,12 +294,14 @@ $(function() {
 		// 当“是否是开放周期型产品”为“是”时必填，否则置灰不可填，且不能小于该条数据的运作起始日
 		if(issuingWay !=null && issuingWay =='01' && isPeriod !=null && isPeriod =='01' ){
 			var autoRedeemDate = $('#autoRedeemDate').val();
-			if(prodSetDate != null){
-				if (autoRedeemDate && prodSetDate){
-					var days = (Date.ofDate(autoRedeemDate) - Date.ofDate(prodSetDate))/(24*60*60*1000);
-					if(days<0){
-						Joyin.error(JoyinUtil.getMessage("自动赎回日必须大于产品成立日"+prodSetDate, JoyinUtil.getLabel("DisProdPlanManage002.prodSetDate")));
-						$('#autoRedeemDate').val('');
+			if(pageModel != PAGE_MODEL_REFERENCE) {
+				if (prodSetDate != null) {
+					if (autoRedeemDate && prodSetDate) {
+						var days = (Date.ofDate(autoRedeemDate) - Date.ofDate(prodSetDate)) / (24 * 60 * 60 * 1000);
+						if (days < 0) {
+							Joyin.error(JoyinUtil.getMessage("自动赎回日必须大于产品成立日" + prodSetDate, JoyinUtil.getLabel("DisProdPlanManage002.prodSetDate")));
+							$('#autoRedeemDate').val('');
+						}
 					}
 				}
 			}
@@ -383,9 +392,11 @@ $(function() {
 		});
 
 		$('#operationStartDate,#openEndDate').change(function () {
-			if ($('#operationStartDate').val() && $('#openEndDate').val()){
-				if ($('#operationStartDate').val() <$('#openEndDate').val() ){
-					Joyin.error("产品运作起始日不能小于开放期结束日！");
+			if(pageModel != PAGE_MODEL_REFERENCE) {
+				if ($('#operationStartDate').val() && $('#openEndDate').val()) {
+					if ($('#operationStartDate').val() < $('#openEndDate').val()) {
+						Joyin.error("产品运作起始日不能小于开放期结束日！");
+					}
 				}
 			}
 		});

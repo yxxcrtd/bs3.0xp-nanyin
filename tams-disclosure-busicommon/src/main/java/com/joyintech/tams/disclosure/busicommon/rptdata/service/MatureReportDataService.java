@@ -178,6 +178,21 @@ public class MatureReportDataService implements IReportDataService {
 			listResult.add(CollectionUtils.bean2Map(matureReportDto));
 			
 			//费用为null或者等于0 ，用“-”代替
+			if ( matureReportDto.getTrustFee()==null || matureReportDto.getTrustFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("trustFeeStr", "-");
+			} else {
+				listResult.get(0).put("trustFeeStr", matureReportDto.getTrustFee().toPlainString());
+			}
+			if ( matureReportDto.getMgrFee()==null || matureReportDto.getMgrFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("mgrFeeStr", "-");
+			} else {
+				listResult.get(0).put("mgrFeeStr", matureReportDto.getMgrFee().toPlainString());
+			}
+			if ( matureReportDto.getFloatFee()==null || matureReportDto.getFloatFee().equals(BigDecimal.ZERO) ) {
+				listResult.get(0).put("floatFeeStr", "-");
+			} else {
+				listResult.get(0).put("floatFeeStr", matureReportDto.getFloatFee().toPlainString());
+			}			
 			if ( matureReportDto.getSaleFee()==null || matureReportDto.getSaleFee().equals(BigDecimal.ZERO) ) {
 				listResult.get(0).put("saleFeeStr", "-");
 			} else {

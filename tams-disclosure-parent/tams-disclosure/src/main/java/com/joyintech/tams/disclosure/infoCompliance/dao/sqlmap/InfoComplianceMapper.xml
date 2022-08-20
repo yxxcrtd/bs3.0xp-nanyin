@@ -164,10 +164,11 @@
 	
 	<select id="getInfoComplianceComment" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto">
 		SELECT
-		seqno,COMMENT_REMARK commentRemark
-		FROM INFO_COMPLIANCE_COMMENT
-		WHERE INFO_SEQNO = #{infoSeqno,jdbcType=VARCHAR}
-		ORDER BY CREATE_TIME ASC
+		i.seqno,i.COMMENT_REMARK commentRemark,nvl(s.real_name,i.create_user) createUser
+		FROM INFO_COMPLIANCE_COMMENT i
+	    LEFT JOIN SYS_USER s ON i.Create_User = s.user_name
+		WHERE i.INFO_SEQNO = #{infoSeqno,jdbcType=VARCHAR}
+		ORDER BY i.CREATE_TIME ASC
 	</select>
 
 	<select id="getFirstNodeId" parameterType="java.lang.String" resultType="java.lang.String">
@@ -182,4 +183,8 @@
 		AND BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
 	</delete>
 
+	<select id="getFilePathByKey" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT PATH filePath FROM sys_upload_file_info
+		WHERE SEQ_NO = #{seqno,jdbcType=VARCHAR}
+	</select>
 </mapper>

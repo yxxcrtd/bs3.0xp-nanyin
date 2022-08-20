@@ -1089,3 +1089,9 @@ delete from sys_datadict_list where DICT_CODE='REP_CHECK_TYPE' and ITEM_CODE='09
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('REP_CHECK_TYPE', '09', '范围控制（同时包含较小和较大的临界值）', 9, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-08-18 信披数据校验比较符数据字典 end
+
+-- add by cuiwei 2022-08-19 上传附件WORD文件预览页面 start
+DELETE FROM SYS_PAGE WHERE PAGE_ID = 'WordView';
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('WordView', 'DIS', '/disclosure/common/WordView', 'disclosure/common/WordView', '', '', '', '02', '01', '上传附件WORD文件预览', 'system', '', sysdate, 'system', sysdate);
+-- add by cuiwei 2022-08-19 上传附件WORD文件预览页面 end

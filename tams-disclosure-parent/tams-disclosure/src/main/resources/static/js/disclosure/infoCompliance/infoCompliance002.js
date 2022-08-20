@@ -114,8 +114,25 @@
 
     }
 
-    function checkBeforeSubmit(){
-        return false;
+    function viewPdf(fileNo,fileName){
+        var index= fileName.lastIndexOf('.');
+        var ext = fileName.substr(index+1).toUpperCase();
+        debugger;
+        //如果是pdf或者word则进行预览
+        if(ext=='PDF'){
+            Joyin.ajax(basePath + 'disclosure/infoCompliance/uploadFile001/getFilePath', {fileNo:fileNo}, function(result) {
+                Joyin.dialog("文件预览",
+                    basePath+"/js/disclosure/pdf/web/viewer.html?file="+result+"&",
+                    "90%", "90%", {},function(){});
+            });
+        } else if(ext=='DOC' || ext=='DOCX'){
+            //预览word文件
+            Joyin.dialog("文件预览",
+                basePath+"/disclosure/common/WordView/init",
+                "1120px", "90%", {fileNo:fileNo},function(){});
+        }else {
+            window.location = basePath+"framework/download/"+fileNo;
+        }
     }
 
     //控件加载完成后
@@ -127,6 +144,8 @@
     $(function() {
         // 去掉工作流框架的“意见和说明”
         $('#wfl_comment').val('无').parent().hide();
+        // 去掉工作流中的“完成”按钮
+        $('#btnComplete_wfl').remove();
 
         // 绑定按钮事件
         $('#InfoCompliance002_btn_save').click(function() {
@@ -135,10 +154,6 @@
 
         $('#InfoCompliance002_btn_submit').click(function() {
             saveOrSubmit('submit');
-        });
-        //提交流程前检查批注是否已经填写
-        $('#checkBeforeSubmit').click(function() {
-            checkBeforeSubmit();
         });
 
         var pageModel = $("#pageModel").val();
@@ -168,13 +183,13 @@
                     debugger;
                     var obj = result[i];
                     var comment = obj.comment;
+                    var createUser = obj.createUser;
                     var fileList = obj.fileList;
-                    console.log(result);
                     var div = $('<div class="upload layui-upload"></div>');
                     var h3 = $('<h3 class="pro-module-title"><span class="title-des"></span>修订后附件<i class="iconfont must" style="display: inline;">*</i></h3>');
                     var table = $('<table class="layui-table"></table>');
                     var remark = $(['<div class="layui-form-item">'
-                        ,'<label style="float: left">修订意见<i class="iconfont must" style="display: inline;">*</i></label>'
+                        ,'<label style="float: left">'+createUser+'<i class="iconfont must" style="display: inline;">*</i></label>'
                         ,'<div class="layui-input-inline input-inline" style="margin:0 10px;width: 80%!important;">'
                         ,'<textarea id="remark" name="remark" maxlength="500" class="layui-textarea" disabled="" autocomplete="off">'+comment+'</textarea>'
                         ,'</div></div>'
@@ -185,14 +200,13 @@
                         var tr = $(['<tr id="upload-'+ file.fileNo +'">'
                             ,'<td>'+(i1+1)+'</td>'
                             ,'<td><div class="layui-table-cell">'
-                            ,'<a href="'
-                            , JoyinUtil.getRealPath('/framework/download/' + file.fileNo)
-                            ,'">'
                             ,file.fileName
                             ,'</a></div></td>'
                             ,'<td>'+file.uploadUser+'</td>'
                             ,'<td>上传成功</td>'
                             ,'<td>'+file.createTimeText+'</td>'
+                            ,'<td><div class="layui-table-cell">'
+                            ,'<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览</a></div></td>'
                             ,'</tr>'].join(''));
                         table.append(tr);
                     }

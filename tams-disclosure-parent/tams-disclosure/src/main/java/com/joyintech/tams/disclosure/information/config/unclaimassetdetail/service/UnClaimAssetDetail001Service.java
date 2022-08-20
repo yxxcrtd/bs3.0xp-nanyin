@@ -194,9 +194,8 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                         for (UnClaimAssetDetailDto dto : dtos) {
                             if(!((DateUtil.compareDate(rowData.get(7),dto.getEffDateStr())<0 && DateUtil.compareDate(rowData.get(8),dto.getEffDateStr())<0)
                                     || (DateUtil.compareDate(rowData.get(7),dto.getEffEndDateStr())>0 && DateUtil.compareDate(rowData.get(8),dto.getEffEndDateStr())>0))){
-                                errorMsg.append(new ExcelValidDto(rowData.get(0), String.valueOf(i+1),
-                                        "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyy-MM-dd")
-                                                +"-"+DateUtil.format(dto.getEffEndDate(),"yyyy-MM-dd")));
+                                errorMsg.append("生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyy-MM-dd")
+                                                +"-"+DateUtil.format(dto.getEffEndDate(),"yyyy-MM-dd"));
                                 break;
                             }
                         }
