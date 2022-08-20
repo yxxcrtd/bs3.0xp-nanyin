@@ -80,8 +80,6 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
 
     }
 
-
-
     /**
      * 导出
      */
@@ -208,7 +206,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
                     for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //产品登记编码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))&&(StringUtil.equals(list1.get(1), list2.get(1)))&&(StringUtil.equals(list1.get(2), list2.get(2)))) {
+                        if ((StringUtil.equals(list1.get(0), list2.get(0)))&&(StringUtil.equals(list1.get(2), list2.get(2)))) {
                             isRepeat = true;
                             break;
                         }
