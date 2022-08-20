@@ -10,8 +10,6 @@
 
 package com.joyintech.tams.disclosure.information.config.disprodplanmanage.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -41,15 +39,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.system.constant.SystemGlobalConstant;
 
 /**
  * 报表模板管理 〈一句话功能简述〉 〈功能详细描述〉
@@ -63,10 +54,6 @@ import com.joyintech.system.constant.SystemGlobalConstant;
 @PageId("DisProdPlanManage001")
 @RequestMapping("/disclosure/information/config/disprodplanmanage/DisProdPlanManage001")
 public class DisProdPlanManage001Controller extends BaseController {
-
-    @SuppressWarnings("rawtypes")
-    @Autowired
-    private CommonExportService commonExportService;
 
     @Autowired
     private DisProdPlanManage001Service disProdPlanManage001Service;
