@@ -517,6 +517,10 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
                     revalInfo.setRepId20(reportCount);
                     if(null!=revalInfoHJ){revalInfoHJ.setRepId20("" + new BigDecimal(revalInfoHJ.getRepId20()==null?"0":revalInfoHJ.getRepId20()).add(reportCountB));}
                     break;
+                case "99":
+                    revalInfo.setRepId99(reportCount);
+                    if(null!=revalInfoHJ){revalInfoHJ.setRepId99("" + new BigDecimal(revalInfoHJ.getRepId99()==null?"0":revalInfoHJ.getRepId99()).add(reportCountB));}
+                    break;
                 default:
                     break;
             }
