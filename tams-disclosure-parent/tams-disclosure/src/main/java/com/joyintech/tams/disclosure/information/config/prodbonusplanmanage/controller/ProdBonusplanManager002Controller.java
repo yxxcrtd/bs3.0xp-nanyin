@@ -103,10 +103,12 @@ public class ProdBonusplanManager002Controller extends BaseController {
         else if (StringUtil.isNotEmpty(workflowId)) {
             // 根据工作流与留痕处理提供的共通方法获取业务实体
             ProdBonusplanDto entity = prodBonusplanManager002Service.getBussinessEntityByWorkflowId(workflowId);
-            String prodId = entity.getProdId();
-            String prodName =entity.getProdName();
-            entity.setProdName(prodId);
-            entity.setProdId(prodName);
+            if (StringUtil.equals(entity.getOperateType(),"new")){
+                String prodId = entity.getProdId();
+                String prodName =entity.getProdName();
+                entity.setProdName(prodId);
+                entity.setProdId(prodName);
+            }
             model.addAttribute("entity", entity);
             model.addAttribute("workflowId", workflowId);
         }
@@ -264,9 +266,9 @@ public class ProdBonusplanManager002Controller extends BaseController {
         WorkFlowParameter<ProdBonusplanDto> params = new WorkFlowParameter<ProdBonusplanDto>();
         params.setPageId("ProdBonusplanManager002");
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getProdId());
+        params.setBusinessCode(dto.getProdName());
         params.setBusinessType(DictCodeListExt4.共通业务类型_产品分红到期计划.getValue());
-        params.setComment(entity -> "分红计划编号-产品代码" + "(" + entity.getProdId() + ")");
+        params.setComment(entity -> "分红计划编号-产品代码" + "(" + entity.getProdName() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
 

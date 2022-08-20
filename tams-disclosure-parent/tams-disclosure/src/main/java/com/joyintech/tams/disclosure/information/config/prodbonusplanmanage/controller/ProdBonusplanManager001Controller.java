@@ -178,9 +178,9 @@ public class ProdBonusplanManager001Controller extends BaseController {
 		WorkFlowParameter<ProdBonusplanDto> params = new WorkFlowParameter<ProdBonusplanDto>();
 		params.setPageId("ProdBonusplanManager002");
 		params.setElementId(dto.getElementId());
-		params.setBusinessCode(dto.getBonusPlanId());
+		params.setBusinessCode(item -> item.getProdId());
 		params.setBusinessType(DictCodeListExt4.共通业务类型_产品分红到期计划.getValue());
-		params.setComment(entity -> "产品分红计划-产品代码"+ "(" + entity.getProdId() + ")");
+		params.setComment(entity -> "产品分红到期计划-产品代码"+ "(" + entity.getProdId() + ")");
 		processParameter.setOperationType(OperationType.DELETE);
 		processParameter.setWorkFlowParameter(params);
 		//String msg =prodBonusplanManager002Service.start(processParameter, dto);
