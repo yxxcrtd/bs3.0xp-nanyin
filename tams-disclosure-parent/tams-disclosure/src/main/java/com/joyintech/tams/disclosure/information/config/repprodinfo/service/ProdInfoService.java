@@ -378,7 +378,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 27) {
+            if (null == objects.get(0) || objects.get(0).size() >= 26) {//NYLCXP-937
                 Map<String, Object> resultMap = new HashMap<>();
                 resultMap.put("errorMsg", "数据格式错误，数据格式需要27列。");
                 AjaxResult wr = new AjaxResult();
