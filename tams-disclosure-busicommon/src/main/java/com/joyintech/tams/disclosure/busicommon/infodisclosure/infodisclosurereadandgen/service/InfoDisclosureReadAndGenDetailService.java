@@ -480,6 +480,16 @@ public class InfoDisclosureReadAndGenDetailService{
 				}
 				repExpectedLogList.add(repExpectedLog);
 			}
+			else if((StringUtil.equals(repRule.getRepId(),"CP_001_002_005")
+					||StringUtil.equals(repRule.getRepId(),"CP_001_002_006"))){
+				Date endDate=repExpectedLog.getEndDate();
+				ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+						com.joyintech.framework.util.DateUtil.format(endDate), "01", 1);
+				if(holidaymarket001Dto!=null){
+					repExpectedLog.setEndDate(holidaymarket001Dto.getBusiDate());
+				}
+				repExpectedLogList.add(repExpectedLog);
+			}
 			else{
 				repExpectedLogList.add(repExpectedLog);
 			}

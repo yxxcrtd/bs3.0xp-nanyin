@@ -410,6 +410,16 @@ public class InfoDiscGenFileDetailService {
 				}
 				revealList.add(repInstallFile);
 			}
+			else if((StringUtil.equals(repRule.getRepId(),"CP_001_002_005")
+					||StringUtil.equals(repRule.getRepId(),"CP_001_002_006"))){
+				Date endDate=repInstallFile.getEndDate();
+				ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+						DateUtil.format(endDate), "01", 1);
+				if(holidaymarket001Dto!=null){
+					repInstallFile.setEndDate(holidaymarket001Dto.getBusiDate());
+				}
+				revealList.add(repInstallFile);
+			}
 //			else if(StringUtil.equals(DictCodeListExt2.报表类别_净值披露.getValue(), repRule.getReportCategory())){
 //				if(repInstallFile.getEndDate()!=null&&DateUtil.compareDate(prodInfoListEntity.getActMdate(), repInstallFile.getEndDate())>0
 //						&&DateUtil.compareDate(repInstallFile.getEndDate(), prodInfoListEntity.getVdate())>=0){
