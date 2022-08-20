@@ -1194,6 +1194,15 @@ UPDATE SYS_PARA SET PARAM_VALUE = '1800' WHERE PARA_CODE = 'login_fail_lock_time
 
 --密码输入错误次数为3次后进行提示
 UPDATE SYS_PARA SET PARAM_VALUE = '3' WHERE PARA_CODE = 'login_fail_count';
+
+--NYLCXP-902我的主页默认配置好 add by sjj 20220818 start
+delete from SYS_HOME_PAGE_CONFIG where CONFIG_ID ='mainXinPi';
+INSERT INTO SYS_HOME_PAGE_CONFIG (CONFIG_ID, SYSTEM_CODE, CONFIG_NAME, SHARE_TYPE, SHARE_TARGET, LAYOUT_STYLE,
+                                  CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('17bed495075840329fe80bcbcbe51dea', 'TAMS', '信息', '04', null,
+        '{"settingSaveIds":["1"],"pageList":["disclosureHome"]}', 'admin', '000000', sysdate, 'sysdate', sysdate);
+--NYLCXP-902我的主页默认配置好 add by sjj 20220818 end
+
 commit;
 
 
