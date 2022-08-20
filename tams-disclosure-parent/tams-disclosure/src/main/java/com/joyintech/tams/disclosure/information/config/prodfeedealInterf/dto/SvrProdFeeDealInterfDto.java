@@ -18,7 +18,7 @@ import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
-@PageId("SvrProdFeeDealInterf001")
+@PageId("SvrProdFeeDealInterf002")
 @ValidLogic(targetClass = SvrProdFeeDealInterfValidator.class, groups = { ValidateGroupEdit.class, ValidateGroupDelete.class })
 public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, ProcessEntity {
 
@@ -58,6 +58,7 @@ public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, Pro
     /**
      * 费用类型
      */
+    @PrimaryKey(PrimaryKey.Field.PK_2)
     private String feeType;
     /**
      * 费用金额
@@ -181,7 +182,7 @@ public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, Pro
     public String getFeeTypeStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.产品费用交易费用类型, this.getFeeType());
     }
-
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getPayDateStr() {
         return this.getPayDate()==null?null: DateUtil.format(this.getPayDate(), "yyyy-MM-dd");
     }
