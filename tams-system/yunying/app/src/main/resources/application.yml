@@ -200,7 +200,7 @@ application:
   minLogo: /image/logos/min-logo.png #系统图标，框架中会根据分辨率自动适配
   leftMenuLogo: /image/logos/left-logo.png #系统图标，框架中会根据分辨率自动适配
   topMenuLogo: /image/logos/top-logo.png #系统图标，框架中会根据分辨率自动适配
-  sessionTimeout: 18000000
+  sessionTimeout: 900000
   joyinsso: false
   interfMaxCorePoolSize: 20  #上游接口解析读取文件处理最大线程数
   maxDataCountOneTimeForInvestholdInfo: 50  #上游接口解析读取文件处理中持有信息批量查询单次最大查询主键数（江苏银行50）

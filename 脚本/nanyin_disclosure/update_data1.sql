@@ -1189,5 +1189,9 @@ INSERT INTO SYS_PAGE_ELEMENT
 (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 VALUES('RepEdit001', 'btnSaveReport', '01', '02', NULL, '保存', 'system', NULL, sysdate, 'system', sysdate, 'COM', NULL);
 
+-- 密码错误次数过多导致的用户锁定时间不允许为0
+UPDATE SYS_PARA SET PARAM_VALUE = '1800' WHERE PARA_CODE = 'login_fail_lock_time';
 
+--密码输入错误次数为3次后进行提示
+UPDATE SYS_PARA SET PARAM_VALUE = '3' WHERE PARA_CODE = 'login_fail_count';
 commit;

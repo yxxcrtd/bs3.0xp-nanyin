@@ -20,8 +20,8 @@
 						<i class="iconfont must" style="display: inline;">*</i> 指标代码
 					</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" id="id" name="id" placeholder="请输入内容"
-							class="layui-input form-input" data-th-Value="${entity?.id}">
+						<input type="text" id="id" name="id" placeholder="请输入内容" onKeyUp="value=value.replace(/[^\u0030-\u0039\u0041-\u005a\u0061-\u007a\u0020-\u0026\u0028-\u007B\u007D\u007E]/g,'')"
+							class="layui-input form-input" maxlength="20" data-th-Value="${entity?.id}">
 					</div>
 				</div>
 			</div>
@@ -31,7 +31,7 @@
 						<i class="iconfont must" style="display: inline;">*</i> 指标名称
 					</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" id="indexName" name="indexName"
+						<input type="text" id="indexName" name="indexName" maxlength="100"
 							placeholder="请输入内容" class="layui-input form-input"
 							data-th-Value="${entity?.indexName}">
 					</div>
@@ -104,7 +104,7 @@
 					<div class="layui-input-inline input-inline">
 						<textarea name="indexDescribe"
 							data-th-text="${entity?.indexDescribe}" class="layui-textarea"
-							placeholder="请输入内容"
+							placeholder="请输入内容" maxlength="1000"
 							data-th-placeholder="#{SysCommon.placeholder}"></textarea>
 					</div>
 				</div>

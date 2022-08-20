@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.dao.RepInstallFileMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.executor.ExecutorException;
 import org.slf4j.Logger;
@@ -81,6 +82,9 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 	 */
 	@Autowired
 	private RepCheckInfoService repCheckInfoService;
+
+	@Autowired
+	private RepInstallFileMapper repInstallFileMapper;
 
 	@Value("${application.interfMaxCorePoolSize}")
 	private int interfMaxCorePoolSize;
@@ -234,6 +238,9 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 			}
 			else if(ccm!=null){
 				logger.info(ccm.getMsg());
+				if(StringUtil.equals(ccm.getMsg(),"校验不满足")){
+					repInstallFileMapper.deleteByPrimaryKey(infoDisclosureGenAndSendEntity.getId());
+				}
 			}
 		}
 	}

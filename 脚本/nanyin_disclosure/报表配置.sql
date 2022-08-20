@@ -517,7 +517,7 @@ date$qryEndDate=(
     and a.market_code=''04''
     order by a.busi_date asc)
     where rownum=1
-)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1001','','05','01','检查每周净值公告/报告日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1001','','05','03','检查每周净值公告/报告日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
 declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
@@ -529,7 +529,7 @@ date$qryEndDate=(
     and a.market_code=''04''
     order by a.busi_date asc)
     where rownum=1
-)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1002','','05','01','检查每周净值公告/报告日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1002','','05','03','检查每周净值公告/报告日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
 declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
@@ -541,7 +541,7 @@ date$qryEndDate=(
     and a.market_code=''01''
     order by a.busi_date asc)
     where rownum=1
-)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1003','','05','01','检查季度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1003','','05','03','检查季度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
 declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
@@ -553,7 +553,7 @@ date$qryEndDate=(
     and a.market_code=''01''
     order by a.busi_date asc)
     where rownum=1
-)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1004','','05','01','检查季度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1004','','05','03','检查季度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
 declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
@@ -565,7 +565,7 @@ date$qryEndDate=(
     and a.market_code=''01''
     order by a.busi_date asc)
     where rownum=1
-)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1005','','05','01','检查半年度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1005','','05','03','检查半年度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
 declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
@@ -577,7 +577,7 @@ date$qryEndDate=(
     and a.market_code=''01''
     order by a.busi_date asc)
     where rownum=1
-)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1006','','05','01','检查半年度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1006','','05','03','检查半年度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
 declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
@@ -589,7 +589,7 @@ date$qryEndDate=(
     and a.market_code=''01''
     order by a.busi_date asc)
     where rownum=1
-)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1007','','05','01','检查年度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1007','','05','03','检查年度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
 declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
@@ -601,7 +601,7 @@ date$qryEndDate=(
     and a.market_code=''01''
     order by a.busi_date asc)
     where rownum=1
-)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1008','','05','01','检查年度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1008','','05','03','检查年度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=endDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
 
 
 -- 校验关系

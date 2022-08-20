@@ -3,21 +3,18 @@ package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.serv
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.JoyinMessage;
-import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
-import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
-import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -31,8 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.io.FileNotFoundException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,10 +41,10 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
     private UnClaimAssetDetailMapper unClaimAssetDetailMapper;
 
     @Autowired
-    private ProElementAdjMapper proElementAdjMapper;
+    private UnClaimAssetDetail002Service unClaimAssetDetail002Service;
 
     @Autowired
-    private UnClaimAssetDetail002Service unClaimAssetDetail002Service;
+    private JoyinDFSTemplate joyinDFSTemplate;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -121,6 +116,10 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
      */
     public AjaxResult checkImportData(String fileName) {
         List<String> findList =  unClaimAssetDetailMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+//        List<List<String>> objects = com.joyintech.tams.systemtools.util.ExcelUtil.getTempList(fileName);
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
         List<List<String>> objects = com.joyintech.tams.systemtools.util.ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
@@ -239,7 +238,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
         }
         Map<String, Object> resultMap = new HashMap<>();
         if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
+            resultMap.put("errorMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
         String tempList = (String) resultMap.get("correctData");
