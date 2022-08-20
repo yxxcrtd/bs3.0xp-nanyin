@@ -78,6 +78,37 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
 
     public List<ProdInfoDto> findAll(Map<String, Object> params) {
+        String status = (String) params.get("status");
+        if (StringUtil.isNotEmpty(status)) {
+            params.put("dataStatusArr", StringUtil.splitToList(GlobalConstant.COMMA, status));
+        }
+
+        String prodRegistNo = (String) params.get("prodRegistNo");
+        if (StringUtil.isNotEmpty(prodRegistNo)) {
+            params.put("prodReNoArr", StringUtil.splitToList(GlobalConstant.COMMA, prodRegistNo));
+        }
+
+        String raiseType = (String) params.get("raiseType");
+        if (StringUtil.isNotEmpty(raiseType)) {
+            params.put("raiseTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, raiseType));
+        }
+
+        String isGrade = (String) params.get("isGrade");
+        if (StringUtil.isNotEmpty(isGrade)) {
+            params.put("isGradeArr", StringUtil.splitToList(GlobalConstant.COMMA, isGrade));
+        }
+
+        String profitType = (String) params.get("profitType");
+        if (StringUtil.isNotEmpty(profitType)) {
+            params.put("profitTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, profitType));
+        }
+
+        /* NYLCXP-411 产品名称字段改为多选下拉框 add by kongzhifang 2022-08-12 start */
+        String prodName = (String) params.get("prodName");
+        if (StringUtil.isNotEmpty(prodName)) {
+            params.put("prodNameArr", StringUtil.splitToList(GlobalConstant.COMMA, prodName));
+        }
+        /* NYLCXP-411 产品名称字段改为多选下拉框 add by kongzhifang 2022-08-12 start */
         List<ProdInfoDto> result = prodInfoMapper.searchProdList(params);
         return result;
     }
@@ -696,11 +727,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         // NYLCXP-580 两次判断都为空会导致newData中重复塞入数据 modify by kongzhifang 2022-08-11
         for (ProdInfoDto temp:selectedItem) {
             if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))){
-                if(StringUtil.equals(DictCodeListExt1.维护数据状态_删除.getValue(),this.selectByProdId(temp.getProdId()).getStatus())){
-                    existDelData.add(temp);
-                }else{
-                    existData.add(temp);
-                }
+                existData.add(temp);
             }
             else if(!StringUtil.isNotEmpty(this.selectByProdStatus(temp.getProdId()))) {
                 temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -712,10 +739,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             //this.doComplete(existDataDto, OperationType.MODIFY);
             this.update(existDataDto);
         }
-        //删除操作 NYLCXP-263 导入一条数据的数据状态为“删除” ，导入同样的数据只展示第二次新增的数据，第一条删除状态的数据不展示
-        for (ProdInfoDto existDelDataDto : existDelData) {
-            this.delete(existDelDataDto);
-        }
+
         //插入操作
         for (ProdInfoDto newDataDto : newData
         ) {
