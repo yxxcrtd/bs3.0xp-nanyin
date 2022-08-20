@@ -232,6 +232,8 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 //				jobSeq = infoDisclosureGenAndSendEntity.getJobSeq();
 //			}
 			infoDisclosureGenAndSendEntity.setCheckFor(DictCodeListExt2.校验位置_必要数据.getValue());
+
+			infoDisclosureGenAndSendEntity.setExecDate(DateUtil.parse(executeDateStr));
 			CheckConfirmMessage ccm = repCheckInfoService.check(infoDisclosureGenAndSendEntity,infoDisclosureGenAndSendEntity.getClass());
 			if (ccm != null && ccm.isFlag()) {
 				infoDisclosureGenService.genDetail(infoDisclosureGenAndSendEntity,screenMap,DateUtil.parse(executeDateStr));
