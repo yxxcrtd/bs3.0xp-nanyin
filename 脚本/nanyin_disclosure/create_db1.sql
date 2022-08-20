@@ -1142,3 +1142,6 @@ commit ;
 ALTER TABLE REP_INFO_STATUS ADD IS_SYNCHRO VARCHAR2(1);
 comment on column REP_INFO_STATUS.IS_SYNCHRO is '模板状态是否同步到REP_INFO表:Y是;N否';
 -- 增加模板状态是否同步到模板表标识 add by cuiwei 20220819 end
+-- 增加模板状态是否同步到模板表标识 add by cuiwei 20220820 start
+ALTER TABLE REP_JOB_RANGE MODIFY RULE_TYPE4 VARCHAR2(4000);
+-- 增加模板状态是否同步到模板表标识 add by cuiwei 20220820 end
