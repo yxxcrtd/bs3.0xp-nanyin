@@ -339,7 +339,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             dto2.setBonusPlanId(temp.getBonusMode());
             dto2.setSettDateStr(temp.getSettDateStr());
             ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto2);
-            if(existDto2 != null){
+            if(existDto2 != null && StringUtil.equals(existDto2.getDataStatus(),"E")){
                // errorMsg.append("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复");
                 existData.add(temp);
             }
@@ -382,7 +382,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                 dto2.setBonusPlanId(temp.getBonusMode());
                 dto2.setSettDateStr(temp.getSettDateStr());
                 ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto2);
-                if(StringUtil.isNotEmpty(existDto2)){
+                if(StringUtil.isNotEmpty(existDto2) && StringUtil.equals(existDto2.getDataStatus(),"E")){
                     //return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
                     temp.setBonusPlanId(existDto2.getBonusPlanId());
                     existData.add(temp);
