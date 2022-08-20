@@ -13,10 +13,7 @@ package com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurere
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -425,18 +422,63 @@ public class InfoDisclosureReadAndGenDetailService{
 				repExpectedLog.setEndDate(dateMap.get("endDate"));
 			}
 			//定期公告必须满足起息日距离结束日大于90天，结束日离实际到期日大于90天
-			if(StringUtil.equals(DictCodeListExt2.报表类别_理财产品定期公告.getValue(), repRule.getReportCategory())){
-				if(repExpectedLog.getEndDate()!=null&&!(DateUtil.getBetweenDayNumber(prodInfoListEntity.getVdate(), repExpectedLog.getEndDate())<90
-						||DateUtil.getBetweenDayNumber(repExpectedLog.getEndDate(), prodInfoListEntity.getActMdate())<90)
-						&&DateUtil.compareDate(prodInfoListEntity.getActMdate(), repExpectedLog.getEndDate())>0){
+			if(StringUtil.equals("CP_001_002_015", repRule.getRepId())
+					||StringUtil.equals("CP_001_002_016", repRule.getRepId())
+					||StringUtil.equals("CP_001_002_017", repRule.getRepId())
+					||StringUtil.equals("CP_001_002_018", repRule.getRepId())
+					||StringUtil.equals("CP_001_002_019", repRule.getRepId())
+					||StringUtil.equals("CP_001_002_020", repRule.getRepId())){
+				if(repExpectedLog.getEndDate()!=null&&!(com.joyintech.framework.util.DateUtil.getBetweenDayNumber(prodInfoListEntity.getSetDate(), repExpectedLog.getEndDate())<90
+						|| com.joyintech.framework.util.DateUtil.getBetweenDayNumber(repExpectedLog.getEndDate(), prodInfoListEntity.getMdate())<90)
+						&& com.joyintech.framework.util.DateUtil.compareDate(prodInfoListEntity.getMdate(), repExpectedLog.getEndDate())>0){
 					repExpectedLogList.add(repExpectedLog);
+					if(StringUtil.equals("CP_001_002_015", repRule.getRepId())
+							||StringUtil.equals("CP_001_002_016", repRule.getRepId())){
+						//季报startDate取季度第一天
+						Date endDate=repExpectedLog.getEndDate();
+						Date startDate= com.joyintech.framework.util.DateUtil.getFirstDayOfQuarter(endDate);
+						repExpectedLog.setStartDate(startDate);
+					}
+
+					if(StringUtil.equals("CP_001_002_017", repRule.getRepId())
+							||StringUtil.equals("CP_001_002_018", repRule.getRepId())){
+						//半年报startDate取半年初第一天
+						Date endDate=repExpectedLog.getEndDate();
+
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(endDate);
+						int halfOfYear = calendar.get(2) / 6 + 1;
+						int month = 1;
+						switch (halfOfYear) {
+							case 1:
+								month = 1;
+								break;
+							case 2:
+								month = 7;
+								break;
+						}
+						calendar.set(calendar.get(1), month, 1);
+						repExpectedLog.setStartDate(calendar.getTime());
+					}
+
+					if(StringUtil.equals("CP_001_002_019", repRule.getRepId())
+							||StringUtil.equals("CP_001_002_020", repRule.getRepId())){
+						//年报startDate取年初第一天
+						Date endDate=repExpectedLog.getEndDate();
+						Date startDate= com.joyintech.framework.util.DateUtil.getFirstDayOfYear(endDate);
+						repExpectedLog.setStartDate(startDate);
+					}
 				}
 			}
-			else if(StringUtil.equals(DictCodeListExt2.报表类别_净值披露.getValue(), repRule.getReportCategory())){
-				if(repExpectedLog.getEndDate()!=null&&DateUtil.compareDate(prodInfoListEntity.getActMdate(), repExpectedLog.getEndDate())>0
-						&&DateUtil.compareDate(repExpectedLog.getEndDate(), prodInfoListEntity.getVdate())>=0){
-					repExpectedLogList.add(repExpectedLog);
+			else if(StringUtil.equals(repRule.getRepId(),"CP_001_003_001")
+					||StringUtil.equals(repRule.getRepId(),"CP_001_003_002")){
+				Date endDate=repExpectedLog.getEndDate();
+				ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+						com.joyintech.framework.util.DateUtil.format(endDate), "02", 1);
+				if(holidaymarket001Dto!=null){
+					repExpectedLog.setEndDate(holidaymarket001Dto.getBusiDate());
 				}
+				repExpectedLogList.add(repExpectedLog);
 			}
 			else{
 				repExpectedLogList.add(repExpectedLog);
