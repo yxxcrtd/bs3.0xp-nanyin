@@ -18,7 +18,44 @@ Date.prototype.format = function(format)
     return format;
 }
 
+var processIndex;
 
+var doprocess = function(){
+    processIndex = layer.open({
+        type: 1
+        ,title: false //不显示标题栏
+        ,closeBtn: false
+        ,area: '300px;'
+        ,shade: 0.6
+        ,id: 'JOY_process' //设定一个id，防止重复弹出
+        ,moveType: 1 //拖拽模式，0或者1
+        ,success: function(layero){
+            layero.css('background', 'transparent');
+            // 开始进度条
+        }
+    });
+}
+
+function viewPdf(fileNo,fileName){
+    var index= fileName.lastIndexOf('.');
+    var ext = fileName.substr(index+1).toUpperCase();
+    debugger;
+    //如果是pdf或者word则进行预览
+    if(ext=='PDF'){
+        Joyin.ajax(basePath + 'disclosure/infoCompliance/uploadFile001/getFilePath', {fileNo:fileNo}, function(result) {
+            Joyin.dialog("文件预览",
+                basePath+"/js/disclosure/pdf/web/viewer.html?file="+result+"&",
+                "90%", "90%", {},function(){});
+        });
+    } else if(ext=='DOC' || ext=='DOCX'){
+        //预览word文件
+        Joyin.dialog("文件预览",
+            basePath+"/disclosure/common/WordView/init",
+            "1120px", "90%", {fileNo:fileNo},function(){});
+    }else {
+        window.location = basePath+"framework/download/"+fileNo;
+    }
+}
 /**
  * Created by zhengyan on 2018/1/29 0029.
  */
@@ -145,11 +182,7 @@ $(function ($) {
                             ,'<td>'+file.createTimeText+'</td>'
                             ,(disabled ? '' : '<td><button data-ignore="true" data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
                             ,'<td><div class="layui-table-cell">'
-                            ,'<a href="'
-                            , JoyinUtil.getRealPath('/framework/download/' + file.fileNo)
-                            ,'">'
-                            ,"预览/下载"
-                            ,'</a></div></td>'
+                            ,'<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览</a></div></td>'
                             ,'</tr>'].join(''));
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
@@ -374,7 +407,7 @@ $(function ($) {
                         if(res!= null){
                             var tr = fileListView.find('tr#upload-'+ file)
                                 ,tds = tr.children();
-                            tds.eq(7).find('.layui-table-cell').html('<a href="' + JoyinUtil.getRealPath('/framework/download/' + res[0].fileNo) + '">预览/下载</a>');
+                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览/下载</a>');
                             tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
                             // tds.eq(3).html(''); //清空操作
                             tr.data('file', res[0]);

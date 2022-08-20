@@ -202,10 +202,11 @@
 
 	<select id="getElementNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
 
-		select id ,text from (
+		select id ,text, parentId from (
 		select
 		DPA.PROD_ADJUST_ID id,
 		DPA.ADJ_FIELD text,
+		RPI.P_PROD_ID parentId,
 		RANK() OVER(PARTITION BY DPA.ADJ_FIELD order by DPA.PROD_ADJUST_ID) NUM
 		from
 		DIS_PROD_ADJUST DPA
