@@ -483,4 +483,11 @@ public class RepDetailsShow001Contoller extends BaseController {
 		repDetailsShow001Service.collateParams(param);
 		return repDetailsShow001Service.dataCheck(param);
 	}
+
+	@ResponseBody
+	@RequestMapping("dateCheck")
+	public String dateCheck() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return repDetailsShow001Service.dateCheck(param);
+	}
 }

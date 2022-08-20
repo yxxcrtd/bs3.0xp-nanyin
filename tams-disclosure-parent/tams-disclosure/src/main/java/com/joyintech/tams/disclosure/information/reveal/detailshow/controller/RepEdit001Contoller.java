@@ -9,19 +9,21 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.config.ShiroProperties;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportFileService;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepEdit001Service;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,25 +32,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import com.joyintech.framework.annotation.LogMethod;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.oss.service.FileRemoteService;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
-import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
-import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportFileService;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
-import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 模板示例<br>
@@ -82,11 +75,11 @@ public class RepEdit001Contoller extends BaseController {
     @Autowired
     private RepDetailsShow001Service repDetailsShow001Service;
 
-    @Resource
-    private FileRemoteService minioFileRemoteService;
-
     @Autowired
     private ReportFileService reportFileService;
+
+    @Autowired
+    private RepEdit001Service repEdit001Service;
 
 //    private String editFilename = "";
 //    private String saveFilename = "";
@@ -128,6 +121,7 @@ public class RepEdit001Contoller extends BaseController {
         model.addAttribute("fileName", editFilename);
 		logger.debug("==================报表下载编辑文件："+editFilename);
     	//saveFilename = editFilename;
+        model.addAttribute("shiroCookie", SpringContextUtil.getBean(ShiroProperties.class).getSessionId());
         return super.init(model);
     }
 
@@ -159,7 +153,7 @@ public class RepEdit001Contoller extends BaseController {
                 }
                 else if(mOption.equalsIgnoreCase("SAVEFILE")){
                     String outputFilename =  params.get("FILENAME").toString();
-                    int ret = this.saveFile (request,outputFilename );
+                    int ret = repEdit001Service.saveFile(request,outputFilename );
                     logger.info(mFileName+"文档已经保存成功");
 
                 }else if(mOption.equalsIgnoreCase("SAVEPDF")){
@@ -335,55 +329,6 @@ public class RepEdit001Contoller extends BaseController {
             e.printStackTrace();
         }
         //System.out.println("OfficeServer.service End");
-    }
-    
-    public int saveFile (HttpServletRequest request,String outputFilename ) throws IOException{
-        int ret = 0;
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
-                request.getSession().getServletContext());
-        // 判断 request 是否有文件上传,即多部分请求
-        if (multipartResolver.isMultipart(request)) {
-            // 转换成多部分request
-            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest)request;
-            // 取得request中的所有文件名
-            Iterator<String> iter = multiRequest.getFileNames();
-            while (iter.hasNext()) {
-                // 取得上传文件
-                MultipartFile file = multiRequest.getFile(iter.next());
-                if (file != null) {
-                    // 取得当前上传文件的文件名称
-                    String myFileName = StringUtil.trim(file.getOriginalFilename());
-                    //String filePath = System.getProperty("user.home");
-                    // 如果名称不为空,说明该文件存在，否则说明该文件不存在
-                    if (StringUtil.isNotEmpty(myFileName)) {
-                        // 文件存储到服务器之前调用监听器
-
-//                        File localFile = new SafelyFile(outputFilename);
-//                        File dir = localFile.getParentFile();
-//                        if (!dir.exists()) {
-//                            dir.mkdirs();
-//                        }
-//                        if (!localFile.exists()) {
-//                            localFile.createNewFile();
-//                        }
-                        String remoteFilePath = minioFileRemoteService.uploadFile(outputFilename,file.getInputStream());
-                        ret = StringUtil.isNotEmpty(remoteFilePath)?1:-1;
-                        // file.transferTo(localFile);
-//                        ret = FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(localFile));
-                        //PoiUtils.copy(file.getName(), localFile.getName());
-
-//                        UploadFile fileInfo = new UploadFile(myFileName, IDGenerator.generate(),
-//                                localFile);
-//                        fileInfo.setFileName(localFile.getPath());
-//                        if(null != fileAttachmentProcess) {
-//                            fileAttachmentProcess.upload(fileInfo);
-//                        }
-                    }
-                }
-            }
-        }
-//        progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0.5D, true);
-        return  ret;
     }
     
     public int loadFile (HttpServletResponse response,String inputFilename) throws IOException {
