@@ -63,14 +63,14 @@ $(function() {
             field : 'feeType',width:'10%',
             visible :false
         },  {
-            field : 'paidFee',width:'10%',
+            field : 'paidFee',width:'10%',type: 'number',digit:2,
             title : '费用金额'
         }, {
             field : 'payDateStr',width:'10%',
             title : '支付日',
             sortField : 'PAY_DATE'
         }, {
-            field : 'accrual',width:'10%',
+            field : 'accrual',width:'10%',type: 'number',digit:2,
             title : '自成立以来发生额（贷方）'
         }, {
             field : 'errmsg',width:'10%',

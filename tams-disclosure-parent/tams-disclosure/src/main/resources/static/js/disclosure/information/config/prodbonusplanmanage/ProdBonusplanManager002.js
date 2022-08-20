@@ -69,7 +69,7 @@ $(function() {
 	function changeSettDate(){
 		var settDate = $('#settDate').val();
 		var paymentDate = $('#paymentDate').val();
-		if (settDate < platDate){
+		if (settDate < platDate && pageModel == PAGE_MODEL_EDIT){
 			Joyin.error('到期日小于平台日，无法修改到期日！', function () {
 				// table.renderRow(data.LAY_TABLE_INDEX);
 				return;
@@ -129,6 +129,15 @@ $(function() {
 	$(function() {
 		// 规则1改变事件
 		$('#finProdId').change(prodIdChange);
+
+		$('#settDate').change(function () {
+			if ($('#settDate').val()<platDate){
+                Joyin.error("收益分配基准日需要大于等于平台日!");
+				$('#settDate').val('');
+				return;
+			}
+		});
+
 		// 绑定按钮事件
 		$('#ProdBonusplanManager002_btn_save').click(function() {
 			saveOrSubmit('save');
