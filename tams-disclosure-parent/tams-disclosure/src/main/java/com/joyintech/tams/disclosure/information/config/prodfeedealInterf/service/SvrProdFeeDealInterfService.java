@@ -82,7 +82,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
     public void doComplete(SvrProdFeeDealInterfDto entity, OperationType type) {
         entity.setOperateType(type.toString());
         entity.setUpdateTime(DateUtil.now());
-        entity.setUpdateUser(CommonUtil.getUserName());
+        //entity.setUpdateUser(CommonUtil.getUserName());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
             entity.setStatus("E");
             svrProdFeeDealInterfMapper.insertPrdFeeDeal(entity);

@@ -1,6 +1,5 @@
 package com.joyintech.tams.disclosure.information.config.prodfeedealInterf.validator;
 
-import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -8,8 +7,6 @@ import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.service.SvrProdFeeDealInterfService;
-import com.joyintech.workflow.engine.service.LeaveMarkProcessService;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +17,6 @@ import java.util.List;
 @Component
 public class SvrProdFeeDealInterfValidator implements BeanValidator {
     @SuppressWarnings("rawtypes")
-    @Autowired(required=false)
-    private LeaveMarkProcessService leaveMarkProcessService;
     @Autowired
     private SvrProdFeeDealInterfService svrProdFeeDealInterfService;
     @Override
@@ -60,7 +55,7 @@ public class SvrProdFeeDealInterfValidator implements BeanValidator {
 //            }
 //        }
 
-        if(!"delete".equals(dto.getOperateType())) {
+        if(!"delete".equals(dto.getOperateType()) && !"edit".equals(dto.getOperateType())) {
             SvrProdFeeDealInterfDto svrProdFeeDealInterfDto= svrProdFeeDealInterfService.selectByProdID(dto);
             if(svrProdFeeDealInterfDto != null && StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
                 errorList.add(new ValidMessage("", "“产品主代码+费用类型+支付日”不能同时与已有数据重复"));
