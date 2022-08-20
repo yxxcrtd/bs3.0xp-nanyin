@@ -14,6 +14,7 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -188,6 +189,16 @@ public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, Pro
     public String getUpdateTimeStr() {
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
     }
+    private DecimalFormat df2 = new DecimalFormat("0.00");
+//    public String getPaidFeeStr() {
+//        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+//        return this.getPaidFee()==null?" ":decimalFormat.format(this.getPaidFee().setScale(2,BigDecimal.ROUND_HALF_UP));
+//    }
+    public String getPaidFeeStr() {
+        return this.getPaidFee()==null?"":df2.format(this.getPaidFee());
+    }
 
-
+    public String getAccrualStr(){
+        return this.getAccrual()==null?"":df2.format(this.getAccrual());
+    }
 }

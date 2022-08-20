@@ -6,9 +6,9 @@
             <Cell order="2" name="产品主代码">prodId</Cell>
             <Cell order="3" name="产品名称">prodName</Cell>
             <Cell order="4" name="费用类型">feeTypeStr</Cell>
-            <Cell order="5" name="费用金额">paidFee</Cell>
+            <Cell order="5" name="费用金额">paidFeeStr</Cell>
             <Cell order="6" name="支付日">payDateStr</Cell>
-            <Cell order="7" name="自成立以来发生额（贷方）">accrual</Cell>
+            <Cell order="7" name="自成立以来发生额（贷方）">accrualStr</Cell>
             <Cell order="8" name="错误信息">errmsg</Cell>
             <Cell order="9" name="更新时间">updateTimeStr</Cell>
             <Cell order="9" name="更新人">updateUser</Cell>
