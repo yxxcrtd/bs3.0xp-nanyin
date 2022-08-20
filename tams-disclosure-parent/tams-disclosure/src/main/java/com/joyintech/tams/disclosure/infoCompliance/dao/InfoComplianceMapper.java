@@ -38,4 +38,6 @@ public interface InfoComplianceMapper {
     String  getFirstNodeId(@Param("seqNo") String seqNo);
 
     void  deleteUploadFile(@Param("businessId") String businessId);
+
+    String getFilePathByKey(@Param("seqno") String seqno);
 }

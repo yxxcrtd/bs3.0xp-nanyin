@@ -70,7 +70,7 @@ $(function () {
     
   //展示报表查询条件
 	var showSearch = function(data){
-
+        if(!repId) return;
 		//拼接查询条件
 		var SearchHtml = '<input type="hidden" name="repId" id="repId" value="'+repId+'" />'
 			+'<input type="hidden" name="repName" id="repName" value="'+repName+'" />'
@@ -84,12 +84,12 @@ $(function () {
 			//产品名称下拉框
 			if(data[i].screenType==='01'){
 			    var datas = '{}';
-			    Joyin.ajaxSync('getPProdIdList1', {}, function(res) {
+			    Joyin.ajaxSync('getPProdIdList1', {repId: repId}, function(res) {
 			        datas = JSON.stringify(res);
 			    });
 
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select select2-hidden-accessible" placeholder="请选择" data-result=\'' + datas
-					+'\' parentIds="repId,prodid" allowClear="true"';
+					+'\' parentIds="repId,prodid" childrenIds="elementname" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
                         SearchHtml+= ' multiple showAll="true" >' +'</select>';
 				}else{
@@ -99,7 +99,7 @@ $(function () {
 			//子产品代码下拉框
 			else if(data[i].screenType==='02'){
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getProdIdList"'
-					+'parentIds="repId,pprodid" allowClear="true" ';
+					+'parentIds="repId,pprodid" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
@@ -119,11 +119,11 @@ $(function () {
 			//要素名称下拉框
 			else if(data[i].screenType==='04'){
 			    var datas = '{}';
-			    Joyin.ajaxSync('getElementNameList1', {}, function(res) {
+			    Joyin.ajaxSync('getElementNameList1', {repId: repId}, function(res) {
 			        datas = JSON.stringify(res);
 			    });
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-result=\'' + datas
-					+'\' parentIds="repId,pprodid" allowClear="true" formatoption="false"';
+					+'\' parentIds="repId" allowClear="true" formatoption="false"';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= ' multiple showAll="true">' +'</select>';
 				}else{
