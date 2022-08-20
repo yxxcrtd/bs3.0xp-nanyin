@@ -250,7 +250,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             map.put("effDate",DateUtil.format(temp.getEffDate()));
             map.put("effEndDate",DateUtil.format(temp.getEffEndDate()));
             map.put("dataStatus",temp.getDataStatus());
-            if (StringUtil.isNotEmpty(unClaimAssetDetail002Service.selectDetailList(map))){
+            if (unClaimAssetDetail002Service.selectDetailList(map).size()>0){
                 existData.add(temp);
             }
         }
@@ -494,7 +494,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             map.put("effDate",DateUtil.format(temp.getEffDate()));
             map.put("effEndDate",DateUtil.format(temp.getEffEndDate()));
             map.put("dataStatus",temp.getDataStatus());
-            if (!StringUtil.isEmptyList(unClaimAssetDetail002Service.selectDetailList(map))){
+            if (unClaimAssetDetail002Service.selectDetailList(map).size()>0){
                 existData.add(temp);
             }
             else {
