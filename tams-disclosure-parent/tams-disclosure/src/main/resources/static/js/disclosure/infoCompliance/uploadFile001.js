@@ -35,6 +35,27 @@ var doprocess = function(){
         }
     });
 }
+
+function viewPdf(fileNo,fileName){
+    var index= fileName.lastIndexOf('.');
+    var ext = fileName.substr(index+1).toUpperCase();
+    debugger;
+    //如果是pdf或者word则进行预览
+    if(ext=='PDF'){
+        Joyin.ajax(basePath + 'disclosure/infoCompliance/uploadFile001/getFilePath', {fileNo:fileNo}, function(result) {
+            Joyin.dialog("文件预览",
+                basePath+"/js/disclosure/pdf/web/viewer.html?file="+result+"&",
+                "90%", "90%", {},function(){});
+        });
+    } else if(ext=='DOC' || ext=='DOCX'){
+        //预览word文件
+        Joyin.dialog("文件预览",
+            basePath+"/disclosure/common/WordView/init",
+            "1120px", "90%", {fileNo:fileNo},function(){});
+    }else {
+        window.location = basePath+"framework/download/"+fileNo;
+    }
+}
 /**
  * Created by zhengyan on 2018/1/29 0029.
  */
@@ -80,7 +101,7 @@ $(function ($) {
             } catch (e) {
                 options = {};
             }
-            debugger;
+
             options = options || {};
             var businessId = $(this).next('#businessId').val();
             var url = options.url || JoyinUtil.getRealPath('disclosure/infoCompliance/uploadFile001/uploadFile?businessId='+businessId);
@@ -103,7 +124,7 @@ $(function ($) {
             if(typeof callback === 'string') {
                 callback = eval(callback);
             }
-            debugger;
+
             var elem = $(this)[0];
             if(muit && type == 'list') {
                 var $table = $('<table class="layui-table"></table>')
@@ -162,16 +183,12 @@ $(function ($) {
                             ,'<td>'+file.createTimeText+'</td>'
                             ,(disabled ? '' : '<td><button data-ignore="true" data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
                             ,'<td><div class="layui-table-cell">'
-                            ,'<a href="'
-                            , JoyinUtil.getRealPath('/framework/download/' + file.fileNo)
-                            ,'">'
-                            ,"预览"
-                            ,'</a></div></td>'
+                            ,'<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览</a></div></td>'
                             ,'</tr>'].join(''));
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
                             removeFileFromServer(fileNo, function() {
-                                debugger;
+
                                 var tmpFiles = [];
                                 _.each(initFiles, function(f) {
                                     if(f.fileNo !== fileNo) {
@@ -189,65 +206,6 @@ $(function ($) {
                         });
                         fileListView.append(tr);
                     }
-                }
-                else {
-                    if(!muit) {
-                        $(_this).hide();
-                    }
-                    var style = {
-                        width: '14px',
-                        height: '14px',
-                        position: 'absolute',
-                        color: '#000',
-                        display: 'none'
-                    };
-                    style['margin-top'] = '-27px';
-                    style['left'] = '50%';
-                    style['top'] = '50%';
-                    $.each(initFiles, function(i, file) {
-                        var name = file.fileName;
-                        var $el = $('<div class="layui-upload-drag" style="width:' + width + 'px;height:' + height + 'px;padding-left: 5px;padding-right: 5px;"></div>')
-                            .mouseover(function () {
-                                $(this).css('background', '#ccc');
-                                $down.show();
-                                if($close) {
-                                    $close.show();
-                                }
-                            }).mouseout(function () {
-                                $(this).css('background', 'none');
-                                $down.hide();
-                                if($close) {
-                                    $close.hide();
-                                }
-                            });
-                        var $name = $('<div></div>').html(name);
-                        $el.append($name);
-                        if(!disabled) {
-                            var $close = $('<div><i class="layui-icon">&#x1006;</i></div>')
-                                .css(style).css('margin-left', '-50px').on('click', function () {
-                                    removeFileFromServer(file.fileNo, function() {
-                                        var tmpFiles = [];
-                                        _.each(initFiles, function(f) {
-                                            if(f.fileNo !== file.fileNo) {
-                                                tmpFiles.push(f);
-                                            }
-                                        });
-                                        initFiles = tmpFiles;
-                                        $el.remove();
-                                        $(_this).show();
-                                    });
-                                });
-                            $el.append($close);
-                        }
-                        var $down = $('<div><a href="' + JoyinUtil.getRealPath('/framework/download/' + file.fileNo) + '"><i class="layui-icon">&#xe601;</i></a></div>')
-                            .css(style).css('margin-left', disabled ? '-25px' : 0);
-                        $el.append($down);
-
-                        if(muit) {
-                            $el.addClass('upload-muiltiple');
-                        }
-                        $(_this).after($el);
-                    });
                 }
             }
 
@@ -322,7 +280,7 @@ $(function ($) {
                                 ,'<td><div class="layui-table-cell">'
                                 ,'</div></td>'
                                 ,'</tr>'].join(''));
-                            debugger;
+
                             // 单个重传
                             tr.find('.file-reload').on('click', function(){
                                 obj.upload(index, file);
@@ -333,7 +291,7 @@ $(function ($) {
                                 var ff = $(tr).data('file');
                                 if(ff) {
                                     removeFileFromServer(ff.fileNo, function() {
-                                        debugger;
+
                                         deleteFile(index); // 删除对应的文件
                                         $(tr).remove();
                                         $("#"+fileUploader+" tbody tr").each(function (index,item){
@@ -353,7 +311,7 @@ $(function ($) {
                         return;
                     }
                     $.each(files, function (i, file) {
-                        debugger;
+
                         if (uploadedFiles[i]) {
                             delete files[i];
                         }
@@ -449,7 +407,7 @@ $(function ($) {
                         if(res!= null){
                             var tr = fileListView.find('tr#upload-'+ file)
                                 ,tds = tr.children();
-                            tds.eq(7).find('.layui-table-cell').html('<a href="' + JoyinUtil.getRealPath('/framework/download/' + res[0].fileNo) + '">预览</a>');
+                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览</a>');
                             tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
                             // tds.eq(3).html(''); //清空操作
                             tr.data('file', res[0]);

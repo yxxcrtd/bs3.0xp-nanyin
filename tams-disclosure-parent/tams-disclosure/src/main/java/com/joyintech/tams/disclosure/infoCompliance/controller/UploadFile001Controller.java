@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -84,6 +85,15 @@ public class UploadFile001Controller extends BaseController {
         }
         model.addAttribute("businessId",businessId);
         return super.init(model);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getFilePath", method = RequestMethod.POST)
+    String getFilePath(){
+        String fileNo = this.getParam("fileNo");
+        //通过主键获取文件路径
+        String filePath = infoComplianceMapper.getFilePathByKey(fileNo);
+        return filePath;
     }
 
     @RequestMapping(

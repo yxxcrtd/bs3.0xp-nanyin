@@ -182,4 +182,8 @@
 		AND BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
 	</delete>
 
+	<select id="getFilePathByKey" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT PATH filePath FROM sys_upload_file_info
+		WHERE SEQ_NO = #{seqno,jdbcType=VARCHAR}
+	</select>
 </mapper>
