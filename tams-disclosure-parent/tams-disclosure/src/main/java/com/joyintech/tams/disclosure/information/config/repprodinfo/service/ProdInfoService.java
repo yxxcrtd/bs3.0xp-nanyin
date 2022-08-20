@@ -78,6 +78,37 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
 
     public List<ProdInfoDto> findAll(Map<String, Object> params) {
+        String status = (String) params.get("status");
+        if (StringUtil.isNotEmpty(status)) {
+            params.put("dataStatusArr", StringUtil.splitToList(GlobalConstant.COMMA, status));
+        }
+
+        String prodRegistNo = (String) params.get("prodRegistNo");
+        if (StringUtil.isNotEmpty(prodRegistNo)) {
+            params.put("prodReNoArr", StringUtil.splitToList(GlobalConstant.COMMA, prodRegistNo));
+        }
+
+        String raiseType = (String) params.get("raiseType");
+        if (StringUtil.isNotEmpty(raiseType)) {
+            params.put("raiseTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, raiseType));
+        }
+
+        String isGrade = (String) params.get("isGrade");
+        if (StringUtil.isNotEmpty(isGrade)) {
+            params.put("isGradeArr", StringUtil.splitToList(GlobalConstant.COMMA, isGrade));
+        }
+
+        String profitType = (String) params.get("profitType");
+        if (StringUtil.isNotEmpty(profitType)) {
+            params.put("profitTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, profitType));
+        }
+
+        /* NYLCXP-411 产品名称字段改为多选下拉框 add by kongzhifang 2022-08-12 start */
+        String prodName = (String) params.get("prodName");
+        if (StringUtil.isNotEmpty(prodName)) {
+            params.put("prodNameArr", StringUtil.splitToList(GlobalConstant.COMMA, prodName));
+        }
+        /* NYLCXP-411 产品名称字段改为多选下拉框 add by kongzhifang 2022-08-12 start */
         List<ProdInfoDto> result = prodInfoMapper.searchProdList(params);
         return result;
     }
