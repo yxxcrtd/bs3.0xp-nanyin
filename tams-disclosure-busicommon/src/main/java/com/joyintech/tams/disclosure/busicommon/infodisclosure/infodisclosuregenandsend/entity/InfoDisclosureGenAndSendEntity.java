@@ -43,6 +43,8 @@ public class InfoDisclosureGenAndSendEntity {
      */
     private Date startDate;
 
+    private Date execDate;
+
     /**
      * 披露渠道
      */
@@ -868,5 +870,13 @@ public class InfoDisclosureGenAndSendEntity {
 
     public void setMarketCode(String marketCode) {
         this.marketCode = marketCode;
+    }
+
+    public Date getExecDate() {
+        return execDate;
+    }
+
+    public void setExecDate(Date execDate) {
+        this.execDate = execDate;
     }
 }
