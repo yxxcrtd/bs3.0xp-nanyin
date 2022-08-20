@@ -5,8 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <title data-th-text="#{RepEdit001}">报表编辑</title>
-<script th:inline="javascript">
-    </script>
 <script data-th-src="@{/js/disclosure/WebOffice.js}"
 	type="text/javascript"></script>
 <script type="text/javascript">
@@ -28,8 +26,8 @@
             WebOfficeObj.obj.Style.ShowOpenProgress = true; //开启、关闭打开文档时的进度条
             WebOfficeObj.obj.WebCreateProcess();          //创建空进程避免打开慢
 			WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";
-            WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
-            WebOfficeObj.Alert(WebOfficeObj.FileName);
+            // WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
+            // WebOfficeObj.Alert(WebOfficeObj.FileName);
 			WebOfficeObj.WebOpen(true);
             SetGraySkin();			//设置控件皮肤
             WebOfficeObj.ShowMenuBar(false);
@@ -40,7 +38,7 @@
                 // 下载文件时访问OfficeServer与其他网页页面session保持一致的说明 （开始）
                 // 为了让/OfficeServer这个Servlet和浏览器的其他页面保持session一致，需要在访问OfficeServer之前把其他页面的cookie发送到服务端去，通过调用
                 // INetSetCookie方法，参数是服务器url和cookie值
-                var MyCookie = "JSESSIONID=" + "<%=mSessionID%>";
+                var MyCookie = "[[${shiroCookie}]]=" + document.getElementById('loggedUserCookie').value;
                 WebOfficeObj.INetSetCookie(WebOfficeObj.ServerUrl, MyCookie);
                 //WebOfficeObj.INetSetCookie(WebOfficeObj.ServerUrl, document.cookie);
                 // 但如果浏览器设置了禁止cookie，那么document.cookie则获取不到有效cookie值，这时候可以通过在客户端创建一个
@@ -173,6 +171,9 @@
 
 <body onUnload="OnUnLoad();" onbeforeunload="OnUnLoad();">
 	<div layout:fragment="content">
+		<input hidden id="loggedUserCookie" th:each="cookie :${#httpServletRequest.getCookies()}"
+			   th:if="${cookie.getName().equals(shiroCookie)}"
+			   th:value="${cookie.getValue()}">
 		<div class="layui-row layui-col-space15">
 			<div class="layui-inline layui-col-md-offset9" 
 				style="margin-top: 1px">

@@ -17,17 +17,20 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.util.SysCommDataUtil;
-import com.joyintech.tams.constant.*;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
-import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -259,6 +262,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             dto.setProdSeries(null);*/
 
         } else {//普通产品
+            /* NYLCXP-895 普通和分层指数型产品都要处理业绩比较基准 modify by kongzhifang 2022-08-19 */
+            //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
+            if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex()) && StringUtils.isNotEmpty(dto.getPerformCompare())) {
+                if (prodBasicChangeService.insertProdBasicChangeFromExcel(dto.getPerformCompare(), dto.getProdId())) {
+                    //成功之后清空产品业绩比较基准
+                    dto.setPerformCompare(null);
+                }
+            }
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
         }
         //重新插入已删除的数据
@@ -562,6 +573,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     if (StringUtil.isEmpty(rowData.get(22))) {
                         errorMsg.append("是否是指数型产品 必填！");
                     }
+                    /* add by kongzhifang NYLCXP-912 当“是否指数型产品”为“是”的时候，业绩基准需要加个必填校验 2022-08-19 */
+                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), rowData.get(22))
+                            && StringUtil.isEmpty(rowData.get(23))) {
+                        errorMsg.append("指数型产品，产品业绩比较基准 必填！");
+                    }
                    /* if (StringUtil.isEmpty(rowData.get(23))){
                         errorMsg.append("产品业绩比较基准 必填！");
                     }*/
@@ -707,6 +723,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             //this.doComplete(newDataDto,OperationType.NEW);
         }
         ajaxResult.setStatuCode(HttpStatus.OK.value());
+        ajaxResult.setData("noInfoShowOut");
+        ajaxResult.setMessage(getMessage("FW_I_0002"), MessageType.提示消息);
         return ajaxResult;
     }
 

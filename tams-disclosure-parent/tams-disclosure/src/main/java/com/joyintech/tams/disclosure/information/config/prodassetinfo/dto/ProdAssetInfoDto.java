@@ -17,6 +17,7 @@ import com.joyintech.tams.disclosure.information.config.prodpartner.validator.Pr
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,8 @@ import java.util.List;
 @ValidLogic(targetClass = ProdAssetInfoValidator.class, groups = {ValidateGroupEdit.class,
 		ValidateGroupDelete.class})
 public class ProdAssetInfoDto extends DisProdAsset implements ProcessEntity{
+
+	private DecimalFormat df2 = new DecimalFormat("0.00");
 
 	/**
 	 * <意义，目的和功能，以及可能被用到的地方>
@@ -200,5 +203,37 @@ public class ProdAssetInfoDto extends DisProdAsset implements ProcessEntity{
 
 	public void setUpdateTimeStr(String updateTimeStr) {
 		this.updateTimeStr = updateTimeStr;
+	}
+
+	public String getFixPreRatioStr() {
+		return super.getFixPreRatio()==null?"":df2.format(super.getFixPreRatio());
+	}
+
+	public String getFixAfterRatioStr() {
+		return super.getFixAfterRatio()==null?"":df2.format(super.getFixAfterRatio());
+	}
+
+	public String getEquityPreRatioStr() {
+		return super.getEquityPreRatio()==null?"":df2.format(super.getEquityPreRatio());
+	}
+
+	public String getEquityAfterRatioStr() {
+		return super.getEquityAfterRatio()==null?"":df2.format(super.getEquityAfterRatio());
+	}
+
+	public String getFdPreRatioStr() {
+		return super.getFdPreRatio()==null?"":df2.format(super.getFdPreRatio());
+	}
+
+	public String getFdAfterRatioStr() {
+		return super.getFdAfterRatio()==null?"":df2.format(super.getFdAfterRatio());
+	}
+
+	public String getMixPreRatioStr() {
+		return super.getMixPreRatio()==null?"":df2.format(super.getMixPreRatio());
+	}
+
+	public String getMixAfterRatioStr() {
+		return super.getMixAfterRatio()==null?"":df2.format(super.getMixAfterRatio());
 	}
 }

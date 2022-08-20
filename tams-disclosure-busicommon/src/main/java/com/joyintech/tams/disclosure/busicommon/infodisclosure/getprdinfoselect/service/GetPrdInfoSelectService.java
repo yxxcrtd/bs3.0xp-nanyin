@@ -1,22 +1,21 @@
 package com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service;
 
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Service
 public class GetPrdInfoSelectService extends BaseService {
+
+	@Autowired
+	private GetPrdInfoSelectMapper getPrdInfoSelectMapper;
 	
 	/**
 	 * 分页获取产品信息
@@ -78,7 +77,34 @@ public class GetPrdInfoSelectService extends BaseService {
 		return page;
 	}
 
-
+	public List<SelectOptionDto> getPProdIdList1(Map<String, Object> paraMap){
+		if(StringUtil.isNotEmpty(paraMap.get("repId"))){
+			String repId=(String)paraMap.get("repId");
+			if(StringUtil.equals(repId,"CP_001_004_004")
+					||StringUtil.equals(repId,"CP_001_004_005")
+					||StringUtil.equals(repId,"CP_001_004_006")
+					||StringUtil.equals(repId,"CP_001_004_007")
+					||StringUtil.equals(repId,"CP_001_004_008")
+					||StringUtil.equals(repId,"CP_001_004_009")
+					||StringUtil.equals(repId,"CP_001_004_010")
+					||StringUtil.equals(repId,"CP_001_004_011")){
+				//费率相关的
+				paraMap.put("flag","01");
+			}
+			else if(StringUtil.equals(repId,"CP_001_004_012")
+					||StringUtil.equals(repId,"CP_001_004_013")
+					||StringUtil.equals(repId,"CP_001_004_014")
+					||StringUtil.equals(repId,"CP_001_004_015")){
+				//产品要素调整
+				paraMap.put("flag","02");
+			}else if (StringUtil.equals(repId, "CP_001_004_016")
+					||StringUtil.equals(repId, "CP_001_004_016")) {
+				//巨额赎回
+				paraMap.put("flag","03");
+			}
+		}
+		return getPrdInfoSelectMapper.getPProdIdList(paraMap);
+	}
 
 	public Page<SelectOptionDto> getPProdIdList(Map<String, Object> paraMap){
 		if(StringUtil.isNotEmpty(paraMap.get("repId"))){
@@ -117,6 +143,10 @@ public class GetPrdInfoSelectService extends BaseService {
 
 	public Page<SelectOptionDto> getFeeNameList(Map<String, Object> paraMap){
 		return this.queryForPage(GetPrdInfoSelectMapper.class, "getFeeNameList", paraMap);
+	}
+
+	public List<SelectOptionDto> getElementNameList1(Map<String, Object> paraMap){
+		return getPrdInfoSelectMapper.getElementNameList(paraMap);
 	}
 
 	public Page<SelectOptionDto> getElementNameList(Map<String, Object> paraMap){

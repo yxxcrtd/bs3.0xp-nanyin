@@ -11,6 +11,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.DisNostdCreditor;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.validator.UnClaimAssetDetailValidator;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.Date;
@@ -95,7 +96,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-
+    @PrimaryKey(PrimaryKey.Field.PK_2)
     public String getEffDateStr() {
         return DateUtil.format(super.getEffDate());
     }
@@ -119,7 +120,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
         return DateUtil.format(this.getEffDateO());
     }
     public String effEndDateOStr;
-
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getEffEndDateStr() {
         return DateUtil.format(super.getEffEndDate());
     }
@@ -158,6 +159,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
 
     @Override
     @NotEmpty(fieldName = "产品主代码", groups = {ValidateGroupEdit.class})
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getProdId() {
         return super.getProdId();
     }
@@ -169,7 +171,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     }
 
     @Override
-    @NotEmpty(fieldName = "生效截止日", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "生效截止日期", groups = {ValidateGroupEdit.class})
     public Date getEffEndDate() {
         return super.getEffEndDate();
     }

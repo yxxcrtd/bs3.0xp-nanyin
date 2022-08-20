@@ -74,25 +74,28 @@
      */
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.dialog(JoyinUtil.getLabel("非标债权类资产明细编辑"),
-            basePath + "disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init",
-            "95%", "90%", data,
-            // {pageModel:PAGE_MODEL_EDIT,
-            //     prodId:data.prodId,effDate:data.effDate,effEndDate:data.effEndDate},
-            function(){table.reload();})
+        var object = {selectedItem: [data]};
+        Joyin.ajaxJson(basePath + '/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
+            Joyin.dialog(JoyinUtil.getLabel("非标债权类资产明细编辑"),
+                basePath + "disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init",
+                "95%", "90%", data,
+                // {pageModel:PAGE_MODEL_EDIT,
+                //     prodId:data.prodId,effDate:data.effDate,effEndDate:data.effEndDate},
+                function(){table.reload();})
+        });
     });
     /**
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
         var object = {selectedItem: [data], operateType:"delete"};
-        // Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
+        Joyin.ajaxJson(basePath + '/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                 WorkFlow.doDeleteList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/delete', object, "UnClaimAssetDetail001_btn_delete", "UnClaimAssetDetail002",function(){
                     table.reload();
                 });
             });
-        // });
+        });
     });
 
     $(function () {
@@ -126,12 +129,12 @@
                 operateType:"delete"
             };
 
-            // Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
+            Joyin.ajaxJson(basePath + '/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/delete', object, "UnClaimAssetDetail001_btn_delete", "UnClaimAssetDetail002",function(){
                     });
                 });
-            // });
+            });
         });
 
         // 导入按钮点击事件

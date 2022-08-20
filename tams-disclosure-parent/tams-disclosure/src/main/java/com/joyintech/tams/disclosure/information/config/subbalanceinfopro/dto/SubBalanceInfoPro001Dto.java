@@ -54,6 +54,7 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
      */
     private String prodName;
 
+    @NotEmpty(fieldName = "产品名称", groups = {ValidateGroupEdit.class})
     public String getProdName() {
         return prodName;
     }
@@ -110,7 +111,6 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
 
     @Override
     @PrimaryKey(PrimaryKey.Field.PK_1)
-    @NotEmpty(fieldName = "产品主代码", groups = {ValidateGroupEdit.class})
     public String getBooksetId() {
         return super.getBooksetId();
     }

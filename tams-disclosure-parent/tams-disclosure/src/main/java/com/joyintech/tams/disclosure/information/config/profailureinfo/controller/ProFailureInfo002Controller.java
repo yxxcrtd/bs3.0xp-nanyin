@@ -141,7 +141,7 @@ public class ProFailureInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("checkExistData")
     public Boolean checkExistData(@RequestBody ProFailureInfo001Dto dto){
-        ProFailureInfo001Dto proFailureInfo001Dto = proFailureInfo001Service.isRepeated(dto);
+        ProFailureInfo001Dto proFailureInfo001Dto = proFailureInfo001Service.isRepeated2(dto);
         if(proFailureInfo001Dto != null && StringUtil.equals(proFailureInfo001Dto.getDataStatus(),"D")){
             return true;
         }else{

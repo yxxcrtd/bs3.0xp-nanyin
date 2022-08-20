@@ -57,7 +57,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
             param.put("subjectNoList", StringUtil.splitToList(GlobalConstant.COMMA,subjectNo));
         }
         Map<String, Object> pageParam = RequestUtil.getPageParam();
-        Page<SubBalanceInfoPro001Dto> result = queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+        Page<SubBalanceInfoPro001Dto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), ()
                 -> subBalanceInfoProMapper.select(param));
         return result;
     }
@@ -110,8 +110,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
 
     @Override
     public Page<SubBalanceInfoPro001Dto> selectPageData(Map<String, Object> selectParam) {
-        return queryForPage(Integer.parseInt(selectParam.get("page").toString()),  Integer.parseInt(selectParam.get("length").toString()), ()
-                -> subBalanceInfoProMapper.select(selectParam));
+        return this.selectForPage(selectParam);
     }
 
     public SubBalanceInfoPro001Dto selectByPrimaryKey(Map map) {

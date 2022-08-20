@@ -38,10 +38,11 @@
         height: '225px',
         cols: [
             //列表中的序号，为当前非标明细表中所查到所有非标的数量加上当前列表的行数
-            { field: 'projectNo', edit: false,editoption:{
-                type:'select',id:'projectNo',showField:'id',formatoption:true,
-                url: JoyinUtil.getRealPath('/invest/basicdata/msttradeopponent/MstTradeOpponent002/getAccount')},
-                sortable: false, width: 120, title: '序号'}
+            // { field: 'projectNo', edit: false,editoption:{
+            //     type:'select',id:'projectNo',showField:'id',formatoption:true,
+            //     url: JoyinUtil.getRealPath('/invest/basicdata/msttradeopponent/MstTradeOpponent002/getAccount')},
+            //     sortable: false, width: 120, title: '序号'},
+            { field: 'projectNo',sortable: false, width: 120, title: '序号',edit: false, type: 'text' }
             , { field: 'financier',sortable: false, width: 120, title: '融资客户',edit: true, type: 'text' }
             , { field: 'projectName',sortable: false, title: '项目名称', width: 150, edit: true, type: 'text'}
             , { field: 'remFinancingPeriod', sortable: false, title: '剩余融资期限', width: 150, edit: true, type: 'text'}
@@ -53,12 +54,9 @@
         addbtn: pageModel == PAGE_MODEL_REFERENCE ? false:true,
         addclick: function(row) {
             var _row = unclaimTable.getRow(0);
-            if (_row.projectNo==null){
-                Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/selectCount', '', function (result) {
-                    row.projectNo=result['count'];
-                    unclaimTable.renderRow(unclaimTable.getAllRows().length-1, row);
-                });
-            }else {
+            if (_row.projectNo == null){
+                row.projectNo = 1;
+            } else {
                 var row2 = unclaimTable.getRow(unclaimTable.getAllRows().length-2);
                 row.projectNo=row2.projectNo+1;
             }
@@ -80,7 +78,16 @@
         },
         done: function () {
             this.bind('click', '.delt', function (data, index) {
-                var object = { selectedItem: [data], operateType: "delete" };
+                //var object = { selectedItem: [data], operateType: "delete" };
+                var length = unclaimTable.getAllRows().length;
+                // 删除后面的行序号递减
+                if (length - 1 > index) {
+                    for (var i = index + 1; i < length; i++) {
+                        var row = unclaimTable.getRow(i);
+                        row.projectNo = i;
+                        unclaimTable.renderRow(i, row);
+                    }
+                }
                 unclaimTable.deleteRow(index);
 
             });

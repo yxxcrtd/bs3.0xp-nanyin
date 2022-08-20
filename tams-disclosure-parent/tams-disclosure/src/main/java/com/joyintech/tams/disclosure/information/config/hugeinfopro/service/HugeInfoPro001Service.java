@@ -177,6 +177,9 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
                     }else if(!this.isDateStr(rowData.get(5))){
                         errorMsg.append("报告发布日期 格式不正确！");
                     }
+                    if(hugeInfoProMapper.isRelate(rowData.get(0),rowData.get(1))==0){
+                        errorMsg.append( "产品登记编码"+ rowData.get(0)+ "与 产品子代码" +rowData.get(1) +"不存在联系！");
+                    }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
@@ -224,7 +227,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         for (HugeInfoPro001Dto temp:selectedItem) {
             Map<String, Object> map = new HashMap<>();
             map.put("prodId",temp.getProdId());
-            map.put("dealDate",DateUtil.format(temp.getDealDate()));
+            map.put("prodRegistNo",temp.getProdRegistNo());
             if (StringUtil.isNotEmpty(this.selectByBusPK(map))){
                 existData.add(temp);
             }
@@ -271,7 +274,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
 //            }
             Map<String, Object> map = new HashMap<>();
             map.put("prodId", temp.getProdId());
-            map.put("dealDate", DateUtil.format(temp.getDealDate()));
+            map.put("prodRegistNo",temp.getProdRegistNo());
             if (StringUtil.isNotEmpty(this.selectByBusPK(map))) {
                 existData.add(temp);
             } else {

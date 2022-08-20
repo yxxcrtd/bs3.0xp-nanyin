@@ -12,6 +12,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     
     @Autowired
     private ReportDataService reportDataService;
+
+    @Autowired
+    private HolidayService holidayService;
 
     /**
      * 日志
@@ -510,6 +514,29 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         }
 
         return ajaxResult;
+    }
+
+    public String dateCheck(Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        String enddate = (String)param.get("enddate");
+        if (StringUtil.isEmpty(enddate)) {
+            return "净值日为空";
+        }
+        Calendar cal = Calendar.getInstance();
+        Date date = DateUtil.parse(enddate);
+        cal.setTime(date);
+        int w = cal.get(Calendar.DAY_OF_WEEK);
+        int days = 0;
+        // 将日期变为下个周一并与当前日期比较，不等则为最后一个工作日
+        Map<String, Object> serparam = new HashMap<>();
+        serparam.put("busi_date", DateUtil.addDay(date, 8 - w));
+        serparam.put("is_holiday", "0");
+        serparam.put("market_code", "04");
+        Date lastdate = holidayService.getLastWorkDay(serparam);
+        if (!date.equals(lastdate)) {
+            return "只能选取最后一个工作日:" + DateUtil.format(lastdate);
+        }
+        return null;
     }
 
 

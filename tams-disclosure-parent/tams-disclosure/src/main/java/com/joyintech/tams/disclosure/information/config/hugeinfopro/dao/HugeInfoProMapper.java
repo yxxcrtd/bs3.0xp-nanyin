@@ -4,6 +4,7 @@ package com.joyintech.tams.disclosure.information.config.hugeinfopro.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,4 +36,6 @@ public interface HugeInfoProMapper {
     int updateByBusKey(HugeInfoPro001Dto existDataDto);
 
     List<SelectOptionDto> getProdId(Map<String, Object> map);
+
+    int isRelate(@Param("prodRegistNo") String prodRegistNo, @Param("prodId")String prodId);
 }

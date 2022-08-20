@@ -1149,4 +1149,45 @@ update SYS_MENU set ORDER_NO =5   WHERE MENU_ID = 'SYSTEM_001_004';
 delete from SYS_MENU where MENU_ID ='SYSTEM_001_012';--删除自定义报表二级菜单
 -- NYLCXP-741 信息披露菜单放置路径及导航请根据需求提供文档调整 add by sunjie 20220818 end
 
+-- NYLCXP-875 产品排期计划待办事项查看业务类型不正确 add by kongzhifang 2022-08-19
+update sys_datadict_list set item_value = '产品排期计划' where dict_code  = 'COMMON_BUSINESS_TYPE' and item_code = 'DISPLAN';
+
+-- NYLCXP-897 产品类型和产品运作方式联动调整 add by kongzhifang 2022-08-19
+delete from sys_datadict_list_link where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE';
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '01', 'DIS_PROD_TYPE', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '03', 'DIS_PROD_TYPE', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '03', 'DIS_PROD_TYPE', '04', 'system', NULL, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list_link where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'ISSUING_WAY';
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '04', 'ISSUING_WAY', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '03', 'ISSUING_WAY', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '02', 'ISSUING_WAY', '02', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '01', 'ISSUING_WAY', '02', 'system', NULL, sysdate, 'system', sysdate);
+
+
+-- NYLCXP-746 工作流管理画面使用 SysFuncWflMatch001而不是SysWflBusinessModule001
+UPDATE SYS_MENU SET PAGE_ID = 'SysFuncWflMatch001' WHERE MENU_ID = 'SYSTEM_001_003_102';
+UPDATE SYS_PAGE SET MENU_ID = 'SYSTEM_001_003_102' WHERE PAGE_ID = 'SysFuncWflMatch001';
+UPDATE SYS_PAGE SET MENU_ID = null WHERE PAGE_ID = 'SysWflBusinessModule001';
+
+-- NYLCXP-477 行为日志记录正确的前提是画面和画面元素表基础数据正确  添加报表编辑画面保存按钮
+INSERT INTO SYS_PAGE_ELEMENT
+(PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+VALUES('RepEdit001', 'btnSaveReport', '01', '02', NULL, '保存', 'system', NULL, sysdate, 'system', sysdate, 'COM', NULL);
+
+
 commit;

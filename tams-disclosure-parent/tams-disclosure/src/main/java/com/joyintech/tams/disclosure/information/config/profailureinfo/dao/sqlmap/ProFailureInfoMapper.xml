@@ -184,5 +184,22 @@
         NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and
         REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
     </select>
+    <select id="isRepeated2"
+            resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
+        select
+          PROD_REGIST_NO prodRegistNo,
+          DATA_STATUS dataStatus,
+          NOCREATE_REASON nocreateReason,
+          REPORT_ISSUE_DATE reportIssueDate,
+          IS_SALES_AGENCY isSalesAgency,
+          DATA_SOURCE,
+          UPDATE_TIME,
+          UPDATE_USER
+      from DIS_PROD_NOCREATE
+      where
+        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and
+        NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and
+        REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
+    </select>
 
 </mapper>

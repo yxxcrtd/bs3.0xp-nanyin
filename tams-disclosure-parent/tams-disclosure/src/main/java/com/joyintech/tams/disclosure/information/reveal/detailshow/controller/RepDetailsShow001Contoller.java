@@ -9,27 +9,6 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -54,6 +33,24 @@ import com.joyintech.tams.disclosure.information.config.reporttree.service.Repor
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 模板示例<br>
@@ -115,6 +112,16 @@ public class RepDetailsShow001Contoller extends BaseController {
         //model.addAttribute("prodInfoList", JsonUtils.object2Json(repDetailsShow001Service.getProdInfo()));
     	return super.init(model);
     }
+
+	@RequestMapping("getPProdIdList1")
+	@ResponseBody
+	public List<SelectOptionDto> getPProdIdList1(){
+		Map<String, Object> param=RequestUtil.getPageParam();
+		if(param.get("repId")!=null){
+			repDetailsShow001Service.getRandgeRule(param);
+		}
+		return getPrdInfoSelectService.getPProdIdList1(param);
+	}
     
     /**
 	 * 分页查询产品下拉框
@@ -457,6 +464,12 @@ public class RepDetailsShow001Contoller extends BaseController {
 		return elementNameList;
 	}
 
+	@RequestMapping("getElementNameList1")
+	@ResponseBody
+	public List<SelectOptionDto> getElementNameList1(){
+		return getPrdInfoSelectService.getElementNameList1(RequestUtil.getPageParam());
+	}
+
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody Map<String, Object> param) {
@@ -469,5 +482,12 @@ public class RepDetailsShow001Contoller extends BaseController {
 	public AjaxResult dataCheck(@RequestBody Map<String, Object> param) {
 		repDetailsShow001Service.collateParams(param);
 		return repDetailsShow001Service.dataCheck(param);
+	}
+
+	@ResponseBody
+	@RequestMapping("dateCheck")
+	public String dateCheck() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return repDetailsShow001Service.dateCheck(param);
 	}
 }
