@@ -510,7 +510,7 @@ declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
     select busi_date from(
-    select a.busi_date from chb_mkt_holiday a ,ROWNUM num
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
     where a.busi_date >= (SELECT trunc(date$qryEndDate,''d'') FROM dual)
     and a.busi_date <= (SELECT trunc(date$qryEndDate,''d'') + 7 from dual)
     and a.is_holiday=''0''
@@ -522,7 +522,7 @@ declare v_clob clob :='select 1 from dual
 where
 date$qryEndDate=(
     select busi_date from(
-    select a.busi_date from chb_mkt_holiday a ,ROWNUM num
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
     where a.busi_date >= (SELECT trunc(date$qryEndDate,''d'' ) FROM dual)
     and a.busi_date <= (SELECT trunc(date$qryEndDate,''d'') + 7 from dual)
     and a.is_holiday=''0''
@@ -534,7 +534,7 @@ declare v_clob clob :='select 1 from dual
 where
 date$qryEndDate=(
     select busi_date from(
-    select a.busi_date from chb_mkt_holiday a ,ROWNUM num
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
     where a.busi_date >= (SELECT trunc(date$qryEndDate,''q'') FROM dual)
     and a.busi_date <= (SELECT trunc(date$qryEndDate,''q'') + 30 from dual)
     and a.is_holiday=''0''
@@ -546,7 +546,7 @@ declare v_clob clob :='select 1 from dual
 where
 date$qryEndDate=(
     select busi_date from(
-    select a.busi_date from chb_mkt_holiday a ,ROWNUM num
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
     where a.busi_date >= (SELECT trunc(date$qryEndDate,''q'') FROM dual)
     and a.busi_date <= (SELECT trunc(date$qryEndDate,''q'') + 30 from dual)
     and a.is_holiday=''0''
@@ -558,7 +558,7 @@ declare v_clob clob :='select 1 from dual
 where
 date$qryEndDate=(
     select busi_date from(
-    select a.busi_date from chb_mkt_holiday a ,ROWNUM num
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
     where a.busi_date >= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) from dual)
     and a.busi_date <= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) + 10 from dual)
     and a.is_holiday=''0''
@@ -570,7 +570,7 @@ declare v_clob clob :='select 1 from dual
 where
 date$qryEndDate=(
     select busi_date from(
-    select a.busi_date from chb_mkt_holiday a ,ROWNUM num
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
     where a.busi_date >= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) from dual)
     and a.busi_date <= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) + 10 from dual)
     and a.is_holiday=''0''
@@ -582,7 +582,7 @@ declare v_clob clob :='select 1 from dual
 where
 date$qryEndDate=(
     select busi_date from(
-    select a.busi_date from chb_mkt_holiday a ,ROWNUM num
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
     where a.busi_date >= (SELECT trunc(date$qryEndDate,''yyyy'') from dual)
     and a.busi_date <= (SELECT trunc(date$qryEndDate,''yyyy'') +10 from dual)
     and a.is_holiday=''0''
@@ -594,7 +594,7 @@ declare v_clob clob :='select 1 from dual
 where
 date$qryEndDate=(
     select busi_date from(
-    select a.busi_date from chb_mkt_holiday a ,ROWNUM num
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
     where a.busi_date >= (SELECT trunc(date$qryEndDate,''yyyy'') from dual)
     and a.busi_date <= (SELECT trunc(date$qryEndDate,''yyyy'') +10 from dual)
     and a.is_holiday=''0''
