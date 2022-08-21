@@ -189,17 +189,18 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                         errorMsg.append("生效截止日期 要大于等于平台日！");
                     }else if (rowData.get(8).compareTo(rowData.get(7)) < 0){
                         errorMsg.append("生效截止日期 要大于等于生效日！");
-                    }else if(StringUtil.isNotEmpty(rowData.get(0))){
-                        List<UnClaimAssetDetailDto> dtos = unClaimAssetDetailMapper.selectNostdByProdId(rowData.get(0).trim());
-                        for (UnClaimAssetDetailDto dto : dtos) {
-                            if(!((DateUtil.compareDate(rowData.get(7),dto.getEffDateStr())<0 && DateUtil.compareDate(rowData.get(8),dto.getEffDateStr())<0)
-                                    || (DateUtil.compareDate(rowData.get(7),dto.getEffEndDateStr())>0 && DateUtil.compareDate(rowData.get(8),dto.getEffEndDateStr())>0))){
-                                errorMsg.append("生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyy-MM-dd")
-                                                +"-"+DateUtil.format(dto.getEffEndDate(),"yyyy-MM-dd"));
-                                break;
-                            }
-                        }
                     }
+//                    else if(StringUtil.isNotEmpty(rowData.get(0))){
+//                        List<UnClaimAssetDetailDto> dtos = unClaimAssetDetailMapper.selectNostdByProdId(rowData.get(0).trim());
+//                        for (UnClaimAssetDetailDto dto : dtos) {
+//                            if(!((DateUtil.compareDate(rowData.get(7),dto.getEffDateStr())<0 && DateUtil.compareDate(rowData.get(8),dto.getEffDateStr())<0)
+//                                    || (DateUtil.compareDate(rowData.get(7),dto.getEffEndDateStr())>0 && DateUtil.compareDate(rowData.get(8),dto.getEffEndDateStr())>0))){
+//                                errorMsg.append("生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyy-MM-dd")
+//                                                +"-"+DateUtil.format(dto.getEffEndDate(),"yyyy-MM-dd"));
+//                                break;
+//                            }
+//                        }
+//                    }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
@@ -250,7 +251,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             map.put("effDate",DateUtil.format(temp.getEffDate()));
             map.put("effEndDate",DateUtil.format(temp.getEffEndDate()));
             map.put("dataStatus",temp.getDataStatus());
-            if (StringUtil.isNotEmpty(unClaimAssetDetail002Service.selectDetailList(map))){
+            if (unClaimAssetDetail002Service.selectDetailList(map).size()>0 && StringUtil.equals(unClaimAssetDetail002Service.selectDetailList(map).get(0).getDataStatus(),"E")){
                 existData.add(temp);
             }
         }
@@ -494,7 +495,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             map.put("effDate",DateUtil.format(temp.getEffDate()));
             map.put("effEndDate",DateUtil.format(temp.getEffEndDate()));
             map.put("dataStatus",temp.getDataStatus());
-            if (!StringUtil.isEmptyList(unClaimAssetDetail002Service.selectDetailList(map))){
+            if (unClaimAssetDetail002Service.selectDetailList(map).size()>0 && StringUtil.equals(unClaimAssetDetail002Service.selectDetailList(map).get(0).getDataStatus(),"E")){
                 existData.add(temp);
             }
             else {
@@ -507,6 +508,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
         //更新操作
         for (UnClaimAssetDetailDto existDataDto : existData) {
 //            unClaimAssetDetail002Service.doComplete(existDataDto,OperationType.MODIFY);
+            existDataDto.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             unClaimAssetDetailMapper.updateImport(existDataDto);
         }
         //插入操作
