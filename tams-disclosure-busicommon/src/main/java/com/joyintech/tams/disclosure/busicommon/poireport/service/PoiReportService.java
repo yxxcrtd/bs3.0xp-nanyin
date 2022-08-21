@@ -913,7 +913,8 @@ public class PoiReportService {
 				//产品募集金额只能是整数，不能出现角和分；
 				if(StringUtil.isNotEmpty(dataMap.get("raiseAmtVal"))){
 					BigDecimal raiseAmt=(BigDecimal)dataMap.get("raiseAmtVal");
-					if(!(new BigDecimal(raiseAmt.intValue()).compareTo(raiseAmt)==0)){
+					BigDecimal raiseAmt2=raiseAmt.setScale(0,BigDecimal.ROUND_DOWN);
+					if(!(raiseAmt2.compareTo(raiseAmt)==0)){
 						resultSb.append((index++)+"："+"产品募集金额只能是整数"+"<br>");
 					}
 				}
