@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
@@ -21,6 +22,7 @@ import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.Di
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage001Service;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage002Service;
+import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -30,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -142,6 +145,12 @@ public class DisProdPlanManage001Controller extends BaseController {
         return value;
     }
 
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody @Validated({
+            ValidateGroupDelete.class}) DisProdPlanManage002Dto dto, BindingResult result) {
+        return commonCheck(result, dto.getOperateType());
+    }
     /**
      * 左侧栏查询 <一句话功能简述> <功能详细描述>
      *
