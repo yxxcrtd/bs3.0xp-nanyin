@@ -98,7 +98,7 @@
             prpi.RAISE_ENDDATE RAISE_ENDDATE,
             prpi.MDATE MDATE,
             prpi.RAISE_TYPE RAISE_TYPE,
-            prpi.PERFORM_COMPARE PERFORM_COMPARE,
+            rpi.PERFORM_COMPARE PERFORM_COMPARE,
             prpi.IS_PERIOD IS_PERIOD,
             prpi.IS_GRADE IS_GRADE,
             prpi.IS_INDEX IS_INDEX,
@@ -789,6 +789,7 @@
         left join REP_PROD_INFO pprod
         on prod.p_prod_id = pprod.prod_id
         where prod.STATUS='E'
+          and prod.rep_prod_type in('02','03')
         <if test="search != null and search != ''">
             and (prod.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
             or prod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
