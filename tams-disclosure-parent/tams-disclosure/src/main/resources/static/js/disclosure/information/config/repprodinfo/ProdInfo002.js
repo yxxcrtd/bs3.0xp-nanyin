@@ -115,6 +115,20 @@
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.basicChangeList = mockTradeTable.getAllRows();
+
+        if(object.holdday){
+            if(!( /(^[0-9]\d*$)/.test(object.holdday))){
+                Joyin.error("固定持有天数必须为大于等于0的整数");
+                return
+            }
+        }
+        if(object.raiseAmt){
+            if(!( /(^[0-9]\d*$)/.test(object.raiseAmt))){
+                Joyin.error("产品募集金额必须为大于等于0的整数");
+                return
+            }
+        }
+
         if (pageModel == PAGE_MODEL_EDIT) { //修改 ，判断募集金额是否改变
             var oldRaiseAmt = $("#oldRaiseAmt").val();
 

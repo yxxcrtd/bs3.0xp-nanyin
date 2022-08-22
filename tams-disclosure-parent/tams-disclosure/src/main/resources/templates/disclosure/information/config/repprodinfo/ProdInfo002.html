@@ -240,14 +240,11 @@
                     <div class="form-inline-wrap">
                         <label class="layui-form-label form-label-wrap">产品募集金额</label>
                         <div class="layui-input-inline input-inline">
-                            <input class="layui-input form-input text-number" name="raiseAmt" id="raiseAmt"
+                            <input type="number" name="raiseAmt" id="raiseAmt"
                                    data-th-value="${entity?.raiseAmt}"
+                                   class="layui-input form-input"
                                    maxlength="15"  required  placeholder="请输入内容"
-                                   onkeyup="if(this.value < 0){
-                                                   this.value= 0;
-                                               }else{
-                                                  this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/) // 只能输入小数点后4位
-                                               }"
+                                   onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
@@ -324,11 +321,7 @@
                             <input type="number" name="holdday" id="holdday"
                                    data-th-value="${entity?.holdday}" maxlength="5"
                                    class="layui-input form-input" placeholder="请输入内容"
-                                   onkeyup="if(this.value < 0){
-                                                   this.value= 0;
-                                               }else{
-                                                  this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/) // 只能输入小数点后4位
-                                               }"
+                                   onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
