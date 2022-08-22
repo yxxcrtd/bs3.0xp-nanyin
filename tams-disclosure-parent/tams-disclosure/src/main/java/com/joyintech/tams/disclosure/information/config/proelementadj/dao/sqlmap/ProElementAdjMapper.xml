@@ -201,6 +201,7 @@
     </select>
     <select id="getRegistNoList" resultType="com.joyintech.framework.select.SelectOptionDto">
           SELECT
+             distinct
              PROD_REGIST_NO id,
              PROD_REGIST_NO text
         FROM
@@ -213,6 +214,7 @@
     </select>
     <select id="getProdIdlist" resultType="com.joyintech.framework.select.SelectOptionDto">
              SELECT
+             distinct
         d.PROD_ID id,
         r.PROD_NAME text,
         r.PROD_ABBR
