@@ -280,11 +280,11 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
         List<RevalInfo> revalInfoList= new ArrayList<RevalInfo>();
         
         // T+1
-        String T1 = DateUtil.format(DateUtil.addDay(DateUtil.now(), 1), "yyyy-MM-dd");
+        String T1 = DateUtil.format(DateUtil.addDay(DateUtil.now(), 0), "yyyy-MM-dd");
         // T+2
-        String T2 = DateUtil.format(DateUtil.addDay(DateUtil.now(), 2), "yyyy-MM-dd");
+        String T2 = DateUtil.format(DateUtil.addDay(DateUtil.now(), 1), "yyyy-MM-dd");
         // T+3
-        String T3 = DateUtil.format(DateUtil.addDay(DateUtil.now(), 3), "yyyy-MM-dd");
+        String T3 = DateUtil.format(DateUtil.addDay(DateUtil.now(), 2), "yyyy-MM-dd");
         
         parmMap.put("sysDate",T1);
 //        List<RepFtpPathDto> pathListT1 = reportHomeMapper.queryYjpl(parmMap);
@@ -310,9 +310,9 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
         RevalInfo revalInfoT2 = new RevalInfo();
         RevalInfo revalInfoT3 = new RevalInfo();
         
-        revalInfoT1.setFirstCol(DateUtil.format(DateUtil.addDay(DateUtil.now(), 1), "yyyy/MM/dd"));
-        revalInfoT2.setFirstCol(DateUtil.format(DateUtil.addDay(DateUtil.now(), 2), "yyyy/MM/dd"));
-        revalInfoT3.setFirstCol(DateUtil.format(DateUtil.addDay(DateUtil.now(), 3), "yyyy/MM/dd"));
+        revalInfoT1.setFirstCol(DateUtil.format(DateUtil.addDay(DateUtil.now(), 0), "yyyy/MM/dd"));
+        revalInfoT2.setFirstCol(DateUtil.format(DateUtil.addDay(DateUtil.now(), 1), "yyyy/MM/dd"));
+        revalInfoT3.setFirstCol(DateUtil.format(DateUtil.addDay(DateUtil.now(), 2), "yyyy/MM/dd"));
         List<String> rolePageIdList = getRolePageId();
         for(RepFtpPathDto pathDto : pathListT1){
             setReportCount(revalInfoT1, null, pathDto,pageIdEstimate,rolePageIdList);
