@@ -1095,3 +1095,31 @@ DELETE FROM SYS_PAGE WHERE PAGE_ID = 'WordView';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('WordView', 'DIS', '/disclosure/common/WordView', 'disclosure/common/WordView', '', '', '', '02', '01', '上传附件WORD文件预览', 'system', '', sysdate, 'system', sysdate);
 -- add by cuiwei 2022-08-19 上传附件WORD文件预览页面 end
+
+-- add by zhengxiaolian 2022-08-22 产品基本信息产品运作方式联动修改 start
+delete from sys_datadict_list_link where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'DIS_PROD_TYPE';
+
+delete from sys_datadict_list_link where dict_code = 'ISSUING_WAY' and linked_dict_code = 'DIS_PROD_TYPE';
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('ISSUING_WAY', '01', 'DIS_PROD_TYPE', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('ISSUING_WAY', '02', 'DIS_PROD_TYPE', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('ISSUING_WAY', '02', 'DIS_PROD_TYPE', '04', 'system', NULL, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list_link where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'ISSUING_WAY';
+
+delete from sys_datadict_list_link where dict_code = 'DIS_PROFIT_TYPE' and linked_dict_code = 'ISSUING_WAY';
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '03', 'ISSUING_WAY', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '04', 'ISSUING_WAY', '01', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '01', 'ISSUING_WAY', '02', 'system', NULL, sysdate, 'system', sysdate);
+-- add by zhengxiaolian 2022-08-22 产品基本信息产品运作方式联动修改 end

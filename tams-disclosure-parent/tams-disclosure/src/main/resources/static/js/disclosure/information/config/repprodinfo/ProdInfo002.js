@@ -214,26 +214,51 @@
                 $("#openFreq").textSelect('setValue', '01');
                 $("#openFreq").attr("disabled", true);
                 // 若产品类型为“现管类产品”，产品运作方式 默认为“开放式非净值型”，不可修改
-                $("#profitType").textSelect('setValue', '03');
+                $("#profitType").textSelect('setValue', '04');
                 $("#profitType").attr("disabled", true);
             } else {
                 $("#issuingWay").attr("disabled", false);
                 $("#openFreq").attr("disabled", false);
                 $("#profitType").attr("disabled", false);
                 changeHoldday();
+
+
+                var issuingWay = $('#issuingWay').select2('data')[0].id;
+                if (issuingWay != null && issuingWay == '01') {
+                    //当“发行方式”为“开放式”时开放频率必填，否则置灰不可填
+                    $("#openFreq").attr("disabled", false);
+                    if(prodType != null && prodType == '01'){
+                        $("#profitType").textSelect('setValue', '03');
+                        $("#profitType").attr("disabled", true);
+                    }
+                } else  if (issuingWay != null && issuingWay == '02'){
+                    if(prodType != null && prodType == '01'){
+                        $("#profitType").textSelect('setValue', '01');
+                        $("#profitType").attr("disabled", true);
+                    }
+                }
             }
         }
 
         // 修改发行方式
         $("#issuingWay").change(function () {
             var issuingWay = $('#issuingWay').select2('data')[0].id;
-
+            var prodType = $('#prodType').select2('data')[0].id;
             //若产品类型为“现管类产品”，"发行方式"默认为“开放式”，且不允许修改
             if (issuingWay != null && issuingWay == '01') {
                 //当“发行方式”为“开放式”时开放频率必填，否则置灰不可填
                 $("#openFreq").attr("disabled", false);
-            } else {
-               // $("#openFreq").val();
+                if(prodType != null && prodType == '01'){
+                    $("#profitType").textSelect('setValue', '03');
+                    $("#profitType").attr("disabled", true);
+                }
+            } else  if (issuingWay != null && issuingWay == '02'){
+                if(prodType != null && prodType == '01'){
+                    $("#profitType").textSelect('setValue', '01');
+                    $("#profitType").attr("disabled", true);
+                }
+            }
+            else{
                 $("#openFreq").textSelect('setValue', '99');
                 $("#openFreq").attr("disabled", true);
             }
