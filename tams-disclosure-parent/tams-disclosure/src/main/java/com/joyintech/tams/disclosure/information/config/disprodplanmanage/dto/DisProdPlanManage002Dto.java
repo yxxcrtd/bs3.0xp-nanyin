@@ -96,7 +96,7 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 	private String raiseType;
 
 	@Override
-	@PrimaryKey(PrimaryKey.Field.PK_1)
+	@PrimaryKey(value = PrimaryKey.Field.PK_1)
 	public String getProdPlanId() {
 		return super.getProdPlanId();
 	}

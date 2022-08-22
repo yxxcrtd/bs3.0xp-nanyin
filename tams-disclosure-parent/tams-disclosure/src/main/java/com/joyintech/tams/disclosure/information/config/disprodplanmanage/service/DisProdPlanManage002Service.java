@@ -136,10 +136,10 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
     public void delete(DisProdPlanManage002Dto entity) {
         String keyId = entity.getProdPlanId();
         if (StringUtils.isNotEmpty(keyId)) {
-            DisProdPlanManage002Dto dto = new DisProdPlanManage002Dto();
-            dto.setProdPlanId(keyId);
-            dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
-            this.update(dto);
+//            DisProdPlanManage002Dto dto = new DisProdPlanManage002Dto();
+            entity.setProdPlanId(keyId);
+            entity.setDataStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
+            this.update(entity);
         }
     }
 

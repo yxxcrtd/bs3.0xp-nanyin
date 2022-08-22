@@ -202,13 +202,19 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))) {
                         errorMsg.append("开放期起始日 必填！");
-                    } else if (!this.isDateStr(rowData.get(2))) {
+                    } else if (!this.isDateStr(rowData.get(1))) {
                         errorMsg.append("开放期起始日 格式不正确！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))) {
                         errorMsg.append("开放期结束日 必填！");
                     } else if (!this.isDateStr(rowData.get(2))) {
                         errorMsg.append("开放期结束日 格式不正确！");
+                    }
+                    if(DateUtil.compareDate(rowData.get(1), prodInfo.getSetDateStr()) <= 0){
+                        errorMsg.append("开放期起始日不能小于等于产品成立日期！");
+                    }
+                    if(DateUtil.compareDate(rowData.get(2), rowData.get(1)) < 0){
+                        errorMsg.append("开放期结束日不能小于开放期起始日！");
                     }
                     if (StringUtil.isNotEmpty(rowData.get(3)) && !this.isDateStr(rowData.get(3))) {
                         errorMsg.append("产品冷静期 格式不正确！");
@@ -217,6 +223,9 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                         errorMsg.append("运作起始日 必填！");
                     } else if (!this.isDateStr(rowData.get(4))) {
                         errorMsg.append("运作起始日 格式不正确！");
+                    }
+                    if(DateUtil.compareDate(rowData.get(4), rowData.get(1)) < 0){
+                        errorMsg.append("运作起始日不能小于开放期起始日！");
                     }
                     if (StringUtil.isNotEmpty(rowData.get(5)) && !this.isDateStr(rowData.get(5))) {
                         errorMsg.append("自动赎回日 格式不正确！");
