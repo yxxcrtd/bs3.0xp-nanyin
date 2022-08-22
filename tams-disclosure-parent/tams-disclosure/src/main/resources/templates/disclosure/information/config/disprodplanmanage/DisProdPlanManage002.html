@@ -13,11 +13,13 @@
 		<div class="layui-form-item" style="display: none;">
 <!--			<input id="operateType" name="operateType" class="layui-input form-input" placeholder="请输入"  data-th-value="${entity?.operateType}"> -->
 			<input id="prodPlanId" name="prodPlanId" class="layui-input form-input" placeholder="主键id"  data-th-value="${entity?.prodPlanId}">
+
 <!--			<input id="priId"  name="priId" class="layui-input form-input" data-th-value="${priId}" placeholder="主键id">-->
 		</div>
 
 		<div class="layui-form-item">
 			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<input type="text" id="openEndDateO" name="openEndDateO" class="layui-input form-input" data-th-value='${#dates.format(entity?.openEndDateO,"yyyy-MM-dd")}' style = "display: none">
 				<label class="layui-form-label form-lable" >产品名称<i class="iconfont must" style="display: inline;">*</i></label>
 				<div class="layui-input-inline input-inline">
 
