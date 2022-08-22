@@ -102,6 +102,7 @@ public class DisProdPlanManage002Controller extends BaseController {
 			DisProdPlanManage002Dto dto = disProdPlanManage002Service.getDisProdPlanManage002Dto(id);
 			ProdInfoDto prodInfoDto = prodInfoService.selectByProdId(dto.getProdId());
 			dto.setProdName(prodInfoDto.getProdName());
+			dto.setOpenEndDateO(dto.getOpenEndDate());
 			// 根据主键获取业务实体
 			model.addAttribute("entity", dto);
 		}

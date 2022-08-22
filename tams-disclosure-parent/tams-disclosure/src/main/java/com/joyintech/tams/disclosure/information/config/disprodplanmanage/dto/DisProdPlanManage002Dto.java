@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.annotation.PageId;
@@ -61,7 +62,20 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 
 	private String dataStatusName;
 
+	public Date openEndDateO;
 
+	public String openEndDateOStr;
+
+	public Date getOpenEndDateO() {
+		return openEndDateO;
+	}
+
+	public void setOpenEndDateO(Date openEndDateO) {
+		this.openEndDateO = openEndDateO;
+	}
+	public String getOpenEndDateOStr() {
+		return DateUtil.format(this.getOpenEndDateO());
+	}
 	/**
 	 * 操作类型
 	 */
