@@ -1127,3 +1127,9 @@ VALUES ('DIS_PROFIT_TYPE', '01', 'ISSUING_WAY', '02', 'system', NULL, sysdate, '
 -- add by zhengxiaolian 2022-08-23 披露状态枚举值中文修改 start
 update SYS_DATADICT_LIST a set a.item_value='披露失败' where a.dict_code='DISCLOSURE_STATUS' and a.item_code='03';
 -- add by zhengxiaolian 2022-08-23 披露状态枚举值中文修改 end
+
+-- add by zhengxiaolian 2022-08-23 模板启用管理页面中文修改 start
+update sys_menu a set a.remark='模板启用/禁用管理' where a.page_id='ReportPageManage001';
+
+update sys_page a set a.remark='模板启用/禁用管理' where a.page_id='ReportPageManage001';
+-- add by zhengxiaolian 2022-08-23 模板启用管理页面中文修改 end

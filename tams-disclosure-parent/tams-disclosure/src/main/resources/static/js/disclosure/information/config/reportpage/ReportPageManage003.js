@@ -42,6 +42,8 @@
 			$("#jinyongbitian").attr("style","display:inline");
 		} else {
 			$("#jinyongLabel").attr("style","padding-right:20px");
+			$("#stopDiv").attr("style","display:none");
+			$("#startRepId").attr("disabled",true);
 		}
 
 		//修建,修改
