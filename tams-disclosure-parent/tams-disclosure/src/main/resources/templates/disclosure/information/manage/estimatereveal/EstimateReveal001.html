@@ -19,9 +19,9 @@
             <div class="layui-inline layui-col-md4">
                 <label class="layui-form-label form-lable">产品</label>
                 <div class="layui-input-inline input-inline">
-                    <select id="prodId" name="prodId" class="layui-input form-input input-select"
-                        placeholder="请选择" data-url='getPrdInfoSelect' allowClear="true"
-                        multiple="multiple">
+                    <select type="text" id="prodId" name="prodId" formatoption="true" multiple
+                            class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodId}'
+                            data-th-data-url="@{/disclosure/information/config/repreportcheck/ReportCheck001/getProdIdList}" allowClear="true">
                     </select>
                 </div>
             </div>
@@ -32,15 +32,17 @@
                         class="layui-input form-input input-dateRangeSelect" value="">
                 </div>
             </div>
-            <div class="layui-inline layui-col-md4">
-	            <label class="layui-form-label form-lable">报表名称</label>
-	            <div class="layui-input-inline input-inline">
-	                <input type="text" id="repName" name="repName" class="layui-input form-input" 
-	                       placeholder="请选择" data-th-data-result="${REPORT_ID}" 
-	                       allowClear="true" multiple="multiple" 
-	                       data-th-placeholder="#{SysCommon.placeholder}">
-	            </div>
-            </div>
+              <div class="layui-inline layui-col-md4">
+                  <label class="layui-form-label form-lable">报表名称</label>
+                  <div class="layui-input-inline input-inline">
+                      <select id="repName" name="repName"
+                              class="layui-input form-input input-select"
+                              data-th-formatoption="false"
+                              data-th-data-result="${REPORT_NAME}" allowClear="true"
+                              placeholder="请输入内容" data-th-initValue="${entity?.repId}">
+                      </select>
+                  </div>
+              </div>
             
 
 		</div>
