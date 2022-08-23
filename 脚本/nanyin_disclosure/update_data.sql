@@ -1123,3 +1123,7 @@ VALUES ('DIS_PROFIT_TYPE', '04', 'ISSUING_WAY', '01', 'system', NULL, sysdate, '
 INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('DIS_PROFIT_TYPE', '01', 'ISSUING_WAY', '02', 'system', NULL, sysdate, 'system', sysdate);
 -- add by zhengxiaolian 2022-08-22 产品基本信息产品运作方式联动修改 end
+
+-- add by zhengxiaolian 2022-08-23 披露状态枚举值中文修改 start
+update SYS_DATADICT_LIST a set a.item_value='披露失败' where a.dict_code='DISCLOSURE_STATUS' and a.item_code='03';
+-- add by zhengxiaolian 2022-08-23 披露状态枚举值中文修改 end
