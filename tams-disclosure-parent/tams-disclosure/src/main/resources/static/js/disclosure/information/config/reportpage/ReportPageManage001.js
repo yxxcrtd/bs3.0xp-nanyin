@@ -147,12 +147,12 @@ $(function() {
         }
         if(selRows != null && selRows.length == 1){
             if(workflowType==='01'){
-                if(!(selRows[0].reportType===undefined||selRows[0].reportType==='04')){
+                if(!(selRows[0].reportType===undefined||selRows[0].reportType===null||selRows[0].reportType==='04')){
                     Joyin.error("只能对状态为初始化/禁用审核通过/禁用生效的模板进行启用");
                     return;
                 }
             }else{
-                if(!(selRows[0].reportType===undefined||selRows[0].reportType==='02')){
+                if(!(selRows[0].reportType===undefined||selRows[0].reportType===null||selRows[0].reportType==='02')){
                     Joyin.error("只能对状态为初始化/启用审核通过/启用生效的模板进行禁用");
                     return;
                 }
