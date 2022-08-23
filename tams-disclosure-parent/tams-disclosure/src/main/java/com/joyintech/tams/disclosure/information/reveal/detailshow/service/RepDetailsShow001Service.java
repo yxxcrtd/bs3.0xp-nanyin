@@ -41,6 +41,7 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.servic
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
+import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportFileService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
@@ -361,7 +362,15 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
 	        if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);
-	            PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
+                String rptType = params.get("uri").toString();
+                if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
+        				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+        				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) 
+        				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
+                	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath,"报告期（");
+                } else {
+                	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
+                }
             }
         } catch (Exception e ) {
         	logger.error("查询数据错误。",e);
