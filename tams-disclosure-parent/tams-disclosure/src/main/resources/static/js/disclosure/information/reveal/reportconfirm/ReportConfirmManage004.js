@@ -129,12 +129,8 @@ $(function () {
 				object.uploadFileList2 = FileCommon2.getUploadFileInfo();
 			}
 
-			if(operateType === 'save') {
-				WorkFlow.doSaveList(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage004/save', object, "ReportConfirmManage004_btn_save");
-			}
-			else {
-				WorkFlow.doSubmitList(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage004/save', object, "ReportConfirmManage004_btn_submit");
-			}
+			WorkFlow.doSubmitList(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage004/save', object, "ReportConfirmManage004_btn_submit");
+
 		});}
 	// }
 	$("#uploadReport").css('width','200px');
@@ -150,9 +146,9 @@ $(function () {
         $('#ReportConfirmManage004_btn_submit').click(function() {
         	submit('submit');
         });
-		$('#ReportConfirmManage004_btn_save').click(function() {
-			submit('save');
-		});
+		// $('#ReportConfirmManage004_btn_save').click(function() {
+		// 	submit('save');
+		// });
 		var pageModel = $("#pageModel").val();
 		var viewFlag = $("#viewFlag").val();
 		upFileName = $("#fileName").val();
