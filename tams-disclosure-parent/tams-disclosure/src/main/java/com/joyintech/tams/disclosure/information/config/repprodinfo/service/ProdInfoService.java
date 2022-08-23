@@ -605,9 +605,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         errorMsg.append("是否是指数型产品 必填！");
                     }
                     /* add by kongzhifang NYLCXP-912 当“是否指数型产品”为“是”的时候，业绩基准需要加个必填校验 2022-08-19 */
+                    //update by zhouqiang 当“是否指数型产品”为“是”的时候，业绩基准不可填校验 NYLCXP-966
                     if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), rowData.get(22))
-                            && StringUtil.isEmpty(rowData.get(23))) {
-                        errorMsg.append("指数型产品，产品业绩比较基准 必填！");
+                            && !StringUtil.isEmpty(rowData.get(23))) {
+                        errorMsg.append("是否是指数型产品 为是时，产品业绩比较基准不可填！");
                     }
                    /* if (StringUtil.isEmpty(rowData.get(23))){
                         errorMsg.append("产品业绩比较基准 必填！");
