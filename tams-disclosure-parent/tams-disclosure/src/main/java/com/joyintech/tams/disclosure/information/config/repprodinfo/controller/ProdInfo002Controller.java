@@ -158,6 +158,50 @@ public class ProdInfo002Controller extends BaseController {
         return result;
     }
 
+    /**
+     * check
+     *
+     * @param dto 前台保存时候的校验
+     * @return 结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/saveCheck")
+    public AjaxResult saveCheck(@RequestBody ProdInfoDto dto) {
+        AjaxResult result = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+
+        if(!StringUtil.isNotEmpty(dto.getProdId())){
+            //return new AjaxResult("子产品代码必填", MessageType.错误消息);
+            errorList.add(new ValidMessage("prodId", this.getMessage("BUSS_COM_E_0038", "子产品代码")));
+        }
+        if(!StringUtil.isNotEmpty(dto.getProdRe())){
+            //return new AjaxResult("子产品代码必填", MessageType.错误消息);
+            errorList.add(new ValidMessage("prodRe", this.getMessage("BUSS_COM_E_0038", "产品登记编码")));
+        }
+        if(!StringUtil.isNotEmpty(dto.getpProdId())){
+            //return new AjaxResult("子产品代码必填", MessageType.错误消息);
+            errorList.add(new ValidMessage("pProdId", this.getMessage("BUSS_COM_E_0038", "产品主代码")));
+        }
+        if(!StringUtil.isNotEmpty(dto.getIsGrade())){
+            //return new AjaxResult("子产品代码必填", MessageType.错误消息);
+            errorList.add(new ValidMessage("isGrade", this.getMessage("BUSS_COM_E_0038", "是否分级产品")));
+        }
+
+        if(CollectionUtils.isNotEmpty(errorList)){
+            result.setErrorList(errorList);
+            return result;
+        }
+
+        ProdInfoDto existDto = prodInfoService.selectByProdStatus(dto.getProdId());
+        if (existDto != null) {
+            return new AjaxResult("子产品代码已存在", MessageType.错误消息);
+        }
+
+        return result;
+    }
+
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Valid ProdInfoDto dto, BindingResult bindingResult) {

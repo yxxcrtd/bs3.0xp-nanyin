@@ -159,11 +159,13 @@
                 });
             });
         }else {
-            Joyin.confirm('是否保存？', function() {
+            Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/saveCheck', object, function (result) {
+                //提交工作流
+                Joyin.confirm('是否保存？', function() {
                     WorkFlow.doSaveList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_save");
+                });
             });
         }
-
     }
 
     /**
