@@ -28,11 +28,11 @@
         </dependency>
 
         <!-- 中债一期 -->
-        <dependency>
+<!--         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>service-chb</artifactId>
             <version>3.1.0</version>
-        </dependency>
+        </dependency> -->
 
         <!-- 中债三期 -->
 <!--         <dependency>
@@ -57,11 +57,11 @@
         </dependency> -->
 
         <!-- 中债共通服务 -->
-        <dependency>
+<!--         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>service-svrcom</artifactId>
             <version>3.1.0</version>
-        </dependency>
+        </dependency> -->
     </dependencies>
 
     <build>

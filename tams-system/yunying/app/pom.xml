@@ -170,7 +170,7 @@
 			</exclusions>
 		</dependency>
 		<!-- 中债画面端 -->
-		<dependency>
+<!-- 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>tams-svreport</artifactId>
 			<version>3.0.0</version>
@@ -184,7 +184,7 @@
 					<groupId>com.squareup.okhttp3</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency> -->
 		<!-- 信批画面端 -->
 		<dependency>
 			<groupId>com.joyintech</groupId>

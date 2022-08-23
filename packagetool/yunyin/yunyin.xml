@@ -29,26 +29,26 @@
         <module>../../background-component/component-common</module>
         <module>../../background-component/component-check</module>
         <module>../../background-component/msg-generate</module>
-        <module>../../tams-svreport-common</module>
+<!--         <module>../../tams-svreport-common</module> -->
 <!--        <module>../../tams-valuation-batch-valmodel</module>-->
 <!--        <module>../../tams-valuation-batch-lossmodel</module>-->
 		<!-- 后台服务 -->
-        <module>../../microservice/service-chb</module>
+<!--         <module>../../microservice/service-chb</module>
 		<module>../../microservice/service-chb3</module>
-		<module>../../microservice/service-customer-report</module>
+		<module>../../microservice/service-customer-report</module> -->
         <module>../../microservice/service-disclosure</module>
-        <module>../../microservice/service-pbc</module>
-        <module>../../microservice/service-svrcom</module>
+<!--         <module>../../microservice/service-pbc</module>
+        <module>../../microservice/service-svrcom</module> -->
 		<module>../../microservice/tams-service-container-yunying</module>
 
         <!-- 批处理 -->
 		<module>../../tams-disclosure-batch</module>
-        <module>../../tams-svreport-batch</module>
+<!--         <module>../../tams-svreport-batch</module> -->
         <module>../../tams-system/yunying/batch</module>
 
         <!-- 前台应用 -->
 		<module>../../tams-disclosure-parent</module>
-        <module>../../tams-svreport-parent</module>
+<!--         <module>../../tams-svreport-parent</module> -->
         <module>../../tams-system/yunying/app</module>
     </modules>
 </project>

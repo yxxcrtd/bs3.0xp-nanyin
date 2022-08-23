@@ -28,24 +28,26 @@
         <module>tams-disclosure-interf</module>
         <module>tams-disclosure-parent</module>
         <!--        清结算共通包-->
-        <module>tams-svreport-common</module>
+<!--         <module>tams-svreport-common</module>
         <module>tams-svreport-parent</module>
-<!--        <module>tams-valuation-report</module>-->
+ -->
+ <!--        <module>tams-valuation-report</module>-->
 
         <!-- 批处理  -->
         <module>tams-disclosure-batch</module>
-        <module>tams-svreport-batch</module>
+ <!--        <module>tams-svreport-batch</module> -->
 
         <!-- 接口 -->
 
 		<!--         微服务 -->
-        <module>microservice/service-chb</module>
+<!--         <module>microservice/service-chb</module>
 		<module>microservice/service-chb3</module>
         <module>microservice/service-customer-report</module>
-        <module>microservice/service-disclosure</module>
+ -->
+         <module>microservice/service-disclosure</module>
 <!--         <module>microservice/service-interf</module> -->
-        <module>microservice/service-pbc</module>
-        <module>microservice/service-svrcom</module>
+<!--         <module>microservice/service-pbc</module> -->
+<!--         <module>microservice/service-svrcom</module> -->
 <!--        <module>microservice/service-exchange</module>-->
 <!--        <module>microservice/service-quote-new</module>-->
 <!--         几许中心包 -->
