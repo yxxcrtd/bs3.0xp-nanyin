@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.disclosure.information.manage.workrule.service.ReportRule002Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -48,12 +49,15 @@ public class EstimateReveal001Controller extends BaseController {
 	
 	@Autowired
 	private GetPrdInfoSelectService getPrdInfoSelectService;
+
+	@Autowired
+	private ReportRule002Service reportRule002Service;
 	
 	@Override
     public String init(Model model) {
 		model.addAttribute("JOBID_LIST",JsonUtils.objectArray2Json(this.getJobidList().toArray()));
 		model.addAttribute("REPORT_STYLE",JsonUtils.objectArray2Json(ftpPathService.getReportCategory().toArray()));
-		
+		model.addAttribute("REPORT_NAME",JsonUtils.objectArray2Json(reportRule002Service.getReportInfo().toArray()));
 		// 首页跳转使用
         String confromPage = this.getParam("confromPage");
         if(StringUtil.equals("01", confromPage)){
@@ -119,7 +123,7 @@ public class EstimateReveal001Controller extends BaseController {
 		String datas = this.getParam("datas");
 		List<EstimateReveal001Dto> dtoList;
 		if (datas == null) {
-			dtoList = this.findPage().getRoot();
+			dtoList = estimateReveal001Service.getExportData(RequestUtil.getPageParam()).getRoot();
 		}
 		else {
 			dtoList = JsonUtils.json2List(datas, EstimateReveal001Dto.class);

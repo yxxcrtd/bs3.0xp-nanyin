@@ -55,4 +55,10 @@ public class EstimateReveal001Service extends CommonExportService<EstimateReveal
         
 	}
 
+	public Page<EstimateReveal001Dto> getExportData(Map<String, Object> params) {
+		params.put("exportFlag","01");
+		return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/EstimateReveal001/findPage",
+				params,EstimateReveal001Dto.class);
+	}
+
 }

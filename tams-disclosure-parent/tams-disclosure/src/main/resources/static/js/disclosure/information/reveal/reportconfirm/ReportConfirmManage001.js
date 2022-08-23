@@ -37,12 +37,7 @@ $(function () {
             data: function() {
                 return getSearchParams();
             }
-        },dblclick:function(table, data) {
-			Joyin.dialog("报表确认管理查看",
-				basePath + "disclosure/information/reveal/reportconfirm/ReportConfirmManage004/init",
-				"90%", "90%", {pageModel:PAGE_MODEL_REFERENCE,
-					seqno:data.id,'viewFlag':'view'},function(){});
-		},
+        },
 		checkbox: true,
 		cols: [ 
 		        {field:'id', title: 'id',visible:false},

@@ -1133,3 +1133,9 @@ update sys_menu a set a.remark='模板启用/禁用管理' where a.page_id='Repo
 
 update sys_page a set a.remark='模板启用/禁用管理' where a.page_id='ReportPageManage001';
 -- add by zhengxiaolian 2022-08-23 模板启用管理页面中文修改 end
+
+-- add by zhengxiaolian 2022-08-23 报表确认页面新建报表去掉审批流程 start
+delete from sys_wfl_business_module a where a.page_id='ReportConfirmManage004' and a.element_id='ReportConfirmManage004_btn_save';
+
+update sys_wfl_business_module a set a.module_id='noneApproval' where a.page_id='ReportConfirmManage004' and a.element_id='ReportConfirmManage004_btn_submit';
+-- add by zhengxiaolian 2022-08-23 报表确认页面新建报表去掉审批流程 end
