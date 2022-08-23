@@ -41,6 +41,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
@@ -48,6 +49,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -403,6 +405,43 @@ public class ProdInfo002Controller extends BaseController {
             }
         }
         return true;
+    }
+
+    /**
+     * 母产品信息快录功能
+     * @param prodId
+     * @return
+     * @throws ParseException
+     */
+    @ResponseBody
+    @RequestMapping("/getParentProdInfo")
+    public AjaxResult getParentProdInfo(@RequestParam("prodId") String prodId) {
+        AjaxResult ar = new AjaxResult();
+        // 产品信息快录功能
+        ProdInfoDto dto = prodInfoService.getParentProdInfo(prodId);
+        if (StringUtil.isNotEmpty(dto)) {
+            if(dto.getRepProdType()!=null){
+                if(StringUtils.equals(DictCodeListExt5.信批产品类别_普通产品.getValue(), dto.getRepProdType())){
+                    List<ValidMessage> errList = new ArrayList<>();
+                    errList.add(new ValidMessage("该产品是普通产品，不支持再次新建子产品要素信息"));
+                    ar.setData(errList);
+                }else if(StringUtils.equals(DictCodeListExt5.信批产品类别_子产品.getValue(), dto.getRepProdType())){
+                    List<ValidMessage> errList = new ArrayList<>();
+                    errList.add(new ValidMessage("该产品是子产品，不支持再次新建子产品要素信息"));
+                    ar.setData(errList);
+                }else{
+                    //查询母产品对应的业绩基准信息
+                    dto.setBasicChangeList(prodBasicChangeService.selectListByProdId(dto.getpProdId()));
+                    ar.setData(dto);
+                }
+            }
+        }else {
+            List<ValidMessage> errList = new ArrayList<>();
+            errList.add(new ValidMessage(this.getMessage("COMMON_E_0008",
+                    "产品主代码")));
+            ar.setData(errList);
+            }
+        return ar;
     }
 
 }

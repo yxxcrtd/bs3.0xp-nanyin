@@ -168,6 +168,111 @@
         }
     }
 
+    var getProdInfo = function(){
+        var prodId =  $('#pProdId').val();
+        if (prodId) {
+            Joyin.ajax(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/getParentProdInfo?prodId='
+                + prodId,'' , function(result){
+                if (result.data[0]) {
+                    Joyin.error(result.data[0].message);
+                } else {
+                    //组件赋值 先清后赋
+                    $.each(Joyin.curfromData['ProdInfo002'],function(id, value){
+                        resetForm(id, value.odata, '');
+                    });
+                    //该版本的框架存在问题，Joyin.curfromData['ProdInfo002']没加载到下拉框控件，需单独处理下拉框控件
+                    resetSelectForm();
+                    $.each(result.data, function(id, value) {
+                        setData(id, value, '');
+                    });
+                }
+                layui.form.render();
+            });
+        } else {
+            Joyin.error(JoyinUtil.getMessage('BUSS_COM_E_0038','产品主代码'));
+        }
+    }
+
+    var resetForm = function(id,value,pageId){
+            var element;
+            if($('#'+id).size() > 0){
+                element = $('#'+id);
+            }else{
+                element = $('input[name=' + id + ']');
+            }
+
+            //下拉框特殊处理
+            if (element.hasClass('input-select')) {
+                element.val(value).trigger('change');
+            }else if(element.hasClass('input-checkbox')){
+                //单选按钮特殊处理
+                element.val(value).trigger('change');
+            }else if ($('#' + id).attr('lay-skin') === 'switch') {
+                //switch 特殊处理
+                $('#' + id).prop('checked', false);
+                // 是否,有无
+                if (value === 'Y' || value === '01') {
+                    $('#' + id).prop('checked', true);
+                }
+            }else{
+                element.val(value);
+            }
+    }
+
+    var resetSelectForm = function(){
+        if(typeof pageModel !== 'undefined'
+            && pageModel === PAGE_MODEL_NEW){
+            $("#prod_div").find(".pro-item-wrap .layui-form-item .form-inline-wrap .input-inline select").val('').trigger('change');
+            $("#prod_div").find(".layui-form-item .form-inline-wrap .input-inline select").val('').trigger('change');
+        }
+    }
+
+    var setData = function(id, value ,pageId) {
+            // 基本信息
+            var element;
+            if(pageId != '' && pageId != undefined){
+                id = pageId + '_' + id;
+            }
+            if($('#'+id).size() > 0){
+                element = $('#'+id);
+            }else{
+                element = $('input[name=' + id + ']');
+            }
+            //下拉框特殊处理
+            if (element.hasClass('input-select')) {
+                element.val(value).trigger('change');
+            }else if (element.hasClass('input-dateSelect')) {
+                //日期框特殊处理
+                if (value){
+                    element.val(new Date(value).format('yyyy-MM-dd'));
+                }
+            }else if(element.hasClass('input-checkbox')){
+                //单选按钮特殊处理
+                element.val(value).trigger('change');
+            }else if ($('#' + id).attr('lay-skin') === 'switch') {
+                //switch 特殊处理
+                $('#' + id).prop('checked', false);
+                $('#' + id).next().removeClass('layui-form-onswitch').trigger('change');
+                $('#' + id).next().find("em").text('否');
+                // 是否,有无
+                if (value === 'Y' || value === '01') {
+                    $('#' + id).prop('checked', true);
+                    $('#' + id).next().addClass('layui-form-onswitch').trigger('change');
+                    $('#' + id).next().find("em").text('是');
+                }
+            }else{
+                element.val(value);
+            }
+            if(id == 'basicChangeList'){
+                // 表格
+                $('#mockTradeTable').data('joyintable').reload({
+                    data : value,
+                    url : null
+                });
+            }
+
+    }
+
     /**
      * 画面加载完成
      */
@@ -286,6 +391,9 @@
             openFreqGlobal = openFreq;
             changeHoldday();
         });
+
+        //放大镜功能
+        $('#magnifier').click(getProdInfo);
 
 
         // 修改 是否指数型产品
