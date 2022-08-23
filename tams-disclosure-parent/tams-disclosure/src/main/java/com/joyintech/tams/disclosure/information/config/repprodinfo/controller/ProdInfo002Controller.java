@@ -266,6 +266,21 @@ public class ProdInfo002Controller extends BaseController {
             return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
         }
 
+        /* NYLCXP-965 子产品的募集起始日、募集结束日要与母产品一致 add by zhouqiang 2022-08-23 start */
+        //根据产品主代码查询母产品信息
+        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())){
+            ProdInfoDto parentInfoDto = prodInfoService.selectByProdStatus(dto.getpProdId());
+            if (parentInfoDto != null) {
+                if(DateUtil.compareDate(parentInfoDto.getRaiseStrdate(),dto.getRaiseStrdate())!=0){
+                    return new AjaxResult("子产品募集起始日期不等于母产品募集起始日期", MessageType.错误消息);
+                }
+                if(DateUtil.compareDate(parentInfoDto.getRaiseEnddate(),dto.getRaiseEnddate())!=0){
+                    return new AjaxResult("子产品募集结束日期不等于母产品募集结束日期", MessageType.错误消息);
+                }
+            }
+        }
+        /* NYLCXP-965 子产品的募集起始日、募集结束日要与母产品一致 add by zhouqiang 2022-08-23 end */
+
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 start */
         //该check与放大镜功能为二阶段内容，暂不处理
         // if(StringUtil.isNotEmpty(dto.getpProdId())&&StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade()){
