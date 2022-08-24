@@ -245,7 +245,7 @@ public class SaleAgency002Service extends CommonExportService<SaleAgencyDto>
         return new SaleAgencyDto();
     }
 
-    public List<TreeNode> getProductTreeByAgencyId(String agencyId) {
+    public List<TreeNode> getProductTreeByAgencyId(String agencyId,String pageModel) {
 
         List<TreeNode> result=new ArrayList<>();
         List<TreeNode> parentNodes = getParentNodes();
@@ -253,7 +253,7 @@ public class SaleAgency002Service extends CommonExportService<SaleAgencyDto>
         List<TreeNode> prodInfoNodes=saleAgency001Mapper.selectProdInfo();
         //根据机构id查询关联的产品
         List<ProdSaleAgencyDto> prodSaleAgencyDtos = saleAgency001Mapper.selectProdByAgencyId(agencyId);
-        if(prodSaleAgencyDtos!=null && prodSaleAgencyDtos.size()>0){
+        if(prodSaleAgencyDtos!=null && prodSaleAgencyDtos.size()>0 && StringUtil.equals(pageModel,"2")) {
             for (TreeNode prodInfoNode : prodInfoNodes) {
                 for (ProdSaleAgencyDto prodSaleAgencyDto : prodSaleAgencyDtos) {
                     if(StringUtil.equals(prodInfoNode.getId(),prodSaleAgencyDto.getProdId())){
@@ -261,12 +261,15 @@ public class SaleAgency002Service extends CommonExportService<SaleAgencyDto>
                         prodInfoNode.setOpen(true);
                         //循环将父节点置为选中状态
                             setParentChecked(parentNodes,prodInfoNode.getpId());
+                            result.add(prodInfoNode);
                     }
                 }
             }
         }
+        if (StringUtil.equals(pageModel,"1")){
+            result.addAll(prodInfoNodes);
+        }
         result.addAll(parentNodes);
-        result.addAll(prodInfoNodes);
         return result;
     }
 

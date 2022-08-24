@@ -94,7 +94,7 @@
                         <label class="layui-form-label form-lable mst-lable">产品名称</label>
                         <div class="layui-input-block input-inline">
                             <input type="checkbox" lay-skin="switch" data-th-lay-text="#{SystemActorRole001.expandAll}" id="expandAll" data-ignore=true>
-                            <div th:if="${entity} != null" class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 219px; overflow-y: scroll;" id='tree'  data-th-url='|@{/disclosure/information/config/saleagency/SaleAgency002/getAllProdIds}?agencyId=${entity?.sequenceNo}&workflowId=${entity?.workflowId}'>
+                            <div th:if="${entity} != null" class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 219px; overflow-y: scroll;" id='tree'  data-th-url='|@{/disclosure/information/config/saleagency/SaleAgency002/getAllProdIds}?agencyId=${entity?.sequenceNo}&workflowId=${entity?.workflowId}&pageModel=${pageModel}'>
                             </div>
                             <div th:if="${entity} == null" class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 219px; overflow-y: scroll;" id='tree' data-th-url='|@{/disclosure/information/config/saleagency/SaleAgency002/getAllProdIds}'>
                             </div>
