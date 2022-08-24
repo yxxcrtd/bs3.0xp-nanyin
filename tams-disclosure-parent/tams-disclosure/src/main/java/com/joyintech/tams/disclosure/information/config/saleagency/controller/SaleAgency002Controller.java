@@ -78,6 +78,8 @@ public class SaleAgency002Controller extends BaseController{
         // 流程
         String workflowId = this.getParam("workflowId");
         String sequenceNo=getParam("sequenceNo");
+        String pageModel = this.getParam("pageModel");
+        model.addAttribute("pageModel",pageModel);
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             SaleAgencyDto dto = saleAgency002Service.getBussinessEntityByWorkflowId(
                     workflowId);
@@ -119,6 +121,8 @@ public class SaleAgency002Controller extends BaseController{
             throws Exception {
         String agencyId=super.getRequest().getParameter("agencyId");
         String workflowId=this.getParam("workflowId");
+        String pageModel=this.getParam("pageModel");
+
         //流程中查看数据反显
         if(StringUtil.isNotEmpty(workflowId) && !workflowId.equals("null")){
             SaleAgencyDto dto = saleAgency002Service.getBussinessEntityByWorkflowId(
@@ -127,7 +131,8 @@ public class SaleAgency002Controller extends BaseController{
         }
 
         if(StringUtil.isNotEmpty(agencyId)){//查看、修改
-            return saleAgency002Service.getProductTreeByAgencyId(agencyId);
+            this.getPageModel();
+            return saleAgency002Service.getProductTreeByAgencyId(agencyId,pageModel);
         }else{//新建
             return saleAgency002Service.getProductTree();
         }

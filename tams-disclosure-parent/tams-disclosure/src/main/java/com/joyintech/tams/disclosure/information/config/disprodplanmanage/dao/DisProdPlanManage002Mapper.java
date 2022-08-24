@@ -87,4 +87,6 @@ public interface DisProdPlanManage002Mapper {
 	List<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> paraMap);
 
 	List<DisProdPlanManage002Dto> checkInfo(DisProdPlanManage002Dto dto);
+
+	int delete1(DisProdPlanManage002Dto entity);
 }

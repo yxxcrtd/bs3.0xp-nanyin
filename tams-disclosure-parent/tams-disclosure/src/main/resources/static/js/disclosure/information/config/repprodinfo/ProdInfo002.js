@@ -334,8 +334,8 @@
                 //当“发行方式”为“开放式”时必填，否则开放频率 置灰不可填,“现管类产品”，此处默认为“日开”，开放频率 且不允许修改
                 $("#openFreq").textSelect('setValue', '01');
                 $("#openFreq").attr("disabled", true);
-                // 若产品类型为“现管类产品”，产品运作方式 默认为“开放式非净值型”，不可修改
-                $("#profitType").textSelect('setValue', '04');
+                // 若产品类型为“现管类产品”，产品运作方式 默认为“开放式净值型”，不可修改
+                $("#profitType").textSelect('setValue', '03');
                 $("#profitType").attr("disabled", true);
             } else {
                 $("#issuingWay").attr("disabled", false);

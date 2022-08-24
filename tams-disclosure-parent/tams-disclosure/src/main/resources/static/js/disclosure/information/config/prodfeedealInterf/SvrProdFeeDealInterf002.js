@@ -89,6 +89,8 @@ $(function() {
             Joyin.ajaxJson(basePath+'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/selectProdName?prodId='+prodId,{},function (result){
                 $('#prodName').val(result['PROD_NAME']);
             })
+        } else {
+            $('#prodName').val('');
         }
     });
 

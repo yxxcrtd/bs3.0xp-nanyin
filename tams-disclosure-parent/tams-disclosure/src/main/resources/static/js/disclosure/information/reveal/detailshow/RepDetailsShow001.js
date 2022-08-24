@@ -732,15 +732,30 @@ $(function () {
 		var webRoot=document.location.href;
 		webRoot=webRoot.substring(0,webRoot.indexOf('disclosure'));	
 		params['webRoot']=webRoot;
+
+		if(document.cookie.includes('webofficetab')) {
+			Joyin.alert('已打开模板编辑画面，请先关闭！',2);
+		    return;
+		}
+
 		Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
-			Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
-				JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
-				"70%","85%",params,function(result){
-					if(top.getData){
-						editFlag=true;
-					}
-				}
-			);
+            var param = [], paramObj = $.extend({dialog:1},params);
+            if (paramObj) {
+                $.each(params, function (key, val) {
+                    param.push(key + '=' + encodeURIComponent(params[key]));
+                });
+            }
+            var paraStr = '?' + param.join('&');
+		    window.open(basePath+"disclosure/information/reveal/detailshow/RepEdit001/init" + paraStr, "_blank");
+
+//			Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
+//				JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
+//				"70%","85%",params,function(result){
+//					if(top.getData){
+//						editFlag=true;
+//					}
+//				}
+//			);
 		});
 
 
