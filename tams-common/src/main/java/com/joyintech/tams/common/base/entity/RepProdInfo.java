@@ -952,7 +952,7 @@ public class RepProdInfo extends BaseEntity {
      * @param openFreq 母产品开放频率，子产品为空 01 日开/02 频率在半年（不含）以内/03 频率在半年以上
      */
     public void setOpenFreq(String openFreq) {
-        this.openFreq = openFreq == null ? null : openFreq.trim();
+        this.openFreq = openFreq == null ? null : (" ".equals(openFreq)?" ":openFreq.trim());
     }
 
     /**

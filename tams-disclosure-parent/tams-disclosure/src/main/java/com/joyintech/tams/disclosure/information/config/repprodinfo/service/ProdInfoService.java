@@ -250,6 +250,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         dto.setIssueStatus(DictCodeListExt1.发行状态_确认发行.getValue());
+        //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
+        dto.setOpenFreq((dto.getOpenFreq()==null || "".equals(dto.getOpenFreq()))?" ":dto.getOpenFreq());
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
             //保存母产品信息，判断母产品是否已存在
             ProdInfoDto existppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
@@ -323,6 +325,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      */
     public void update(ProdInfoDto dto) {
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+        //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
+        dto.setOpenFreq((dto.getOpenFreq()==null || "".equals(dto.getOpenFreq()))?" ":dto.getOpenFreq());
         prodInfoMapper.updateByPrimaryKeySelective(dto);
 
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
@@ -839,6 +843,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     prodDto.setOpenFreq(null);
                 }
             }
+            //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
+            prodDto.setOpenFreq((dto.getOpenFreq()==null || "".equals(dto.getOpenFreq()))?" ":dto.getOpenFreq());
             if (StringUtil.isNotEmpty(rowData.get(18))) {
                 //固定持有天数
                 prodDto.setHoldday(new BigDecimal(rowData.get(18).toString()));
