@@ -605,10 +605,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         errorMsg.append("是否是指数型产品 必填！");
                     }
                     /* add by kongzhifang NYLCXP-912 当“是否指数型产品”为“是”的时候，业绩基准需要加个必填校验 2022-08-19 */
-                    //update by zhouqiang 当“是否指数型产品”为“是”的时候，业绩基准不可填校验 NYLCXP-966
                     if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), rowData.get(22))
-                            && !StringUtil.isEmpty(rowData.get(23))) {
-                        errorMsg.append("是否是指数型产品 为是时，产品业绩比较基准不可填！");
+                            && StringUtil.isEmpty(rowData.get(23))) {
+                        errorMsg.append("指数型产品，产品业绩比较基准 必填！");
                     }
                    /* if (StringUtil.isEmpty(rowData.get(23))){
                         errorMsg.append("产品业绩比较基准 必填！");
@@ -631,8 +630,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         if (!StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), rowData.get(17))) {
                             errorMsg.append("产品类型为“现管类产品”时，开放频率为“日开”！ ");
                         }
-                        if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式非净值型.getCodeName(), rowData.get(19))) {
-                            errorMsg.append("产品类型为“现管类产品”时，产品运作方式为“开放式非净值型”！ ");
+                        if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式净值型.getCodeName(), rowData.get(19))) {
+                            errorMsg.append("产品类型为“现管类产品”时，产品运作方式为“开放式净值型”！ ");
                         }
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())) {
