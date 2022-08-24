@@ -131,9 +131,16 @@ public final class XmlParseUtil {
 			// ------start---------2020-11-25 周敏 添加
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			spf.setValidating(false);
+			
 			spf.setFeature("http://xml.org/sax/features/validation", false);
 			spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 			spf.setFeature("http://xml.org/sax/features/use-entity-resolver2", false);
+			
+			//chenxc: update for pinpoint check 2022-08-24
+	        spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+	        spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+	        spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+	        
 			SAXParser sax = spf.newSAXParser();
 			// ------end---------
 //           SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
