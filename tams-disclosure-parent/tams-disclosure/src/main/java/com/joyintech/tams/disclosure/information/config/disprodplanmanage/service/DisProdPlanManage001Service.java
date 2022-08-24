@@ -230,6 +230,9 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     if (StringUtil.isNotEmpty(rowData.get(5)) && !this.isDateStr(rowData.get(5))) {
                         errorMsg.append("自动赎回日 格式不正确！");
                     }
+                    if(DateUtil.compareDate(rowData.get(4), rowData.get(5)) >= 0){
+                        errorMsg.append("自动赎回日不能小于运作起始日！");
+                    }
                     if (StringUtil.isNotEmpty(rowData.get(6)) && !StringUtils.isNumeric(rowData.get(6))) {
                         errorMsg.append("客户实际持有天数 必须为数字！");
                     }

@@ -90,6 +90,7 @@
          PROD_NAME text
         from REP_PROD_INFO
         where 1=1
+        and REP_PROD_INFO.rep_prod_type in ('01','02')
         <if test="dataStatus != null and dataStatus != ''">
             and STATUS=#{dataStatus,jdbcType=VARCHAR}
         </if>

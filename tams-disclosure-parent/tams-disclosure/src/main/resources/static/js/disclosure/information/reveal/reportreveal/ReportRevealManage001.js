@@ -92,6 +92,18 @@ $(function () {
                           return '<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.annexPath)+ '">'+ data +'</a>'
                    }
                 },
+                {
+                    title : '操作',
+                    field : 'operation',
+                    type : 'action',
+                    width : 120,
+                    buttons : [
+                        {
+                            text : '&#xe615;',
+                            clas : 'view',
+                            title : '预览'
+                        } ]
+                }
 		],
 		done:function(){
 			//流程中退回时需选中
@@ -119,6 +131,18 @@ $(function () {
 	        }
 		}
 	});
+
+    table.bind('click', '.view', function(data, index) {
+        var fileNo=data.sysFilepath;
+        if(data.filepath!=undefined&&data.filepath!=""){
+            fileNo=data.filepath;
+        }
+        Joyin.dialog(JoyinUtil.getLabel("文件预览"),
+            basePath + "disclosure/information/config/repreportcheck/ReportCheck003/init",
+            "95%", "96%", {
+                fileNo:fileNo
+            });
+    });
 
 	var exportExcel = function() {
 		if (table != null && table != '') {

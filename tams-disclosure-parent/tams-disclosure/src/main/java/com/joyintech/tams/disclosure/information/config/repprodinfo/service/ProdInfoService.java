@@ -409,9 +409,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() < 26) {//NYLCXP-937
+            if (null == objects.get(0) || objects.get(0).size() != 27) {//NYLCXP-937
                 Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要26列。");
+                resultMap.put("errorMsg", "导入文件格式错误，文件应为27列。");
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
@@ -630,8 +630,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         if (!StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), rowData.get(17))) {
                             errorMsg.append("产品类型为“现管类产品”时，开放频率为“日开”！ ");
                         }
-                        if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式非净值型.getCodeName(), rowData.get(19))) {
-                            errorMsg.append("产品类型为“现管类产品”时，产品运作方式为“开放式非净值型”！ ");
+                        if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式净值型.getCodeName(), rowData.get(19))) {
+                            errorMsg.append("产品类型为“现管类产品”时，产品运作方式为“开放式净值型”！ ");
                         }
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())) {
@@ -944,5 +944,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
                 -> prodInfoMapper.queryPprodName(paraMap));
         return result;
+    }
+
+    /**
+     * 根据产品主代码查询产品基本信息
+     * @param prodId
+     * @return
+     */
+    public ProdInfoDto getParentProdInfo(String prodId) {
+        return prodInfoMapper.selectParentProdInfo(prodId);
     }
 }

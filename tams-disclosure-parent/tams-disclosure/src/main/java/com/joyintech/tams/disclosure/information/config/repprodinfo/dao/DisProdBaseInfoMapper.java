@@ -47,4 +47,11 @@ public interface DisProdBaseInfoMapper  {
     List<SelectOptionDto> queryPprodIds(Map<String, Object> paramMap);
 
     List<SelectOptionDto> queryPprodName(Map<String, Object> paramMap);
+
+    /**
+     * 根据产品主代码查询母产品基本信息
+     * @param prodId
+     * @return
+     */
+    ProdInfoDto selectParentProdInfo(String prodId);
 }

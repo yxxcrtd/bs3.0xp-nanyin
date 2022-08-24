@@ -795,5 +795,43 @@
             or prod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
         </if>
     </select>
+    <select id="selectParentProdInfo"
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
+        select
+        rpi.PROD_ID pProdId,
+        rpi.PROD_NAME pProdName,
+        rpi.SET_DATE pSetDate,
+        rpi.RAISE_AMT raiseAmt,
+        rpi.PROD_ABBR prodAbbr,
+        rpi.PROD_RE prodRe,
+        --rpi.P_PROD_ID pProdId,
+        rpi.RAISE_STRDATE raiseStrdate,
+        rpi.RAISE_ENDDATE raiseEnddate,
+        rpi.MDATE mdate,
+        rpi.RAISE_TYPE raiseType,
+        rpi.PERFORM_COMPARE performCompare,
+        rpi.IS_PERIOD isPeriod,
+        rpi.IS_GRADE isGrade,
+        rpi.IS_INDEX isIndex,
+        rpi.OPEN_FREQ openFreq,
+        rpi.NATURE_INVEST natureInvest,
+        rpi.PROD_TYPE prodType,
+        rpi.ISSUING_WAY issuingWay,
+        rpi.ACCT_CHNNAME acctChnname,
+        rpi.PROFIT_TYPE profitType,
+        rpi.PD_STATUS pdStatus,
+        rpi.PROD_SERIES prodSeries,
+        rpi.STATUS status,
+        rpi.ISSUE_STATUS issueStatus,
+        rpi.REP_PROD_TYPE repProdType,
+        rpi.HOLDDAY holdday,
+        rpi.TRUSTPART trustpart,
+        rpi.ERRORMSG errormsg,
+        rpi.prod_name  pProdName ,
+        rpi.set_date  pSetDate
+        from REP_PROD_INFO rpi
+        where rpi.STATUS='E'
+        and rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
 
 </mapper>
