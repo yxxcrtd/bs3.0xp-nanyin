@@ -73,7 +73,7 @@ public class RepRelDealValidator implements BeanValidator {
 
             }else{
 
-                if(StringUtil.isNotEmpty(repRelDealDto.getEffdate())){
+                if(repRelDealDto!=null && StringUtil.isNotEmpty(repRelDealDto.getEffdate())){
                     if(StringUtil.isNotEmpty(dto.getEffdate())) {
                         if (DateUtil.compareDate(repRelDealDto.getEffdate(), platDate) > 0) {
                             if (DateUtil.compareDate(dto.getEffdate(), platDate) < 0) {
@@ -83,7 +83,7 @@ public class RepRelDealValidator implements BeanValidator {
                     }
                 }
 
-                if(StringUtil.isNotEmpty(repRelDealDto.getEffdelidate())){
+                if(repRelDealDto!=null && StringUtil.isNotEmpty(repRelDealDto.getEffdelidate())){
                     if(StringUtil.isNotEmpty(dto.getEffdelidate())) {
                         if (DateUtil.compareDate(repRelDealDto.getEffdelidate(), platDate) > 0) {
                             if (DateUtil.compareDate(dto.getEffdelidate(), platDate) < 0) {
