@@ -630,8 +630,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         if (!StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), rowData.get(17))) {
                             errorMsg.append("产品类型为“现管类产品”时，开放频率为“日开”！ ");
                         }
-                        if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式非净值型.getCodeName(), rowData.get(19))) {
-                            errorMsg.append("产品类型为“现管类产品”时，产品运作方式为“开放式非净值型”！ ");
+                        if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式净值型.getCodeName(), rowData.get(19))) {
+                            errorMsg.append("产品类型为“现管类产品”时，产品运作方式为“开放式净值型”！ ");
                         }
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())) {
