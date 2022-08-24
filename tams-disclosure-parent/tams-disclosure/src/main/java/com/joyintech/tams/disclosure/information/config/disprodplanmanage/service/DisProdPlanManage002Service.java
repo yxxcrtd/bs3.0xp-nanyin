@@ -139,7 +139,7 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
 //            DisProdPlanManage002Dto dto = new DisProdPlanManage002Dto();
             entity.setProdPlanId(keyId);
             entity.setDataStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
-            this.update(entity);
+            disProdPlanManage002Mapper.delete1(entity);
         }
     }
 

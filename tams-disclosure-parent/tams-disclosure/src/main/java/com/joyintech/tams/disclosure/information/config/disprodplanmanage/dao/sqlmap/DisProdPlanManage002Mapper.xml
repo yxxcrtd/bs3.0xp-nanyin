@@ -135,6 +135,10 @@
     <delete id="delete" parameterType="java.util.Map">
         delete from DIS_PROD_PLAN where PROD_PLAN_ID=#{prodPlanId,jdbcType=VARCHAR}
     </delete>
+    <delete id="delete1">
+         update DIS_PROD_PLAN set DATA_STATUS = 'D'
+        where PROD_ID = #{prodId} and OPEN_END_DATE = TO_DATE(#{openEndDateStr},'YYYY-MM-DD')
+    </delete>
 
     <!-- 查询母产品和普通产品的产品代码和产品名称 -->
     <select id="getMontherAndCommonProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
