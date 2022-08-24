@@ -13,14 +13,18 @@ package com.joyintech.tams.disclosure.information.reveal.reportconfirm.service;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.disclosure.common.CollectionUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
@@ -160,7 +164,20 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
      */
     public ResponseEntity<byte[]> downLoadReportInfo(Map<String, Object> paraMap)
             throws IOException {
-        List<RepReveal> reportList = reportConfirmManage001Mapper.queryReportInfo(paraMap);
+        //add by zhoubin 20220824 start
+        //导出报表文件-压缩包内文件与列表勾选保持一致
+        List<RepReveal> reportList = new LinkedList<>();
+        List<RepReveal> reportResultList = reportConfirmManage001Mapper.queryReportInfo(paraMap);
+        if (!CollectionUtils.isEmptyList(reportResultList)) {
+            List<String>  idList = (List<String>) paraMap.get("idList");
+            idList.forEach(id->{
+                RepReveal repReveal = reportResultList.stream().filter(item -> {
+                    return StringUtil.equals(id,item.getId());
+                }).collect(Collectors.toList()).get(0);
+                reportList.add(repReveal);
+            });
+        }
+        //add by zhoubin 20220824 end
         // 时间戳
         String dateTime = DateUtil.format(new Date(), DateUtil.DEFAULT_OTHER_FORMAT);
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
