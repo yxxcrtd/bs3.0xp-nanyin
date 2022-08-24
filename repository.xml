@@ -10,7 +10,7 @@
   <localRepository>/path/to/local/repo</localRepository>
 
   -->
-  <localRepository>E:\maven\mavenNanYin\repo</localRepository>
+  <localRepository>D:\maven_repository_ny</localRepository>
 
 <!-- 
 <offline>true</offline>

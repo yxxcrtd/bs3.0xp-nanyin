@@ -41,6 +41,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
@@ -48,6 +49,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -158,6 +160,50 @@ public class ProdInfo002Controller extends BaseController {
         return result;
     }
 
+    /**
+     * check
+     *
+     * @param dto 前台保存时候的校验
+     * @return 结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/saveCheck")
+    public AjaxResult saveCheck(@RequestBody ProdInfoDto dto) {
+        AjaxResult result = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+
+        if(!StringUtil.isNotEmpty(dto.getProdId())){
+            //return new AjaxResult("子产品代码必填", MessageType.错误消息);
+            errorList.add(new ValidMessage("prodId", this.getMessage("BUSS_COM_E_0038", "子产品代码")));
+        }
+        if(!StringUtil.isNotEmpty(dto.getProdRe())){
+            //return new AjaxResult("子产品代码必填", MessageType.错误消息);
+            errorList.add(new ValidMessage("prodRe", this.getMessage("BUSS_COM_E_0038", "产品登记编码")));
+        }
+        if(!StringUtil.isNotEmpty(dto.getpProdId())){
+            //return new AjaxResult("子产品代码必填", MessageType.错误消息);
+            errorList.add(new ValidMessage("pProdId", this.getMessage("BUSS_COM_E_0038", "产品主代码")));
+        }
+        if(!StringUtil.isNotEmpty(dto.getIsGrade())){
+            //return new AjaxResult("子产品代码必填", MessageType.错误消息);
+            errorList.add(new ValidMessage("isGrade", this.getMessage("BUSS_COM_E_0038", "是否分级产品")));
+        }
+
+        if(CollectionUtils.isNotEmpty(errorList)){
+            result.setErrorList(errorList);
+            return result;
+        }
+
+        ProdInfoDto existDto = prodInfoService.selectByProdStatus(dto.getProdId());
+        if (existDto != null) {
+            return new AjaxResult("子产品代码已存在", MessageType.错误消息);
+        }
+
+        return result;
+    }
+
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Valid ProdInfoDto dto, BindingResult bindingResult) {
@@ -219,6 +265,21 @@ public class ProdInfo002Controller extends BaseController {
                 && dto.getHoldday() == null) {
             return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
         }
+
+        /* NYLCXP-965 子产品的募集起始日、募集结束日要与母产品一致 add by zhouqiang 2022-08-23 start */
+        //根据产品主代码查询母产品信息
+        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())){
+            ProdInfoDto parentInfoDto = prodInfoService.selectByProdStatus(dto.getpProdId());
+            if (parentInfoDto != null) {
+                if(DateUtil.compareDate(parentInfoDto.getRaiseStrdate(),dto.getRaiseStrdate())!=0){
+                    return new AjaxResult("子产品募集起始日期不等于母产品募集起始日期", MessageType.错误消息);
+                }
+                if(DateUtil.compareDate(parentInfoDto.getRaiseEnddate(),dto.getRaiseEnddate())!=0){
+                    return new AjaxResult("子产品募集结束日期不等于母产品募集结束日期", MessageType.错误消息);
+                }
+            }
+        }
+        /* NYLCXP-965 子产品的募集起始日、募集结束日要与母产品一致 add by zhouqiang 2022-08-23 end */
 
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 start */
         //该check与放大镜功能为二阶段内容，暂不处理
@@ -359,6 +420,43 @@ public class ProdInfo002Controller extends BaseController {
             }
         }
         return true;
+    }
+
+    /**
+     * 母产品信息快录功能
+     * @param prodId
+     * @return
+     * @throws ParseException
+     */
+    @ResponseBody
+    @RequestMapping("/getParentProdInfo")
+    public AjaxResult getParentProdInfo(@RequestParam("prodId") String prodId) {
+        AjaxResult ar = new AjaxResult();
+        // 产品信息快录功能
+        ProdInfoDto dto = prodInfoService.getParentProdInfo(prodId);
+        if (StringUtil.isNotEmpty(dto)) {
+            if(dto.getRepProdType()!=null){
+                if(StringUtils.equals(DictCodeListExt5.信批产品类别_普通产品.getValue(), dto.getRepProdType())){
+                    List<ValidMessage> errList = new ArrayList<>();
+                    errList.add(new ValidMessage("该产品是普通产品，不支持再次新建子产品要素信息"));
+                    ar.setData(errList);
+                }else if(StringUtils.equals(DictCodeListExt5.信批产品类别_子产品.getValue(), dto.getRepProdType())){
+                    List<ValidMessage> errList = new ArrayList<>();
+                    errList.add(new ValidMessage("该产品是子产品，不支持再次新建子产品要素信息"));
+                    ar.setData(errList);
+                }else{
+                    //查询母产品对应的业绩基准信息
+                    dto.setBasicChangeList(prodBasicChangeService.selectListByProdId(dto.getpProdId()));
+                    ar.setData(dto);
+                }
+            }
+        }else {
+            List<ValidMessage> errList = new ArrayList<>();
+            errList.add(new ValidMessage(this.getMessage("COMMON_E_0008",
+                    "产品主代码")));
+            ar.setData(errList);
+            }
+        return ar;
     }
 
 }

@@ -409,9 +409,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() < 26) {//NYLCXP-937
+            if (null == objects.get(0) || objects.get(0).size() != 27) {//NYLCXP-937
                 Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要26列。");
+                resultMap.put("errorMsg", "导入文件格式错误，文件应为27列。");
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
@@ -605,9 +605,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         errorMsg.append("是否是指数型产品 必填！");
                     }
                     /* add by kongzhifang NYLCXP-912 当“是否指数型产品”为“是”的时候，业绩基准需要加个必填校验 2022-08-19 */
+                    //update by zhouqiang 当“是否指数型产品”为“是”的时候，业绩基准不可填校验 NYLCXP-966
                     if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), rowData.get(22))
-                            && StringUtil.isEmpty(rowData.get(23))) {
-                        errorMsg.append("指数型产品，产品业绩比较基准 必填！");
+                            && !StringUtil.isEmpty(rowData.get(23))) {
+                        errorMsg.append("是否是指数型产品 为是时，产品业绩比较基准不可填！");
                     }
                    /* if (StringUtil.isEmpty(rowData.get(23))){
                         errorMsg.append("产品业绩比较基准 必填！");
@@ -944,5 +945,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
                 -> prodInfoMapper.queryPprodName(paraMap));
         return result;
+    }
+
+    /**
+     * 根据产品主代码查询产品基本信息
+     * @param prodId
+     * @return
+     */
+    public ProdInfoDto getParentProdInfo(String prodId) {
+        return prodInfoMapper.selectParentProdInfo(prodId);
     }
 }

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="SalesTransactionMaintenanceRegistDel.xlsx" name="销售结算资金交易登记">
-	<Worksheet javaBean="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
-		<Row>
-			<Cell order="1" name="提供销售结算资金服务机构代码">institutionCode</Cell>
-			<Cell order="2" name="销售结算资金交易流水号">tradeNo</Cell>
-		</Row>
-	</Worksheet>
-</Workbook>

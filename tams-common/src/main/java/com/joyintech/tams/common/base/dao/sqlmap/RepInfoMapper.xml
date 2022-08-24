@@ -50,8 +50,8 @@
             REPORT_CATEGORY)
         values (#{repId,jdbcType=VARCHAR}, #{templateId,jdbcType=VARCHAR}, #{templatePath,jdbcType=VARCHAR}, 
             #{templateName,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR}, #{reportType,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{repOrder,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, SYSDATE,
+            #{updateUser,jdbcType=VARCHAR}, SYSDATE, #{repOrder,jdbcType=DECIMAL},
             #{reportCategory,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepInfo" >
@@ -123,13 +123,13 @@
                 #{createDept,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null" >
-                #{createTime,jdbcType=TIMESTAMP},
+                SYSDATE,
             </if>
             <if test="updateUser != null" >
                 #{updateUser,jdbcType=VARCHAR},
             </if>
             <if test="updateTime != null" >
-                #{updateTime,jdbcType=TIMESTAMP},
+                SYSDATE,
             </if>
             <if test="repOrder != null" >
                 #{repOrder,jdbcType=DECIMAL},
@@ -144,7 +144,7 @@
         REPORT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REP_ORDER, 
         REPORT_CATEGORY)
         select REP_ID, TEMPLATE_ID, TEMPLATE_PATH, TEMPLATE_NAME, REPORT_NAME, 
-            REPORT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REP_ORDER, 
+            REPORT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REP_ORDER,
             REPORT_CATEGORY
              from REP_INFO
              where 1 = 1 and REP_ID = #{repId,jdbcType=VARCHAR}
@@ -171,7 +171,7 @@
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
             <if test="updateTime != null" >
-                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+                UPDATE_TIME=SYSDATE,
             </if>
             <if test="repOrder != null" >
                 REP_ORDER = #{repOrder,jdbcType=DECIMAL},
@@ -190,7 +190,7 @@
             REPORT_NAME = #{reportName,jdbcType=VARCHAR},
             REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            UPDATE_TIME = SYSDATE,
             REP_ORDER = #{repOrder,jdbcType=DECIMAL},
             REPORT_CATEGORY = #{reportCategory,jdbcType=VARCHAR}
         where REP_ID = #{repId,jdbcType=VARCHAR}

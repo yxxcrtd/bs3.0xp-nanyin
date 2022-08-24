@@ -37,12 +37,7 @@ $(function () {
             data: function() {
                 return getSearchParams();
             }
-        },dblclick:function(table, data) {
-			Joyin.dialog("报表确认管理查看",
-				basePath + "disclosure/information/reveal/reportconfirm/ReportConfirmManage004/init",
-				"90%", "90%", {pageModel:PAGE_MODEL_REFERENCE,
-					seqno:data.id,'viewFlag':'view'},function(){});
-		},
+        },
 		checkbox: true,
 		cols: [ 
 		        {field:'id', title: 'id',visible:false},
@@ -123,7 +118,7 @@ $(function () {
                 },
              
                 //ReportConfirmManage001
-                {field:'operation', title: '操作',fixed : 'right',width:80,
+                {field:'operation', title: '操作',fixed : 'right',width:120,
                 	render : function(data, type, row, meta){
                        //console.log(row);
 					   if(editFlag==='true'){
@@ -136,15 +131,20 @@ $(function () {
 							   }
 							   if(purviewElements.indexOf('_batch')!=-1){
 								   str += '<a id="jumpTab" href=\'javascript:redirectUrl2("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传附件" class="iconfont icon-cloud-upload1 batch"></i></a>';
+								   str += '&nbsp;&nbsp;&nbsp;&nbsp;';
 							   }
 //                		   str = '<a id="jumpTab" style="color: green;" href=\'javascript:redirectUrl2("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传披露文档" class="iconfont icon-upload"></i></a>';
 //                		   str += '&nbsp;&nbsp;&nbsp;&nbsp;';
 //                		   str += '<a id="jumpTab" href=\'javascript:redirectUrl2("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传附件" class="iconfont icon-cloud-upload1"></i></a>';
 							   //update by yantianyuan 二级法人按钮改造 end
+							   str +="<i class='iconfont icon-search view'></i>";
 							   return str;
 						   }
+					   }else{
+						   var str = "";
+						   str +="<i class='iconfont icon-search view'></i>";
+						   return str;
 					   }
-					   return ""
                 	} 
                    
                 }
@@ -163,6 +163,18 @@ $(function () {
  			   });
         });
     });
+
+	table.bind('click', '.view', function(data, index) {
+		var fileNo=data.sysFilepath;
+		if(data.filepath!=undefined&&data.filepath!=""){
+			fileNo=data.filepath;
+		}
+		Joyin.dialog(JoyinUtil.getLabel("文件预览"),
+			basePath + "disclosure/information/config/repreportcheck/ReportCheck003/init",
+			"95%", "96%", {
+				fileNo:fileNo
+			});
+	});
     	
 	//导出
 	var exportExcel = function() {

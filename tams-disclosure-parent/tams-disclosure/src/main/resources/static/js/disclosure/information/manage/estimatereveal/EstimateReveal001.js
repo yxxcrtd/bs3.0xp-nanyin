@@ -5,7 +5,7 @@ $(function () {
     var getSearchParams = function() {
         return {
         	prodId: $.trim($('#prodId').val()),
-        	repName: $.trim($('#repName').val()),
+        	repName: $.trim($("#repName").find("option:selected").text()),
         	revealEndDateBegin: $('#revealEndDate').startDate(),
             revealEndDateEnd: $('#revealEndDate').endDate(),
             jobId: $.trim($('#jobId').val()),

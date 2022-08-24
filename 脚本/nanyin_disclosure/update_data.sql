@@ -1123,3 +1123,19 @@ VALUES ('DIS_PROFIT_TYPE', '04', 'ISSUING_WAY', '01', 'system', NULL, sysdate, '
 INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('DIS_PROFIT_TYPE', '01', 'ISSUING_WAY', '02', 'system', NULL, sysdate, 'system', sysdate);
 -- add by zhengxiaolian 2022-08-22 产品基本信息产品运作方式联动修改 end
+
+-- add by zhengxiaolian 2022-08-23 披露状态枚举值中文修改 start
+update SYS_DATADICT_LIST a set a.item_value='披露失败' where a.dict_code='DISCLOSURE_STATUS' and a.item_code='03';
+-- add by zhengxiaolian 2022-08-23 披露状态枚举值中文修改 end
+
+-- add by zhengxiaolian 2022-08-23 模板启用管理页面中文修改 start
+update sys_menu a set a.remark='模板启用/禁用管理' where a.page_id='ReportPageManage001';
+
+update sys_page a set a.remark='模板启用/禁用管理' where a.page_id='ReportPageManage001';
+-- add by zhengxiaolian 2022-08-23 模板启用管理页面中文修改 end
+
+-- add by zhengxiaolian 2022-08-23 报表确认页面新建报表去掉审批流程 start
+delete from sys_wfl_business_module a where a.page_id='ReportConfirmManage004' and a.element_id='ReportConfirmManage004_btn_save';
+
+update sys_wfl_business_module a set a.module_id='noneApproval' where a.page_id='ReportConfirmManage004' and a.element_id='ReportConfirmManage004_btn_submit';
+-- add by zhengxiaolian 2022-08-23 报表确认页面新建报表去掉审批流程 end

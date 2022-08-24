@@ -1,7 +1,9 @@
 package com.joyintech.service.disclosure.information.manage.estimatereveal.service;
 
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +51,17 @@ public class EstimateReveal001Service extends CommonExportService<EstimateReveal
         params.put("repTypeArr", repTypeArr);
         
         params.put("status", DisclosureDictCodeList.数据状态_有效.getValue());
-        return super.queryForPageForSelectReturn(page, length, ()-> estimateReveal001Mapper.findPage(params));
+
+        if(StringUtil.isNotEmpty(params.get("exportFlag"))){
+            List<EstimateReveal001Dto> list=estimateReveal001Mapper.findPage(params);
+            Page<EstimateReveal001Dto>result=new Page<EstimateReveal001Dto>();
+            if(CollectionUtils.isNotEmpty(list)){
+                result.setRoot(list);
+            }
+            return result;
+        }else{
+            return super.queryForPageForSelectReturn(page, length, ()-> estimateReveal001Mapper.findPage(params));
+        }
 	}
 
 }
