@@ -83,7 +83,7 @@ $(function () {
 				return;
 			}
 			if(object.filename == "" || object.filename == null){
-				Joyin.error(JoyinUtil.getMessage("报表不能为空"));
+				Joyin.error(JoyinUtil.getMessage("报表上传不能为空"));
 				return;
 			}
 			if(object.startDate == "" || object.startDate == null){
