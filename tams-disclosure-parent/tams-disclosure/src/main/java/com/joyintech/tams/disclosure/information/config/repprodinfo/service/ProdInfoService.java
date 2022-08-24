@@ -250,6 +250,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         dto.setIssueStatus(DictCodeListExt1.发行状态_确认发行.getValue());
+        //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
+        dto.setOpenFreq(StringUtil.isEmpty(dto.getOpenFreq()) ? " ":dto.getOpenFreq());
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
             //保存母产品信息，判断母产品是否已存在
             ProdInfoDto existppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
@@ -323,8 +325,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      */
     public void update(ProdInfoDto dto) {
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+        //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
+        dto.setOpenFreq(StringUtil.isEmpty(dto.getOpenFreq())  ? " ":dto.getOpenFreq());
         prodInfoMapper.updateByPrimaryKeySelective(dto);
-
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
             // 更新母产品信息
             ProdInfoDto ppDto = new ProdInfoDto();
@@ -689,7 +692,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtils.equals(DictCodeListExt5.发行方式_封闭式.getCodeName(), list.get(16))
                     && !StringUtils.equals(DictCodeListExt5.产品运作方式_封闭式净值型.getCodeName(), list.get(19))
                     && !StringUtils.equals(DictCodeListExt5.产品运作方式_封闭式非净值型.getCodeName(), list.get(19))) {
-                message.add("若发行方式为封闭式，产品运作方式只能选择“封闭式净值型”或“封闭式非净值型“。");
+                message.add("发行方式为封闭式，产品运作方式只能选择“封闭式净值型”或“封闭式非净值型“。");
             }
             if (StringUtil.isEmpty(list.get(20))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "是否是客户周期型产品"));
@@ -712,7 +715,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(22))
                     && !StringUtil.isEmpty(list.get(23))) {
-                message.add("是否是指数型产品为是时，产品业绩比较基准不可填。");
+                message.add("指数型产品，产品业绩比较基准必填。");
             }
             if (StringUtil.isEmpty(list.get(24))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "投资性质"));
@@ -732,8 +735,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 if (!StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), list.get(17))) {
                     message.add("产品类型为“现管类产品”时，开放频率为“日开”。");
                 }
-                if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式非净值型.getCodeName(), list.get(19))) {
-                    message.add("产品类型为“现管类产品”时，产品运作方式为“开放式非净值型”。");
+                if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式净值型.getCodeName(), list.get(19))) {
+                    message.add("产品类型为“现管类产品”时，产品运作方式为“开放式净值型”。");
                 }
             }
             if (StringUtil.isEmpty(list.get(0)) && prodMap.containsKey(list.get(0))) {
@@ -831,6 +834,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 entity.setOpenFreq(null);
             }
         }
+        //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
+        entity.setOpenFreq(StringUtil.isEmpty(entity.getOpenFreq()) ? " ":entity.getOpenFreq());
         if (StringUtil.isNotEmpty(list.get(18))) {
             //固定持有天数
             entity.setHoldday(new BigDecimal(list.get(18)));

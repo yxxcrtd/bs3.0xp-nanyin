@@ -358,8 +358,12 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             if (StringUtil.isNotEmpty(rowData.get(5)) && !isDateStr(rowData.get(5))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "自动赎回日"));
             }
+            if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(5))
+                    && DateUtil.compareDate(rowData.get(4), rowData.get(5)) >= 0){
+                message.add("自动赎回日不能小于运作起始日。");
+            }
             if (StringUtil.isNotEmpty(rowData.get(6)) && !StringUtils.isNumeric(rowData.get(6))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "运作起始日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "客户实际持有天数"));
             }
 
             if (prodInfo != null && StringUtils.isNotBlank(prodInfo.getIsPeriod())
