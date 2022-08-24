@@ -18,11 +18,11 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage001Service;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage002Service;
-import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -200,7 +200,7 @@ public class DisProdPlanManage001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param) {
-        return disProdPlanManage001Service.importFile(param);
+    public List<ExcelValidDto> importFile(String fileName) {
+        return disProdPlanManage001Service.importData(fileName);
     }
 }

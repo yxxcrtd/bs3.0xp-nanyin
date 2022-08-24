@@ -10,7 +10,6 @@
 
 package com.joyintech.tams.disclosure.information.config.repprodinfo.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -18,7 +17,6 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -43,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -544,10 +541,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             List<String> list = dataList.get(i);
             if (null == list || list.size() != 27) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1),
-                        this.getMessage("REPORT_COMMON_FILE_E_0030")));
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 27)));
                 break;
             }
-            ProdInfoDto entity = new ProdInfoDto();
             // 验证消息
             List<String> message = new ArrayList<>();
             for (int j = i + 1; j < dataList.size(); j++) {
@@ -565,7 +561,6 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     }
                 }
             }
-            boolean isDate = true;
             // 子产品代码
             if (StringUtil.isEmpty(list.get(0))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
@@ -577,10 +572,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             // 子产品成立日期
             if (StringUtil.isEmpty(list.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品成立日期"));
-                isDate = false;
             } else if (!isDateStr(list.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0011", "子产品成立日期"));
-                isDate = false;
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "子产品成立日期"));
             }
             // 产品状态
             if (StringUtil.isEmpty(list.get(3))) {
@@ -609,49 +602,46 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             // 募集起始日期
             if (StringUtil.isEmpty(list.get(9))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "募集起始日期"));
-                isDate = false;
             } else if (!isDateStr(list.get(9))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0011", "募集起始日期"));
-                isDate = false;
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "募集起始日期"));
             }
             // 募集结束日期
             if (StringUtil.isEmpty(list.get(10))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "募集结束日期"));
             } else if (!isDateStr(list.get(10))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0011", "募集结束日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "募集结束日期"));
             }
             // 产品募集金额
             if (StringUtil.isEmpty(list.get(11))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品募集金额"));
             } else if (!isNumber(list.get(11))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0011", "产品募集金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "产品募集金额"));
             }
             // 产品成立日期
             if (StringUtil.isEmpty(list.get(12))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品成立日期"));
-                isDate = false;
             } else if (!isDateStr(list.get(12))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0011", "产品成立日期"));
-                isDate = false;
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "产品成立日期"));
             }
             // 产品到期日
             if (StringUtil.isEmpty(list.get(13))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品到期日"));
-                isDate = false;
             } else if (!isDateStr(list.get(13))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0011", "产品到期日"));
-                isDate = false;
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "产品到期日"));
             }
             // 募集方式
             if (StringUtil.isEmpty(list.get(14))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "募集方式"));
             }
-            if (isDate && (DateUtil.compareDate(list.get(10),list.get(9)) < 0
+            if (isDateStr(list.get(10)) && isDateStr(list.get(9))
+                    && isDateStr(list.get(2)) && isDateStr(list.get(12))
+                    && (DateUtil.compareDate(list.get(10),list.get(9)) < 0
                     || DateUtil.compareDate(list.get(10),list.get(2)) > 0
                     || DateUtil.compareDate(list.get(10),list.get(12)) > 0)) {
                 message.add("募集结束日期必须大于等于募集起始日期，且必须小于子产品成立日期和产品成立日。");
             }
-            if (isDate && (DateUtil.compareDate(list.get(13),list.get(2)) < 0
+            if (isDateStr(list.get(13)) && isDateStr(list.get(12)) && isDateStr(list.get(2))
+                    && (DateUtil.compareDate(list.get(13),list.get(2)) < 0
                     || DateUtil.compareDate(list.get(13),list.get(12)) < 0 )) {
                 message.add("产品到期日必须大于产品成立日及子产品成立日期。");
             }
