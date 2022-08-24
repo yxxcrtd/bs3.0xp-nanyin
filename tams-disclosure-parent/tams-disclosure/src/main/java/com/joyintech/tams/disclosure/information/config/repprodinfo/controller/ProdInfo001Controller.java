@@ -223,7 +223,7 @@ public class ProdInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("checkImportData")
     public AjaxResult checkImportData(String fileName) {
-        return prodInfoService.checkImportData1(fileName);
+        return prodInfoService.checkImportData(fileName);
     }
 
 
