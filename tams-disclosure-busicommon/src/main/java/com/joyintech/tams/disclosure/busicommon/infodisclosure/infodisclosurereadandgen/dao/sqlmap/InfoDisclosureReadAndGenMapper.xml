@@ -281,5 +281,64 @@
 					        AND T1.CHANGE_DATE = (SELECT MAX(CHANGE_DATE) FROM REP_PROD_INFO_TA WHERE CHANGE_DATE &lt; T.CHANGE_DATE))
 					AND T.LARGE_SH_DATE = #{executeDateStr,jdbcType=DATE}
 	</select>
-	
+
+	<select id="checkWeek" resultType="int">
+		select count(1) from dual
+		where
+		#{executeDateStr,jdbcType=DATE}=(
+		select busi_date from(
+		select a.busi_date ,ROWNUM num from chb_mkt_holiday a
+		where a.busi_date >= (SELECT trunc(#{executeDateStr,jdbcType=DATE},'d' ) FROM dual)
+		and a.busi_date &lt;= (SELECT trunc(#{executeDateStr,jdbcType=DATE},'d') + 7 from dual)
+		and a.is_holiday='0'
+		and a.market_code='04'
+		order by a.busi_date asc)
+		where num=1
+		)
+	</select>
+
+	<select id="checkQuarter" resultType="int">
+		select count(1) from dual
+		where
+				#{executeDateStr,jdbcType=DATE}=(
+		select busi_date from(
+		select a.busi_date,ROWNUM num  from chb_mkt_holiday a
+		where a.busi_date >= (SELECT trunc(#{executeDateStr,jdbcType=DATE},'q') FROM dual)
+		and a.busi_date &lt;= (SELECT trunc(#{executeDateStr,jdbcType=DATE},'q') + 30 from dual)
+		and a.is_holiday='0'
+		and a.market_code='01'
+		order by a.busi_date asc)
+		where num=3
+		)
+	</select>
+
+	<select id="checkHalfYear" resultType="int">
+		select count(1) from dual
+		where
+		#{executeDateStr,jdbcType=DATE}=(
+		select busi_date from(
+		select a.busi_date ,ROWNUM num from chb_mkt_holiday a
+		where a.busi_date >= (SELECT add_months(trunc(#{executeDateStr,jdbcType=DATE},'yyyy'),6) from dual)
+		and a.busi_date &lt;=(SELECT add_months(trunc(#{executeDateStr,jdbcType=DATE},'yyyy'),6) + 10 from dual)
+		and a.is_holiday='0'
+		and a.market_code='01'
+		order by a.busi_date asc)
+		where num=3
+		)
+	</select>
+
+	<select id="checkYear" resultType="int">
+		select count(1) from dual
+		where
+		#{executeDateStr,jdbcType=DATE}=(
+		select busi_date from(
+		select a.busi_date,ROWNUM num  from chb_mkt_holiday a
+		where a.busi_date >= (SELECT trunc(#{executeDateStr,jdbcType=DATE},'yyyy') from dual)
+		and a.busi_date &lt;= (SELECT trunc(#{executeDateStr,jdbcType=DATE},'yyyy') +10 from dual)
+		and a.is_holiday='0'
+		and a.market_code='01'
+		order by a.busi_date asc)
+		where num=3
+		)
+	</select>
 	</mapper>

@@ -87,4 +87,9 @@ public interface InfoDisclosureReadAndGenMapper {
 	 * @return
 	 */
 	int queryMJJETZCount(@Param("executeDateStr")Date executeDateStr);
+
+	int checkWeek(@Param("executeDateStr")Date executeDateStr);
+	int checkQuarter(@Param("executeDateStr")Date executeDateStr);
+	int checkHalfYear(@Param("executeDateStr")Date executeDateStr);
+	int checkYear(@Param("executeDateStr")Date executeDateStr);
 }
