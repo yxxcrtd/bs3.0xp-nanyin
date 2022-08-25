@@ -196,11 +196,13 @@ public class ProdInfo002Controller extends BaseController {
             return result;
         }
 
-        ProdInfoDto existDto = prodInfoService.selectByProdStatus(dto.getProdId());
-        if (existDto != null) {
-            return new AjaxResult("子产品代码已存在", MessageType.错误消息);
+        //NYLCXP-996 只有新增界面点击保存，添加此校验 add by zhouqiang
+        if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {//新增
+            ProdInfoDto existDto = prodInfoService.selectByProdStatus(dto.getProdId());
+            if (existDto != null) {
+                return new AjaxResult("子产品代码已存在", MessageType.错误消息);
+            }
         }
-
         return result;
     }
 
