@@ -377,12 +377,13 @@
                 if(prodType != null && prodType == '01'){
                     $("#profitType").textSelect('setValue', '01');
                     $("#profitType").attr("disabled", true);
+                    $('#openFreq').val('').prop('disabled',true).trigger("change");
                 }
             }
-            else{
+            /*else{
                 $("#openFreq").textSelect('setValue', '99');
                 $("#openFreq").attr("disabled", true);
-            }
+            }*/
         });
 
         // 修改开放频率
