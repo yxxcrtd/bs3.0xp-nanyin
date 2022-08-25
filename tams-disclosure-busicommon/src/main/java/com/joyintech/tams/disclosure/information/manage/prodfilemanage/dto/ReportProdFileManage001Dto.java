@@ -23,7 +23,7 @@ import com.joyintech.tams.disclosure.information.manage.prodfilemanage.validator
 @ValidLogic(targetClass = ReportProdFileManage001Validator.class, groups = {ValidateGroupEdit.class,ValidateGroupDelete.class})
 public class ReportProdFileManage001Dto extends RepProdFileProdInfoDto implements ProcessEntity{
 
-	List<RepInvassetkindDto> investLists;
+	private transient List<RepInvassetkindDto> investLists;
 	
 	/**
      * 编号(投资种类)

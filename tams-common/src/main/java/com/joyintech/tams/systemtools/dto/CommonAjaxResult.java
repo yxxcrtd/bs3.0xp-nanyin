@@ -8,6 +8,8 @@ import com.joyintech.framework.ajax.MessageType;
 public class CommonAjaxResult extends AjaxResult{
 	@Override
     public void setMessageType(MessageType messageType) {
+		//chenxc:update for pinpoint check,2022-08-25
+		//所有非空值，instanceof将始终返回true，不建议修改，可以对MessageType进行继承
     	if(messageType instanceof MessageType){
     		super.setMessageType(messageType);
     	}else{

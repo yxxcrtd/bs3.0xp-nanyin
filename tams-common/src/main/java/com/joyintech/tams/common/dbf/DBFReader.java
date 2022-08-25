@@ -35,7 +35,8 @@ public final class DBFReader {
 
     private DBFReader(File file) {
         if(null == file || !file.exists()) {
-            throw new RuntimeException(String.format("文件%s不存在", file.getPath()));
+        	//chenxc: update for pinpoint check,2022-08-25
+            throw new RuntimeException(String.format("文件%s不存在!"));
         }
         this.file = file;
     }

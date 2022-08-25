@@ -103,7 +103,7 @@ public class SftpUtil {
     @SuppressWarnings("unchecked")
     public static Vector<String> getSFtpFile(String pathname)
         throws SftpException {
-        Vector<String> vector = null;
+        Vector<String> vector = new Vector<>();
         try {
             vector = sftp.ls(pathname);
         }

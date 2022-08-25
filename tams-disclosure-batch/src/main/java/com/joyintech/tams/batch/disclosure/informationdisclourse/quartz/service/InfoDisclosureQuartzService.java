@@ -104,7 +104,9 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService /*impleme
             repTaskDeatilMapper.updateRepTaskDeatil(DisclosureDictCodeList.数据状态_有效.getValue(),DisclosureDictCodeList.数据状态_待处理.getValue());
     	    try {
     	        //如果当前有现成正在运行.则暂停10分钟
-    	        Thread.sleep(1000*60*time);
+    	    	//chenxc: update for pinpoint check on 2022-08-25
+    	    	//int乘法的结果强制转换为long
+    	        Thread.sleep(1000*60*(long)time);
                 logger.info("等待时间结束.查看线程是否可使用");
 
             } catch (InterruptedException e) {

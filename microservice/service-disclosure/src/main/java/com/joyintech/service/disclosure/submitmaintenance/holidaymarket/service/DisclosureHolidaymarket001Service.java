@@ -207,7 +207,8 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
             long ms = 1000;
             int days = (int) (l/(24*60*60*ms));
             for(int i=0;i<days;i++){
-                temp = new Date(d.getTime()+(i*24*60*60*ms));
+            	//chenxc:update for pinpoint check on 2022-08-25
+                temp = new Date(d.getTime()+((long)i*24*60*60*ms));
                 checkDateList.add(temp);
             }
         } catch (ParseException e) {
