@@ -77,7 +77,9 @@ public class ZipFileCmpUtil {
 		File tmp = null;
 		OutputStream os = null;
 		try {
-			tmp = File.createTempFile("lzq", ".tmp", new File("/"));
+			//chenxc: update for pinpoint check on 2022-08-25
+			//绝对路径名的硬编码引用
+			tmp = File.createTempFile("lzq", ".tmp", new File("./"));
 			 os = new FileOutputStream(tmp);
 			int bytesRead = 0;
 			byte[] buffer = new byte[8192];

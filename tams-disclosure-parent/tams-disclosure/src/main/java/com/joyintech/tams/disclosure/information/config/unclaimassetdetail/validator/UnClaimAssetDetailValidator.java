@@ -114,7 +114,7 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
             }
             //校验同一个产品不能有两条数据的生效区间范围有重叠
             //查询产品所有的合作机构数据
-            if (StringUtil.isNotEmpty(dto.getProdId())&&dto.getProdId()!="") {
+            if (StringUtil.isNotEmpty(dto.getProdId()) && dto.getProdId().length()!=0) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("prodId", dto.getProdId());
                 if(StringUtil.isNotEmpty(dto.getEffDateO())){

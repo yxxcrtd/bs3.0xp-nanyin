@@ -261,8 +261,8 @@ public class ReportConfirmManage001Contoller extends BaseController {
         String msg = getMessage("COMMON_I_0001");
         
         for(ReportConfirmManage001Dto dto : listdto) {
-        	if((StringUtil.isEmpty(dto.getSysFilepath()) || dto.getSysFilepath() == "")
-        			&& (StringUtil.isEmpty(dto.getFilepath()) || dto.getFilepath() == "")) {
+        	if((StringUtil.isEmpty(dto.getSysFilepath()) )
+        			&& (StringUtil.isEmpty(dto.getFilepath()))) {
         		AjaxResult result = new AjaxResult();
         		result.setMessage("该报表文件路径不存在: " + dto.getReportName(), MessageType.错误消息);
         		return result;

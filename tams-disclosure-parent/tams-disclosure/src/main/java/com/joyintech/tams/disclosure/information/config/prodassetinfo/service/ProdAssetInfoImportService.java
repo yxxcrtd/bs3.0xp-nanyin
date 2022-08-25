@@ -151,7 +151,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                     ,"穿透前权益类资产占总资产比例","穿透后权益类资产占总资产比例","穿透前商品及金融衍生品类资产占总资产比例",
                     "穿透后商品及金融衍生品类资产占总资产比例","穿透前混合类资产占总资产比例","穿透后混合类资产占总资产比例","生效日","生效截止日期"};
             for (int j = 0; j < list.size(); j++) {
-                if (list.get(j) == null || list.get(j) == "") {
+                if (list.get(j) == null || list.get(j).length()==0) {
                     ExcelValidDto dto = new ExcelValidDto(list.get(j), String.valueOf(i + 2),
                             fildsStr[j] + "不能为空！");
                     excelValidDtolist.add(dto);

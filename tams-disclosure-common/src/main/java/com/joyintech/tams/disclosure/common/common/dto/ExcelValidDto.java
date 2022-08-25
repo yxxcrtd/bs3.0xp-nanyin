@@ -13,7 +13,6 @@ package com.joyintech.tams.disclosure.common.common.dto;
 import java.util.Date;
 
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
 
 /**
  * excel验证结果封装

@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -30,6 +31,10 @@ import java.util.List;
         ValidateGroupDelete.class})
 public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow, ProcessEntity {
     private static final long serialVersionUID = 1L;
+    /**
+     * excle行
+     */
+    private String excelNum;
     /**
      * 操作类型
      */
@@ -98,8 +103,21 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     }
     @PrimaryKey(PrimaryKey.Field.PK_2)
     public String getEffDateStr() {
-        return DateUtil.format(super.getEffDate());
+        if (StringUtil.isNotEmpty(this.effDateStr)) {
+            return this.effDateStr;
+        } else {
+            return DateUtil.format(super.getEffDate());
+        }
     }
+
+    public void setEffDateStr(String effDateStr) {
+        this.effDateStr = effDateStr;
+    }
+
+    public void setEffEndDateStr(String effEndDateStr) {
+        this.effEndDateStr = effEndDateStr;
+    }
+
     public String effDateStr;
     public String effEndDateStr;
 
@@ -122,7 +140,11 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     public String effEndDateOStr;
     @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getEffEndDateStr() {
-        return DateUtil.format(super.getEffEndDate());
+        if (StringUtil.isNotEmpty(this.effEndDateStr)) {
+            return this.effEndDateStr;
+        } else {
+            return DateUtil.format(super.getEffEndDate());
+        }
     }
 
     //    获取数据状态枚举
@@ -188,5 +210,13 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     }
     public String getEffEndDateOStr() {
         return DateUtil.format(this.getEffEndDateO());
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }

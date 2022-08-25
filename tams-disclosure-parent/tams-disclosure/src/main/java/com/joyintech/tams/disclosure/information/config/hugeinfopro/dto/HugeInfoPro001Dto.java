@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.hugeinfopro.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -24,6 +25,10 @@ public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, 
      * 序列
      */
     private static final long serialVersionUID = -2744914232496735261L;
+    /**
+     * excle行
+     */
+    private String excelNum;
 
     /**
      * 操作类型
@@ -120,7 +125,12 @@ public String dealDateStr;
     }
 
     public String getDealDateStr() {
-        return super.getDealDate()==null?null: DateUtil.format(super.getDealDate(), "yyyy-MM-dd");
+        if (StringUtil.isNotEmpty(this.dealDateStr)) {
+            return this.dealDateStr;
+        } else {
+            return super.getDealDate() == null ? null : DateUtil.format(super.getDealDate(), "yyyy-MM-dd");
+        }
+
     }
     private String rptIssueDateStr;
 
@@ -136,5 +146,11 @@ public String dealDateStr;
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
     }
 
+    public String getExcelNum() {
+        return excelNum;
+    }
 
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
+    }
 }

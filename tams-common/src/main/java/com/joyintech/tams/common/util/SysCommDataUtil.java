@@ -19,9 +19,12 @@ public class SysCommDataUtil {
 
     public static String getNameFromDataDict(BaseDictCode dictCode, String itemCode) {
         List<? extends DataDictItem> dataDictItemList = getDataDictItem(dictCode.getValue());
-        return (String)dataDictItemList.stream().filter((item) -> {
-            return StringUtil.equals(item.getItemCode(), itemCode);
-        }).map(DataDictItem::getItemValue).findFirst().orElse(itemCode);
+        if ( dataDictItemList!=null  )
+	        return (String)dataDictItemList.stream().filter((item) -> {
+	            return StringUtil.equals(item.getItemCode(), itemCode);
+	        }).map(DataDictItem::getItemValue).findFirst().orElse(itemCode);
+        else
+        	return "";
     }
 
     public static List<? extends DataDictItem> getDataDictItem(String dictCode) {
@@ -51,8 +54,11 @@ public class SysCommDataUtil {
      */
     public static String getCodeFromDataDictByName(BaseDictCode dictCode, String itemName) {
         List<? extends DataDictItem> dataDictItemList = getDataDictItem(dictCode.getValue());
-        return (String)dataDictItemList.stream().filter((item) -> {
-            return StringUtil.equals(item.getItemValue(), itemName);
-        }).map(DataDictItem::getItemCode).findFirst().orElse(null);
+        if ( dataDictItemList!=null )
+	        return (String)dataDictItemList.stream().filter((item) -> {
+	            return StringUtil.equals(item.getItemValue(), itemName);
+	        }).map(DataDictItem::getItemCode).findFirst().orElse(null);
+        else
+        	return "";
     }
 }

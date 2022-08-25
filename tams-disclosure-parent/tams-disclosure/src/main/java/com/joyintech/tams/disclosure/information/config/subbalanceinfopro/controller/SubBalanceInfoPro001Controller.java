@@ -9,6 +9,7 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.service.SubBalanceInfoPro001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 
 @PageId("SubBalanceInfoPro001")
@@ -119,8 +119,8 @@ public class SubBalanceInfoPro001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
-        return subBalanceInfoPro001Service.importFile(param);
+    public List<ExcelValidDto> importFile(String fileName)  {
+        return subBalanceInfoPro001Service.importData(fileName);
     }
 
 

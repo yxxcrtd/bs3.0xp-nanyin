@@ -2,7 +2,6 @@ package com.joyintech.tams.disclosure.information.config.proelementadj.dao;
 
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import org.springframework.stereotype.Repository;
 

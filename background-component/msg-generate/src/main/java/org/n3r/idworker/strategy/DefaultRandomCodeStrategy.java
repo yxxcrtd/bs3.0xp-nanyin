@@ -137,8 +137,8 @@ public class DefaultRandomCodeStrategy implements RandomCodeStrategy {
     private void generate() {
         for (int i = 0; i < CACHE_CODES_NUM; ++i)
             availableCodes.add(generateOne());
-
-        fileLock.writeObject(codesFilter);
+        if ( fileLock!=null )
+        	fileLock.writeObject(codesFilter);
     }
 
     private int generateOne() {

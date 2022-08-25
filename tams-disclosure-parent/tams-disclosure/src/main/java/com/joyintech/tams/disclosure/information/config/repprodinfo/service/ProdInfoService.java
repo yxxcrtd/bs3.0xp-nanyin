@@ -509,6 +509,12 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         return str.matches(reg);
     }
 
+    //NYLCXP-977 产品募集金额、固定持有天数只能为大于等于0的整数 add by zhouqiang
+    public static boolean isIntegerNumber(String str) {
+        String reg = "^[1-9]\\d*$";
+        return str.matches(reg) || "0".equals(str);
+    }
+
     public List<ExcelValidDto> importData(String fileName) {
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
@@ -617,8 +623,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             // 产品募集金额
             if (StringUtil.isEmpty(list.get(11))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品募集金额"));
-            } else if (!isNumber(list.get(11))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "产品募集金额"));
+            } else if (!isIntegerNumber(list.get(11))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0031", "产品募集金额"));
             }
             // 产品成立日期
             if (StringUtil.isEmpty(list.get(12))) {
@@ -677,8 +683,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 message.add("开放频率为日开且产品类型为净值型，固定持有天数必填。");
             }
 
-            if (StringUtil.isNotEmpty(list.get(18)) && !isNumber(list.get(18))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "固定持有天数"));
+            if (StringUtil.isNotEmpty(list.get(18)) && !isIntegerNumber(list.get(18))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0031", "固定持有天数"));
             }
             if (StringUtil.isEmpty(list.get(19))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品运作方式"));
@@ -714,7 +720,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "是否是指数型产品"));
             }
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(22))
-                    && !StringUtil.isEmpty(list.get(23))) {
+                    && StringUtil.isEmpty(list.get(23))) {
                 message.add("指数型产品，产品业绩比较基准必填。");
             }
             if (StringUtil.isEmpty(list.get(24))) {

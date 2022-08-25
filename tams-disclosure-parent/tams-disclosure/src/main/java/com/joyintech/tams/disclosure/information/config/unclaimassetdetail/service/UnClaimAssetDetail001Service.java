@@ -1,8 +1,9 @@
 package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -11,24 +12,23 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -109,158 +109,118 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
         return this.selectForPage(selectParam);
     }
 
-    /**
-     * 导入check
-     * @param fileName
-     * @return
-     */
     public AjaxResult checkImportData(String fileName) {
-        List<String> findList =  unClaimAssetDetailMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-//        List<List<String>> objects = com.joyintech.tams.systemtools.util.ExcelUtil.getTempList(fileName);
+        AjaxResult webResult = new AjaxResult();
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
-        List<List<String>> objects = com.joyintech.tams.systemtools.util.ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
+        List<List<String>> tempList = com.joyintech.tams.systemtools.util.ExcelUtil.getTempList(fileName);
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
         }
-        String totalMsg = "";
-        List<List<String>> jsonArrays = new ArrayList<>();
-        // 重复数据
-        int repeatNum = 0;
-        if (objects.size() <= 1) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
+        if (null == tempList.get(0) || tempList.get(0).size() != 9) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 9), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = tempList.subList(1, tempList.size());
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            if (dataList.size() > 50000) {
+                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                return webResult;
+            }
+            List<UnClaimAssetDetailDto> entities = this.convertToBean(dataList);
+            List<UnClaimAssetDetailDto> data = this.selectUnClaimAssetByKey(entities);
+            if (data != null && data.size() > 0) {
+                Map<String, List<UnClaimAssetDetailDto>> map = entities.stream().collect(
+                        JoyinCollectors.groupingBy(x ->
+                                x.getProdId()
+                                        + GlobalConstant.UNDER_LINE + x.getEffDateStr()
+                                        + GlobalConstant.UNDER_LINE + x.getEffEndDateStr()
+                        ));
+                // 将序号放入list中
+                List<String> excelNumList = new ArrayList<>();
+                List<Integer> excelNumIntList = new ArrayList<>();
+                for (UnClaimAssetDetailDto dto : data) {
+                    List<UnClaimAssetDetailDto> listTemp = map.get(dto.getProdId()
+                            + GlobalConstant.UNDER_LINE + dto.getEffDateStr()
+                            + GlobalConstant.UNDER_LINE + dto.getEffEndDateStr());
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+                }
+                // 将list进行排序，并转化为string
+                Collections.sort(excelNumIntList);
+                for (Integer rowNo : excelNumIntList) {
+                    excelNumList.add(String.valueOf(rowNo));
+                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
+            } else {
+                // 防止在进行导入前check时进行了两次的弹框
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            }
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 9) {
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要9列。");
-                AjaxResult wr = new AjaxResult();
-                wr.setData(resultMap);
-                return wr;
-            }else {
-                StringBuilder returnerrorMsg = new StringBuilder("");
-                for (int i = 1; i < objects.size(); i++) {
-                    StringBuilder errorMsg = new StringBuilder("");
-                    List<String> rowData = objects.get(i);
-                    if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
-                        errorMsg.append("产品主代码 必填！");
-                    }
-                    else if(!findList.contains(rowData.get(0).trim())){
-                        errorMsg.append("产品主代码 在产品基本信息表中没有维护！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
-                        errorMsg.append("融资顾客 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(2).trim())){
-                        errorMsg.append("项目名称 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
-                        errorMsg.append("剩余融资期限 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
-                        errorMsg.append("到期收益分配 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
-                        errorMsg.append("交易结构 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
-                        errorMsg.append("风险状况 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(7).trim())){
-                        errorMsg.append("生效日 必填！");
-                    }else if(!this.isDateStr(rowData.get(7).trim())){
-                        errorMsg.append("生效日 格式不正确！");
-                    }else if (rowData.get(7).compareTo(DateUtil.format(DateUtil.platDateFromCache())) < 0){
-                        errorMsg.append("生效日 要大于等于平台日！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(8).trim())){
-                        errorMsg.append("生效截止日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(8).trim())){
-                        errorMsg.append("生效截止日期 格式不正确！");
-                    }else if (rowData.get(8).compareTo(DateUtil.format(DateUtil.platDateFromCache())) < 0){
-                        errorMsg.append("生效截止日期 要大于等于平台日！");
-                    }else if (rowData.get(8).compareTo(rowData.get(7)) < 0){
-                        errorMsg.append("生效截止日期 要大于等于生效日！");
-                    }
-//                    else if(StringUtil.isNotEmpty(rowData.get(0))){
-//                        List<UnClaimAssetDetailDto> dtos = unClaimAssetDetailMapper.selectNostdByProdId(rowData.get(0).trim());
-//                        for (UnClaimAssetDetailDto dto : dtos) {
-//                            if(!((DateUtil.compareDate(rowData.get(7),dto.getEffDateStr())<0 && DateUtil.compareDate(rowData.get(8),dto.getEffDateStr())<0)
-//                                    || (DateUtil.compareDate(rowData.get(7),dto.getEffEndDateStr())>0 && DateUtil.compareDate(rowData.get(8),dto.getEffEndDateStr())>0))){
-//                                errorMsg.append("生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyy-MM-dd")
-//                                                +"-"+DateUtil.format(dto.getEffEndDate(),"yyyy-MM-dd"));
-//                                break;
-//                            }
-//                        }
-//                    }
-                    if (StringUtil.isNotEmpty(errorMsg.toString())){
-                        errorMsg.append("<br />");
-                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
-                    }
-                }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("errorMsg", returnerrorMsg.toString());
-                    AjaxResult wr = new AjaxResult();
-                    wr.setData(resultMap);
-                    return wr;
-                }
-                //第一行【i=0】为表头，所以不操作。
-                for (int i = objects.size() - 1; i >= 1; i--) {
-                    List<String> list1 = objects.get(i);
-                    Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
-                        List<String> list2 = objects.get(k);
-                        //产品登记编码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))&&(StringUtil.equals(list1.get(7), list2.get(7)))&&(StringUtil.equals(list1.get(8), list2.get(8)))) {
-                            isRepeat = true;
-                            break;
-                        }
-                    }
-                    if (isRepeat){
-                        repeatNum++;
-                    }else {
-                        jsonArrays.add(list1);
-                    }
-                }
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        return webResult;
+    }
+
+    /**
+     * excel数据转为java对象
+     * @return
+     */
+    private List<UnClaimAssetDetailDto> convertToBean(List<List<String>> dataList) {
+        List<UnClaimAssetDetailDto> entities = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list =  dataList.get(i);
+            UnClaimAssetDetailDto entity = new UnClaimAssetDetailDto();
+            entity.setProdId(list.get(0));
+            entity.setEffDateStr(list.get(7));
+            entity.setEffEndDateStr(list.get(8));
+            entity.setExcelNum(String.valueOf(i+2));
+            entities.add(entity);
+        }
+        return entities;
+    }
+
+    /**
+     * 分批查询
+     * @param dataList
+     * @return
+     */
+    private List<UnClaimAssetDetailDto> selectUnClaimAssetByKey(List<UnClaimAssetDetailDto> dataList) {
+        int maxDataCountOneTime = 1000;
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            return unClaimAssetDetailMapper.selectUnClaimAssetList(dataList);
+        }
+        // 导入大于1000时，返回值
+        List<UnClaimAssetDetailDto> equtiyList = new ArrayList<>();
+
+        List<UnClaimAssetDetailDto> newDataList = new ArrayList<>(dataList);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        List<UnClaimAssetDetailDto> listTemp;
+        for (int i = 0; i < part; i++ ) {
+            listTemp = unClaimAssetDetailMapper.selectUnClaimAssetList(newDataList.subList(0, maxDataCountOneTime));
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            listTemp = unClaimAssetDetailMapper.selectUnClaimAssetList(newDataList);
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
             }
         }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，请检查文件！";
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("errorMsg", totalMsg);
-        }
-        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
-        String tempList = (String) resultMap.get("correctData");
-        UnClaimAssetDetailDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<UnClaimAssetDetailDto> selectedItem = dto.getSelectedItem();
-        List<UnClaimAssetDetailDto>  existData = new ArrayList<>();
-        for (UnClaimAssetDetailDto temp:selectedItem) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("prodId",temp.getProdId());
-            map.put("effDate",DateUtil.format(temp.getEffDate()));
-            map.put("effEndDate",DateUtil.format(temp.getEffEndDate()));
-            map.put("dataStatus",temp.getDataStatus());
-            if (unClaimAssetDetail002Service.selectDetailList(map).size()>0 && StringUtil.equals(unClaimAssetDetail002Service.selectDetailList(map).get(0).getDataStatus(),"E")){
-                existData.add(temp);
-            }
-        }
-        if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
-        }
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
+        return equtiyList;
     }
 
     public static boolean isDateStr(String str) {
@@ -274,371 +234,147 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
         }
     }
 
-    public UnClaimAssetDetailDto getValNetAssetQuotationInfoListData(String tempList) {
-        UnClaimAssetDetailDto dto = new UnClaimAssetDetailDto();
-        // 非标明细信息列表
-        List<UnClaimAssetDetailDto> unClaimAssetDetailDtoList = new ArrayList<>();
-        dto.setSelectedItem(unClaimAssetDetailDtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
-            if (StringUtil.isNotEmpty(rowData.get(0))) {
-                unClaimAssetDetailDto.setProdId(rowData.get(0).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                unClaimAssetDetailDto.setFinancier(rowData.get(1).toString());
-//                unClaimAssetDetailDto.setBalanceDate(DateUtil.parse(rowData.get(1).toString()));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                unClaimAssetDetailDto.setProjectName(rowData.get(2).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                unClaimAssetDetailDto.setRemFinancingPeriod(rowData.get(3).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(4))) {
-                unClaimAssetDetailDto.setIncomeDistribute(rowData.get(4).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(5))) {
-                unClaimAssetDetailDto.setTrdConstruct(rowData.get(5).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(6))) {
-                unClaimAssetDetailDto.setRiskInfo(rowData.get(6).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(7))) {
-                unClaimAssetDetailDto.setEffDate(DateUtil.parse(rowData.get(7).toString()));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(8))) {
-                unClaimAssetDetailDto.setEffEndDate(DateUtil.parse(rowData.get(8).toString()));
-            }
-            unClaimAssetDetailDtoList.add(unClaimAssetDetailDto);
-        }
-        dto.setSelectedItem(unClaimAssetDetailDtoList);
-        return dto;
-    }
-    /**
-     * excel导入功能
-     *
-     * @param fileName 文件名称
-     * @return 检验list
-     * @throws Exception 异常
-     * @see
-     * @since 1.0
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public List<ExcelValidDto> importData(String fileName) throws Exception {
-        // 获取平台日期
-        Date platDate = DateUtil.platDateFromCache()==null?new Date():DateUtil.platDateFromCache();
-        ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName),
-                null);
-        List<List<String>> dataList = excelUtil.readToList(0, 0, 0);
-        List<ExcelValidDto> excelValidDtolist=new ArrayList<>();
-        if(dataList.size()<1){
-            excelValidDtolist.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-                    "导入文件为空！"));
-            return excelValidDtolist;
-        }
-        if(null == dataList.get(0) || dataList.get(0).size() != 9){
-            excelValidDtolist.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(1),
-                    "导入文件模板不正确，表头应该为9列！"));
-            return excelValidDtolist;
-        }
-        for (int i = 1; i < dataList.size(); i++) {
-            List<String> list = dataList.get(i);
-            //字段非空检查
-            if (!StringUtil.isNotEmpty(list.get(0))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
-                        "产品主代码 不能为空！"));
-            }else{
-                //判断产品主代码是否存在
-                if(!checkProdIdExist(list.get(0).trim())){
-                    excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
-                            "产品主代码未在系统中维护！"));
-                }
-            }
-            if(!StringUtil.isNotEmpty(list.get(1))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(1), String.valueOf(i+1),
-                        "融资客户 不能为空！"));
-            }
-            if (!StringUtil.isNotEmpty(list.get(2))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(2), String.valueOf(i+1),
-                        "项目名称 不能为空！"));
-            }
-            if (!StringUtil.isNotEmpty(list.get(3))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
-                        "剩余融资期限 不能为空！"));
-            }
-            if (!StringUtil.isNotEmpty(list.get(4))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(4), String.valueOf(i+1),
-                        "到期收益分配 不能为空！"));
-            }
-            if (!StringUtil.isNotEmpty(list.get(5))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(5), String.valueOf(i+1),
-                        "交易结构 不能为空！"));
-            }
-            if (!StringUtil.isNotEmpty(list.get(6))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(6), String.valueOf(i+1),
-                        "风险状况 不能为空！"));
-            }
-            if (!StringUtil.isNotEmpty(list.get(7))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(7), String.valueOf(i+1),
-                        "生效日 不能为空！"));
-            }else{
-                //判断日期格式是否正确
-                if(!DateUtil.isDateStr(list.get(7).trim())){
-                    excelValidDtolist.add(new ExcelValidDto(list.get(7), String.valueOf(i+1),
-                            "生效日格式不正确，正确格式：yyyy-MM-dd！"));
-                }else{
-                    //验证生效日是否大于等于平台日期
-                    if (DateUtil.compareDate(platDate,DateUtil.parse(list.get(7).trim()))>0){
-                        excelValidDtolist.add(new ExcelValidDto(list.get(7), String.valueOf(i+1),
-                                "生效日要大于等于平台日期！"));
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<UnClaimAssetDetailDto> entities = new ArrayList<>(dataList.size());
+            List<com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("prodId", item.getProdId());
+                    map.put("effDate", item.getEffDateStr());
+                    map.put("effEndDate", item.getEffEndDateStr());
+                    map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
+                    item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                    if (unClaimAssetDetail002Service.selectDetailList(map).size() > 0) {
+                        unClaimAssetDetailMapper.updateImport(item);
+                    } else {
+                        item.setUpdateTime(DateUtil.now());
+                        item.setUpdateUser(CommonUtil.getUserName());
+                        int num = unClaimAssetDetailMapper.selectCount(map);
+                        item.setNostdAssetId(IDGenerator.generate(36));
+                        item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                        item.setProjectNo(String.valueOf(num + 1));
+                        unClaimAssetDetailMapper.insert(item);
                     }
-                }
+                });
             }
-            if (!StringUtil.isNotEmpty(list.get(8))){
-                if (DateUtil.compareDate(platDate,DateUtil.parse(list.get(8).trim()))>0){
-                    excelValidDtolist.add(new ExcelValidDto(list.get(8), String.valueOf(i+1),
-                            "生效截止日期 不能为空！"));
-                }
-            }else{
-                //判断日期格式是否正确
-                if(!DateUtil.isDateStr(list.get(8).trim())){
-                    excelValidDtolist.add(new ExcelValidDto(list.get(8), String.valueOf(i+1),
-                            "生效截止日期格式不正确，正确格式：yyyy-MM-dd！"));
-                }else{
-                    Date effEndDate=DateUtil.parse(list.get(8).trim());
-                    //生效截止日期是否大于等于平台日期
-                    if (DateUtil.compareDate(platDate,effEndDate)>0){
-                        excelValidDtolist.add(new ExcelValidDto(list.get(8), String.valueOf(i+1),
-                                "生效截止日期要大于等于平台日期！"));
-                    }
-                    if(DateUtil.isDateStr(list.get(7).trim())){
-                        Date effDate=DateUtil.parse(list.get(7).trim());
-                        if (DateUtil.compareDate(effDate,effEndDate)>0) {
-                            excelValidDtolist.add(new ExcelValidDto(list.get(8), String.valueOf(i+1),
-                                    "生效截止日期要大于等于生效日！"));
-                        }
-                        //生效日、生效截止日格式都正确，通过产品主代码查询系统中该产品已有的生效区间，校验生效区间是否有重叠
-                        if(StringUtil.isNotEmpty(list.get(0))){
-                            List<UnClaimAssetDetailDto> dtos = unClaimAssetDetailMapper.selectNostdByProdId(list.get(0).trim());
-                            for (UnClaimAssetDetailDto dto : dtos) {
-                                if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
-                                        || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
-                                    excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
-                                            "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
-                                                    +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
         }
-        if(StringUtil.isEmptyList(excelValidDtolist)){
-            //所有数据通过校验后，转换成bean,按产品分组，校验导入文件中同一产品的生效区间是否有重叠
-            List<UnClaimAssetDetailDto> unClaimAssetDetailDtos = this.converToBean(dataList);
-            if(unClaimAssetDetailDtos!=null && unClaimAssetDetailDtos.size()>=2){
-                Map<String, List<UnClaimAssetDetailDto>> map = unClaimAssetDetailDtos.stream().collect(Collectors.groupingBy(UnClaimAssetDetailDto::getProdId));
-                for (String key : map.keySet()) {
-                    List<UnClaimAssetDetailDto> unClaimAssetDetailDtoList = map.get(key);
-                    if(unClaimAssetDetailDtoList.size()>1){
-                        for(int m=0;m<unClaimAssetDetailDtoList.size()-1;m++){
-                            UnClaimAssetDetailDto dto1 = unClaimAssetDetailDtoList.get(m);
-                            for(int n=m+1;n<unClaimAssetDetailDtoList.size();n++){
-                                UnClaimAssetDetailDto dto2 = unClaimAssetDetailDtoList.get(n);
-                                if(!((DateUtil.compareDate(dto2.getEffDate(),dto1.getEffDate())<0 && DateUtil.compareDate(dto2.getEffEndDate(),dto1.getEffDate())<0)
-                                        || (DateUtil.compareDate(dto2.getEffDate(),dto1.getEffEndDate())>0 && DateUtil.compareDate(dto2.getEffEndDate(),dto1.getEffEndDate())>0))){
-                                    excelValidDtolist.add(new ExcelValidDto(key, StringUtil.EMPTY,
-                                            "文件中同一产品生效区间有重叠！"));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (excelValidDtolist.isEmpty()) {
-            List<UnClaimAssetDetailDto> equityList = converToBean(dataList);
-            this.insertBtachEquityInfoByPart(equityList);
-        }
-
-        return excelValidDtolist;
     }
 
-
-    public AjaxResult importFile(Map<String, Object> param) {
-        AjaxResult ajaxResult = new AjaxResult();
-        Date sysDate = DateUtil.platDateFromCache();
-        String tempList = (String) param.get("tempList");
-        UnClaimAssetDetailDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<UnClaimAssetDetailDto> selectedItem = dto.getSelectedItem();
-        List<UnClaimAssetDetailDto>  existData = new ArrayList<>();
-        List<UnClaimAssetDetailDto>  newData = new ArrayList<>();
-//        for (SubBalanceInfoPro001Dto temp:selectedItem) {
-//            //数据已存在 【校验产品主代码+科目号+余额日期 相同】，做更新操作。
-//            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getSubjectNo()))){
-//                existData.add(temp);
-//            }else {
-//                temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-//                temp.setUpdateTime(sysDate);
-//                temp.setUpdateUser(CommonUtil.getUserName());
-//                newData.add(temp);
-//            }
-//        }
-
-        for (UnClaimAssetDetailDto temp:selectedItem) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("prodId",temp.getProdId());
-            map.put("effDate",DateUtil.format(temp.getEffDate()));
-            map.put("effEndDate",DateUtil.format(temp.getEffEndDate()));
-            map.put("dataStatus",temp.getDataStatus());
-            if (unClaimAssetDetail002Service.selectDetailList(map).size()>0 && StringUtil.equals(unClaimAssetDetail002Service.selectDetailList(map).get(0).getDataStatus(),"E")){
-                existData.add(temp);
-            }
-            else {
-                temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                temp.setUpdateTime(sysDate);
-                temp.setUpdateUser(CommonUtil.getUserName());
-                newData.add(temp);
-            }
-        }
-        //更新操作
-        for (UnClaimAssetDetailDto existDataDto : existData) {
-//            unClaimAssetDetail002Service.doComplete(existDataDto,OperationType.MODIFY);
-            existDataDto.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            unClaimAssetDetailMapper.updateImport(existDataDto);
-        }
-        //插入操作
-        for (UnClaimAssetDetailDto newDataDto : newData
-        ) {
-//            unClaimAssetDetail002Service.doComplete(newDataDto,OperationType.NEW);
-            int num = unClaimAssetDetailMapper.selectCount();
-            newDataDto.setNostdAssetId(IDGenerator.generate(36));
-            newDataDto.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            newDataDto.setProjectNo(String.valueOf(num+1));
-            unClaimAssetDetailMapper.insert(newDataDto);
-        }
-
-        ajaxResult.setStatuCode(HttpStatus.OK.value());
-        return ajaxResult;
-    }
-
-    /**
-     * 根据产品代码查询该产品的所有非标资产信息
-     * @param prodId
-     * @U
-     */
-    private boolean selectNostdByProdId(String prodId) {
-        List<UnClaimAssetDetailDto> unClaimAssetDetailList=unClaimAssetDetailMapper.selectNostdByProdId(prodId);
-        if(StringUtil.isEmptyList(unClaimAssetDetailList)){
-            return false;
-        }
-        return true;
-    }
-    /**
-     * 检查导入文件中的产品主代码是否存在
-     * @param prodId
-     * @return
-     */
-    private boolean checkProdIdExist(String prodId) {
-        return unClaimAssetDetailMapper.selectByProdId(prodId)>0;
-    }
-
-    /**
-     * list转换为Bean
-     *
-     * @param dataList excel解析后的list
-     * @return List<mstMarketCalendarInfo001Dto>
-     * @throws ParseException 抛出异常
-     * @see
-     * @since 1.0
-     */
-    private List<UnClaimAssetDetailDto> converToBean(List<List<String>> dataList)
-            throws ParseException {
-        // 返回的list定义
-        List<UnClaimAssetDetailDto> returnInfoList = new ArrayList<UnClaimAssetDetailDto>();
-        UnClaimAssetDetailDto dto = null;
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<UnClaimAssetDetailDto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        List<String> findList =  unClaimAssetDetailMapper.getProdId(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         for (int i = 0; i < dataList.size(); i++ ) {
-            List<String> list = dataList.get(i);
-            dto = new UnClaimAssetDetailDto();
-            dto.setNostdAssetId(IDGenerator.generate(36));
-            dto.setProdId(list.get(0).trim());
-            dto.setFinancier(list.get(1).trim());
-            dto.setProjectName(list.get(2).trim());
-            dto.setRemFinancingPeriod(list.get(3).trim());
-            dto.setIncomeDistribute(list.get(4).trim());
-            dto.setTrdConstruct(list.get(5).trim());
-            dto.setRiskInfo(list.get(6).trim());
-            dto.setEffDate(DateUtil.parse(list.get(7).trim()));
-            dto.setEffEndDate(DateUtil.parse(list.get(8).trim()));
-            dto.setCreateDept(CommonUtil.getDeptCode());
-            dto.setCreateUser(CommonUtil.getUserName());
-            dto.setUpdateUser(CommonUtil.getUserName());
-            dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
-            dto.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-
-            returnInfoList.add(dto);
-        }
-        return returnInfoList;
-    }
-
-
-
-
-    /**
-     * 分批次执行insertBtachEquityInfo
-     *
-     * @param dataList 数据
-     * @see
-     * @since 1.0
-     */
-    private void insertBtachEquityInfoByPart(List<UnClaimAssetDetailDto> dataList) {
-        if (StringUtil.isEmptyList(dataList)) {
-            return;
-        }
-        else {
-
-            int maxDataCountOneTime = 20;
-            int dataCount = dataList.size();
-            if (dataCount <= maxDataCountOneTime) {
-                insertBtachEquityInfo(dataList);
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 9) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 9)));
+                break;
+            }
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (!StringUtil.isNotEmpty(rowData.get(0))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
+            } else if (!findList.contains(rowData.get(0))){
+                message.add("产品主代码在产品基本信息表中没有维护。");
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(1))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "融资顾客"));
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(2))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "项目名称"));
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(3))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "剩余融资期限"));
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(4))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "到期收益分配"));
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(5))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "交易结构"));
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(6))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "风险状况"));
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(7))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效日"));
+            }else if(!isDateStr(rowData.get(7))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效日"));
+            } else if (rowData.get(7).compareTo(DateUtil.format(DateUtil.platDateFromCache())) < 0){
+                message.add("生效日要大于等于平台日。");
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(8))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效截止日期"));
+            } else if (!isDateStr(rowData.get(8))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效截止日期"));
+            } else if (rowData.get(8).compareTo(DateUtil.format(DateUtil.platDateFromCache())) < 0){
+                message.add("生效截止日期要大于等于平台日。");
+            } else if (isDateStr(rowData.get(7)) && rowData.get(8).compareTo(rowData.get(7)) < 0){
+                message.add("生效截止日期要大于等于生效日。");
+            }
+            if (map.containsKey(rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(7)
+                    + GlobalConstant.UNDER_LINE + rowData.get(8))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            }
+            map.put(rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(7)
+                    + GlobalConstant.UNDER_LINE + rowData.get(8), rowData);
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(7)
+                        + GlobalConstant.UNDER_LINE + rowData.get(8),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             else {
-                List<UnClaimAssetDetailDto> newDataList = new ArrayList<UnClaimAssetDetailDto>();
-                newDataList.addAll(dataList);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    insertBtachEquityInfo(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    insertBtachEquityInfo(newDataList);
-                }
+                entities.add(this.convertToEntity(rowData));
             }
         }
+        return checkResult;
     }
 
-
-    /**
-     * 插入数据 <功能详细描述>
-     *
-     * @param list 参数
-     * @see
-     * @since 1.0
-     */
-    private void insertBtachEquityInfo(List<UnClaimAssetDetailDto> list) {
-        unClaimAssetDetailMapper.insertBtachEquityInfo(list);
+    private UnClaimAssetDetailDto convertToEntity(List<String> rowData) {
+        UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            unClaimAssetDetailDto.setProdId(rowData.get(0));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            unClaimAssetDetailDto.setFinancier(rowData.get(1));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            unClaimAssetDetailDto.setProjectName(rowData.get(2));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            unClaimAssetDetailDto.setRemFinancingPeriod(rowData.get(3));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(4))) {
+            unClaimAssetDetailDto.setIncomeDistribute(rowData.get(4));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(5))) {
+            unClaimAssetDetailDto.setTrdConstruct(rowData.get(5));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(6))) {
+            unClaimAssetDetailDto.setRiskInfo(rowData.get(6));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(7))) {
+            unClaimAssetDetailDto.setEffDate(DateUtil.parse(rowData.get(7)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(8))) {
+            unClaimAssetDetailDto.setEffEndDate(DateUtil.parse(rowData.get(8)));
+        }
+        return unClaimAssetDetailDto;
     }
-
-
-
-
-
-
 }

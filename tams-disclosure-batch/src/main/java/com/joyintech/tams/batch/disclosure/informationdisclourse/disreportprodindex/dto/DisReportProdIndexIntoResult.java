@@ -36,7 +36,7 @@ public class DisReportProdIndexIntoResult extends NeedToWriteEntity implements S
 	/**
 	 * 产品指标数据
 	 */
-	private List<DisReportProdIndexResult> repProdIndexList = new ArrayList<DisReportProdIndexResult>();
+	private transient List<DisReportProdIndexResult> repProdIndexList = new ArrayList<DisReportProdIndexResult>();
 
 	/**
      * 参数配置
