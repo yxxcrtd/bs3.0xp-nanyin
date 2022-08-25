@@ -235,7 +235,10 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                     } else if (!StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1))
                             && !StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1))
                             && !StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1))
-                            && !StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1))) {
+                            && !StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1))
+                            && !StringUtils.equals("1-份额分红后净值为1", rowData.get(1))
+                            && !StringUtils.equals("2-到期兑付", rowData.get(1))
+                               ) {
                         errorMsg.append("分红方式值 不正确！");
                     }else if (StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1).toString())
                             || StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1).toString())) {
