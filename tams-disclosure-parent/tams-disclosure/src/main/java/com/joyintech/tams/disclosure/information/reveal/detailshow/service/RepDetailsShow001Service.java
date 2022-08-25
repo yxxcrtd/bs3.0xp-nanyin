@@ -515,11 +515,15 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     public AjaxResult dataCheck(Map<String, Object> param){
         AjaxResult ajaxResult=new AjaxResult();
 
-        String restltStr=poiReportService.dataCheck(param);
-        if(StringUtil.isNotEmpty(restltStr)){
+        Map<String, Object> resultMap=poiReportService.dataCheck(param);
+        if(StringUtil.isNotEmpty(resultMap.get("resultSb"))){
             //数据有问题
-            ajaxResult.setMessage(restltStr,MessageType.确认消息);
-            ajaxResult.setData("data");
+            if(StringUtil.isNotEmpty(resultMap.get("flag"))){
+                ajaxResult.setMessage(resultMap.get("resultSb").toString(),MessageType.提示消息);
+            }else{
+                ajaxResult.setMessage(resultMap.get("resultSb").toString(),MessageType.确认消息);
+                ajaxResult.setData("data");
+            }
         }
 
         return ajaxResult;
