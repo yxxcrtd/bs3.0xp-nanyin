@@ -107,6 +107,7 @@
             <foreach collection="list" item="item" open="(plan.PROD_ID,to_char(plan.OPEN_END_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
                 (#{item.prodId},#{item.openEndDateStr})
             </foreach>
+            and plan.DATA_STATUS = 'E'
         </where>
     </select>
 </mapper>
