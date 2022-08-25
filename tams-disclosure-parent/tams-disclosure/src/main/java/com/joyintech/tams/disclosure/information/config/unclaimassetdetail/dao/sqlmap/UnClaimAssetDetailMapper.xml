@@ -238,7 +238,21 @@
 		and PROD_ID=#{prodId,jdbcType=VARCHAR}
     </select>
     <select id="selectCount" resultType="int">
-       select count(*) from DIS_NOSTD_CREDITOR where DATA_STATUS='E'
+       select count(*) from DIS_NOSTD_CREDITOR
+        <where>
+            <if test="prodId != null and prodId != ''">
+                AND DNDC.PROD_ID = #{prodId,jdbcType=VARCHAR}
+            </if>
+            <if test="effDate != null ">
+                AND DNDC.EFF_DATE = TO_DATE(#{effDate,jdbcType=DATE},'YYYY-MM-DD')
+            </if>
+            <if test="effEndDate != null">
+                AND DNDC.EFF_END_DATE = TO_DATE(#{effEndDate,jdbcType=DATE},'YYYY-MM-DD')
+            </if>
+            <if test="dataStatus != null and dataStatus != ''">
+                AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+            </if>
+        </where>
     </select>
     <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
@@ -479,5 +493,17 @@
         </foreach>
     </delete>
 
+    <select id="selectUnClaimAssetList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+        select
+            A.PROD_ID,
+            to_char(A.EFF_DATE,'yyyy-mm-dd') effDateStr,
+            to_char(A.EFF_END_DATE,'yyyy-mm-dd') effEndDateStr
+        from DIS_NOSTD_CREDITOR A
+        <where>
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFF_DATE,'yyyy-mm-dd'),to_char(A.EFF_END_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
+                (#{item.prodId},#{item.effDateStr},#{item.effEndDateStr})
+            </foreach>
+        </where>
+    </select>
 
 </mapper>

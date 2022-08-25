@@ -106,11 +106,11 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
         param.put("status",DictCodeListExt1.维护数据状态_有效.getValue());
         return unClaimAssetDetailMapper.checkNostdExistByProdId(param);
     }
-
-
-
-
-    public int selectCount() {
-        return unClaimAssetDetailMapper.selectCount();
-    }
+//
+//
+//
+//
+//    public int selectCount() {
+//        return unClaimAssetDetailMapper.selectCount();
+//    }
 }

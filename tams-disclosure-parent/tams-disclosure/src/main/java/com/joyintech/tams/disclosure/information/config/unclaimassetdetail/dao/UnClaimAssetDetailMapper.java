@@ -6,8 +6,6 @@ import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.U
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -116,9 +114,11 @@ public interface UnClaimAssetDetailMapper  {
     int updateByKey(UnClaimAssetDetailDto record);
 
 
-    int selectCount();
+    int selectCount(Map<String, Object> map);
 
     int updateImport(UnClaimAssetDetailDto existDataDto);
 
     List<SelectOptionDto> getProdId(Map<String, Object> map);
+
+    List<UnClaimAssetDetailDto> selectUnClaimAssetList(@Param("list") List<UnClaimAssetDetailDto> list);
 }
