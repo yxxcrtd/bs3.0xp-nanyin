@@ -490,4 +490,11 @@ public class RepDetailsShow001Contoller extends BaseController {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		return repDetailsShow001Service.dateCheck(param);
 	}
+
+	@ResponseBody
+	@RequestMapping("statusCheck")
+	public AjaxResult statusCheck(@RequestBody Map<String, Object> param) {
+		repDetailsShow001Service.collateParams(param);
+		return repDetailsShow001Service.statusCheck(param);
+	}
 }

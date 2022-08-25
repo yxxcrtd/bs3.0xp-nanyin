@@ -26,6 +26,8 @@ $(function () {
 
 	var previewFlag=false;
 
+	var statusFlag=true;
+
 	var editFlag=true;
 
 	var backParam;
@@ -567,6 +569,17 @@ $(function () {
 	    }else{
 	    	params['uri'] = modelId;
 	    	params['repid']=repId;
+			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/statusCheck', params, function(result2) {
+				console.log(result2);
+				if(result2){
+					if(result2.data){
+						statusFlag=false
+					}else{
+						statusFlag=true
+					}
+				}
+			});
+
 			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result1) {
 				console.log(result1);
 				if(result1){
@@ -767,6 +780,11 @@ $(function () {
 			Joyin.alert('生成之前请先预览报表！',2);
 			return;
 		}
+		if(!statusFlag){
+			Joyin.alert('启用状态为初始化的报表,无法生成该报表',2);
+			return;
+		}
+
 		if(!editFlag){
 			Joyin.alert('该单据报表校验不通过，请检查数据或编辑后生成',2);
 			return;

@@ -548,6 +548,18 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         return null;
     }
 
+    public AjaxResult statusCheck(Map<String, Object> param) {
+        AjaxResult ajaxResult=new AjaxResult();
+
+        String restltStr=poiReportService.statusCheck(param);
+        if(StringUtil.isNotEmpty(restltStr)){
+            //数据有问题
+            ajaxResult.setMessage(restltStr,MessageType.确认消息);
+            ajaxResult.setData("data");
+        }
+        return ajaxResult;
+    }
+
 
     public RepReveal getRepReveal(Map<String, Object> param) {
     	return poiReportService.getRepReveal(param);
