@@ -241,9 +241,10 @@
                     <div class="form-inline-wrap">
                         <label class="layui-form-label form-label-wrap">产品募集金额</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="number" name="raiseAmt" id="raiseAmt"
+                            <input type="text" name="raiseAmt" id="raiseAmt"
                                    data-th-value="${entity?.raiseAmt}"
-                                   class="layui-input form-input"
+                                   data-textrange="0"
+                                   class="layui-input form-input text-number"
                                    maxlength="15"  required  placeholder="请输入内容"
                                    onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
                                    data-th-placeholder="#{SysCommon.placeholder}">
@@ -319,9 +320,9 @@
                     <div class="form-inline-wrap">
                         <label class="layui-form-label form-label-wrap">固定持有天数</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="number" name="holdday" id="holdday"
-                                   data-th-value="${entity?.holdday}" maxlength="5"
-                                   class="layui-input form-input" placeholder="请输入内容"
+                            <input type="text" name="holdday" id="holdday"
+                                   data-th-value="${entity?.holdday}" maxlength="5" data-textrange="0"
+                                   class="layui-input form-input text-number" placeholder="请输入内容"
                                    onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>

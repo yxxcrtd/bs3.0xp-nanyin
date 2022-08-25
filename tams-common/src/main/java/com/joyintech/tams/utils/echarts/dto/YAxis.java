@@ -5,7 +5,7 @@ package com.joyintech.tams.utils.echarts.dto;
  */
 public class YAxis{
 
-	public YAxis(String name,String type,String position,boolean scale,String splitNumber,AxisLine axisLine,AxisLabel axisLabel) {
+	public YAxis(String name,String type,String position,boolean scale,String splitNumber,AxisLine axisLine,AxisLabel axisLabel,Object boundaryGap) {
 		setName(name);
 		setType(type);
 		setPosition(position);
@@ -13,6 +13,7 @@ public class YAxis{
 		setAxisLine(axisLine);
 		setSplitNumber(splitNumber);
 		setAxisLabel(axisLabel);
+		setBoundaryGap(boundaryGap);
 	}
 	/**
 	 * 类型 
@@ -53,6 +54,16 @@ public class YAxis{
 	private String   splitNumber;
 
 	private AxisLabel axisLabel;
+
+	private Object boundaryGap;
+
+	public Object getBoundaryGap() {
+		return boundaryGap;
+	}
+
+	public void setBoundaryGap(Object boundaryGap) {
+		this.boundaryGap = boundaryGap;
+	}
 
 	public String getSplitNumber() {
 		return splitNumber;

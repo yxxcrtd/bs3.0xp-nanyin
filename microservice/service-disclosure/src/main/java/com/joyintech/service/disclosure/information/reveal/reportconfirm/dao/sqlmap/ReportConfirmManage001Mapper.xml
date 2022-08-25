@@ -162,7 +162,7 @@
 		<if test="confrom != null and confrom !='' ">
 			REVEAL.REVEAL_STATUS DESC,
 		</if>
-		REVEAL.CREATE_TIME DESC) where 1=1
+		REVEAL.CONFIRM_DATE DESC) where 1=1
     </select>
     
     <update id="updateRepRevealById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >

@@ -254,6 +254,18 @@ public class EchartsUtils {
 		if(configMap.get("xAxis.axisLabel.interval") != null){
 			xAxis_axisLabel_interval = (Integer) configMap.get("xAxis.axisLabel.interval");
 		}
+		//横坐标显示刻度样式
+		String xAxis_axisLabel_formatter = obj2str(configMap.get("xAxis.axisLabel.formatter"));
+		if (StringUtils.isEmpty(xAxis_axisLabel_formatter))
+			xAxis_axisLabel_formatter = null;// 默认为空
+		//横坐标显示字体大小
+		String xAxis_axisLabel_fontSize = obj2str(configMap.get("xAxis.axisLabel.fontSize"));
+		if (StringUtils.isEmpty(xAxis_axisLabel_fontSize))
+			xAxis_axisLabel_fontSize = "";// 默认为空
+		//横坐标显示字体大小
+		String xAxis_axisLabel_fontWeight = obj2str(configMap.get("xAxis.axisLabel.fontWeight"));
+		if (StringUtils.isEmpty(xAxis_axisLabel_fontWeight))
+			xAxis_axisLabel_fontWeight = "";// 默认为空
 
 		Object[] xAxis_data = null;
 		if (StringUtil.isNotEmpty(dataMap.get("xAxis.data")) && (dataMap.get("xAxis.data") instanceof Object[]))
@@ -278,11 +290,20 @@ public class EchartsUtils {
 			yAxis_axisLine_lineStyle_type = "solid";// 默认实线
 		String splitNumber = obj2str(configMap.get("yAxis.splitNumber"));
 		if (StringUtils.isEmpty(splitNumber))
-			splitNumber = "7";
+			splitNumber = "10";
 		//纵坐标显示刻度
 		String yAxis_axisLabel_formatter = obj2str(configMap.get("yAxis.axisLabel.formatter"));
 		if (StringUtils.isEmpty(yAxis_axisLabel_formatter))
 			yAxis_axisLabel_formatter = "{value}";// 默认为空
+		//纵坐标显示字体大小
+		String yAxis_axisLabel_fontSize = obj2str(configMap.get("yAxis.axisLabel.fontSize"));
+		if (StringUtils.isEmpty(yAxis_axisLabel_fontSize))
+			yAxis_axisLabel_fontSize = "";// 默认为空
+		//横坐标显示字体大小
+		String yAxis_axisLabel_fontWeight = obj2str(configMap.get("yAxis.axisLabel.fontWeight"));
+		if (StringUtils.isEmpty(yAxis_axisLabel_fontWeight))
+			yAxis_axisLabel_fontWeight = "";// 默认为空
+		Object yAxis_boundaryGap = configMap.get("yAxis.boundaryGap");
 
 		// 数据集合
 		List<Series> seriesList = null;
@@ -300,17 +321,13 @@ public class EchartsUtils {
 		}
 		// 横坐标（展示：折线/面积图、柱状/条形图）
 		if (Arrays.asList(new String[] { ECHARTS_图表类型_曲线图, ECHARTS_图表类型_柱状图 }).contains(series_type)) {
-			option.setxAxis(new XAxis(xAxis_name, xAxis_type, xAxis_boundaryGap, new AxisLabel(xAxis_axisLabel_rotate,xAxis_axisLabel_interval),xAxis_data));
+			option.setxAxis(new XAxis(xAxis_name, xAxis_type, xAxis_boundaryGap, new AxisLabel(xAxis_axisLabel_rotate,xAxis_axisLabel_interval,xAxis_axisLabel_formatter,xAxis_axisLabel_fontSize,xAxis_axisLabel_fontWeight),xAxis_data));
 		}
 		// 纵坐标（展示：折线/面积图、柱状/条形图）
 		if (Arrays.asList(new String[] { ECHARTS_图表类型_曲线图, ECHARTS_图表类型_柱状图 }).contains(series_type)) {
 			List<YAxis> yAxisList = new ArrayList<YAxis>();
-			AxisLabel axisLabel = new AxisLabel();
-			if(StringUtil.isNotEmpty(axisLabel)){
-				axisLabel.setFormatter(yAxis_axisLabel_formatter);
-			}
 			yAxisList.add(new YAxis(yAxis_name, yAxis_type, yAxis_position,yAxis_scale,splitNumber,
-					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type)),axisLabel));
+					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type)),new AxisLabel(null,0,yAxis_axisLabel_formatter,yAxis_axisLabel_fontSize,yAxis_axisLabel_fontWeight),yAxis_boundaryGap));
 			option.setyAxis(yAxisList);
 		}
 		// 数据集合

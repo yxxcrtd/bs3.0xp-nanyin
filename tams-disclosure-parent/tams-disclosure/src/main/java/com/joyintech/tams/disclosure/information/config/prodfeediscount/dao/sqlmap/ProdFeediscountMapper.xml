@@ -406,6 +406,7 @@
 
     <select id="getProdFeenameSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
+        distinct
             dpf.FEENAME id,
             dpf.FEENAME text
         FROM

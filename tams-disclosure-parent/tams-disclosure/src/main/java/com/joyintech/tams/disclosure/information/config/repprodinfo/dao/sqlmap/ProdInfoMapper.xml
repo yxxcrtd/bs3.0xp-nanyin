@@ -834,4 +834,14 @@
         and rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectProdList" parameterType="java.util.List"  resultMap="BaseResultMap">
+        select rpi.PROD_ID
+        from REP_PROD_INFO rpi
+        <where>
+            <foreach collection="list" item="item" open="and PROD_ID in(" separator="," close=")">
+                #{item.prodId}
+            </foreach>
+        </where>
+    </select>
+
 </mapper>

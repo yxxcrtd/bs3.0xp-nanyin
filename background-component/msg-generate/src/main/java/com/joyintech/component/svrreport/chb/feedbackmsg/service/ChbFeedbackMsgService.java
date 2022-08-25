@@ -10,25 +10,29 @@
 
 package com.joyintech.component.svrreport.chb.feedbackmsg.service;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
-import com.joyintech.background.component.common.pack.common.util.DateUtil;
-import com.joyintech.background.component.common.pack.common.util.JsonUtils;
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
-import com.joyintech.component.svrreport.chb.contant.ChbConstant;
-import com.joyintech.component.svrreport.chb.contant.DictCode;
-import com.joyintech.component.svrreport.chb.contant.DictCodeList;
-import com.joyintech.component.svrreport.chb.dto.*;
-import com.joyintech.component.svrreport.chb.feedbackmsg.dao.ChbFeedbackFileComponentMapper;
-import com.joyintech.component.svrreport.chb.feedbackmsg.dao.ChbFeedbackMsgComponentMapper;
-import com.joyintech.component.svrreport.chb.feedbackmsg.dto.ChbFeedbackFile;
-import com.joyintech.component.svrreport.chb.msglog.dao.ChbComponentMsgLogMapper;
-import com.joyintech.component.svrreport.chb.msglog.service.ChbComponentMsgLogService;
-import com.joyintech.component.svrreport.chb.msgsend.dto.ExtFprDClient;
-import com.joyintech.component.svrreport.chb.util.ChbXmlUtil;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipInputStream;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -40,11 +44,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import java.io.*;
-import java.util.*;
-import java.util.zip.ZipInputStream;
+import com.joyintech.background.component.common.pack.common.util.DateUtil;
+import com.joyintech.background.component.common.pack.common.util.JsonUtils;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.component.svrreport.chb.contant.ChbConstant;
+import com.joyintech.component.svrreport.chb.contant.DictCode;
+import com.joyintech.component.svrreport.chb.contant.DictCodeList;
+import com.joyintech.component.svrreport.chb.dto.AsynReport40Entity;
+import com.joyintech.component.svrreport.chb.dto.AsynReportEntity;
+import com.joyintech.component.svrreport.chb.dto.ChbInfoReportDto;
+import com.joyintech.component.svrreport.chb.dto.ChbPrdresistCode;
+import com.joyintech.component.svrreport.chb.dto.ChbPrdresistCodeKey;
+import com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto;
+import com.joyintech.component.svrreport.chb.dto.CommonNodeEntity;
+import com.joyintech.component.svrreport.chb.dto.InformationEntity;
+import com.joyintech.component.svrreport.chb.dto.InterfLog;
+import com.joyintech.component.svrreport.chb.dto.XbrliDownLoadXml;
+import com.joyintech.component.svrreport.chb.feedbackmsg.dao.ChbFeedbackFileComponentMapper;
+import com.joyintech.component.svrreport.chb.feedbackmsg.dao.ChbFeedbackMsgComponentMapper;
+import com.joyintech.component.svrreport.chb.feedbackmsg.dto.ChbFeedbackFile;
+import com.joyintech.component.svrreport.chb.msglog.dao.ChbComponentMsgLogMapper;
+import com.joyintech.component.svrreport.chb.msglog.service.ChbComponentMsgLogService;
+import com.joyintech.component.svrreport.chb.msgsend.dto.ExtFprDClient;
+import com.joyintech.component.svrreport.chb.util.ChbXmlUtil;
+
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 
 /**
  * 中债反馈信息处理
@@ -737,7 +765,13 @@ public class ChbFeedbackMsgService {
         try {
             JAXBContext context = JAXBContext.newInstance(c);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            t = (T)unmarshaller.unmarshal(new StringReader(xml));
+            
+            //chenxc: update for pinpoint check 2022-08-24
+            XMLInputFactory xif = XMLInputFactory.newFactory();
+            xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+            xif.setProperty(XMLInputFactory.SUPPORT_DTD, true);
+            XMLStreamReader xsr = xif.createXMLStreamReader(new StringReader(xml));
+            t = (T)unmarshaller.unmarshal(xsr);
         }
         catch (Exception e) {
             logger.error("报文：" + xml);

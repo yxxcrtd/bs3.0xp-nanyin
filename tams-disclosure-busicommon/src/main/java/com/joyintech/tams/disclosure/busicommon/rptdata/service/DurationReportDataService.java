@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class DurationReportDataService implements IReportDataService {
 
 		try {
 			DurationReportDto reportDto = new DurationReportDto();
-
+			DecimalFormat df = new DecimalFormat("#,##0.00");
 			//报告参数整理
 			int year = 2022;
 			int quarter = 2;
@@ -96,13 +97,13 @@ public class DurationReportDataService implements IReportDataService {
 			//报表基本产品信息，母产品维度
 			try {
 				DurationReportDto dto= durationReportMapper.selectProdInfo(paraMap);
-				
 				if ( DateUtil.getBetweenDayNumber(dto.geteDate(),reportDate)<=90 || DateUtil.getBetweenDayNumber(reportDate, dto.getmDate())<=90 )  //不需要生成定期报表
 					return null;
 				
 				if ( dto!=null ) {
 					reportDto = dto; 
 				}
+				
 			} catch (Exception e) {
 				logger.error("报表产品基本信息错误.",e);
 			}
@@ -141,7 +142,13 @@ public class DurationReportDataService implements IReportDataService {
 					item.setUnitValue(item.getUnitValue()==null? item.getUnitValue():item.getUnitValue().setScale(4,BigDecimal.ROUND_DOWN));
 					item.setUnitValueT(item.getUnitValueT()==null?item.getUnitValueT():item.getUnitValueT().setScale(4,BigDecimal.ROUND_DOWN));
 					item.setOtherFee(item.getOtherFee()==null? item.getOtherFee():item.getOtherFee().setScale(2,BigDecimal.ROUND_DOWN));
-					listFinIndex.add(CollectionUtils.bean2Map(item));
+					Map<String, Object> map = CollectionUtils.bean2Map(item);
+					if ( item.getAssetsValue()!=null )
+						map.put("assetsValueStr", df.format(item.getAssetsValue()));
+					else
+						map.put("assetsValueStr", "");
+					listFinIndex.add(map);
+					
 				});
 				reportDto.setListFinIndex(listFinIndex);
 			} catch (Exception e) {
@@ -278,11 +285,21 @@ public class DurationReportDataService implements IReportDataService {
 				for ( RepAssetsComb item:listDto ) {
 					if ( i<10 ) {
 						item.setPersonalField(++i+"");
-						listAssetDetail.add(CollectionUtils.bean2Map(item));
+						Map<String,Object> map = CollectionUtils.bean2Map(item);
+						if ( item.getFairValue()!=null ) 
+							map.put("fairValueStr", df.format(item.getFairValue()));
+						else
+							map.put("fairValueStr", "");
+						listAssetDetail.add(map);
 					} else {
 						if ( item.getPdProp().equals(pd) && item.getFairValue().equals(fv) ) {
 							item.setPersonalField(++i+"");
-							listAssetDetail.add(CollectionUtils.bean2Map(item));
+							Map<String,Object> map = CollectionUtils.bean2Map(item);
+							if ( item.getFairValue()!=null )
+								map.put("fairValueStr", df.format(item.getFairValue()));
+							else
+								map.put("fairValueStr", "");
+							listAssetDetail.add(map);
 						} else {
 							break;
 						}
@@ -339,6 +356,13 @@ public class DurationReportDataService implements IReportDataService {
 			}
 			
 			listResult.add(CollectionUtils.bean2Map(reportDto));
+			
+			//金额千分符转换
+			//reportDto.setCapital(new BigDecimal("123456.789"));
+			if ( reportDto.getCapital()!=null )
+				listResult.get(0).put("capitalStr", df.format(reportDto.getCapital()) );
+			else
+				listResult.get(0).put("capitalStr", "" );
 			
 			//排除检查项
 			listResult.get(0).put("endDate_xx", "");

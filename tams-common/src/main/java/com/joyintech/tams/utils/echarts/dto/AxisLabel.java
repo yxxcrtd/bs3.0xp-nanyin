@@ -7,10 +7,14 @@ public class AxisLabel {
 
 	public AxisLabel(){}
 
-	public AxisLabel(String rotate,int interval){
-		setRotate(rotate);
-		setInterval(interval);
+	public AxisLabel(String rotate, int interval, String formatter, String fontSize, String fontWeight) {
+		this.rotate = rotate;
+		this.interval = interval;
+		this.formatter = formatter;
+		this.fontSize = fontSize;
+		this.fontWeight = fontWeight;
 	}
+
 	/**
 	 * 刻度标签旋转的角度 [-90,90 度]
 	 */
@@ -22,6 +26,10 @@ public class AxisLabel {
 	private int interval;
 
 	private String formatter;
+
+	private String fontSize;
+
+	private String fontWeight;
 
 	public String getFormatter() {
 		return formatter;
@@ -45,5 +53,21 @@ public class AxisLabel {
 
 	public void setInterval(int interval) {
 		this.interval = interval;
+	}
+
+	public String getFontSize() {
+		return fontSize;
+	}
+
+	public void setFontSize(String fontSize) {
+		this.fontSize = fontSize;
+	}
+
+	public String getFontWeight() {
+		return fontWeight;
+	}
+
+	public void setFontWeight(String fontWeight) {
+		this.fontWeight = fontWeight;
 	}
 }

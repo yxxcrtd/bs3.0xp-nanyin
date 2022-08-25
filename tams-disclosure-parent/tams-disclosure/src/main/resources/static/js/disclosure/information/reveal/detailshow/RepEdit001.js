@@ -64,6 +64,7 @@ $(function () {
     var closeReport = function(params){
             WebOfficeObj.WebClose();
             parent.layer.closeAll();
+            window.close();
     }
     
     /**
