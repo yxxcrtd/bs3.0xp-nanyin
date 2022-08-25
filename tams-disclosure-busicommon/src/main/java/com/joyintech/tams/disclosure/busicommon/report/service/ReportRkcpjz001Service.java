@@ -1,6 +1,7 @@
 
 package com.joyintech.tams.disclosure.busicommon.report.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -147,12 +148,12 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     dataList.add(row);
                 }
                 //由于纵坐标要求居中显示，需要设置 "boundaryGap"属性
-                int max = grahDtoList.stream().mapToInt(value -> (int) Math.round(Double.valueOf(value.getValue()))).max().orElse(0);
-                int min = grahDtoList.stream().mapToInt(value -> (int) Math.round(Double.valueOf(value.getValue()))).min().orElse(0);
+                double max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).max().orElse(1);
+                double min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).min().orElse(0);
+                BigDecimal endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
                 //折线图配置信息
                 Map<String, Object> configMap = getEchartsConfigMap(rptType);
-                configMap.put("yAxis.boundaryGap",new Integer[]{min,max});
-
+                configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath1, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
                 //清空list，重新绘制份额累计净值（元）走势图
                 dataList.clear();
@@ -172,9 +173,11 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     row.add(grahDto.getTotalValue());
                     dataList.add(row);
                 }
-                max = grahDtoList.stream().mapToInt(value -> (int) Math.round(Double.valueOf(value.getTotalValue()))).max().orElse(0);
-                min = grahDtoList.stream().mapToInt(value -> (int) Math.round(Double.valueOf(value.getTotalValue()))).min().orElse(0);
-                configMap.put("yAxis.boundaryGap",new Integer[]{min,max});
+                 max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).max().orElse(1);
+                 min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).min().orElse(0);
+                 endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
+                //折线图配置信息
+                configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
             }
             logger.info("日开产品净值公告（公募净值型产品）【{}】生成成功", JsonUtils.object2Json(paraMap));
@@ -225,7 +228,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
         configMap.put("xAxis.type", "category");
         configMap.put("xAxis.boundaryGap", "");
         configMap.put("xAxis.axisLabel.fontSize", "13");
-        configMap.put("xAxis.axisLabel.fontWeight", "normal");
+        configMap.put("xAxis.axisLabel.fontWeight", "bold");
         configMap.put("xAxis.axisLabel.rotate", "30");//设置x轴转的角度
         configMap.put("xAxis.axisLabel.interval", 1);//设置x轴数据隔天显示
 

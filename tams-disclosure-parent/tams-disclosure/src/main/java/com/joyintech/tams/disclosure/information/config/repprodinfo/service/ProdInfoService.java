@@ -714,7 +714,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "是否是指数型产品"));
             }
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(22))
-                    && !StringUtil.isEmpty(list.get(23))) {
+                    && StringUtil.isEmpty(list.get(23))) {
                 message.add("指数型产品，产品业绩比较基准必填。");
             }
             if (StringUtil.isEmpty(list.get(24))) {
