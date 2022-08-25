@@ -307,15 +307,14 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> prodplanMap = new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
-            List<String> list = dataList.get(i);
-            if (null == list || list.size() != 7) {
-                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1),
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 7) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
                         this.getMessage("REPORT_COMMON_FILE_E_0030", 7)));
                 break;
             }
             // 验证消息
             List<String> message = new ArrayList<>();
-            List<String> rowData = dataList.get(i);
             ProdInfoDto prodInfo = new ProdInfoDto();
             if (!StringUtil.isNotEmpty(rowData.get(0))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
@@ -336,7 +335,8 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             } else if (!isDateStr(rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "开放期结束日"));
             }
-            if(isDateStr(rowData.get(1)) && DateUtil.compareDate(rowData.get(1), prodInfo.getSetDateStr()) <= 0){
+            if(prodInfo != null && isDateStr(rowData.get(1))
+                    && DateUtil.compareDate(rowData.get(1), prodInfo.getSetDateStr()) <= 0){
                 message.add("开放期起始日不能小于等于产品成立日期。");
             }
             if(isDateStr(rowData.get(1)) && isDateStr(rowData.get(2))
@@ -395,18 +395,16 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     message.add("产品冷静期必须小于运作起始日！");
                 }
             }
-            if (prodplanMap.containsKey(list.get(0) + GlobalConstant.UNDER_LINE + list.get(2))) {
+            if (prodplanMap.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
-            if (StringUtil.isEmpty(list.get(0))) {
-                prodplanMap.put(list.get(0) + GlobalConstant.UNDER_LINE + list.get(2), list);
-            }
+            prodplanMap.put(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0),
+                checkResult.add(new ExcelValidDto(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2),
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             else {
-                entities.add(this.convertToEntity(list));
+                entities.add(this.convertToEntity(rowData));
             }
         }
         return checkResult;

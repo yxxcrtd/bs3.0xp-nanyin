@@ -543,7 +543,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
             if (null == list || list.size() != 27) {
-                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1),
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
                         this.getMessage("REPORT_COMMON_FILE_E_0030", 27)));
                 break;
             }
@@ -739,10 +739,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     message.add("产品类型为“现管类产品”时，产品运作方式为“开放式净值型”。");
                 }
             }
-            if (StringUtil.isEmpty(list.get(0)) && prodMap.containsKey(list.get(0))) {
+            if (StringUtil.isNotEmpty(list.get(0)) && prodMap.containsKey(list.get(0))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
-            if (StringUtil.isEmpty(list.get(0))) {
+            if (StringUtil.isNotEmpty(list.get(0))) {
                 prodMap.put(list.get(0), list);
             }
             if (CollectionUtils.isNotEmpty(message)) {

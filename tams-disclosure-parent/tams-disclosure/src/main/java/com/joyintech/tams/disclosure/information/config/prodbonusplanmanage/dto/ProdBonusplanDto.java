@@ -21,6 +21,11 @@ import java.util.Map;
         ValidateGroupDelete.class})
 public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, ProcessEntity {
 
+    /**
+     * excle行
+     */
+    private String excelNum;
+
     private Map<String, Object> param;
 
     private String updateDateStr;
@@ -218,5 +223,13 @@ public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, Pro
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getBonusPlanId() {
         return super.getBonusPlanId();
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }
