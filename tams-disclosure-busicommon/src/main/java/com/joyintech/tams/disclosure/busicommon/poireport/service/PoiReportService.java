@@ -876,7 +876,9 @@ public class PoiReportService {
     }
 
 
-	public String dataCheck(Map<String, Object> params){
+	public Map<String, Object>  dataCheck(Map<String, Object> params){
+		Map<String, Object>resultMap=new HashMap<>();
+
 		StringBuffer resultSb=new StringBuffer();
 
 		String reportId = params.get("repid").toString();   //报表编号
@@ -894,20 +896,20 @@ public class PoiReportService {
 		if(params.get("batchCheckData")!=null){
 			dataMap=(Map<String, Object>)params.get("batchCheckData");
 			if(dataMap == null){
-				return resultSb.toString();
+				return resultMap;
 			}
 		}else{
 			List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
 			if(listReports==null){
 				resultSb.append((index++)+"："+"报告期末时点距离当前产品的生成日或者到期日不足90个自然日，无需生成报告<br>");
-				return resultSb.toString();
+				return resultMap;
 			}
 			if (listReports.size() > 0) {
 				dataMap = listReports.get(0);
 				dataMap.put("prodId",repReveal.getProdid());
 				dataMap.put("repId",params.get("repid"));
 			} else{
-				return resultSb.toString();
+				return resultMap;
 			}
 		}
 
@@ -916,6 +918,36 @@ public class PoiReportService {
 		String prodId = StringUtil.isNotEmpty(repReveal.getProdid())?repReveal.getProdid():params.get("prodid").toString();
 
 		if (StringUtil.isNotEmpty(rptType)) {
+			//对所有报告的通用校验
+			//生成报告时，若存在某个统计项取不到值的情况，需要在本模块进行提示 提示“生成报告所需数据有缺失”
+			for (String key:dataMap.keySet()){
+				if(!key.contains("_xx")){
+					if(dataMap.get(key) instanceof List){
+						if (CollectionUtils.isEmpty((List)dataMap.get(key))) {
+							if (!dataMap.containsKey(key+"_xx")) {
+								if(dataMap.get(key) instanceof String){
+									dataMap.put(key,"xxx");
+								}
+								resultSb.append((index++)+"："+"生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+								break;
+							}
+						}
+					}else{
+						if (!StringUtil.isNotEmpty(dataMap.get(key))) {
+							if (!dataMap.containsKey(key+"_xx")) {
+								if(dataMap.get(key) instanceof String){
+									dataMap.put(key,"xxx");
+								}
+								resultSb.append((index++)+"："+"生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+								break;
+							}
+						}
+					}
+				}
+
+			}
+
+
 			if (StringUtil.equals(rptType,DisReportType.FXGG)) {
 				//发行公告
 				//产品募集金额只能是整数，不能出现角和分；
@@ -1281,39 +1313,14 @@ public class PoiReportService {
 						}
 					}
 					if(changeFlag){
+						if(!StringUtil.isNotEmpty(resultSb.toString())){
+							resultMap.put("flag",true);
+						}
 						resultSb.append((index++)+"："+"报告期内业绩比较基准发生变更，请确认<br>");
 					}
 				}
 			}
 
-			//对所有报告的通用校验
-			//生成报告时，若存在某个统计项取不到值的情况，需要在本模块进行提示 提示“生成报告所需数据有缺失”
-			for (String key:dataMap.keySet()){
-				if(!key.contains("_xx")){
-					if(dataMap.get(key) instanceof List){
-						if (CollectionUtils.isEmpty((List)dataMap.get(key))) {
-							if (!dataMap.containsKey(key+"_xx")) {
-								if(dataMap.get(key) instanceof String){
-									dataMap.put(key,"xxx");
-								}
-								resultSb.append((index++)+"："+"生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
-								break;
-							}
-						}
-					}else{
-						if (!StringUtil.isNotEmpty(dataMap.get(key))) {
-							if (!dataMap.containsKey(key+"_xx")) {
-								if(dataMap.get(key) instanceof String){
-									dataMap.put(key,"xxx");
-								}
-								resultSb.append((index++)+"："+"生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
-								break;
-							}
-						}
-					}
-				}
-
-			}
 
 			//校验完成之后判断有没有错误
 			if(StringUtil.isNotEmpty(resultSb)){
@@ -1340,10 +1347,11 @@ public class PoiReportService {
 				repReportCheckMapper.insertSelective(repReportCheck);
 
 				resultSb.append("<br>点击“确认”按钮，可对当前报表详情进行预览");
+				resultMap.put("resultSb",resultSb.toString());
 			}
 		}
 
-		return resultSb.toString();
+		return resultMap;
 	}
 
 	private String singleCheck(RepDataCheck repDataCheck,BigDecimal val,String tips){
