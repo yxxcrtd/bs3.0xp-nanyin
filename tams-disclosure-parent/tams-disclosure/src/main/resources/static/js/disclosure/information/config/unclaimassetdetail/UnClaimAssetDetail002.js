@@ -60,7 +60,18 @@
                 var row2 = unclaimTable.getRow(unclaimTable.getAllRows().length-2);
                 row.projectNo=row2.projectNo+1;
             }
+            if (_row.financier == '无'){
+                Joyin.error("请删除为无的那行数据之后才能新增一行！");
+                unclaimTable.deleteRow(row.length()-1);
+            }
         },
+        // beforeEditCell: function(preVal, field, rowData){
+        //     debugger;
+        //     if (rowData.financier == '无'){
+        //         $('.btn-table-add').hide();
+        //     }
+        //     unclaimTable.renderRow(data.LAY_TABLE_INDEX, rowData);
+        // },
         editCell : function(value, data, field, cell, column){
                if (value == '无'){
                    var RowData = {};
@@ -125,6 +136,15 @@
         $('#UnClaimAssetDetail002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
+
+        // if (pageModel == PAGE_MODEL_EDIT || pageModel == PAGE_MODEL_NEW){
+        //     // debugger;
+        //     // if (unclaimTable.getAllRows().length == 0){
+        //     //     $('.btn-table-add').hide();
+        //     //     unclaimTable.renderRow(unclaimTable.getAllRows().length);
+        //     // }
+        //     $('.btn-table-add').attr('disabled',true);
+        // }
 
         //产品名称联动
         $('#prodId').change(function() {
