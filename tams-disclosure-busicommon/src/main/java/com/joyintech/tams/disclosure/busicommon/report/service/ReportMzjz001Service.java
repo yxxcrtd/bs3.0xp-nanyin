@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -81,6 +83,10 @@ public class ReportMzjz001Service implements IReportDataService {
                     Date announceDate = holidayService.getNextWorkDay(searchparam);
                     if (announceDate == null) {
                         announceDate = DateUtil.addDay(DateUtil.parse(valueDate), 1);
+                    }
+                    if(reportMzjz001Dto.getAssetsValue() != null){
+                        DecimalFormat df = new DecimalFormat("#,###.00");
+                        reportMzjz001Dto.setAssetsValue(df.format(new BigDecimal(reportMzjz001Dto.getAssetsValue())));
                     }
                     reportMzjz001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
                 }

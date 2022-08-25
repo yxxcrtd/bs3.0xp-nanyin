@@ -23,7 +23,10 @@ import java.util.List;
 @ValidLogic(targetClass = ProdInfoValidator.class, groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
 public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity {
-
+    /**
+     * excle行
+     */
+    private String excelNum;
     /**
      *  业绩基准变更表
      */
@@ -393,5 +396,13 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getProdId() {
         return super.getProdId();
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }

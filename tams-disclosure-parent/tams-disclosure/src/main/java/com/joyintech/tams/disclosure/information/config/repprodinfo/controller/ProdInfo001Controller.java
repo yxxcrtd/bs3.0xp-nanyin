@@ -13,6 +13,7 @@ import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -228,7 +229,8 @@ public class ProdInfo001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param) {
-        return prodInfoService.importFile(param);
+    public List<ExcelValidDto> importData(String fileName) {
+        return prodInfoService.importData(fileName);
     }
+
 }

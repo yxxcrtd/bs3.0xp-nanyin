@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,8 +171,8 @@ public class InfoDisclosureReadAndGenDetailService{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<ProdInfoListEntity> getRuleProdList(RepJob repJob, RepRuleEntity repRule, Date executeDateStr, 
-			Date ptDate, Map<String,Date> dateMap) throws ParseException, InvocationTargetException, IntrospectionException, IllegalAccessException, NoSuchFieldException {
+	public List<ProdInfoListEntity> getRuleProdList(RepJob repJob, RepRuleEntity repRule, Date executeDateStr,
+													Date ptDate, Map<String,Date> dateMap) throws ParseException {
 		//获取作业范围list
 		List<RepJobRange> repJobRangeList = infoDisclosureReadAndGenMapper.getRepJobRangeList(repJob.getJobId());
 		//通过组装的条件，查询产品相关内容
@@ -183,8 +184,8 @@ public class InfoDisclosureReadAndGenDetailService{
 		}
 		List<ProdInfoListEntity> list = new ArrayList<ProdInfoListEntity>();
 		if(StringUtil.equals(DictCodeListExt2.基准日_平台日.getValue(), repRule.getBasisDateType())){
-	          //获取开始日结束日方法
-            this.getDataBeginAndEndDate(repRule, executeDateStr, dateMap);
+			//获取开始日结束日方法
+			this.getDataBeginAndEndDate(repRule, executeDateStr, dateMap);
 			//获取披露截止日
 			ptDate = revealDeadLineService.getRevDeadlineByMark(executeDateStr, repRule, dateMap);
 			dateMap.put("ptDate", ptDate);
@@ -196,12 +197,122 @@ public class InfoDisclosureReadAndGenDetailService{
 			ProdInfoListEntity prodInfo = null;
 			for (ProdInfoListEntity prodInfoListEntity : prodList) {
 				prodInfo = new ProdInfoListEntity();
+//				int days = Integer.parseInt(repRule.getMakeValue());
+//				if(StringUtil.equals(ReportDictCodeList.生成时点类型_后.getValue(), repRule.getRevealType())){
+//					days = -1*days;
+//				}
+				//基准日
 				Date openDate = revealDeadLineService.isCanGenOpen(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
 				if(openDate!=null){
 					prodInfoListEntity.setBasisDate(openDate);
-		             //获取开始日结束日方法
-		            this.getDataBeginAndEndDate(repRule, openDate, dateMap);
-		            
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+		else if(StringUtil.equals(DictCodeListExt2.基准日_费率调整日.getValue(), repRule.getBasisDateType())){
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenAdjust(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+
+
+		else if(StringUtil.equals(DictCodeListExt3.基准日_巨额赎回调整日.getValue(), repRule.getBasisDateType())){
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenJESH(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+		else if(StringUtil.equals(DictCodeListExt3.基准日_募集上线调整日.getValue(), repRule.getBasisDateType())){
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenMJTZ(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+		else if (StringUtil.equals(DictCodeListExt3.基准日_当期收益分配基准日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenDQSYFP(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+		else if (StringUtil.equals(DictCodeListExt3.基准日_自动赎回日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenZDSH(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+		else if (StringUtil.equals(DictCodeListExt2.基准日_成立日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenCLR(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+		else if (StringUtil.equals(DictCodeListExt2.基准日_到期日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenMDATE(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取披露截止日
 					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
 					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
 					list.add(prodInfo);
@@ -214,28 +325,29 @@ public class InfoDisclosureReadAndGenDetailService{
 				prodInfo = new ProdInfoListEntity();
 				Date revDeadDate = this.getBasisDate(prodInfoListEntity, repRule);
 				int days = Integer.parseInt(repRule.getMakeValue());
-				if(StringUtil.equals(DictCodeListExt2.基准区分_基准日前.getValue(), repRule.getRevealType())){
+				// update by leipeng 规则 前后更改
+				if(StringUtil.equals(DictCodeListExt2.时点类型_基准日后.getValue(), repRule.getRevealType())){
 					days = -1*days;
 				}
 				boolean isGen = false;
 				if(StringUtil.equals(DictCodeListExt1.日期类型_信批_自然日.getValue(), repRule.getMakeDateType())){
-					if(DateUtil.getBetweenDayNumber(revDeadDate, executeDateStr)==days){
+					if(DateUtil.getBetweenDayNumber(executeDateStr, revDeadDate )==days){
 						isGen = true;
 					}
 				}
-				else if(revealDeadLineService.isWorkDay(executeDateStr, DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
+				else if(revealDeadLineService.isWorkDay(executeDateStr, repRule.getMarketCode())){
 					isGen = revealDeadLineService.isCanGen(revDeadDate, repRule, dateMap, executeDateStr);
 				}
 				prodInfoListEntity.setBasisDate(revDeadDate);
 				if(isGen){
-                    //获取开始日结束日方法
-                    this.getDataBeginAndEndDate(repRule, revDeadDate, dateMap);
+					this.getDataBeginAndEndDate(repRule, revDeadDate, dateMap);
+					//获取披露截止日
 					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(revDeadDate, repRule, dateMap));
 					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
 					list.add(prodInfo);
 				}
 			}
-		}		
+		}
 		return list;
 	}
 	/**
@@ -354,6 +466,42 @@ public class InfoDisclosureReadAndGenDetailService{
 	 */
 	public boolean preReadAndGenDetail(RepJob repJob, Map<String,Date> dateMap, Date executeDateStr) throws NoSuchFieldException, IntrospectionException, IllegalAccessException, ParseException, InvocationTargetException {
 		boolean flag = false;
+		//预处理作业增加时间判断
+		//每周报告/公告为每周第一个工作日
+		if(StringUtil.equals(repJob.getRuleId(),"D0000000000000000005")
+		||StringUtil.equals(repJob.getRuleId(),"D0000000000000000006")){
+			if(infoDisclosureReadAndGenMapper.checkWeek(executeDateStr)==0){
+				logger.info("当前日期不是每周第一个工作日，每周报告/公告不生成作业");
+				return true;
+			}
+		}
+		//季报为每季度第3个工作日
+		else if(StringUtil.equals(repJob.getRuleId(),"D0000000000000000014")
+				||StringUtil.equals(repJob.getRuleId(),"D0000000000000000015")){
+			if(infoDisclosureReadAndGenMapper.checkQuarter(executeDateStr)==0){
+				logger.info("当前日期不是每季度第3个工作日，季度报告不生成作业");
+				return true;
+			}
+		}
+
+		//半年报为每半年第3个工作日
+		else if(StringUtil.equals(repJob.getRuleId(),"D0000000000000000016")
+				||StringUtil.equals(repJob.getRuleId(),"D0000000000000000017")){
+			if(infoDisclosureReadAndGenMapper.checkHalfYear(executeDateStr)==0){
+				logger.info("当前日期不是每半年第3个工作日，半年度报告不生成作业");
+				return true;
+			}
+		}
+
+		//年报为每年第3个工作日
+		else if(StringUtil.equals(repJob.getRuleId(),"D0000000000000000018")
+				||StringUtil.equals(repJob.getRuleId(),"D0000000000000000019")){
+			if(infoDisclosureReadAndGenMapper.checkYear(executeDateStr)==0){
+				logger.info("当前日期不是每年第3个工作日，年度报告不生成作业");
+				return true;
+			}
+		}
+
 		//规则表信息
 		RepRuleEntity repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(repJob.getRuleId());
 		if(repRule == null){

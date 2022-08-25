@@ -10,9 +10,9 @@
 
 package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -20,29 +20,28 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
-import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 记账凭证查询service
@@ -173,187 +172,118 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         return prodBonusplanMapper.selectByProdId2(prodId, DictCodeListExt3.信披_数据状态_有效E.getValue());
     }
 
-    /**
-     * 导入check
-     *
-     * @param fileName
-     * @return
-     */
     public AjaxResult checkImportData(String fileName) {
+        AjaxResult webResult = new AjaxResult();
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
-//        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
+        List<List<String>> tempList = ExcelUtil.getTempList(fileName);
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
         }
-        String totalMsg = "";
-        List<List<String>> jsonArrays = new ArrayList<>();
-        // 重复数据
-        int repeatNum = 0;
-        if (objects.size() <= 1) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        } else {
-            if (null == objects.get(0) || objects.get(0).size() != 8) {
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要8列。");
-                AjaxResult wr = new AjaxResult();
-                wr.setData(resultMap);
-                return wr;
+        if (null == tempList.get(0) || tempList.get(0).size() != 8) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 8), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = tempList.subList(1, tempList.size());
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            if (dataList.size() > 50000) {
+                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                return webResult;
+            }
+            List<ProdBonusplanDto> entities = this.convertToBean(dataList);
+            List<ProdBonusplanDto> data = this.selectBonusPlanByKey(entities);
+            if (data != null && data.size() > 0) {
+                Map<String, List<ProdBonusplanDto>> map = entities.stream().collect(
+                        JoyinCollectors.groupingBy(x ->
+                                x.getProdId()
+                                        + GlobalConstant.UNDER_LINE + x.getBonusMode()
+                                        + GlobalConstant.UNDER_LINE + x.getSettDateStr()
+                        ));
+                // 将序号放入list中
+                List<String> excelNumList = new ArrayList<>();
+                List<Integer> excelNumIntList = new ArrayList<>();
+                for (ProdBonusplanDto dto : data) {
+                    List<ProdBonusplanDto> listTemp = map.get(dto.getProdId()
+                            + GlobalConstant.UNDER_LINE + dto.getBonusMode()
+                            + GlobalConstant.UNDER_LINE + dto.getSettDateStr());
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+                }
+                // 将list进行排序，并转化为string
+                Collections.sort(excelNumIntList);
+                for (Integer rowNo : excelNumIntList) {
+                    excelNumList.add(String.valueOf(rowNo));
+                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
             } else {
-                StringBuilder returnerrorMsg = new StringBuilder("");
-                for (int i = 1; i < objects.size(); i++) {
-                    StringBuilder errorMsg = new StringBuilder("");
-                    List<String> rowData = objects.get(i);
-                    ProdBonusplanDto dto = new ProdBonusplanDto();
+                // 防止在进行导入前check时进行了两次的弹框
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            }
+        } else {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        return webResult;
+    }
 
-                    if (!StringUtil.isNotEmpty(rowData.get(0))) {
-                        errorMsg.append("子产品代码 必填！");
-                    }else{
-                        //不存在 校验
-                        ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(0));
-                        if(prodInfo == null){
-                            errorMsg.append("子产品代码 不存在");
-                        }
+    /**
+     * excel数据转为java对象
+     * @return
+     */
+    private List<ProdBonusplanDto> convertToBean(List<List<String>> dataList) {
+        List<ProdBonusplanDto> entities = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list =  dataList.get(i);
+            ProdBonusplanDto entity = new ProdBonusplanDto();
+            entity.setProdId(list.get(0));
+            entity.setBonusMode(list.get(1));
+            entity.setSettDateStr(list.get(2));
+            entity.setExcelNum(String.valueOf(i+2));
+            entities.add(entity);
+        }
+        return entities;
+    }
 
-                        /*if (StringUtil.isNotEmpty(this.selectByProdId(rowData.get(0)))) {
-                            errorMsg.append("子产品代码已存在，继续录入会覆盖历史数据");
-                        }   */
-                        dto.setProdId(rowData.get(0));
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))) {
-                        errorMsg.append("分红方式 必填！");
-                    } else if (!StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1))
-                            && !StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1))
-                            && !StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1))
-                            && !StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1))
-                            && !StringUtils.equals("1-份额分红后净值为1", rowData.get(1))
-                            && !StringUtils.equals("2-到期兑付", rowData.get(1))
-                               ) {
-                        errorMsg.append("分红方式值 不正确！");
-                    }else if (StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1).toString())
-                            || StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1).toString())) {
-                        dto.setBonusMode(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue());
-                    } else if (StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1).toString())
-                            || StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1).toString())) {
-                        dto.setBonusMode(DictCodeListExt3.信披_分红方式_到期兑付.getValue());
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(2))) {
-                        errorMsg.append("收益分配基准日 必填！");
-                    } else if (!this.isDateStr(rowData.get(2))) {
-                        errorMsg.append("收益分配基准日 格式不正确！");
-                    }else{
-                        dto.setSettDate(DateUtil.parse(rowData.get(2).toString()));
-                        dto.setSettDateStr(rowData.get(2));
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(3))) {
-                        errorMsg.append("现金红利发放日 必填！");
-                    } else if (!this.isDateStr(rowData.get(3))) {
-                        errorMsg.append("现金红利发放日 格式不正确！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(4))) {
-                        errorMsg.append("业绩报酬 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(5))) {
-                        errorMsg.append("超额业绩报酬收取比例 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(6))) {
-                        errorMsg.append("业绩比较基准 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(7))) {
-                        errorMsg.append("业绩比较基准比例 必填！");
-                    }
+    /**
+     * 分批查询
+     * @param dataList
+     * @return
+     */
+    private List<ProdBonusplanDto> selectBonusPlanByKey(List<ProdBonusplanDto> dataList) {
+        int maxDataCountOneTime = 1000;
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            return prodBonusplanMapper.selectBonusPlanList(dataList);
+        }
+        // 导入大于1000时，返回值
+        List<ProdBonusplanDto> equtiyList = new ArrayList<>();
 
-//                    ProdBonusplanDto existDto = prodBonusplanManager001Service.selectByProdId2(rowData.get(0));
-                    int num = prodBonusplanManager001Service.selectByProdId2(rowData.get(0));
-                    if(StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(),rowData.get(1))
-                            && num > 0){
-                        errorMsg.append("当分红方式选择到期兑付时，一个子产品代码只能有一条数据");
-                    }
+        List<ProdBonusplanDto> newDataList = new ArrayList<>(dataList);
 
-                    //
-                    /*if(StringUtils.isNotEmpty(dto.getProdId())
-                            && StringUtils.isNotEmpty(dto.getBonusMode())
-                            && StringUtils.isNotEmpty(dto.getSettDateStr())){
-                        ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto);
-                        if(existDto2 != null){
-                            errorMsg.append("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复");
-                        }
-                    }*/
-
-                    if (StringUtil.isNotEmpty(errorMsg.toString())) {
-                        errorMsg.append("<br />");
-                        returnerrorMsg.append("第" + (i + 1) + "行数据：" + errorMsg.toString());
-                    }
-                }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())) {
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("errorMsg", returnerrorMsg.toString());
-                    AjaxResult wr = new AjaxResult();
-                    wr.setData(resultMap);
-                    return wr;
-                }
-                //第一行【i=0】为表头，所以不操作。
-                for (int i = objects.size() - 1; i >= 1; i--) {
-                    List<String> list1 = objects.get(i);
-                    Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
-                        List<String> list2 = objects.get(k);
-                        //子产品代码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))
-                                && (StringUtil.equals(list1.get(1), list2.get(1))) &&(StringUtil.equals(list1.get(2), list2.get(2)))) {
-                            isRepeat = true;
-                            break;
-                        }
-                    }
-                    if (isRepeat) {
-                        repeatNum++;
-                    } else {
-                        jsonArrays.add(list1);
-                    }
-                }
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        List<ProdBonusplanDto> listTemp;
+        for (int i = 0; i < part; i++ ) {
+            listTemp = prodBonusplanMapper.selectBonusPlanList(newDataList.subList(0, maxDataCountOneTime));
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            listTemp = prodBonusplanMapper.selectBonusPlanList(newDataList);
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
             }
         }
-        if (repeatNum > 0) {
-            totalMsg += "导入文件存在" + String.valueOf(repeatNum) + "条数据重复，请检查！";
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("errorMsg", totalMsg);
-        }
-        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
-
-        String tempList = (String) resultMap.get("correctData");
-        ProdBonusplanDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<ProdBonusplanDto> selectedItem = dto.getSelectedItem();
-        List<ProdBonusplanDto>  existData = new ArrayList<>();
-        for (ProdBonusplanDto temp:selectedItem) {
-            ProdBonusplanDto dto2  = new ProdBonusplanDto();
-            dto2.setProdId(temp.getProdId());
-            dto2.setBonusPlanId(temp.getBonusMode());
-            dto2.setSettDateStr(temp.getSettDateStr());
-            ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto2);
-            if(existDto2 != null && StringUtil.equals(existDto2.getDataStatus(),"E")){
-               // errorMsg.append("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复");
-                existData.add(temp);
-            }
-        }
-        if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "系统有重复信息，是否覆盖？");
-        }
-
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
+        return equtiyList;
     }
 
     public static boolean isDateStr(String str) {
@@ -367,110 +297,152 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         }
     }
 
-
-    public AjaxResult importFile(Map<String, Object> param) {
-        AjaxResult ajaxResult = new AjaxResult();
-        String tempList = (String) param.get("tempList");
-        ProdBonusplanDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<ProdBonusplanDto> selectedItem = dto.getSelectedItem();
-        List<ProdBonusplanDto> existData = new ArrayList<>();
-        List<ProdBonusplanDto> newData = new ArrayList<>();
-        for (ProdBonusplanDto temp : selectedItem) {
-            //数据已存在 【产品编码 相同】，做更新操作。
-            if(StringUtils.isNotEmpty(temp.getProdId())
-                    && StringUtils.isNotEmpty(temp.getBonusMode())
-                    && StringUtils.isNotEmpty(temp.getSettDateStr())){
-                ProdBonusplanDto dto2  = new ProdBonusplanDto();
-                dto2.setProdId(temp.getProdId());
-                dto2.setBonusPlanId(temp.getBonusMode());
-                dto2.setSettDateStr(temp.getSettDateStr());
-                ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto2);
-                if(StringUtil.isNotEmpty(existDto2) && StringUtil.equals(existDto2.getDataStatus(),"E")){
-                    //return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
-                    temp.setBonusPlanId(existDto2.getBonusPlanId());
-                    existData.add(temp);
-                }else {
-                    temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
-                    temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-                    newData.add(temp);
-                }
-            }else {
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
-                temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-                newData.add(temp);
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<ProdBonusplanDto> entities = new ArrayList<>(dataList.size());
+            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    ProdBonusplanDto serchdto  = new ProdBonusplanDto();
+                    serchdto.setProdId(item.getProdId());
+                    serchdto.setBonusPlanId(item.getBonusMode());
+                    serchdto.setSettDateStr(item.getSettDateStr());
+                    ProdBonusplanDto dto = prodBonusplanManager002Service.selectByCondition(serchdto);
+                    if(StringUtil.isNotEmpty(dto) && StringUtil.equals(dto.getDataStatus(), DictCodeListExt1.维护数据状态_有效.getValue())) {
+                        item.setBonusPlanId(dto.getBonusPlanId());
+                        prodBonusplanManager002Service.update(item);
+                    }else {
+                        item.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
+                        item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                        prodBonusplanManager002Service.insert(item);
+                    }
+                });
             }
-            /*if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))) {
-                existData.add(temp);
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
+        }
+    }
+
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<ProdBonusplanDto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 8) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 8)));
+                break;
+            }
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (!StringUtil.isNotEmpty(rowData.get(0))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else {
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
-                temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-                newData.add(temp);
-            }*/
-        }
-        //更新操作
-        for (ProdBonusplanDto existDataDto : existData) {
-            //this.doComplete(existDataDto, OperationType.MODIFY);
-            prodBonusplanManager002Service.update(existDataDto);
-        }
-        //插入操作
-        for (ProdBonusplanDto newDataDto : newData
-        ) {
-            // this.doComplete(newDataDto, OperationType.NEW);
-            prodBonusplanManager002Service.insert(newDataDto);
-        }
-        ajaxResult.setStatuCode(HttpStatus.OK.value());
-        return ajaxResult;
-    }
-
-
-    public ProdBonusplanDto getValNetAssetQuotationInfoListData(String tempList) {
-        ProdBonusplanDto dto = new ProdBonusplanDto();
-        // 行情信息列表
-        List<ProdBonusplanDto> prodBonusplanDtoList = new ArrayList<>();
-       // dto.setSelectedItem(prodBonusplanDtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            ProdBonusplanDto prodBonusplanDto = new ProdBonusplanDto();
-			/*if (StringUtil.isNotEmpty(rowData.get(0))) {
-				prodBonusplanDto.setDataStatus(rowData.get(0).toString());
-			}*/
-            if (StringUtil.isNotEmpty(rowData.get(0))) {
-                prodBonusplanDto.setProdId(rowData.get(0).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                if (StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1).toString())
-                        || StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1).toString())) {
-                    prodBonusplanDto.setBonusMode(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue());
-                } else if (StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1).toString())
-                        || StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1).toString())) {
-                    prodBonusplanDto.setBonusMode(DictCodeListExt3.信披_分红方式_到期兑付.getValue());
+                //不存在 校验
+                ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(0));
+                if(prodInfo == null){
+                    message.add("子产品代码不存在。");
                 }
             }
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                prodBonusplanDto.setSettDate(DateUtil.parse(rowData.get(2).toString()));
+            if (!StringUtil.isNotEmpty(rowData.get(1))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "分红方式"));
+            } else if (!StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1))
+                    && !StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1))
+                    && !StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1))
+                    && !StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1))) {
+                message.add("分红方式值不正确。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                prodBonusplanDto.setPaymentDate(DateUtil.parse(rowData.get(3).toString()));
+            if (!StringUtil.isNotEmpty(rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "收益分配基准日"));
+            } else if (!isDateStr(rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "收益分配基准日"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(4))) {
-                prodBonusplanDto.setAchievement(rowData.get(4).toString());
+            if (!StringUtil.isNotEmpty(rowData.get(3))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "现金红利发放日"));
+            } else if (!isDateStr(rowData.get(3))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "现金红利发放日"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(5))) {
-                prodBonusplanDto.setExcessAchievementProp(new BigDecimal(rowData.get(5).toString()));
+            if (!StringUtil.isNotEmpty(rowData.get(4))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩报酬"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(6))) {
-                prodBonusplanDto.setAchievementBasis(rowData.get(6).toString());
+            if (!StringUtil.isNotEmpty(rowData.get(5))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "超额业绩报酬收取比例"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(7))) {
-                prodBonusplanDto.setAchievementBasisProp(new BigDecimal(rowData.get(7).toString()));
+            if (!StringUtil.isNotEmpty(rowData.get(6))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准"));
             }
-
-            prodBonusplanDtoList.add(prodBonusplanDto);
+            if (!StringUtil.isNotEmpty(rowData.get(7))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准比例"));
+            }
+            if (StringUtil.isNotEmpty(rowData.get(0))) {
+                int num = prodBonusplanManager001Service.selectByProdId2(rowData.get(0));
+                if (StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1))
+                        && num > 0) {
+                    message.add("当分红方式选择到期兑付时，一个子产品代码只能有一条数据。");
+                }
+            }
+            if (map.containsKey(rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(1)
+                    + GlobalConstant.UNDER_LINE + rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            }
+            map.put(rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(1)
+                    + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(1)
+                        + GlobalConstant.UNDER_LINE + rowData.get(2),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+            }
+            else {
+                entities.add(this.convertToEntity(rowData));
+            }
         }
-        dto.setSelectedItem(prodBonusplanDtoList);
-        return dto;
+        return checkResult;
     }
 
+    private ProdBonusplanDto convertToEntity(List<String> rowData) {
+        ProdBonusplanDto prodBonusplanDto = new ProdBonusplanDto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            prodBonusplanDto.setProdId(rowData.get(0));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            if (StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1).toString())
+                    || StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1).toString())) {
+                prodBonusplanDto.setBonusMode(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue());
+            } else if (StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1).toString())
+                    || StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1).toString())) {
+                prodBonusplanDto.setBonusMode(DictCodeListExt3.信披_分红方式_到期兑付.getValue());
+            }
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            prodBonusplanDto.setSettDate(DateUtil.parse(rowData.get(2)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            prodBonusplanDto.setPaymentDate(DateUtil.parse(rowData.get(3)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(4))) {
+            prodBonusplanDto.setAchievement(rowData.get(4));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(5))) {
+            prodBonusplanDto.setExcessAchievementProp(new BigDecimal(rowData.get(5)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(6))) {
+            prodBonusplanDto.setAchievementBasis(rowData.get(6));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(7))) {
+            prodBonusplanDto.setAchievementBasisProp(new BigDecimal(rowData.get(7)));
+        }
+        return prodBonusplanDto;
+    }
 }

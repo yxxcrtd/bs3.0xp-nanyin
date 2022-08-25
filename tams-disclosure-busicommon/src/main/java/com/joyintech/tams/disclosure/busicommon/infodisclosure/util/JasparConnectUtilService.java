@@ -216,14 +216,16 @@ public class JasparConnectUtilService {
 		Map<String,Object> dataMap = new HashMap<>();
 		if (CollectionUtils.isNotEmpty(listReports)){
 			dataMap = listReports.get(0);
+			dataMap.put("uri",r1.getUri());
+			dataMap.put("execDate",params.get("execDate"));
+			RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
+			if (prodInfo != null) {
+				dataMap.put("prodname", prodInfo.getProdName());
+			}
+			dataMap.put("repId",r1.getReportID());
+			params.put("batchCheckData",dataMap);
 		}
-		dataMap.put("uri",r1.getUri());
-		dataMap.put("execDate",params.get("execDate"));
-		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
-		if (prodInfo != null) {
-			dataMap.put("prodname", prodInfo.getProdName());
-		}
-		dataMap.put("repId",r1.getReportID());
+
 
 //		//TODO:zhengxiaolian
 //		String reportFile = reportFileService.getReportFileName(r1.getReportID(),(Date) params.get("execDate") ,dataMap,ReportFileService.FILE_TYPE_DOCX );
