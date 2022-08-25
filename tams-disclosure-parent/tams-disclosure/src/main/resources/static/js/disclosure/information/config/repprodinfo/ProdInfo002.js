@@ -185,6 +185,16 @@
                     $.each(result.data, function(id, value) {
                         setData(id, value, '');
                     });
+                    //置灰产品登记编码、产品主代码，是否是分级产品
+                    if($("#prodRe").val()){
+                        $("#prodRe").attr("disabled", true);
+                    }
+                    if($("#pProdId").val()){
+                        $("#pProdId").attr("disabled", true);
+                    }
+                    if($("#isGrade").val()){
+                        $("#isGrade").attr("disabled", true);
+                    }
                 }
                 layui.form.render();
             });
