@@ -2,11 +2,10 @@ package com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dao;
 
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,4 +41,6 @@ public interface SubBalanceInfoProMapper {
 
 
     List<SelectOptionDto> getProdId1(Map<String, Object> map);
+
+    List<SubBalanceInfoPro001Dto> selectBalanceList(@Param("list") List<SubBalanceInfoPro001Dto> list);
 }
