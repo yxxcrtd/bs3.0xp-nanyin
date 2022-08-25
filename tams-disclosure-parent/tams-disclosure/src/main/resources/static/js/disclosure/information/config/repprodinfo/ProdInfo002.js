@@ -18,6 +18,8 @@
         });
 
     } else {
+        //修改、查看，放大镜按钮隐藏 NYLCXP-978
+        $("#magnifier").hide();
         //修改页面
         $("#prodId").attr("disabled", "disabled");
         $("#isGrade").attr("disabled", "disabled");
