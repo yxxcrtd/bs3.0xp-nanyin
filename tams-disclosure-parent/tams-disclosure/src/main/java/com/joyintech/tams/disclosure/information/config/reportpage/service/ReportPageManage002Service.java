@@ -135,6 +135,15 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 		}
 	}
 
+	/**
+	 *  退回时,updateUser变更为退回人,updateTime更新到当前时间
+	 **/
+	@Override
+	public void doBack(ReportStatusDto dto){
+		dto.setRepStatus(null);
+		reportPageManage002Mapper.updateReportStatus(dto);
+	}
+
 	//流程作废
 	public void doDelete(String workflowId) {
 		Map<String,Object> param = new HashMap<>();
