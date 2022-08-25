@@ -5,11 +5,11 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.service.ProElementAdj001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 
 @PageId("ProElementAdj001")
@@ -121,8 +120,8 @@ public class ProElementAdj001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
-        return proElementAdj001Service.importFile(param);
+    public List<ExcelValidDto> importFile(String fileName)  {
+        return proElementAdj001Service.importData(fileName);
     }
 
 
