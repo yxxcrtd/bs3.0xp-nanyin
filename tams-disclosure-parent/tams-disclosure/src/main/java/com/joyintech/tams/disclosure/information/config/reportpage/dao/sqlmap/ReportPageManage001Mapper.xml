@@ -12,7 +12,7 @@
         </where>
         order by A.REPORT_NAME
 	</select>
-	
+
 	<select id="findPage" parameterType="java.util.Map" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto">
 		select
 		A.REP_ID repId,
@@ -30,30 +30,31 @@
 		left join REP_FTP_PATH rfp
 		on A.REPORT_CATEGORY=rfp.ID
 		left join (
-			select rep_id,remark,eff_date,rep_status,UPDATE_USER,
-			row_number()over(partition by rep_id order by eff_date desc) rn
-			from rep_info_status
-			where eff_date <![CDATA[<=]]>  #{effDate,jdbcType=TIMESTAMP}
+		select rep_id,remark,eff_date,rep_status,UPDATE_USER,
+		row_number()over(partition by rep_id order by eff_date desc) rn
+		from rep_info_status
+		where eff_date <![CDATA[<=]]>  #{effDate,jdbcType=TIMESTAMP}
 		) ris1 ON A.REP_ID = ris1.Rep_Id and ris1.rn =1
-			left join (
-			select rep_id,remark,eff_date,rep_status,UPDATE_USER,
-			row_number()over(partition by rep_id order by eff_date asc) rn
-			from rep_info_status
-			where eff_date > #{effDate,jdbcType=TIMESTAMP}
+		left join (
+		<!--每次取最后一次审批的更新人和备注-->
+		select rep_id,remark,eff_date,rep_status,UPDATE_USER,
+		row_number()over(partition by rep_id order by update_time desc) rn
+		from rep_info_status
+		where eff_date > #{effDate,jdbcType=TIMESTAMP}
 		) ris2 ON A.REP_ID = ris2.Rep_Id and ris2.rn =1
-	    <where>
-	        <if test="reportName!=null and reportName!=''">
+		<where>
+			<if test="reportName!=null and reportName!=''">
 				A.REPORT_NAME like concat(concat('%',#{reportName,jdbcType=VARCHAR}),'%')
-			</if>	
+			</if>
 			<if test="reportCategoryArr != null and reportCategoryArr.length > 0">
-	 		AND A.REPORT_CATEGORY IN
-			<foreach item="item" collection="reportCategoryArr" index="index"
-				open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		   </if>  
-        </where>
-        order by A.UPDATE_TIME DESC
+				AND A.REPORT_CATEGORY IN
+				<foreach item="item" collection="reportCategoryArr" index="index"
+						 open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		order by A.UPDATE_TIME DESC
 	</select>
 
 	

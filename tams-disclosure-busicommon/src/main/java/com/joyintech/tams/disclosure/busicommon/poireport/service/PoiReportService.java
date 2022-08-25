@@ -1403,6 +1403,16 @@ public class PoiReportService {
 		return result;
 	}
 
+	public String statusCheck(Map<String, Object> params){
+		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
+		//
+		int count = reportInfoMapper.getRepInfoStatus(params);
+		if (count<1) {
+			return "启用状态为初始化的报表,无法生成该报表";
+		}
+		return null;
+	}
+
 	private boolean getChangeFlag(RepProdInfo prod,Date durStartDate,Date durEndDate){
 
 		Date sDate = durStartDate;

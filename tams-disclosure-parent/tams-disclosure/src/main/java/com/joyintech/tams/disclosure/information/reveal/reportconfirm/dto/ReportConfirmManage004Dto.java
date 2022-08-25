@@ -35,7 +35,7 @@ public class ReportConfirmManage004Dto extends RepReveal implements ProcessEntit
      * */
     private String infoStatus;
 
-    private List<UploadFileDto> uploadFileList2;
+    private transient List<UploadFileDto> uploadFileList2;
 
     private String comment;
 

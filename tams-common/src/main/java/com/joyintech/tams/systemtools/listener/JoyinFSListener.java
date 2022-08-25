@@ -152,7 +152,7 @@ public class JoyinFSListener implements FileUploadListener, FileAttachmentProces
             LOGGER.debug("文件{}已上传", file.getPath());
         }
         String os = System.getProperty("os.name");
-        if(!os.toLowerCase().startsWith("win")){
+        if(os!=null && !os.toLowerCase().startsWith("win")){
             // 设置权限 755
             Set<PosixFilePermission> perms = new HashSet<>();
             // 设置所有者的读取权限

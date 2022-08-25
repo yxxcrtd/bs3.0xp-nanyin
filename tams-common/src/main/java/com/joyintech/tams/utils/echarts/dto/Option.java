@@ -33,7 +33,7 @@ public class Option implements Serializable {
 	/**
 	 * 数据集合
 	 */
-	private List<Series> Series;
+	private transient List<Series> Series;
 
 	public Title getTitle() {
 		return title;

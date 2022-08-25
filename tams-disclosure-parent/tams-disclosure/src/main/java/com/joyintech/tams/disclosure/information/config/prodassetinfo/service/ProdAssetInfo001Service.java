@@ -306,7 +306,7 @@ public class ProdAssetInfo001Service extends CommonExportService<ProdAssetInfoDt
         //字段非空检查
         String[] elementStr={"主产品代码","合作机构","生效日","生效截止日期"};
         for (int j = 0; j < list.size(); j++) {
-            if(list.get(j)==null || list.get(j)==""){
+            if(list.get(j)==null || list.get(j).length()==0){
                 ExcelValidDto dto = new ExcelValidDto(list.get(j), String.valueOf(i+2),
                         elementStr[j]+"不能为空！");
                 excelValidDtolist.add(dto);
