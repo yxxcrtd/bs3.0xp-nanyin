@@ -565,6 +565,9 @@ $(function () {
 
 	        });
 	    }else{
+	    	params['uri'] = modelId;
+	    	params['repid']=repId;
+
 			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result1) {
 				console.log(result1);
 				if(result1){
