@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -26,6 +27,10 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
      * 序列
      */
     private static final long serialVersionUID = -2744914232496735261L;
+    /**
+     * excle行
+     */
+    private String excelNum;
 
     /**
      * 操作类型
@@ -47,6 +52,8 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
     private  String prodId;
 
     private String status;
+
+    private String balanceDateStr;
 
 
     /**
@@ -115,11 +122,18 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
         return super.getBooksetId();
     }
 
+    public void setBalanceDateStr(String balanceDateStr) {
+        this.balanceDateStr = balanceDateStr;
+    }
 
     @PrimaryKey(PrimaryKey.Field.PK_2)
     @NotEmpty(fieldName = "余额日期", groups = {ValidateGroupEdit.class})
     public String getBalanceDateStr() {
-        return DateUtil.format(super.getBalanceDate());
+        if (StringUtil.isNotEmpty(this.balanceDateStr)) {
+            return this.balanceDateStr;
+        } else {
+            return DateUtil.format(super.getBalanceDate());
+        }
     }
 //    @PrimaryKey(PrimaryKey.Field.PK_2)
 //    public String getTradeDateStr() {
@@ -158,5 +172,13 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
 
     public String getDataStatusStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,super.getStatus());
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }

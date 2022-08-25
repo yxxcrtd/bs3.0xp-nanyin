@@ -32,6 +32,11 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 	private List<DisProdPlanManage002Dto> addParam=new ArrayList<>();
 
 	/**
+	 * excle行
+	 */
+	private String excelNum;
+
+	/**
 	 * 开放期起始日
 	 */
 	private String openStartDateStr;
@@ -275,5 +280,13 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 
 	public void setAddParam(List<DisProdPlanManage002Dto> addParam) {
 		this.addParam = addParam;
+	}
+
+	public String getExcelNum() {
+		return excelNum;
+	}
+
+	public void setExcelNum(String excelNum) {
+		this.excelNum = excelNum;
 	}
 }

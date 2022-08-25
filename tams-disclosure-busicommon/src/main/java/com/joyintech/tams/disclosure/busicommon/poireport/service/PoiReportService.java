@@ -890,19 +890,27 @@ public class PoiReportService {
 		RepReveal repReveal = poiReportService.getRepReveal(params);
 
 		Map<String, Object> dataMap = null;
-		List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
 		int index=1;
-		if(listReports==null){
-			resultSb.append((index++)+"："+"报告期末时点距离当前产品的生成日或者到期日不足90个自然日，无需生成报告<br>");
-			return resultSb.toString();
+		if(params.get("batchCheckData")!=null){
+			dataMap=(Map<String, Object>)params.get("batchCheckData");
+			if(dataMap == null){
+				return resultSb.toString();
+			}
+		}else{
+			List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+			if(listReports==null){
+				resultSb.append((index++)+"："+"报告期末时点距离当前产品的生成日或者到期日不足90个自然日，无需生成报告<br>");
+				return resultSb.toString();
+			}
+			if (listReports.size() > 0) {
+				dataMap = listReports.get(0);
+				dataMap.put("prodId",repReveal.getProdid());
+				dataMap.put("repId",params.get("repid"));
+			} else{
+				return resultSb.toString();
+			}
 		}
-		if (listReports.size() > 0) {
-			dataMap = listReports.get(0);
-			dataMap.put("prodId",repReveal.getProdid());
-			dataMap.put("repId",params.get("repid"));
-		} else{
-			return resultSb.toString();
-		}
+
 
 		String rptType = params.get("uri").toString();
 		String prodId = StringUtil.isNotEmpty(repReveal.getProdid())?repReveal.getProdid():params.get("prodid").toString();

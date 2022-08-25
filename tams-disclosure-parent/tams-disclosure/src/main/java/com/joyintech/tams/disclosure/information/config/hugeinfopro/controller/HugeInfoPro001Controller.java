@@ -3,7 +3,6 @@ package com.joyintech.tams.disclosure.information.config.hugeinfopro.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -12,9 +11,9 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.service.HugeInfoPro001Service;
-import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -30,11 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
 @PageId("HugeInfoPro001")
@@ -127,8 +122,8 @@ public class HugeInfoPro001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
-        return hugeInfoPro001Service.importFile(param);
+    public List<ExcelValidDto> importFile(String fileName)  {
+        return hugeInfoPro001Service.importData(fileName);
     }
 
     @ResponseBody

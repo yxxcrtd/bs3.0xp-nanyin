@@ -10,8 +10,6 @@
 
 package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,14 +17,12 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
-import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
-import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -46,15 +42,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.system.constant.SystemGlobalConstant;
 
 /**
  * 产品分红到期计划 〈一句话功能简述〉 〈功能详细描述〉
@@ -68,10 +57,6 @@ import com.joyintech.system.constant.SystemGlobalConstant;
 @PageId("ProdBonusplanManager001")
 @RequestMapping("/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001")
 public class ProdBonusplanManager001Controller extends BaseController {
-
-	@SuppressWarnings("rawtypes")
-	@Autowired
-	private CommonExportService commonExportService;
 
 	@Autowired
 	private ProdBonusplanManager001Service prodBonusplanManager001Service;
@@ -221,7 +206,7 @@ public class ProdBonusplanManager001Controller extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("importFile")
-	public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
-		return prodBonusplanManager001Service.importFile(param);
+	public List<ExcelValidDto> importFile(String fileName)  {
+		return prodBonusplanManager001Service.importData(fileName);
 	}
 }

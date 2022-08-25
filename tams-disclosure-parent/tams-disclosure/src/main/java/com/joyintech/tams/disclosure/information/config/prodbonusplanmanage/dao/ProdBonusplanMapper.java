@@ -68,4 +68,6 @@ public interface ProdBonusplanMapper {
 	List<SelectOptionDto> getAllPrdInfoSelect2(Map<String, Object> param);
 
 	int selectByProdId2(@Param("prodId") String prodId, @Param("dataStatus")String dataStatus);
+
+	List<ProdBonusplanDto> selectBonusPlanList(@Param("list") List<ProdBonusplanDto> list);
 }

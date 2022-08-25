@@ -28,12 +28,12 @@ public class ExcelValidDto {
     /**
      * 检查通过MSG
      */
-    private static final String CHECK_OK_MSG = "01";
+    private static final String CHECK_OK_MSG = "检查通过";
 
     /**
      * 检查不通过MSG
      */
-    private static final String CHECK_NG_MSG = "02";
+    private static final String CHECK_NG_MSG = "检查不通过";
 
     /**
      * 存在警示信息项MSG

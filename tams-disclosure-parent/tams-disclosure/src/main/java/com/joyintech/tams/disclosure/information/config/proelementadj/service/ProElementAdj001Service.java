@@ -1,8 +1,8 @@
 package com.joyintech.tams.disclosure.information.config.proelementadj.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -13,8 +13,8 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
-import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
@@ -22,14 +22,12 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -138,160 +136,34 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")),()->proElementAdjMapper.getProdIdlist(map));
     }
-    /**
-     * 导入check
-     * @param fileName
-     * @return
-     */
+
     public AjaxResult checkImportData(String fileName) {
-        List<String> findProdRegistNoList =  this.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-        List<String> findProdList =  this.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        AjaxResult webResult = new AjaxResult();
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
+        List<List<String>> tempList = ExcelUtil.getTempList(fileName);
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
         }
-        String totalMsg = "";
-        List<List<String>> jsonArrays = new ArrayList<>();
-        // 重复数据
-        int repeatNum = 0;
-        if (objects.size() <= 1) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        } else {
-            if (null == objects.get(0) || objects.get(0).size() != 13) {
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要13列。");
-                AjaxResult wr = new AjaxResult();
-                wr.setData(resultMap);
-                return wr;
-            }else {
-                StringBuilder returnerrorMsg = new StringBuilder("");
-                for (int i = 1; i < objects.size(); i++) {
-                    StringBuilder errorMsg = new StringBuilder("");
-                    List<String> rowData = objects.get(i);
-
-
-                    if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
-                        errorMsg.append("产品登记编码 必填！");
-                    }
-                    else if(!findProdRegistNoList.contains(rowData.get(0).trim())){
-                        errorMsg.append("产品登记编码未在产品基本信息表中维护！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
-                        errorMsg.append("子产品代码 必填！");
-                    }
-                    else if(!findProdList.contains(rowData.get(1).trim())){
-                        errorMsg.append("子产品代码未在产品基本信息表中维护！");
-                    }
-                    if (rowData.get(2).length()>500){
-                        errorMsg.append("调整此产品要素原因 输入字符长度超过限制！");
-                    }
-                    if (rowData.get(3).length()>500){
-                        errorMsg.append("此产品要素调整描述文字1 输入字符长度超过限制！");
-                    }
-                    if (rowData.get(4).length()>500){
-                        errorMsg.append("此产品要素调整描述文字2 输入字符长度超过限制！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
-                        errorMsg.append("调整要素 必填！");
-                    }
-                    if (rowData.get(5).length()>500){
-                        errorMsg.append("调整要素输入字符长度超过限制！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
-                        errorMsg.append("调整前 必填！");
-                    }
-                    if (rowData.get(6).length()>500){
-                        errorMsg.append("调整前 输入字符长度超过限制！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(7).trim())){
-                        errorMsg.append("调整后 必填！");
-                    }
-                    if (rowData.get(7).length()>500){
-                        errorMsg.append("调整后 输入字符长度超过限制！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(8))){
-                        errorMsg.append("生效时间 必填！");
-                    }else if(!this.isDateStr(rowData.get(8))){
-                        errorMsg.append("生效时间 格式不正确！");
-                    }
-                    if (rowData.get(9).length()>500){
-                        errorMsg.append("对此要素调整(原因) 输入字符长度超过限制！");
-                    }
-                    if (rowData.get(10).length()>500){
-                        errorMsg.append("调整此要素（补充说明文1） 输入字符长度超过限制！");
-                    }
-                    if (rowData.get(11).length()>500){
-                        errorMsg.append("调整此要素（补充说明文2） 输入字符长度超过限制！");
-                    }
-//                    if (!StringUtil.isNotEmpty(rowData.get(9).trim())){
-//                        errorMsg.append("对此要素调整(原因) 必填！");
-//                    }
-//                    if (!StringUtil.isNotEmpty(rowData.get(10).trim())){
-//                        errorMsg.append("调整此要素（补充说明文1） 必填！");
-//                    }
-//                    if (!StringUtil.isNotEmpty(rowData.get(11).trim())){
-//                        errorMsg.append("调整此要素（补充说明文2） 必填！");
-//                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(12))){
-                        errorMsg.append("报告发布日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(12))){
-                        errorMsg.append("报告发布日期 格式不正确！");
-                    }
-                    if (StringUtil.isNotEmpty(errorMsg.toString())){
-                        errorMsg.append("<br />");
-                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
-                    }
-                }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("errorMsg", returnerrorMsg.toString());
-                    AjaxResult wr = new AjaxResult();
-                    wr.setData(resultMap);
-                    return wr;
-                }
-                //第一行【i=0】为表头，所以不操作。
-                for (int i = objects.size() - 1; i >= 1; i--) {
-                    List<String> list1 = objects.get(i);
-                    Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
-                        List<String> list2 = objects.get(k);
-                        //产品登记编码，相同时为重复数据
-                        /* NYLCXP-540 登记编码相同且调整字段相同才视为重复数据  modify by kongzhifang 2022-08-11 */
-                        if (StringUtil.equals(list1.get(1), list2.get(1))&&StringUtil.equals(list1.get(5), list2.get(5))) {
-                            isRepeat = true;
-                            break;
-                        }
-                    }
-                    if (isRepeat){
-                        repeatNum++;
-                    }else {
-                        jsonArrays.add(list1);
-                    }
-                }
+        if (null == tempList.get(0) || tempList.get(0).size() != 13) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 13), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = tempList.subList(1, tempList.size());
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            if (dataList.size() > 50000) {
+                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                return webResult;
             }
+            // 防止在进行导入前check时进行了两次的弹框
+            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+        } else {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
         }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，请检查文件！";
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("errorMsg", totalMsg);
-        }
-        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
+        return webResult;
     }
 
     public static boolean isDateStr(String str) {
@@ -305,98 +177,160 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
         }
     }
 
-
-    public AjaxResult importFile(Map<String, Object> param) {
-        AjaxResult ajaxResult = new AjaxResult();
-        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
-        String tempList = (String) param.get("tempList");
-        ProElementAdj001Dto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<ProElementAdj001Dto> selectedItem = dto.getSelectedItem();
-        List<ProElementAdj001Dto>  existData = new ArrayList<>();
-        List<ProElementAdj001Dto>  newData = new ArrayList<>();
-        for (ProElementAdj001Dto temp:selectedItem) {
-            //数据已存在 【产品登记编码 相同】，做更新操作。
-//            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
-//                existData.add(temp);
-//            }else {
-//                newData.add(temp);
-//            }
-            temp.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-            temp.setUpdateTime(sysDate);
-            temp.setUpdateUser(CommonUtil.getUserName());
-            temp.setProdAdjustId(IDGenerator.generate(36));
-            newData.add(temp);
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<ProElementAdj001Dto> entities = new ArrayList<>(dataList.size());
+            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                    item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                    item.setUpdateTime(DateUtil.now());
+                    item.setUpdateUser(CommonUtil.getUserName());
+                    item.setProdAdjustId(IDGenerator.generate(36));
+                    this.doComplete(item, OperationType.NEW);
+                });
+            }
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
         }
-        //更新操作
-//        for (ProElementAdj001Dto existDataDto : existData) {
-//            this.doComplete(existDataDto,OperationType.MODIFY);
-//        }
-        //插入操作
-        for (ProElementAdj001Dto newDataDto : newData
-        ) {
-            this.doComplete(newDataDto,OperationType.NEW);
-        }
-        ajaxResult.setStatuCode(HttpStatus.OK.value());
-        return ajaxResult;
     }
 
-
-    public ProElementAdj001Dto getValNetAssetQuotationInfoListData(String tempList) {
-        ProElementAdj001Dto dto = new ProElementAdj001Dto();
-        // 产品要素调整信息列表
-        List<ProElementAdj001Dto> proElementAdj001DtoList = new ArrayList<>();
-        dto.setSelectedItem(proElementAdj001DtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            ProElementAdj001Dto proElementAdj001Dto = new ProElementAdj001Dto();
-            if (StringUtil.isNotEmpty(rowData.get(0))) {
-                proElementAdj001Dto.setProdRegistNo(rowData.get(0).toString());
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<ProElementAdj001Dto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        List<String> registNoList =  this.getRegistNo(Maps.newHashMap())
+                .stream().map(SelectOptionDto::getId).collect(Collectors.toList());
+        List<String> prodList =  this.getProdId(Maps.newHashMap())
+                .stream().map(SelectOptionDto::getId).collect(Collectors.toList());
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 13) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 13)));
+                break;
             }
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                proElementAdj001Dto.setProdId(rowData.get(1).toString());
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (!StringUtil.isNotEmpty(rowData.get(0))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品登记编码"));
+            } else if(!registNoList.contains(rowData.get(0))){
+                message.add("产品登记编码未在产品基本信息表中维护。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                proElementAdj001Dto.setAdjReason(rowData.get(2).toString());
+            if (!StringUtil.isNotEmpty(rowData.get(1))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
+            } else if(!prodList.contains(rowData.get(1))){
+                message.add("子产品代码未在产品基本信息表中维护。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                proElementAdj001Dto.setProdAdjRemark(rowData.get(3).toString());
+            if (StringUtil.isNotEmpty(rowData.get(2)) && rowData.get(2).length() > 500){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整此产品要素原因"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(4))) {
-                proElementAdj001Dto.setProdAdjRemark2(rowData.get(4).toString());
+            if (StringUtil.isNotEmpty(rowData.get(3)) && rowData.get(3).length() > 500){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "此产品要素调整描述文字1"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(5))) {
-                proElementAdj001Dto.setAdjField(rowData.get(5).toString());
+            if (StringUtil.isNotEmpty(rowData.get(4)) && rowData.get(4).length() > 500){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "此产品要素调整描述文字2"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(6))) {
-                proElementAdj001Dto.setPreAdjust(rowData.get(6).toString());
+            if (!StringUtil.isNotEmpty(rowData.get(5))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整要素"));
+            } else if (rowData.get(5).length() > 500){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整要素"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(7))) {
-                proElementAdj001Dto.setAfterAdjust(rowData.get(7).toString());
+            if (!StringUtil.isNotEmpty(rowData.get(6))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整前"));
+            } else if (rowData.get(6).length() > 500){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整前"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(8))) {
-                proElementAdj001Dto.setEffDate(DateUtil.parse(rowData.get(8).toString()));
+            if (!StringUtil.isNotEmpty(rowData.get(7))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整后"));
+            } else if (rowData.get(7).length() > 500){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整后"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(9))) {
-                proElementAdj001Dto.setAdjReason2(rowData.get(9).toString());
+            if (!StringUtil.isNotEmpty(rowData.get(8))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效时间"));
+            } else if(!isDateStr(rowData.get(8))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效时间"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(10))) {
-                proElementAdj001Dto.setFieldAdjRemark(rowData.get(10).toString());
+            if (StringUtil.isNotEmpty(rowData.get(9)) && rowData.get(9).length() > 500) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "对此要素调整(原因)"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(11))) {
-                proElementAdj001Dto.setFieldAdjRemark2(rowData.get(11).toString());
+            if (StringUtil.isNotEmpty(rowData.get(10)) && rowData.get(10).length() > 500){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整此要素（补充说明文1）"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(12))) {
-                proElementAdj001Dto.setRptIssueDate(DateUtil.parse(rowData.get(12).toString()));
+            if (StringUtil.isNotEmpty(rowData.get(11)) && rowData.get(11).length() > 500){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整此要素（补充说明文2）"));
             }
-            proElementAdj001DtoList.add(proElementAdj001Dto);
+            if (!StringUtil.isNotEmpty(rowData.get(12))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
+            }else if(!isDateStr(rowData.get(12))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
+            }
+            if (map.containsKey(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(5))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            }
+            map.put(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(5), rowData);
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(rowData.get(1)
+                        + GlobalConstant.UNDER_LINE + rowData.get(5),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+            }
+            else {
+                entities.add(this.convertToEntity(rowData));
+            }
         }
-        dto.setSelectedItem(proElementAdj001DtoList);
-        return dto;
+        return checkResult;
     }
 
-
-
+    private ProElementAdj001Dto convertToEntity(List<String> rowData) {
+        ProElementAdj001Dto proElementAdj001Dto = new ProElementAdj001Dto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            proElementAdj001Dto.setProdRegistNo(rowData.get(0));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            proElementAdj001Dto.setProdId(rowData.get(1));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            proElementAdj001Dto.setAdjReason(rowData.get(2));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            proElementAdj001Dto.setProdAdjRemark(rowData.get(3));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(4))) {
+            proElementAdj001Dto.setProdAdjRemark2(rowData.get(4));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(5))) {
+            proElementAdj001Dto.setAdjField(rowData.get(5));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(6))) {
+            proElementAdj001Dto.setPreAdjust(rowData.get(6));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(7))) {
+            proElementAdj001Dto.setAfterAdjust(rowData.get(7));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(8))) {
+            proElementAdj001Dto.setEffDate(DateUtil.parse(rowData.get(8)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(9))) {
+            proElementAdj001Dto.setAdjReason2(rowData.get(9));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(10))) {
+            proElementAdj001Dto.setFieldAdjRemark(rowData.get(10));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(11))) {
+            proElementAdj001Dto.setFieldAdjRemark2(rowData.get(11));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(12))) {
+            proElementAdj001Dto.setRptIssueDate(DateUtil.parse(rowData.get(12)));
+        }
+        return proElementAdj001Dto;
+    }
 }

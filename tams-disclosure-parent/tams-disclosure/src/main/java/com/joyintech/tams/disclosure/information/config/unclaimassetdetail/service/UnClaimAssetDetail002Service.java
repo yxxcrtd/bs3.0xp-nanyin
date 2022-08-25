@@ -81,9 +81,15 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
         }
         else {
             //编辑后更新  全删全插，覆盖掉 删除按照prodId,effDate,effEndDate
+            UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
+            unClaimAssetDetailDto.setProdId(dto.getProdId());
                 unClaimAssetDetailMapper.deleteOnReal(dto);
             for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()){
                 String code = IDGenerator.generate(36);
+                if (unclaimDto.getProdId()==null){
+                    unclaimDto.setProdId(unClaimAssetDetailDto.getProdId());
+                }
+                unclaimDto.setDataStatus("E");
                 unclaimDto.setNostdAssetId(code);
                 unclaimDto.setEffDate(dto.getEffDate());
                 unclaimDto.setEffEndDate(dto.getEffEndDate());

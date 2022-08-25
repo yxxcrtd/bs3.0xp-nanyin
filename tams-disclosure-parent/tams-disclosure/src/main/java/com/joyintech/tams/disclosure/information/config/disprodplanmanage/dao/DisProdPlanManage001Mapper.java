@@ -36,4 +36,6 @@ public interface DisProdPlanManage001Mapper {
 	String getProdId(@Param("prodId") String prodId);
 
     List<DisProdPlanManage002Dto> isRepeated(DisProdPlanManage002Dto dto);
+
+	List<DisProdPlanManage002Dto> selectProdPlanList(@Param("list") List<DisProdPlanManage002Dto> list);
 }
