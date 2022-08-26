@@ -203,8 +203,16 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             RepProdIndexDto entity = new RepProdIndexDto();
-            entity.setProdId(list.get(0));
-            entity.setValueDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setValueDateStr(list.get(2));
+            } else {
+                entity.setValueDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

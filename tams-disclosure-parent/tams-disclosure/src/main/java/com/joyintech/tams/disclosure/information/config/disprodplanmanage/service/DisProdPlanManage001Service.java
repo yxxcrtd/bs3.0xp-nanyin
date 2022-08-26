@@ -213,8 +213,16 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             DisProdPlanManage002Dto entity = new DisProdPlanManage002Dto();
-            entity.setProdId(list.get(0));
-            entity.setOpenEndDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setOpenEndDateStr(list.get(2));
+            } else {
+                entity.setOpenEndDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

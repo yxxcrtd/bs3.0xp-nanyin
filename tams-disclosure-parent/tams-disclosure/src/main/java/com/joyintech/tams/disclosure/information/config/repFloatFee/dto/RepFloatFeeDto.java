@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.repFloatFee.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -22,6 +23,10 @@ import java.util.List;
 @PageId("RepFloatFee002")
 @ValidLogic(targetClass = RepFloatFeeValidator.class, groups = { ValidateGroupEdit.class, ValidateGroupDelete.class })
 public class RepFloatFeeDto extends RepFloatFee implements ITableRow, ProcessEntity {
+    /**
+     * excle行
+     */
+    private String excelNum;
     /**
      * 操作类型
      */
@@ -85,6 +90,8 @@ public class RepFloatFeeDto extends RepFloatFee implements ITableRow, ProcessEnt
      * 产品代码
      */
     private String prodName;
+
+    private String affirmDateStr;
 
     public String getOperateType() {
         return operateType;
@@ -222,7 +229,15 @@ public class RepFloatFeeDto extends RepFloatFee implements ITableRow, ProcessEnt
 
     @PrimaryKey(PrimaryKey.Field.PK_2)
     public String getAffirmDateStr() {
-        return this.getAffirmDate()==null?null: DateUtil.format(this.getAffirmDate(), "yyyy-MM-dd");
+        if (StringUtil.isNotEmpty(this.affirmDateStr)) {
+            return this.affirmDateStr;
+        } else {
+            return this.getAffirmDate() == null ? null : DateUtil.format(this.getAffirmDate(), "yyyy-MM-dd");
+        }
+    }
+
+    public void setAffirmDateStr(String affirmDateStr) {
+        this.affirmDateStr = affirmDateStr;
     }
 
     public String getUpdateTimeStr() {
@@ -232,4 +247,11 @@ public class RepFloatFeeDto extends RepFloatFee implements ITableRow, ProcessEnt
         return SysDataUtil.getNameFromDataDict(DictCodeExt1.业务代码, this.getBusinessCode());
     }
 
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
+    }
 }
