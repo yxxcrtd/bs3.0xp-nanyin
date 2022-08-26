@@ -30,4 +30,6 @@ public interface RepInvestAccount001Mapper {
     String getProdId(@Param("prodId") String prodId);
 
     RepInvestAccountDto checkExistData(RepInvestAccountDto record);
+
+    List<RepInvestAccountDto> selectInvestAccountList(@Param("list") List<RepInvestAccountDto> list);
 }

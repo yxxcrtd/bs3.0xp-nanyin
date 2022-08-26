@@ -18,7 +18,10 @@ import java.util.List;
 @PageId("RepInvestAccount002")
 @ValidLogic(targetClass = RepInvestAccountValidator.class, groups = { ValidateGroupEdit.class, ValidateGroupDelete.class })
 public class RepInvestAccountDto extends RepInvestAccount implements ITableRow, ProcessEntity {
-
+    /**
+     * excle行
+     */
+    private String excelNum;
     /**
      * 操作类型
      */
@@ -85,5 +88,13 @@ public class RepInvestAccountDto extends RepInvestAccount implements ITableRow, 
 
     public String getUpdateTimeStr() {
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }

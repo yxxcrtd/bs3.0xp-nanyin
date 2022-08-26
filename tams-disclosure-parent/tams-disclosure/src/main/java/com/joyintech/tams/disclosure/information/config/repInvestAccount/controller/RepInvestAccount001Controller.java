@@ -11,7 +11,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
-import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.service.RepInvestAccountService;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -144,7 +144,7 @@ public class RepInvestAccount001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
-        return repInvestAccountService.importFile(param);
+    public List<ExcelValidDto> importFile(String fileName)  {
+        return repInvestAccountService.importData(fileName);
     }
 }
