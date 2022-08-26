@@ -88,7 +88,6 @@ public class ProdBasicChangeService {
      * @return
      */
     public void updateProdBasicChangeList(List<ProdBasicChangeDto> list, String prodId, String isIndex) {
-        Date platDate = commonPlatformDateService.getSysDate(); //平台日
         if (CollectionUtils.isNotEmpty(list) || StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), isIndex)) {
             //根据prodId进行更新，将老数据状态改成 删除状态
             List<ProdBasicChangeDto> oldList = prodBasicChangeMapper.selectListByProdId(prodId);

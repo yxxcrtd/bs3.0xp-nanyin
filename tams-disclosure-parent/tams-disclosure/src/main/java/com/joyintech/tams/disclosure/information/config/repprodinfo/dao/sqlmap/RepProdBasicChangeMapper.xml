@@ -189,7 +189,7 @@
 
     <update id="updateByGroupId" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
         update REP_PROD_BASIC_CHANGE
-        set STATUS = #{status,jdbcType=VARCHAR}
+        set STATUS = #{status,jdbcType=VARCHAR}, UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where GROUP_ID = #{groupId,jdbcType=CHAR} and PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 
