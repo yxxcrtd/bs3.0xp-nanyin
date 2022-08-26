@@ -186,7 +186,7 @@
                     var createUser = obj.createUser;
                     var fileList = obj.fileList;
                     var div = $('<div class="upload layui-upload"></div>');
-                    var h3 = $('<h3 class="pro-module-title"><span class="title-des"></span>修订后附件<i class="iconfont must" style="display: inline;">*</i></h3>');
+                    var h3 = $('<h3 class="pro-module-title"><span class="title-des"></span>修订意见<i class="iconfont must" style="display: inline;">*</i></h3>');
                     var table = $('<table class="layui-table"></table>');
                     var remark = $(['<div class="layui-form-item">'
                         ,'<label style="float: left">'+createUser+'<i class="iconfont must" style="display: inline;">*</i></label>'
