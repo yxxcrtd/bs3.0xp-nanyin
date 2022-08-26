@@ -10,8 +10,9 @@
 
 package com.joyintech.tams.disclosure.information.config.prodfeediscount.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -23,11 +24,10 @@ import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
-import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.ProdFeediscountMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
-import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -38,7 +38,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -266,172 +265,112 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         return  prodInfo;
     }
 
-
-    /**
-     * 导入check
-     * @param fileName
-     * @return
-     */
     public AjaxResult checkImportData(String fileName) {
+        AjaxResult webResult = new AjaxResult();
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
-//        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
-//        if (objects.size() - 1 > 50000) {
-//            Map<String, Object> resultMap = new HashMap<>();
-//            resultMap.put("errorMsg", "单次最多导入50000条。");
-//            AjaxResult wr = new AjaxResult();
-//            wr.setData(resultMap);
-//            return wr;
-//        }
-        String totalMsg = "";
-        List<List<String>> jsonArrays = new ArrayList<>();
-        // 重复数据
-        int repeatNum = 0;
-        if (objects.size() <= 1) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
+        List<List<String>> tempList = ExcelUtil.getTempList(fileName);
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        if (null == tempList.get(0) || tempList.get(0).size() != 13) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 13), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = tempList.subList(1, tempList.size());
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
+                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                return webResult;
+            }
+            List<ProdFeediscountDto> entities = this.convertToBean(dataList);
+            List<String> excelNumList = new ArrayList<>();
+            entities.forEach(x -> {
+                if (this.selectData(x) != null) {
+                    excelNumList.add(x.getExcelNum());
+                }
+            });
+            if (!excelNumList.isEmpty()) {
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
+            } else {
+                // 防止在进行导入前check时进行了两次的弹框
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            }
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 13) {
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要13列。");
-                AjaxResult wr = new AjaxResult();
-                wr.setData(resultMap);
-                return wr;
-            }else {
-                StringBuilder returnerrorMsg = new StringBuilder("");
-                for (int i = 1; i < objects.size(); i++) {
-                    StringBuilder errorMsg = new StringBuilder("");
-                    List<String> rowData = objects.get(i);
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        return webResult;
+    }
 
-                    if (StringUtil.isEmpty(rowData.get(0))){
-                        errorMsg.append("产品登记编码 必填！");
-                    }
-                    if (StringUtil.isEmpty(rowData.get(1))){
-                        errorMsg.append("子产品代码 必填！");
-                    }else{
-//                        ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(1));
-//                        if(prodInfo == null){
-//                            errorMsg.append("子产品代码 不存在");
-//                        }
-                        if (!this.getProdId(rowData.get(1))) {
-                            errorMsg.append("子产品代码 不存在");
-                        }
-                    }
-                    if (StringUtil.isEmpty(rowData.get(3))){
-                        errorMsg.append("优惠的费用 必填！");
-                    }
-                    if (StringUtil.isNotEmpty(rowData.get(4)) && !isNumber(rowData.get(4))){
-                        errorMsg.append("优惠前费率 格式不正确！");
-                    }
-                    if (StringUtil.isNotEmpty(rowData.get(5)) && !isNumber(rowData.get(5))){
-                        errorMsg.append("优惠后费率 格式不正确！");
-                    }
-                    if (StringUtil.isNotEmpty(rowData.get(6)) && !this.isDateStr(rowData.get(6))){
-                        errorMsg.append("优惠起始时间 格式不正确！");
-                    }
-                    if (StringUtil.isNotEmpty(rowData.get(7)) && !this.isDateStr(rowData.get(7))){
-                        errorMsg.append("优惠截止时间 格式不正确！");
-                    }
-                    if (StringUtil.isNotEmpty(rowData.get(8)) && !isNumber(rowData.get(8))){
-                        errorMsg.append("本次优惠前费率 格式不正确！");
-                    }
-                    if (StringUtil.isNotEmpty(rowData.get(9)) && !isNumber(rowData.get(9))){
-                        errorMsg.append("本次优惠后费率 格式不正确！");
-                    }
-                    if (StringUtil.isNotEmpty(rowData.get(10)) && !isNumber(rowData.get(10))){
-                        errorMsg.append("本次优惠结束后费率 格式不正确！");
-                    }
-                    if (StringUtil.isEmpty(rowData.get(12))){
-                        errorMsg.append("报告发布日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(12))){
-                        errorMsg.append("报告发布日期 格式不正确！");
-                    }
-
-                    if (StringUtil.isNotEmpty(rowData.get(6)) && this.isDateStr(rowData.get(6))
-                        && StringUtil.isNotEmpty(rowData.get(7)) && this.isDateStr(rowData.get(7))){
-                        if (DateUtil.compareDate(rowData.get(7),rowData.get(6)) < 0) {
-                            errorMsg.append("优惠截止时间必须大于优惠起始时间");
-                        }
-                    }
-
-                    if (StringUtil.isNotEmpty(errorMsg.toString())){
-                        errorMsg.append("<br />");
-                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
-                    }
-                }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("errorMsg", returnerrorMsg.toString());
-                    AjaxResult wr = new AjaxResult();
-                    wr.setData(resultMap);
-                    return wr;
-                }
-                //第一行【i=0】为表头，所以不操作。
-                for (int i = objects.size() - 1; i >= 1; i--) {
-                    List<String> list1 = objects.get(i);
-                    Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
-                        List<String> list2 = objects.get(k);
-                        //子产品代码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))
-                         && (StringUtil.equals(list1.get(1), list2.get(1)))
-                                && (StringUtil.equals(list1.get(2), list2.get(2)))
-                                && (StringUtil.equals(list1.get(3), list2.get(3)))
-                                && (StringUtil.equals(list1.get(4), list2.get(4)))
-                                && (StringUtil.equals(list1.get(5), list2.get(5)))
-                                && (StringUtil.equals(list1.get(6), list2.get(6)))
-                                && (StringUtil.equals(list1.get(7), list2.get(7)))
-                                && (StringUtil.equals(list1.get(8), list2.get(8)))
-                                && (StringUtil.equals(list1.get(9), list2.get(9)))
-                                && (StringUtil.equals(list1.get(10), list2.get(10)))
-                                && (StringUtil.equals(list1.get(11), list2.get(11)))
-                                && (StringUtil.equals(list1.get(12), list2.get(12))) ) {
-                            isRepeat = true;
-                            break;
-                        }
-                    }
-                    if (isRepeat){
-                        repeatNum++;
-                    }else {
-                        jsonArrays.add(list1);
-                    }
-//                    jsonArrays.add(objects.get(i));
-                }
+    /**
+     * excel数据转为java对象
+     * @return
+     */
+    private List<ProdFeediscountDto> convertToBean(List<List<String>> dataList) {
+        List<ProdFeediscountDto> entities = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list =  dataList.get(i);
+            ProdFeediscountDto entity = new ProdFeediscountDto();
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdRegistNo(list.get(0));
+            } else {
+                entity.setProdRegistNo(" ");
             }
-        }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
-        }
-        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
-
-        String tempList = (String) resultMap.get("correctData");
-        ProdFeediscountDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<ProdFeediscountDto> selectedItem = dto.getSelectedItem();
-        List<ProdFeediscountDto>  existData = new ArrayList<>();
-        for (ProdFeediscountDto temp:selectedItem) {
-            if (StringUtil.isNotEmpty(this.selectData(temp))){
-                existData.add(temp);
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setProdId(list.get(1));
+            } else {
+                entity.setProdId(" ");
             }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setProdDisRemark(list.get(2));
+            }
+            if (StringUtil.isNotEmpty(list.get(3))) {
+                entity.setFeename(list.get(3));
+            } else {
+                entity.setFeename(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(4))) {
+                entity.setPreFeerate(list.get(4));
+            }
+            if (StringUtil.isNotEmpty(list.get(5))) {
+                entity.setAfterFeerate(list.get(5));
+            }
+            if (StringUtil.isNotEmpty(list.get(6)) && isDateStr(list.get(6))) {
+                entity.setStartDate(DateUtil.parse(list.get(6)));
+            }
+            if (StringUtil.isNotEmpty(list.get(7)) && isDateStr(list.get(7))) {
+                entity.setEndDate(DateUtil.parse(list.get(7)));
+            }
+
+            if (StringUtil.isNotEmpty(list.get(8)) && isNumber(list.get(8))) {
+                entity.setThisPreFeerate(new BigDecimal(list.get(8)));
+            }
+            if (StringUtil.isNotEmpty(list.get(9)) && isNumber(list.get(9))) {
+                entity.setThisAfterFeerate( new BigDecimal(list.get(9)));
+            }
+            if (StringUtil.isNotEmpty(list.get(10)) && isNumber(list.get(10))) {
+                entity.setThisEndFeerate( new BigDecimal(list.get(10)));
+            }
+            if (StringUtil.isNotEmpty(list.get(11))) {
+                entity.setFeeDisRemark(list.get(11));
+            }
+            if (StringUtil.isNotEmpty(list.get(12)) && isDateStr(list.get(12))) {
+                entity.setRptIssueDateStr(list.get(12));
+            } else {
+                entity.setRptIssueDateStr(" ");
+            }
+            entity.setExcelNum(String.valueOf(i+2));
+            entities.add(entity);
         }
-        if(existData.size() > 0){
-            resultMap.put("errorMsg", "不可创建重复数据!");
-        }
-        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
-        if (objects.size() - 1 > maxCount) {
-            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
-        }
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
+        return entities;
     }
 
     public static boolean isDateStr(String str) {
@@ -449,98 +388,156 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         String reg = "^[0-9]+(.[0-9]+)?$";
         return str.matches(reg);
     }
-
-    public AjaxResult importFile(Map<String, Object> param) {
-        AjaxResult ajaxResult = new AjaxResult();
-        String tempList = (String) param.get("tempList");
-        ProdFeediscountDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<ProdFeediscountDto> selectedItem = dto.getSelectedItem();
-        List<ProdFeediscountDto>  existData = new ArrayList<>();
-        List<ProdFeediscountDto>  newData = new ArrayList<>();
-        for (ProdFeediscountDto temp:selectedItem) {
-            //数据已存在 【产品编码 相同】，做更新操作。
-           /* if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))){
-                existData.add(temp);
-            }else {*/
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
-                temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-                newData.add(temp);
-           // }
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<ProdFeediscountDto> entities = new ArrayList<>(dataList.size());
+            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    if (this.selectData(item) == null) {
+                        item.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
+                        item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                        this.insert(item);
+                    }
+                });
+            }
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
         }
-        //更新操作
-        /*for (ProdFeediscountDto existDataDto : existData) {
-            //this.doComplete(existDataDto, OperationType.MODIFY);
-            this.update(existDataDto);
-        }*/
-        //插入操作
-        for (ProdFeediscountDto newDataDto : newData
-        ) {
-            this.insert(newDataDto);
-            //this.doComplete(newDataDto,OperationType.NEW);
-        }
-        ajaxResult.setStatuCode(HttpStatus.OK.value());
-        return ajaxResult;
     }
 
-
-
-    public ProdFeediscountDto getValNetAssetQuotationInfoListData(String tempList) {
-        ProdFeediscountDto dto = new ProdFeediscountDto();
-        // 行情信息列表
-        List<ProdFeediscountDto> prodBonusplanDtoList = new ArrayList<>();
-       // dto.setSelectedItem(prodBonusplanDtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            ProdFeediscountDto feediscountDto = new ProdFeediscountDto();
-			/*if (StringUtil.isNotEmpty(rowData.get(0))) {
-				prodBonusplanDto.setDataStatus(rowData.get(0).toString());
-			}*/
-            if (StringUtil.isNotEmpty(rowData.get(0))) {
-                feediscountDto.setProdRegistNo(rowData.get(0).toString());
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<ProdFeediscountDto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        List<String> map = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 13) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 13)));
+                break;
             }
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                feediscountDto.setProdId(rowData.get(1).toString());
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (StringUtil.isEmpty(rowData.get(0))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品登记编码"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                feediscountDto.setProdDisRemark(rowData.get(2).toString());
+            if (StringUtil.isEmpty(rowData.get(1))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
+            } else {
+                if (!this.getProdId(rowData.get(1))) {
+                    message.add("子产品代码不存在。");
+                }
             }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                feediscountDto.setFeename(rowData.get(3).toString());
+            if (StringUtil.isEmpty(rowData.get(3))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "优惠的费用"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(4))) {
-                feediscountDto.setPreFeerate(rowData.get(4).toString());
+            if (StringUtil.isNotEmpty(rowData.get(6)) && !isDateStr(rowData.get(6))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "优惠起始时间"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(5))) {
-                feediscountDto.setAfterFeerate( rowData.get(5).toString());
+            if (StringUtil.isNotEmpty(rowData.get(7)) && !isDateStr(rowData.get(7))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "优惠截止时间"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(6))) {
-                feediscountDto.setStartDate(DateUtil.parse(rowData.get(6).toString()));
+            if (StringUtil.isNotEmpty(rowData.get(8)) && !isNumber(rowData.get(8))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "本次优惠前费率"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(7))) {
-                feediscountDto.setEndDate(DateUtil.parse(rowData.get(7).toString()));
+            if (StringUtil.isNotEmpty(rowData.get(9)) && !isNumber(rowData.get(9))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "本次优惠后费率"));
             }
-
-            if (StringUtil.isNotEmpty(rowData.get(8))) {
-                feediscountDto.setThisPreFeerate(new BigDecimal(rowData.get(8).toString()));
+            if (StringUtil.isNotEmpty(rowData.get(10)) && !isNumber(rowData.get(10))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "本次优惠结束后费率"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(9))) {
-                feediscountDto.setThisAfterFeerate( new BigDecimal(rowData.get(9).toString()));
+            if (StringUtil.isEmpty(rowData.get(12))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
+            }else if(!isDateStr(rowData.get(12))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(10))) {
-                feediscountDto.setThisEndFeerate( new BigDecimal(rowData.get(10).toString()));
+            if (StringUtil.isNotEmpty(rowData.get(6)) && isDateStr(rowData.get(6))
+                    && StringUtil.isNotEmpty(rowData.get(7)) && isDateStr(rowData.get(7))){
+                if (DateUtil.compareDate(rowData.get(7),rowData.get(6)) < 0) {
+                    message.add("优惠截止时间必须大于优惠起始时间。");
+                }
             }
-            if (StringUtil.isNotEmpty(rowData.get(11))) {
-                feediscountDto.setFeeDisRemark(rowData.get(11).toString());
+            String key = rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(1)
+                    + GlobalConstant.UNDER_LINE + rowData.get(2)
+                    + GlobalConstant.UNDER_LINE + rowData.get(3)
+                    + GlobalConstant.UNDER_LINE + rowData.get(4)
+                    + GlobalConstant.UNDER_LINE + rowData.get(5)
+                    + GlobalConstant.UNDER_LINE + rowData.get(6)
+                    + GlobalConstant.UNDER_LINE + rowData.get(7)
+                    + GlobalConstant.UNDER_LINE + rowData.get(8)
+                    + GlobalConstant.UNDER_LINE + rowData.get(9)
+                    + GlobalConstant.UNDER_LINE + rowData.get(10)
+                    + GlobalConstant.UNDER_LINE + rowData.get(11)
+                    + GlobalConstant.UNDER_LINE + rowData.get(12);
+            if (map.contains(key)) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            } else {
+                map.add(key);
             }
-            if (StringUtil.isNotEmpty(rowData.get(12))) {
-                feediscountDto.setRptIssueDate(DateUtil.parse(rowData.get(12 ).toString()));
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(1),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
-            prodBonusplanDtoList.add(feediscountDto);
+            else {
+                entities.add(this.convertToEntity(rowData));
+            }
         }
-        dto.setSelectedItem(prodBonusplanDtoList);
-        return dto;
+        return checkResult;
+    }
+
+    private ProdFeediscountDto convertToEntity(List<String> rowData) {
+        ProdFeediscountDto feediscountDto = new ProdFeediscountDto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            feediscountDto.setProdRegistNo(rowData.get(0));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            feediscountDto.setProdId(rowData.get(1));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            feediscountDto.setProdDisRemark(rowData.get(2));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            feediscountDto.setFeename(rowData.get(3));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(4))) {
+            feediscountDto.setPreFeerate(rowData.get(4));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(5))) {
+            feediscountDto.setAfterFeerate( rowData.get(5));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(6))) {
+            feediscountDto.setStartDate(DateUtil.parse(rowData.get(6)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(7))) {
+            feediscountDto.setEndDate(DateUtil.parse(rowData.get(7)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(8))) {
+            feediscountDto.setThisPreFeerate(new BigDecimal(rowData.get(8)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(9))) {
+            feediscountDto.setThisAfterFeerate( new BigDecimal(rowData.get(9)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(10))) {
+            feediscountDto.setThisEndFeerate( new BigDecimal(rowData.get(10)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(11))) {
+            feediscountDto.setFeeDisRemark(rowData.get(11));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(12))) {
+            feediscountDto.setRptIssueDate(DateUtil.parse(rowData.get(12)));
+        }
+        return feediscountDto;
     }
 
     @Override

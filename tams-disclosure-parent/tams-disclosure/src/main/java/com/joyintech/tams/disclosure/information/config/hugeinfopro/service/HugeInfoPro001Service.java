@@ -254,25 +254,6 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         joyinDFSTemplate.fetch(suf);
         List<List<String>> dataList = ExcelUtil.getDataList(fileName);
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
-            //触发的情形说明和拒绝赎回说明是否超长
-            List<ExcelValidDto> checkLengthResult = new ArrayList<>();
-            for (int i = 0; i < dataList.size(); i++) {
-                String triggerRemark = dataList.get(i).get(3);
-                String rejectRemark = dataList.get(i).get(4);
-                if (triggerRemark!=null && triggerRemark.length() > 500) {
-                    checkLengthResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
-                            "触发的情形说明文字不能查过500字符"));
-                }
-                if (rejectRemark!=null && rejectRemark.length() > 500) {
-                    checkLengthResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
-                            "拒绝赎回说明不能查过500字符"));
-                }
-            }
-
-            if (CollectionUtils.isNotEmpty(checkLengthResult)) {
-                return checkLengthResult;
-            }
-
             List<HugeInfoPro001Dto> entities = new ArrayList<>(dataList.size());
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
             if (checkResult.isEmpty()) {
@@ -335,9 +316,13 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             }
             if (!StringUtil.isNotEmpty(rowData.get(3))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "触发的情形说明文字"));
+            } else if (rowData.get(3).length() > 500) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "触发的情形说明文字"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(4))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "拒绝赎回说明（文字）"));
+            } else if (rowData.get(4).length() > 500) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "拒绝赎回说明（文字）"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(5))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
