@@ -20,6 +20,10 @@ import java.util.List;
 @ValidLogic(targetClass = ProdFeediscountValidator.class, groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
 public class ProdFeediscountDto extends DisProdFeediscount implements ITableRow, ProcessEntity {
+    /**
+     * excle行
+     */
+    private String excelNum;
 
     private String operateType ;
 
@@ -96,7 +100,7 @@ public class ProdFeediscountDto extends DisProdFeediscount implements ITableRow,
     }
 
     public String getRptIssueDateStr() {
-        if(StringUtils.isNotBlank(this.rptIssueDateStr)){
+        if(StringUtils.isNotEmpty(this.rptIssueDateStr)){
             return this.rptIssueDateStr ;
         }else{
             return this.rptIssueDateStr = this.getRptIssueDate()==null?null: DateUtil.format(this.getRptIssueDate(), "yyyy-MM-dd");
@@ -155,5 +159,13 @@ public class ProdFeediscountDto extends DisProdFeediscount implements ITableRow,
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getProdDiscountId() {
         return super.getProdDiscountId();
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }

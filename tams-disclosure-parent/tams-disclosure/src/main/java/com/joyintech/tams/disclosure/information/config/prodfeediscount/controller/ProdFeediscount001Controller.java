@@ -14,19 +14,17 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.service.ProdFeediscountService;
-import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -36,12 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -57,10 +52,6 @@ import java.util.Map;
 @PageId("ProdFeediscount001")
 @RequestMapping("/disclosure/information/config/prodfeediscount/ProdFeediscount001")
 public class ProdFeediscount001Controller extends BaseController {
-
-	@SuppressWarnings("rawtypes")
-	@Autowired
-	private CommonExportService commonExportService;
 
 	@Autowired
 	private ProdFeediscountService prodFeediscountService;
@@ -226,8 +217,8 @@ public class ProdFeediscount001Controller extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("importFile")
-	public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
-		return prodFeediscountService.importFile(param);
+	public List<ExcelValidDto> importFile(String fileName)  {
+		return prodFeediscountService.importData(fileName);
 	}
 
 
