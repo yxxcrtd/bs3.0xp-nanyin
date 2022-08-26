@@ -40,6 +40,12 @@
             $("#profitType").attr("disabled", false);
         }
 
+        //普通产品修改时，子产品名称、子产品成立日期置灰  NYLCXP-994 add by zhouqiang
+        if(isGradeUpdate !=null && isGradeUpdate=='02'){
+            $("#prodName").attr("disabled", true);
+            $("#setDate").attr("disabled", true);
+        }
+
         showHidePerformDiv(isIndexUpdate);
     }
     var init = 0;
