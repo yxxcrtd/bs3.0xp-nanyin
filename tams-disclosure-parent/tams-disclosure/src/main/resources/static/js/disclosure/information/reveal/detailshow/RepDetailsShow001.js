@@ -567,6 +567,7 @@ $(function () {
 	    }else{
 	    	params['uri'] = modelId;
 	    	params['repid']=repId;
+
 			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result1) {
 				console.log(result1);
 				if(result1){
@@ -767,6 +768,7 @@ $(function () {
 			Joyin.alert('生成之前请先预览报表！',2);
 			return;
 		}
+
 		if(!editFlag){
 			Joyin.alert('该单据报表校验不通过，请检查数据或编辑后生成',2);
 			return;

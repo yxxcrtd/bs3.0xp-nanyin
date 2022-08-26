@@ -159,7 +159,9 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
-            if (dataList.size() > 50000) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
@@ -210,9 +212,21 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             SubBalanceInfoPro001Dto entity = new SubBalanceInfoPro001Dto();
-            entity.setBooksetId(list.get(0));
-            entity.setBalanceDateStr(list.get(1));
-            entity.setSubjectNo(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setBooksetId(list.get(0));
+            } else {
+                entity.setBooksetId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setBalanceDateStr(list.get(1));
+            } else {
+                entity.setBalanceDateStr(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setSubjectNo(list.get(2));
+            } else {
+                entity.setSubjectNo(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

@@ -73,6 +73,7 @@ public class RepDetailsShow002Contoller extends BaseController {
         model.addAttribute("repName",getParam("repName"));
 
         model.addAttribute("cureDate", DateUtil.getCurrentDate());
+        model.addAttribute("uri", getParam("uri"));
         return super.init(model);
     }
 

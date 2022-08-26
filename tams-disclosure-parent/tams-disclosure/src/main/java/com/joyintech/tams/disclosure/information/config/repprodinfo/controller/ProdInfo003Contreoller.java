@@ -79,7 +79,8 @@ public class ProdInfo003Contreoller extends BaseController {
         if (!StringUtil.isEmptyList(dto.getSelectedItem())) {
             for (ProdInfoDto entity : dto.getSelectedItem()) {
                 if (StringUtil.isEmpty(entity.getIssuingStatusNew())) {
-                    validList.add(new ValidMessage(this.getMessage("FIN_PROD_E_0040")));
+                    //NYLCXP-976:新发行状态是空直接提交时，提示内容有误 update by zhouqiang
+                    validList.add(new ValidMessage("新发行状态不能为空！"));
                 } else {
                     //若新发行状态为“发行成功”需要校验，所选数据中的子产品成立日期和平台日是否相等，若不相等，需要给出提示“子产品成立日期与平台日不相等，请确认”，
                     if (StringUtils.equals(DictCodeListExt1.发行状态_发行成功.getValue(), entity.getIssuingStatusNew())

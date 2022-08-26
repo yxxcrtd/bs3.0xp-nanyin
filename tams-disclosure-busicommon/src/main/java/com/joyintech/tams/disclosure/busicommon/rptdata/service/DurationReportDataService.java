@@ -362,7 +362,7 @@ public class DurationReportDataService implements IReportDataService {
 			if ( reportDto.getCapital()!=null )
 				listResult.get(0).put("capitalStr", df.format(reportDto.getCapital()) );
 			else
-				listResult.get(0).put("capitalStr", "" );
+				listResult.get(0).put("capitalStr", " " );
 			
 			//排除检查项
 			listResult.get(0).put("endDate_xx", "");

@@ -164,7 +164,7 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 							end = Math.min(size, 200 * (i + 1));
 							List<InfoDisclosureGenAndSendEntity> subList = repFileList.subList(start, end);
 							tasks.add(() -> {
-								 batch(repFileList,holidayIsWork,executeDateStr,jobSeq,screenMap);
+								 batch(subList,holidayIsWork,executeDateStr,jobSeq,screenMap);
 								 return true;
 							});
 						}

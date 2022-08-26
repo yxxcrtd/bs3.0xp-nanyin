@@ -4,6 +4,7 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.Repor
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -20,5 +21,7 @@ public interface ReportInfoMapper {
     ReportInfo getReportInfoByURI(String uri);
 
     List<ReportInfo> loadEntityAll(Class<ReportInfo> class1);
+
+    int getRepInfoStatus(Map<String, Object> params);
 
 }

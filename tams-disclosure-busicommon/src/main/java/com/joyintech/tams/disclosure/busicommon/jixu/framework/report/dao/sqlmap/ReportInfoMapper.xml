@@ -22,4 +22,8 @@
         REP_REPORTINFO.*
         from REP_REPORTINFO
     </select>
+
+    <select id="getRepInfoStatus" resultType="int">
+        select count(*) from REP_INFO_STATUS WHERE  REP_ID = #{repId,jdbcType=VARCHAR}
+    </select>
 </mapper>

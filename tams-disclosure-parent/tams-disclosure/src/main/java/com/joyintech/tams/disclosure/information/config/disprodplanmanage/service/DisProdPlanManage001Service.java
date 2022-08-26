@@ -164,7 +164,9 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
-            if (dataList.size() > 50000) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
@@ -211,8 +213,16 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             DisProdPlanManage002Dto entity = new DisProdPlanManage002Dto();
-            entity.setProdId(list.get(0));
-            entity.setOpenEndDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setOpenEndDateStr(list.get(2));
+            } else {
+                entity.setOpenEndDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

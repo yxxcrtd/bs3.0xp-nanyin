@@ -11,7 +11,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
-import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.service.RepProdIndexService;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -134,7 +134,7 @@ public class RepProdIndex001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
-        return repProdIndexService.importFile(param);
+    public List<ExcelValidDto> importFile(String fileName) {
+        return repProdIndexService.importData(fileName);
     }
 }
