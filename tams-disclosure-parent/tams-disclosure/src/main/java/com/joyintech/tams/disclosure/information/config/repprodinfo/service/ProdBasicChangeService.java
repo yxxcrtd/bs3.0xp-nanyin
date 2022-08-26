@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.config.repprodinfo.service;
 
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.common.base.dao.DisProdPlanMapper;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt5;
@@ -51,6 +52,9 @@ public class ProdBasicChangeService {
 
     @Autowired
     private ProdBasicChangeMapper prodBasicChangeMapper;
+    
+    @Autowired
+    private DisProdPlanMapper disProdPlanMapper;
 
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
@@ -116,7 +120,9 @@ public class ProdBasicChangeService {
         dto.setStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
         dto.setProdId(prodId);
         dto.setGroupId(groupId);
-        dto.setEffDate(platDate);
+        //得到生效日
+        Date operationStartDate = disProdPlanMapper.getOperationStartDate(prodId, platDate);
+        dto.setEffDate(operationStartDate);
         if (StringUtils.contains(dto.getProportion(), "%")) {
             dto.setProportion(dto.getProportion());
         } else {
