@@ -196,7 +196,11 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             RepInvestAccountDto entity = new RepInvestAccountDto();
-            entity.setProdId(list.get(0));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

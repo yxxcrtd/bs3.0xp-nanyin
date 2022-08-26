@@ -212,9 +212,21 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             SubBalanceInfoPro001Dto entity = new SubBalanceInfoPro001Dto();
-            entity.setBooksetId(list.get(0));
-            entity.setBalanceDateStr(list.get(1));
-            entity.setSubjectNo(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setBooksetId(list.get(0));
+            } else {
+                entity.setBooksetId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setBalanceDateStr(list.get(1));
+            } else {
+                entity.setBalanceDateStr(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setSubjectNo(list.get(2));
+            } else {
+                entity.setSubjectNo(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

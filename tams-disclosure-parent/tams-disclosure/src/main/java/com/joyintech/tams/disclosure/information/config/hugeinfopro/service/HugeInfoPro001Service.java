@@ -174,9 +174,21 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             HugeInfoPro001Dto entity = new HugeInfoPro001Dto();
-            entity.setProdRegistNo(list.get(0));
-            entity.setProdId(list.get(1));
-            entity.setDealDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdRegistNo(list.get(0));
+            } else {
+                entity.setProdRegistNo(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setProdId(list.get(1));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setDealDateStr(list.get(2));
+            } else {
+                entity.setDealDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

@@ -241,9 +241,21 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             ProdBonusplanDto entity = new ProdBonusplanDto();
-            entity.setProdId(list.get(0));
-            entity.setBonusMode(list.get(1));
-            entity.setSettDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setBonusMode(list.get(1));
+            } else {
+                entity.setBonusMode(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setSettDateStr(list.get(2));
+            } else {
+                entity.setSettDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

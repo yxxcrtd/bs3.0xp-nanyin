@@ -229,11 +229,21 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             SvrProdFeeDealInterfDto entity = new SvrProdFeeDealInterfDto();
-            entity.setProdId(list.get(0));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
             if (StringUtil.isNotEmpty(list.get(1))) {
                 entity.setFeeType(this.getFeeTYPE(list.get(1)));
+            } else {
+                entity.setFeeType(" ");
             }
-            entity.setPayDateStr(list.get(4));
+            if (StringUtil.isNotEmpty(list.get(4))) {
+                entity.setPayDateStr(list.get(4));
+            } else {
+                entity.setPayDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }
