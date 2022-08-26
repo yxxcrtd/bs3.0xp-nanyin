@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.repProdIndex.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -20,6 +21,10 @@ import java.util.List;
 @PageId("RepProdIndex002")
 @ValidLogic(targetClass = RepProdIndexValidator.class, groups = { ValidateGroupEdit.class, ValidateGroupDelete.class })
 public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessEntity {
+    /**
+     * excle行
+     */
+    private String excelNum;
     /**
      * 操作类型
      */
@@ -88,6 +93,8 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
      * 产品类型
      */
     private String prodType;
+
+    private String valueDateStr;
 
 
     public String getOperateType() {
@@ -207,8 +214,16 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
     }
 
+    public void setValueDateStr(String valueDateStr) {
+        this.valueDateStr = valueDateStr;
+    }
+
     public String getValueDateStr() {
-        return this.getValueDate()==null?null: DateUtil.format(this.getValueDate(), "yyyy-MM-dd");
+        if (StringUtil.isNotEmpty(this.valueDateStr)) {
+            return this.valueDateStr;
+        } else {
+            return this.getValueDate() == null ? null : DateUtil.format(this.getValueDate(), "yyyy-MM-dd");
+        }
     }
     public String getUpdateTimeStr() {
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
@@ -220,5 +235,13 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
 
     public void setProdName(String prodName) {
         this.prodName = prodName;
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }
