@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.profailureinfo.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -26,6 +27,10 @@ public class ProFailureInfo001Dto extends DisProdNocreate implements ITableRow, 
      */
     private static final long serialVersionUID = -2744914232496735261L;
 
+    /**
+     * excle行
+     */
+    private String excelNum;
     /**
      * 操作类型
      */
@@ -107,15 +112,26 @@ public class ProFailureInfo001Dto extends DisProdNocreate implements ITableRow, 
 
     private String reportIssueDateStr;
     public String getReportIssueDateStr(){
-        return DateUtil.format(super.getReportIssueDate());
+        if (StringUtil.isNotEmpty(this.reportIssueDateStr)) {
+            return this.reportIssueDateStr;
+        } else {
+            return DateUtil.format(super.getReportIssueDate());
+        }
     }
 
-    public void setReportIssueDateStr(){
-        reportIssueDateStr = DateUtil.format(super.getReportIssueDate());
+    public void setReportIssueDateStr(String reportIssueDateStr){
+        this.reportIssueDateStr = reportIssueDateStr;
     }
 
     public String getUpdateTimeStr() {
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
     }
 
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
+    }
 }

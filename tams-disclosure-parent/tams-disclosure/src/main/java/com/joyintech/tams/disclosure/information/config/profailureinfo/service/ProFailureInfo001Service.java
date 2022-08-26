@@ -1,8 +1,8 @@
 package com.joyintech.tams.disclosure.information.config.profailureinfo.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -13,18 +13,19 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFailureInfoMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
-import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -131,119 +132,125 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")),()->proFailureInfoMapper.getProdIdlist(map));
     }
-    /**
-     * 导入check
-     * @param fileName
-     * @return
-     */
+
     public AjaxResult checkImportData(String fileName) {
+        AjaxResult webResult = new AjaxResult();
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
-        List<String> findList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
+        List<List<String>> tempList = ExcelUtil.getTempList(fileName);
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
         }
-        String totalMsg = "";
-        List<List<String>> jsonArrays = new ArrayList<>();
-        // 重复数据
-        int repeatNum = 0;
-        if (objects.size() <= 1) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
+        if (null == tempList.get(0) || tempList.get(0).size() != 3) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 3), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = tempList.subList(1, tempList.size());
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
+                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                return webResult;
+            }
+            List<ProFailureInfo001Dto> entities = this.convertToBean(dataList);
+            List<ProFailureInfo001Dto> data = this.selectFailureInfoByKey(entities);
+            if (data != null && data.size() > 0) {
+                Map<String, List<ProFailureInfo001Dto>> map = entities.stream().collect(
+                        JoyinCollectors.groupingBy(x ->
+                                x.getProdRegistNo() + GlobalConstant.UNDER_LINE + x.getReportIssueDateStr()
+                        ));
+                // 将序号放入list中
+                List<String> excelNumList = new ArrayList<>();
+                List<Integer> excelNumIntList = new ArrayList<>();
+                for (ProFailureInfo001Dto dto : data) {
+                    List<ProFailureInfo001Dto> listTemp = map.get(dto.getProdRegistNo()
+                            + GlobalConstant.UNDER_LINE + dto.getReportIssueDateStr());
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+                }
+                // 将list进行排序，并转化为string
+                Collections.sort(excelNumIntList);
+                for (Integer rowNo : excelNumIntList) {
+                    excelNumList.add(String.valueOf(rowNo));
+                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
+            } else {
+                // 防止在进行导入前check时进行了两次的弹框
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            }
         } else {
-            if (null == objects.get(1) || objects.get(1).size() < 3) {//NYLCXP-599
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要3列。");
-                AjaxResult wr = new AjaxResult();
-                wr.setData(resultMap);
-                return wr;
-            }else {
-                StringBuilder returnerrorMsg = new StringBuilder("");
-                for (int i = 1; i < objects.size(); i++) {
-                    StringBuilder errorMsg = new StringBuilder("");
-                    List<String> rowData = objects.get(i);
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        return webResult;
+    }
 
+    /**
+     * excel数据转为java对象
+     * @return
+     */
+    private List<ProFailureInfo001Dto> convertToBean(List<List<String>> dataList) {
+        List<ProFailureInfo001Dto> entities = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list =  dataList.get(i);
+            ProFailureInfo001Dto entity = new ProFailureInfo001Dto();
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdRegistNo(list.get(0));
+            } else {
+                entity.setProdRegistNo(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setReportIssueDateStr(list.get(2));
+            } else {
+                entity.setReportIssueDateStr(" ");
+            }
+            entity.setExcelNum(String.valueOf(i+2));
+            entities.add(entity);
+        }
+        return entities;
+    }
 
-                    if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
-                        errorMsg.append("产品登记编码 必填！");
-                    }
-                    else if(!findList.contains(rowData.get(0).trim())){
-                        errorMsg.append("产品登记编码不存在！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
-                        errorMsg.append("不成立原因 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
-                        errorMsg.append("报告发布日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(2))){
-                        errorMsg.append("报告发布日期 格式不正确！");
-                    }
-                    if (StringUtil.isNotEmpty(errorMsg.toString())){
-                        errorMsg.append("<br />");
-                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
-                    }
-                }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("errorMsg", returnerrorMsg.toString());
-                    AjaxResult wr = new AjaxResult();
-                    wr.setData(resultMap);
-                    return wr;
-                }
-                //第一行【i=0】为表头，所以不操作。
-                for (int i = objects.size() - 1; i >= 1; i--) {
-                    List<String> list1 = objects.get(i);
-                    Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
-                        List<String> list2 = objects.get(k);
-                        //产品登记编码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))&&(StringUtil.equals(list1.get(2), list2.get(2)))) {
-                            isRepeat = true;
-                            break;
-                        }
-                    }
-                    if (isRepeat){
-                        repeatNum++;
-                    }else {
-                        jsonArrays.add(list1);
-                    }
-                }
+    /**
+     * 分批查询
+     * @param dataList
+     * @return
+     */
+    private List<ProFailureInfo001Dto> selectFailureInfoByKey(List<ProFailureInfo001Dto> dataList) {
+        int maxDataCountOneTime = 1000;
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            return proFailureInfoMapper.selectFailureInfoList(dataList);
+        }
+        // 导入大于1000时，返回值
+        List<ProFailureInfo001Dto> equtiyList = new ArrayList<>();
+
+        List<ProFailureInfo001Dto> newDataList = new ArrayList<>(dataList);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        List<ProFailureInfo001Dto> listTemp;
+        for (int i = 0; i < part; i++ ) {
+            listTemp = proFailureInfoMapper.selectFailureInfoList(newDataList.subList(0, maxDataCountOneTime));
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            listTemp = proFailureInfoMapper.selectFailureInfoList(newDataList);
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
             }
         }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，请检查文件!";
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("errorMsg", totalMsg);
-        }
-        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
-
-        String tempList = (String) resultMap.get("correctData");
-        ProFailureInfo001Dto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<ProFailureInfo001Dto> selectedItem = dto.getSelectedItem();
-        List<ProFailureInfo001Dto>  existData = new ArrayList<>();
-        for (ProFailureInfo001Dto temp:selectedItem) {
-            if (this.isRepeated(temp).size()>0){
-                existData.add(temp);
-            }
-        }
-        if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
-        }
-
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
+        return equtiyList;
     }
 
     public static boolean isDateStr(String str) {
@@ -257,67 +264,92 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         }
     }
 
-
-    public AjaxResult importFile(Map<String, Object> param) {
-        AjaxResult ajaxResult = new AjaxResult();
-        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
-        String tempList = (String) param.get("tempList");
-        ProFailureInfo001Dto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<ProFailureInfo001Dto> selectedItem = dto.getSelectedItem();
-        List<ProFailureInfo001Dto>  existData = new ArrayList<>();
-        List<ProFailureInfo001Dto>  newData = new ArrayList<>();
-
-        for (ProFailureInfo001Dto temp:selectedItem) {
-            //数据已存在 【产品登记编码 相同】，做更新操作。
-            if (this.isRepeated(temp).size()>0){
-                existData.add(temp);
-            }else {
-                temp.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-                temp.setUpdateTime(sysDate);
-                temp.setUpdateUser(CommonUtil.getUserName());
-                newData.add(temp);
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<ProFailureInfo001Dto> entities = new ArrayList<>(dataList.size());
+            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    if (this.isRepeated(item).size() > 0) {
+                        this.doComplete(item, OperationType.MODIFY);
+                    } else {
+                        item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                        item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                        item.setUpdateTime(DateUtil.now());
+                        item.setUpdateUser(CommonUtil.getUserName());
+                        this.doComplete(item, OperationType.NEW);
+                    }
+                });
             }
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
         }
-        //更新操作
-        for (ProFailureInfo001Dto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
-        }
-        //插入操作
-        for (ProFailureInfo001Dto newDataDto : newData
-        ) {
-            this.doComplete(newDataDto,OperationType.NEW);
-        }
-        ajaxResult.setStatuCode(HttpStatus.OK.value());
-        return ajaxResult;
     }
 
-
-    public ProFailureInfo001Dto getValNetAssetQuotationInfoListData(String tempList) {
-        ProFailureInfo001Dto dto = new ProFailureInfo001Dto();
-        // 产品不成立信息列表
-        List<ProFailureInfo001Dto> ProFailureInfo001DtoList = new ArrayList<>();
-        dto.setSelectedItem(ProFailureInfo001DtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            ProFailureInfo001Dto ProFailureInfo001Dto = new ProFailureInfo001Dto();
-            if (StringUtil.isNotEmpty(rowData.get(0))) {
-                ProFailureInfo001Dto.setProdRegistNo(rowData.get(0).toString());
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<ProFailureInfo001Dto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        List<String> findList = proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 3) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 3)));
+                break;
             }
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                ProFailureInfo001Dto.setNocreateReason(rowData.get(1).toString());
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (!StringUtil.isNotEmpty(rowData.get(0))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品登记编码"));
+            } else if (!findList.contains(rowData.get(0))) {
+                message.add("产品登记编码不存在。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                ProFailureInfo001Dto.setReportIssueDate(DateUtil.parse(rowData.get(2).toString()));
+            if (!StringUtil.isNotEmpty(rowData.get(1))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "不成立原因"));
             }
-            ProFailureInfo001DtoList.add(ProFailureInfo001Dto);
+            if (!StringUtil.isNotEmpty(rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
+            } else if (!isDateStr(rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
+            }
+            if (map.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            }
+            map.put(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(2),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+            }
+            else {
+                entities.add(this.convertToEntity(rowData));
+            }
         }
-        dto.setSelectedItem(ProFailureInfo001DtoList);
-        return dto;
+        return checkResult;
     }
 
+    private ProFailureInfo001Dto convertToEntity(List<String> rowData) {
+        ProFailureInfo001Dto proFailureInfo001Dto = new ProFailureInfo001Dto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            proFailureInfo001Dto.setProdRegistNo(rowData.get(0).toString());
+        }
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            proFailureInfo001Dto.setNocreateReason(rowData.get(1).toString());
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            proFailureInfo001Dto.setReportIssueDate(DateUtil.parse(rowData.get(2).toString()));
+        }
+        return proFailureInfo001Dto;
+    }
 
     public List<SelectOptionDto> getRePord(Map<String, Object> pageParam) {
         return proFailureInfoMapper.getRePord(pageParam);
