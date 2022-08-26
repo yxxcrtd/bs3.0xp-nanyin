@@ -100,6 +100,10 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         return proFailureInfoMapper.selectByPrimaryKey(prodRegistNo);
     }
 
+    public ProFailureInfo001Dto selectOne(String prodRegistNo,String nocreateReason,String date) {
+        return proFailureInfoMapper.selectOne(prodRegistNo,nocreateReason,date);
+    }
+
 
 
 

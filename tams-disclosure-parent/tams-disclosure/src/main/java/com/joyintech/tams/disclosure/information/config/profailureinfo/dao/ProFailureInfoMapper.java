@@ -15,6 +15,8 @@ public interface ProFailureInfoMapper {
 
     ProFailureInfo001Dto selectByPrimaryKey(String prodRegistNo);
 
+    ProFailureInfo001Dto selectOne(@Param("prodRegistNo") String prodRegistNo,@Param("nocreateReason") String nocreateReason,@Param("date") String date);
+
     int deleteByKey(String prodRegistNo);
 
     int insert(ProFailureInfo001Dto proFailureInfo001Dto);

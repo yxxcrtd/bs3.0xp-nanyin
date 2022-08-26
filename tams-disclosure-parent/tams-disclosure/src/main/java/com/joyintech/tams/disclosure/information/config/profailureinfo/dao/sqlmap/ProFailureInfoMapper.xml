@@ -53,6 +53,24 @@
       where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
    </select>
 
+    <select id="selectOne"
+            resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
+        select
+            PROD_REGIST_NO prodRegistNo,
+            DATA_STATUS dataStatus,
+            NOCREATE_REASON nocreateReason,
+            REPORT_ISSUE_DATE reportIssueDate,
+            IS_SALES_AGENCY isSalesAgency,
+            DATA_SOURCE,
+            UPDATE_TIME,
+            UPDATE_USER
+        from DIS_PROD_NOCREATE
+        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+          AND NOCREATE_REASON= #{nocreateReason,jdbcType=VARCHAR}
+          AND TO_CHAR(REPORT_ISSUE_DATE,'yyyy-MM-dd')= #{date,jdbcType=VARCHAR}
+          AND DATA_STATUS='E'
+    </select>
+
 
     <select id="isRepeated"
             resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
