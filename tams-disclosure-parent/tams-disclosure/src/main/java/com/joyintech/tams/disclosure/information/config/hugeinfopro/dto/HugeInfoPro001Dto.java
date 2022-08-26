@@ -11,13 +11,13 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.DisLargeRedemption;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.disclosure.information.config.proelementadj.validator.ProElementAdjValidator;
+import com.joyintech.tams.disclosure.information.config.hugeinfopro.validator.HugeInfoPro001Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.Date;
 import java.util.List;
-
+@ValidLogic(targetClass = HugeInfoPro001Validator.class, groups = {ValidateGroupEdit.class, ValidateGroupDelete.class})
 @PageId("HugeInfoPro002")
 public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, ProcessEntity {
 
