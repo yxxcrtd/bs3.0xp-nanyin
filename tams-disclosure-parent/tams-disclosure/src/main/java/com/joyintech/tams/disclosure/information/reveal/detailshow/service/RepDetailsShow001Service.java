@@ -364,8 +364,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);
                 String rptType = params.get("uri").toString();
-                if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
-        				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+                if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
         				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) 
         				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
                 	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath,"4.其它费用");
@@ -516,11 +515,15 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     public AjaxResult dataCheck(Map<String, Object> param){
         AjaxResult ajaxResult=new AjaxResult();
 
-        String restltStr=poiReportService.dataCheck(param);
-        if(StringUtil.isNotEmpty(restltStr)){
+        Map<String, Object> resultMap=poiReportService.dataCheck(param);
+        if(StringUtil.isNotEmpty(resultMap.get("resultSb"))){
             //数据有问题
-            ajaxResult.setMessage(restltStr,MessageType.确认消息);
-            ajaxResult.setData("data");
+            if(StringUtil.isNotEmpty(resultMap.get("flag"))){
+                ajaxResult.setMessage(resultMap.get("resultSb").toString(),MessageType.提示消息);
+            }else{
+                ajaxResult.setMessage(resultMap.get("resultSb").toString(),MessageType.确认消息);
+                ajaxResult.setData("data");
+            }
         }
 
         return ajaxResult;
@@ -547,6 +550,18 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             return "只能选取最后一个工作日:" + DateUtil.format(lastdate);
         }
         return null;
+    }
+
+    public AjaxResult statusCheck(Map<String, Object> param) {
+        AjaxResult ajaxResult=new AjaxResult();
+
+        String restltStr=poiReportService.statusCheck(param);
+        if(StringUtil.isNotEmpty(restltStr)){
+            //数据有问题
+            ajaxResult.setMessage(restltStr,MessageType.确认消息);
+            ajaxResult.setData("data");
+        }
+        return ajaxResult;
     }
 
 

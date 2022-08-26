@@ -1,7 +1,10 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
 
 @Repository
 public interface DisProdPlanMapper {
@@ -18,4 +21,6 @@ public interface DisProdPlanMapper {
     int updateByPrimaryKeySelective(DisProdPlanInfo record);
 
     int updateByPrimaryKey(DisProdPlanInfo record);
+
+    Date getOperationStartDate(@Param("prodId") String prodId,@Param("platDate") Date platDate);
 }

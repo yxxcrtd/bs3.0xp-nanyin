@@ -168,11 +168,11 @@ public class UnClaimAssetDetail002Controller extends BaseController {
 
 
 
-      @RequestMapping("selectCount")
-      @ResponseBody
-      public Map<String, Integer>  selectCount(){
-        HashMap map = new HashMap();
-        map.put("count",unClaimAssetDetail002Service.selectCount());
-          return map;
-      }
+//      @RequestMapping("selectCount")
+//      @ResponseBody
+//      public Map<String, Integer>  selectCount(){
+//        HashMap map = new HashMap();
+//        map.put("count",unClaimAssetDetail002Service.selectCount());
+//          return map;
+//      }
 }

@@ -237,10 +237,14 @@ public class JasparConnectUtilService {
 //		logger.info("UploadFile fileName= "  + reportFile);
 //		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(), localFile);
 
-		String restltStr=poiReportService.dataCheck(params);
+		Map<String, Object> resultMap=poiReportService.dataCheck(params);
 		UploadFile uploadFile=null;
-		if(!StringUtil.isNotEmpty(restltStr)){
+		if(!StringUtil.isNotEmpty(resultMap.get("resultSb"))){
 			uploadFile=poiReportService.genReportFile2Batch(dataMap);
+		}else {
+			if(StringUtil.isNotEmpty(resultMap.get("flag"))){
+				uploadFile=poiReportService.genReportFile2Batch(dataMap);
+			}
 		}
 		
 //		//存入SYS_UPLOAD_FILE_INFO表

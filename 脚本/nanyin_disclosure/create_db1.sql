@@ -1145,3 +1145,8 @@ comment on column REP_INFO_STATUS.IS_SYNCHRO is '模板状态是否同步到REP_
 -- 增加模板状态是否同步到模板表标识 add by cuiwei 20220820 start
 ALTER TABLE REP_JOB_RANGE MODIFY RULE_TYPE4 VARCHAR2(4000);
 -- 增加模板状态是否同步到模板表标识 add by cuiwei 20220820 end
+
+/**披露预期信息 字段长度调整 add by zhengxiaolian 2022-08-25 start*/
+ALTER TABLE REP_EXPECTED_LOG MODIFY PROD_NAME VARCHAR2(1000);
+ALTER TABLE REP_EXPECTED_LOG MODIFY REP_NAME VARCHAR2(1000);
+/**披露预期信息 字段长度调整 add by zhengxiaolian 2022-08-25 end*/

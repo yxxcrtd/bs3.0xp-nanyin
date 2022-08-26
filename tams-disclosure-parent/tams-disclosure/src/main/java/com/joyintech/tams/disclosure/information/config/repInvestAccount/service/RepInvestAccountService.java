@@ -1,7 +1,8 @@
 package com.joyintech.tams.disclosure.information.config.repInvestAccount.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -9,21 +10,20 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dao.RepInvestAccount001Mapper;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class RepInvestAccountService extends CommonExportService<RepInvestAccountDto> implements BaseProcessService<RepInvestAccountDto> {
@@ -133,116 +133,118 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
         return result;
     }
 
-    /**
-     * 导入check
-     * @param fileName
-     * @return
-     */
     public AjaxResult checkImportData(String fileName) {
+        AjaxResult webResult = new AjaxResult();
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        String totalMsg = "";
-        List<List<String>> jsonArrays = new ArrayList<>();
-        // 重复数据
-        int repeatNum = 0;
-        if (objects.size() <= 1) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        }else {
-            if (null == objects.get(0) || objects.get(0).size() != 4) {
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要4列。");
-                AjaxResult wr = new AjaxResult();
-                wr.setData(resultMap);
-                return wr;
-            }else {
-                StringBuilder returnerrorMsg = new StringBuilder("");
-                for (int i = 1; i < objects.size(); i++) {
-                    StringBuilder errorMsg = new StringBuilder("");
-                    List<String> rowData = objects.get(i);
-
-                    if (!StringUtil.isNotEmpty(rowData.get(0))){
-                        errorMsg.append("产品主代码 必填！");
-                    }else if(!this.getProdId(rowData.get(0))){
-                        errorMsg.append("产品主代码未在系统中维护！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
-                        errorMsg.append("账号 必填！");
-                    }else if(rowData.get(1).length() > 20){
-                        errorMsg.append("账号不得超过20个字符！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
-                        errorMsg.append("账户名称 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(3))){
-                        errorMsg.append("开户单位 必填！");
-                    }
-                    if (StringUtil.isNotEmpty(errorMsg.toString())){
-                        errorMsg.append("<br />");
-                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
-                    }
-                }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("errorMsg", returnerrorMsg.toString());
-                    AjaxResult wr = new AjaxResult();
-                    wr.setData(resultMap);
-                    return wr;
-                }
-                for (int i = objects.size() - 1; i >= 1; i--) {
-                    List<String> list1 = objects.get(i);
-                    Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
-                        List<String> list2 = objects.get(k);
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))) {
-                            isRepeat = true;
-                            break;
-                        }
-                    }
-                    if (isRepeat){
-                        repeatNum++;
-                    }else {
-                        jsonArrays.add(list1);
-                    }
-                }
+        List<List<String>> tempList = ExcelUtil.getTempList(fileName);
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        if (null == tempList.get(0) || tempList.get(0).size() != 4) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 4), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = tempList.subList(1, tempList.size());
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
+                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                return webResult;
             }
-        }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
-        }
-        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
-
-        String tempList = (String) resultMap.get("correctData");
-        RepInvestAccountDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<RepInvestAccountDto> selectedItem = dto.getSelectedItem();
-        List<RepInvestAccountDto>  existData = new ArrayList<>();
-        for (RepInvestAccountDto temp:selectedItem) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("prodId",temp.getProdId());
-            if (StringUtil.isNotEmpty(this.selectData(map))){
-                existData.add(temp);
+            List<RepInvestAccountDto> entities = this.convertToBean(dataList);
+            List<RepInvestAccountDto> data = this.selectInvestAccountByKey(entities);
+            if (data != null && data.size() > 0) {
+                Map<String, List<RepInvestAccountDto>> map = entities.stream().collect(
+                        JoyinCollectors.groupingBy(RepInvestAccountDto::getProdId));
+                // 将序号放入list中
+                List<String> excelNumList = new ArrayList<>();
+                List<Integer> excelNumIntList = new ArrayList<>();
+                for (RepInvestAccountDto dto : data) {
+                    List<RepInvestAccountDto> listTemp = map.get(dto.getProdId());
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+                }
+                // 将list进行排序，并转化为string
+                Collections.sort(excelNumIntList);
+                for (Integer rowNo : excelNumIntList) {
+                    excelNumList.add(String.valueOf(rowNo));
+                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
+            } else {
+                // 防止在进行导入前check时进行了两次的弹框
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             }
+        } else {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
         }
-        if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
-        }
-        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
-        if (objects.size() - 1 > maxCount) {
-            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
-        }
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
+        return webResult;
     }
+
+    /**
+     * excel数据转为java对象
+     * @return
+     */
+    private List<RepInvestAccountDto> convertToBean(List<List<String>> dataList) {
+        List<RepInvestAccountDto> entities = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list =  dataList.get(i);
+            RepInvestAccountDto entity = new RepInvestAccountDto();
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            entity.setExcelNum(String.valueOf(i+2));
+            entities.add(entity);
+        }
+        return entities;
+    }
+
+    /**
+     * 分批查询
+     * @param dataList
+     * @return
+     */
+    private List<RepInvestAccountDto> selectInvestAccountByKey(List<RepInvestAccountDto> dataList) {
+        int maxDataCountOneTime = 1000;
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            return repInvestAccountMapper.selectInvestAccountList(dataList);
+        }
+        // 导入大于1000时，返回值
+        List<RepInvestAccountDto> equtiyList = new ArrayList<>();
+
+        List<RepInvestAccountDto> newDataList = new ArrayList<>(dataList);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        List<RepInvestAccountDto> listTemp;
+        for (int i = 0; i < part; i++ ) {
+            listTemp = repInvestAccountMapper.selectInvestAccountList(newDataList.subList(0, maxDataCountOneTime));
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            listTemp = repInvestAccountMapper.selectInvestAccountList(newDataList);
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+        }
+        return equtiyList;
+    }
+
     public Boolean getProdId(String prodId) {
         String r = repInvestAccountMapper.getProdId(prodId);
         if(StringUtil.isNotEmpty(r)){
@@ -252,62 +254,97 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
         }
     }
 
-    public AjaxResult importFile(Map<String, Object> param) {
-        AjaxResult ajaxResult = new AjaxResult();
-        String tempList = (String) param.get("tempList");
-        RepInvestAccountDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<RepInvestAccountDto> selectedItem = dto.getSelectedItem();
-        List<RepInvestAccountDto>  existData = new ArrayList<>();
-        List<RepInvestAccountDto>  newData = new ArrayList<>();
-        for (RepInvestAccountDto temp:selectedItem) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("prodId",temp.getProdId());
-            if (StringUtil.isNotEmpty(this.selectData(map))){
-                existData.add(temp);
-            }else {
-                newData.add(temp);
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<RepInvestAccountDto> entities = new ArrayList<>(dataList.size());
+            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("prodId", item.getProdId());
+                    if (StringUtil.isNotEmpty(this.selectData(map))) {
+                        this.doComplete(item, OperationType.MODIFY);
+                    } else {
+                        this.doComplete(item, OperationType.NEW);
+                    }
+                });
             }
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
         }
-        //更新操作
-        for (RepInvestAccountDto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
-        }
-
-        //插入操作
-        for (RepInvestAccountDto newDataDto : newData) {
-            this.doComplete(newDataDto,OperationType.NEW);
-        }
-        ajaxResult.setStatuCode(HttpStatus.OK.value());
-        return ajaxResult;
     }
 
-
-    public RepInvestAccountDto getValNetAssetQuotationInfoListData(String tempList) {
-        RepInvestAccountDto dto = new RepInvestAccountDto();
-        List<RepInvestAccountDto> repInvestAccountDtoList = new ArrayList<>();
-        dto.setSelectedItem(repInvestAccountDtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            RepInvestAccountDto repInvestAccountDto = new RepInvestAccountDto();
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<RepInvestAccountDto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 4) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 4)));
+                break;
+            }
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (!StringUtil.isNotEmpty(rowData.get(0))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
+            } else if (!this.getProdId(rowData.get(0))) {
+                message.add("产品主代码未在系统中维护。");
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(1))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "账号"));
+            } else if (rowData.get(1).length() > 20) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "账号"));
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "账户名称"));
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(3))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "开户单位"));
+            }
+            if (StringUtil.isNotEmpty(rowData.get(0)) && map.containsKey(rowData.get(0))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            }
             if (StringUtil.isNotEmpty(rowData.get(0))) {
-                repInvestAccountDto.setProdId(rowData.get(0).toString());
+                map.put(rowData.get(0), rowData);
             }
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                repInvestAccountDto.setAccountNum(rowData.get(1).toString());
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(rowData.get(0),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                repInvestAccountDto.setAccountName(rowData.get(2).toString());
+            else {
+                entities.add(this.convertToEntity(rowData));
             }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                repInvestAccountDto.setAccountOpener(rowData.get(3).toString());
-            }
-            repInvestAccountDto.setAccountType("A01");
-            repInvestAccountDto.setStatus("E");
-            repInvestAccountDtoList.add(repInvestAccountDto);
         }
-        dto.setSelectedItem(repInvestAccountDtoList);
-        return dto;
+        return checkResult;
+    }
+
+    private RepInvestAccountDto convertToEntity(List<String> rowData) {
+        RepInvestAccountDto repInvestAccountDto = new RepInvestAccountDto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            repInvestAccountDto.setProdId(rowData.get(0));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            repInvestAccountDto.setAccountNum(rowData.get(1));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            repInvestAccountDto.setAccountName(rowData.get(2));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            repInvestAccountDto.setAccountOpener(rowData.get(3));
+        }
+        repInvestAccountDto.setAccountType("A01");
+        repInvestAccountDto.setStatus("E");
+        return repInvestAccountDto;
     }
 
     public RepInvestAccountDto checkExistData(RepInvestAccountDto dto) {

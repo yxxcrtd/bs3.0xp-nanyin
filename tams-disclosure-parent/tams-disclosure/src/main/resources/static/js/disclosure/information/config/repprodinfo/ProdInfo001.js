@@ -41,30 +41,30 @@ $(function() {
             {field:'prodId',visible:false}
             ,{field:'prodId', sortable:false, width:100, title: '子产品代码'}
             ,{field:'prodName', sortable:false, width:100, title: '子产品名称'}
-            ,{field:'setDateStr', sortable:false, width:100, title: '子产品成立日期'}
+            ,{field:'setDateStr', sortable:false, width:120, title: '子产品成立日期'}
             ,{field:'pdStatusName', sortable:false, width:100, title: '产品状态'}
             ,{field:'prodSeries', sortable:false, width:100, title: '产品系列'}
             ,{field:'pProdName', sortable:false, width:150, title: '产品名称'}
             ,{field:'prodAbbr', sortable:false, width:150, title: '产品简称'}
-            ,{field:'prodRe', sortable:false, width:100, title: '产品登记编码'}
+            ,{field:'prodRe', sortable:false, width:120, title: '产品登记编码'}
             ,{field:'pProdId', sortable:false, width:100, title: '产品主代码'}
-            ,{field:'raiseStrdateStr', sortable:false, width:100, title: '募集起始日期'}
-            ,{field:'raiseEnddateStr', sortable:false, width:100, title: '募集结束日期'}
-            ,{field:'raiseAmt', sortable:false, width:100, title: '产品募集金额'}
-            ,{field:'pSetDateStr', sortable:false, width:100, title: '产品成立日期'}
-            ,{field:'mdateStr', sortable:false, width:100, title: '产品到期日期'}
+            ,{field:'raiseStrdateStr', sortable:false, width:120, title: '募集起始日期'}
+            ,{field:'raiseEnddateStr', sortable:false, width:120, title: '募集结束日期'}
+            ,{field:'raiseAmt', sortable:false, width:120, title: '产品募集金额'}
+            ,{field:'pSetDateStr', sortable:false, width:120, title: '产品成立日期'}
+            ,{field:'mdateStr', sortable:false, width:120, title: '产品到期日期'}
             ,{field:'raiseTypeName', sortable:false, width:100, title: '募集方式'}
             ,{field:'prodTypeName', sortable:false, width:100, title: '产品类型'}
             ,{field:'issuingWayName', sortable:false, width:100, title: '发行方式'}
             ,{field:'openFreqName', sortable:false, width:100, title: '开放频率'}
-            ,{field:'holdday', sortable:false, width:100, title: '固定持有天数'}
-            ,{field:'profitTypeName', sortable:false, width:100, title: '产品运作方式'}
-            ,{field:'isPeriodName', sortable:false, width:100, title: '是否是客户周期型产品'}
-            ,{field:'isGradeName', sortable:false, width:100, title: '是否是分级产品'}
-            ,{field:'isIndexName', sortable:false, width:100, title: '是否是指数型产品'}
-            ,{field:'performCompare', sortable:false, width:100, title: '产品业绩比较基准'}
+            ,{field:'holdday', sortable:false, width:120, title: '固定持有天数'}
+            ,{field:'profitTypeName', sortable:false, width:120, title: '产品运作方式'}
+            ,{field:'isPeriodName', sortable:false, width:150, title: '是否是客户周期型产品'}
+            ,{field:'isGradeName', sortable:false, width:120, title: '是否是分级产品'}
+            ,{field:'isIndexName', sortable:false, width:130, title: '是否是指数型产品'}
+            ,{field:'performCompare', sortable:false, width:130, title: '产品业绩比较基准'}
             ,{field:'natureInvestName', sortable:false, width:100, title: '投资性质'}
-            ,{field:'acctChnname', sortable:false, width:100, title: '产品托管人名称'}
+            ,{field:'acctChnname', sortable:false, width:130, title: '产品托管人名称'}
             ,{field:'statusName',  sortable:false,width:100 , title: '数据状态'}
             ,{field:'trustpart', sortable:false, width:100, title: '托管部门'}
             ,{field:'errormsg', sortable:false, width:100, title: '错误信息'}

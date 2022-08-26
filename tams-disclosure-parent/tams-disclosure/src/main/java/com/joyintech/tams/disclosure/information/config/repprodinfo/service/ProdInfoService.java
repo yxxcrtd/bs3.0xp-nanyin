@@ -486,7 +486,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             ProdInfoDto entity = new ProdInfoDto();
-            entity.setProdId(list.get(0));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

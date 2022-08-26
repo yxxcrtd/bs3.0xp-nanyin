@@ -1,8 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.repProdIndex.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
-import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -39,4 +38,6 @@ public interface RepProdIndexSMapper {
     String selectProdId(@Param("prodId") String prodId);
 
     RepProdIndexDto checkExistData(RepProdIndexDto record);
+
+    List<RepProdIndexDto> selectProdIndexList(@Param("list") List<RepProdIndexDto> list);
 }
