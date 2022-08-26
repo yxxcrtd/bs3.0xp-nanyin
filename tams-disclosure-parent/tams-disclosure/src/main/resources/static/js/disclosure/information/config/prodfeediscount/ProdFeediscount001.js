@@ -53,7 +53,7 @@
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("产品费率优惠查看"),
                 basePath + "disclosure/information/config/prodfeediscount/ProdFeediscount002/init",
-                "99%", "99%", data,function(){table.reload();});
+                "99%", "99%", {workflowId:data.workflowId,prodDiscountId:data.prodDiscountId},function(){table.reload();});
         },
         /**
          * 定义表头
@@ -96,7 +96,7 @@
         //Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/check', data, function(editResult){
             Joyin.dialog(JoyinUtil.getLabel("产品费率优惠编辑"),
                 basePath + "disclosure/information/config/prodfeediscount/ProdFeediscount002/init",
-                "95%", "90%",data,function() {
+                "95%", "90%",{workflowId:data.workflowId,prodDiscountId:data.prodDiscountId},function() {
                     table.reload();
                 });
        // });
