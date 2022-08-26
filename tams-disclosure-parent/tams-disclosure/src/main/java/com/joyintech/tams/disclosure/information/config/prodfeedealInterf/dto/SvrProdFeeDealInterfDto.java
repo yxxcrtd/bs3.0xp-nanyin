@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -21,7 +22,10 @@ import java.util.List;
 @PageId("SvrProdFeeDealInterf002")
 @ValidLogic(targetClass = SvrProdFeeDealInterfValidator.class, groups = { ValidateGroupEdit.class, ValidateGroupDelete.class })
 public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, ProcessEntity {
-
+    /**
+     * excle行
+     */
+    private String excelNum;
     /**
      * 操作类型
      */
@@ -76,6 +80,8 @@ public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, Pro
      * 错误信息
      */
     private String errmsg;
+
+    private String payDateStr;
 
     public String getOperateType() {
         return operateType;
@@ -184,7 +190,15 @@ public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, Pro
     }
     @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getPayDateStr() {
-        return this.getPayDate()==null?null: DateUtil.format(this.getPayDate(), "yyyy-MM-dd");
+        if (StringUtil.isNotEmpty(this.payDateStr)) {
+            return this.payDateStr;
+        } else {
+            return this.getPayDate() == null ? null : DateUtil.format(this.getPayDate(), "yyyy-MM-dd");
+        }
+    }
+
+    public void setPayDateStr(String payDateStr) {
+        this.payDateStr = payDateStr;
     }
 
     public String getUpdateTimeStr() {
@@ -201,5 +215,13 @@ public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, Pro
 
     public String getAccrualStr(){
         return this.getAccrual()==null?"":df2.format(this.getAccrual());
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }

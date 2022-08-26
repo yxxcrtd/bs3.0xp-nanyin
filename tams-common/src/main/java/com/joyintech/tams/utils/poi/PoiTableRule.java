@@ -12,6 +12,9 @@ public class PoiTableRule {
 	private List<String> fields;
 	private int startRow;
 	private int startCol;
+	private int mergeRow;
+	private int mergeCol;
+	
 	public String getForeach() {
 		return foreach;
 	}
@@ -41,6 +44,18 @@ public class PoiTableRule {
 	}
 	public void setStartCol(int startCol) {
 		this.startCol = startCol;
+	}
+	public int getMergeRow() {
+		return mergeRow;
+	}
+	public void setMergeRow(int mergeRow) {
+		this.mergeRow = mergeRow;
+	}
+	public int getMergeCol() {
+		return mergeCol;
+	}
+	public void setMergeCol(int mergeCol) {
+		this.mergeCol = mergeCol;
 	}
 	
 }

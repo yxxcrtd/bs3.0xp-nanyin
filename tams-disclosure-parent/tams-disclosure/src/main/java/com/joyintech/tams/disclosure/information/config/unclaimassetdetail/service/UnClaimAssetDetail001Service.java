@@ -125,7 +125,9 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
-            if (dataList.size() > 50000) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
@@ -176,9 +178,21 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             UnClaimAssetDetailDto entity = new UnClaimAssetDetailDto();
-            entity.setProdId(list.get(0));
-            entity.setEffDateStr(list.get(7));
-            entity.setEffEndDateStr(list.get(8));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(7))) {
+                entity.setEffDateStr(list.get(7));
+            } else {
+                entity.setEffDateStr(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(8))) {
+                entity.setEffEndDateStr(list.get(8));
+            } else {
+                entity.setEffEndDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

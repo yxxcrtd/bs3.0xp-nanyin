@@ -188,7 +188,9 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
-            if (dataList.size() > 50000) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
@@ -239,9 +241,21 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             ProdBonusplanDto entity = new ProdBonusplanDto();
-            entity.setProdId(list.get(0));
-            entity.setBonusMode(list.get(1));
-            entity.setSettDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setBonusMode(list.get(1));
+            } else {
+                entity.setBonusMode(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setSettDateStr(list.get(2));
+            } else {
+                entity.setSettDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }
@@ -388,7 +402,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             }
             if (StringUtil.isNotEmpty(rowData.get(0))) {
                 int num = prodBonusplanManager001Service.selectByProdId2(rowData.get(0));
-                if (StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1))
+                if (StringUtils.equals("2-到期兑付", rowData.get(1))
                         && num > 0) {
                     message.add("当分红方式选择到期兑付时，一个子产品代码只能有一条数据。");
                 }
@@ -421,10 +435,14 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         }
         if (StringUtil.isNotEmpty(rowData.get(1))) {
             if (StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1).toString())
-                    || StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1).toString())) {
+                    || StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1).toString())
+                    || StringUtils.equals("1-份额分红后净值为1", rowData.get(1).toString())
+            ) {
                 prodBonusplanDto.setBonusMode(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue());
             } else if (StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1).toString())
-                    || StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1).toString())) {
+                    || StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1).toString())
+                    || StringUtils.equals("2-到期兑付", rowData.get(1).toString())
+            ) {
                 prodBonusplanDto.setBonusMode(DictCodeListExt3.信披_分红方式_到期兑付.getValue());
             }
         }

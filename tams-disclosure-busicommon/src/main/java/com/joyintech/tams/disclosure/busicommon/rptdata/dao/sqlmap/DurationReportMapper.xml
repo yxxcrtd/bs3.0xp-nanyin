@@ -75,7 +75,7 @@
 				</if>
 			group by bb.BOOKSET_ID,bb.BALANCE_DATE
 		) bal
-		on info.PROD_ID=bal.BOOKSET_ID		
+		on info.P_PROD_ID=bal.BOOKSET_ID		
 		where 1=1
 		and info.STATUS='E'
 		and info.REP_PROD_TYPE in ('02','03')  /**单产品或者子产品**/
@@ -224,12 +224,14 @@
 		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID 
 		where 1=1
 			and info.REP_PROD_TYPE in ('01','02')  /**目产品或单产品**/
+			and (basis.EFF_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE})  
 		<if test="prodId!=null">
 			and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
 		<if test="status!=null">
 			and info.STATUS=#{status,jdbcType=VARCHAR}
 		</if>
+		
 		order by basis.EFF_DATE
     </select>
     

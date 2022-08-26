@@ -672,12 +672,14 @@
             <![CDATA[AND  temp.RAISE_ENDDATE <= TO_DATE(#{raiseStrdateEnd},'YYYY-MM-DD')]]>
         </if>
 
+        /*NYLCXP-975 产品成立日查询条件取值有误,应该是查母产品的成立日 add by zhouqiang start*/
         <if test="setDateStart != null and setDateStart != ''">
-            <![CDATA[AND  temp.SET_DATE >= TO_DATE(#{setDateStart},'YYYY-MM-DD') ]]>
+            <![CDATA[AND  temp.pSetDate >= TO_DATE(#{setDateStart},'YYYY-MM-DD') ]]>
         </if>
         <if test="setDateEnd != null and setDateEnd != ''">
-            <![CDATA[AND  temp.SET_DATE <= TO_DATE(#{setDateEnd},'YYYY-MM-DD')]]>
+            <![CDATA[AND  temp.pSetDate <= TO_DATE(#{setDateEnd},'YYYY-MM-DD')]]>
         </if>
+        /*NYLCXP-975 产品成立日查询条件取值有误,应该是查母产品的成立日 add by zhouqiang end*/
         order by NVL(temp.UPDATE_TIME,temp.CREATE_TIME) desc
     </select>
 
