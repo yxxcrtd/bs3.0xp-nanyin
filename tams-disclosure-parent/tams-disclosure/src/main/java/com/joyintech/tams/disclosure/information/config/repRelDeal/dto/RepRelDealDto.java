@@ -3,25 +3,26 @@ package com.joyintech.tams.disclosure.information.config.repRelDeal.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepRelDeal;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.validator.RepRelDealValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @PageId("RepRelDeal002")
 @ValidLogic(targetClass = RepRelDealValidator.class, groups = { ValidateGroupEdit.class, ValidateGroupDelete.class })
 public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntity {
-
+    /**
+     * excle行
+     */
+    private String excelNum;
     /**
      * 操作类型
      */
@@ -43,11 +44,10 @@ public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntit
      * 产品名称
      */
     private String prodName;
-    /**
-     * 导入时记录excel中的行号
-     * @return
-     */
-    private String excelRowNum;
+
+    private String effdateStr;
+
+    private String effdelidateStr;
 
     @Override
     @PrimaryKey(PrimaryKey.Field.PK_1)
@@ -95,14 +95,6 @@ public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntit
         this.prodName = prodName;
     }
 
-    public String getExcelRowNum() {
-        return excelRowNum;
-    }
-
-    public void setExcelRowNum(String excelRowNum) {
-        this.excelRowNum = excelRowNum;
-    }
-
     public String getStatusStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
     }
@@ -112,14 +104,38 @@ public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntit
     }
 
     public String getEffdateStr() {
-        return this.getEffdate()==null?null: DateUtil.format(this.getEffdate(), "yyyy-MM-dd");
+        if (StringUtil.isNotEmpty(this.effdateStr)) {
+            return this.effdateStr;
+        } else {
+            return this.getEffdate() == null ? null : DateUtil.format(this.getEffdate(), "yyyy-MM-dd");
+        }
     }
 
     public String getEffdelidateStr() {
-        return this.getEffdelidate()==null?null: DateUtil.format(this.getEffdelidate(), "yyyy-MM-dd");
+        if (StringUtil.isNotEmpty(this.effdelidateStr)) {
+            return this.effdelidateStr;
+        } else {
+            return this.getEffdelidate() == null ? null : DateUtil.format(this.getEffdelidate(), "yyyy-MM-dd");
+        }
+    }
+
+    public void setEffdateStr(String effdateStr) {
+        this.effdateStr = effdateStr;
+    }
+
+    public void setEffdelidateStr(String effdelidateStr) {
+        this.effdelidateStr = effdelidateStr;
     }
 
     public String getUpdateTimeStr() {
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
+    }
+
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 }
