@@ -247,7 +247,7 @@ public class PoiUtilsHelper {
 	 * @param fromRow 开始行
 	 * @param toRow  结束行。
 	 */
-    public void mergeCellsVertically(XWPFTable table, int col, int fromRow, int toRow) {
+    public static void mergeCellsVertically(XWPFTable table, int col, int fromRow, int toRow) {
         for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
             XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
             if (rowIndex == fromRow) {
@@ -424,8 +424,14 @@ public class PoiUtilsHelper {
 					run.setText(content,0);					
 				}
 			}
+			//合并部分单元格
+			if ( rule.getMergeRow()>0 && rule.getMergeCol()>0 ) {
+				mergeCellsVertically(table,rule.getMergeCol(),rule.getMergeRow(),rule.getMergeRow()+listData.size());
+			}
+			
 			table.removeRow(0);  //删除规则行1
 			table.removeRow(rowNo-1);  //删除最后一行
+			
 		}
 		
 		if ( "col".equals(rule.getLoopMode()) && listData!=null ) {

@@ -349,6 +349,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        	//树单击：初始化报表，即报表模板中的变量全部用xxx代替
 	    		String repId = params.get("repid").toString();
 	        	reportFile = poiReportService.initReport(repId);
+	        	//reportFile ="E:/指数型分级净值型产品2022年01年度报告.docx";
 	        } else {  //预览按钮：显示指定产品的实际内容，生成了一个临时文件f1
 	    		collateParams(params);
 	            reportFile = poiReportService.previewReport(params);
@@ -367,7 +368,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
         				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) 
         				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
-                	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath,"报告期（");
+                	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath,"4.其它费用");
                 } else {
                 	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
                 }
