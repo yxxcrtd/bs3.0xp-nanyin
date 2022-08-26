@@ -402,12 +402,9 @@ public class DurationReportDataService implements IReportDataService {
 			//查询指定的产品在统计区间内的所有业绩基准
 			Map<String,Object> mapParas = new HashMap<>();
 			mapParas.put("prodId", prod.getpProdId());   //这里传入母产品id（P_PROD_ID)，业绩基准明细绑定在母产品上
-//			mapParas.put("sDate", sDate);
-//			mapParas.put("eDate",eDate);
+			mapParas.put("sDate", sDate);
+			mapParas.put("eDate",eDate);
 			List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis(mapParas);
-			
-			//区间内是否有业绩基准变更的标志
-			boolean changeFlag = false;
 			
 			//查询指定的产品在统计区间内的有效业绩基准
 			List<RepProdBasicChange> listEffBasis = new ArrayList<>();
@@ -415,21 +412,35 @@ public class DurationReportDataService implements IReportDataService {
 				if ( "E".equals(item.getStatus()) ) {
 					listEffBasis.add(item);
 				}
-				//更新日期在统计区间内，且状态为D，说明有变更
-				if ( item.getUpdateTime()!=null && item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+//				//更新日期在统计区间内，且状态为D，说明有变更
+//				if ( item.getUpdateTime()!=null && item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+//					changeFlag=true;
+//				}
+			}
+			//查询是否在区间内有业绩基准变更，变更的判断规则是变更表的数据记录，与需求中的变更判断思路不一样，经过讨论，按变更履历表来
+			//有无业绩基准变更的依据：查询边变更履历表的EFF_DATE在报表区间内的所有变更履历数据，全部为E的无变更，全部为D的无变更，有E且有D的为有变更；
+			//采用EFF_DATE的依据是：需求说明，如果3月25日做了变更，但EFF_DATE是4月2日，仍然算第一季度无变更
+			//程序中有无业绩基准变更，过滤listBasis状态为D的数据，如果条数减少，就是有变更
+			//非指数变更为指数型产品，变更履历表里面只有E状态的数据，也算变更；
+			//区间内是否有业绩基准变更的标志
+			boolean changeFlag = false;
+			if ( listEffBasis.size()>0 ) {  //区间内必须有E的数据，才有可能变更
+				if ( listBasis.size()>listEffBasis.size()  ) {  //有E,D数据，有变更
 					changeFlag=true;
+				} else {  //相等，表示只有E的数据，
+//					if ( "1".equals(listEffBasis.get(0).getChangeType())) {  //可能由非指数型产品变更为指数型产品，算变更
+//						changeFlag = true;
+//					}
 				}
 			}
 			
-			//查询指定产品最新的业绩基准指数
 			
+			//查询指定产品最新的业绩基准指数
 			if ( "02".equals(prod.getIssuingWay()) ) {  //封闭式：max(产品成立日，统计周期开始日）
 				if (prod.getSetDate().compareTo(sDate)>0) {
 					sDate = prod.getSetDate();
 				}
 			} else if ( "01".equals(prod.getIssuingWay()) ) {  //开放式
-				//查询是否在区间内有业绩基准变更，变更的判断规则是变更表的数据记录，与需求中的变更判断思路不一样，经过讨论，按变更履历表来
-				//有无业绩基准变更，过滤listBasis状态为D的数据，如果条数减少，就是有变更
 				if ( changeFlag==true ) {  //无业绩基准变更：max(产品成立日，统计周期开始日）
 					sDate = listEffBasis.get(0).getEffDate();  //最新的变更生效日
 				} else {  //无业绩基准变更
