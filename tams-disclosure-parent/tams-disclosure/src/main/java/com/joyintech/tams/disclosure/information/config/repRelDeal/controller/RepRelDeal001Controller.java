@@ -11,6 +11,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.service.RepRelDealService;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -130,7 +132,7 @@ public class RepRelDeal001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
-        return repRelDealService.importFile(param);
+    public List<ExcelValidDto> importFile(String fileName)  {
+        return repRelDealService.importData(fileName);
     }
 }
