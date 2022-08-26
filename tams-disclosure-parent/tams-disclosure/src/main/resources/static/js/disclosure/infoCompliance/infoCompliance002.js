@@ -143,7 +143,7 @@
      */
     $(function() {
         // 去掉工作流框架的“意见和说明”
-        $('#wfl_comment').val('无').parent().hide();
+        //$('#wfl_comment').val('无').parent().hide();
         // 去掉工作流中的“完成”按钮
         $('#btnComplete_wfl').remove();
 
