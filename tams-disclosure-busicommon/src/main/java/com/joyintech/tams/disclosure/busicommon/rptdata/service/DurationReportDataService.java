@@ -165,17 +165,17 @@ public class DurationReportDataService implements IReportDataService {
 					mapChild.put("duration",DurationUtil.getQuarterDuration(year, quarter, child.getSetDate()));
 					Date durStartDate = DurationUtil.getQuarterStart(year, quarter);
 					Date durEndDate = DurationUtil.getQuarterEnd(year, quarter);
-					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate) );
+					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate)+"%" );
 				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
 					mapChild.put("duration",DurationUtil.getHalfYearDuration(year, halfYear, child.getSetDate()));
 					Date durStartDate = DurationUtil.getHalfYearStart(year, halfYear);
 					Date durEndDate = DurationUtil.getHalfYearEnd(year, halfYear);
-					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate) );
+					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate)+"%" );
 				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
 					mapChild.put("duration",DurationUtil.getYearDuration(year, child.getSetDate()));
 					Date durStartDate = DurationUtil.getYearStart(year);
 					Date durEndDate = DurationUtil.getYearEnd(year);
-					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate) );
+					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate)+"%" );
 				}				
 				listAchieveBasis.add(mapChild);
 			}
@@ -473,7 +473,7 @@ public class DurationReportDataService implements IReportDataService {
 				val = val.multiply(percent2BigDecimal(basis.getProportion())).divide(new BigDecimal(days),20,BigDecimal.ROUND_DOWN);
 				basisValue = basisValue.add(val);
 			}
-			basisValue = basisValue.setScale(2, BigDecimal.ROUND_DOWN);
+			basisValue = new BigDecimal(100).multiply(basisValue).setScale(2, BigDecimal.ROUND_DOWN);
 		} catch (Exception e) {
 			logger.error("业绩比较基准计算错误！",e);
 		}
