@@ -261,8 +261,11 @@ public class ReportJzfhbg001Service implements IReportDataService {
         if(reportJzfhbg001Dto != null){
             //查询收益分配基准日的产品分红到期表
             DisProdBonusplan bonusplan = reportJzfhbg001Mapper.getBonusPlanBySettDate(searchparam);
-
-            paraMap.put("cusFileName",reportJzfhbg001Dto.getTitleName()+DateUtil.format(bonusplan.getSettDate(), DateUtil.ABB_DATE_FORMAT_CN));
+            Date settdate = null;
+            if (bonusplan != null) {
+                settdate = bonusplan.getSettDate();
+            }
+            paraMap.put("cusFileName",reportJzfhbg001Dto.getTitleName()+DateUtil.format(settdate, DateUtil.ABB_DATE_FORMAT_CN));
         }
         return repReveal;
     }

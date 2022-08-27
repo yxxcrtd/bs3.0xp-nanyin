@@ -356,7 +356,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        }
 	        
 	        if ( reportFile ==null )  //生成日期与产品到期日小于等于90天，不需要生成报表。
-	        	reportFile = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH)+"/CP/NOREPORT.DOCX";
+	        	reportFile = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH)+"/CP/NOREPORT.docx";
 	        
 	        //将生成的文件作为输入，转换成html后，发送到response
 	        byte[] bytes = poiReportService.getFileByteArray(reportFile);

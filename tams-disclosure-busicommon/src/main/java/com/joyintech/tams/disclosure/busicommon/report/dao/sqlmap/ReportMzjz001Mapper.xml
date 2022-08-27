@@ -19,7 +19,7 @@
 					 RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
 				 ELSE RPI.PROD_NAME END titleName,
 			RPI2.PROD_NAME prodName,
-			RPI2.PROD_RE regCode,
+			RPI.PROD_RE regCode,
 			RPI.SET_DATE setDate,
 			nvl(RPI.MDATE,RPI2.MDATE) mDate,
 			TO_CHAR(ROUND(PINDEX.UNIT_VALUE,4),'FM9999999999999990.0000') unitValue,
