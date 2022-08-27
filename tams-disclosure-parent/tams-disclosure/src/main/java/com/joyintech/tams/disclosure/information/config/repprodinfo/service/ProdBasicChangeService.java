@@ -87,20 +87,28 @@ public class ProdBasicChangeService {
      * @param list
      * @return
      */
-    public void updateProdBasicChangeList(List<ProdBasicChangeDto> list, String prodId, String isIndex) {
+    public void updateProdBasicChangeList(List<ProdBasicChangeDto> list, String prodId, String isIndex,String oldIsIndex) {
         if (CollectionUtils.isNotEmpty(list) || StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), isIndex)) {
             //根据prodId进行更新，将老数据状态改成 删除状态
             List<ProdBasicChangeDto> oldList = prodBasicChangeMapper.selectListByProdId(prodId);
             if (CollectionUtils.isNotEmpty(oldList)) {
                 for (ProdBasicChangeDto i : oldList) {
                     i.setStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
+                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),oldIsIndex)) {
+                        i.setChangeType("2");
+                    }
                     prodBasicChangeMapper.updateByGroupId(i);
                 }
             }
+
             //新增
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), isIndex)) {
                 String groupId = IDGenerator.generate(36);
                 for (ProdBasicChangeDto i : list) {
+                    i.setChangeType("0");
+                    if (StringUtils.equals(DictCodeListExt1.是或否_否.getValue(),oldIsIndex)) {
+                        i.setChangeType("1");
+                    }
                     insertProdBasicChange(i, prodId, groupId);
                 }
             }

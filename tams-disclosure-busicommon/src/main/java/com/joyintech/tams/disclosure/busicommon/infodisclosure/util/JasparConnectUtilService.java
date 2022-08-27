@@ -57,16 +57,16 @@ import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 public class JasparConnectUtilService {
 	@Autowired
 	@Qualifier("masterDataSource") DataSource master;
-	
+
 	@Autowired
 	private ReportManager reportManager;
-	
+
 	@Autowired
 	private FileAttachmentProcess fileAttachmentProcess;
-	
-	
+
+
 	@Autowired
-    private JoyinDFSTemplate joyinDFSTemplate;
+	private JoyinDFSTemplate joyinDFSTemplate;
 
 	@Autowired
 	private RepInfoMapper repInfoMapper;
@@ -97,79 +97,79 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndDownload_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
-			String fileType, String repId, String prodId) throws IOException {
+												   String fileType, String repId, String prodId) throws IOException {
 		logger.info("连接报表服务器开始=====");
 		InputStream inputStream = null;
 		try{
-		URL connUrl = new URL(strUrl);
-		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-		URLConnection conn = connUrl.openConnection();
-		logger.info("连接报表服务器结束=====");
-		// 防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+			URL connUrl = new URL(strUrl);
+			fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
+			URLConnection conn = connUrl.openConnection();
+			logger.info("连接报表服务器结束=====");
+			// 防止屏蔽程序抓取而返回403错误
+			conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
 			inputStream = conn.getInputStream();
 
-        String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-        // 获取自己数组
-        byte[] getData = readInputStream(inputStream);
-        
-        String path = FileNameUtil.createUploadFilePath("");
-        logger.info("判断是否有指定文件夹开始=====");
-        File localFile = new SafelyFile(path+ File.separator+filePathName);
-        File dir = localFile.getParentFile();
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        logger.info("判断是否有指定文件夹结束=====");    
-        logger.info("写文件开始=====");
+			String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
+			// 获取自己数组
+			byte[] getData = readInputStream(inputStream);
 
-		FileOutputStream fos =null;
-        try {
-			fos = new FileOutputStream(localFile);
-			fos.write(getData);
-			logger.info("写文件结束=====");
-		}catch (Exception e)
-		{
-			logger.error(e.getMessage(),e);
-		}
-		finally {
-			if (fos != null) {
-				fos.close();
+			String path = FileNameUtil.createUploadFilePath("");
+			logger.info("判断是否有指定文件夹开始=====");
+			File localFile = new SafelyFile(path+ File.separator+filePathName);
+			File dir = localFile.getParentFile();
+			if (!dir.exists()) {
+				dir.mkdirs();
 			}
+			logger.info("判断是否有指定文件夹结束=====");
+			logger.info("写文件开始=====");
+
+			FileOutputStream fos =null;
+			try {
+				fos = new FileOutputStream(localFile);
+				fos.write(getData);
+				logger.info("写文件结束=====");
+			}catch (Exception e)
+			{
+				logger.error(e.getMessage(),e);
+			}
+			finally {
+				if (fos != null) {
+					fos.close();
+				}
 			}
 
-        UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
-                localFile);
-        //存入SYS_UPLOAD_FILE_INFO表
-        if(null != fileAttachmentProcess) {
-            fileAttachmentProcess.upload(uploadFile);
-        }
-        
-      //add by leipeng 上传文件处理
-        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
-        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
-        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
-        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
-        joyinDFSTemplate.upload(sysUploadFileInfo);
-        
-		return uploadFile;
+			UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
+					localFile);
+			//存入SYS_UPLOAD_FILE_INFO表
+			if(null != fileAttachmentProcess) {
+				fileAttachmentProcess.upload(uploadFile);
+			}
+
+			//add by leipeng 上传文件处理
+			SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
+			sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
+			sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
+			sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
+			joyinDFSTemplate.upload(sysUploadFileInfo);
+
+			return uploadFile;
 		}finally {
 			if (inputStream != null) {
 				inputStream.close();
-	}
+			}
 		}
-	
+
 	}
-	
+
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
-			String fileType, String repId, String prodId,Map<String,Object> params) {
+											   String fileType, String repId, String prodId,Map<String,Object> params) {
 		if(null!=params.get("enddate")){
-    		params.put("enddate", params.get("enddate").toString());
-    	}
-    	if(null!=params.get("startdate")){
-    		params.put("startdate", params.get("startdate").toString());
-    	}
+			params.put("enddate", params.get("enddate").toString());
+		}
+		if(null!=params.get("startdate")){
+			params.put("startdate", params.get("startdate").toString());
+		}
 		// 通过REP_ID获取TEMPLATE_ID
 //		RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repId);
 		String templateId = repId;
@@ -180,7 +180,7 @@ public class JasparConnectUtilService {
 		if(!filepath.exists()){
 			filepath.mkdirs();
 		}
-		String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE 
+		String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE
 				+ DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
 
 		//reportManager.exportReport(r1, params, fileType, path+ File.separator+filePathName);
@@ -214,6 +214,7 @@ public class JasparConnectUtilService {
 
 		List<Map<String,Object>> listReports = rptDataService.queryDatas(params);
 		Map<String,Object> dataMap = new HashMap<>();
+		UploadFile uploadFile=null;
 		if (CollectionUtils.isNotEmpty(listReports)){
 			dataMap = listReports.get(0);
 			dataMap.put("uri",r1.getUri());
@@ -224,43 +225,20 @@ public class JasparConnectUtilService {
 			}
 			dataMap.put("repId",r1.getReportID());
 			params.put("batchCheckData",dataMap);
-		}
 
+			Map<String, Object> resultMap=poiReportService.dataCheck(params);
 
-//		//TODO:zhengxiaolian
-//		String reportFile = reportFileService.getReportFileName(r1.getReportID(),(Date) params.get("execDate") ,dataMap,ReportFileService.FILE_TYPE_DOCX );
-//
-//		fileName =fileName+GlobalConstant.POINT+fileType;
-//
-//		//String reportFile="";
-//		File localFile = new SafelyFile(reportFile);
-//		logger.info("UploadFile fileName= "  + reportFile);
-//		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(), localFile);
-
-		Map<String, Object> resultMap=poiReportService.dataCheck(params);
-		UploadFile uploadFile=null;
-		if(!StringUtil.isNotEmpty(resultMap.get("resultSb"))){
-			uploadFile=poiReportService.genReportFile2Batch(dataMap);
-		}else {
-			if(StringUtil.isNotEmpty(resultMap.get("flag"))){
+			if(!StringUtil.isNotEmpty(resultMap.get("resultSb"))){
 				uploadFile=poiReportService.genReportFile2Batch(dataMap);
+			}else {
+				if(StringUtil.isNotEmpty(resultMap.get("flag"))){
+					uploadFile=poiReportService.genReportFile2Batch(dataMap);
+				}
 			}
+
 		}
-		
-//		//存入SYS_UPLOAD_FILE_INFO表
-//        if(null != fileAttachmentProcess) {
-//            fileAttachmentProcess.upload(uploadFile);
-//        }
-        
-//      //add by leipeng 上传文件处理
-//        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
-//        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
-//        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
-//        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
-//        joyinDFSTemplate.upload(sysUploadFileInfo);
-        
 		return uploadFile;
-		
+
 	}
 	/**
 	 * 连接Jaspar并将url上的连接下载到本地固定位置
@@ -271,28 +249,28 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndExport_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
-			String fileType) throws IOException {
-		
+												 String fileType) throws IOException {
+
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-		
+
 		URLConnection conn = connUrl.openConnection();
 		// 防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+		conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
 
-        
-        String path = FileNameUtil.createUploadFilePath("");
-        
-        File localFile = new SafelyFile(path+ File.separator+fileName);
-        File dir = localFile.getParentFile();
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+
+		String path = FileNameUtil.createUploadFilePath("");
+
+		File localFile = new SafelyFile(path+ File.separator+fileName);
+		File dir = localFile.getParentFile();
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
 
 		FileOutputStream fos = null;
 		InputStream inputStream = null;
-        try {
+		try {
 			inputStream = conn.getInputStream();
 			// 获取自己数组
 			byte[] getData = readInputStream(inputStream);
@@ -310,44 +288,44 @@ public class JasparConnectUtilService {
 				inputStream.close();
 			}
 		}
-        UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
-                localFile);
-        //存入SYS_UPLOAD_FILE_INFO表
-        if(null != fileAttachmentProcess) {
-            fileAttachmentProcess.upload(uploadFile);
-        }
-        
-      //add by leipeng 上传文件处理
-        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
-        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
-        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
-        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
-        joyinDFSTemplate.upload(sysUploadFileInfo);
-        
+		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
+				localFile);
+		//存入SYS_UPLOAD_FILE_INFO表
+		if(null != fileAttachmentProcess) {
+			fileAttachmentProcess.upload(uploadFile);
+		}
+
+		//add by leipeng 上传文件处理
+		SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
+		sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
+		sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
+		sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
+		joyinDFSTemplate.upload(sysUploadFileInfo);
+
 		return uploadFile;
 	}
 	public UploadFile connectJasparAndExport(String strUrl, String fileName,
-			String fileType,String repId,Map<String,Object> params) {
+											 String fileType,String repId,Map<String,Object> params) {
 		if(null!=params.get("endDate")){
-    		Date endDate = DateUtil.parse(params.get("endDate").toString());
-    		params.put("endDate", new java.sql.Date(endDate.getTime()));
-    	}
-    	if(null!=params.get("startDate")){
-    		Date endDate = DateUtil.parse(params.get("startDate").toString());
-    		params.put("startDate", new java.sql.Date(endDate.getTime()));
-    	}
-    	//
-    	if(null!=params.get("portnum")){
-    		String portnum = params.get("portnum").toString();
-    		//chenxc:update for pinpoint check:“.”或“|”用于正则表达式，2022-08-24
-    		//改类已无用，直接删除|和.
-    		if(portnum.matches("^(([1-9]{1}\\d*)|([0]{1}))\\.((\\d){0,2})?$")){
-    			portnum = portnum.split(".")[0];
-    		}
-    		params.put("portnum", portnum);
-    	}
-    	
-    	
+			Date endDate = DateUtil.parse(params.get("endDate").toString());
+			params.put("endDate", new java.sql.Date(endDate.getTime()));
+		}
+		if(null!=params.get("startDate")){
+			Date endDate = DateUtil.parse(params.get("startDate").toString());
+			params.put("startDate", new java.sql.Date(endDate.getTime()));
+		}
+		//
+		if(null!=params.get("portnum")){
+			String portnum = params.get("portnum").toString();
+			//chenxc:update for pinpoint check:“.”或“|”用于正则表达式，2022-08-24
+			//改类已无用，直接删除|和.
+			if(portnum.matches("^(([1-9]{1}\\d*)|([0]{1}))\\.((\\d){0,2})?$")){
+				portnum = portnum.split(".")[0];
+			}
+			params.put("portnum", portnum);
+		}
+
+
 		// 通过REP_ID获取TEMPLATE_ID
 //		RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repId);
 //		String templateId = repInfo.getTemplateId();
@@ -369,70 +347,70 @@ public class JasparConnectUtilService {
 		if(null != fileAttachmentProcess) {
 			fileAttachmentProcess.upload(uploadFile);
 		}
-		
+
 		//add by leipeng 上传文件处理
-        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
-        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
-        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
-        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
-        joyinDFSTemplate.upload(sysUploadFileInfo);
+		SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
+		sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
+		sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
+		sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
+		joyinDFSTemplate.upload(sysUploadFileInfo);
 		return uploadFile;
 	}
 	/**
-     * 从输入流中获取字节数组
-     * 
-     * @param inputStream
-     * @return
-     * @throws IOException
-     */
-    public static byte[] readInputStream(InputStream inputStream) throws IOException {
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((len = inputStream.read(buffer)) != -1) {
-            bos.write(buffer, 0, len);
-        }
-        bos.close();
-        return bos.toByteArray();
-    }
-    /**
-     * 从输入流中获取字节数组
-     * 
-     * @param inputStream
-     * @return
-     * @throws IOException
-     */
-    public static String readInputStreamToString(InputStream inputStream) throws IOException {
-    	BufferedReader tBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-    	 
-        StringBuffer tStringBuffer = new StringBuffer();
+	 * 从输入流中获取字节数组
+	 *
+	 * @param inputStream
+	 * @return
+	 * @throws IOException
+	 */
+	public static byte[] readInputStream(InputStream inputStream) throws IOException {
+		byte[] buffer = new byte[1024];
+		int len = 0;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		while ((len = inputStream.read(buffer)) != -1) {
+			bos.write(buffer, 0, len);
+		}
+		bos.close();
+		return bos.toByteArray();
+	}
+	/**
+	 * 从输入流中获取字节数组
+	 *
+	 * @param inputStream
+	 * @return
+	 * @throws IOException
+	 */
+	public static String readInputStreamToString(InputStream inputStream) throws IOException {
+		BufferedReader tBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        String sTempOneLine = "";
+		StringBuffer tStringBuffer = new StringBuffer();
 
-        while ((sTempOneLine = tBufferedReader.readLine()) != null){
+		String sTempOneLine = "";
 
-            tStringBuffer.append(sTempOneLine);
+		while ((sTempOneLine = tBufferedReader.readLine()) != null){
 
-        }
-        return tStringBuffer.toString();
-    }
-    /**
+			tStringBuffer.append(sTempOneLine);
+
+		}
+		return tStringBuffer.toString();
+	}
+	/**
 	 * 连接Jaspar并将url上的连接下载到本地固定位置
 	 * @param strUrl 连接url
 	 * @return
 	 * @throws Exception
 	 */
 	public String  connectJasparAndGenHtml(String strUrl) throws IOException {
-		
+
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-		
+
 		URLConnection conn = connUrl.openConnection();
 		// 防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+		conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = null;
-        try	{
+		InputStream inputStream = null;
+		try	{
 			inputStream = conn.getInputStream();
 			// 获取自己数组
 			String getData = readInputStreamToString(inputStream);
@@ -451,7 +429,7 @@ public class JasparConnectUtilService {
 				inputStream.close();
 			}
 		}
-        }
+	}
 	/**
 	 * 连接Jaspar并将url上的xml解析成list格式
 	 * @param strUrl 连接url
@@ -462,16 +440,16 @@ public class JasparConnectUtilService {
 
 	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws ParserConfigurationException, SAXException, IOException {
 
-		
+
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-		
+
 		URLConnection conn = connUrl.openConnection();
 		// 防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+		conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = null;
-        try{
+		InputStream inputStream = null;
+		try{
 			inputStream = conn.getInputStream();
 			// 获取自己数组
 //        String getData = readInputStreamToString(inputStream);
@@ -507,62 +485,62 @@ public class JasparConnectUtilService {
 //        }
 			return list;
 		} finally {
-        	if(inputStream != null){
+			if(inputStream != null){
 				inputStream.close();
 			}
 		}
 	}
-    /**
-     * 获取报表全路径
-     * @param serverUrl 服务器url
-     * @param serverUser 用户
-     * @param serverPwd  密码
-     * @return
-     */
-    public String getAllHtmlUrl(String serverUrl, String serverUser, String serverPwd, String  path, String uri, RepReveal repReveal){
-    	String url= serverUrl + ReportGlobalConstant.MID_URL + path + ReportGlobalConstant.OBLIQUE_LINE + uri + ".html" ;
-    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser + ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd;
-    	if(StringUtil.isNotEmpty(repReveal.getProdid())){
-    		paramStr = paramStr + ReportGlobalConstant.AMPERS_AND + "portnum=" + repReveal.getProdid();
-    	}
-    	if(repReveal.getStartDate()!=null){
-    		paramStr = paramStr + ReportGlobalConstant.AMPERS_AND + "startDate=" + DateUtil.format(repReveal.getStartDate());
-    	}
-    	if(repReveal.getEndDate()!=null){
-    		paramStr = paramStr + ReportGlobalConstant.AMPERS_AND + "endDate=" + DateUtil.format(repReveal.getEndDate());
-    	}
-    	url = url+ paramStr;
-    	return url;
-    }
-    /**
-     * 获取报表全路径
-     * @param serverUrl 服务器url
-     * @param serverUser 用户
-     * @param serverPwd  密码
-     * @param path 
-     * @return
-     */
-    public String getReportsUrl(String serverUrl, String serverUser, String serverPwd, String  path){
-    	String url= serverUrl + "/rest_v2/resources";
+	/**
+	 * 获取报表全路径
+	 * @param serverUrl 服务器url
+	 * @param serverUser 用户
+	 * @param serverPwd  密码
+	 * @return
+	 */
+	public String getAllHtmlUrl(String serverUrl, String serverUser, String serverPwd, String  path, String uri, RepReveal repReveal){
+		String url= serverUrl + ReportGlobalConstant.MID_URL + path + ReportGlobalConstant.OBLIQUE_LINE + uri + ".html" ;
+		String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser + ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd;
+		if(StringUtil.isNotEmpty(repReveal.getProdid())){
+			paramStr = paramStr + ReportGlobalConstant.AMPERS_AND + "portnum=" + repReveal.getProdid();
+		}
+		if(repReveal.getStartDate()!=null){
+			paramStr = paramStr + ReportGlobalConstant.AMPERS_AND + "startDate=" + DateUtil.format(repReveal.getStartDate());
+		}
+		if(repReveal.getEndDate()!=null){
+			paramStr = paramStr + ReportGlobalConstant.AMPERS_AND + "endDate=" + DateUtil.format(repReveal.getEndDate());
+		}
+		url = url+ paramStr;
+		return url;
+	}
+	/**
+	 * 获取报表全路径
+	 * @param serverUrl 服务器url
+	 * @param serverUser 用户
+	 * @param serverPwd  密码
+	 * @param path
+	 * @return
+	 */
+	public String getReportsUrl(String serverUrl, String serverUser, String serverPwd, String  path){
+		String url= serverUrl + "/rest_v2/resources";
 //    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
 //    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd
 //    			+ReportGlobalConstant.AMPERS_AND +"folderUri="+path+ReportGlobalConstant.AMPERS_AND +"type=reportUnit";
 //    	url = url+ paramStr;
-    	return url;
-    }
-    /**
-     * 获取报表全路径
-     * @param serverUrl 服务器url
-     * @param serverUser 用户
-     * @param serverPwd  密码
-     * @param path 
-     * @return
-     */
-    public String getReportsInputsUrl(String serverUrl, String serverUser, String serverPwd, String  path){
-    	String url= serverUrl + "/rest_v2/reports"+path+"/inputControls";
+		return url;
+	}
+	/**
+	 * 获取报表全路径
+	 * @param serverUrl 服务器url
+	 * @param serverUser 用户
+	 * @param serverPwd  密码
+	 * @param path
+	 * @return
+	 */
+	public String getReportsInputsUrl(String serverUrl, String serverUser, String serverPwd, String  path){
+		String url= serverUrl + "/rest_v2/reports"+path+"/inputControls";
 //    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
 //    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd;
 //    	url = url+ paramStr;
-    	return url;
-    }
+		return url;
+	}
 }

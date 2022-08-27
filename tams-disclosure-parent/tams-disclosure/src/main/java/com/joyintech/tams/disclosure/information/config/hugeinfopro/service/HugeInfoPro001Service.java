@@ -316,9 +316,13 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             }
             if (!StringUtil.isNotEmpty(rowData.get(3))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "触发的情形说明文字"));
+            } else if (rowData.get(3).length() > 500) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "触发的情形说明文字"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(4))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "拒绝赎回说明（文字）"));
+            } else if (rowData.get(4).length() > 500) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "拒绝赎回说明（文字）"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(5))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));

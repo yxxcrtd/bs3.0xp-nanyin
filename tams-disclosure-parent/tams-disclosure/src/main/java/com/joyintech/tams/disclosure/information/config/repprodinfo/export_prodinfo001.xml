@@ -14,7 +14,7 @@
 			<Cell order="10" name="募集起始日期">raiseStrdateStr</Cell>
 
 			<Cell order="11" name="募集结束日期">raiseEnddateStr</Cell>
-			<Cell order="12" name="产品募集金额">raiseAmt</Cell>
+			<Cell order="12" name="总产品募集金额">raiseAmt</Cell>
 			<Cell order="13" name="产品成立日期">pSetDateStr</Cell>
 			<Cell order="14" name="产品到期日期">mdateStr</Cell>
 			<Cell order="15" name="募集方式">raiseTypeName</Cell>

@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.profailureinfo.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface ProFailureInfoMapper {
     List<ProFailureInfo001Dto> select(Map<String, Object> pageParam);
 
     ProFailureInfo001Dto selectByPrimaryKey(String prodRegistNo);
+
+    ProFailureInfo001Dto selectOne(@Param("prodRegistNo") String prodRegistNo,@Param("nocreateReason") String nocreateReason,@Param("date") String date);
 
     int deleteByKey(String prodRegistNo);
 
@@ -38,4 +41,6 @@ public interface ProFailureInfoMapper {
     List<ProFailureInfo001Dto> isRepeated(ProFailureInfo001Dto dto);
 
     ProFailureInfo001Dto isRepeated2(ProFailureInfo001Dto dto);
+
+    List<ProFailureInfo001Dto> selectFailureInfoList(@Param("list") List<ProFailureInfo001Dto> list);
 }

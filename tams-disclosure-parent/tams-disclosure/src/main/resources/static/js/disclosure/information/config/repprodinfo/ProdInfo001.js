@@ -50,7 +50,7 @@ $(function() {
             ,{field:'pProdId', sortable:false, width:100, title: '产品主代码'}
             ,{field:'raiseStrdateStr', sortable:false, width:120, title: '募集起始日期'}
             ,{field:'raiseEnddateStr', sortable:false, width:120, title: '募集结束日期'}
-            ,{field:'raiseAmt', sortable:false, width:120, title: '产品募集金额'}
+            ,{field:'raiseAmt', sortable:false, width:120, title: '总产品募集金额'}
             ,{field:'pSetDateStr', sortable:false, width:120, title: '产品成立日期'}
             ,{field:'mdateStr', sortable:false, width:120, title: '产品到期日期'}
             ,{field:'raiseTypeName', sortable:false, width:100, title: '募集方式'}
