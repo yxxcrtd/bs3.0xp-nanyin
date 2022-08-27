@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.utils.echarts.dto.*;
 import com.joyintech.tams.utils.poi.PoiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +23,6 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.utils.echarts.dto.AxisLabel;
-import com.joyintech.tams.utils.echarts.dto.AxisLine;
-import com.joyintech.tams.utils.echarts.dto.Legend;
-import com.joyintech.tams.utils.echarts.dto.LineStyle;
-import com.joyintech.tams.utils.echarts.dto.NvObject;
-import com.joyintech.tams.utils.echarts.dto.Option;
-import com.joyintech.tams.utils.echarts.dto.Series;
-import com.joyintech.tams.utils.echarts.dto.TextStyle;
-import com.joyintech.tams.utils.echarts.dto.Title;
-import com.joyintech.tams.utils.echarts.dto.XAxis;
-import com.joyintech.tams.utils.echarts.dto.YAxis;
 
 /**
  * echarts报表图片服务类
@@ -332,6 +322,14 @@ public class EchartsUtils {
 		}
 		// 数据集合
 		option.setSeries(seriesList);
+		//图表离容器底部的距离
+		String grid_bottom = obj2str(configMap.get("grid.bottom"));
+		Grid grid = new Grid();
+		if(StringUtil.isNotEmpty(grid_bottom)){
+			grid.setBottom(grid_bottom);
+		}
+		option.setGrid(grid);
+
 		String optionStr = JsonUtils.object2Json(option);
 		//logger.debug("echarts数据对象：" + optionStr);
 		return optionStr;
