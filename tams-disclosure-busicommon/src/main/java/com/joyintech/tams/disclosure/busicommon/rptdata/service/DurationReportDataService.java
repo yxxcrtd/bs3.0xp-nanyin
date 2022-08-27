@@ -428,9 +428,9 @@ public class DurationReportDataService implements IReportDataService {
 				if ( listBasis.size()>listEffBasis.size()  ) {  //有E,D数据，有变更
 					changeFlag=true;
 				} else {  //相等，表示只有E的数据，
-//					if ( "1".equals(listEffBasis.get(0).getChangeType())) {  //可能由非指数型产品变更为指数型产品，算变更
-//						changeFlag = true;
-//					}
+					if ( "1".equals(listEffBasis.get(0).getChangeType())) {  //可能由非指数型产品变更为指数型产品，算变更
+						changeFlag = true;
+					}
 				}
 			}
 			
