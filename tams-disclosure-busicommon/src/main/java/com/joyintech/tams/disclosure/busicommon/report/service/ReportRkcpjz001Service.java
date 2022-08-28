@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
@@ -77,6 +78,13 @@ public class ReportRkcpjz001Service implements IReportDataService {
             if(StringUtil.isNotEmpty(prodId)&&StringUtil.isNotEmpty(valueDate)){
                 Map<String, Object> searchparam = new HashMap<>();
                 searchparam.put("prodId", prodId);
+
+                //判断是普通产品还是子产品
+                RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(searchparam);
+                if(StringUtil.isNotEmpty(info)){
+                    searchparam.put("prodId",info.getProdId());
+                }
+
                 searchparam.put("valueDate", valueDate);
                 //查询产品信息
                 reportRkcpjz001Dto = reportRkcpjz001Mapper.getProdInfo(searchparam);
@@ -257,6 +265,14 @@ public class ReportRkcpjz001Service implements IReportDataService {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         repReveal.setProdid(prodId);
+
+        Map<String, Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        RepProdInfo info=reportRkcpjz001Mapper.getProdID(searchparam);
+        if(StringUtil.isNotEmpty(info)){
+            repReveal.setProdid(info.getpProdId());
+        }
+
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;

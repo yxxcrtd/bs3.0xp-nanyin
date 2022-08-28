@@ -111,4 +111,23 @@
 		) WHERE ROWNUM &lt;= 31
 	</select>
 
+	<select id="getPProdInfo" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
+		select
+		    v.prod_id pProdId,
+		    r.PROD_ID prodId
+		    from V_REP_PROD_INFO v
+		    inner join REP_PROD_INFO r
+		    on r.P_PROD_ID=v.prod_id
+		    where v.PROD_ID = #{prodId}
+			and v.rep_prod_type='02'
+	</select>
+
+	<select id="getProdId" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
+		select
+			v.P_PROD_ID pProdId
+		from REP_PROD_INFO v
+		where v.PROD_ID = #{prodId}
+		  and v.rep_prod_type='02'
+	</select>
+
 </mapper>

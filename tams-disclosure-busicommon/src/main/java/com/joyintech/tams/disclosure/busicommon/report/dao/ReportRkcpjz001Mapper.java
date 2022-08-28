@@ -1,6 +1,7 @@
 
 package com.joyintech.tams.disclosure.busicommon.report.dao;
 
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportGrahDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportRkcpjz001Dto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportValueDto;
@@ -31,4 +32,7 @@ public interface ReportRkcpjz001Mapper {
     List<ReportValueDto> getJzxValueList(Map<String, Object> searchparam);
 
     List<Date> getValueDayList(Map<String, Object> searchparam);
+
+    RepProdInfo getPProdInfo(Map<String, Object> searchParam);
+    RepProdInfo getProdID(Map<String, Object> searchParam);
 }
