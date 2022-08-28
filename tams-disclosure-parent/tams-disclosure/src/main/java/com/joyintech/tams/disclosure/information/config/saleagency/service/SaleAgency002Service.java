@@ -250,25 +250,32 @@ public class SaleAgency002Service extends CommonExportService<SaleAgencyDto>
         List<TreeNode> parentNodes = getParentNodes();
         //查询所有产品
         List<TreeNode> prodInfoNodes=saleAgency001Mapper.selectProdInfo();
+        //双击查看,只显示已经关联的产品
+        List<TreeNode> checkedProdInfoNodes=new ArrayList<>();
         //根据机构id查询关联的产品
         List<ProdSaleAgencyDto> prodSaleAgencyDtos = saleAgency001Mapper.selectProdByAgencyId(agencyId);
-        if(prodSaleAgencyDtos!=null && prodSaleAgencyDtos.size()>0 && StringUtil.equals(pageModel,"2")) {
+        if(prodSaleAgencyDtos!=null && prodSaleAgencyDtos.size()>0) {
             for (TreeNode prodInfoNode : prodInfoNodes) {
                 for (ProdSaleAgencyDto prodSaleAgencyDto : prodSaleAgencyDtos) {
                     if(StringUtil.equals(prodInfoNode.getId(),prodSaleAgencyDto.getProdId())){
                         prodInfoNode.setChecked(true);
                         prodInfoNode.setOpen(true);
                         //循环将父节点置为选中状态
-                            setParentChecked(parentNodes,prodInfoNode.getpId());
-                            result.add(prodInfoNode);
+                        setParentChecked(parentNodes,prodInfoNode.getpId());
+                        checkedProdInfoNodes.add(prodInfoNode);
                     }
                 }
             }
         }
         if (StringUtil.equals(pageModel,"1")){
             result.addAll(prodInfoNodes);
+            result.addAll(parentNodes);
+        }else{
+            //查看：只显示该代销机构关联的产品
+            result.addAll(checkedProdInfoNodes);
+            result.addAll(parentNodes.stream().filter(TreeNode::isChecked).collect(Collectors.toList()));
         }
-        result.addAll(parentNodes);
+
         return result;
     }
 
