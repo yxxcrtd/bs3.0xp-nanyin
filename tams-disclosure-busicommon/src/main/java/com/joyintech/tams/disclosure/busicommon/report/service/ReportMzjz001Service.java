@@ -4,7 +4,9 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqgg001Dto;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportMzjz001Mapper;
@@ -40,6 +42,9 @@ public class ReportMzjz001Service implements IReportDataService {
     @Autowired
     private HolidayService holidayService;
 
+    @Autowired
+    private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -59,12 +64,18 @@ public class ReportMzjz001Service implements IReportDataService {
         ReportMzjz001Dto reportMzjz001Dto = new ReportMzjz001Dto();
         //产品代码：子产品代码为空的话，取父产品代码
         String prodId =  (paraMap.get("prodid") == null ? (String)paraMap.get("pprodid") : (String)paraMap.get("prodid"));
+
         //净值日
         String valueDate = (String)paraMap.get("enddate");
         try {
             if(StringUtil.isNotEmpty(prodId)&&StringUtil.isNotEmpty(valueDate)){
                 Map<String, Object> searchparam = new HashMap<>();
                 searchparam.put("prodId", prodId);
+                //判断是普通产品还是子产品
+                RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(searchparam);
+                if(StringUtil.isNotEmpty(info)){
+                    searchparam.put("prodId",info.getProdId());
+                }
                 searchparam.put("valueDate",valueDate);
                 //查询产品相关信息
                 reportMzjz001Dto =  reportMzjz001Mapper.getProdInfo(searchparam);
@@ -105,6 +116,12 @@ public class ReportMzjz001Service implements IReportDataService {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         repReveal.setProdid(prodId);
+        Map<String, Object> param = new HashMap<>();
+        param.put("prodId", prodId);
+        RepProdInfo info=reportRkcpjz001Mapper.getProdID(param);
+        if(StringUtil.isNotEmpty(info)){
+            repReveal.setProdid(info.getpProdId());
+        }
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         String valueDate = (String)paraMap.get("enddate");

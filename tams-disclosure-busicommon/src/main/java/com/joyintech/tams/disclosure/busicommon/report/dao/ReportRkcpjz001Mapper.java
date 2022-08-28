@@ -34,5 +34,5 @@ public interface ReportRkcpjz001Mapper {
     List<Date> getValueDayList(Map<String, Object> searchparam);
 
     RepProdInfo getPProdInfo(Map<String, Object> searchParam);
-    RepProdInfo getProdID(Map<String, Object> searchParam);
+    RepProdInfo getProdId(Map<String, Object> searchParam);
 }
