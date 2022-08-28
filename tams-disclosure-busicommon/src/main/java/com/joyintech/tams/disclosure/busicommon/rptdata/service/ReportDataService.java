@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.disclosure.busicommon.report.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -346,7 +347,10 @@ public class ReportDataService {
 	        String repId=(String)params.get("repid").toString();
 	        repReveal.setRepId(repId);
 
-		 	repReveal.setProdid(params.get("prodid").toString());
+			if(!StringUtil.isNotEmpty(repReveal.getProdid())){
+				repReveal.setProdid(params.get("prodid").toString());
+			}
+
 	        return repReveal;
 	    }
 	 

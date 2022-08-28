@@ -384,12 +384,18 @@ public class PoiReportService {
 		repReveal.setSysFilepath(fileKey);
 		repReveal.setSysFilename(fileName);
 		repReveal.setReportName(reportInfo.getReportName());
-		if (StringUtil.isNotEmpty(params.get("prodId"))) {
-			repReveal.setProdid(params.get("prodId").toString());
-		} else {
-			if ( params.get("pprodId")!=null )
-				repReveal.setProdid(params.get("pprodId").toString());
+		if(!(StringUtil.equals(repReveal.getRepId(),"CP_001_002_003")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_004")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_005")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_006"))){
+			if (StringUtil.isNotEmpty(params.get("prodId"))) {
+				repReveal.setProdid(params.get("prodId").toString());
+			} else {
+				if ( params.get("pprodId")!=null )
+					repReveal.setProdid(params.get("pprodId").toString());
+			}
 		}
+
 		if ( params.get("prodName")!=null ) { 
 			repReveal.setProdName(params.get("prodName").toString());
 		} else {
