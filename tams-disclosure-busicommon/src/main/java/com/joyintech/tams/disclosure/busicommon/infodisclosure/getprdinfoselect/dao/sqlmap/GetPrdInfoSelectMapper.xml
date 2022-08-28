@@ -137,7 +137,7 @@
 		distinct RPI.PROD_ID id,
 		RPI.PROD_NAME text
 		from
-		REP_PROD_INFO RPI
+		V_REP_PROD_INFO RPI
 		<if test="flag != null and flag != '' and flag == '01'">
 			inner join DIS_PROD_FEEDISCOUNT DPF on DPF.PROD_REGIST_NO=RPI.PROD_RE and DPF.DATA_STATUS='E'
 		</if>
@@ -173,7 +173,7 @@
 			or PROD_ABBR like '%' || #{search, jdbcType=VARCHAR} || '%')
 		</if>
 		<if test="pprodid != null and pprodid != ''">
-			and prod_re=(select prod_re from rep_prod_info where prod_id = #{pprodid})
+			and p_prod_id = #{pprodid}
 		</if>
 		<if test="condition != null and condition != ''">
 			<![CDATA[ ${condition}  ]]>
@@ -195,7 +195,7 @@
 			DPF.FEENAME like '%' || #{search, jdbcType=VARCHAR} || '%')
 		</if>
 		<if test="pprodid != null and pprodid != ''">
-			and prod_re=(select prod_re from rep_prod_info where prod_id = #{pprodid})
+			and p_prod_id = #{pprodid}
 		</if>
 		)where NUM=1
 	</select>
@@ -217,7 +217,7 @@
 			DPA.ADJ_FIELD like '%' || #{search, jdbcType=VARCHAR} || '%')
 		</if>
 		<if test="pprodid != null and pprodid != ''">
-			and prod_re=(select prod_re from rep_prod_info where prod_id = #{pprodid})
+			and p_prod_id = #{pprodid}
 		</if>
 		)where NUM=1
 	</select>
