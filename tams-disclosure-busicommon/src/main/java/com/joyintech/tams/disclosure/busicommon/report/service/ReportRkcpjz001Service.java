@@ -83,6 +83,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(searchparam);
                 if(StringUtil.isNotEmpty(info)){
                     searchparam.put("prodId",info.getProdId());
+                    prodId=info.getProdId();
                 }
 
                 searchparam.put("valueDate", valueDate);
