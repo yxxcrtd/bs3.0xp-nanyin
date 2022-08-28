@@ -7,9 +7,9 @@
         PROD_NAME text,
         PROD_NAME object
         FROM
-        REP_PROD_INFO
+        V_REP_PROD_INFO
         where
-        (P_PROD_ID is null or PROD_ID=P_PROD_ID)
+        1=1
         <if test="search != null and search != ''">
             and (PROD_ID like
             concat(concat('%',#{search}),'%')
@@ -22,9 +22,9 @@
         PROD_ID text,
         PROD_NAME object
         FROM
-        REP_PROD_INFO
+        V_REP_PROD_INFO
         where
-        (P_PROD_ID is null or PROD_ID=P_PROD_ID)
+        1=1
         <if test="search != null and search != ''">
             and (PROD_ID like
             concat(concat('%',#{search}),'%')
@@ -133,7 +133,7 @@
                rft.UPDATE_TIME updateTime,
                rft.ERRORMSG errmsg
         from REP_FEE_TRD rft
-        left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        left join V_REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
         <where>
             <if test='prodId != null and !prodId.equals("")'>
                 and rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -165,7 +165,7 @@
         rft.UPDATE_TIME updateTime,
         rft.ERRORMSG errmsg
         from REP_FEE_TRD rft
-        left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        left join V_REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
         <where>
             <if test="selectData != null and selectData.size()>0">
                 <foreach collection="selectData" item="item" open="(" close=")" separator=") or (">
@@ -188,7 +188,7 @@
                rft.UPDATE_USER updateUser,
                rft.UPDATE_TIME updateTime
         from REP_FEE_TRD rft
-        left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        left join V_REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
         where rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
                 and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
                 and rft.PAY_DATE = #{payDate,jdbcType=DATE}
@@ -206,20 +206,20 @@
                rft.UPDATE_USER updateUser,
                rft.UPDATE_TIME updateTime
         from REP_FEE_TRD rft
-        left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        left join V_REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
         where rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
                 and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
                 and rft.PAY_DATE = #{payDate,jdbcType=DATE}
                 and rft.STATUS = 'E'
     </select>
     <select id="selectProdName" resultType="java.util.Map">
-        SELECT PROD_NAME FROM REP_PROD_INFO WHERE PROD_ID=#{prodId} AND ROWNUM = 1
+        SELECT PROD_NAME FROM V_REP_PROD_INFO WHERE PROD_ID=#{prodId} AND ROWNUM = 1
     </select>
     <select id="getFeeTYPE" resultType="java.lang.String">
         SELECT ITEM_CODE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'FEE_TYPE_REP' and ITEM_VALUE = #{feetype}
     </select>
     <select id="getProdId" resultType="java.lang.String">
-        SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
+        SELECT PROD_ID FROM V_REP_PROD_INFO WHERE PROD_ID = #{prodId}
     </select>
 
     <select id="checkExistData" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
