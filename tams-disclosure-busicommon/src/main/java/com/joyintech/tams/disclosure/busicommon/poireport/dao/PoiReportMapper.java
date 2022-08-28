@@ -46,4 +46,6 @@ public interface PoiReportMapper {
     List<RepDataCheck> getRepDataCheckList();
 
     RepProdInfo getProdInfo(@Param("prodId")String prodId);
+
+    RepProdInfo getVProdInfo(@Param("prodId")String prodId);
 }
