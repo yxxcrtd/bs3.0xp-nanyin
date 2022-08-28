@@ -268,7 +268,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
 
         Map<String, Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
-        RepProdInfo info=reportRkcpjz001Mapper.getProdID(searchparam);
+        RepProdInfo info=reportRkcpjz001Mapper.getProdId(searchparam);
         if(StringUtil.isNotEmpty(info)){
             repReveal.setProdid(info.getpProdId());
         }
