@@ -89,8 +89,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
      * @since 1.0
      */
     public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
-        //todo:现在的数据状态不统一
-//        map.put("dataStatus",DictCodeListExt3.信披_数据状态_有效.getValue());
+        map.put("dataStatus",DictCodeListExt3.信披_数据状态_有效E.getValue());
         return prodPartner001Mapper.queryProdIdInfo(map);
     }
 
@@ -101,7 +100,6 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
      * @throws Exception 异常信息
      */
     public Page<ProdPartnerDto> selectForPage(Map<String, Object> pageParam){
-        //todo:前台查询的请求参数（String）和导出中的参数类型(int)不一致
         int page=1;
         int length=30;
         if(pageParam.get("page")instanceof Integer){

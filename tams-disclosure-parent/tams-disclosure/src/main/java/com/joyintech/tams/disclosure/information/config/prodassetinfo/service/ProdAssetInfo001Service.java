@@ -71,8 +71,7 @@ public class ProdAssetInfo001Service extends CommonExportService<ProdAssetInfoDt
      * @since 1.0
      */
     public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
-        //todo:现在的数据状态不统一
-//        map.put("dataStatus",DictCodeListExt3.信披_数据状态_有效.getValue());
+        map.put("dataStatus",DictCodeListExt3.信披_数据状态_有效E.getValue());
         return prodAssetInfo001Mapper.queryProdIdInfo(map);
     }
 
