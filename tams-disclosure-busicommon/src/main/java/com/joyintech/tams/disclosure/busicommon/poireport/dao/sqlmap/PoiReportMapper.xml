@@ -73,4 +73,10 @@
 		where PROD_ID=#{prodId,jdbcType=VARCHAR}
 		  and status='E'
 	</select>
+
+	<select id="getVProdInfo" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
+		select *from V_REP_PROD_INFO
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and status='E'
+	</select>
 </mapper>

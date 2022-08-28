@@ -68,6 +68,9 @@ public class ReportRevealEndDateService {
 		Map<String, Date> map = new HashMap<>();
 		// 获取产品信息
 		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(busiId);
+		if (prodInfo == null) {
+			prodInfo = poiReportMapper.getVProdInfo(busiId);
+		}
 		map.put(到期日, prodInfo.getMdate());
 		map.put(成立日, prodInfo.getSetDate());
 		map.put(募集起始日, prodInfo.getRaiseStrdate());
