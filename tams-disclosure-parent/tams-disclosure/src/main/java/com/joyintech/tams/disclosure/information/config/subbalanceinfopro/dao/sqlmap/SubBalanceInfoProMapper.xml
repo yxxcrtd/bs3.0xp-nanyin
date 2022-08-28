@@ -17,7 +17,7 @@
           bb.UPDATE_USER updateUser
        from
         BOK_BALANCE  bb
-        left join REP_PROD_INFO rpi on bb.BOOKSET_ID = rpi.PROD_ID
+        left join V_REP_PROD_INFO rpi on bb.BOOKSET_ID = rpi.PROD_ID
     <where>
         <if test="booksetIdList != null and booksetIdList.size() > 0">
             AND bb.BOOKSET_ID in
@@ -58,7 +58,7 @@
           bb.UPDATE_USER updateUser
        from
         BOK_BALANCE  bb
-        left join REP_PROD_INFO rpi on bb.BOOKSET_ID = rpi.PROD_ID
+        left join V_REP_PROD_INFO rpi on bb.BOOKSET_ID = rpi.PROD_ID
       where bb.BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and
       bb.BALANCE_DATE = to_date(#{balanceDate,jdbcType=DATE},'YYYY-MM-DD')
       and bb.SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
@@ -121,12 +121,12 @@
         PROD_RE id,
         PROD_RE text
         FROM
-        rep_prod_info
+            V_REP_PROD_INFO
         WHERE PROD_RE IS NOT NULL
     </select>
     <select id="selectByProdRegistNo" resultType="java.lang.String">
         select PROD_RE
-        from REP_PROD_INFO
+        from V_REP_PROD_INFO
         where PROD_RE = #{prodRegistNo,jdbcType=VARCHAR}
     </select>
 
@@ -136,7 +136,7 @@
         PROD_NAME text,
         PROD_ABBR
         FROM
-        rep_prod_info
+            V_REP_PROD_INFO
     </select>
     <select id="getRegistNoList" resultType="com.joyintech.framework.select.SelectOptionDto">
           SELECT
@@ -151,7 +151,7 @@
         r.PROD_NAME text,
         r.PROD_ABBR
         FROM
-        DIS_PROD_ADJUST d left join rep_prod_info r
+        DIS_PROD_ADJUST d left join V_REP_PROD_INFO r
         on d.PROD_ID = r.PROD_ID
     </select>
     <select id="getRePord" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -160,7 +160,7 @@
         dp.BOOKSET_ID id,
          rp.PROD_NAME text
         from BOK_BALANCE dp
-        left join REP_PROD_INFO  rp
+        left join V_REP_PROD_INFO  rp
         on dp.BOOKSET_ID = rp.PROD_ID
         <where>
         <if test="search != null and search != ''">
@@ -179,7 +179,7 @@
         PROD_NAME text,
         PROD_NAME object
         FROM
-        rep_prod_info
+        V_REP_PROD_INFO
         where
         REP_PROD_TYPE in ('02','01')
         <if test="search != null and search != ''">
@@ -210,7 +210,7 @@
         PROD_NAME text,
         PROD_RE object
         FROM
-        rep_prod_info
+        V_REP_PROD_INFO
         <where>
             <if test="prodRegistNo != null and !prodRegistNo.equals('')">
                 AND PROD_RE=#{prodRegistNo}
