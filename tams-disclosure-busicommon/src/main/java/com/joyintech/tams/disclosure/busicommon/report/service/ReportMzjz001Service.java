@@ -75,6 +75,7 @@ public class ReportMzjz001Service implements IReportDataService {
                 RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(searchparam);
                 if(StringUtil.isNotEmpty(info)){
                     searchparam.put("prodId",info.getProdId());
+                    prodId=info.getProdId();
                 }
                 searchparam.put("valueDate",valueDate);
                 //查询产品相关信息
@@ -108,6 +109,16 @@ public class ReportMzjz001Service implements IReportDataService {
         }
         //跑批日
         reportMzjz001Dto.setEnddate(valueDate);
+
+        Map<String, Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        searchparam.put("valueDate",valueDate);
+        //封装导出文件名称
+        ReportMzjz001Dto dto =  reportMzjz001Mapper.getProdInfo(searchparam);
+        if(dto != null){
+            reportMzjz001Dto.setCusFileName(dto.getTitleName());
+        }
+
         resultMap.add(ReportCollectionUtils.bean2Map(reportMzjz001Dto));
         return resultMap;
     }

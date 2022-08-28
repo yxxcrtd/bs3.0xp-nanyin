@@ -22,6 +22,15 @@ public class ReportMzjz001Dto {
     /*增加公告期*/
     private String enddate;
 
+    private String cusFileName;
+
+    public String getCusFileName() {
+        return cusFileName;
+    }
+
+    public void setCusFileName(String cusFileName) {
+        this.cusFileName = cusFileName;
+    }
     public String getEnddate() {
         return enddate;
     }
