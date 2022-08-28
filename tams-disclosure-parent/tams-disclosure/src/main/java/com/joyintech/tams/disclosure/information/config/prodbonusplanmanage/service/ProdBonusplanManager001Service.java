@@ -124,6 +124,14 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             prodIdArr = prodId.split(",");
         }
         params.put("prodIdArr", prodIdArr);
+
+        String prodId1 = (String) params.get("prodId1");
+        String[] prodIdArr1 = null;
+        if (StringUtil.isNotEmpty(prodId1)) {
+            prodIdArr1 = prodId1.split(",");
+        }
+        params.put("prodIdArr1", prodIdArr1);
+
         Page<ProdBonusplanDto> pages = super.queryForPageForSelectReturn(
                 Integer.parseInt( params.get("page").toString()),
                 Integer.parseInt(params.get("length").toString()),

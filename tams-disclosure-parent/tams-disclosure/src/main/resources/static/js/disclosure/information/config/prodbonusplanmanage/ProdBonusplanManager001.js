@@ -16,11 +16,19 @@
 		   }else {
 			   prodId = null;
 		   }
+
+		   var prodId1 = $('#finprodId1').val();
+		   if(prodId1 && prodId1 != ''){
+			   prodId1 = prodId1.join(',');
+		   }else {
+			   prodId1 = null;
+		   }
 	        return {
 	        	/*temName:$.trim($('#temName').val()),
 	    		temDescription:$.trim($('#temDescription').val()),
 	    		temLoad:REPORT_SERVER_PATH*/
 				prodId : prodId,
+				prodId1 : prodId1,
 					dataStatus: $.trim($('#dataStatus').val()),
 				bonusMode: $.trim($('#bonusMode').val()),
 				settDateBegin: $('#settDate').startDate(),

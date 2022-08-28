@@ -321,6 +321,13 @@
                 #{item}
             </foreach>
         </if>
+        <if test="prodIdArr1 != null and prodIdArr1.length > 0">
+            AND dpb.PROD_ID IN
+            <foreach item="item" collection="prodIdArr1" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="bonusModeArr != null and bonusModeArr.length > 0">
             AND dpb.BONUS_MODE IN
             <foreach item="item" collection="bonusModeArr" index="index"
