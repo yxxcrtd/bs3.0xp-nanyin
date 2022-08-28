@@ -29,7 +29,6 @@ import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.Di
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
-import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -62,9 +61,6 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
 
     @Autowired
     DisProdPlanManage002Service disProdPlanManage002Service;
-
-    @Autowired
-    ProdInfoService prodInfoService;
 
     @Autowired
     private JoyinDFSTemplate joyinDFSTemplate;
@@ -332,7 +328,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 if (!this.getProdId(rowData.get(0))) {
                     message.add("产品主代码不存在。");
                 }else{
-                    prodInfo = prodInfoService.selectByProdStatus(rowData.get(0));
+                    prodInfo = disProdPlanManage002Service.getPrdInfo(rowData.get(0), DictCodeListExt1.维护数据状态_有效.getValue());
                 }
             }
             if (!StringUtil.isNotEmpty(rowData.get(1))) {
