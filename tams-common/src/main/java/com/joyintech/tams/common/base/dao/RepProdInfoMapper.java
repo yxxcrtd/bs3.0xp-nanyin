@@ -18,4 +18,6 @@ public interface RepProdInfoMapper {
     int updateByPrimaryKeySelective(RepProdInfo record);
 
     int updateByPrimaryKey(RepProdInfo record);
+
+    RepProdInfo selectProdName(String prodId);
 }

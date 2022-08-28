@@ -903,4 +903,17 @@
             LOWEST_AMT = #{lowestAmt,jdbcType=DECIMAL}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectProdName" resultType="com.joyintech.tams.common.base.entity.RepProdInfo" parameterType="java.lang.String" >
+        select
+        PROD_NAME prodName
+        from REP_PROD_INFO
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and REP_PROD_TYPE ='03'
+        union all
+        select
+            PROD_NAME prodName
+        from V_REP_PROD_INFO
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
 </mapper>
