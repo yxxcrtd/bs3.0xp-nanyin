@@ -69,7 +69,7 @@
 	</select>
 
 	<select id="getProdInfo" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
-		select *from REP_PROD_INFO
+		select *from V_REP_PROD_INFO
 		where PROD_ID=#{prodId,jdbcType=VARCHAR}
 		  and status='E'
 	</select>

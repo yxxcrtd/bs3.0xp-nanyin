@@ -266,7 +266,7 @@
 	<!-- 查询成立日 -->
 	<select id="getCLRDate" resultType="java.util.Date">
 		SELECT DISTINCT T.SET_DATE
-		FROM REP_PROD_INFO T
+		FROM V_REP_PROD_INFO T
 		LEFT JOIN REP_PROD_INFO T1 ON T1.P_PROD_ID=T.PROD_ID
 		WHERE
 			1=1
@@ -277,6 +277,15 @@
 		      	where t2.P_PROD_ID=T.PROD_ID
 		      	and t2.SET_DATE &lt; #{sysDate, jdbcType=DATE}
 			)
+		and T.REP_PROD_TYPE='01'
+	union all
+		SELECT DISTINCT T.SET_DATE
+		FROM V_REP_PROD_INFO T
+		WHERE
+			1=1
+		  AND T.SET_DATE = #{sysDate, jdbcType=DATE}
+		  AND T.PROD_ID= #{prodId, jdbcType=VARCHAR}
+		  and T.REP_PROD_TYPE='02'
 	</select>
 
 	<select id="getMDATE" resultType="java.util.Date">
