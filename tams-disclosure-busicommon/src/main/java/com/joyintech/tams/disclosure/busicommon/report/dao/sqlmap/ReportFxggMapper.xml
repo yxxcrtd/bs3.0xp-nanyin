@@ -10,7 +10,7 @@
 			rpi.set_date set_date,
 			rpi.prod_re reg_code,
 			rpi.raise_amt raiseAmt
-		from rep_prod_info rpi
+		from v_rep_prod_info rpi
 		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
 		and rpi.status = 'E'
 	</select>
