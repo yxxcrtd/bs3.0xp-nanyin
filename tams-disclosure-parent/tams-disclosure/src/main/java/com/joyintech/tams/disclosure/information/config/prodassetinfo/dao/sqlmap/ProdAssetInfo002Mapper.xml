@@ -59,7 +59,6 @@
 		dpa.UPDATE_USER updateUser,
 		dpa.UPDATE_TIME updateTime
 		from DIS_PROD_ASSET dpa
-		left join REP_PROD_INFO info on dpa.PROD_ID=info.PROD_ID
 		<where>
 			<if test="prodAssetId != null and prodAssetId != ''">
 				AND	dpa.PROD_ASSET_ID=#{prodAssetId,jdbcType=VARCHAR}

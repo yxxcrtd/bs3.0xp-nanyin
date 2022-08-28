@@ -12,7 +12,7 @@
          DNDC.UPDATE_USER updateUser,
         max(dndc.update_time ) updatetime
     FROM DIS_NOSTD_CREDITOR DNDC
-    LEFT JOIN REP_PROD_INFO RPI
+    LEFT JOIN V_REP_PROD_INFO RPI
     on DNDC.PROD_ID = RPI.PROD_ID
     <where>
         <if test="dataStatus != null and dataStatus != ''">
@@ -63,7 +63,7 @@
         DNDC.UPDATE_USER  updateUser,
 --         TO_CHAR(DNDC.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTime
         FROM DIS_NOSTD_CREDITOR DNDC
-        LEFT JOIN REP_PROD_INFO RPI
+        LEFT JOIN V_REP_PROD_INFO RPI
         on DNDC.PROD_ID = RPI.PROD_ID
         <where> RPI.STATUS = 'E'
             <if test="dataStatus != null and dataStatus != ''">
@@ -88,9 +88,9 @@
     <select id="getProdInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
         select PROD_ID id,
          PROD_NAME text
-        from REP_PROD_INFO
+        from V_REP_PROD_INFO
         where 1=1
-        and REP_PROD_INFO.rep_prod_type in ('01','02')
+        and V_REP_PROD_INFO.rep_prod_type in ('01','02')
         <if test="dataStatus != null and dataStatus != ''">
             and STATUS=#{dataStatus,jdbcType=VARCHAR}
         </if>
@@ -115,7 +115,7 @@
         DNDC.UPDATE_USER updateUser,
         TO_CHAR(DNDC.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
         from DIS_NOSTD_CREDITOR DNDC
-        left join REP_PROD_INFO RIP on dpp.PROD_ID=RIP.PROD_ID
+        left join V_REP_PROD_INFO RIP on dpp.PROD_ID=RIP.PROD_ID
         <where>
             <foreach collection="list" item="dto" open="DNDC.NOSTD_ASSET_ID in (" close=")" separator=",">
                 #{dto.nostdAssetId}
@@ -123,7 +123,7 @@
         </where>
     </select>
     <select id="selectByProdId" resultType="java.lang.Integer">
-		select count(1) count from REP_PROD_INFO
+		select count(1) count from V_REP_PROD_INFO
 		where PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 <!--    当前维护非标资产的数量，用生成资产序号-->
@@ -150,7 +150,7 @@
 <!--        DNDC.UPDATE_TIME            updateTime,-->
 <!--        DNDC.UPDATE_USER            updateUser-->
 <!--        FROM DIS_NOSTD_CREDITOR DNDC-->
-<!--        LEFT JOIN  REP_PROD_INFO RPI-->
+<!--        LEFT JOIN  V_REP_PROD_INFO RPI-->
 <!--        on DNDC.PROD_ID = RPI.PROD_ID-->
 <!--        where DNDC.NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}-->
 <!--    </select>-->
@@ -173,7 +173,7 @@
         DNDC.UPDATE_TIME            updateTime,
         DNDC.UPDATE_USER            updateUser
         FROM DIS_NOSTD_CREDITOR DNDC
-        LEFT JOIN  REP_PROD_INFO RPI
+        LEFT JOIN  V_REP_PROD_INFO RPI
         on DNDC.PROD_ID = RPI.PROD_ID
         <where>
             <if test="prodId != null and prodId != ''">
@@ -260,7 +260,7 @@
         PROD_ID text,
         PROD_RE object
         FROM
-        rep_prod_info
+        V_REP_PROD_INFO
         <where>
             <if test="prodRegistNo != null and !prodRegistNo.equals('')">
                 AND PROD_RE=#{prodRegistNo}

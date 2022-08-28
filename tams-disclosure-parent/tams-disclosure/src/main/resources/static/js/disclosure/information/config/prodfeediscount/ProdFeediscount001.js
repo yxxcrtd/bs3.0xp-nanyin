@@ -53,7 +53,7 @@
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("产品费率优惠查看"),
                 basePath + "disclosure/information/config/prodfeediscount/ProdFeediscount002/init",
-                "99%", "99%", data,function(){table.reload();});
+                "99%", "99%", {workflowId:data.workflowId,prodDiscountId:data.prodDiscountId,pageModel:PAGE_MODEL_REFERENCE},function(){table.reload();});
         },
         /**
          * 定义表头
@@ -96,7 +96,7 @@
         //Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/check', data, function(editResult){
             Joyin.dialog(JoyinUtil.getLabel("产品费率优惠编辑"),
                 basePath + "disclosure/information/config/prodfeediscount/ProdFeediscount002/init",
-                "95%", "90%",data,function() {
+                "95%", "90%",{workflowId:data.workflowId,prodDiscountId:data.prodDiscountId,pageModel:PAGE_MODEL_EDIT},function() {
                     table.reload();
                 });
        // });
@@ -123,11 +123,11 @@
      */
 
     $('#ProdFeediscount001_btn_import').click(function() {
-        Joyin.confirm("请确认是否要导入数据？", function () {
-        Joyin.uploadFile({pageId:'ProdFeediscount001'},function(fileName) {
-            Joyin.ajax(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/checkImportData',
-                {fileName: fileName}, function(checkResult) {
-                if (checkResult) {
+        Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function () {
+            Joyin.uploadFile({pageId:'ProdFeediscount001'},function(fileName) {
+                Joyin.ajax('checkImportData',{fileName: fileName}, function() {
+                    Joyin.ajax('importFile', {fileName: fileName});
+                /*if (checkResult) {
                     setTimeout( function () {
                             if(checkResult.data.errorMsg){
                                 Joyin.error(checkResult.data.errorMsg);
@@ -143,7 +143,7 @@
                                         Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/importFile', data,
                                             function (resultObj) {
                                                 if (resultObj.statuCode.toString() === '200') {
-                                                    /** modify by yanya on 20210329 修正导入逻辑**/
+                                                    /!** modify by yanya on 20210329 修正导入逻辑**!/
                                                     //Joyin.alert("文件导入成功！");
                                                     table.reload();
                                                     return;
@@ -160,7 +160,7 @@
                                     Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/importFile', data,
                                         function (resultObj) {
                                             if (resultObj.statuCode.toString() === '200') {
-                                                /** modify by yanya on 20210329 修正导入逻辑**/
+                                                /!** modify by yanya on 20210329 修正导入逻辑**!/
                                                 //Joyin.alert("文件导入成功！");
                                                 table.reload();
                                                 return;
@@ -180,7 +180,7 @@
                                     Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/importFile', data,
                                         function (resultObj) {
                                             if (resultObj.statuCode.toString() === '200') {
-                                                /** modify by yanya on 20210329 修正导入逻辑**/
+                                                /!** modify by yanya on 20210329 修正导入逻辑**!/
                                                 //Joyin.alert("文件导入成功！");
                                                 table.reload();
                                                 return;
@@ -197,7 +197,7 @@
                                 Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/importFile', data,
                                     function (resultObj) {
                                         if (resultObj.statuCode.toString() === '200') {
-                                            /** modify by yanya on 20210329 修正导入逻辑**/
+                                            /!** modify by yanya on 20210329 修正导入逻辑**!/
                                             //Joyin.alert("文件导入成功！");
                                             table.reload();
                                             return;
@@ -208,11 +208,13 @@
 
                         }
                         ,1000);
-                }
+                }*/
+                },function() {
+                    $('iframe').contents().find("#loading").hide();
+                });
+            },function() {
+                table.reload();
             });
-        },function() {
-            table.reload();
-        });
         });
     });
 

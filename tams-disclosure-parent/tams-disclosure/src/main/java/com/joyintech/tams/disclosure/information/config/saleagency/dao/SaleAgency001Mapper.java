@@ -57,8 +57,6 @@ public interface SaleAgency001Mapper extends DisSaleAgencyMapper {
     List<SaleAgencyDto> select(Map<String, Object> pageParam);
 
 
-    int selectByProdId(String prodId);
-
     /**
      * 根据代销机构id查询关联产品
      * @param sequenceNo

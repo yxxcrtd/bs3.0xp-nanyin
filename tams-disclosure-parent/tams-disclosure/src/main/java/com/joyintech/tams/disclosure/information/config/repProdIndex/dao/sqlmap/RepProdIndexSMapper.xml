@@ -345,4 +345,16 @@
           and T.VALUE_DATE = #{valueDate,jdbcType=DATE}
           and T.STATUS = 'D'
     </select>
+
+    <select id="selectProdIndexList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        select
+        A.PROD_ID,
+        to_char(A.VALUE_DATE,'yyyy-mm-dd') valueDateStr
+        from REP_PROD_INDEX A
+        <where>
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.VALUE_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
+                (#{item.prodId},#{item.valueDateStr})
+            </foreach>
+        </where>
+    </select>
 </mapper>

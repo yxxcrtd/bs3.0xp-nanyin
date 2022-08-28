@@ -58,7 +58,7 @@
 			dpp.UPDATE_USER updateUser,
 			dpp.UPDATE_TIME updateTime
 		from DIS_PROD_PARTNER dpp
-		left join REP_PROD_INFO info on dpp.PROD_ID=info.PROD_ID
+		left join V_REP_PROD_INFO info on dpp.PROD_ID=info.PROD_ID
 		<where>
 			<if test="prodPartenerId != null and prodPartenerId != ''">
 				AND	dpp.PROD_PARTENER_ID=#{prodPartenerId,jdbcType=VARCHAR}

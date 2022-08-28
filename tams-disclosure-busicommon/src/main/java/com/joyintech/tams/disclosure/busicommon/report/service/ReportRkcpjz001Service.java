@@ -141,16 +141,21 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 dataList.add(single);
 
                 //近一个月（工作日）份额净值走势图或近一个月(自然日)万份收益走势图
-                for (ReportGrahDto grahDto : grahDtoList) {
+                for (int i = 0; i < grahDtoList.size(); i++) {
+                    ReportGrahDto grahDto = grahDtoList.get(i);
                     List<String> row = new ArrayList<>();
-                    row.add(grahDto.getcDate());
+                    if(i == 0){
+                        row.add("");
+                    }else{
+                        row.add(grahDto.getcDate());
+                    }
                     row.add(grahDto.getValue());
                     dataList.add(row);
                 }
                 //由于纵坐标要求居中显示，需要设置 "boundaryGap"属性
-                double max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).max().orElse(1);
-                double min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).min().orElse(0);
-                BigDecimal endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
+//                double max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).max().orElse(1);
+//                double min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).min().orElse(0);
+//                BigDecimal endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
                 //折线图配置信息
                 Map<String, Object> configMap = getEchartsConfigMap(rptType);
                 configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
@@ -167,15 +172,20 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 //添加横纵坐标说明
                 dataList.add(single);
                 //份额累计净值曲线数据
-                for (ReportGrahDto grahDto : grahDtoList) {
+                for (int i = 0; i < grahDtoList.size(); i++) {
+                    ReportGrahDto grahDto = grahDtoList.get(i);
                     List<String> row = new ArrayList<>();
-                    row.add(grahDto.getcDate());
+                    if(i == 0){
+                        row.add("");
+                    }else{
+                        row.add(grahDto.getcDate());
+                    }
                     row.add(grahDto.getTotalValue());
                     dataList.add(row);
                 }
-                 max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).max().orElse(1);
-                 min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).min().orElse(0);
-                 endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
+//                 max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).max().orElse(1);
+//                 min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).min().orElse(0);
+//                 endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
                 //折线图配置信息
                 configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
@@ -224,10 +234,11 @@ public class ReportRkcpjz001Service implements IReportDataService {
         configMap.put("legend.left", "center");
         configMap.put("legend.top", "auto");
         configMap.put("legend.bottom", "1%");
+        configMap.put("grid.bottom","15%");
 
         configMap.put("xAxis.type", "category");
         configMap.put("xAxis.boundaryGap", "");
-        configMap.put("xAxis.axisLabel.fontSize", "13");
+        configMap.put("xAxis.axisLabel.fontSize", "20");
         configMap.put("xAxis.axisLabel.fontWeight", "bold");
         configMap.put("xAxis.axisLabel.rotate", "30");//设置x轴转的角度
         configMap.put("xAxis.axisLabel.interval", 1);//设置x轴数据隔天显示

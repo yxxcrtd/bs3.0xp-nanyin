@@ -121,7 +121,9 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
-            if (dataList.size() > 50000) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
@@ -172,9 +174,21 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             HugeInfoPro001Dto entity = new HugeInfoPro001Dto();
-            entity.setProdRegistNo(list.get(0));
-            entity.setProdId(list.get(1));
-            entity.setDealDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdRegistNo(list.get(0));
+            } else {
+                entity.setProdRegistNo(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setProdId(list.get(1));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setDealDateStr(list.get(2));
+            } else {
+                entity.setDealDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }
@@ -302,9 +316,13 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             }
             if (!StringUtil.isNotEmpty(rowData.get(3))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "触发的情形说明文字"));
+            } else if (rowData.get(3).length() > 500) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "触发的情形说明文字"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(4))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "拒绝赎回说明（文字）"));
+            } else if (rowData.get(4).length() > 500) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "拒绝赎回说明（文字）"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(5))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));

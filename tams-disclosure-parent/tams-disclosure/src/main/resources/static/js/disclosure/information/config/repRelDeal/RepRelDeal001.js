@@ -177,10 +177,11 @@ $(function() {
         });
 
         $('#RepRelDeal001_btn_import').click(function() {
-            Joyin.confirm("请确认是否要导入数据？", function () {
+            Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function () {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'disclosure/information/config/repRelDeal/RepRelDeal001/checkImportData', {fileName: fileName}, function(checkResult) {
-                        if (checkResult) {
+                    Joyin.ajax('checkImportData', {fileName: fileName}, function() {
+                        Joyin.ajax('importFile', {fileName: fileName});
+                        /*if (checkResult) {
                             setTimeout( function () {
                                     if(checkResult.data.errorMsg){
                                         Joyin.error(checkResult.data.errorMsg);
@@ -327,7 +328,9 @@ $(function() {
                                     }
                                 }
                                 ,1000);
-                        }
+                        }*/
+                    },function() {
+                        $('iframe').contents().find("#loading").hide();
                     });
                 },function() {
                     layui.layer.closeAll()

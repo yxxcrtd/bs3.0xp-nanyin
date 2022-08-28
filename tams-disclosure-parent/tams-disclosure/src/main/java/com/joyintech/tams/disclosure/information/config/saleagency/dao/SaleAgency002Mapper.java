@@ -64,20 +64,6 @@ public interface SaleAgency002Mapper extends DisProdAgencyMapper {
      */
     List<ProdSaleAgencyDto> select(Map<String, Object> pageParam);
 
-    /**
-     * 导出选中的数据
-     * @param investList
-     * @return
-     */
-    List<ProdSaleAgencyDto> selectForExport(@Param("list") List<ProdPartnerDto> investList);
-
-    /**
-     * 根据产品代码查询产品
-     * @param prodId
-     * @return
-     */
-    List<ProdSaleAgencyDto> selectPartnerByProdId(String prodId);
-
 
     int selectByProdId(String prodId);
 

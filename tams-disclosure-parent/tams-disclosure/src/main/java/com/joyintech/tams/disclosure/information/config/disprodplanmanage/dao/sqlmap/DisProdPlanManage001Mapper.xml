@@ -20,7 +20,7 @@
             TO_CHAR(NVL(dpp.Update_Time,dpp.Create_Time),'yyyy-mm-dd hh24:mi:ss') updateDateStr,
             rpi.prod_name prodName
         FROM DIS_PROD_PLAN dpp
-        LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpp.PROD_ID WHERE 1=1
+        LEFT JOIN V_REP_PROD_INFO rpi ON rpi.PROD_ID = dpp.PROD_ID WHERE 1=1
         <if test="dataStatusArr != null and dataStatusArr.length > 0">
             AND dpp.DATA_STATUS IN
             <foreach item="item" collection="dataStatusArr" index="index"

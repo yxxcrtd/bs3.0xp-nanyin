@@ -45,12 +45,12 @@
         insert into REP_PROD_BASIC_CHANGE (UUID, PROD_ID, EFF_DATE,
                                            DATA_TYPE, PROPORTION, CREATE_USER,
                                            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-                                           UPDATE_TIME, STATUS, GROUP_ID
+                                           UPDATE_TIME, STATUS, GROUP_ID,CHANGE_TYPE
         )
         values (#{uuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE},
                 #{dataType,jdbcType=VARCHAR}, #{proportion,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
                 #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-                #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}
+                #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR},#{changeType,jdbcType=VARCHAR}
                )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
@@ -189,7 +189,7 @@
 
     <update id="updateByGroupId" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
         update REP_PROD_BASIC_CHANGE
-        set STATUS = #{status,jdbcType=VARCHAR}
+        set STATUS = #{status,jdbcType=VARCHAR}, CHANGE_TYPE=#{changeType,jdbcType=VARCHAR},UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where GROUP_ID = #{groupId,jdbcType=CHAR} and PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 

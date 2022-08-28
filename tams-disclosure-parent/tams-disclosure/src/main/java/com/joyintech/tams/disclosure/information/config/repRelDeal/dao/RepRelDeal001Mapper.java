@@ -1,7 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.repRelDeal.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -34,4 +34,5 @@ public interface RepRelDeal001Mapper {
 
     int importInfo(RepRelDealDto record);
 
+    List<RepRelDealDto> selectRelDealList(@Param("list") List<RepRelDealDto> list);
 }

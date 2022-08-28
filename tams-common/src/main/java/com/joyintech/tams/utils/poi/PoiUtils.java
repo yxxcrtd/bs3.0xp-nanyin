@@ -269,7 +269,11 @@ public class PoiUtils {
             	content = replaceStr + content.substring(endIdx+1);
             }
             if ( keyStr!=null && keyStr.length()>0 )
-            	content = reviseMergeCells(content);
+            	content = reviseMergeCells(content,keyStr);
+            
+//            System.out.println("==--------------------------------------------------------------------------------------------------------==");
+//            System.out.println(content);
+//            System.out.println("==--------------------------------------------------------------------------------------------------------==");            
             bos.reset();
             bos.write(content.getBytes());
         } catch (Exception e) {
@@ -278,37 +282,73 @@ public class PoiUtils {
     }
     
     /**
-     * 针对定期报表中的财务指标，进行单元格合并，表样如下
+     * 针对定期报表中的财务指标，对其他费用单元格合并，表样如下
      * ----------------------------------------------------------------------------
-     *  |主要财务指标	    |             报告期（2022年04月01日 - 2022年06月30日）|
-	    |                           |          Z70022001 |	Z70022002	| Z70022003              |
+     *  |                    	    |             报告期（2022年04月01日 - 2022年06月30日）|
+     *  |    内部销售代码        ------------------------------------------------------|
+	    |                           |          资产净值 |	份额净值	| 累计净值       | 4.其他费用 |
+        ----------------------------------------------------------------------------|
+        |A01                     |      9,123.45    |              1.0 |                1.0 |                 |
+        -------------------|-------------- -|---------- --|---------------|      478.12|
+        |A02                     |      9,123.45    |              1.0 |                1.0 |                 |
         ----------------------------------------------------------------------------
+        
      * @param content
      * @return
      */
-    private static String reviseMergeCells(String content) {
+    private static String reviseMergeCells(String content,String keyStr) {
         //替换单元格合并
         Document doc = Jsoup.parse(content);
         Elements tables = doc.getElementsByTag("table");
+        int rowIdx = -1;
+        int colIdx = -1;
+        Element tableIdx = null;
         for ( Element table:tables ) {
         	Elements lines = table.getElementsByTag("tr");
         	if ( lines!=null && lines.size()>0 ) {
-        		Element line1 = lines.get(0);  //表的第一行
-        		Elements cols = line1.getElementsByTag("td");
-        		if ( cols!=null && cols.size()>2 ) {  //只有大于两列才合并
-        			String keyStr = cols.get(1).html();   //第二列
-        			if ( keyStr.contains(keyStr)) {
-        				cols.get(1).attr("colspan",cols.size()-1+"");//
-        				for ( int idx = 2;idx<cols.size();idx++ ) {
-        					cols.get(idx).remove();  //删除后续的列
+        		for ( int i=0;i<lines.size();i++ ) {
+        			Element line=lines.get(i);
+        			Elements cols = line.getElementsByTag("td");
+        			if ( cols!=null && cols.size()>2 ) {  //只有大于两列才合并
+        				for ( int j=0;j<cols.size();j++ ) {
+        					Element col=cols.get(j);
+        					String cellStr = col.html();  
+		        			if ( cellStr.contains(keyStr)) {  //从i+1以下的第j列都合并
+		        				tableIdx= table;
+		        				rowIdx = i+1;
+		        				colIdx = j+1;
+		        				break;
+		        			}
         				}
-            			break;
-        			} else {
-        				continue;
         			}
         		}
+	        } else {
+	        	continue;
+	        }
+        }
+        int startRow = 0;
+        if ( tableIdx!=null && rowIdx>0&& colIdx>0 ) {
+        	Elements lines = tableIdx.getElementsByTag("tr");
+        	for ( int i=0;i<lines.size();i++ ) {
+        		Element line = lines.get(i);
+        		Elements cols = line.getElementsByTag("td");
+        		for ( int j=0;j<cols.size();j++ ) {
+        			Element col = cols.get(j);
+        			System.out.println(col);
+        			if ( i==rowIdx && j==colIdx ) {
+        				col.attr("rowspan",lines.size()-2+"");
+        				//flag = true;
+        				startRow=i;
+        				break;
+        			}
+        		}
+        		if ( startRow>0 && i>startRow )
+        			cols.get(colIdx).remove();   //删除后续的列
         	}
         }
+        
+        
+        
         return doc.html();
         //替换单元格合并--end
     }

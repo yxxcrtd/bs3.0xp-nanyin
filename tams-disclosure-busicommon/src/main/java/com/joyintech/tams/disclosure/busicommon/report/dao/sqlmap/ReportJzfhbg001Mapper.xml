@@ -19,7 +19,7 @@
 			CASE WHEN RPI.IS_GRADE = '01' THEN
 					 RPI2.PROD_NAME ||RPI.PROD_NAME
 				 ELSE RPI.PROD_NAME END prodName,
-			RPI2.PROD_RE regCode,
+			RPI.PROD_RE regCode,
 			RPI.SET_DATE setDate
 		FROM REP_PROD_INFO RPI
 		 /*查询普通产品或者母产品数据  P_PROD_ID:母产品代码：当为子产品时填写母产品代码。普通产品为自己的产品代码。母产品为空*/

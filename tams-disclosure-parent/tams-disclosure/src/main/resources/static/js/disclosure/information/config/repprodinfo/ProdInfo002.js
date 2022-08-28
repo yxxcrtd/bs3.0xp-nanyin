@@ -40,6 +40,12 @@
             $("#profitType").attr("disabled", false);
         }
 
+        //普通产品修改时，子产品名称、子产品成立日期置灰  NYLCXP-994 add by zhouqiang
+        if(isGradeUpdate !=null && isGradeUpdate=='02'){
+            $("#prodName").attr("disabled", true);
+            $("#setDate").attr("disabled", true);
+        }
+
         showHidePerformDiv(isIndexUpdate);
     }
     var init = 0;
@@ -126,7 +132,7 @@
         }
         if(object.raiseAmt){
             if(!( /(^[0-9]\d*$)/.test(object.raiseAmt))){
-                Joyin.error("产品募集金额必须为大于等于0的整数");
+                Joyin.error("总产品募集金额必须为大于等于0的整数");
                 return
             }
         }
@@ -138,7 +144,7 @@
             console.log(oldRaiseAmt);
             console.log(raiseAmt);
             if (raiseAmt != oldRaiseAmt) {
-                Joyin.confirm("是否同步修改其余子产品的产品募集金额？", function () {
+                Joyin.confirm("是否同步修改其余子产品的总产品募集金额？", function () {
                     object.synchFlag = true;
                     doSaveOrSubmit(object,operateType);
                 },null, function () {

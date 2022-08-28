@@ -10,7 +10,6 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.service.RepRelDealService;

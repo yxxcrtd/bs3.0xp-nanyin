@@ -196,7 +196,9 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
-            if (dataList.size() > 50000) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
@@ -247,9 +249,21 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             ProdBonusplanDto entity = new ProdBonusplanDto();
-            entity.setProdId(list.get(0));
-            entity.setBonusMode(list.get(1));
-            entity.setSettDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setBonusMode(list.get(1));
+            } else {
+                entity.setBonusMode(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setSettDateStr(list.get(2));
+            } else {
+                entity.setSettDateStr(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }

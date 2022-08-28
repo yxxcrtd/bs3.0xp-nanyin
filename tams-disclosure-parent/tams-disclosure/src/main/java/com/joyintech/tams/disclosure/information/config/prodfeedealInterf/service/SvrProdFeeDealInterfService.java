@@ -1,8 +1,9 @@
 package com.joyintech.tams.disclosure.information.config.prodfeedealInterf.service;
 
 
-import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -10,29 +11,25 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
-import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao.SvrProdFeeDealInterfMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
-import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
-import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -163,142 +160,132 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         return map;
     }
 
-
-
-    /**
-     * 导入check
-     * @param fileName
-     * @return
-     */
     public AjaxResult checkImportData(String fileName) {
+        AjaxResult webResult = new AjaxResult();
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        String totalMsg = "";
-        List<List<String>> jsonArrays = new ArrayList<>();
-        // 重复数据
-        int repeatNum = 0;
-        if (objects.size() <= 1) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
+        List<List<String>> tempList = ExcelUtil.getTempList(fileName);
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        if (null == tempList.get(0) || tempList.get(0).size() != 5) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 5), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = tempList.subList(1, tempList.size());
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
+                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                return webResult;
+            }
+            List<SvrProdFeeDealInterfDto> entities = this.convertToBean(dataList);
+            List<SvrProdFeeDealInterfDto> data = this.selectFeeDealByKey(entities);
+            if (data != null && data.size() > 0) {
+                Map<String, List<SvrProdFeeDealInterfDto>> map = entities.stream().collect(
+                        JoyinCollectors.groupingBy(x ->
+                                x.getProdId()
+                                        + GlobalConstant.UNDER_LINE + x.getFeeType()
+                                        + GlobalConstant.UNDER_LINE + x.getPayDateStr()
+                        ));
+                // 将序号放入list中
+                List<String> excelNumList = new ArrayList<>();
+                List<Integer> excelNumIntList = new ArrayList<>();
+                for (SvrProdFeeDealInterfDto dto : data) {
+                    List<SvrProdFeeDealInterfDto> listTemp = map.get(dto.getProdId()
+                            + GlobalConstant.UNDER_LINE + dto.getFeeType()
+                            + GlobalConstant.UNDER_LINE + dto.getPayDateStr());
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+                }
+                // 将list进行排序，并转化为string
+                Collections.sort(excelNumIntList);
+                for (Integer rowNo : excelNumIntList) {
+                    excelNumList.add(String.valueOf(rowNo));
+                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
+            } else {
+                // 防止在进行导入前check时进行了两次的弹框
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            }
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 5) {
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要5列。");
-                AjaxResult wr = new AjaxResult();
-                wr.setData(resultMap);
-                return wr;
-            }else {
-                StringBuilder returnerrorMsg = new StringBuilder("");
-                for (int i = 1; i < objects.size(); i++) {
-                    StringBuilder errorMsg = new StringBuilder("");
-                    List<String> rowData = objects.get(i);
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        return webResult;
+    }
 
-                    if (!StringUtil.isNotEmpty(rowData.get(0))){
-                        errorMsg.append("产品主代码 必填！");
-                    }else if(!this.getProdId(rowData.get(0))){
-                        errorMsg.append("产品主代码未在系统中维护！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
-                        errorMsg.append("费用类型 必填！");
-                    }else if((rowData.get(1).trim().equals("申购费") ||
-                            rowData.get(1).trim().equals("赎回费") ||
-                            rowData.get(1).trim().equals("客户收益")) &&
-                            (!StringUtil.isNotEmpty(rowData.get(2)))){
-                        errorMsg.append("当费用类型为“申购费”“赎回费”“客户收益”时费用金额不能为空!");
-                    }else if((rowData.get(1).trim().equals("托管费") ||
-                            rowData.get(1).trim().equals("管理费（固定）") ||
-                            rowData.get(1).trim().equals("管理费（超额）")||
-                            rowData.get(1).trim().equals("销售费")) &&
-                            (!StringUtil.isNotEmpty(rowData.get(3)))){
-                        errorMsg.append("当费用类型为“托管费”“管理费（固定）”“管理费（超额）”“销售费”时自成立以来发生额（贷方）不可为空!");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(4))){
-                        errorMsg.append("支付日 必填！");
-                    }else if(!this.isDateStr(rowData.get(4))){
-                        errorMsg.append("支付日 格式不正确！");
-                    }else if(rowData.get(4).compareTo(DateUtil.format(DateUtil.platDateFromCache())) > 0){
-                        errorMsg.append("支付日 只能小于等于平台日！");
-                    }
-                    if(StringUtil.isNotEmpty(rowData.get(3))){
-                        if(!this.isBigDecimal(rowData.get(3))){
-                            errorMsg.append("自成立以来发生额（贷方） 格式不正确！");
-                        }
-                    }
-                    if(StringUtil.isNotEmpty(rowData.get(2))){
-                        if(!this.isBigDecimal(rowData.get(2))){
-                            errorMsg.append("费用金额 格式不正确！");
-                        }
-                    }
-                    if (StringUtil.isNotEmpty(errorMsg.toString())){
-                        errorMsg.append("<br />");
-                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
-                    }
-                }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("errorMsg", returnerrorMsg.toString());
-                    AjaxResult wr = new AjaxResult();
-                    wr.setData(resultMap);
-                    return wr;
-                }
-                //第一行【i=0】为表头，所以不操作。
-                for (int i = objects.size() - 1; i >= 1; i--) {
-                    List<String> list1 = objects.get(i);
-                    Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
-                        List<String> list2 = objects.get(k);
-                        //产品主代码，费用类型,支付日相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))
-                             &&(StringUtil.equals(list1.get(1), list2.get(1)))
-                                &&(StringUtil.equals(list1.get(4), list2.get(4)))) {
-                            isRepeat = true;
-                            break;
-                        }
-                    }
-                    if (isRepeat){
-                        repeatNum++;
-                    }else {
-                        jsonArrays.add(list1);
-                    }
-                }
+    /**
+     * excel数据转为java对象
+     * @return
+     */
+    private List<SvrProdFeeDealInterfDto> convertToBean(List<List<String>> dataList) {
+        List<SvrProdFeeDealInterfDto> entities = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list =  dataList.get(i);
+            SvrProdFeeDealInterfDto entity = new SvrProdFeeDealInterfDto();
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setFeeType(this.getFeeTYPE(list.get(1)));
+            } else {
+                entity.setFeeType(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(4))) {
+                entity.setPayDateStr(list.get(4));
+            } else {
+                entity.setPayDateStr(" ");
+            }
+            entity.setExcelNum(String.valueOf(i+2));
+            entities.add(entity);
+        }
+        return entities;
+    }
+
+    /**
+     * 分批查询
+     * @param dataList
+     * @return
+     */
+    private List<SvrProdFeeDealInterfDto> selectFeeDealByKey(List<SvrProdFeeDealInterfDto> dataList) {
+        int maxDataCountOneTime = 1000;
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            return svrProdFeeDealInterfMapper.selectFeeDealList(dataList);
+        }
+        // 导入大于1000时，返回值
+        List<SvrProdFeeDealInterfDto> equtiyList = new ArrayList<>();
+
+        List<SvrProdFeeDealInterfDto> newDataList = new ArrayList<>(dataList);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        List<SvrProdFeeDealInterfDto> listTemp;
+        for (int i = 0; i < part; i++ ) {
+            listTemp = svrProdFeeDealInterfMapper.selectFeeDealList(newDataList.subList(0, maxDataCountOneTime));
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            listTemp = svrProdFeeDealInterfMapper.selectFeeDealList(newDataList);
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
             }
         }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
-        }
-        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
-        String tempList = (String) resultMap.get("correctData");
-        SvrProdFeeDealInterfDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<SvrProdFeeDealInterfDto> selectedItem = dto.getSelectedItem();
-        List<SvrProdFeeDealInterfDto>  existData = new ArrayList<>();
-        for (SvrProdFeeDealInterfDto temp:selectedItem) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("prodId",temp.getProdId());
-            map.put("feeType",temp.getFeeType());
-            map.put("payDate",temp.getPayDate());
-            if (StringUtil.isNotEmpty(this.selectData(map))){
-                existData.add(temp);
-            }
-        }
-        if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
-        }
-        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
-        if (objects.size() - 1 > maxCount) {
-            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
-        }
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
+        return equtiyList;
     }
 
     public static boolean isDateStr(String str) {
@@ -331,65 +318,125 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         }
     }
 
-    public AjaxResult importFile(Map<String, Object> param) {
-        AjaxResult ajaxResult = new AjaxResult();
-        String tempList = (String) param.get("tempList");
-        SvrProdFeeDealInterfDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<SvrProdFeeDealInterfDto> selectedItem = dto.getSelectedItem();
-        List<SvrProdFeeDealInterfDto>  existData = new ArrayList<>();
-        List<SvrProdFeeDealInterfDto>  newData = new ArrayList<>();
-        for (SvrProdFeeDealInterfDto temp:selectedItem) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("prodId",temp.getProdId());
-            map.put("feeType",temp.getFeeType());
-            map.put("payDate",temp.getPayDate());
-            if (StringUtil.isNotEmpty(this.selectData(map))){
-                existData.add(temp);
-            }else {
-                newData.add(temp);
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<SvrProdFeeDealInterfDto> entities = new ArrayList<>(dataList.size());
+            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("prodId", item.getProdId());
+                    map.put("feeType", item.getFeeType());
+                    map.put("payDate", item.getPayDate());
+                    item.setUpdateUser(CommonUtil.getUserName());
+                    if (null != this.selectData(map)){
+                        this.doComplete(item, OperationType.MODIFY);
+                    } else {
+                        item.setCreateUser(CommonUtil.getUserName());
+                        this.doComplete(item, OperationType.NEW);
+                    }
+                });
             }
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
         }
-        //更新操作
-        for (SvrProdFeeDealInterfDto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
-        }
-
-        //插入操作
-        for (SvrProdFeeDealInterfDto newDataDto : newData) {
-            this.doComplete(newDataDto,OperationType.NEW);
-        }
-        ajaxResult.setStatuCode(HttpStatus.OK.value());
-        return ajaxResult;
     }
 
-    public SvrProdFeeDealInterfDto getValNetAssetQuotationInfoListData(String tempList) {
-        SvrProdFeeDealInterfDto dto = new SvrProdFeeDealInterfDto();
-        List<SvrProdFeeDealInterfDto> svrProdFeeDealInterfDtoList = new ArrayList<>();
-        dto.setSelectedItem(svrProdFeeDealInterfDtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            SvrProdFeeDealInterfDto svrProdFeeDealInterfDto = new SvrProdFeeDealInterfDto();
-            if (StringUtil.isNotEmpty(rowData.get(0))) {
-                svrProdFeeDealInterfDto.setProdId(rowData.get(0).toString());
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<SvrProdFeeDealInterfDto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 5) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 5)));
+                break;
             }
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                svrProdFeeDealInterfDto.setFeeType(this.getFeeTYPE(rowData.get(1).toString()));
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (!StringUtil.isNotEmpty(rowData.get(0))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
+            }else if(!this.getProdId(rowData.get(0))) {
+                message.add("产品主代码未在系统中维护。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                svrProdFeeDealInterfDto.setPaidFee(new BigDecimal(rowData.get(2).toString()));
+            if (!StringUtil.isNotEmpty(rowData.get(1))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "费用类型"));
+            } else if (!StringUtil.isNotEmpty(this.getFeeTYPE(rowData.get(1)))) {
+                message.add(this.getMessage("费用类型值不正确。"));
+            } else if ((rowData.get(1).trim().equals("申购费") ||
+                    rowData.get(1).trim().equals("赎回费") ||
+                    rowData.get(1).trim().equals("客户收益")) &&
+                    (!StringUtil.isNotEmpty(rowData.get(2)))) {
+                message.add("当费用类型为“申购费”“赎回费”“客户收益”时费用金额不能为空。");
+            } else if ((rowData.get(1).trim().equals("托管费") ||
+                    rowData.get(1).trim().equals("管理费（固定）") ||
+                    rowData.get(1).trim().equals("管理费（超额）")||
+                    rowData.get(1).trim().equals("销售费")) &&
+                    (!StringUtil.isNotEmpty(rowData.get(3)))) {
+                message.add("当费用类型为“托管费”“管理费（固定）”“管理费（超额）”“销售费”时自成立以来发生额（贷方）不可为空。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                svrProdFeeDealInterfDto.setAccrual(new BigDecimal(rowData.get(3).toString()));
+            if (!StringUtil.isNotEmpty(rowData.get(4))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "支付日"));
+            } else if (!isDateStr(rowData.get(4))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "支付日"));
+            } else if (rowData.get(4).compareTo(DateUtil.format(DateUtil.platDateFromCache())) > 0) {
+                message.add("支付日只能小于等于平台日。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(4))) {
-                svrProdFeeDealInterfDto.setPayDate(DateUtil.parse(rowData.get(4).toString()));
+            if(StringUtil.isNotEmpty(rowData.get(3)) && isBigDecimal(rowData.get(3))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "自成立以来发生额（贷方）"));
             }
-            svrProdFeeDealInterfDto.setStatus("E");
-            svrProdFeeDealInterfDtoList.add(svrProdFeeDealInterfDto);
+            if(StringUtil.isNotEmpty(rowData.get(2)) && isBigDecimal(rowData.get(2))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "费用金额"));
+            }
+            if (map.containsKey(rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(1)
+                    + GlobalConstant.UNDER_LINE + rowData.get(4))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            }
+            map.put(rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(1)
+                    + GlobalConstant.UNDER_LINE + rowData.get(4), rowData);
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(1)
+                        + GlobalConstant.UNDER_LINE + rowData.get(4),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+            }
+            else {
+                entities.add(this.convertToEntity(rowData));
+            }
         }
-        dto.setSelectedItem(svrProdFeeDealInterfDtoList);
-        return dto;
+        return checkResult;
+    }
+
+    private SvrProdFeeDealInterfDto convertToEntity(List<String> rowData) {
+        SvrProdFeeDealInterfDto svrProdFeeDealInterfDto = new SvrProdFeeDealInterfDto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            svrProdFeeDealInterfDto.setProdId(rowData.get(0));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            svrProdFeeDealInterfDto.setFeeType(this.getFeeTYPE(rowData.get(1)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            svrProdFeeDealInterfDto.setPaidFee(new BigDecimal(rowData.get(2)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            svrProdFeeDealInterfDto.setAccrual(new BigDecimal(rowData.get(3)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(4))) {
+            svrProdFeeDealInterfDto.setPayDate(DateUtil.parse(rowData.get(4)));
+        }
+        svrProdFeeDealInterfDto.setStatus("E");
+        return svrProdFeeDealInterfDto;
     }
 
     public String getFeeTYPE(String feetype) {

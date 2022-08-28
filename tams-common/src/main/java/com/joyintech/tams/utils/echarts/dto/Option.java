@@ -35,6 +35,11 @@ public class Option implements Serializable {
 	 */
 	private transient List<Series> Series;
 
+	/**
+	 * echarts布局
+	 */
+	private Grid grid;
+
 	public Title getTitle() {
 		return title;
 	}
@@ -73,5 +78,13 @@ public class Option implements Serializable {
 
 	public void setSeries(List<Series> series) {
 		Series = series;
+	}
+
+	public Grid getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Grid grid) {
+		this.grid = grid;
 	}
 }

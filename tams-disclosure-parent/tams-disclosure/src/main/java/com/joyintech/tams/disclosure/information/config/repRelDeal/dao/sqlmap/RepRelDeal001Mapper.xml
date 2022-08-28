@@ -6,12 +6,11 @@
         PROD_ID id,
         PROD_NAME text
         FROM
-        REP_PROD_INFO
+        V_REP_PROD_INFO
         where
-        (P_PROD_ID is null or P_PROD_ID = PROD_ID)
+        1=1
         <if test="search != null and search != ''">
-            and (PROD_ID like
-            concat(concat('%',#{search}),'%')
+            and (PROD_ID like concat(concat('%',#{search}),'%')
             or PROD_NAME like concat(concat('%',#{search}),'%'))
         </if>
     </select>
@@ -31,7 +30,7 @@
         T1.UPDATE_TIME updateTime,
         T1.ERRORMSG errormsg
         from REP_REL_DEAL T1
-        left join REP_PROD_INFO T2 on T2.PROD_ID = T1.PROD_ID
+        left join V_REP_PROD_INFO T2 on T2.PROD_ID = T1.PROD_ID
         <where>
             <if test="prodList != null  and prodIds!= ''">
                 <foreach collection="prodList" item="item" open="and T1.PROD_ID in(" separator="," close=")">
@@ -173,7 +172,7 @@
     </select>
 
     <select id="selectPProdId" resultType="java.lang.String">
-        SELECT PROD_ID FROM REP_PROD_INFO WHERE (P_PROD_ID is null or P_PROD_ID = PROD_ID) and PROD_ID = #{prodId}
+        SELECT PROD_ID FROM V_REP_PROD_INFO WHERE PROD_ID = #{prodId}
     </select>
 
     <select id="selectExistInfo" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
@@ -249,4 +248,17 @@
             TEMP.UPDATE_TIME,TEMP.CREATE_DEPT,TEMP.CREATE_USER,
             TEMP.UPDATE_USER,TEMP.STATUS)
     </insert>
+
+    <select id="selectRelDealList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto">
+        select
+        A.PROD_ID,
+        to_char(A.EFFDATE,'yyyy-mm-dd') effdateStr,
+        to_char(A.EFFDELIDATE,'yyyy-mm-dd') effdelidateStr
+        from REP_REL_DEAL A
+        <where>
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFFDATE,'yyyy-mm-dd'),to_char(A.EFFDELIDATE,'yyyy-mm-dd')) IN (" separator="," close=")">
+                (#{item.prodId},#{item.effdateStr},#{item.effdelidateStr})
+            </foreach>
+        </where>
+    </select>
 </mapper>

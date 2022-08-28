@@ -486,7 +486,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list =  dataList.get(i);
             ProdInfoDto entity = new ProdInfoDto();
-            entity.setProdId(list.get(0));
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }
@@ -894,15 +898,17 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         entity.setOperateType(type.toString());
         entity.setUpdateTime(DateUtil.now());
         entity.setStatus(null);
+
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
             /* entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());*/
             this.insert(entity);
             // 更新行情代码信息
-            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(), entity.getpProdId(), entity.getIsIndex());
+            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(), entity.getpProdId(), entity.getIsIndex(),null);
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {
+            ProdInfoDto prodInfoDto = prodInfoMapper.selectByPrimaryKey(entity.getProdId());
             this.update(entity);
             // 更新行情代码信息
-            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(), entity.getpProdId(), entity.getIsIndex());
+            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(), entity.getpProdId(), entity.getIsIndex(),prodInfoDto.getIsIndex());
         } else if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
             this.delete(entity);
         }

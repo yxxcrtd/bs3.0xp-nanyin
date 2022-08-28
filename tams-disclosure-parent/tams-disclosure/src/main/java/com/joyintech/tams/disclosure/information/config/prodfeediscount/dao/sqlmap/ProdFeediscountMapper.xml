@@ -456,7 +456,7 @@
         from DIS_PROD_FEEDISCOUNT
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
             and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
-            and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
+            and to_char(RPT_ISSUE_DATE,'yyyy-MM-dd') = #{rptIssueDateStr}
             and FEENAME = #{feename,jdbcType=VARCHAR}
             and DATA_STATUS = 'E'
         <if test="startDate != null" >

@@ -12,6 +12,8 @@ package com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -89,4 +91,6 @@ public interface DisProdPlanManage002Mapper {
 	List<DisProdPlanManage002Dto> checkInfo(DisProdPlanManage002Dto dto);
 
 	int delete1(DisProdPlanManage002Dto entity);
+
+	ProdInfoDto selectByProdStatus(@Param("prodId") String prodId, @Param("status") String status);
 }

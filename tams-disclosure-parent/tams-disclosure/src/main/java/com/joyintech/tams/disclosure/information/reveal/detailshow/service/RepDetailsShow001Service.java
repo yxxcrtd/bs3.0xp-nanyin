@@ -349,13 +349,14 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        	//树单击：初始化报表，即报表模板中的变量全部用xxx代替
 	    		String repId = params.get("repid").toString();
 	        	reportFile = poiReportService.initReport(repId);
+	        	//reportFile ="E:/指数型分级净值型产品2022年01年度报告.docx";
 	        } else {  //预览按钮：显示指定产品的实际内容，生成了一个临时文件f1
 	    		collateParams(params);
 	            reportFile = poiReportService.previewReport(params);
 	        }
 	        
 	        if ( reportFile ==null )  //生成日期与产品到期日小于等于90天，不需要生成报表。
-	        	reportFile = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH)+"/CP/NOREPORT.DOCX";
+	        	reportFile = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH)+"/CP/NOREPORT.docx";
 	        
 	        //将生成的文件作为输入，转换成html后，发送到response
 	        byte[] bytes = poiReportService.getFileByteArray(reportFile);
@@ -363,11 +364,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);
                 String rptType = params.get("uri").toString();
-                if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
-        				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+                if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
         				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) 
         				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
-                	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath,"报告期（");
+                	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath,"4.其它费用");
                 } else {
                 	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
                 }

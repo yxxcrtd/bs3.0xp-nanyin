@@ -37,6 +37,11 @@ public class RepProdBasicChange extends BaseEntity {
     private String groupId;
 
     /**
+     * 变更类型
+     */
+    private String changeType;
+
+    /**
      * 取得 主键
      * @return 主键
      */
@@ -131,5 +136,13 @@ public class RepProdBasicChange extends BaseEntity {
      */
     public void setGroupId(String groupId) {
         this.groupId = groupId == null ? null : groupId.trim();
+    }
+
+    public String getChangeType() {
+        return changeType;
+    }
+
+    public void setChangeType(String changeType) {
+        this.changeType = changeType == null ? null : changeType.trim();;
     }
 }

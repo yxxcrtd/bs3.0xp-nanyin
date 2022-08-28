@@ -1,7 +1,8 @@
 package com.joyintech.tams.disclosure.information.config.repRelDeal.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -9,19 +10,21 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.dao.RepRelDeal001Mapper;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -117,218 +120,132 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
         return repRelDeal001Mapper.selectData2(param);
     }
 
-    /**
-     * 导入check
-     * @param fileName
-     * @return
-     */
     public AjaxResult checkImportData(String fileName) {
+        AjaxResult webResult = new AjaxResult();
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
-//        if (objects.size() - 1 > 50000) {
-//            Map<String, Object> resultMap = new HashMap<>();
-//            resultMap.put("errorMsg", "单次最多导入50000条。");
-//            AjaxResult wr = new AjaxResult();
-//            wr.setData(resultMap);
-//            return wr;
-//        }
-        String totalMsg = "";
-        List<List<String>> jsonArrays = new ArrayList<>();
-        // 重复数据
-        int repeatNum = 0;
-        if (objects.size() <= 1) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        }else {
-            if (null == objects.get(0) || objects.get(0).size() != 7) {
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要7列。");
-                AjaxResult wr = new AjaxResult();
-                wr.setData(resultMap);
-                return wr;
+        List<List<String>> tempList = ExcelUtil.getTempList(fileName);
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        if (null == tempList.get(0) || tempList.get(0).size() != 7) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 7), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = tempList.subList(1, tempList.size());
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
+                    ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+            if (dataList.size() > maxCount) {
+                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                return webResult;
+            }
+            List<RepRelDealDto> entities = this.convertToBean(dataList);
+            List<RepRelDealDto> data = this.selectRelDealByKey(entities);
+            if (data != null && data.size() > 0) {
+                Map<String, List<RepRelDealDto>> map = entities.stream().collect(
+                        JoyinCollectors.groupingBy(x ->
+                                x.getProdId()
+                                        + GlobalConstant.UNDER_LINE + x.getEffdateStr()
+                                        + GlobalConstant.UNDER_LINE + x.getEffdelidateStr()
+                        ));
+                // 将序号放入list中
+                List<String> excelNumList = new ArrayList<>();
+                List<Integer> excelNumIntList = new ArrayList<>();
+                for (RepRelDealDto dto : data) {
+                    List<RepRelDealDto> listTemp = map.get(dto.getProdId()
+                            + GlobalConstant.UNDER_LINE + dto.getEffdateStr()
+                            + GlobalConstant.UNDER_LINE + dto.getEffdelidateStr());
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+                }
+                // 将list进行排序，并转化为string
+                Collections.sort(excelNumIntList);
+                for (Integer rowNo : excelNumIntList) {
+                    excelNumList.add(String.valueOf(rowNo));
+                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
             } else {
-                StringBuilder returnerrorMsg = new StringBuilder("");
-                for (int i = 1; i < objects.size(); i++) {
-                    StringBuilder errorMsg = new StringBuilder("");
-                    List<String> rowData = objects.get(i);
-                    if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
-                        errorMsg.append("产品主代码 必填！");
-                    }else if(!this.selectPProdId(rowData.get(0).trim())){
-                        errorMsg.append("产品主代码未在系统中维护！");
-                    }
+                // 防止在进行导入前check时进行了两次的弹框
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            }
+        } else {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
+            return webResult;
+        }
+        return webResult;
+    }
 
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
-                        errorMsg.append("期间投资关联机构发行证券交易金额 必填！");
-                    }else if(!this.isBigDecimal(rowData.get(1))){
-                        errorMsg.append("期间投资关联机构发行证券交易金额 格式不正确！");
-                    }
+    /**
+     * excel数据转为java对象
+     * @return
+     */
+    private List<RepRelDealDto> convertToBean(List<List<String>> dataList) {
+        List<RepRelDealDto> entities = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list =  dataList.get(i);
+            RepRelDealDto entity = new RepRelDealDto();
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                entity.setProdId(list.get(0));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(5))) {
+                entity.setEffdateStr(list.get(5));
+            } else {
+                entity.setEffdateStr(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(6))) {
+                entity.setEffdelidateStr(list.get(6));
+            } else {
+                entity.setEffdelidateStr(" ");
+            }
+            entity.setExcelNum(String.valueOf(i+2));
+            entities.add(entity);
+        }
+        return entities;
+    }
 
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
-                        errorMsg.append("期间投资关联机构承销证券交易金额 必填！");
-                    }else if(!this.isBigDecimal(rowData.get(2))){
-                        errorMsg.append("期间投资关联机构承销证券交易金额 格式不正确！");
-                    }
+    /**
+     * 分批查询
+     * @param dataList
+     * @return
+     */
+    private List<RepRelDealDto> selectRelDealByKey(List<RepRelDealDto> dataList) {
+        int maxDataCountOneTime = 1000;
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            return repRelDeal001Mapper.selectRelDealList(dataList);
+        }
+        // 导入大于1000时，返回值
+        List<RepRelDealDto> equtiyList = new ArrayList<>();
 
-                    if (!StringUtil.isNotEmpty(rowData.get(3))){
-                        errorMsg.append("期间关联方作为交易对手的投融资业务的交易金额 必填！");
-                    }else if(!this.isBigDecimal(rowData.get(3))){
-                        errorMsg.append("期间关联方作为交易对手的投融资业务的交易金额 格式不正确！");
-                    }
+        List<RepRelDealDto> newDataList = new ArrayList<>(dataList);
 
-                    if (!StringUtil.isNotEmpty(rowData.get(4))){
-                        errorMsg.append("关联方提供服务的交易金额 必填！");
-                    }
-                    Date platDate = DateUtil.platDateFromCache();
-                    if (!StringUtil.isNotEmpty(rowData.get(5))){
-                        errorMsg.append("生效日 必填！");
-                    }else if(!this.isDateStr(rowData.get(5).trim())){
-                        errorMsg.append("生效日 格式不正确！");
-                    }else if (DateUtil.compareDate(DateUtil.parse(rowData.get(5).toString().trim()), platDate) < 0) {
-                        errorMsg.append("生效日不能小于平台日！");
-                    }
-
-                    if (!StringUtil.isNotEmpty(rowData.get(6))){
-                        errorMsg.append("生效截止日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(6).trim())){
-                        errorMsg.append("生效截止日期 格式不正确！");
-                    }else if (DateUtil.compareDate(DateUtil.parse(rowData.get(6).toString().trim()), platDate) < 0) {
-                        errorMsg.append("生效截止日期不能小于平台日！");
-                    }
-
-                    if(StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))){
-                        if(this.isDateStr(rowData.get(5)) && this.isDateStr(rowData.get(6))){
-                            Date effdate=DateUtil.parse(rowData.get(5).toString().trim());
-                            Date effdelidate=DateUtil.parse(rowData.get(6).toString().trim());
-                            if (DateUtil.compareDate(effdelidate,effdate) < 0){
-                                errorMsg.append("生效截止日期不能小于生效日！");
-                            }
-                        }
-                    }
-
-                    if(StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))
-                       && this.isDateStr(rowData.get(5).trim()) && this.isDateStr(rowData.get(6).trim())){
-
-                        Date effdate=DateUtil.parse(rowData.get(5).toString().trim());
-                        Date effdelidate=DateUtil.parse(rowData.get(6).toString().trim());
-                        if(DateUtil.compareDate(effdelidate,effdate) >= 0){
-                            RepRelDealDto map = new RepRelDealDto();
-                            map.setProdId(rowData.get(0).trim());
-                            map.setEffdate(effdate);
-                            map.setEffdelidate(effdelidate);
-                            List<RepRelDealDto> dtos = repRelDeal001Mapper.selectExistInfo(map);
-                            for (RepRelDealDto dto : dtos) {
-                                if(!((DateUtil.compareDate(effdate,dto.getEffdate())<0 && DateUtil.compareDate(effdelidate,dto.getEffdate())<0)
-                                        || (DateUtil.compareDate(effdate,dto.getEffdelidate())>0 && DateUtil.compareDate(effdelidate,dto.getEffdelidate())>0)
-                                        || (DateUtil.compareDate(effdate,dto.getEffdate())==0 && DateUtil.compareDate(effdelidate,dto.getEffdelidate())==0)
-                                )){
-                                    errorMsg.append("生效区间重叠！ 系统中已存在的生效区间:"+DateUtil.format(dto.getEffdate(),"yyyy-MM-dd")
-                                            +"-"+DateUtil.format(dto.getEffdelidate(),"yyyy-MM-dd"));
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                    if (StringUtil.isNotEmpty(errorMsg.toString())){
-                        errorMsg.append("<br />");
-                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
-                    }
-                }
-                if(!StringUtil.isNotEmpty(returnerrorMsg.toString())){
-                    //所有数据通过校验后，转换成bean,按产品分组，校验导入文件中同一产品的生效区间是否有重叠
-                    List<RepRelDealDto> repRelDealDto = this.converToBean(objects);
-                    if(repRelDealDto!=null && repRelDealDto.size()>=2){
-                        Map<String, List<RepRelDealDto>> map = repRelDealDto.stream().collect(Collectors.groupingBy(RepRelDealDto::getProdId));
-                        StringBuilder errorMsg = new StringBuilder("");
-                        for (String key : map.keySet()) {
-                            List<RepRelDealDto> repRelDealDtoList = map.get(key);
-                            if(repRelDealDtoList.size()>1){
-                                loop:for(int m=0;m<repRelDealDtoList.size()-1;m++){
-                                    RepRelDealDto dto1 = repRelDealDtoList.get(m);
-                                    for(int n=m+1;n<repRelDealDtoList.size();n++){
-                                        RepRelDealDto dto2 = repRelDealDtoList.get(n);
-                                        if(!((DateUtil.compareDate(dto2.getEffdate(),dto1.getEffdate())<0 && DateUtil.compareDate(dto2.getEffdelidate(),dto1.getEffdate())<0)
-                                                || (DateUtil.compareDate(dto2.getEffdate(),dto1.getEffdelidate())>0 && DateUtil.compareDate(dto2.getEffdelidate(),dto1.getEffdelidate())>0)
-                                                || (DateUtil.compareDate(dto2.getEffdate(),dto1.getEffdate()) == 0 && DateUtil.compareDate(dto2.getEffdelidate(),dto1.getEffdelidate())==0))){
-                                            errorMsg.append("文件中同一产品生效区间有重叠：第"+dto1.getExcelRowNum()+"行和第"+dto2.getExcelRowNum()+"行");
-                                            errorMsg.append("<br />");
-                                            break loop;
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                        if (StringUtil.isNotEmpty(errorMsg.toString())){
-                            returnerrorMsg.append(errorMsg.toString());
-                        }
-                    }
-                }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("errorMsg", returnerrorMsg.toString());
-                    AjaxResult wr = new AjaxResult();
-                    wr.setData(resultMap);
-                    return wr;
-                }
-                for (int i = objects.size() - 1; i >= 1; i--) {
-                    List<String> list1 = objects.get(i);
-                    Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
-                        List<String> list2 = objects.get(k);
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))
-                                &&(StringUtil.equals(list1.get(5), list2.get(5)))
-                                &&(StringUtil.equals(list1.get(6), list2.get(6)))) {
-                            isRepeat = true;
-                            break;
-                        }
-                    }
-                    if (isRepeat){
-                        repeatNum++;
-                    }else {
-                        jsonArrays.add(list1);
-                    }
-                }
-
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        List<RepRelDealDto> listTemp;
+        for (int i = 0; i < part; i++ ) {
+            listTemp = repRelDeal001Mapper.selectRelDealList(newDataList.subList(0, maxDataCountOneTime));
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            listTemp = repRelDeal001Mapper.selectRelDealList(newDataList);
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
             }
         }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，请检查文件！";
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("errorMsg", totalMsg);
-        }
-
-        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
-        String tempList = (String) resultMap.get("correctData");
-        RepRelDealDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<RepRelDealDto> selectedItem = dto.getSelectedItem();
-        List<RepRelDealDto>  existData = new ArrayList<>();
-        for (RepRelDealDto temp:selectedItem) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("prodId",temp.getProdId());
-            map.put("effdate",temp.getEffdate());
-            map.put("effdelidate",temp.getEffdelidate());
-            if (StringUtil.isNotEmpty(this.selectData2(map))){
-                existData.add(temp);
-            }
-        }
-        if(existData.size() > 0){
-            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
-        }
-        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
-        if (objects.size() - 1 > maxCount) {
-            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
-        }
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
+        return equtiyList;
     }
 
     public Boolean selectPProdId(String prodId) {
@@ -359,86 +276,193 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
         }
     }
 
-    /**
-     * list转换为Bean
-     *
-     * @param dataList excel解析后的list
-     * @return List<RepRelDealDto>
-     * @throws ParseException 抛出异常
-     * @see
-     * @since 1.0
-     */
-    private List<RepRelDealDto> converToBean(List<List<String>> dataList) {
-        // 返回的list定义
-        List<RepRelDealDto> repRelDealList = new ArrayList<RepRelDealDto>();
-        RepRelDealDto repRelDealDto = null;
-        for (int i = 1; i < dataList.size(); i++ ) {
-            List<String> list = dataList.get(i);
-            repRelDealDto = new RepRelDealDto();
-            repRelDealDto.setUuid(IDGenerator.generate(36));
-            repRelDealDto.setProdId(list.get(0).trim());
-            repRelDealDto.setBankTransAmt(new BigDecimal(list.get(1).trim()));
-            repRelDealDto.setOrgTransAmt(new BigDecimal(list.get(2).trim()));
-            repRelDealDto.setInvestTransAmt(new BigDecimal(list.get(3).trim()));
-            repRelDealDto.setRelateamount(list.get(4).trim());
-            repRelDealDto.setEffdate(DateUtil.parse(list.get(5).trim()));
-            repRelDealDto.setEffdelidate(DateUtil.parse(list.get(6).trim()));
-            repRelDealDto.setCreateDept(CommonUtil.getDeptCode());
-            repRelDealDto.setCreateUser(CommonUtil.getUserName());
-            repRelDealDto.setUpdateUser(CommonUtil.getUserName());
-            repRelDealDto.setExcelRowNum(String.valueOf(i+1));
-            repRelDealList.add(repRelDealDto);
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<RepRelDealDto> entities = new ArrayList<>(dataList.size());
+            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    repRelDeal001Mapper.importInfo(item);
+                });
+            }
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
         }
-        return repRelDealList;
     }
 
-    public RepRelDealDto getValNetAssetQuotationInfoListData(String tempList) {
-        RepRelDealDto dto = new RepRelDealDto();
-        List<RepRelDealDto> repRelDealDtoList = new ArrayList<>();
-        dto.setSelectedItem(repRelDealDtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            RepRelDealDto repRelDealDto = new RepRelDealDto();
-            if (StringUtil.isNotEmpty(rowData.get(0))) {
-                repRelDealDto.setProdId(rowData.get(0).toString().trim());
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<RepRelDealDto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 7) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 7)));
+                break;
             }
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                repRelDealDto.setBankTransAmt(new BigDecimal(rowData.get(1).toString().trim()));
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (!StringUtil.isNotEmpty(rowData.get(0).trim())) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
+            } else if (!this.selectPProdId(rowData.get(0).trim())) {
+                message.add("产品主代码未在系统中维护。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                repRelDealDto.setOrgTransAmt(new BigDecimal(rowData.get(2).toString().trim()));
+
+            if (!StringUtil.isNotEmpty(rowData.get(1))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "期间投资关联机构发行证券交易金额"));
+            } else if (!isBigDecimal(rowData.get(1))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "期间投资关联机构发行证券交易金额"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                repRelDealDto.setInvestTransAmt(new BigDecimal(rowData.get(3).toString().trim()));
+
+            if (!StringUtil.isNotEmpty(rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "期间投资关联机构承销证券交易金额"));
+            } else if (!isBigDecimal(rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "期间投资关联机构承销证券交易金额"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(4))) {
-                repRelDealDto.setRelateamount(rowData.get(4).toString().trim());
+
+            if (!StringUtil.isNotEmpty(rowData.get(3))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "期间关联方作为交易对手的投融资业务的交易金额"));
+            } else if (!isBigDecimal(rowData.get(3))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "期间关联方作为交易对手的投融资业务的交易金额"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(5))) {
-                repRelDealDto.setEffdate(DateUtil.parse(rowData.get(5).toString().trim()));
+
+            if (!StringUtil.isNotEmpty(rowData.get(4))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "关联方提供服务的交易金额"));
+            } else if (!isBigDecimal(rowData.get(4))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "关联方提供服务的交易金额"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(6))) {
-                repRelDealDto.setEffdelidate(DateUtil.parse(rowData.get(6).toString().trim()));
+            Date platDate = DateUtil.platDateFromCache();
+            if (!StringUtil.isNotEmpty(rowData.get(5))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效日"));
+            } else if (!isDateStr(rowData.get(5).trim())) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效日"));
+            } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(5)), platDate) < 0) {
+                message.add("生效日不能小于平台日。");
             }
-            repRelDealDto.setStatus("E");
-            repRelDealDto.setUuid(IDGenerator.generate(36));
-            repRelDealDtoList.add(repRelDealDto);
+
+            if (!StringUtil.isNotEmpty(rowData.get(6))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效截止日期"));
+            } else if (!this.isDateStr(rowData.get(6).trim())) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效截止日期"));
+            } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(6)), platDate) < 0) {
+                message.add("生效截止日期不能小于平台日。");
+            }
+
+            if (StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))) {
+                if (isDateStr(rowData.get(5)) && isDateStr(rowData.get(6))) {
+                    Date effdate = DateUtil.parse(rowData.get(5));
+                    Date effdelidate = DateUtil.parse(rowData.get(6));
+                    if (DateUtil.compareDate(effdelidate, effdate) < 0) {
+                        message.add("生效截止日期不能小于生效日。");
+                    }
+                }
+            }
+
+            if (StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))
+                    && isDateStr(rowData.get(5).trim()) && isDateStr(rowData.get(6).trim())) {
+
+                Date effdate = DateUtil.parse(rowData.get(5).toString().trim());
+                Date effdelidate = DateUtil.parse(rowData.get(6).toString().trim());
+                if (DateUtil.compareDate(effdelidate, effdate) >= 0) {
+                    RepRelDealDto ser = new RepRelDealDto();
+                    ser.setProdId(rowData.get(0).trim());
+                    ser.setEffdate(effdate);
+                    ser.setEffdelidate(effdelidate);
+                    List<RepRelDealDto> dtos = repRelDeal001Mapper.selectExistInfo(ser);
+                    for (RepRelDealDto dto : dtos) {
+                        if (!((DateUtil.compareDate(effdate, dto.getEffdate()) < 0 && DateUtil.compareDate(effdelidate, dto.getEffdate()) < 0)
+                                || (DateUtil.compareDate(effdate, dto.getEffdelidate()) > 0 && DateUtil.compareDate(effdelidate, dto.getEffdelidate()) > 0)
+                                || (DateUtil.compareDate(effdate, dto.getEffdate()) == 0 && DateUtil.compareDate(effdelidate, dto.getEffdelidate()) == 0)
+                        )) {
+                            message.add("生效区间重叠，系统中已存在的生效区间:" + DateUtil.format(dto.getEffdate(), "yyyy-MM-dd")
+                                    + "-" + DateUtil.format(dto.getEffdelidate(), "yyyy-MM-dd"));
+                            break;
+                        }
+                    }
+                }
+                if (map.containsKey(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(5)
+                        + GlobalConstant.UNDER_LINE + rowData.get(6))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+                }
+                map.put(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(5)
+                        + GlobalConstant.UNDER_LINE + rowData.get(6), rowData);
+                if (CollectionUtils.isNotEmpty(message)) {
+                    checkResult.add(new ExcelValidDto(rowData.get(0)
+                            + GlobalConstant.UNDER_LINE + rowData.get(5)
+                            + GlobalConstant.UNDER_LINE + rowData.get(6),
+                            String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+                }
+                else {
+                    RepRelDealDto relDealDto = this.convertToEntity(rowData);
+                    relDealDto.setExcelNum(String.valueOf(i + 2));
+                    entities.add(relDealDto);
+                }
+            }
         }
-        dto.setSelectedItem(repRelDealDtoList);
-        return dto;
+        if (checkResult.isEmpty()) {
+            List<String> message = new ArrayList<>();
+            Map<String, List<RepRelDealDto>> realmap = entities.stream().collect(Collectors.groupingBy(RepRelDealDto::getProdId));
+            for (String key : realmap.keySet()) {
+                List<RepRelDealDto> repRelDealDtoList = realmap.get(key);
+                if (repRelDealDtoList.size() > 1) {
+                    loop:
+                    for (int m = 0; m < repRelDealDtoList.size() - 1; m++) {
+                        RepRelDealDto dto1 = repRelDealDtoList.get(m);
+                        for (int n = m + 1; n < repRelDealDtoList.size(); n++) {
+                            RepRelDealDto dto2 = repRelDealDtoList.get(n);
+                            if (!((DateUtil.compareDate(dto2.getEffdate(), dto1.getEffdate()) < 0 && DateUtil.compareDate(dto2.getEffdelidate(), dto1.getEffdate()) < 0)
+                                    || (DateUtil.compareDate(dto2.getEffdate(), dto1.getEffdelidate()) > 0 && DateUtil.compareDate(dto2.getEffdelidate(), dto1.getEffdelidate()) > 0)
+                                    || (DateUtil.compareDate(dto2.getEffdate(), dto1.getEffdate()) == 0 && DateUtil.compareDate(dto2.getEffdelidate(), dto1.getEffdelidate()) == 0))) {
+                                message.add("文件中同一产品生效区间有重叠：第" + dto1.getExcelNum() + "行和第" + dto2.getExcelNum() + "行");
+                                break loop;
+                            }
+                        }
+                    }
+                }
+            }
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY, StringUtil.joinString(message, "<br>")));
+            }
+        }
+        return checkResult;
     }
 
-
-    public AjaxResult importFile(Map<String, Object> param) {
-        AjaxResult ajaxResult = new AjaxResult();
-        String tempList = (String) param.get("tempList");
-        RepRelDealDto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<RepRelDealDto> selectedItem = dto.getSelectedItem();
-        for (RepRelDealDto temp:selectedItem) {
-            repRelDeal001Mapper.importInfo(temp);
+    private RepRelDealDto convertToEntity(List<String> rowData) {
+        RepRelDealDto repRelDealDto = new RepRelDealDto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            repRelDealDto.setProdId(rowData.get(0).toString().trim());
         }
-        ajaxResult.setStatuCode(HttpStatus.OK.value());
-        return ajaxResult;
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            repRelDealDto.setBankTransAmt(new BigDecimal(rowData.get(1).toString().trim()));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            repRelDealDto.setOrgTransAmt(new BigDecimal(rowData.get(2).toString().trim()));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            repRelDealDto.setInvestTransAmt(new BigDecimal(rowData.get(3).toString().trim()));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(4))) {
+            repRelDealDto.setRelateamount(rowData.get(4).toString().trim());
+        }
+        if (StringUtil.isNotEmpty(rowData.get(5))) {
+            repRelDealDto.setEffdate(DateUtil.parse(rowData.get(5).toString().trim()));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(6))) {
+            repRelDealDto.setEffdelidate(DateUtil.parse(rowData.get(6).toString().trim()));
+        }
+        repRelDealDto.setStatus("E");
+        repRelDealDto.setUuid(IDGenerator.generate(36));
+        return repRelDealDto;
     }
 }

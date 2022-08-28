@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.config.repprodinfo.service;
 
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.common.base.dao.DisProdPlanMapper;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt5;
@@ -51,6 +52,9 @@ public class ProdBasicChangeService {
 
     @Autowired
     private ProdBasicChangeMapper prodBasicChangeMapper;
+    
+    @Autowired
+    private DisProdPlanMapper disProdPlanMapper;
 
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
@@ -83,21 +87,28 @@ public class ProdBasicChangeService {
      * @param list
      * @return
      */
-    public void updateProdBasicChangeList(List<ProdBasicChangeDto> list, String prodId, String isIndex) {
-        Date platDate = commonPlatformDateService.getSysDate(); //平台日
+    public void updateProdBasicChangeList(List<ProdBasicChangeDto> list, String prodId, String isIndex,String oldIsIndex) {
         if (CollectionUtils.isNotEmpty(list) || StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), isIndex)) {
             //根据prodId进行更新，将老数据状态改成 删除状态
             List<ProdBasicChangeDto> oldList = prodBasicChangeMapper.selectListByProdId(prodId);
             if (CollectionUtils.isNotEmpty(oldList)) {
                 for (ProdBasicChangeDto i : oldList) {
                     i.setStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
+                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),oldIsIndex)) {
+                        i.setChangeType("2");
+                    }
                     prodBasicChangeMapper.updateByGroupId(i);
                 }
             }
+
             //新增
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), isIndex)) {
                 String groupId = IDGenerator.generate(36);
                 for (ProdBasicChangeDto i : list) {
+                    i.setChangeType("0");
+                    if (StringUtils.equals(DictCodeListExt1.是或否_否.getValue(),oldIsIndex)) {
+                        i.setChangeType("1");
+                    }
                     insertProdBasicChange(i, prodId, groupId);
                 }
             }
@@ -116,7 +127,9 @@ public class ProdBasicChangeService {
         dto.setStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
         dto.setProdId(prodId);
         dto.setGroupId(groupId);
-        dto.setEffDate(platDate);
+        //得到生效日
+        Date operationStartDate = disProdPlanMapper.getOperationStartDate(prodId, platDate);
+        dto.setEffDate(operationStartDate);
         if (StringUtils.contains(dto.getProportion(), "%")) {
             dto.setProportion(dto.getProportion());
         } else {

@@ -18,14 +18,10 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
-import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage002Mapper;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
-import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -52,9 +48,6 @@ import java.util.*;
 public class DisProdPlanManage002Service extends CommonExportService<DisProdPlanManage002Dto> implements BaseProcessService<DisProdPlanManage002Dto> {
 
     @Autowired
-    private RepProdInfoMapper repProdInfoMapper;
-
-    @Autowired
     private DisProdPlanManage002Mapper disProdPlanManage002Mapper;
 
 
@@ -63,8 +56,8 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
      */
     private Logger logger = LoggerFactory.getLogger(DisProdPlanManage002Service.class);
 
-    public RepProdInfo getPrdInfo(String prodId) {
-        RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
+    public ProdInfoDto getPrdInfo(String prodId, String status) {
+        ProdInfoDto prodInfo = disProdPlanManage002Mapper.selectByProdStatus(prodId, status);
         return prodInfo;
     }
 

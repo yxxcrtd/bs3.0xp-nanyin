@@ -23,7 +23,6 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
@@ -158,9 +157,9 @@ public class DisProdPlanManage002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getPrdInfo")
-	public RepProdInfo getPrdInfo(String finprodId){
+	public ProdInfoDto getPrdInfo(String finprodId){
 
-		return  disProdPlanManage002Service.getPrdInfo(finprodId);
+		return  disProdPlanManage002Service.getPrdInfo(finprodId, null);
 	}
 
 	/**
