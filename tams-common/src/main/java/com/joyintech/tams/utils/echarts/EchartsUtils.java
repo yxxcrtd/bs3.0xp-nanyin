@@ -295,6 +295,11 @@ public class EchartsUtils {
 			yAxis_axisLabel_fontWeight = "";// 默认为空
 		Object yAxis_boundaryGap = configMap.get("yAxis.boundaryGap");
 
+		String yAxis_min = obj2str(configMap.get("yAxis.min"));
+		String yAxis_max = obj2str(configMap.get("yAxis.max"));
+
+
+
 		// 数据集合
 		List<Series> seriesList = null;
 		if (StringUtil.isNotEmpty(dataMap.get("series")) && (dataMap.get("series") instanceof List))
@@ -317,7 +322,7 @@ public class EchartsUtils {
 		if (Arrays.asList(new String[] { ECHARTS_图表类型_曲线图, ECHARTS_图表类型_柱状图 }).contains(series_type)) {
 			List<YAxis> yAxisList = new ArrayList<YAxis>();
 			yAxisList.add(new YAxis(yAxis_name, yAxis_type, yAxis_position,yAxis_scale,splitNumber,
-					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type)),new AxisLabel(null,0,yAxis_axisLabel_formatter,yAxis_axisLabel_fontSize,yAxis_axisLabel_fontWeight),yAxis_boundaryGap));
+					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type)),new AxisLabel(null,0,yAxis_axisLabel_formatter,yAxis_axisLabel_fontSize,yAxis_axisLabel_fontWeight),yAxis_boundaryGap,yAxis_min,yAxis_max));
 			option.setyAxis(yAxisList);
 		}
 		// 数据集合

@@ -136,6 +136,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 List<Date> queryDateList =reportRkcpjz001Mapper.getValueDayList(searchparam);
                 searchparam.put("dateList",queryDateList);
                 List<ReportGrahDto> grahDtoList = reportRkcpjz001Mapper.getValues(searchparam);
+
                 //排序
                 Map<String,ReportGrahDto> valueMap = grahDtoList.stream().collect(Collectors.toMap(ReportGrahDto::getcDate, reportGrahDto -> reportGrahDto));
                 //图例赋值
@@ -166,6 +167,11 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 //折线图配置信息
                 Map<String, Object> configMap = getEchartsConfigMap(rptType);
 
+                if(valueMap == null || valueMap.size() == 0){
+                    configMap.put("yAxis.min","0");
+                    configMap.put("yAxis.max","1");
+                }
+
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath1, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
                 //清空list，重新绘制份额累计净值（元）走势图
                 dataList.clear();
@@ -193,6 +199,10 @@ public class ReportRkcpjz001Service implements IReportDataService {
                         row.add("");
                     }
                     dataList.add(row);
+                }
+                if(valueMap == null || valueMap.size() == 0){
+                    configMap.put("yAxis.min","0");
+                    configMap.put("yAxis.max","1");
                 }
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
             }
@@ -257,6 +267,9 @@ public class ReportRkcpjz001Service implements IReportDataService {
         //纵坐标显示4位小数
         configMap.put("yAxis.axisLabel.formatter", "function(value,index){return value.toFixed(4)}");
         configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
+        //y轴设置默认值，否则会导致无数据显示y轴位空
+        configMap.put("yAxis.min",null);
+        configMap.put("yAxis.max",null);
 
 
         configMap.put("yAxis.scale", true);
@@ -274,7 +287,16 @@ public class ReportRkcpjz001Service implements IReportDataService {
         if(StringUtil.isNotEmpty(info)){
             repReveal.setProdid(info.getpProdId());
         }
-
+        //判断是普通产品还是子产品
+        RepProdInfo info2=reportRkcpjz001Mapper.getPProdInfo(searchparam);
+        if(StringUtil.isNotEmpty(info2)){
+            searchparam.put("prodId",info2.getProdId());
+        }
+        //查询产品信息
+        ReportRkcpjz001Dto reportRkcpjz001Dto = reportRkcpjz001Mapper.getProdInfo(searchparam);
+        if(reportRkcpjz001Dto != null){
+            paraMap.put("cusFileName", reportRkcpjz001Dto.getTitleName());
+        }
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
