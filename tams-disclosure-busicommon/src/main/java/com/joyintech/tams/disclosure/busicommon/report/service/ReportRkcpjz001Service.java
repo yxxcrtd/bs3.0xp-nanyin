@@ -2,12 +2,7 @@
 package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.RepProdInfo;
@@ -142,23 +137,28 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 searchparam.put("dateList",queryDateList);
                 List<ReportGrahDto> grahDtoList = reportRkcpjz001Mapper.getValues(searchparam);
                 //排序
-                grahDtoList = grahDtoList.stream().sorted(Comparator.comparing(ReportGrahDto::getcDate)).collect(Collectors.toList());
+                Map<String,ReportGrahDto> valueMap = grahDtoList.stream().collect(Collectors.toMap(ReportGrahDto::getcDate, reportGrahDto -> reportGrahDto));
                 //图例赋值
                 List<String> single = new ArrayList<>();
                 single.add("日期");
                 single.add("");
                 dataList.add(single);
-
+                //将日期进行排序
+                if(queryDateList != null && queryDateList.size()>0){
+                    queryDateList = queryDateList.stream().sorted(Comparator.comparing(Date::getTime)).collect(Collectors.toList());
+                }
                 //近一个月（工作日）份额净值走势图或近一个月(自然日)万份收益走势图
-                for (int i = 0; i < grahDtoList.size(); i++) {
-                    ReportGrahDto grahDto = grahDtoList.get(i);
+                for (int i = 0; i < queryDateList.size(); i++) {
+                    String curValueDate = DateUtil.format(queryDateList.get(i));
                     List<String> row = new ArrayList<>();
                     if(i == 0){
                         row.add("");
                     }else{
-                        row.add(grahDto.getcDate());
+                        row.add(curValueDate);
                     }
-                    row.add(grahDto.getValue());
+                    if(valueMap.get(curValueDate) != null){
+                        row.add(valueMap.get(curValueDate).getValue());
+                    }
                     dataList.add(row);
                 }
                 //折线图配置信息
@@ -177,15 +177,17 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 //添加横纵坐标说明
                 dataList.add(single);
                 //份额累计净值曲线数据
-                for (int i = 0; i < grahDtoList.size(); i++) {
-                    ReportGrahDto grahDto = grahDtoList.get(i);
+                for (int i = 0; i < queryDateList.size(); i++) {
+                    String curValueDate = DateUtil.format(queryDateList.get(i));
                     List<String> row = new ArrayList<>();
                     if(i == 0){
                         row.add("");
                     }else{
-                        row.add(grahDto.getcDate());
+                        row.add(curValueDate);
                     }
-                    row.add(grahDto.getTotalValue());
+                    if(valueMap.get(curValueDate) != null){
+                        row.add(valueMap.get(curValueDate).getTotalValue());
+                    }
                     dataList.add(row);
                 }
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
