@@ -161,20 +161,16 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     row.add(grahDto.getValue());
                     dataList.add(row);
                 }
-                //由于纵坐标要求居中显示，需要设置 "boundaryGap"属性
-//                double max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).max().orElse(1);
-//                double min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).min().orElse(0);
-//                BigDecimal endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
                 //折线图配置信息
                 Map<String, Object> configMap = getEchartsConfigMap(rptType);
-                configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
+
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath1, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
                 //清空list，重新绘制份额累计净值（元）走势图
                 dataList.clear();
                 //重新添加标题
                 if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)) {
                     configMap.put("title.text", "七日年化收益率（%）走势图");
-                    configMap.put("yAxis.axisLabel.formatter", "{value}%");
+                    configMap.put("yAxis.axisLabel.formatter", "function(value,index){return value.toFixed(4)+'%'}");
                 } else {
                     configMap.put("title.text", "份额累计净值（元）走势图");
                 }
@@ -192,11 +188,6 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     row.add(grahDto.getTotalValue());
                     dataList.add(row);
                 }
-//                 max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).max().orElse(1);
-//                 min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).min().orElse(0);
-//                 endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
-                //折线图配置信息
-                configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
             }
             logger.info("日开产品净值公告（公募净值型产品）【{}】生成成功", JsonUtils.object2Json(paraMap));
@@ -257,6 +248,10 @@ public class ReportRkcpjz001Service implements IReportDataService {
         configMap.put("yAxis.axisLabel.fontSize", "20");
         configMap.put("yAxis.axisLabel.fontWeight", "bold");
         configMap.put("yAxis.boundaryGap", "");
+        //纵坐标显示4位小数
+        configMap.put("yAxis.axisLabel.formatter", "function(value,index){return value.toFixed(4)}");
+        configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
+
 
         configMap.put("yAxis.scale", true);
         return configMap;
