@@ -94,9 +94,9 @@ public class ProdBasicChangeService {
             if (CollectionUtils.isNotEmpty(oldList)) {
                 for (ProdBasicChangeDto i : oldList) {
                     i.setStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
-                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),oldIsIndex)) {
-                        i.setChangeType("2");
-                    }
+//                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),oldIsIndex)) {
+//                        i.setChangeType("2");
+//                    }
                     prodBasicChangeMapper.updateByGroupId(i);
                 }
             }
