@@ -1,9 +1,9 @@
 package com.joyintech.tams.disclosure.infoCompliance.service;
 
 import com.google.json.JsonSanitizer;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
@@ -14,9 +14,9 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.constant.ProcessType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.entity.WorkflowEntity;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.service.BusinessService;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,7 +88,12 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
 
     }
 
+    @Override
     public void doBack(InfoComplianceDto entity) {
+        if (StringUtil.isBlank(entity.getComment())) {
+            WorkFlowUtil.showMessage("请填写修订意见。", MessageType.提示消息);
+            return;
+        }
         //退回删除已上传,未关联批注的附件
         infoComplianceMapper.deleteUploadFile(entity.getSeqno());
     }
