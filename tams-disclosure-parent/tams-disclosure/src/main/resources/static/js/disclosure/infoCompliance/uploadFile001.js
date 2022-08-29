@@ -56,6 +56,10 @@ function viewPdf(fileNo,fileName){
         window.location = basePath+"framework/download/"+fileNo;
     }
 }
+
+function downLoad(fileNo){
+    window.location = basePath+"framework/download/"+fileNo;
+}
 /**
  * Created by zhengyan on 2018/1/29 0029.
  */
@@ -183,7 +187,8 @@ $(function ($) {
                             ,'<td>'+file.createTimeText+'</td>'
                             ,(disabled ? '' : '<td><button data-ignore="true" data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
                             ,'<td><div class="layui-table-cell">'
-                            ,'<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览</a></div></td>'
+                            ,'<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览</a>' +
+                            ' <a style="cursor: pointer" onclick="javascript:downLoad(\''+file.fileNo+'\')">下载</a></div></td>'
                             ,'</tr>'].join(''));
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
