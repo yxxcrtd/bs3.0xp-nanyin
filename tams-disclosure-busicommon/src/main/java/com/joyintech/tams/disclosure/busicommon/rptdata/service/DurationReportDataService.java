@@ -147,6 +147,10 @@ public class DurationReportDataService implements IReportDataService {
 						map.put("assetsValueStr", df.format(item.getAssetsValue()));
 					else
 						map.put("assetsValueStr", "");
+					if ( item.getOtherFee()!=null )
+						map.put("otherFeeStr", df.format(item.getOtherFee()));
+					else
+						map.put("otherFeeStr", "");					
 					listFinIndex.add(map);
 					
 				});
@@ -498,7 +502,7 @@ public class DurationReportDataService implements IReportDataService {
 				sDate = DurationUtil.getQuarterStart(year, quarter);
 				eDate = DurationUtil.getQuarterEnd(year, quarter);
 			} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
-				halfYear = Integer.parseInt(paraMap.get("halfYear").toString());
+				halfYear = Integer.parseInt(paraMap.get("halfyear").toString());
 				sDate = DurationUtil.getHalfYearStart(year, halfYear);
 				eDate = DurationUtil.getHalfYearEnd(year, halfYear);
 			} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
@@ -506,8 +510,8 @@ public class DurationReportDataService implements IReportDataService {
 				eDate = DurationUtil.getYearEnd(year);
 			}						
 		} catch ( Exception e ) {
-			logger.error("报表区间数据错误.");
-			e.printStackTrace();
+			logger.error("报表区间数据错误.",e);
+			//e.printStackTrace();
 		}
 		repReveal.setStartDate(sDate);
 		repReveal.setEndDate(eDate);

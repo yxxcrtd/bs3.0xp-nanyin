@@ -334,7 +334,7 @@ public class PoiUtils {
         		Elements cols = line.getElementsByTag("td");
         		for ( int j=0;j<cols.size();j++ ) {
         			Element col = cols.get(j);
-        			System.out.println(col);
+        			//System.out.println(col);
         			if ( i==rowIdx && j==colIdx ) {
         				col.attr("rowspan",lines.size()-2+"");
         				//flag = true;
