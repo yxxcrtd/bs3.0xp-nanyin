@@ -69,7 +69,7 @@ public class ReportRevealEndDateService {
 		// 获取产品信息
 		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(busiId);
 		if (prodInfo == null) {
-			prodInfo = poiReportMapper.getVProdInfo(busiId);
+			prodInfo = poiReportMapper.getProdInfo(busiId);
 		}
 		map.put(到期日, prodInfo.getMdate());
 		map.put(成立日, prodInfo.getSetDate());
