@@ -533,7 +533,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     String isGrade = item.getIsGrade();
                     //普通产品
                     if (StringUtil.equals(isGrade,"02")) {
-                        item.setProdName(item.getpProdName());
+                        item.setpProdName(item.getProdName());
                     }
                     ProdInfoDto prodInfo = this.selectByProdId(item.getProdId());
                     if (null != prodInfo) {
