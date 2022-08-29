@@ -129,7 +129,7 @@ public class ProdBasicChangeService {
         dto.setGroupId(groupId);
         //得到生效日
         Date operationStartDate = disProdPlanMapper.getOperationStartDate(prodId, platDate);
-        dto.setEffDate(operationStartDate);
+        dto.setEffDate(operationStartDate==null?platDate:operationStartDate);
         if (StringUtils.contains(dto.getProportion(), "%")) {
             dto.setProportion(dto.getProportion());
         } else {

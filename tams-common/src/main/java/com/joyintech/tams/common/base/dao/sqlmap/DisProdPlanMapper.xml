@@ -223,6 +223,6 @@
     <select id="getOperationStartDate" resultType="java.util.Date">
         select OPERATION_START_DATE from DIS_PROD_PLAN where
         PROD_ID=#{prodId,jdbcType=VARCHAR} and OPEN_START_DATE > #{platDate,jdbcType=DATE}
-        AND  ROWNUM=1 order by OPEN_START_DATE asc
+        AND  DATA_STATUS ='E' AND ROWNUM=1 order by OPEN_START_DATE asc
     </select>
 </mapper>
