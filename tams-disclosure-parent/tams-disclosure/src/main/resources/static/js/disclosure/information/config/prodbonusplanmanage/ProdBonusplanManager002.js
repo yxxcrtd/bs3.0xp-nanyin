@@ -28,11 +28,11 @@ $(function() {
 		var object = $.serializeToObject('#submitForm');
 		object.operateType = operateType;
 		object.pageModel = pageModel;
-		if (pageModel == PAGE_MODEL_NEW) {
-			object.operateType = 'new';
-		} else if (pageModel == PAGE_MODEL_EDIT) {
-			object.operateType = 'update';
-		}
+		// if (pageModel == PAGE_MODEL_NEW) {
+		// 	object.operateType = 'new';
+		// } else if (pageModel == PAGE_MODEL_EDIT) {
+		// 	object.operateType = 'update';
+		// }
 		Joyin.ajaxJson(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/check',
 			object, function(result) {
 				Joyin.confirm(result.data, function() {

@@ -529,6 +529,12 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
+                    //是否分级产品
+                    String isGrade = item.getIsGrade();
+                    //普通产品
+                    if (StringUtil.equals(isGrade,"02")) {
+                        item.setProdName(item.getpProdName());
+                    }
                     ProdInfoDto prodInfo = this.selectByProdId(item.getProdId());
                     if (null != prodInfo) {
                         this.update(item);
