@@ -6,8 +6,9 @@
 			<Cell order="2" name="模板英文名">templateId</Cell>
 			<Cell order="3" name="模板中文名">templateName</Cell>
 			<Cell order="4" name="报表类别">reportCategoryName</Cell>
-			<Cell order="5" name="制作人">updateUser</Cell>
+			<Cell order="5" name="当前处理人">updateUser</Cell>
 			<Cell order="6" name="状态">reportTypeName</Cell>
+			<Cell order="7" name="备注说明">remark</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>
