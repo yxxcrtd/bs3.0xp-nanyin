@@ -158,6 +158,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     }
                     if(valueMap.get(curValueDate) != null){
                         row.add(valueMap.get(curValueDate).getValue());
+                    }else{
+                        row.add("");
                     }
                     dataList.add(row);
                 }
@@ -187,6 +189,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     }
                     if(valueMap.get(curValueDate) != null){
                         row.add(valueMap.get(curValueDate).getTotalValue());
+                    }else{
+                        row.add("");
                     }
                     dataList.add(row);
                 }
