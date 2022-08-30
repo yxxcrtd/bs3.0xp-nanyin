@@ -10,6 +10,7 @@
 package com.joyintech.tams.disclosure.information.config.prodassetinfo.service;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -24,6 +25,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,11 +94,24 @@ public class ProdAssetInfo002Service extends CommonExportService<ProdAssetInfoDt
 
     /**
      * 查询产品所有的合作机构信息
-     * @param dto
+     * @param
      * @return
      */
     public List<ProdAssetInfoDto> selectProdAssetInfoByProdId(Map<String,Object> param) {
         param.put("status",DictCodeListExt3.信披_数据状态_有效E.getValue());
         return prodAssetInfo002Mapper.selectProdAssetInfoByProdId(param);
+    }
+
+    public List<ProdAssetInfoDto> getWorklowData(String prodId) {
+        List<ProcessMark> processMarkList = prodAssetInfo002Mapper.getWorklowData(prodId);
+        List<ProdAssetInfoDto> list = new ArrayList<>();
+        if (processMarkList != null && processMarkList.size() > 0){
+            for (ProcessMark processMark : processMarkList){
+                ProdAssetInfoDto prodAssetInfoDto = this.getBussinessEntity(processMark);
+                list.add(prodAssetInfoDto);
+            }
+
+        }
+        return list;
     }
 }
