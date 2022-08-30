@@ -108,7 +108,7 @@
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where PROD_ID = #{prodId} and OPEN_END_DATE = TO_DATE(#{openEndDateOStr},'YYYY-MM-DD')
+        where PROD_ID = #{prodId} and OPEN_END_DATE = TO_DATE(#{openEndDateStr},'YYYY-MM-DD')
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto" >
         update DIS_PROD_PLAN
