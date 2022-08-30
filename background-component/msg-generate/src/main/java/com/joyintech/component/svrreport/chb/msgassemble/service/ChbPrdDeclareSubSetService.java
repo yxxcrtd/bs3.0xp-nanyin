@@ -99,7 +99,10 @@ public class ChbPrdDeclareSubSetService {
 		//清理临时生成文件
 		for(String file : attachFiles){
 			File files = new File(file);
-			files.delete();
+			boolean ret = files.delete();
+            if ( ret==false ) {
+            	throw new IOException("文件删除失败.");
+            }
 		}
 		return chbMsgBuildInfoDto;
 	}

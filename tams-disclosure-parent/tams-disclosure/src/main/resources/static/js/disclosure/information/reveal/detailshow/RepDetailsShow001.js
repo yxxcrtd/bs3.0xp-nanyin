@@ -1,3 +1,5 @@
+var editFlag=true;
+var changeFlag=false;
 $(function () {
 
 	var tree=$("#typeDatatree");
@@ -26,7 +28,7 @@ $(function () {
 
 	var previewFlag=false;
 
-	var editFlag=true;
+
 
 	var backParam;
 	
@@ -218,6 +220,7 @@ $(function () {
                 Joyin.ajax('getRepsearch',
                     parms,
                     function(data) {
+						changeFlag=true;
                         if(data){
                              modelId = data.templateId;
                              modelUri = data.templatePath;
@@ -569,7 +572,6 @@ $(function () {
 	    	params['repid']=repId;
 
 			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result1) {
-				console.log(result1);
 				if(result1){
 					if(result1.data){
 						editFlag=false
@@ -746,6 +748,7 @@ $(function () {
                     param.push(key + '=' + encodeURIComponent(params[key]));
                 });
             }
+			changeFlag=false;
             var paraStr = '?' + param.join('&');
 		    window.open(basePath+"disclosure/information/reveal/detailshow/RepEdit001/init" + paraStr, "_blank");
 
@@ -761,7 +764,6 @@ $(function () {
 
 
     }
-
 
     var submit = function(type){
 		if(!previewFlag){
@@ -862,6 +864,7 @@ $(function () {
         $('#RepDetailsShow001_showDetail').click(function() {
 			backParam=getSearchParams();
 			previewFlag=false;
+			changeFlag=true;
         	showDetail(getSearchParams());
         });
 
@@ -964,6 +967,13 @@ function elementNameChange(modelId){
 
 		$('#pprodid').val("NYLCSMCP").trigger("change").trigger('blur');
 		//$('#pprodid').select2('destroy').textSelect('setValue', 'NYLCSMCP');
+	}
+}
+
+
+function changeEditFlag(){
+	if(!changeFlag){
+		editFlag=true;
 	}
 }
 

@@ -469,7 +469,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         File remoteFile = new SafelyFile(reportFile);
 
         if(!remoteFile.exists()){
-        	remoteFile.createNewFile();
+        	boolean ret = remoteFile.createNewFile();
+        	if ( ret==false ) {
+        		throw new IOException("创建文件失败.");
+        	}
         }
 
         return ExportUtil.export(localFileName, remoteFile, true);

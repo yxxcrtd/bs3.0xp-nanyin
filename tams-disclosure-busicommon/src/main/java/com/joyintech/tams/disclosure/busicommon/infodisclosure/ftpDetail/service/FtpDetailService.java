@@ -165,7 +165,7 @@ public class FtpDetailService {
 		public Boolean pushInterfServer(FtpDetailDto dto,RepFtpPath ftpPath,String DetailId){
 			Boolean flag = false;
 			//获取发送报表需要数据
-			RepProdInfo reportinfo = repProdInfoMapper.selectByPrimaryKey(dto.getProdId());
+			RepProdInfo reportinfo = ftpDetailMapper.selectProdInfo(dto.getProdId());
 			RepReveal repReveal = repRevealMapper.selectByPrimaryKey(dto.getRevealId());
 			
 			

@@ -118,6 +118,8 @@ public class ReportPageManage001Controller extends BaseController {
     	String datas = this.getParam("datas");
     	List<ReportPageManage001Dto> dtoList;
         if (datas == null) {
+            Calendar calendar = Calendar.getInstance();
+            param.put("effDate",calendar.getTime());
         	dtoList = reportPageManage001Service.findPage(param);
         } else {
        		dtoList = JsonUtils.json2List(datas, ReportPageManage001Dto.class);

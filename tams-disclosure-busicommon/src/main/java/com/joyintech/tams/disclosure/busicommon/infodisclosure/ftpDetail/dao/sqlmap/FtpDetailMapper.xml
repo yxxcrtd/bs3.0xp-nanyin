@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dao.FtpDetailMapper">
-	
+	<sql id="Base_Column_List" >
+		PROD_ID PROD_ID, PROD_NAME PROD_NAME, SET_DATE SET_DATE, RAISE_AMT RAISE_AMT, PROD_ABBR PROD_ABBR,
+        PROD_RE PROD_RE, RAISE_STRDATE RAISE_STRDATE, RAISE_ENDDATE RAISE_ENDDATE,
+        MDATE MDATE, RAISE_TYPE RAISE_TYPE, PERFORM_COMPARE PERFORM_COMPARE, IS_PERIOD IS_PERIOD,
+        IS_GRADE IS_GRADE, IS_INDEX IS_INDEX, OPEN_FREQ OPEN_FREQ, NATURE_INVEST NATURE_INVEST,
+        PROD_TYPE PROD_TYPE, ISSUING_WAY ISSUING_WAY, ACCT_CHNNAME ACCT_CHNNAME, PROFIT_TYPE PROFIT_TYPE,
+        PD_STATUS PD_STATUS, PROD_SERIES PROD_SERIES, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS,
+        ISSUE_STATUS ISSUE_STATUS, REP_PROD_TYPE REP_PROD_TYPE, HOLDDAY HOLDDAY, TRUSTPART TRUSTPART,
+        ERRORMSG ERRORMSG, ISSUE_STATUS_REMARK ISSUE_STATUS_REMARK, RAISE_MIN RAISE_MIN,
+        RAISE_MAX RAISE_MAX, RAISE_CCY RAISE_CCY, VDATE VDATE, FIRST_OPEN_DAY FIRST_OPEN_DAY,
+        ACT_MDATE ACT_MDATE, TERM TERM, WINDUP_DATE WINDUP_DATE, ISSUE_MODE ISSUE_MODE, RISK_LEVEL RISK_LEVEL,
+        OPEN_MODE OPEN_MODE, INVEST_PROF_DATE INVEST_PROF_DATE, INVEST_PRIN_DATE INVEST_PRIN_DATE,
+        IS_INDEPE_ACC IS_INDEPE_ACC, PROD_INVEST_TYPE PROD_INVEST_TYPE, REVEAL_CHANNEL REVEAL_CHANNEL,
+        DEAL_CAL DEAL_CAL, FINA_TYPE FINA_TYPE, TRU_ACCOUNT TRU_ACCOUNT, TRU_FEE_RAGE TRU_FEE_RAGE,
+        TRU_ACCOUNT_NUM TRU_ACCOUNT_NUM, TRU_ACCOUNT_NAME TRU_ACCOUNT_NAME, PROD_TERM_TYPE PROD_TERM_TYPE,
+        BASIS BASIS, TARGET_SALE TARGET_SALE, IS_LAYER IS_LAYER, PRO_MANAGER PRO_MANAGER,
+        PRO_CUSTODIAN PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD HUGE_REDEEM_THRESHOLD, SALE_AMT_STR SALE_AMT_STR,
+        OPERATE_MODE OPERATE_MODE, F_PROD_ID F_PROD_ID, PRODPROFITFLAG PRODPROFITFLAG, SALETARGET_DECLARE SALETARGET_DECLARE,
+        BONUS_MODE BONUS_MODE, LOWEST_AMT LOWEST_AMT
+	</sql>
+
+
 	<select id="selectFtpDetatil" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto"
 		resultType="com.joyintech.tams.common.base.entity.RepFtpDetail">
 		SELECT
@@ -18,5 +40,18 @@
 				AND rfd.END_DATE = #{endDate, jdbcType=DATE}
 			</if>
 			AND rfd.STATUS = 'E'
+	</select>
+
+	<select id="selectProdInfo" resultType="com.joyintech.tams.common.base.entity.RepProdInfo" parameterType="java.lang.String" >
+		select
+		<include refid="com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dao.FtpDetailMapper.Base_Column_List" />
+		from REP_PROD_INFO R
+		where R.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		and R.REP_PROD_TYPE='03'
+		union
+		select
+		<include refid="com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dao.FtpDetailMapper.Base_Column_List" />
+		from V_REP_PROD_INFO V
+		where V.PROD_ID = #{prodId,jdbcType=VARCHAR}
 	</select>
 </mapper>

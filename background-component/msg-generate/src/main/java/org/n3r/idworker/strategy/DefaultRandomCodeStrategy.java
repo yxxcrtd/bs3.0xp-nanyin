@@ -99,7 +99,10 @@ public class DefaultRandomCodeStrategy implements RandomCodeStrategy {
 
     private boolean createPrefixIndexFile() {
         try {
-            codePrefixIndex.createNewFile();
+            boolean ret = codePrefixIndex.createNewFile();
+            if ( ret==false ) {
+            	throw new IOException("文件生成失败.");
+            }
             return codePrefixIndex.exists();
         } catch (IOException e) {
             e.printStackTrace();

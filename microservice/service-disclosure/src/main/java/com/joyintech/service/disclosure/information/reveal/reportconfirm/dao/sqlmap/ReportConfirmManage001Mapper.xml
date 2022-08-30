@@ -6,7 +6,7 @@
 			REVEAL.ID id
 			,REVEAL.REP_ID repId
 			,REVEAL.REPORT_NAME reportName
-			,decode(R1.REP_PROD_TYPE,'03',R2.PROD_NAME,R1.PROD_NAME) prodName
+			,decode(R1.REP_PROD_TYPE,'03',R2.PROD_NAME,decode(R1.PROD_NAME,null,REVEAL.PROD_NAME,R1.PROD_NAME)) prodName
 			,REVEAL.PRODID prodid
 			,case when
 				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
@@ -162,7 +162,8 @@
 		<if test="confrom != null and confrom !='' ">
 			REVEAL.REVEAL_STATUS DESC,
 		</if>
-		REVEAL.CONFIRM_DATE DESC) where 1=1
+		REVEAL.CONFIRM_DATE DESC,
+		REVEAL.UPDATE_TIME DESC) where 1=1
     </select>
     
     <update id="updateRepRevealById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
