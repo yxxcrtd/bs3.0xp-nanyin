@@ -1,11 +1,13 @@
 package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.service;
 
 
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +109,21 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
         param.put("status",DictCodeListExt1.维护数据状态_有效.getValue());
         return unClaimAssetDetailMapper.checkNostdExistByProdId(param);
     }
+
+    public List<UnClaimAssetDetailDto> getWorklowData(UnClaimAssetDetailDto detailDto) {
+        List<ProcessMark> processMarkList = unClaimAssetDetailMapper.getWorklowData(detailDto);
+        List<UnClaimAssetDetailDto> list = new ArrayList<>();
+        if (processMarkList != null && processMarkList.size() > 0){
+            for (ProcessMark processMark : processMarkList){
+                UnClaimAssetDetailDto unClaimAssetDetailDto = this.getBussinessEntity(processMark);
+                list.add(unClaimAssetDetailDto);
+            }
+
+        }
+        return list;
+    }
+
+
 //
 //
 //

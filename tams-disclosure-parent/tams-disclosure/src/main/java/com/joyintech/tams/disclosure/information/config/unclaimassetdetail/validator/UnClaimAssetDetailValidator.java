@@ -5,6 +5,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.service.UnClaimAssetDetail002Service;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -132,12 +133,24 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
                     map.put("excludeId", dto.getNostdAssetId());
                 }
                 List<UnClaimAssetDetailDto> unClaimAssetDetailDtoList = unClaimAssetDetail002Service.checkNostdExistByProdId(map);
+                List<UnClaimAssetDetailDto> worklowList=unClaimAssetDetail002Service.getWorklowData(dto);
                 if (unClaimAssetDetailDtoList.size() > 0) {
                     for (UnClaimAssetDetailDto unClaimAssetDetailDto : unClaimAssetDetailDtoList) {
                         if (!((DateUtil.compareDate(dto.getEffDate(), unClaimAssetDetailDto.getEffDate()) < 0 && DateUtil.compareDate(dto.getEffEndDate(), unClaimAssetDetailDto.getEffDate()) < 0)
                                 || (DateUtil.compareDate(dto.getEffDate(), unClaimAssetDetailDto.getEffEndDate()) > 0 && DateUtil.compareDate(dto.getEffEndDate(), unClaimAssetDetailDto.getEffEndDate()) > 0))) {
                             resultList.add(new ValidMessage("生效区间范围有重叠！" + "{" + DateUtil.format(unClaimAssetDetailDto.getEffDate(), "yyyy-MM-dd")
                                     + "-" + DateUtil.format(unClaimAssetDetailDto.getEffEndDate(), "yyyy-MM-dd") + "}"));
+                            break;
+                        }
+                    }
+                }
+
+                if(worklowList.size()>0){
+                    for (UnClaimAssetDetailDto unClaimAssetDetailDto : worklowList) {
+                        if(!((DateUtil.compareDate(dto.getEffDate(),unClaimAssetDetailDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),unClaimAssetDetailDto.getEffDate())<0)
+                                || (DateUtil.compareDate(dto.getEffDate(),unClaimAssetDetailDto.getEffEndDate())>0 && DateUtil.compareDate(dto.getEffEndDate(),unClaimAssetDetailDto.getEffEndDate())>0))){
+                            resultList.add(new ValidMessage("生效区间范围与代办数据有重叠！"+"{"+DateUtil.format(unClaimAssetDetailDto.getEffDate(),"yyyyMMdd")
+                                    +"-"+DateUtil.format(unClaimAssetDetailDto.getEffEndDate(),"yyyyMMdd")+"}"));
                             break;
                         }
                     }

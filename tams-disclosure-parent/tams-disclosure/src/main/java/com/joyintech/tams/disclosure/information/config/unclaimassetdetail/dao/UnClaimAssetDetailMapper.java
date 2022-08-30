@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao;
 
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.select.SelectOptionDto;
 
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
@@ -121,4 +122,6 @@ public interface UnClaimAssetDetailMapper  {
     List<SelectOptionDto> getProdId(Map<String, Object> map);
 
     List<UnClaimAssetDetailDto> selectUnClaimAssetList(@Param("list") List<UnClaimAssetDetailDto> list);
+
+    List<ProcessMark> getWorklowData(UnClaimAssetDetailDto detailDto);
 }
