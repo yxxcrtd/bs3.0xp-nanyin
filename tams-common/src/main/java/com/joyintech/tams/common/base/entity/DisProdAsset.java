@@ -20,6 +20,7 @@ public class DisProdAsset extends BaseEntity {
     /**
      * 主产品代码
      */
+    @PrimaryKey(value = PrimaryKey.Field.PK_2)
     private String prodId;
 
     /**

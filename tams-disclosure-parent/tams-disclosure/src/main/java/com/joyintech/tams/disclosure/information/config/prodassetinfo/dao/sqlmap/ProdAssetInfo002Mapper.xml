@@ -87,8 +87,27 @@
 			</if>
 		</where>
 	</select>
+    <select id="getWorklowData" resultType="com.joyintech.framework.base.entity.ProcessMark">
+          SELECT
+                   mark.SEQ_NO, mark.PAGE_ID,
+                   mark.BUSINESS_DATA_PK1,
+                   mark.BUSINESS_DATA_PK2,
+                   mark.BUSINESS_DATA_PK3,
+                   mark.BUSINESS_DATA,
+                   mark.WORKFLOW_ID,
+                   mark.STATUS
+          FROM SYS_DATA_PROCESS_MARK mark,(
+          SELECT
+               MAX(mark.HIS_NO) his_no,
+                 mark.WORKFLOW_ID
+          FROM SYS_DATA_PROCESS_MARK mark
+WHERE mark.BUSINESS_DATA_PK2 = #{businessDataPk1} GROUP BY mark.WORKFLOW_ID) maxmark
+WHERE maxmark.his_no=mark.his_no
+AND maxmark.workflow_id =mark.workflow_id AND mark.status IN('A','U','P')
+AND mark.business_data_pk2=#{businessDataPk1}
+	</select>
 
-	<update id="deleteProdAssetByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
+    <update id="deleteProdAssetByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
 		update DIS_PROD_ASSET
 		<set >
 			DATA_STATUS='D',

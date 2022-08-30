@@ -105,6 +105,7 @@ public class ProdAssetInfoValidator implements BeanValidator {
                 param.put("excludeId",dto.getProdAssetId());
             }
             List<ProdAssetInfoDto> prodAssetInfoDtos=prodAssetInfo002Service.selectProdAssetInfoByProdId(param);
+            List<ProdAssetInfoDto> worklowList=prodAssetInfo002Service.getWorklowData(dto.getProdId());
             if(prodAssetInfoDtos.size()>0){
                 for (ProdAssetInfoDto prodAssetInfoDto : prodAssetInfoDtos) {
                     if(!((DateUtil.compareDate(dto.getEffDate(),prodAssetInfoDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),prodAssetInfoDto.getEffDate())<0)
@@ -115,6 +116,17 @@ public class ProdAssetInfoValidator implements BeanValidator {
                     }
                 }
             }
+            if(worklowList.size()>0){
+                for (ProdAssetInfoDto prodAssetInfoDto : worklowList) {
+                    if(!((DateUtil.compareDate(dto.getEffDate(),prodAssetInfoDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),prodAssetInfoDto.getEffDate())<0)
+                            || (DateUtil.compareDate(dto.getEffDate(),prodAssetInfoDto.getEffEndDate())>0 && DateUtil.compareDate(dto.getEffEndDate(),prodAssetInfoDto.getEffEndDate())>0))){
+                        resultList.add(new ValidMessage("生效区间范围与代办数据有重叠！"+"{"+DateUtil.format(prodAssetInfoDto.getEffDate(),"yyyyMMdd")
+                                +"-"+DateUtil.format(prodAssetInfoDto.getEffEndDate(),"yyyyMMdd")+"}"));
+                        break;
+                    }
+                }
+            }
+
             //穿透前固定收益类资产占总资产比例+穿透前权益类资产占总资产比例+穿透前商品及金融衍生品类资产占总资产比例+穿透前混合类资产占总资产比例,不能大于100
             if(dto.getFixPreRatio().add(dto.getEquityPreRatio()).add(dto.getFdPreRatio()).add(dto.getMixPreRatio()).compareTo(new BigDecimal(100))>0){
                 resultList.add(new ValidMessage("各类资产穿透前占比总和不能大于100！"));

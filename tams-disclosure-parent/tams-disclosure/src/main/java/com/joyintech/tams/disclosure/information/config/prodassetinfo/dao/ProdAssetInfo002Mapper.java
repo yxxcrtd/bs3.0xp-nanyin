@@ -2,6 +2,7 @@
 
 package com.joyintech.tams.disclosure.information.config.prodassetinfo.dao;
 
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.dao.DisProdAssetMapper;
 import com.joyintech.tams.common.base.dao.DisProdPartnerMapper;
@@ -46,4 +47,6 @@ public interface ProdAssetInfo002Mapper extends DisProdAssetMapper {
     int deleteProdAssetByPrimaryKey(ProdAssetInfoDto dto);
 
     int insertProdAssetInfo(ProdAssetInfoDto dto);
+
+    List<ProcessMark> getWorklowData(String prodId);
 }
