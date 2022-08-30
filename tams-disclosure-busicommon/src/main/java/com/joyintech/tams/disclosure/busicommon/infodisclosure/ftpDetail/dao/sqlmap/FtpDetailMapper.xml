@@ -54,4 +54,12 @@
 		from V_REP_PROD_INFO V
 		where V.PROD_ID = #{prodId,jdbcType=VARCHAR}
 	</select>
+
+	<select id="selectProdInfoByProdId" resultType="com.joyintech.tams.common.base.entity.RepProdInfo" parameterType="java.lang.String" >
+		select
+		<include refid="com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dao.FtpDetailMapper.Base_Column_List" />
+		from REP_PROD_INFO R
+		where R.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		and R.REP_PROD_TYPE='02'
+	</select>
 </mapper>

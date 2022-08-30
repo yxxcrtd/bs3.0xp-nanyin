@@ -11,4 +11,6 @@ public interface FtpDetailMapper {
 	RepFtpDetail selectFtpDetatil(RepFtpDetail dto);
 
 	RepProdInfo selectProdInfo(String prodId);
+
+	RepProdInfo selectProdInfoByProdId(String prodId);
 }
