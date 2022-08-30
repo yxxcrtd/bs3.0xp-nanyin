@@ -26,15 +26,17 @@
 			});
 
 	}
-
-	JoyinWorkFlow.doCheckOnSubmit = function(){
-		var object = $.serializeToObject('#submitForm', false);
-		if (object.comment==null || object.comment ==='') {
-			Joyin.error("审批意见不能为空!");
-			return false;
+	if(pageModel==='2'){
+		JoyinWorkFlow.doCheckOnSubmit = function(){
+			var object = $.serializeToObject('#submitForm', false);
+			if (object.comment==null || object.comment ==='') {
+				Joyin.error("审批意见不能为空!");
+				return false;
+			}
+			return true;
 		}
-		return true;
 	}
+
 
 	$(function() {
         // 去掉工作流框架的“意见和说明”
