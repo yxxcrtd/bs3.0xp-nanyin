@@ -38,7 +38,7 @@
 		where
 			info.STATUS = 'E'
 			<if test="prodId!=null">
-				and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
+				and info.P_PROD_ID=#{prodId,jdbcType=VARCHAR}
 			</if>
     </select>
     
