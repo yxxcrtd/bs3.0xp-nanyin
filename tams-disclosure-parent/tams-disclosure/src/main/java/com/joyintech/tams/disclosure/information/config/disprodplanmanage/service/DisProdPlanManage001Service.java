@@ -342,8 +342,8 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "开放期结束日"));
             }
             if(prodInfo != null && isDateStr(rowData.get(1))
-                    && DateUtil.compareDate(rowData.get(1), prodInfo.getSetDateStr()) <= 0){
-                message.add("开放期起始日不能小于等于产品成立日期。");
+                    && DateUtil.compareDate(rowData.get(1), prodInfo.getSetDateStr()) < 0){
+                message.add("开放期起始日不能小于产品成立日期。");
             }
             if(isDateStr(rowData.get(1)) && isDateStr(rowData.get(2))
                     &&  DateUtil.compareDate(rowData.get(2), rowData.get(1)) < 0){
