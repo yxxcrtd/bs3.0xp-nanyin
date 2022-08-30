@@ -41,7 +41,7 @@
     <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
         select
         T.PROD_ID prodId,
-        nvl(rpi2.PROD_NAME,rpi1.PROD_NAME || '(' || rpi.PROD_NAME || ')') prodName,
+        nvl(rpi2.PROD_NAME,rpi1.PROD_NAME) prodName,
         T.VALUE_DATE valueDate,
         T.ASSETS_VALUE assetsValue,
         T.CAPITAL capital,
