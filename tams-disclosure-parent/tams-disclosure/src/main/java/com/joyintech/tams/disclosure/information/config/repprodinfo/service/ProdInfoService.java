@@ -332,7 +332,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             // 更新母产品信息
             ProdInfoDto ppDto = new ProdInfoDto();
             BeanUtils.copyProperties(dto, ppDto);
-            ppDto.setProdId(ppDto.getpProdId());
+            //ppDto.setProdId(ppDto.getpProdId());
             ppDto.setProdName(ppDto.getpProdName());
             ppDto.setSetDate(ppDto.getpSetDate());
             ppDto.setpProdId(null);
