@@ -80,7 +80,7 @@ var RepProdIndex002 = function() {
 
 var pAssetsValueChange = function(){
     if($('#isGrade').val() == "02"){
-        $('#assetsValue').val($('#pAssetsValue').val()).trigger("blur");
+        $('#assetsValue').val($('#pAssetsValue').val()).trigger("change").trigger("blur");
         $("#assetsValue").attr('disabled',true);
     }else{
         $("#assetsValue").attr('disabled',false);
@@ -89,7 +89,7 @@ var pAssetsValueChange = function(){
 
 var pCapitalChange = function(){
     if($('#isGrade').val() == "02"){
-        $('#capital').val($('#pCapital').val()).trigger("blur");
+        $('#capital').val($('#pCapital').val()).trigger("change").trigger("blur");
         $("#capital").attr('disabled',true);
     }else{
         // $('#capital').val('').trigger("blur");
@@ -99,11 +99,11 @@ var pCapitalChange = function(){
 
 var pUnitValueChange = function(){
     if($('#isGrade').val() == "02"){
-        $('#unitValue').val($('#pUnitValue').val()).trigger("blur");
+        $('#unitValue').val($('#pUnitValue').val()).trigger("change").trigger("blur");
         $("#unitValue").attr('disabled',true);
     }else{
         if($('#prodType').val() == "04"){
-            $('#unitValue').val('1.0000').trigger("blur");;
+            $('#unitValue').val('1.0000').trigger("blur");
             $("#unitValue").attr('disabled',true);
         }else{
             // $('#unitValue').val('');
@@ -114,7 +114,7 @@ var pUnitValueChange = function(){
 
 var pUnitValueTChange = function(){
     if($('#isGrade').val() == "02"){
-        $('#unitValueT').val($('#pUnitValueT').val()).trigger("blur");
+        $('#unitValueT').val($('#pUnitValueT').val()).trigger("change").trigger("blur");
         $("#unitValueT").attr('disabled',true);
     }else{
         if($('#prodType').val() == "04"){
@@ -268,7 +268,9 @@ $(function() {
     $('#pUnitValueT').change(pUnitValueTChange);
     $('#pWYield').change(pWYieldChange);
     $('#pYield7').change(pYield7Change);
-debugger;
+
+
+
     if(pageModel!=PAGE_MODEL_NEW){
         if($('#prodType').val() == "04"){
             $("#pUnitValue").attr('disabled',true);
@@ -284,7 +286,7 @@ debugger;
             $("#pWYield").attr('disabled',true);
             $('#pYield7').removeAttr("required");
             $("#pYield7").attr('disabled',true);
-        };
+        }
 
         if($('#isGrade').val() == "02"){
             $("#assetsValue").attr('disabled',true);
