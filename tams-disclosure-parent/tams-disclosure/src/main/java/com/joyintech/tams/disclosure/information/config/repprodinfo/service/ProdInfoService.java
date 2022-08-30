@@ -177,6 +177,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         return prodInfoMapper.selectByPrimaryKey(prodId);
     }
 
+
+    public ProdInfoDto selectByPProdId(String prodId) {
+        // return  prodInfoMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效.getValue());
+        return prodInfoMapper.selectByPrimaryKeyPT(prodId);
+    }
     /**
      * 查询产品明细信息-普通产品
      *
