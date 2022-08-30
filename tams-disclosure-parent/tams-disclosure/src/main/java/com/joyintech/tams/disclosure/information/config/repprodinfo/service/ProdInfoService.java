@@ -677,6 +677,16 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(16))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "发行方式"));
             }
+            if (StringUtil.equals(list.get(16),"开放式") && StringUtil.isNotEmpty(list.get(19))) {
+                if (list.get(19).contains("封闭式")) {
+                    message.add("发行方式是开放式时，产品运作方式不能是封闭式。");
+                }
+            }
+            if (StringUtil.equals(list.get(16),"封闭式") && StringUtil.isNotEmpty(list.get(19))) {
+                if (list.get(19).contains("开放式")) {
+                    message.add("发行方式是封闭式时，产品运作方式不能是开放式。");
+                }
+            }
             if (StringUtils.equals(DictCodeListExt5.发行方式_开放式.getCodeName(), list.get(16))
                     && StringUtils.isBlank(list.get(17))) {
                 message.add("发行方式为开放式，开放频率必填。");
@@ -694,6 +704,13 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             //校验固定持有天数是否必填
             if (StringUtil.equals(list.get(15),"现管类产品") && StringUtil.isNotEmpty(list.get(18))) {
                 message.add("产品类型是现管类产品时，固定持有天数不可填。");
+            }
+
+            //校验产品运作方式
+            if (StringUtil.equals(list.get(15),"净值型产品") && StringUtil.isNotEmpty(list.get(19))) {
+                if (list.get(19).contains("非")) {
+                    message.add("产品类型是净值型产品时，产品运作方式不能是非净值型。");
+                }
             }
 
             if (StringUtil.isNotEmpty(list.get(18)) && !isIntegerNumber(list.get(18))) {
