@@ -349,7 +349,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             }
             if (!StringUtil.isNotEmpty(rowData.get(1))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
-            }else if(!this.selectpProdId(rowData.get(1))){
+            }else if(!this.selectpProdId(StringUtil.isNotBlank(rowData.get(1))?rowData.get(1).trim():"")){
                 message.add("产品主代码未在系统中维护。");
             }else if(StringUtil.isNotEmpty(dto1.getpProdId()) && !(dto1.getpProdId().equals(rowData.get(1)))){
                 message.add("产品主代码不是产品子代码的母产品代码。");
