@@ -401,7 +401,11 @@ $(function() {
 			}
 		});
 		$('#operationStartDate,#autoRedeemDate').change(function () {
-			debugger;
+			if ($('#operationStartDate').val()&& $('#operationStartDate').val() <platDate){
+				Joyin.error("产品运作起始日不能小于平台日！");
+				$('#operationStartDate').val('');
+				return;
+			}
 			if ($('#operationStartDate').val() && $('#autoRedeemDate').val()){
 				if ($('#operationStartDate').val() <platDate && platDate < $('#autoRedeemDate').val() ){
 					$('#collingoffPeriod').attr('disabled',true);

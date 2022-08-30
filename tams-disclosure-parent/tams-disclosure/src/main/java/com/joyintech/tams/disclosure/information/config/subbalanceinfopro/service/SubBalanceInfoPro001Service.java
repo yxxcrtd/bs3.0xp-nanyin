@@ -16,6 +16,7 @@ import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dao.SubBalanceInfoProMapper;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -72,18 +73,21 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
             if (dto1!=null){
                 dto.setStatus("E");
                 dto.setErrormsg("");
+                dto.setUpdateUser(CommonUtil.getUserName());
                 subBalanceInfoProMapper.updateByKey(dto);
             }
             else {
                 SubBalanceInfoPro001Dto subBalanceInfoPro001Dto = new SubBalanceInfoPro001Dto();
                 BeanUtil.copyPropertiesIgnoreNull(subBalanceInfoPro001Dto, dto);
                 subBalanceInfoPro001Dto.setStatus("E");
+                subBalanceInfoPro001Dto.setUpdateUser(CommonUtil.getUserName());
                 subBalanceInfoProMapper.insert(subBalanceInfoPro001Dto);
             }
         }
         else {
             dto.setStatus("E");
             dto.setErrormsg("");
+            dto.setUpdateUser(CommonUtil.getUserName());
             subBalanceInfoProMapper.updateByKey(dto);
         }
 
