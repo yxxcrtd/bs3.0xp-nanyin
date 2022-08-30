@@ -183,7 +183,7 @@ $(function() {
 				if (openStartDate && prodSetDate) {
 					var days = (Date.ofDate(openStartDate) - Date.ofDate(prodSetDate)) / (24 * 60 * 60 * 1000);
 					if (days < 0) {
-						Joyin.error(JoyinUtil.getMessage("开放开始日必须大于等于产品成立日" + prodSetDate, JoyinUtil.getLabel("DisProdPlanManage002.prodSetDate")));
+						Joyin.error(JoyinUtil.getMessage("开放起始日必须大于等于产品成立日" + prodSetDate, JoyinUtil.getLabel("DisProdPlanManage002.prodSetDate")));
 						$('#openStartDate').val('');
 					}
 				}
