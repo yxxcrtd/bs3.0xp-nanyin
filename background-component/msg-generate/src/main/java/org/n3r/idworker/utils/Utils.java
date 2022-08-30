@@ -104,11 +104,18 @@ public class Utils {
     }
 
     public static File createIdWorkerHome() {
-        String userHome = System.getProperty("user.home");
-        File idWorkerHome = new File(userHome + File.separator + DOT_IDWORKERS);
-        idWorkerHome.mkdirs();
-        if (idWorkerHome.isDirectory()) return idWorkerHome;
-
-        throw new RuntimeException("failed to create .idworkers at user home");
+    	try {
+	        String userHome = System.getProperty("user.home");
+	        File idWorkerHome = new File(userHome + File.separator + DOT_IDWORKERS);
+	        boolean ret = idWorkerHome.mkdirs();
+	        if ( ret==false ) {
+	        	throw new IOException("创建文件失败.");
+	        }
+	        if (idWorkerHome.isDirectory()) return idWorkerHome;
+	        throw new RuntimeException("failed to create .idworkers at user home");
+    	} catch (IOException e ) {
+    		e.printStackTrace();
+    		return null;
+    	}
     }
 }

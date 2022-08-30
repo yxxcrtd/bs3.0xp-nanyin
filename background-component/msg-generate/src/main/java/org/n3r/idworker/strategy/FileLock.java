@@ -19,6 +19,7 @@ public class FileLock {
     private final File file;
     private FileChannel channel;
     private java.nio.channels.FileLock flock = null;
+    private RandomAccessFile randomFile;
     Logger logger = LoggerFactory.getLogger(FileLock.class);
 
     public FileLock(File file) {
@@ -26,8 +27,17 @@ public class FileLock {
 
         try {
             file.createNewFile(); // create the file if it doesn't exist
-            channel = new RandomAccessFile(file, "rw").getChannel();
+            randomFile = new RandomAccessFile(file, "rw");
+            channel = randomFile.getChannel();
         } catch (IOException e) {
+             try {
+            	 if ( channel!=null )
+            		 channel.close();
+            	 if ( randomFile!=null )
+            		 randomFile.close();
+             } catch (IOException e1) {
+                 throw new RuntimeException(e1);
+             }
             throw new RuntimeException(e);
         }
     }
@@ -94,6 +104,7 @@ public class FileLock {
 
             try {
                 channel.close();
+                randomFile.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

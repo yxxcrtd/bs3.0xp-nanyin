@@ -10,19 +10,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.utils.echarts.dto.*;
-import com.joyintech.tams.utils.poi.PoiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.utils.echarts.dto.AxisLabel;
+import com.joyintech.tams.utils.echarts.dto.AxisLine;
+import com.joyintech.tams.utils.echarts.dto.Grid;
+import com.joyintech.tams.utils.echarts.dto.Legend;
+import com.joyintech.tams.utils.echarts.dto.LineStyle;
+import com.joyintech.tams.utils.echarts.dto.NvObject;
+import com.joyintech.tams.utils.echarts.dto.Option;
+import com.joyintech.tams.utils.echarts.dto.Series;
+import com.joyintech.tams.utils.echarts.dto.TextStyle;
+import com.joyintech.tams.utils.echarts.dto.Title;
+import com.joyintech.tams.utils.echarts.dto.XAxis;
+import com.joyintech.tams.utils.echarts.dto.YAxis;
 
 /**
  * echarts报表图片服务类
@@ -356,10 +361,16 @@ public class EchartsUtils {
 		
 		File file = new File(echartsPicture); // 文件路径
 		if (!file.exists()) {
-			File dir = new File(file.getParent());
-			dir.mkdirs();
 			try {
-				file.createNewFile();
+				File dir = new File(file.getParent());
+				boolean ret = dir.mkdirs();
+				if ( ret==false ) {
+					throw new IOException("创建文件夹失败.");
+				}
+				ret = file.createNewFile();
+				if ( ret==false ) {
+					throw new IOException("创建文件失败.");
+				}
 			} catch (IOException e) {
 				throw new EchartsException( "buildEChartFile",e.getCause(),"" );
 			}
@@ -388,8 +399,12 @@ public class EchartsUtils {
 		}
 		// 删除临时json文件
 		File jsondata = new File(jsonData);
-		if (jsondata != null && jsondata.exists())
-			jsondata.delete();
+		if (jsondata != null && jsondata.exists()) {
+			boolean ret = jsondata.delete();
+			if ( ret==false ) {
+				throw new EchartsException("删除文件失败.");
+			}
+		}
 		//logger.debug("已创建图表：" + file.getPath());
 		return file;
 	}
@@ -409,8 +424,14 @@ public class EchartsUtils {
 			File writename = new File(dataPath);
 			if (!writename.exists()) {
 				File dir = new File(writename.getParent());
-				dir.mkdirs();
-				writename.createNewFile();
+				boolean ret = dir.mkdirs();
+				if ( ret==false ) {
+					throw new IOException("创建文件夹失败.");
+				}
+				ret = writename.createNewFile();
+				if ( ret==false ) {
+					throw new IOException("创建文件失败.");
+				}
 			}
 			out = new BufferedWriter(new FileWriter(writename));
 			out.write(option);

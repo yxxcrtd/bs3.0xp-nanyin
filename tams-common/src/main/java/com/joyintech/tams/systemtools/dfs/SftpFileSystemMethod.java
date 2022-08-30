@@ -1,20 +1,26 @@
 package com.joyintech.tams.systemtools.dfs;
 
-import com.jcraft.jsch.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.util.Date;
-import java.util.Properties;
 
 /**
  * @description: 使用Sftp方式存储文件
@@ -82,19 +88,26 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
      * @since 1.0
      */
     private void getFile(SftpDto dto, String remoteFile, String localDir) throws SftpException {
-        File localFile = new SafelyFile(localDir);
-        if (localFile.exists()) {
-            // 本地目录不是目录，先删除
-            if (!localFile.isDirectory()) {
-                boolean rec =localFile.delete();
-                if(rec){
-                    logger.debug("");
-                }
-            }
-        } else {
-            // 创建本地目录
-            localFile.mkdirs();
-        }
+    	try {
+	        File localFile = new SafelyFile(localDir);
+	        if (localFile.exists()) {
+	            // 本地目录不是目录，先删除
+	            if (!localFile.isDirectory()) {
+	                boolean rec =localFile.delete();
+	                if(rec){
+	                    logger.debug("");
+	                }
+	            }
+	        } else {
+	            // 创建本地目录
+	            boolean ret = localFile.mkdirs();
+	            if ( ret==false ) {
+	            	throw new IOException("删除文件失败.");
+	            }
+	        }
+    	} catch (Exception e ) {
+    		logger.error("下载文件失败",e);
+    	}
         try {
             dto.getSftp().get(remoteFile, localDir);
         } catch (SftpException e) {

@@ -74,48 +74,59 @@ public class OSSFileSystemMethod implements JoyinFileSystemMethod{
 
     @Override
     public UploadFile fecth(SysUploadFileInfo file) {
-        String filePath = file.getPath();
-        if(filePath != null){
-            File f = null;
-            if(filePath.toLowerCase(Locale.CHINA).startsWith(HTTP_STR)||filePath.toLowerCase(Locale.CHINA).startsWith(HTTPS_STR)) {
-                String localFilePath = minioFileRemoteService.getSimpleFilePathName(filePath);
-                String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
-                if(localFilePath.startsWith("/")||basePath.endsWith("/") || basePath.endsWith("\\")|| localFilePath.startsWith("\\")){
-                    localFilePath = basePath+localFilePath;
-                }else{
-                    localFilePath = basePath + File.separator+localFilePath;
-                }
-                int begin = Math.max(localFilePath.lastIndexOf("/"), localFilePath.lastIndexOf("\\"));
-                File fileDir = new SafelyFile(localFilePath.substring(0,begin));
-                if(!fileDir.exists()){
-                    fileDir.mkdirs();
-                }
-                f = new SafelyFile(localFilePath);
-
-//                if(!f.exists()){
-                createLocalFile(f,filePath);
-//                }
-
-            }else{
-                f = new SafelyFile(filePath);
-                if(!f.exists()){
-                    int begin = Math.max(filePath.lastIndexOf("/"), filePath.lastIndexOf("\\"));
-                    File fileDir = new SafelyFile(filePath.substring(0,begin));
-                    if(!fileDir.exists()){
-                        fileDir.mkdirs();
-                    }
-                    String localFilePath = minioFileRemoteService.getSimpleFilePathName(filePath);
-                    String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
-                    localFilePath = localFilePath.replaceAll(basePath,"");
-                    String remoteFilePathStr = minioFileRemoteService.getRemoteFilePathName(localFilePath);
-                    createLocalFile(f,remoteFilePathStr);
-                }
-            }
-            UploadFile upfile = new UploadFile(null,file.getSeqNo(),f);
-            upfile.setFileName(file.getFileName());
-            return upfile;
-        }
-        return null;
+    	try {
+	        String filePath = file.getPath();
+	        if(filePath != null){
+	            File f = null;
+	            if(filePath.toLowerCase(Locale.CHINA).startsWith(HTTP_STR)||filePath.toLowerCase(Locale.CHINA).startsWith(HTTPS_STR)) {
+	                String localFilePath = minioFileRemoteService.getSimpleFilePathName(filePath);
+	                String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+	                if(localFilePath.startsWith("/")||basePath.endsWith("/") || basePath.endsWith("\\")|| localFilePath.startsWith("\\")){
+	                    localFilePath = basePath+localFilePath;
+	                }else{
+	                    localFilePath = basePath + File.separator+localFilePath;
+	                }
+	                int begin = Math.max(localFilePath.lastIndexOf("/"), localFilePath.lastIndexOf("\\"));
+	                File fileDir = new SafelyFile(localFilePath.substring(0,begin));
+	                if(!fileDir.exists()){
+	                    boolean ret = fileDir.mkdirs();
+						if ( ret==false ) {
+							throw new IOException("创建文件夹失败.");
+						}
+	                }
+	                f = new SafelyFile(localFilePath);
+	
+	//                if(!f.exists()){
+	                createLocalFile(f,filePath);
+	//                }
+	
+	            }else{
+	                f = new SafelyFile(filePath);
+	                if(!f.exists()){
+	                    int begin = Math.max(filePath.lastIndexOf("/"), filePath.lastIndexOf("\\"));
+	                    File fileDir = new SafelyFile(filePath.substring(0,begin));
+	                    if(!fileDir.exists()){
+	                        boolean ret = fileDir.mkdirs();
+	    					if ( ret==false ) {
+	    						throw new IOException("创建文件夹失败.");
+	    					}
+	                    }
+	                    String localFilePath = minioFileRemoteService.getSimpleFilePathName(filePath);
+	                    String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+	                    localFilePath = localFilePath.replaceAll(basePath,"");
+	                    String remoteFilePathStr = minioFileRemoteService.getRemoteFilePathName(localFilePath);
+	                    createLocalFile(f,remoteFilePathStr);
+	                }
+	            }
+	            UploadFile upfile = new UploadFile(null,file.getSeqNo(),f);
+	            upfile.setFileName(file.getFileName());
+	            return upfile;
+	        }
+	        return null;
+    	}catch (Exception e) {
+    		logger.error("上传文件失败",e);
+    		return null;
+    	}
     }
     /**
      * @Author ZY22350
