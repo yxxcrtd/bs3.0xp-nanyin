@@ -50,10 +50,10 @@
 		var params = new Array();
 		for (var i = 0; i < nodes.length; i++) {
 			var flag = getParam(nodes[i], params);
-			if(!flag){
-				Joyin.error("产品中包含“产品状态”为“已到期”或“已销户”的产品,不能提交");
-				return;
-			}
+			// if(!flag){
+			// 	Joyin.error("产品中包含“产品状态”为“已到期”或“已销户”的产品,不能提交");
+			// 	return;
+			// }
 		}
 		if(params.length == 0){
 			Joyin.error("请选择产品");
