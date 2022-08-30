@@ -166,6 +166,9 @@ public class FtpDetailService {
 			Boolean flag = false;
 			//获取发送报表需要数据
 			RepProdInfo reportinfo = ftpDetailMapper.selectProdInfo(dto.getProdId());
+			if(reportinfo ==null){
+				reportinfo = ftpDetailMapper.selectProdInfoByProdId(dto.getProdId());
+			}
 			RepReveal repReveal = repRevealMapper.selectByPrimaryKey(dto.getRevealId());
 			
 			
