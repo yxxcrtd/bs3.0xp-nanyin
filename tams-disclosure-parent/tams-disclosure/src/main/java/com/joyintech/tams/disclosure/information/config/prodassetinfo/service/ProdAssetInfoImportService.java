@@ -204,7 +204,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                     // 验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(sysDate, sdf.parse(list.get(9))) > 0) {
                         ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i + 2),
-                                this.getMessage("BUSS_COM_E_0004", "生效日", "平台日期"));
+                                this.getMessage("PRODFILE_E_0001", "生效日", "平台日期"));
                         excelValidDtolist.add(dto);
                     }
                 }
@@ -218,7 +218,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                 }else{
                     if (DateUtil.compareDate(sysDate, sdf.parse(list.get(10))) > 0) {
                         ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
-                                this.getMessage("BUSS_COM_E_0004", "生效日截止日", "平台日期"));
+                                this.getMessage("PRODFILE_E_0001", "生效日截止日", "平台日期"));
                         excelValidDtolist.add(dto);
                     }else{
                         if(DateUtil.isDateStr(list.get(9))){
