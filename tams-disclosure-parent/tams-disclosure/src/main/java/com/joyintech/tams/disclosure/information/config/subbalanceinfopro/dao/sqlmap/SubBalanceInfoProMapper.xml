@@ -220,6 +220,22 @@
                 or PROD_NAME like concat(concat('%',#{search}),'%'))
             </if>
         </where>
+        union all
+        SELECT
+        P_PROD_ID id,
+        PROD_NAME text,
+        PROD_RE object
+        FROM
+        REP_PROD_INFO
+        <where>
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (P_PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
     </select>
 
     <select id="selectBalanceList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto">
