@@ -192,7 +192,7 @@
         to_char(A.AFFIRM_DATE,'yyyy-mm-dd') affirmDateStr
         from REP_FLOAT_FEE A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.AFFIRM_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.AFFIRM_DATE,'yyyy-mm-dd')) IN (" separator="," close=") and A.STATUS='E' ">
                 (#{item.prodId},#{item.affirmDateStr})
             </foreach>
         </where>
