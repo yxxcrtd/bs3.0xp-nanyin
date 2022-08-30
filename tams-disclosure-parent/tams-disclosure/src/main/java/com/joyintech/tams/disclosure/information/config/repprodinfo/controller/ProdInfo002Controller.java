@@ -303,15 +303,22 @@ public class ProdInfo002Controller extends BaseController {
                 return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
             }
             Set<String> setChangeDto = new HashSet<>();
+            boolean flag=true;
             for (ProdBasicChangeDto i : dto.getBasicChangeList()) {
                 if (StringUtils.isBlank(i.getDataType()) || StringUtils.isBlank(i.getProportion())) {
                     return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
                 } else {
                     setChangeDto.add(i.getDataType());
                 }
+                if(new BigDecimal(i.getProportion()).compareTo(BigDecimal.ZERO)<=0){
+                    flag=false;
+                }
             }
             if (setChangeDto.size() != dto.getBasicChangeList().size()) {
                 return new AjaxResult("行情代码重复", MessageType.错误消息);
+            }
+            if (!flag) {
+                return new AjaxResult("系数不能小于等于0", MessageType.错误消息);
             }
         }
         return commonCheck(bindingResult, operateType);

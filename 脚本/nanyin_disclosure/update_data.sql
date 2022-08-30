@@ -1146,3 +1146,8 @@ delete from sys_datadict_list where DICT_CODE='INFO_DEV_STATUS' and ITEM_CODE='0
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('INFO_DEV_STATUS', '04', '开发完成', 4, '0', 'system', null, sysdate, 'system', sysdate);
 -- add by zhengxiaolian 2022-08-24 开发状态新增开发完成数据字典 end
+
+
+-- add by zhengxiaolian 2022-08-30 开发状态删除需修改数据字典 start
+delete from sys_datadict_list where DICT_CODE='INFO_DEV_STATUS' and ITEM_CODE='02';
+-- add by zhengxiaolian 2022-08-30 开发状态删除需修改数据字典 end

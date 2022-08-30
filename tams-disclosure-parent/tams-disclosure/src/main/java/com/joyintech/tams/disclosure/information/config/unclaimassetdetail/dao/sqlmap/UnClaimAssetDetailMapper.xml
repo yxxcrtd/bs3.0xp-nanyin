@@ -238,7 +238,7 @@
 		and PROD_ID=#{prodId,jdbcType=VARCHAR}
     </select>
     <select id="selectCount" resultType="int">
-       select count(*) from DIS_NOSTD_CREDITOR
+       select count(*) from DIS_NOSTD_CREDITOR DNDC
         <where>
             <if test="prodId != null and prodId != ''">
                 AND DNDC.PROD_ID = #{prodId,jdbcType=VARCHAR}
