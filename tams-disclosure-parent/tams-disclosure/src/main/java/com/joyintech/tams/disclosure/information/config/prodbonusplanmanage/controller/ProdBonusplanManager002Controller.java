@@ -103,7 +103,7 @@ public class ProdBonusplanManager002Controller extends BaseController {
         else if (StringUtil.isNotEmpty(workflowId)) {
             // 根据工作流与留痕处理提供的共通方法获取业务实体
             ProdBonusplanDto entity = prodBonusplanManager002Service.getBussinessEntityByWorkflowId(workflowId);
-            if (StringUtil.equals(entity.getOperateType(),"new")){
+            if (StringUtil.equals(entity.getOperateType(),"submit")){
                 String prodId = entity.getProdId();
                 String prodName =entity.getProdName();
                 entity.setProdName(prodId);

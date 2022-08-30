@@ -370,17 +370,26 @@ public class EchartsUtils {
 		String echartsPicture = echartsFilePathName + ".png";
 		
 		File file = new File(echartsPicture); // 文件路径
+//		if (!file.exists()) {
+//			try {
+//				File dir = new File(file.getParent());
+//				boolean ret = dir.mkdirs();
+//				if ( ret==false ) {
+//					throw new IOException("创建文件夹失败.");
+//				}
+//				ret = file.createNewFile();
+//				if ( ret==false ) {
+//					throw new IOException("创建文件失败.");
+//				}
+//			} catch (IOException e) {
+//				throw new EchartsException( "buildEChartFile",e.getCause(),"" );
+//			}
+//		}
 		if (!file.exists()) {
+			File dir = new File(file.getParent());
+			dir.mkdirs();
 			try {
-				File dir = new File(file.getParent());
-				boolean ret = dir.mkdirs();
-				if ( ret==false ) {
-					throw new IOException("创建文件夹失败.");
-				}
-				ret = file.createNewFile();
-				if ( ret==false ) {
-					throw new IOException("创建文件失败.");
-				}
+				file.createNewFile();
 			} catch (IOException e) {
 				throw new EchartsException( "buildEChartFile",e.getCause(),"" );
 			}
@@ -409,12 +418,14 @@ public class EchartsUtils {
 		}
 		// 删除临时json文件
 		File jsondata = new File(jsonData);
-		if (jsondata != null && jsondata.exists()) {
-			boolean ret = jsondata.delete();
-			if ( ret==false ) {
-				throw new EchartsException("删除文件失败.");
-			}
-		}
+//		if (jsondata != null && jsondata.exists()) {
+//			boolean ret = jsondata.delete();
+//			if ( ret==false ) {
+//				throw new EchartsException("删除文件失败.");
+//			}
+//		}
+		if (jsondata != null && jsondata.exists())
+			jsondata.delete();
 		//logger.debug("已创建图表：" + file.getPath());
 		return file;
 	}
@@ -434,14 +445,16 @@ public class EchartsUtils {
 			File writename = new File(dataPath);
 			if (!writename.exists()) {
 				File dir = new File(writename.getParent());
-				boolean ret = dir.mkdirs();
-				if ( ret==false ) {
-					throw new IOException("创建文件夹失败.");
-				}
-				ret = writename.createNewFile();
-				if ( ret==false ) {
-					throw new IOException("创建文件失败.");
-				}
+				dir.mkdirs();
+				writename.createNewFile();
+//				boolean ret = dir.mkdirs();
+//				if ( ret==false ) {
+//					throw new IOException("创建文件夹失败.");
+//				}
+//				ret = writename.createNewFile();
+//				if ( ret==false ) {
+//					throw new IOException("创建文件失败.");
+//				}
 			}
 			out = new BufferedWriter(new FileWriter(writename));
 			out.write(option);

@@ -672,6 +672,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(15))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品类型"));
             }
+
             // 发行方式
             if (StringUtil.isEmpty(list.get(16))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "发行方式"));
@@ -690,9 +691,15 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 message.add("开放频率为日开且产品类型为净值型，固定持有天数必填。");
             }
 
+            //校验固定持有天数是否必填
+            if (StringUtil.equals(list.get(15),"现管类产品") && StringUtil.isNotEmpty(list.get(18))) {
+                message.add("产品类型是现管类产品时，固定持有天数不可填。");
+            }
+
             if (StringUtil.isNotEmpty(list.get(18)) && !isIntegerNumber(list.get(18))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0031", "固定持有天数"));
             }
+
             if (StringUtil.isEmpty(list.get(19))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品运作方式"));
             }

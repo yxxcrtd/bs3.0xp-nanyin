@@ -338,6 +338,10 @@
         SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
     </select>
 
+    <select id="selectpProdId" resultType="java.lang.String">
+        SELECT P_PROD_ID FROM REP_PROD_INFO WHERE P_PROD_ID = #{pProdId}
+    </select>
+
     <select id="checkExistData" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
         select distinct T.*
         from REP_PROD_INDEX T

@@ -37,6 +37,8 @@ public interface RepProdIndexSMapper {
 
     String selectProdId(@Param("prodId") String prodId);
 
+    List<String> selectpProdId(@Param("pProdId") String pProdId);
+
     RepProdIndexDto checkExistData(RepProdIndexDto record);
 
     List<RepProdIndexDto> selectProdIndexList(@Param("list") List<RepProdIndexDto> list);

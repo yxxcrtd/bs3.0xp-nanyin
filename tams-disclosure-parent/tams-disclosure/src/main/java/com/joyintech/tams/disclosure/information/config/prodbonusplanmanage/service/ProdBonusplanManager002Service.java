@@ -162,8 +162,12 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
     public void doComplete(ProdBonusplanDto entity, OperationType type) {
         entity.setOperateType(type.toString());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
+            String prodId = entity.getProdName();
+            String prodName = entity.getProdId();
             entity.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
+            entity.setProdId(prodId);
+            entity.setProdName(prodName);
             this.insert(entity);
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {
             this.update(entity);

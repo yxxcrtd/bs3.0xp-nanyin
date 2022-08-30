@@ -391,10 +391,10 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             } else if (rowData.get(4).compareTo(DateUtil.format(DateUtil.platDateFromCache())) > 0) {
                 message.add("支付日只能小于等于平台日。");
             }
-            if(StringUtil.isNotEmpty(rowData.get(3)) && isBigDecimal(rowData.get(3))){
+            if(StringUtil.isNotEmpty(rowData.get(3)) && !isBigDecimal(rowData.get(3))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "自成立以来发生额（贷方）"));
             }
-            if(StringUtil.isNotEmpty(rowData.get(2)) && isBigDecimal(rowData.get(2))){
+            if(StringUtil.isNotEmpty(rowData.get(2)) && !isBigDecimal(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "费用金额"));
             }
             if (map.containsKey(rowData.get(0)
