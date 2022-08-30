@@ -840,7 +840,8 @@
         select rpi.PROD_ID
         from REP_PROD_INFO rpi
         <where>
-            <foreach collection="list" item="item" open="and PROD_ID in(" separator="," close=")">
+            rpi.STATUS='E'
+            <foreach collection="list" item="item" open=" and PROD_ID in(" separator="," close=")">
                 #{item.prodId}
             </foreach>
         </where>
