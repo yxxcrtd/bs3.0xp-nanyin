@@ -94,9 +94,9 @@ public class ProdBasicChangeService {
             if (CollectionUtils.isNotEmpty(oldList)) {
                 for (ProdBasicChangeDto i : oldList) {
                     i.setStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
-                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),oldIsIndex)) {
-                        i.setChangeType("2");
-                    }
+//                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),oldIsIndex)) {
+//                        i.setChangeType("2");
+//                    }
                     prodBasicChangeMapper.updateByGroupId(i);
                 }
             }
@@ -129,7 +129,7 @@ public class ProdBasicChangeService {
         dto.setGroupId(groupId);
         //得到生效日
         Date operationStartDate = disProdPlanMapper.getOperationStartDate(prodId, platDate);
-        dto.setEffDate(operationStartDate);
+        dto.setEffDate(operationStartDate==null?platDate:operationStartDate);
         if (StringUtils.contains(dto.getProportion(), "%")) {
             dto.setProportion(dto.getProportion());
         } else {

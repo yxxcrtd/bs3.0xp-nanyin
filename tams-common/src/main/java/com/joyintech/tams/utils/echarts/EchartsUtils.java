@@ -280,7 +280,7 @@ public class EchartsUtils {
 			yAxis_axisLine_lineStyle_type = "solid";// 默认实线
 		String splitNumber = obj2str(configMap.get("yAxis.splitNumber"));
 		if (StringUtils.isEmpty(splitNumber))
-			splitNumber = "10";
+			splitNumber = null;
 		//纵坐标显示刻度
 		String yAxis_axisLabel_formatter = obj2str(configMap.get("yAxis.axisLabel.formatter"));
 		if (StringUtils.isEmpty(yAxis_axisLabel_formatter))
@@ -294,6 +294,11 @@ public class EchartsUtils {
 		if (StringUtils.isEmpty(yAxis_axisLabel_fontWeight))
 			yAxis_axisLabel_fontWeight = "";// 默认为空
 		Object yAxis_boundaryGap = configMap.get("yAxis.boundaryGap");
+
+		String yAxis_min = obj2str(configMap.get("yAxis.min"));
+		String yAxis_max = obj2str(configMap.get("yAxis.max"));
+
+
 
 		// 数据集合
 		List<Series> seriesList = null;
@@ -317,7 +322,7 @@ public class EchartsUtils {
 		if (Arrays.asList(new String[] { ECHARTS_图表类型_曲线图, ECHARTS_图表类型_柱状图 }).contains(series_type)) {
 			List<YAxis> yAxisList = new ArrayList<YAxis>();
 			yAxisList.add(new YAxis(yAxis_name, yAxis_type, yAxis_position,yAxis_scale,splitNumber,
-					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type)),new AxisLabel(null,0,yAxis_axisLabel_formatter,yAxis_axisLabel_fontSize,yAxis_axisLabel_fontWeight),yAxis_boundaryGap));
+					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type)),new AxisLabel(null,0,yAxis_axisLabel_formatter,yAxis_axisLabel_fontSize,yAxis_axisLabel_fontWeight),yAxis_boundaryGap,yAxis_min,yAxis_max));
 			option.setyAxis(yAxisList);
 		}
 		// 数据集合
@@ -331,6 +336,11 @@ public class EchartsUtils {
 		option.setGrid(grid);
 
 		String optionStr = JsonUtils.object2Json(option);
+		//如果optionStr中存在function ,需要将function前面及后面的"去除，否则echarts画图无法正常显示函数中的动作
+		if(yAxis_axisLabel_formatter.contains("function")){
+			//查看需要替换的function表达式
+			optionStr = optionStr.replace("\""+yAxis_axisLabel_formatter+"\"",yAxis_axisLabel_formatter);
+		}
 		//logger.debug("echarts数据对象：" + optionStr);
 		return optionStr;
 	}
