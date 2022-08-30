@@ -806,7 +806,10 @@ public class ChbFeedbackMsgService {
                 File fout = new File(disCompressPath, entry.getName());
                 fileList.add(entry.getName());
                 if (!fout.exists()) {
-                    (new File(fout.getParent())).mkdirs();
+                    boolean ret = (new File(fout.getParent())).mkdirs();
+                    if ( ret==false ) {
+                    	throw new IOException("文件夹创建失败.");
+                    }
                 }
                 out = new FileOutputStream(fout);
                 bout = new BufferedOutputStream(out);
@@ -826,7 +829,7 @@ public class ChbFeedbackMsgService {
         catch (IOException e) {
             logger.error("解压文件异常",e);
             return null;
-        }
+        } 
         finally {
             try {
                 if (bin != null) {

@@ -366,7 +366,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								firstFile = new SafelyFile(firstPath);
 								// 判断第一层文件夹是否存在，否则创建
 								if(!firstFile.exists()){
-									firstFile.mkdir();
+									boolean ret = firstFile.mkdir();
+									if ( ret==false ) {
+										throw new IOException("创建文件夹失败.");
+									}
 								}
 								String secondPath = firstPath + File.separator + report.getReportCategory();
 								// 第二层目录

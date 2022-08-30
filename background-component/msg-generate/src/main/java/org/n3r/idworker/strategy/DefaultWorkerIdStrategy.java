@@ -113,7 +113,10 @@ public class DefaultWorkerIdStrategy implements WorkerIdStrategy {
         long availWorkerId = -1L;
         try {
             File idWorkerHome = Utils.createIdWorkerHome();
-            new File(idWorkerHome, ipudotlock + String.format("%04d", wid)).createNewFile();
+            boolean ret = new File(idWorkerHome, ipudotlock + String.format("%04d", wid)).createNewFile();
+            if ( ret==false ) {
+            	throw new IOException("创建文件失败.");
+            }
             availWorkerId = findAvailWorkerId();
         } catch (IOException e) {
             logger.warn("checkAvail error", e);
@@ -132,7 +135,10 @@ public class DefaultWorkerIdStrategy implements WorkerIdStrategy {
         File idWorkerHome = Utils.createIdWorkerHome();
         for (String syncId : syncIdsArr) {
             try {
-                new File(idWorkerHome, ipudotlock + syncId).createNewFile();
+                boolean ret = new File(idWorkerHome, ipudotlock + syncId).createNewFile();
+                if ( ret==false ) {
+                	throw new IOException("创建文件失败.");
+                }
             } catch (IOException e) {
                 logger.warn("create workerid lock file error", e);
             }
