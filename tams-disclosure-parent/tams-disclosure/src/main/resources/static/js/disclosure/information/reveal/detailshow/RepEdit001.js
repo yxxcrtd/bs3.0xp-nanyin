@@ -54,7 +54,8 @@ $(function () {
         if (WebOfficeObj.WebSave()){    //交互OfficeServer的OPTION="SAVEFILE"
      //       WebOfficeObj.WebClose();
             WebOfficeObj.Alert("保存成功!");
-            top.getData="true"
+            //top.getData="true"
+            window.opener.changeEditFlag();
         }else{
             WebOfficeObj.Alert("保存失败");
         }

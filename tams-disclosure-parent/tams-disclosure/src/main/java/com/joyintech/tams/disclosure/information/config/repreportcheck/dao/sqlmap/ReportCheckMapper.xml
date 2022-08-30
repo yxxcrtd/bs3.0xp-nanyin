@@ -298,56 +298,6 @@
         <if test="checkDateEnd != null and checkDateEnd != ''">
             <![CDATA[AND  rrc.CHECK_DATE <= TO_DATE(#{checkDateEnd},'YYYY-MM-DD')]]>
         </if>
-union all
-        SELECT
-        rrc.REPORT_CHECK_ID reportCheckId,
-        rrc.REP_ID repId,
-        rrc.REPORT_TYPE reportType,
-        rrc.REPORT_NAME reportName ,
-        rri.P_PROD_ID pprodId,
-        rri.PROD_ID prodId,
-        rri.PROD_NAME prodName,
-        rrc.CHECK_DATE checkDate,
-        rrc.ERRORMSG errormsg,
-        rrc.FILE_NO  fileNo,
-        rrc.UPDATE_TIME updateTime,
-        rrc.CREATE_TIME createTime
-        FROM REP_REPORT_CHECK rrc
-        inner join REP_PROD_INFO rri on rrc.PROD_ID=rri.PROD_ID and rri.REP_PROD_TYPE in('02')
-        where rrc.DATA_STATUS ='E'
-        <if test="prodIdArr != null and prodIdArr.size > 0">
-            AND (rri.PROD_ID IN
-            <foreach item="item" collection="prodIdArr" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-            or
-            rri.P_PROD_ID IN
-            <foreach item="item" collection="prodIdArr" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>)
-        </if>
-        <if test="reportTypeArr != null and reportTypeArr.size > 0">
-            AND rrc.REPORT_TYPE IN
-            <foreach item="item" collection="reportTypeArr" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="reportNameList != null and reportNameList.size > 0">
-            AND rrc.REPORT_NAME IN
-            <foreach item="item" collection="reportNameList" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="checkDateStart != null and checkDateStart != ''">
-            <![CDATA[AND  rrc.CHECK_DATE >= TO_DATE(#{checkDateStart},'YYYY-MM-DD') ]]>
-        </if>
-        <if test="checkDateEnd != null and checkDateEnd != ''">
-            <![CDATA[AND  rrc.CHECK_DATE <= TO_DATE(#{checkDateEnd},'YYYY-MM-DD')]]>
-        </if>
         union all
         SELECT
         rrc.REPORT_CHECK_ID reportCheckId,
@@ -364,7 +314,7 @@ union all
         rrc.CREATE_TIME createTime
         FROM REP_REPORT_CHECK rrc
         inner join V_REP_PROD_INFO rri on rrc.PROD_ID=rri.PROD_ID and rri.REP_PROD_TYPE in('02')
-        inner join REP_PROD_INFO t on rrc.PROD_ID=T.PROD_ID
+        inner join REP_PROD_INFO t on rrc.PROD_ID=T.P_PROD_ID
         where rrc.DATA_STATUS ='E'
         <if test="prodIdArr != null and prodIdArr.size > 0">
             AND (rri.PROD_ID IN

@@ -2,12 +2,7 @@
 package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.RepProdInfo;
@@ -141,62 +136,74 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 List<Date> queryDateList =reportRkcpjz001Mapper.getValueDayList(searchparam);
                 searchparam.put("dateList",queryDateList);
                 List<ReportGrahDto> grahDtoList = reportRkcpjz001Mapper.getValues(searchparam);
+
                 //排序
-                grahDtoList = grahDtoList.stream().sorted(Comparator.comparing(ReportGrahDto::getcDate)).collect(Collectors.toList());
+                Map<String,ReportGrahDto> valueMap = grahDtoList.stream().collect(Collectors.toMap(ReportGrahDto::getcDate, reportGrahDto -> reportGrahDto));
                 //图例赋值
                 List<String> single = new ArrayList<>();
                 single.add("日期");
                 single.add("");
                 dataList.add(single);
-
+                //将日期进行排序
+                if(queryDateList != null && queryDateList.size()>0){
+                    queryDateList = queryDateList.stream().sorted(Comparator.comparing(Date::getTime)).collect(Collectors.toList());
+                }
                 //近一个月（工作日）份额净值走势图或近一个月(自然日)万份收益走势图
-                for (int i = 0; i < grahDtoList.size(); i++) {
-                    ReportGrahDto grahDto = grahDtoList.get(i);
+                for (int i = 0; i < queryDateList.size(); i++) {
+                    String curValueDate = DateUtil.format(queryDateList.get(i));
                     List<String> row = new ArrayList<>();
                     if(i == 0){
                         row.add("");
                     }else{
-                        row.add(grahDto.getcDate());
+                        row.add(curValueDate);
                     }
-                    row.add(grahDto.getValue());
+                    if(valueMap.get(curValueDate) != null){
+                        row.add(valueMap.get(curValueDate).getValue());
+                    }else{
+                        row.add("");
+                    }
                     dataList.add(row);
                 }
-                //由于纵坐标要求居中显示，需要设置 "boundaryGap"属性
-//                double max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).max().orElse(1);
-//                double min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getValue())).min().orElse(0);
-//                BigDecimal endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
                 //折线图配置信息
                 Map<String, Object> configMap = getEchartsConfigMap(rptType);
-                configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
+
+                if(valueMap == null || valueMap.size() == 0){
+                    configMap.put("yAxis.min","0");
+                    configMap.put("yAxis.max","1");
+                }
+
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath1, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
                 //清空list，重新绘制份额累计净值（元）走势图
                 dataList.clear();
                 //重新添加标题
                 if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)) {
                     configMap.put("title.text", "七日年化收益率（%）走势图");
-                    configMap.put("yAxis.axisLabel.formatter", "{value}%");
+                    configMap.put("yAxis.axisLabel.formatter", "function(value,index){return value.toFixed(4)+'%'}");
                 } else {
                     configMap.put("title.text", "份额累计净值（元）走势图");
                 }
                 //添加横纵坐标说明
                 dataList.add(single);
                 //份额累计净值曲线数据
-                for (int i = 0; i < grahDtoList.size(); i++) {
-                    ReportGrahDto grahDto = grahDtoList.get(i);
+                for (int i = 0; i < queryDateList.size(); i++) {
+                    String curValueDate = DateUtil.format(queryDateList.get(i));
                     List<String> row = new ArrayList<>();
                     if(i == 0){
                         row.add("");
                     }else{
-                        row.add(grahDto.getcDate());
+                        row.add(curValueDate);
                     }
-                    row.add(grahDto.getTotalValue());
+                    if(valueMap.get(curValueDate) != null){
+                        row.add(valueMap.get(curValueDate).getTotalValue());
+                    }else{
+                        row.add("");
+                    }
                     dataList.add(row);
                 }
-//                 max = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).max().orElse(1);
-//                 min = grahDtoList.stream().mapToDouble(value -> Double.valueOf(value.getTotalValue())).min().orElse(0);
-//                 endTag = new BigDecimal(min).divide(new BigDecimal(max),4,BigDecimal.ROUND_HALF_UP);
-                //折线图配置信息
-                configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
+                if(valueMap == null || valueMap.size() == 0){
+                    configMap.put("yAxis.min","0");
+                    configMap.put("yAxis.max","1");
+                }
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath2, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
             }
             logger.info("日开产品净值公告（公募净值型产品）【{}】生成成功", JsonUtils.object2Json(paraMap));
@@ -257,6 +264,13 @@ public class ReportRkcpjz001Service implements IReportDataService {
         configMap.put("yAxis.axisLabel.fontSize", "20");
         configMap.put("yAxis.axisLabel.fontWeight", "bold");
         configMap.put("yAxis.boundaryGap", "");
+        //纵坐标显示4位小数
+        configMap.put("yAxis.axisLabel.formatter", "function(value,index){return value.toFixed(4)}");
+        configMap.put("yAxis.boundaryGap",new double[]{0.5,0.5});
+        //y轴设置默认值，否则会导致无数据显示y轴位空
+        configMap.put("yAxis.min",null);
+        configMap.put("yAxis.max",null);
+
 
         configMap.put("yAxis.scale", true);
         return configMap;
@@ -273,7 +287,16 @@ public class ReportRkcpjz001Service implements IReportDataService {
         if(StringUtil.isNotEmpty(info)){
             repReveal.setProdid(info.getpProdId());
         }
-
+        //判断是普通产品还是子产品
+        RepProdInfo info2=reportRkcpjz001Mapper.getPProdInfo(searchparam);
+        if(StringUtil.isNotEmpty(info2)){
+            searchparam.put("prodId",info2.getProdId());
+        }
+        //查询产品信息
+        ReportRkcpjz001Dto reportRkcpjz001Dto = reportRkcpjz001Mapper.getProdInfo(searchparam);
+        if(reportRkcpjz001Dto != null){
+            paraMap.put("cusFileName", reportRkcpjz001Dto.getTitleName());
+        }
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;

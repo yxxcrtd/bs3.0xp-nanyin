@@ -305,6 +305,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
         }
+        dto.setProdName(dto.getpProdName());
         //重新插入已删除的数据
         ProdInfoDto prodInfoDto=prodInfoMapper.selectByPrimaryKey(dto.getProdId());
         if(prodInfoDto !=null && prodInfoDto.getStatus().equals("D")){
@@ -327,7 +328,6 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
         dto.setOpenFreq(StringUtil.isEmpty(dto.getOpenFreq())  ? " ":dto.getOpenFreq());
-        prodInfoMapper.updateByPrimaryKeySelective(dto);
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
             // 更新母产品信息
             ProdInfoDto ppDto = new ProdInfoDto();
@@ -346,6 +346,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             // 更新母产品信息
             prodInfoMapper.updateByPrimaryKeySelective(ppDto);
+        } else {
+            dto.setProdName(dto.getpProdName());
+            prodInfoMapper.updateByPrimaryKeySelective(dto);
         }
 
     }

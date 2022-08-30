@@ -96,7 +96,7 @@
     		AND STATUS = 'E'
     		and ISSUE_STATUS ='01'
     		and REP_PROD_TYPE='03'
-    		AND NOT EXISTS(select  1 FROM REP_JOB_EXCLUDE_PRO pro 
+    		AND NOT EXISTS(select  1 FROM REP_JOB_EXCLUDE_PRO pro
     		WHERE pro.PROD_ID=REP_PROD_INFO.PROD_ID and pro.JOB_ID=#{jobId, jdbcType=VARCHAR})
 		union all
 		SELECT
