@@ -149,4 +149,30 @@
             </if>
         </where>
     </update>
+
+    <select id="getExistInfo" resultType="com.joyintech.tams.common.base.entity.RepInfo" >
+        select a.REP_ID repId
+        from rep_info a
+        where a.report_name =
+              (select report_name
+               from rep_info b
+               where b.rep_id = #{repId,jdbcType=VARCHAR})
+          and a.rep_id != #{repId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getList" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto">
+        select
+            rep_id repId,
+            eff_date effDate,
+            start_off startOff
+        from (select rep_id,
+                     remark,
+                     eff_date,
+                     rep_status,
+                     UPDATE_USER,
+                     start_off,
+                     row_number() over(partition by rep_id, start_off order by eff_date desc) rn
+              from rep_info_status)
+        where rn = 1 and rep_id = #{repId,jdbcType=VARCHAR}
+    </select>
 </mapper>

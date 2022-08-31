@@ -53,4 +53,7 @@ public interface ReportPageManage002Mapper {
     List<ReportStatusDto> getLastedInfoListStatus(@Param("sysdate") Date sysdate);
 
     void updateReportType(RepInfo dto);
+
+    List<RepInfo> getExistInfo(String repId);
+    List<ReportStatusDto>getList(String repId);
 }
