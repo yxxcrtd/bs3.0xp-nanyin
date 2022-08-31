@@ -230,7 +230,7 @@ public class ProdInfo002Controller extends BaseController {
                     && StringUtils.isNotEmpty( dto.getOpenFreq())
                     && StringUtils.equals(DictCodeListExt5.开放频率_日开.getValue(), dto.getOpenFreq())
                     && dto.getHoldday() == null) {
-                return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
+                return new AjaxResult("开放频率为日开且产品类型为净值型,最低持有天数必填", MessageType.错误消息);
             }
         } else if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {//修改
             //产品类型为净值型 01 且开放频率为日开时必填
@@ -238,7 +238,7 @@ public class ProdInfo002Controller extends BaseController {
                     && StringUtils.isNotEmpty( dto.getOpenFreq())
                     && StringUtils.equals(DictCodeListExt5.开放频率_日开.getValue(), dto.getOpenFreq())
                     && dto.getHoldday() == null) {
-                return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
+                return new AjaxResult("开放频率为日开且产品类型为净值型,最低持有天数必填", MessageType.错误消息);
             }
 
         }
@@ -265,7 +265,7 @@ public class ProdInfo002Controller extends BaseController {
                 && StringUtils.isNotEmpty( dto.getOpenFreq())
                 && StringUtils.equals(DictCodeListExt5.开放频率_日开.getValue(), dto.getOpenFreq())
                 && dto.getHoldday() == null) {
-            return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
+            return new AjaxResult("开放频率为日开且产品类型为净值型,最低持有天数必填", MessageType.错误消息);
         }
 
         /* NYLCXP-965 子产品的募集起始日、募集结束日要与母产品一致 add by zhouqiang 2022-08-23 start */
@@ -389,7 +389,7 @@ public class ProdInfo002Controller extends BaseController {
                     ||StringUtil.equals(name,"setDate")){
                 continue;
             }
-            if (annotation != null||StringUtil.equals(name,"openFreq")||StringUtil.equals(name,"holdday")) {//开放频率和固定持有天数为非必填项也要判断
+            if (annotation != null||StringUtil.equals(name,"openFreq")||StringUtil.equals(name,"holdday")) {//开放频率和最低持有天数为非必填项也要判断
                 try {
                     String replace = name.substring(0, 1).toUpperCase() + name.substring(1);
                     if(StringUtil.equals(name,"pProdId")||StringUtil.equals(name,"pSetDate")

@@ -126,7 +126,7 @@
 
         if(object.holdday){
             if(!( /(^[0-9]\d*$)/.test(object.holdday))){
-                Joyin.error("固定持有天数必须为大于等于0的整数");
+                Joyin.error("最低持有天数必须为大于等于0的整数");
                 return
             }
         }
@@ -465,7 +465,7 @@
             }
         }
 
-        // 修改固定持有天数
+        // 修改最低持有天数
         function changeHoldday() {
             //当产品的开放频率为“日开”且“产品类型”为“净值型”时必填，否则不可填
             if (openFreqGlobal && prodTypeGlobal && openFreqGlobal == '01' && prodTypeGlobal == '01') {
