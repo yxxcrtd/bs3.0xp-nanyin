@@ -286,11 +286,12 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 //					if(!CollectionUtils.isEmpty(statusMap.get("01"))){
 //						start=statusMap.get("01").get(0);
 //					}
-					if(!CollectionUtils.isEmpty(statusMap.get("02"))){
+					if(CollectionUtils.isEmpty(statusMap.get("02"))){
 						//没有禁止生效日，说明存在冲突
 
+					}else{
+						//如果有生效截止日，则新报表的生效日要大于原报表的禁用截止日
 					}
-
 
 				}
 			}
