@@ -127,8 +127,8 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
      * @return revealStatusName.
      */
     public String getRevealStatusName() {
-    	return  StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.信息披露状态, this.getRevealStatus()))?
-    	        SysDataUtil.getNameFromDataDict(DictCode.信息披露状态, this.getRevealStatus()):this.getRevealStatus();
+    	return  StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.披露状态, this.getRevealStatus()))?
+    	        SysDataUtil.getNameFromDataDict(DictCode.披露状态, this.getRevealStatus()):this.getRevealStatus();
 	}
 
     /**

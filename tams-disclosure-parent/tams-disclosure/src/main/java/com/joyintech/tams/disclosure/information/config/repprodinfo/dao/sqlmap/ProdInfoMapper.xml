@@ -831,7 +831,7 @@
         rpi.ERRORMSG errormsg,
         rpi.prod_name  pProdName ,
         rpi.set_date  pSetDate
-        from REP_PROD_INFO rpi
+        from V_REP_PROD_INFO rpi
         where rpi.STATUS='E'
         and rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>

@@ -47,7 +47,7 @@ $(function () {
                         }else if(row.revealStatus=='02'){
                             return '<span class="layui-badge-rim layui-bg-red">'+row.revealStatusName+'</span>';
                         }else if(row.revealStatus=='03'){
-                            return '<span class="layui-badge-rim layui-bg-orange">'+'生成失败'+'</span>';
+                            return '<span class="layui-badge-rim layui-bg-orange">'+'披露失败'+'</span>';
                         }
                         else{
                         	return '';
