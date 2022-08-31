@@ -788,11 +788,12 @@
         else prod.PROD_NAME end text
         from
         REP_PROD_INFO prod
-        left join V_REP_PROD_INFO pprod
-        on prod.prod_id = pprod.prod_id
-        where  prod.rep_prod_type in('02','03')
+        left join REP_PROD_INFO pprod
+        on prod.p_prod_id = pprod.prod_id
+        where  prod.rep_prod_type in ('02','03')
         <if test="search != null and search != ''">
-            and (prod.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+            and (pprod.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+            or pprod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%'
             or prod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
         </if>
     </select>

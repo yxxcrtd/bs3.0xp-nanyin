@@ -166,7 +166,10 @@ public class ReportJzfhbg001Service implements IReportDataService {
                                 searchParam.put("settDate", DateUtil.format(lastBonus.getSettDate()));
                                 RepProdIndex lastRepProdIndex = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
                                 if (lastRepProdIndex != null) {
-                                    reportJzfhbg001Dto.setUnitValueT(lastRepProdIndex.getUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
+                                        reportJzfhbg001Dto.setUnitValueT(lastRepProdIndex.getUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
+                                }else {
+                                    reportJzfhbg001Dto.setUnitValueT(new BigDecimal(unitProfitStr).toString());
+
                                 }
                             }
                             //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
