@@ -150,6 +150,7 @@ public class ProdBasicChangeService {
         String groupId = IDGenerator.generate();
         if (CollectionUtils.isNotEmpty(list)) {
             for (ProdBasicChangeDto i : list) {
+                i.setChangeType("0");
                 insertProdBasicChange(i, prodId, groupId);
             }
             flag = true;

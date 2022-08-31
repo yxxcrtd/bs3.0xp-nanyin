@@ -1169,3 +1169,8 @@ where a.page_id in ('ProElementAdj002',
                     'ProdFeediscount002',
                     'ProFailureInfo002');
 -- add by zhengxiaolian 2022-08-31 数据维护除了产品基本信息、产品基础指标外，产品排期计划，产品分红到期计划，其他新建修改全部配无流程 end
+
+-- add by zhengxiaolian 2022-08-31 报表确认改为二级流程 start
+update  sys_wfl_business_module a set a.module_id = 'twoApproval'
+where a.page_id ='ReportConfirmManage001' and a.element_id='ReportConfirmManage001_btn_submit';
+-- add by zhengxiaolian 2022-08-31 报表确认改为二级流程 end

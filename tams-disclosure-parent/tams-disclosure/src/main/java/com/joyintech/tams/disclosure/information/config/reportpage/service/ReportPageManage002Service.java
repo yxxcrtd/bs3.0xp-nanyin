@@ -23,6 +23,7 @@ import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPag
 import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage002Mapper;
 import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto;
 import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.constant.ProcessType;
@@ -84,6 +85,8 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 			dto.setRepStatus("01");
 			dto.setStartOff(dto.getWorkflowType());
 			dto.setRepId(dto.getStartRepId());
+			dto.setCreateUser(CommonUtil.getUserName());
+			dto.setUpdateUser(CommonUtil.getUserName());
 			reportPageManage002Mapper.saveReportStatus(dto);
 
 			if(StringUtil.isNotEmpty(dto.getOffRepId())){
@@ -96,6 +99,8 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 				offDto.setStartOff("02");
 				//流程状态:禁用审核中
 				offDto.setRepStatus("03");
+				offDto.setCreateUser(CommonUtil.getUserName());
+				offDto.setUpdateUser(CommonUtil.getUserName());
 				offDto.setSeqno(IDGenerator.generate());
 				reportPageManage002Mapper.saveReportStatus(offDto);
 			}
@@ -106,6 +111,8 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 			dto.setRepStatus("03");
 			dto.setStartOff(dto.getWorkflowType());
 			dto.setRepId(dto.getOffRepId());
+			dto.setCreateUser(CommonUtil.getUserName());
+			dto.setUpdateUser(CommonUtil.getUserName());
 			reportPageManage002Mapper.saveReportStatus(dto);
 		}
 		//保存附件信息
@@ -126,6 +133,8 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 	@Override
 	public void doUpdate(ReportStatusDto dto){
 		dto.setRepStatus(null);
+		dto.setUpdateUser(CommonUtil.getUserName());
+		dto.setUpdateTime(DateUtil.now());
 		reportPageManage002Mapper.updateReportStatus(dto);
 		//保存审批意见
 		if(StringUtil.isNotEmpty(dto.getComment())){
@@ -141,6 +150,8 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 	@Override
 	public void doBack(ReportStatusDto dto){
 		dto.setRepStatus(null);
+		dto.setUpdateUser(CommonUtil.getUserName());
+		dto.setUpdateTime(DateUtil.now());
 		reportPageManage002Mapper.updateReportStatus(dto);
 	}
 
@@ -159,6 +170,8 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 			//流程状态:启用审核通过
 			dto.setRepStatus("02");
 			dto.setRepId(dto.getStartRepId());
+			dto.setUpdateUser(CommonUtil.getUserName());
+			dto.setUpdateTime(DateUtil.now());
 			reportPageManage002Mapper.updateReportStatus(dto);
 			if(StringUtil.isNotEmpty(dto.getOffRepId())){
 				dto.setRepId(dto.getOffRepId());
@@ -170,6 +183,8 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 		//禁用流程
 		if("02".equals(dto.getWorkflowType())){
 			dto.setRepId(dto.getOffRepId());
+			dto.setUpdateUser(CommonUtil.getUserName());
+			dto.setUpdateTime(DateUtil.now());
 			//流程状态:禁用审核通过
 			dto.setRepStatus("04");
 			reportPageManage002Mapper.updateReportStatus(dto);
