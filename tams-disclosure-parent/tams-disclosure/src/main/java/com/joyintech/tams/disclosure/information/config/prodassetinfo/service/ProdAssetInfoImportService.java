@@ -172,6 +172,12 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                         ExcelValidDto dto = new ExcelValidDto(list.get(index), String.valueOf(i + 2),
                                 fildsStr[index]+"字段数据格式不正确！");
                         excelValidDtolist.add(dto);
+
+                    }
+                    if (isBigDecimal(list.get(index).trim()) && new BigDecimal(list.get(index).trim()).signum()== -1){
+                        ExcelValidDto dto1 = new ExcelValidDto(list.get(index), String.valueOf(i + 2),
+                                fildsStr[index]+"字段不能为负数！");
+                        excelValidDtolist.add(dto1);
                     }
                 }
             }
