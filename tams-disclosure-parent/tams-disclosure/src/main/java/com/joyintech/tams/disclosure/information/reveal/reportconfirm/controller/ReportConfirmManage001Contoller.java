@@ -147,8 +147,12 @@ public class ReportConfirmManage001Contoller extends BaseController {
 				 ProcessService processService = WorkflowContext.getProcessService();
 				 FlowEntity flowEntity = processService.getRuntimeEntity(processInstanceId);
 				 if (StringUtil.isNotEmpty(flowEntity)) {
-					 if (!flowEntity.getProcessState().equals(ProcessState.BACK)) {
+					 if (!StringUtil.equals(flowEntity.getProcessState(),ProcessState.BACK)) {
 						 editFlag = false;
+					 }else{
+						 if(!StringUtil.equals(flowEntity.getCreateUser(),flowEntity.getCurrentUser())){
+							 editFlag = false;
+						 }
 					 }
 				 } else {
 					 editFlag = false;

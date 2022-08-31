@@ -82,8 +82,8 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
             String infoSeqno = dto.getSeqno();
             InfoComplianceCommentDto commentDto = new InfoComplianceCommentDto(IDGenerator.generate(),infoSeqno,dto.getComment());
             infoComplianceMapper.saveInfoComplianceComment(commentDto);
-            //修订意见与修订附件关联
-            infoComplianceMapper.relationFileAndComment(commentDto);
+//            //修订意见与修订附件关联
+//            infoComplianceMapper.relationFileAndComment(commentDto);
         }
 
     }
@@ -92,10 +92,12 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
     public void doBack(InfoComplianceDto entity) {
         if (StringUtil.isBlank(entity.getComment())) {
             WorkFlowUtil.showMessage("请填写修订意见。", MessageType.提示消息);
-            return;
         }
-        //退回删除已上传,未关联批注的附件
-        infoComplianceMapper.deleteUploadFile(entity.getSeqno());
+        // 保存修订意见
+        InfoComplianceCommentDto commentDto = new InfoComplianceCommentDto(IDGenerator.generate(),entity.getSeqno(),entity.getComment());
+        infoComplianceMapper.saveInfoComplianceComment(commentDto);
+//        //退回删除已上传,未关联批注的附件
+//        infoComplianceMapper.deleteUploadFile(entity.getSeqno());
     }
 
     @Override

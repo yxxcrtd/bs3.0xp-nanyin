@@ -1151,3 +1151,26 @@ values ('INFO_DEV_STATUS', '04', '开发完成', 4, '0', 'system', null, sysdate
 -- add by zhengxiaolian 2022-08-30 开发状态删除需修改数据字典 start
 delete from sys_datadict_list where DICT_CODE='INFO_DEV_STATUS' and ITEM_CODE='02';
 -- add by zhengxiaolian 2022-08-30 开发状态删除需修改数据字典 end
+
+-- add by zhengxiaolian 2022-08-31 数据维护除了产品基本信息、产品基础指标外，产品排期计划，产品分红到期计划，其他新建修改全部配无流程 start
+update sys_wfl_business_module a
+set a.module_id = 'noneApproval'
+where a.page_id in ('ProElementAdj002',
+                    'HugeInfoPro002',
+                    'SubBalanceInfoPro002',
+                    'UnClaimAssetDetail002',
+                    'ProdPartner002',
+                    'ProdAssetInfo002',
+                    'SvrProdFeeDealInterf002',
+                    'RepInvestAccount002',
+                    'RepFloatFee002',
+                    'RepRelDeal002',
+                    'SaleAgency002',
+                    'ProdFeediscount002',
+                    'ProFailureInfo002');
+-- add by zhengxiaolian 2022-08-31 数据维护除了产品基本信息、产品基础指标外，产品排期计划，产品分红到期计划，其他新建修改全部配无流程 end
+
+-- add by zhengxiaolian 2022-08-31 报表确认改为二级流程 start
+update  sys_wfl_business_module a set a.module_id = 'twoApproval'
+where a.page_id ='ReportConfirmManage001' and a.element_id='ReportConfirmManage001_btn_submit';
+-- add by zhengxiaolian 2022-08-31 报表确认改为二级流程 end
