@@ -59,8 +59,8 @@
 
         </div>
 
-        <div id="upLoadDiv3" style="display: none" class="page-component" th:data-path="@{/disclosure/infoCompliance/uploadFile003/init}"
-             th:data-params="|{fileType: '03',businessId: '${seqno ?: ''}'}|"></div>
+       <!-- <div id="upLoadDiv3" style="display: none" class="page-component" th:data-path="@{/disclosure/infoCompliance/uploadFile003/init}"
+             th:data-params="|{fileType: '03',businessId: '${seqno ?: ''}', workflowId: '${workflowId ?:''}'}|"></div>-->
 
         <div class="pro-module-wrap" id="commentDiv" style="display: none">
             <div class="pro-module">
@@ -68,7 +68,7 @@
                     <div class="layui-form-item">
                         <label style="float: left">修订意见<i class="iconfont must" style="display: inline;">*</i></label>
                         <div class="layui-input-inline input-inline" style="margin:0 10px;width: 80%!important;">
-                            <textarea data-ignore="true" id="comment" name="comment" maxlength="500"
+                            <textarea data-th-data-ignore="true" id="comment" name="comment" maxlength="500"
                                       class="layui-textarea" placeholder="请输入内容"
                                       th:placeholder="#{SysCommon.placeholder}"></textarea>
                         </div>
