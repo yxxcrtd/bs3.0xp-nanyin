@@ -21,7 +21,7 @@
 			<Cell order="16" name="产品类型">prodTypeName</Cell>
 			<Cell order="17" name="发行方式">issuingWayName</Cell>
 			<Cell order="18" name="开放频率">openFreqName</Cell>
-			<Cell order="19" name="固定持有天数">holdday</Cell>
+			<Cell order="19" name="最低持有天数">holdday</Cell>
 			<Cell order="20" name="产品运作方式">profitTypeName</Cell>
 
 			<Cell order="21" name="是否是客户周期型产品">isPeriodName</Cell>
