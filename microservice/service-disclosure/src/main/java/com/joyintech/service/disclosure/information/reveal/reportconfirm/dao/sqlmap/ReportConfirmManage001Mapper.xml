@@ -49,7 +49,7 @@
 			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
 			,fp.finprod_id finprodId
 			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
-            ,decode(REVEAL.REVEAL_STATUS,'01',decode(REVEAL.IS_REVEAL,'02',T2.REAL_NAME,'系统自动披露'),null) revealUser
+            ,decode(REVEAL.REVEAL_STATUS,'01',decode(T2.REAL_NAME,'system','系统自动披露',T2.REAL_NAME),null) revealUser
 		<!--,decode(REVEAL.CONFIRM_STATUS,'1',decode(REVEAL.IS_CONFIRM,'01',F1.REAL_NAME,'系统自动确认'),null) confirmUser-->
 	     	,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F1.REAL_NAME,'系统自动确认'),null) confirmUser
 		    ,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F2.REAL_NAME,'系统自动确认'),null) checkUser
