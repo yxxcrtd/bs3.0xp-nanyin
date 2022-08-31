@@ -36,7 +36,6 @@
                 return;
             }
             var fileArray = FileCommon.getUploadFileInfo();
-            debugger;
             if(fileArray && _.isArray(fileArray)){
 
                 $.each(fileArray, function(index,obj){
@@ -46,7 +45,6 @@
                     }
                     var index= srcName.lastIndexOf('.');
                     var ext = srcName.substr(index+1).toUpperCase();
-                    debugger;
                     //支持word、pdf、Excel、zip 文件
                     if(ext!='DOC' && ext!='DOCX' && ext!='PDF' && ext!='XLS'  && ext!='XLSX' && ext!='ZIP'){
                         checkFlag = false;
@@ -82,7 +80,6 @@
                     }
                     var index= srcName.lastIndexOf('.');
                     var ext = srcName.substr(index+1).toUpperCase();
-                    debugger;
                     //支持word、pdf、Excel、zip 文件
                     if(ext!='DOC' && ext!='DOCX' && ext!='PDF' && ext!='XLS'  && ext!='XLSX' && ext!='ZIP'){
                         checkFlag = false;
@@ -117,7 +114,6 @@
     function viewPdf(fileNo,fileName){
         var index= fileName.lastIndexOf('.');
         var ext = fileName.substr(index+1).toUpperCase();
-        debugger;
         //如果是pdf或者word则进行预览
         if(ext=='PDF'){
             Joyin.ajax(basePath + 'disclosure/infoCompliance/uploadFile001/getFilePath', {fileNo:fileNo}, function(result) {
@@ -162,25 +158,22 @@
         //修建,修改
         if(pageModel==='0' || pageModel === '1'){
             $("#commentDiv").hide();
-            $("#upLoadDiv3").hide();
+//            $("#upLoadDiv3").hide();
         } else if(pageModel==='2'){
-            debugger;
             //查看界面,不显示上传审批意见
             if(viewFlag !='view'){
                 $("#commentDiv").show();
-                $("#upLoadDiv3").show();
+//                $("#upLoadDiv3").show();
             } else{
                 $("#commentDiv").hide();
-                $("#upLoadDiv3").hide();
+//                $("#upLoadDiv3").hide();
             }
         }
         var seqno =  $("#seqno").val();
         if(seqno){
             Joyin.ajax(basePath + 'disclosure/infoCompliance/infoCompliance002/getCommentList', {seqno:seqno}, function(result) {
-                console.log(result);
                 var commentList = $("#commentList");
                 for(var i=0; i<result.length;i++){
-                    debugger;
                     var obj = result[i];
                     var comment = obj.comment;
                     var createUser = obj.createUser;

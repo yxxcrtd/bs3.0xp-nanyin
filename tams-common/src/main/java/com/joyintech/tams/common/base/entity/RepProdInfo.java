@@ -160,7 +160,7 @@ public class RepProdInfo extends BaseEntity {
 
 
     /**
-     * 固定持有天数
+     * 最低持有天数
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal holdday;

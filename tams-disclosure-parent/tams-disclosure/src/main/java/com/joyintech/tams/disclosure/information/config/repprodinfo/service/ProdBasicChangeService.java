@@ -26,9 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 /**
@@ -150,6 +152,7 @@ public class ProdBasicChangeService {
         String groupId = IDGenerator.generate();
         if (CollectionUtils.isNotEmpty(list)) {
             for (ProdBasicChangeDto i : list) {
+                i.setChangeType("0");
                 insertProdBasicChange(i, prodId, groupId);
             }
             flag = true;
@@ -216,7 +219,14 @@ public class ProdBasicChangeService {
             }
 
         }
+        //行情代码去重
+        list = list.stream().filter(distinctByKey(ProdBasicChangeDto::getDataType)).collect(Collectors.toList());
         return list;
+    }
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 
     public static void main(String[] args) {

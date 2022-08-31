@@ -57,7 +57,7 @@ $(function() {
             ,{field:'prodTypeName', sortable:false, width:100, title: '产品类型'}
             ,{field:'issuingWayName', sortable:false, width:100, title: '发行方式'}
             ,{field:'openFreqName', sortable:false, width:100, title: '开放频率'}
-            ,{field:'holdday', sortable:false, width:120, title: '固定持有天数'}
+            ,{field:'holdday', sortable:false, width:120, title: '最低持有天数'}
             ,{field:'profitTypeName', sortable:false, width:120, title: '产品运作方式'}
             ,{field:'isPeriodName', sortable:false, width:150, title: '是否是客户周期型产品'}
             ,{field:'isGradeName', sortable:false, width:120, title: '是否是分级产品'}
