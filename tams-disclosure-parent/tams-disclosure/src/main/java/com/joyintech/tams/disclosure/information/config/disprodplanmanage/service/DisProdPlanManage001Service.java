@@ -325,7 +325,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             if (!StringUtil.isNotEmpty(rowData.get(0))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
             } else {
-                if (!this.getProdId(rowData.get(0))) {
+                if (StringUtil.isEmptyList(this.getProdId1(rowData.get(0)))) {
                     message.add("产品主代码不存在。");
                 }else{
                     prodInfo = disProdPlanManage002Service.getPrdInfo(rowData.get(0), DictCodeListExt1.维护数据状态_有效.getValue());
@@ -449,5 +449,15 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         }else{
             return false;
         }
+    }
+
+
+    public List<String> getProdId1(String prodId) {
+        return disProdPlanManage001Mapper.getProdId1(prodId);
+//        if(StringUtil.isNotEmpty(r)){
+//            return true;
+//        }else{
+//            return false;
+//        }
     }
 }

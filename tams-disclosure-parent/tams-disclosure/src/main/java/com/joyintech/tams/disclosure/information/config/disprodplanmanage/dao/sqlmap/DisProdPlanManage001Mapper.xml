@@ -110,4 +110,9 @@
             and plan.DATA_STATUS = 'E'
         </where>
     </select>
+    <select id="getProdId1" resultType="java.lang.String">
+        SELECT PROD_ID FROM V_REP_PROD_INFO WHERE PROD_ID = #{prodId} AND REP_PROD_TYPE != '03'
+        union all
+        select P_PROD_ID from REP_PROD_INFO where P_PROD_ID = #{prodId}
+    </select>
 </mapper>
