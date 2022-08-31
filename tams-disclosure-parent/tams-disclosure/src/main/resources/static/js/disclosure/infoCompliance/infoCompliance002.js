@@ -160,13 +160,9 @@
             $("#commentDiv").hide();
 //            $("#upLoadDiv3").hide();
         } else if(pageModel==='2'){
-            //查看界面,不显示上传审批意见
-            if(viewFlag !='view'){
-                $("#commentDiv").show();
-//                $("#upLoadDiv3").show();
-            } else{
-                $("#commentDiv").hide();
-//                $("#upLoadDiv3").hide();
+            $("#commentDiv").show();
+            if (!$("#btnSubmit_wfl").is(":visible")){
+                $('#comment').attr('disabled',true);
             }
         }
         var seqno =  $("#seqno").val();
