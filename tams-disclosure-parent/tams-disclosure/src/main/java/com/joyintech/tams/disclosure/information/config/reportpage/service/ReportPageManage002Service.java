@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 〈一句话功能简述〉
@@ -59,6 +60,9 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 
 	@Autowired
 	private InfoComplianceMapper infoComplianceMapper;
+
+	@Autowired
+	private ReportPageManage001Service reportPageManage001Service;
 
 	public List<SelectOptionDto> getReportInfo() {
 		List<ReportPageManage001Dto> reportInfoList = reportPageManage002Mapper.getReportInfo();
@@ -265,5 +269,34 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 			dto.setEffDate(sysDate);
 			reportPageManage002Mapper.updateReportStatus(dto);
 		}
+	}
+
+	public void checkStatus(ReportStatusDto dto){
+		//根据启用模板的ID找到是否有同名的信披报表
+		String startRepId=dto.getStartRepId();
+		List<RepInfo>list= reportPageManage002Mapper.getExistInfo(startRepId);
+		if(!CollectionUtils.isEmpty(list)){
+			//List<String>repIdList=list.stream().map(RepInfo::getRepId).collect(Collectors.toList());
+			for(RepInfo info:list){
+				String repId=info.getRepId();
+				List<ReportStatusDto>statusList=reportPageManage002Mapper.getList(repId);
+				if(CollectionUtils.isEmpty(statusList)){
+					Map<String, List<ReportStatusDto>> statusMap = statusList.stream().collect(Collectors.groupingBy(ReportStatusDto::getStartOff));
+					ReportStatusDto start=statusMap.get("01").get(0);
+//					if(!CollectionUtils.isEmpty(statusMap.get("01"))){
+//						start=statusMap.get("01").get(0);
+//					}
+					if(CollectionUtils.isEmpty(statusMap.get("02"))){
+						//没有禁止生效日，说明存在冲突
+
+					}else{
+						//如果有生效截止日，则新报表的生效日要大于原报表的禁用截止日
+					}
+
+				}
+			}
+
+		}
+
 	}
 }

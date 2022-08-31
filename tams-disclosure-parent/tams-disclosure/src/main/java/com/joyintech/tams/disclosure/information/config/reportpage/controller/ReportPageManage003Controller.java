@@ -171,6 +171,12 @@ public class ReportPageManage003Controller extends BaseController {
             }
         }
 
+        if("01".equals(dto.getStartOff())){
+            String startRepId=dto.getStartRepId();
+            //根据启用模板的ID找到是否有同名的信披报表
+
+        }
+
         return commonCheck(bindingResult, operateType);
     }
 
