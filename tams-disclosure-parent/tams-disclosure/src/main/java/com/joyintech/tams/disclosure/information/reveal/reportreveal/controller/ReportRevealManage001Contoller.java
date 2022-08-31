@@ -423,7 +423,8 @@ public class ReportRevealManage001Contoller extends BaseController {
          else {
         	 dtoList = JsonUtils.json2List(datas, ReportConfirmManage001Dto.class);
         	 for (ReportConfirmManage001Dto dto : dtoList) {
- 				if(StringUtil.equals(DictCodeListExt2.披露状态_未披露.getValue(), dto.getRevealStatus())) {
+ 				if(StringUtil.equals(DictCodeListExt2.披露状态_未披露.getValue(), dto.getRevealStatus())
+                ||StringUtil.equals(DictCodeListExt2.披露状态_生成失败.getValue(), dto.getRevealStatus())) {
  					dto.setRevealDate(null);
  				}
  			 }
