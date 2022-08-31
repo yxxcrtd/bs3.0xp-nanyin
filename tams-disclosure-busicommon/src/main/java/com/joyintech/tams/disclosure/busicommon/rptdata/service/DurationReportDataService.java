@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -524,14 +525,33 @@ public class DurationReportDataService implements IReportDataService {
 		sql.append("and prod_id='"+prodId+"' ");
 		if ( listRules!=null ) {
 			for ( RepJobRange rule:listRules ) {
-				sql.append(" and ");
-				sql.append(rule.getRuleType1());
-				sql.append(rule.getRuleType2());
-				if ( "02".equals(rule.getRuleType3()) )
-					sql.append("'");
-				sql.append(rule.getRuleType4());
-				if ( "02".equals(rule.getRuleType3()) )
-					sql.append("'");		
+				if(StringUtil.equals(rule.getRuleType1(),"FINPROD_NAME")){
+					String result="";
+					String str=rule.getRuleType4();
+					List<String>strList=StringUtil.splitToList(",",str);
+					for (int i = 0; i < strList.size(); i++) {
+						String ss=strList.get(i);
+						result+="'"+ss+"'";
+						if(i<strList.size()-1){
+							result+=",";
+						}
+					}
+					if(StringUtil.isNotEmpty(result)){
+						sql.append(" and ");
+						sql.append("prod_id in (");
+						sql.append(result);
+						sql.append(")");
+					}
+				}else{
+					sql.append(" and ");
+					sql.append(rule.getRuleType1());
+					sql.append(rule.getRuleType2());
+					if ( "02".equals(rule.getRuleType3()) )
+						sql.append("'");
+					sql.append(rule.getRuleType4());
+					if ( "02".equals(rule.getRuleType3()) )
+						sql.append("'");
+				}
 			}
 		}
 		List<RepProdInfo> list = durationReportMapper.selectProdInfoBySql(sql.toString());
