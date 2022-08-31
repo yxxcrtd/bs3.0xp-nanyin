@@ -56,11 +56,10 @@
 			$("#stopDiv").attr("style","display:none");
 			$("#startRepId").attr("disabled",true);
 		}
-
 		//修建,修改
-		if(pageModel==='0' || pageModel === '1'){
+		if(pageModel==='0'){
 			$("#commentDiv").hide();
-		} else if(pageModel==='2'){
+		} else if(pageModel==='2' || pageModel === '1'){
 			$("#commentDiv").show();
 		}
 
