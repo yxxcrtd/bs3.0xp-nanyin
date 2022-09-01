@@ -225,6 +225,12 @@ public class DisProdPlanManage002Controller extends BaseController {
 			}
 		}
 
+		if(dto.getOpenStartDate()!=null && dto.getOpenEndDate()!=null){
+			if(DateUtil.compareDate(dto.getOpenEndDate(),dto.getOpenStartDate()) <= 0 ){
+				return new AjaxResult("开放结束日必须大于开放起始日！", MessageType.错误消息);
+			}
+		}
+
 		if(StringUtils.isNotBlank(dto.getProdId()) && dto.getOperationStartDate() != null ){
 		     List<DisProdPlanManage002Dto> list = disProdPlanManage002Service.checkInfo(dto);
 		     if(list.size()>0){
