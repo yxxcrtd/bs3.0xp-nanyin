@@ -542,7 +542,17 @@ public class DurationReportDataService implements IReportDataService {
 						sql.append(result);
 						sql.append(")");
 					}
-				}else{
+				}else if(StringUtil.equals(rule.getRuleType1(),"INVEST_TYPE")){
+					sql.append(" and ");
+					sql.append("NATURE_INVEST");
+					sql.append(rule.getRuleType2());
+					if ( "02".equals(rule.getRuleType3()) )
+						sql.append("'");
+					sql.append(rule.getRuleType4());
+					if ( "02".equals(rule.getRuleType3()) )
+						sql.append("'");
+				}
+				else{
 					sql.append(" and ");
 					sql.append(rule.getRuleType1());
 					sql.append(rule.getRuleType2());
