@@ -164,7 +164,7 @@
 	
 	<select id="getInfoComplianceComment" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto">
 		SELECT
-		i.seqno,i.COMMENT_REMARK commentRemark,nvl(s.real_name,i.create_user) createUser
+		i.seqno, i.CREATE_TIME createTime, i.COMMENT_REMARK commentRemark,nvl(s.real_name,i.create_user) createUser
 		FROM INFO_COMPLIANCE_COMMENT i
 	    LEFT JOIN SYS_USER s ON i.Create_User = s.user_name
 		WHERE i.INFO_SEQNO = #{infoSeqno,jdbcType=VARCHAR}
