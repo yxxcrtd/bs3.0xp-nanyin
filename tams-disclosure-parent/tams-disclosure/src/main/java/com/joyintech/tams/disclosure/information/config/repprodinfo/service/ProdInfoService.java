@@ -282,24 +282,6 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             //保存子产品信息
             dto.setRepProdType(DictCodeListExt5.信批产品类别_子产品.getValue());
-            /*dto.setProdAbbr(null);
-            dto.setProdRe(null);
-            dto.setRaiseStrdate(null);
-            dto.setRaiseEnddate(null);
-            dto.setMdate(null);
-            dto.setRaiseType(null);
-            dto.setIsPeriod(null);
-            dto.setIsGrade(null);
-            dto.setIsIndex(null);
-            dto.setOpenFreq(null);
-            dto.setNatureInvest(null);
-            dto.setProdType(null);
-            dto.setIssuingWay(null);
-            dto.setAcctChnname(null);
-            dto.setProfitType(null);
-            dto.setPdStatus(null);
-            dto.setProdSeries(null);*/
-
         } else {//普通产品
             /* NYLCXP-895 普通和分层指数型产品都要处理业绩比较基准 modify by kongzhifang 2022-08-19 */
             //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
@@ -311,7 +293,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
         }
-        dto.setProdName(dto.getpProdName());
+
         //重新插入已删除的数据
         ProdInfoDto prodInfoDto=prodInfoMapper.selectByPrimaryKey(dto.getProdId());
         if(prodInfoDto !=null && prodInfoDto.getStatus().equals("D")){
@@ -344,7 +326,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             ppDto.setpProdId(null);
             ppDto.setpProdName(null);
             ppDto.setpSetDate(null);
-            ppDto.setRepProdType(DictCodeListExt5.信批产品类别_母产品.getValue());
+            ppDto.setRepProdType(DictCodeListExt5.信批产品类别_子产品.getValue());
             //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), ppDto.getIsIndex()) && StringUtils.isNotEmpty(ppDto.getPerformCompare())) {
                 if (prodBasicChangeService.insertProdBasicChangeFromExcel(ppDto.getPerformCompare(), ppDto.getProdId())) {
@@ -367,7 +349,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     dto.setPerformCompare(null);
                 }
             }
-            dto.setProdName(dto.getpProdName());
+            dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
             prodInfoMapper.updateByPrimaryKeySelective(dto);
         }
 
