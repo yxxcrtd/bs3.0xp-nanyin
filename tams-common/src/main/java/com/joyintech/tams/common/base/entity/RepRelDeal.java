@@ -25,27 +25,46 @@ public class RepRelDeal extends BaseEntity {
     private Date pubDate;
 
     /**
-     * 期间投资关联机构发行证券交易金额
+     * 投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal bankTransAmt;
+    private BigDecimal creditorAmt;
 
     /**
-     * 期间投资关联机构承销证券交易金额
+     * 投资于关联方承销的证券交易金额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal orgTransAmt;
+    private BigDecimal bondAmt;
 
     /**
-     * 期间关联方作为交易对手的投融资业务的交易金额
+     * 与关联方作为交易对手开展的投融资业务交易金额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal investTransAmt;
+    private BigDecimal investAmt;
 
     /**
-     * 关联方提供服务的交易金额
+     * 投资关联方作为管理人的资产管理产品交易金额
      */
-    private String relateamount;
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal assetAmt;
+
+    /**
+     * 支付关联方托管费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal trustFee;
+
+    /**
+     * 支付关联方代销费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal sellFee;
+
+    /**
+     * 发生其他关联交易金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal otherFee;
 
     /**
      * 生效日期
@@ -112,67 +131,115 @@ public class RepRelDeal extends BaseEntity {
     }
 
     /**
-     * 取得 期间投资关联机构发行证券交易金额
-     * @return 期间投资关联机构发行证券交易金额
+     * 取得 投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额
+     * @return 投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额
      */
-    public BigDecimal getBankTransAmt() {
-        return bankTransAmt;
+    public BigDecimal getCreditorAmt() {
+        return creditorAmt;
     }
 
     /**
-     * 设置 期间投资关联机构发行证券交易金额
-     * @param bankTransAmt 期间投资关联机构发行证券交易金额
+     * 设置 投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额
+     * @param creditorAmt 投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额
      */
-    public void setBankTransAmt(BigDecimal bankTransAmt) {
-        this.bankTransAmt = bankTransAmt;
+    public void setCreditorAmt(BigDecimal creditorAmt) {
+        this.creditorAmt = creditorAmt;
     }
 
     /**
-     * 取得 期间投资关联机构承销证券交易金额
-     * @return 期间投资关联机构承销证券交易金额
+     * 取得 投资于关联方承销的证券交易金额
+     * @return 投资于关联方承销的证券交易金额
      */
-    public BigDecimal getOrgTransAmt() {
-        return orgTransAmt;
+    public BigDecimal getBondAmt() {
+        return bondAmt;
     }
 
     /**
-     * 设置 期间投资关联机构承销证券交易金额
-     * @param orgTransAmt 期间投资关联机构承销证券交易金额
+     * 设置 投资于关联方承销的证券交易金额
+     * @param bondAmt 投资于关联方承销的证券交易金额
      */
-    public void setOrgTransAmt(BigDecimal orgTransAmt) {
-        this.orgTransAmt = orgTransAmt;
+    public void setBondAmt(BigDecimal bondAmt) {
+        this.bondAmt = bondAmt;
     }
 
     /**
-     * 取得 期间关联方作为交易对手的投融资业务的交易金额
-     * @return 期间关联方作为交易对手的投融资业务的交易金额
+     * 取得 与关联方作为交易对手开展的投融资业务交易金额
+     * @return 与关联方作为交易对手开展的投融资业务交易金额
      */
-    public BigDecimal getInvestTransAmt() {
-        return investTransAmt;
+    public BigDecimal getInvestAmt() {
+        return investAmt;
     }
 
     /**
-     * 设置 期间关联方作为交易对手的投融资业务的交易金额
-     * @param investTransAmt 期间关联方作为交易对手的投融资业务的交易金额
+     * 设置 与关联方作为交易对手开展的投融资业务交易金额
+     * @param investAmt 与关联方作为交易对手开展的投融资业务交易金额
      */
-    public void setInvestTransAmt(BigDecimal investTransAmt) {
-        this.investTransAmt = investTransAmt;
+    public void setInvestAmt(BigDecimal investAmt) {
+        this.investAmt = investAmt;
     }
 
     /**
-     * 取得 关联方提供服务的交易金额
-     * @return 关联方提供服务的交易金额
+     * 取得 投资关联方作为管理人的资产管理产品交易金额
+     * @return 投资关联方作为管理人的资产管理产品交易金额
      */
-    public String getRelateamount() {
-        return relateamount;
+    public BigDecimal getAssetAmt() {
+        return assetAmt;
     }
 
     /**
-     * 设置 关联方提供服务的交易金额
-     * @param relateamount 关联方提供服务的交易金额
+     * 设置 投资关联方作为管理人的资产管理产品交易金额
+     * @param assetAmt 投资关联方作为管理人的资产管理产品交易金额
      */
-    public void setRelateamount(String relateamount) {
-        this.relateamount = relateamount;
+    public void setAssetAmt(BigDecimal assetAmt) {
+        this.assetAmt = assetAmt;
+    }
+
+    /**
+     * 取得 支付关联方托管费
+     * @return 支付关联方托管费
+     */
+    public BigDecimal getTrustFee() {
+        return trustFee;
+    }
+
+    /**
+     * 设置 支付关联方托管费
+     * @param trustFee 支付关联方托管费
+     */
+    public void setTrustFee(BigDecimal trustFee) {
+        this.trustFee = trustFee;
+    }
+
+    /**
+     * 取得 支付关联方代销费
+     * @return 支付关联方代销费
+     */
+    public BigDecimal getSellFee() {
+        return sellFee;
+    }
+
+    /**
+     * 设置 支付关联方代销费
+     * @param sellFee 支付关联方代销费
+     */
+    public void setSellFee(BigDecimal sellFee) {
+        this.sellFee = sellFee;
+    }
+
+    /**
+     * 取得 发生其他关联交易金额
+     * @return 发生其他关联交易金额
+     */
+    public BigDecimal getOtherFee() {
+        return otherFee;
+    }
+
+    /**
+     * 设置 发生其他关联交易金额
+     * @param otherFee 发生其他关联交易金额
+     */
+    public void setOtherFee(BigDecimal otherFee) {
+        this.otherFee = otherFee;
     }
 
     /**
