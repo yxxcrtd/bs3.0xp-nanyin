@@ -8,7 +8,7 @@
         <result column="CREDITOR_AMT" property="creditorAmt" jdbcType="DECIMAL" />
         <result column="BOND_AMT" property="bondAmt" jdbcType="DECIMAL" />
         <result column="INVEST_AMT" property="investAmt" jdbcType="DECIMAL" />
-        <result column="ASSET_AMT" property="assetAmt" jdbcType="VARCHAR" />
+        <result column="ASSET_AMT" property="assetAmt" jdbcType="DECIMAL" />
         <result column="TRUST_FEE" property="trustFee" jdbcType="DECIMAL" />
         <result column="SELL_FEE" property="sellFee" jdbcType="DECIMAL" />
         <result column="OTHER_FEE" property="otherFee" jdbcType="DECIMAL" />
@@ -60,7 +60,7 @@
             STATUS)
         values (#{uuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE}, 
             #{creditorAmt,jdbcType=DECIMAL}, #{bondAmt,jdbcType=DECIMAL}, #{investAmt,jdbcType=DECIMAL}, 
-            #{assetAmt,jdbcType=VARCHAR}, #{trustFee,jdbcType=DECIMAL}, #{sellFee,jdbcType=DECIMAL}, 
+            #{assetAmt,jdbcType=DECIMAL}, #{trustFee,jdbcType=DECIMAL}, #{sellFee,jdbcType=DECIMAL}, 
             #{otherFee,jdbcType=DECIMAL}, #{effdate,jdbcType=DATE}, #{effdelidate,jdbcType=DATE}, 
             #{errormsg,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
@@ -147,7 +147,7 @@
                 #{investAmt,jdbcType=DECIMAL},
             </if>
             <if test="assetAmt != null" >
-                #{assetAmt,jdbcType=VARCHAR},
+                #{assetAmt,jdbcType=DECIMAL},
             </if>
             <if test="trustFee != null" >
                 #{trustFee,jdbcType=DECIMAL},
@@ -216,7 +216,7 @@
                 INVEST_AMT = #{investAmt,jdbcType=DECIMAL},
             </if>
             <if test="assetAmt != null" >
-                ASSET_AMT = #{assetAmt,jdbcType=VARCHAR},
+                ASSET_AMT = #{assetAmt,jdbcType=DECIMAL},
             </if>
             <if test="trustFee != null" >
                 TRUST_FEE = #{trustFee,jdbcType=DECIMAL},
@@ -255,7 +255,7 @@
             CREDITOR_AMT = #{creditorAmt,jdbcType=DECIMAL},
             BOND_AMT = #{bondAmt,jdbcType=DECIMAL},
             INVEST_AMT = #{investAmt,jdbcType=DECIMAL},
-            ASSET_AMT = #{assetAmt,jdbcType=VARCHAR},
+            ASSET_AMT = #{assetAmt,jdbcType=DECIMAL},
             TRUST_FEE = #{trustFee,jdbcType=DECIMAL},
             SELL_FEE = #{sellFee,jdbcType=DECIMAL},
             OTHER_FEE = #{otherFee,jdbcType=DECIMAL},
