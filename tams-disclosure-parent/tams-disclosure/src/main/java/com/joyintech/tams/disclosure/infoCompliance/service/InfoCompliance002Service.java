@@ -92,6 +92,7 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
     public void doBack(InfoComplianceDto entity) {
         if (StringUtil.isBlank(entity.getComment())) {
             WorkFlowUtil.showMessage("请填写修订意见。", MessageType.提示消息);
+            return;
         }
         // 保存修订意见
         InfoComplianceCommentDto commentDto = new InfoComplianceCommentDto(IDGenerator.generate(),entity.getSeqno(),entity.getComment());
