@@ -1279,13 +1279,21 @@ public class PoiReportService {
 				if(StringUtil.equals(dataMap.get("partner"),"-")){
 					resultSb.append((index++)+"："+"合作机构信息缺失<br>");
 				}
-				if(!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
-						&&!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
-						&&!StringUtil.isNotEmpty(dataMap.get("ldxfxfx"))
-						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg1"))
-						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg2"))
-						&&!StringUtil.isNotEmpty(dataMap.get("tgrbg3"))){
-					resultSb.append((index++)+"："+"报表指标信息缺失<br>");
+
+				if(StringUtil.equals(rptType,DisReportType.JDBG_ZSX)
+						||StringUtil.equals(rptType,DisReportType.JDBG_FZSX)){
+					if(!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
+							||!StringUtil.isNotEmpty(dataMap.get("ldxfxfx"))){
+						resultSb.append((index++)+"："+"报表指标信息缺失<br>");
+					}
+				}else{
+					if(!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
+							||!StringUtil.isNotEmpty(dataMap.get("ldxfxfx"))
+							||!StringUtil.isNotEmpty(dataMap.get("tgrbg1"))
+							||!StringUtil.isNotEmpty(dataMap.get("tgrbg2"))
+							||!StringUtil.isNotEmpty(dataMap.get("tgrbg3"))){
+						resultSb.append((index++)+"："+"报表指标信息缺失<br>");
+					}
 				}
 
 				//对于开放式产品，若在定期报告的统计期内产品业绩比较基准发生了变更（由非指数型产品变为指数型产品，或指数型产品挂钩的行情代码由A变为B）需要在本模块给出提示：

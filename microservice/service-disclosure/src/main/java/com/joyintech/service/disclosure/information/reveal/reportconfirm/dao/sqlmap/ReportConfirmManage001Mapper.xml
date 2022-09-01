@@ -521,7 +521,7 @@
 			REVEAL.ID id
 			,REVEAL.REP_ID repId
 			,REVEAL.REPORT_NAME reportName
-			,decode(T1.REP_PROD_TYPE,'03',T2.PROD_NAME,T1.PROD_NAME) prodName
+		    ,decode(T1.REP_PROD_TYPE,'03',T2.PROD_NAME,decode(T1.PROD_NAME,null,REVEAL.PROD_NAME,T1.PROD_NAME)) prodName
 			,REVEAL.PRODID prodid
 			,case when 
 				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
