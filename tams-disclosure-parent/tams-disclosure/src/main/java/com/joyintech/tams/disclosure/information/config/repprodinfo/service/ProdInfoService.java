@@ -29,6 +29,7 @@ import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -281,24 +282,6 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             //保存子产品信息
             dto.setRepProdType(DictCodeListExt5.信批产品类别_子产品.getValue());
-            /*dto.setProdAbbr(null);
-            dto.setProdRe(null);
-            dto.setRaiseStrdate(null);
-            dto.setRaiseEnddate(null);
-            dto.setMdate(null);
-            dto.setRaiseType(null);
-            dto.setIsPeriod(null);
-            dto.setIsGrade(null);
-            dto.setIsIndex(null);
-            dto.setOpenFreq(null);
-            dto.setNatureInvest(null);
-            dto.setProdType(null);
-            dto.setIssuingWay(null);
-            dto.setAcctChnname(null);
-            dto.setProfitType(null);
-            dto.setPdStatus(null);
-            dto.setProdSeries(null);*/
-
         } else {//普通产品
             /* NYLCXP-895 普通和分层指数型产品都要处理业绩比较基准 modify by kongzhifang 2022-08-19 */
             //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
@@ -309,8 +292,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 }
             }
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
+            dto.setProdName(dto.getpProdName());
         }
-        dto.setProdName(dto.getpProdName());
+
         //重新插入已删除的数据
         ProdInfoDto prodInfoDto=prodInfoMapper.selectByPrimaryKey(dto.getProdId());
         if(prodInfoDto !=null && prodInfoDto.getStatus().equals("D")){
@@ -333,17 +317,25 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
         dto.setOpenFreq(StringUtil.isEmpty(dto.getOpenFreq())  ? " ":dto.getOpenFreq());
-        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
+        //是分级产品，子产品
+        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {
             // 更新母产品信息
             ProdInfoDto ppDto = new ProdInfoDto();
             BeanUtils.copyProperties(dto, ppDto);
-            //ppDto.setProdId(ppDto.getpProdId());
-            //ppDto.setProdName(ppDto.getpProdName());
+            ppDto.setProdId(ppDto.getpProdId());
+            ppDto.setProdName(ppDto.getpProdName());
             ppDto.setSetDate(ppDto.getpSetDate());
             ppDto.setpProdId(null);
             ppDto.setpProdName(null);
             ppDto.setpSetDate(null);
             ppDto.setRepProdType(DictCodeListExt5.信批产品类别_母产品.getValue());
+            //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
+            if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), ppDto.getIsIndex()) && StringUtils.isNotEmpty(ppDto.getPerformCompare())) {
+                if (prodBasicChangeService.insertProdBasicChangeFromExcel(ppDto.getPerformCompare(), ppDto.getProdId())) {
+                    //成功之后清空产品业绩比较基准
+                    ppDto.setPerformCompare(null);
+                }
+            }
             // ProdInfoDto ppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
             if (dto.isSynchFlag()) { // 则同步对母产品下其余子产品的产品募集金额的值进行调整
                 //ppDto.setRaiseAmt(dto.getRaiseAmt());
@@ -352,7 +344,15 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             // 更新母产品信息
             prodInfoMapper.updateByPrimaryKeySelective(ppDto);
         } else {
+            //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
+            if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex()) && StringUtils.isNotEmpty(dto.getPerformCompare())) {
+                if (prodBasicChangeService.insertProdBasicChangeFromExcel(dto.getPerformCompare(), dto.getProdId())) {
+                    //成功之后清空产品业绩比较基准
+                    dto.setPerformCompare(null);
+                }
+            }
             dto.setProdName(dto.getpProdName());
+            dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
             prodInfoMapper.updateByPrimaryKeySelective(dto);
         }
 
@@ -757,7 +757,15 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(22))
                     && StringUtil.isEmpty(list.get(23))) {
-                message.add("指数型产品，产品业绩比较基准必填。");
+
+            }
+            //校验产品业绩比较基准格式
+            if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(22))
+                    && StringUtil.isNotEmpty(list.get(23))) {
+                List<ProdBasicChangeDto> changeList = prodBasicChangeService.analyseDate(list.get(23));
+                if (CollectionUtils.isEmpty(changeList)) {
+                    message.add("产品业绩比较基准格式不正确。");
+                }
             }
             if (StringUtil.isEmpty(list.get(24))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "投资性质"));

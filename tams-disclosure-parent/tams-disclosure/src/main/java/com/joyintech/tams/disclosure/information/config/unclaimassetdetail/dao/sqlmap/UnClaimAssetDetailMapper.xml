@@ -279,10 +279,10 @@
                 AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
             </if>
             <if test="effDate != null">
-                <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDate},'YYYY-MM-DD') ]]>
+                <![CDATA[AND  DNDC.EFF_DATE = TO_DATE(#{effDate},'YYYY-MM-DD') ]]>
             </if>
             <if test="effEndDate != null">
-                <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDate},'YYYY-MM-DD')]]>
+                <![CDATA[AND  DNDC.EFF_END_DATE = TO_DATE(#{effEndDate},'YYYY-MM-DD')]]>
             </if>
             <if test="prodId != null and !prodId.equals('')">
                 AND DNDC.PROD_ID = #{prodId,jdbcType=VARCHAR}
