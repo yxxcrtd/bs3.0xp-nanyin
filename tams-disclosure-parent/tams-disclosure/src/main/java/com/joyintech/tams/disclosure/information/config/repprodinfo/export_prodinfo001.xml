@@ -6,35 +6,34 @@
 			<Cell order="2" name="子产品名称">prodName</Cell>
 			<Cell order="3" name="子产品成立日期">setDateStr</Cell>
 			<Cell order="4" name="产品状态">pdStatusName</Cell>
-			<Cell order="5" name="产品系列">prodSeries</Cell>
-			<Cell order="6" name="产品名称">pProdName</Cell>
-			<Cell order="7" name="产品简称">prodAbbr</Cell>
-			<Cell order="8" name="产品登记编码">prodRe</Cell>
-			<Cell order="9" name="产品主代码">pProdId</Cell>
-			<Cell order="10" name="募集起始日期">raiseStrdateStr</Cell>
-
-			<Cell order="11" name="募集结束日期">raiseEnddateStr</Cell>
-			<Cell order="12" name="总产品募集金额">raiseAmt</Cell>
-			<Cell order="13" name="产品成立日期">pSetDateStr</Cell>
-			<Cell order="14" name="产品到期日期">mdateStr</Cell>
-			<Cell order="15" name="募集方式">raiseTypeName</Cell>
-			<Cell order="16" name="产品类型">prodTypeName</Cell>
-			<Cell order="17" name="发行方式">issuingWayName</Cell>
-			<Cell order="18" name="开放频率">openFreqName</Cell>
-			<Cell order="19" name="最低持有天数">holdday</Cell>
-			<Cell order="20" name="产品运作方式">profitTypeName</Cell>
-
-			<Cell order="21" name="是否是客户周期型产品">isPeriodName</Cell>
-			<Cell order="22" name="是否是分级产品">isGradeName</Cell>
-			<Cell order="23" name="是否是指数型产品">isIndexName</Cell>
-			<Cell order="24" name="产品业绩比较基准">performCompare</Cell>
-			<Cell order="25" name="投资性质">natureInvestName</Cell>
-			<Cell order="26" name="产品托管人名称">acctChnname</Cell>
-			<Cell order="27" name="数据状态">statusName</Cell>
-			<Cell order="28" name="托管部门">trustpart</Cell>
-			<Cell order="29" name="错误信息">errormsg</Cell>
-			<Cell order="30" name="更新时间">updateDateStr</Cell>
-			<Cell order="31" name="更新人">updateUser</Cell>
+			<Cell order="5" name="发行状态">issueStatusStr</Cell>
+			<Cell order="6" name="产品系列">prodSeries</Cell>
+			<Cell order="7" name="产品名称">pProdName</Cell>
+			<Cell order="8" name="产品简称">prodAbbr</Cell>
+			<Cell order="9" name="产品登记编码">prodRe</Cell>
+			<Cell order="10" name="产品主代码">pProdId</Cell>
+			<Cell order="11" name="募集起始日期">raiseStrdateStr</Cell>
+			<Cell order="12" name="募集结束日期">raiseEnddateStr</Cell>
+			<Cell order="13" name="总产品募集金额">raiseAmt</Cell>
+			<Cell order="14" name="产品成立日期">pSetDateStr</Cell>
+			<Cell order="15" name="产品到期日期">mdateStr</Cell>
+			<Cell order="16" name="募集方式">raiseTypeName</Cell>
+			<Cell order="17" name="产品类型">prodTypeName</Cell>
+			<Cell order="18" name="发行方式">issuingWayName</Cell>
+			<Cell order="19" name="开放频率">openFreqName</Cell>
+			<Cell order="20" name="最低持有天数">holdday</Cell>
+			<Cell order="21" name="产品运作方式">profitTypeName</Cell>
+			<Cell order="22" name="是否是客户周期型产品">isPeriodName</Cell>
+			<Cell order="23" name="是否是分级产品">isGradeName</Cell>
+			<Cell order="24" name="是否是指数型产品">isIndexName</Cell>
+			<Cell order="25" name="产品业绩比较基准">performCompare</Cell>
+			<Cell order="26" name="投资性质">natureInvestName</Cell>
+			<Cell order="27" name="产品托管人名称">acctChnname</Cell>
+			<Cell order="28" name="数据状态">statusName</Cell>
+			<Cell order="29" name="托管部门">trustpart</Cell>
+			<Cell order="30" name="错误信息">errormsg</Cell>
+			<Cell order="31" name="更新时间">updateDateStr</Cell>
+			<Cell order="32" name="更新人">updateUser</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>
