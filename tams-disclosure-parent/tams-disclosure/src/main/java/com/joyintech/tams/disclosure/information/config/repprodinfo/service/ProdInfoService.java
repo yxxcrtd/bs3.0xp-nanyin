@@ -292,6 +292,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 }
             }
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
+            dto.setProdName(dto.getpProdName());
         }
 
         //重新插入已删除的数据
@@ -316,17 +317,18 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         //NYXPUAT-3:新建导入修改时，如果开放频率为空，库里需要存空格，不能存null add by zhouqiang 20220824
         dto.setOpenFreq(StringUtil.isEmpty(dto.getOpenFreq())  ? " ":dto.getOpenFreq());
-        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
+        //是分级产品，子产品
+        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {
             // 更新母产品信息
             ProdInfoDto ppDto = new ProdInfoDto();
             BeanUtils.copyProperties(dto, ppDto);
-            //ppDto.setProdId(ppDto.getpProdId());
-            //ppDto.setProdName(ppDto.getpProdName());
+            ppDto.setProdId(ppDto.getpProdId());
+            ppDto.setProdName(ppDto.getpProdName());
             ppDto.setSetDate(ppDto.getpSetDate());
             ppDto.setpProdId(null);
             ppDto.setpProdName(null);
             ppDto.setpSetDate(null);
-            ppDto.setRepProdType(DictCodeListExt5.信批产品类别_子产品.getValue());
+            ppDto.setRepProdType(DictCodeListExt5.信批产品类别_母产品.getValue());
             //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), ppDto.getIsIndex()) && StringUtils.isNotEmpty(ppDto.getPerformCompare())) {
                 if (prodBasicChangeService.insertProdBasicChangeFromExcel(ppDto.getPerformCompare(), ppDto.getProdId())) {
@@ -349,6 +351,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     dto.setPerformCompare(null);
                 }
             }
+            dto.setProdName(dto.getpProdName());
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
             prodInfoMapper.updateByPrimaryKeySelective(dto);
         }
