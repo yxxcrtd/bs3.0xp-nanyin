@@ -228,12 +228,12 @@ public class DurationReportDataService implements IReportDataService {
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
 							perVal = "";
 							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
-								if ( map.get("unitValue")==null  ) continue;
-								perVal += map.get("prodId")+"份额净值为"+map.get("unitValue").toString()+"元，";
+								//if ( map.get("unitValue")==null  ) continue;
+								perVal += map.get("prodId")+"份额净值为"+ (map.get("unitValue")==null? "0.00":map.get("unitValue").toString())+"元，";
 							}
 							perVal = perVal.substring(0, perVal.length()-2);
 						} else {
-							perVal = reportDto.getListFinIndex().get(0).get("unitValue").toString();
+							perVal = "份额净值为" + reportDto.getListFinIndex().get(0).get("unitValue").toString();
 						}
 					} else {  //现管类：固定为1.0000
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
@@ -243,7 +243,7 @@ public class DurationReportDataService implements IReportDataService {
 							}
 							perVal = perVal.substring(0, perVal.length()-2);
 						} else {
-							perVal = String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
+							perVal = "份额净值为" + String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
 						}
 					}
 					reportDto.setYjbx(perVal);
