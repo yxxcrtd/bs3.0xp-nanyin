@@ -58,7 +58,7 @@
                 row.projectNo = 1;
             } else {
                 var row2 = unclaimTable.getRow(unclaimTable.getAllRows().length-2);
-                row.projectNo=row2.projectNo+1;
+                row.projectNo=Number(row2.projectNo)+1;
             }
             if (_row.financier == '无'){
                 Joyin.error("请删除为无的那行数据之后才能新增一行！");
@@ -112,6 +112,7 @@
         }
         //修改时，如果生效日小于平台日，生效日不能修改
         //若生效日≤平台日＜生效截止日期，则生效日不能修改，生效截止日期可以修改
+
         if($('#effDate').val() != '' && $('#effDate').val() != null && $('#effEndDate').val() != '' && $('#effEndDate').val() != null){
             if($('#effDate').val()<=platDate && $('#effEndDate').val()>platDate){
                 $("#effDate").attr("disabled",true);
