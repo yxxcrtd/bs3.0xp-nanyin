@@ -32,7 +32,7 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 募集金额：子产品或母产品募集金额、普通产品募集金额
      */
-    @NotEmpty(fieldName = "产品募集金额")
+    @NotEmpty(fieldName = "总产品募集金额")
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal raiseAmt;
 
