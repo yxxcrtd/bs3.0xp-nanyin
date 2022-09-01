@@ -43,6 +43,7 @@ $(function() {
             ,{field:'prodName', sortable:false, width:100, title: '子产品名称'}
             ,{field:'setDateStr', sortable:false, width:120, title: '子产品成立日期'}
             ,{field:'pdStatusName', sortable:false, width:100, title: '产品状态'}
+            ,{field:'issueStatusStr', sortable:false, width:100, title: '发行状态'}
             ,{field:'prodSeries', sortable:false, width:100, title: '产品系列'}
             ,{field:'pProdName', sortable:false, width:150, title: '产品名称'}
             ,{field:'prodAbbr', sortable:false, width:150, title: '产品简称'}
@@ -151,15 +152,19 @@ $(function() {
                         }
                         prodIdStr = prodIdStr + v.prodId + ",";
                     });
-                    if(confirmFlag){
-                        Joyin.confirm("只有发行状态为确认发行的数据才能处理");
-                    }else{
-                        // 跳转发行状态管理页面
-                        Joyin.dialog(JoyinUtil.getLabel("发行状态管理"),
-                            JoyinUtil.getRealPath("disclosure/information/config/repprodinfo/ProdInfo003/init"),
-                            "70%", "80%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
-                        );
-                    }
+                    // if(confirmFlag){
+                    //     Joyin.confirm("只有发行状态为确认发行的数据才能处理");
+                    // }else{
+                    //     // 跳转发行状态管理页面
+                    //     Joyin.dialog(JoyinUtil.getLabel("发行状态管理"),
+                    //         JoyinUtil.getRealPath("disclosure/information/config/repprodinfo/ProdInfo003/init"),
+                    //         "70%", "80%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
+                    //     );
+                    // }
+                    Joyin.dialog(JoyinUtil.getLabel("发行状态管理"),
+                        JoyinUtil.getRealPath("disclosure/information/config/repprodinfo/ProdInfo003/init"),
+                        "70%", "80%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
+                    );
                     //});
                 }else{
                     Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));

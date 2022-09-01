@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,12 +228,12 @@ public class DurationReportDataService implements IReportDataService {
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
 							perVal = "";
 							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
-								if ( map.get("unitValue")==null  ) continue;
-								perVal += map.get("prodId")+"份额净值为"+map.get("unitValue").toString()+"元，";
+								//if ( map.get("unitValue")==null  ) continue;
+								perVal += map.get("prodId")+"份额净值为"+ (map.get("unitValue")==null? "0.00":map.get("unitValue").toString())+"元，";
 							}
 							perVal = perVal.substring(0, perVal.length()-2);
 						} else {
-							perVal = reportDto.getListFinIndex().get(0).get("unitValue").toString();
+							perVal = "份额净值为" + reportDto.getListFinIndex().get(0).get("unitValue").toString();
 						}
 					} else {  //现管类：固定为1.0000
 						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
@@ -242,7 +243,7 @@ public class DurationReportDataService implements IReportDataService {
 							}
 							perVal = perVal.substring(0, perVal.length()-2);
 						} else {
-							perVal = String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
+							perVal = "份额净值为" + String.valueOf(BigDecimal.ONE.setScale(4,BigDecimal.ROUND_DOWN));
 						}
 					}
 					reportDto.setYjbx(perVal);
@@ -524,14 +525,33 @@ public class DurationReportDataService implements IReportDataService {
 		sql.append("and prod_id='"+prodId+"' ");
 		if ( listRules!=null ) {
 			for ( RepJobRange rule:listRules ) {
-				sql.append(" and ");
-				sql.append(rule.getRuleType1());
-				sql.append(rule.getRuleType2());
-				if ( "02".equals(rule.getRuleType3()) )
-					sql.append("'");
-				sql.append(rule.getRuleType4());
-				if ( "02".equals(rule.getRuleType3()) )
-					sql.append("'");		
+				if(StringUtil.equals(rule.getRuleType1(),"FINPROD_NAME")){
+					String result="";
+					String str=rule.getRuleType4();
+					List<String>strList=StringUtil.splitToList(",",str);
+					for (int i = 0; i < strList.size(); i++) {
+						String ss=strList.get(i);
+						result+="'"+ss+"'";
+						if(i<strList.size()-1){
+							result+=",";
+						}
+					}
+					if(StringUtil.isNotEmpty(result)){
+						sql.append(" and ");
+						sql.append("prod_id in (");
+						sql.append(result);
+						sql.append(")");
+					}
+				}else{
+					sql.append(" and ");
+					sql.append(rule.getRuleType1());
+					sql.append(rule.getRuleType2());
+					if ( "02".equals(rule.getRuleType3()) )
+						sql.append("'");
+					sql.append(rule.getRuleType4());
+					if ( "02".equals(rule.getRuleType3()) )
+						sql.append("'");
+				}
 			}
 		}
 		List<RepProdInfo> list = durationReportMapper.selectProdInfoBySql(sql.toString());

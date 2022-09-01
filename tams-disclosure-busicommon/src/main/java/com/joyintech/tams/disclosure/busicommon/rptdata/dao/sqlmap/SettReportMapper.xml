@@ -28,7 +28,7 @@
 		    ,info.PROD_NAME
 		    ,info.PROD_RE
 		    ,info.SET_DATE EDATE
-		    ,'南京银行股份有限公司' trustName
+		    ,info.ACCT_CHNNAME trustName
 		    ,info.ACCT_CHNNAME
 		    ,nvl(plan.SETT_DATE,info.MDATE) mDate
 		    ,plan.BONUS_PLAN_ID

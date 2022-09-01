@@ -346,7 +346,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             } else if (!isDateStr(rowData.get(5).trim())) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效日"));
             } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(5)), platDate) < 0) {
-                message.add("生效日不能小于平台日。");
+                //message.add("生效日不能小于平台日。");
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(6))) {
@@ -354,7 +354,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             } else if (!this.isDateStr(rowData.get(6).trim())) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效截止日期"));
             } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(6)), platDate) < 0) {
-                message.add("生效截止日期不能小于平台日。");
+                //message.add("生效截止日期不能小于平台日。");
             }
 
             if (StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))) {
@@ -444,16 +444,16 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             repRelDealDto.setProdId(rowData.get(0).toString().trim());
         }
         if (StringUtil.isNotEmpty(rowData.get(1))) {
-            repRelDealDto.setBankTransAmt(new BigDecimal(rowData.get(1).toString().trim()));
+            repRelDealDto.setCreditorAmt(new BigDecimal(rowData.get(1).toString().trim()));
         }
         if (StringUtil.isNotEmpty(rowData.get(2))) {
-            repRelDealDto.setOrgTransAmt(new BigDecimal(rowData.get(2).toString().trim()));
+            repRelDealDto.setBondAmt(new BigDecimal(rowData.get(2).toString().trim()));
         }
         if (StringUtil.isNotEmpty(rowData.get(3))) {
-            repRelDealDto.setInvestTransAmt(new BigDecimal(rowData.get(3).toString().trim()));
+            repRelDealDto.setInvestAmt(new BigDecimal(rowData.get(3).toString().trim()));
         }
         if (StringUtil.isNotEmpty(rowData.get(4))) {
-            repRelDealDto.setRelateamount(rowData.get(4).toString().trim());
+            repRelDealDto.setAssetAmt(new BigDecimal (rowData.get(4).toString().trim()));
         }
         if (StringUtil.isNotEmpty(rowData.get(5))) {
             repRelDealDto.setEffdate(DateUtil.parse(rowData.get(5).toString().trim()));

@@ -148,8 +148,7 @@
         )
         else '' end pid
         from
-        REP_PROD_INFO
-        where (P_PROD_ID is null or PROD_ID=P_PROD_ID)
-        and status='E' AND PD_STATUS NOT IN ('02','03')
+        V_REP_PROD_INFO
+        where status='E' AND PD_STATUS NOT IN ('02','03')
     </select>
 </mapper>

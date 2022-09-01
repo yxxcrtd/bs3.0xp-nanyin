@@ -49,7 +49,7 @@
 			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
 			,fp.finprod_id finprodId
 			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
-            ,decode(REVEAL.REVEAL_STATUS,'01',decode(REVEAL.IS_REVEAL,'02',T2.REAL_NAME,'系统自动披露'),null) revealUser
+            ,decode(REVEAL.REVEAL_STATUS,'01',decode(T2.REAL_NAME,'system','系统自动披露',T2.REAL_NAME),null) revealUser
 		<!--,decode(REVEAL.CONFIRM_STATUS,'1',decode(REVEAL.IS_CONFIRM,'01',F1.REAL_NAME,'系统自动确认'),null) confirmUser-->
 	     	,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F1.REAL_NAME,'系统自动确认'),null) confirmUser
 		    ,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F2.REAL_NAME,'系统自动确认'),null) checkUser
@@ -521,7 +521,7 @@
 			REVEAL.ID id
 			,REVEAL.REP_ID repId
 			,REVEAL.REPORT_NAME reportName
-			,decode(T1.REP_PROD_TYPE,'03',T2.PROD_NAME,T1.PROD_NAME) prodName
+		    ,decode(T1.REP_PROD_TYPE,'03',T2.PROD_NAME,decode(T1.PROD_NAME,null,REVEAL.PROD_NAME,T1.PROD_NAME)) prodName
 			,REVEAL.PRODID prodid
 			,case when 
 				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE

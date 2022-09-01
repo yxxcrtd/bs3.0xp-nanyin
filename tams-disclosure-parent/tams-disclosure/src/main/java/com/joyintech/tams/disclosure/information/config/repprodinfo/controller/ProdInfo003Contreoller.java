@@ -85,7 +85,7 @@ public class ProdInfo003Contreoller extends BaseController {
                     //若新发行状态为“发行成功”需要校验，所选数据中的子产品成立日期和平台日是否相等，若不相等，需要给出提示“子产品成立日期与平台日不相等，请确认”，
                     if (StringUtils.equals(DictCodeListExt1.发行状态_发行成功.getValue(), entity.getIssuingStatusNew())
                             && !StringUtils.equals(sysDateStr, entity.getSetDateStr())) {
-                        validList.add(new ValidMessage(this.getMessage(entity.getProdName()+"【"+entity.getProdId()+"】产品，子产品成立日期与平台日不相等，请确认")));
+                        //validList.add(new ValidMessage(this.getMessage(entity.getProdName()+"【"+entity.getProdId()+"】产品，子产品成立日期与平台日不相等，请确认")));
                     }
                 }
                 if (StringUtil.isNotEmpty(entity.getIssueStatusRemark())) {

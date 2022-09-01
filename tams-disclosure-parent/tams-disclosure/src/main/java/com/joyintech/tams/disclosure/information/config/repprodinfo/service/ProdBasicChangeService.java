@@ -96,9 +96,6 @@ public class ProdBasicChangeService {
             if (CollectionUtils.isNotEmpty(oldList)) {
                 for (ProdBasicChangeDto i : oldList) {
                     i.setStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
-//                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),oldIsIndex)) {
-//                        i.setChangeType("2");
-//                    }
                     prodBasicChangeMapper.updateByGroupId(i);
                 }
             }
@@ -151,6 +148,15 @@ public class ProdBasicChangeService {
         List<ProdBasicChangeDto> list = analyseDate(performCompare);
         String groupId = IDGenerator.generate();
         if (CollectionUtils.isNotEmpty(list)) {
+            //如果已存在则更新删除状态
+            List<ProdBasicChangeDto> oldList = prodBasicChangeMapper.selectListByProdId(prodId);
+            if (CollectionUtils.isNotEmpty(oldList)) {
+                for (ProdBasicChangeDto i : oldList) {
+                    i.setStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
+                    prodBasicChangeMapper.updateByGroupId(i);
+                }
+            }
+
             for (ProdBasicChangeDto i : list) {
                 i.setChangeType("0");
                 insertProdBasicChange(i, prodId, groupId);
