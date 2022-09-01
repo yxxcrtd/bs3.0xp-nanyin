@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.config.reportpage.service;
 
 import com.google.json.JsonSanitizer;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -153,6 +154,10 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 	 **/
 	@Override
 	public void doBack(ReportStatusDto dto){
+		if (StringUtil.isBlank(dto.getComment())) {
+			WorkFlowUtil.showMessage("请填写审批意见。", MessageType.提示消息);
+			return;
+		}
 		dto.setRepStatus(null);
 		dto.setUpdateUser(CommonUtil.getUserName());
 		dto.setUpdateTime(DateUtil.now());

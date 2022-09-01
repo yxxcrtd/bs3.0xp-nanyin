@@ -410,10 +410,10 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                 }
             } else if (StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("01")) {
                 if (StringUtil.isNotEmpty(rowData.get(7))) {
-                    message.add("子产品万份收益不应填值。");
+                    message.add("产品类型是净值型，子产品万份收益不应填值。");
                 }
                 if (StringUtil.isNotEmpty(rowData.get(8))) {
-                    message.add("子产品七日年化收益率不应填值。");
+                    message.add("产品类型是净值型，子产品七日年化收益率不应填值。");
                 }
             }
             if (!StringUtil.isNotEmpty(rowData.get(9))) {
@@ -528,17 +528,17 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                 }
             } else if (StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("01")) {
                 if (StringUtil.isNotEmpty(rowData.get(7))) {
-                    message.add("母产品万份收益不应填值。");
+                    message.add("产品类型是净值型，母产品万份收益不应填值。");
                 }
                 if (StringUtil.isNotEmpty(rowData.get(8))) {
-                    message.add("母产品七日年化收益率不应填值。");
+                    message.add("产品类型是净值型，母产品七日年化收益率不应填值。");
                 }
             }
             if (StringUtil.isNotEmpty(dto1.getIsGrade()) && dto1.getIsGrade().equals("01")) {
                 RepProdIndexDto repProdIndexDto2 = this.selectPProdInfo(dto2);
                 RepProdIndexDto repProdIndexDto3 = this.selectPProd(dto2);
                 if (repProdIndexDto2 == null && repProdIndexDto3 != null) {
-                    message.add("对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等。");
+                    message.add("产品类型是净值型，对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等。");
                 }
             }
             if (map.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {

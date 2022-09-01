@@ -168,18 +168,18 @@
 
 	<select id="selectRelDeals" resultType="com.joyintech.tams.common.base.entity.RepRelDeal">
 		select ROWNUM personalField
-			deal.PROD_ID
-			deal.PUB_DATE
-			deal.CREDITOR_AMT
-			deal.BOND_AMT
-			deal.INVEST_AMT
-			deal.ASSET_AMT
-			deal.TRUST_FEE
-			deal.SELL_FEE
-			deal.OTHER_FEE
-			deal.EFFDATE
-			deal.EFFDELIDATE
-			deal.ERRORMSG
+			,deal.PROD_ID
+			,deal.PUB_DATE
+			,deal.CREDITOR_AMT
+			,deal.BOND_AMT
+			,deal.INVEST_AMT
+			,deal.ASSET_AMT
+			,deal.TRUST_FEE
+			,deal.SELL_FEE
+			,deal.OTHER_FEE
+			,deal.EFFDATE
+			,deal.EFFDELIDATE
+			,deal.ERRORMSG
 		from REP_REL_DEAL deal
 		where
 		deal.STATUS='E'

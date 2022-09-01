@@ -23,6 +23,9 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,9 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
 
     @Autowired
     private JoyinDFSTemplate joyinDFSTemplate;
+
+    @Autowired
+    private SqlSessionTemplate template;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -257,25 +263,39 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             List<UnClaimAssetDetailDto> entities = new ArrayList<>(dataList.size());
             List<com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
             if (checkResult.isEmpty()) {
-                entities.forEach(item -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("prodId", item.getProdId());
-                    map.put("effDate", item.getEffDateStr());
-                    map.put("effEndDate", item.getEffEndDateStr());
-                    map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
-                    item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                    if (unClaimAssetDetail002Service.selectDetailList(map).size() > 0) {
-                        unClaimAssetDetailMapper.updateImport(item);
-                    } else {
-                        item.setUpdateTime(DateUtil.now());
-                        item.setUpdateUser(CommonUtil.getUserName());
-                        int num = unClaimAssetDetailMapper.selectCount(map);
-                        item.setNostdAssetId(IDGenerator.generate(36));
+                SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+                try {
+                    UnClaimAssetDetailMapper mapper=session.getMapper(UnClaimAssetDetailMapper.class);
+
+                    entities.forEach(item -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("prodId", item.getProdId());
+                        map.put("effDate", item.getEffDateStr());
+                        map.put("effEndDate", item.getEffEndDateStr());
+                        map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
                         item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                        item.setProjectNo(String.valueOf(num + 1));
-                        unClaimAssetDetailMapper.insert(item);
-                    }
-                });
+                        if (unClaimAssetDetail002Service.selectDetailList(map).size() > 0) {
+                            mapper.updateImport(item);
+                        } else {
+                            item.setUpdateTime(DateUtil.now());
+                            item.setUpdateUser(CommonUtil.getUserName());
+                            int num = mapper.selectCount(map);
+                            item.setNostdAssetId(IDGenerator.generate(36));
+                            item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                            item.setProjectNo(String.valueOf(num + 1));
+                            mapper.insert(item);
+                        }
+                    });
+                    session.commit();
+
+                }catch (Exception e) {
+                    session.rollback();
+                } finally {
+                    session.close();
+                }
+
+
+
             }
             return checkResult;
         } else {
@@ -342,7 +362,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             if (map.containsKey(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(7)
                     + GlobalConstant.UNDER_LINE + rowData.get(8))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+                //message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
             map.put(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(7)

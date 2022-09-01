@@ -194,12 +194,12 @@ $(function() {
             }
             var selArrUseful =[];
             selArr.forEach(v => {
-                if(v.status == 'E' || v.status == 'A'){
+                if(v.status == 'D'){
                     selArrUseful.push(v);
                 }
             })
-            if (!selArrUseful || selArrUseful.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("请选择一条有效或待处理的数据"));
+            if (!selArrUseful || selArrUseful.length > 0) {
+                Joyin.error(JoyinUtil.getMessage("删除状态的数据不支持删除！"));
                 return;
             }
 
