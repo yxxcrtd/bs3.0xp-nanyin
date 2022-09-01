@@ -2,28 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.common.base.dao.RepRelDealMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepRelDeal" >
-        <id column="UUID" property="uuid" jdbcType="VARCHAR" />
+        <id column="UUID" property="uuid" jdbcType="CHAR" />
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
         <result column="PUB_DATE" property="pubDate" jdbcType="DATE" />
-        <result column="BANK_TRANS_AMT" property="bankTransAmt" jdbcType="DECIMAL" />
-        <result column="ORG_TRANS_AMT" property="orgTransAmt" jdbcType="DECIMAL" />
-        <result column="INVEST_TRANS_AMT" property="investTransAmt" jdbcType="DECIMAL" />
+        <result column="CREDITOR_AMT" property="creditorAmt" jdbcType="DECIMAL" />
+        <result column="BOND_AMT" property="bondAmt" jdbcType="DECIMAL" />
+        <result column="INVEST_AMT" property="investAmt" jdbcType="DECIMAL" />
+        <result column="ASSET_AMT" property="assetAmt" jdbcType="VARCHAR" />
+        <result column="TRUST_FEE" property="trustFee" jdbcType="DECIMAL" />
+        <result column="SELL_FEE" property="sellFee" jdbcType="DECIMAL" />
+        <result column="OTHER_FEE" property="otherFee" jdbcType="DECIMAL" />
+        <result column="EFFDATE" property="effdate" jdbcType="DATE" />
+        <result column="EFFDELIDATE" property="effdelidate" jdbcType="DATE" />
+        <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
-        <result column="RELATEAMOUNT" property="relateamount" jdbcType="VARCHAR" />
-        <result column="EFFDATE" property="effdate" jdbcType="DATE" />
-        <result column="EFFDELIDATE" property="effdelidate" jdbcType="DATE" />
-        <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        UUID UUID,PROD_ID PROD_ID, PUB_DATE PUB_DATE, BANK_TRANS_AMT BANK_TRANS_AMT, ORG_TRANS_AMT ORG_TRANS_AMT,
-        INVEST_TRANS_AMT INVEST_TRANS_AMT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS, 
-        RELATEAMOUNT RELATEAMOUNT, EFFDATE EFFDATE, EFFDELIDATE EFFDELIDATE, ERRORMSG ERRORMSG
+        UUID UUID, PROD_ID PROD_ID, PUB_DATE PUB_DATE, CREDITOR_AMT CREDITOR_AMT, BOND_AMT BOND_AMT, 
+        INVEST_AMT INVEST_AMT, ASSET_AMT ASSET_AMT, TRUST_FEE TRUST_FEE, SELL_FEE SELL_FEE, 
+        OTHER_FEE OTHER_FEE, EFFDATE EFFDATE, EFFDELIDATE EFFDELIDATE, ERRORMSG ERRORMSG, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, STATUS STATUS
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -40,25 +44,27 @@
         select 
         <include refid="com.joyintech.tams.common.base.dao.RepRelDealMapper.Base_Column_List" />
         from REP_REL_DEAL
-        where UUID = #{uuid,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from REP_REL_DEAL
-        where UUID = #{uuid,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
-        insert into REP_REL_DEAL (UUID, PROD_ID, PUB_DATE, BANK_TRANS_AMT,
-            ORG_TRANS_AMT, INVEST_TRANS_AMT, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, STATUS, RELATEAMOUNT, 
-            EFFDATE, EFFDELIDATE, ERRORMSG
-            )
-        values (#{uuid,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE}, #{bankTransAmt,jdbcType=DECIMAL},
-            #{orgTransAmt,jdbcType=DECIMAL}, #{investTransAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
-            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{relateamount,jdbcType=VARCHAR},
-            #{effdate,jdbcType=DATE}, #{effdelidate,jdbcType=DATE}, #{errormsg,jdbcType=VARCHAR}
-            )
+        insert into REP_REL_DEAL (UUID, PROD_ID, PUB_DATE, 
+            CREDITOR_AMT, BOND_AMT, INVEST_AMT, 
+            ASSET_AMT, TRUST_FEE, SELL_FEE, 
+            OTHER_FEE, EFFDATE, EFFDELIDATE, 
+            ERRORMSG, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            STATUS)
+        values (#{uuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE}, 
+            #{creditorAmt,jdbcType=DECIMAL}, #{bondAmt,jdbcType=DECIMAL}, #{investAmt,jdbcType=DECIMAL}, 
+            #{assetAmt,jdbcType=VARCHAR}, #{trustFee,jdbcType=DECIMAL}, #{sellFee,jdbcType=DECIMAL}, 
+            #{otherFee,jdbcType=DECIMAL}, #{effdate,jdbcType=DATE}, #{effdelidate,jdbcType=DATE}, 
+            #{errormsg,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{status,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
         insert into REP_REL_DEAL
@@ -72,14 +78,35 @@
             <if test="pubDate != null" >
                 PUB_DATE,
             </if>
-            <if test="bankTransAmt != null" >
-                BANK_TRANS_AMT,
+            <if test="creditorAmt != null" >
+                CREDITOR_AMT,
             </if>
-            <if test="orgTransAmt != null" >
-                ORG_TRANS_AMT,
+            <if test="bondAmt != null" >
+                BOND_AMT,
             </if>
-            <if test="investTransAmt != null" >
-                INVEST_TRANS_AMT,
+            <if test="investAmt != null" >
+                INVEST_AMT,
+            </if>
+            <if test="assetAmt != null" >
+                ASSET_AMT,
+            </if>
+            <if test="trustFee != null" >
+                TRUST_FEE,
+            </if>
+            <if test="sellFee != null" >
+                SELL_FEE,
+            </if>
+            <if test="otherFee != null" >
+                OTHER_FEE,
+            </if>
+            <if test="effdate != null" >
+                EFFDATE,
+            </if>
+            <if test="effdelidate != null" >
+                EFFDELIDATE,
+            </if>
+            <if test="errormsg != null" >
+                ERRORMSG,
             </if>
             <if test="createUser != null" >
                 CREATE_USER,
@@ -99,22 +126,10 @@
             <if test="status != null" >
                 STATUS,
             </if>
-            <if test="relateamount != null" >
-                RELATEAMOUNT,
-            </if>
-            <if test="effdate != null" >
-                EFFDATE,
-            </if>
-            <if test="effdelidate != null" >
-                EFFDELIDATE,
-            </if>
-            <if test="errormsg != null" >
-                ERRORMSG,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="uuid != null" >
-                #{uuid,jdbcType=VARCHAR},
+                #{uuid,jdbcType=CHAR},
             </if>
             <if test="prodId != null" >
                 #{prodId,jdbcType=VARCHAR},
@@ -122,14 +137,35 @@
             <if test="pubDate != null" >
                 #{pubDate,jdbcType=DATE},
             </if>
-            <if test="bankTransAmt != null" >
-                #{bankTransAmt,jdbcType=DECIMAL},
+            <if test="creditorAmt != null" >
+                #{creditorAmt,jdbcType=DECIMAL},
             </if>
-            <if test="orgTransAmt != null" >
-                #{orgTransAmt,jdbcType=DECIMAL},
+            <if test="bondAmt != null" >
+                #{bondAmt,jdbcType=DECIMAL},
             </if>
-            <if test="investTransAmt != null" >
-                #{investTransAmt,jdbcType=DECIMAL},
+            <if test="investAmt != null" >
+                #{investAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="assetAmt != null" >
+                #{assetAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="trustFee != null" >
+                #{trustFee,jdbcType=DECIMAL},
+            </if>
+            <if test="sellFee != null" >
+                #{sellFee,jdbcType=DECIMAL},
+            </if>
+            <if test="otherFee != null" >
+                #{otherFee,jdbcType=DECIMAL},
+            </if>
+            <if test="effdate != null" >
+                #{effdate,jdbcType=DATE},
+            </if>
+            <if test="effdelidate != null" >
+                #{effdelidate,jdbcType=DATE},
+            </if>
+            <if test="errormsg != null" >
+                #{errormsg,jdbcType=VARCHAR},
             </if>
             <if test="createUser != null" >
                 #{createUser,jdbcType=VARCHAR},
@@ -149,29 +185,17 @@
             <if test="status != null" >
                 #{status,jdbcType=VARCHAR},
             </if>
-            <if test="relateamount != null" >
-                #{relateamount,jdbcType=VARCHAR},
-            </if>
-            <if test="effdate != null" >
-                #{effdate,jdbcType=DATE},
-            </if>
-            <if test="effdelidate != null" >
-                #{effdelidate,jdbcType=DATE},
-            </if>
-            <if test="errormsg != null" >
-                #{errormsg,jdbcType=VARCHAR},
-            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
-        insert into REP_REL_DEAL(UUID, PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT,
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS, RELATEAMOUNT, 
-        EFFDATE, EFFDELIDATE, ERRORMSG)
-        select UUID, PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT,
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS, RELATEAMOUNT, 
-            EFFDATE, EFFDELIDATE, ERRORMSG
+        insert into REP_REL_DEAL(UUID, PROD_ID, PUB_DATE, CREDITOR_AMT, BOND_AMT, INVEST_AMT, 
+        ASSET_AMT, TRUST_FEE, SELL_FEE, OTHER_FEE, EFFDATE, EFFDELIDATE, ERRORMSG, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS)
+        select UUID, PROD_ID, PUB_DATE, CREDITOR_AMT, BOND_AMT, INVEST_AMT, 
+            ASSET_AMT, TRUST_FEE, SELL_FEE, OTHER_FEE, EFFDATE, EFFDELIDATE, ERRORMSG, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS
              from REP_REL_DEAL
-             where STATUS = 'E' and UUID = #{uuid,jdbcType=VARCHAR}
+             where STATUS = 'E' and UUID = #{uuid,jdbcType=CHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
         update REP_REL_DEAL
@@ -182,26 +206,26 @@
             <if test="pubDate != null" >
                 PUB_DATE = #{pubDate,jdbcType=DATE},
             </if>
-            <if test="bankTransAmt != null" >
-                BANK_TRANS_AMT = #{bankTransAmt,jdbcType=DECIMAL},
+            <if test="creditorAmt != null" >
+                CREDITOR_AMT = #{creditorAmt,jdbcType=DECIMAL},
             </if>
-            <if test="orgTransAmt != null" >
-                ORG_TRANS_AMT = #{orgTransAmt,jdbcType=DECIMAL},
+            <if test="bondAmt != null" >
+                BOND_AMT = #{bondAmt,jdbcType=DECIMAL},
             </if>
-            <if test="investTransAmt != null" >
-                INVEST_TRANS_AMT = #{investTransAmt,jdbcType=DECIMAL},
+            <if test="investAmt != null" >
+                INVEST_AMT = #{investAmt,jdbcType=DECIMAL},
             </if>
-            <if test="updateUser != null" >
-                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            <if test="assetAmt != null" >
+                ASSET_AMT = #{assetAmt,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            <if test="trustFee != null" >
+                TRUST_FEE = #{trustFee,jdbcType=DECIMAL},
             </if>
-            <if test="status != null" >
-                STATUS = #{status,jdbcType=VARCHAR},
+            <if test="sellFee != null" >
+                SELL_FEE = #{sellFee,jdbcType=DECIMAL},
             </if>
-            <if test="relateamount != null" >
-                RELATEAMOUNT = #{relateamount,jdbcType=VARCHAR},
+            <if test="otherFee != null" >
+                OTHER_FEE = #{otherFee,jdbcType=DECIMAL},
             </if>
             <if test="effdate != null" >
                 EFFDATE = #{effdate,jdbcType=DATE},
@@ -212,23 +236,35 @@
             <if test="errormsg != null" >
                 ERRORMSG = #{errormsg,jdbcType=VARCHAR},
             </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
         </set>
-        where UUID = #{uuid,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
         update REP_REL_DEAL
-        set PROD_ID = #{prodId,jdbcType=DATE},
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
             PUB_DATE = #{pubDate,jdbcType=DATE},
-            BANK_TRANS_AMT = #{bankTransAmt,jdbcType=DECIMAL},
-            ORG_TRANS_AMT = #{orgTransAmt,jdbcType=DECIMAL},
-            INVEST_TRANS_AMT = #{investTransAmt,jdbcType=DECIMAL},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            STATUS = #{status,jdbcType=VARCHAR},
-            RELATEAMOUNT = #{relateamount,jdbcType=VARCHAR},
+            CREDITOR_AMT = #{creditorAmt,jdbcType=DECIMAL},
+            BOND_AMT = #{bondAmt,jdbcType=DECIMAL},
+            INVEST_AMT = #{investAmt,jdbcType=DECIMAL},
+            ASSET_AMT = #{assetAmt,jdbcType=VARCHAR},
+            TRUST_FEE = #{trustFee,jdbcType=DECIMAL},
+            SELL_FEE = #{sellFee,jdbcType=DECIMAL},
+            OTHER_FEE = #{otherFee,jdbcType=DECIMAL},
             EFFDATE = #{effdate,jdbcType=DATE},
             EFFDELIDATE = #{effdelidate,jdbcType=DATE},
-            ERRORMSG = #{errormsg,jdbcType=VARCHAR}
-        where UUID = #{uuid,jdbcType=VARCHAR}
+            ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </update>
 </mapper>
