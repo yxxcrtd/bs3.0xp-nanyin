@@ -245,7 +245,8 @@ public class MatureReportDataService implements IReportDataService {
 		List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
 		if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
 			BonusReportDto dto = listBonusReport.get(0);
-			eDate =holidayService.getNextWorkDate(dto.getSettDate());
+			//eDate =holidayService.getNextWorkDate(dto.getSettDate());
+			eDate =dto.getSettDate();
 		}
 		repReveal.setEndDate(eDate);
 		return repReveal;

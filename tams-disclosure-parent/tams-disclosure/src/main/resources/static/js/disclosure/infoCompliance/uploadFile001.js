@@ -1,3 +1,5 @@
+//@ sourceURL=uploadFile001.js
+
 Date.prototype.format = function(format)
 {
     var o = {
@@ -177,23 +179,26 @@ $(function ($) {
                 if(muit && type == 'list') {
                     for(var i = 0; i < initFiles.length; i++) {
                         var file = initFiles[i];
+                        var _disabled = !!disabled;
+                        var actionHtml = '';
+                        if(fileUploader === 'fileUploader3' && !_disabled) {
+                            _disabled = file.createUser != loginUser;
+                            actionHtml = '<td></td>';
+                        }
                         rownum ++;
                         var tr = $(['<tr id="upload-'+ file.fileNo +'">',
                             ,'<td>'+rownum+'</td>'
-                            ,'<td>'+file.fileName+'</td>'
+                            ,'<td><div class="layui-table-cell"><a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">' + file.fileName + '</a></div></td>'
                             ,'<td style="display: none">'+ (file.size/1014).toFixed(1) +'kb</td>'
                             ,'<td>'+file.uploadUser+'</td>'
                             ,'<td>上传成功</td>'
                             ,'<td>'+file.createTimeText+'</td>'
-                            ,(disabled ? '' : '<td><button data-ignore="true" data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
-                            ,'<td><div class="layui-table-cell">'
-                            ,'<a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览</a>' +
-                            ' <a style="cursor: pointer" onclick="javascript:downLoad(\''+file.fileNo+'\')">下载</a></div></td>'
+                            ,(_disabled ? actionHtml : '<td><button data-ignore="true" data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
+                            ,'<td><div class="layui-table-cell"><a style="cursor: pointer" onclick="javascript:downLoad(\''+file.fileNo+'\')">下载</a></div></td>'
                             ,'</tr>'].join(''));
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
                             removeFileFromServer(fileNo, function() {
-
                                 var tmpFiles = [];
                                 _.each(initFiles, function(f) {
                                     if(f.fileNo !== fileNo) {
@@ -412,7 +417,8 @@ $(function ($) {
                         if(res!= null){
                             var tr = fileListView.find('tr#upload-'+ file)
                                 ,tds = tr.children();
-                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+res[0].fileNo+'\',\''+res[0].fileName+'\')">预览</a>');
+                            tds.eq(1).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+res[0].fileNo+'\',\''+res[0].fileName+'\')">' + res[0].fileName + '</a>');
+                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:downLoad(\''+file.fileNo+'\')">下载</a>');
                             tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
                             // tds.eq(3).html(''); //清空操作
                             tr.data('file', res[0]);

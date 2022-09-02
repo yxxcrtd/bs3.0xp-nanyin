@@ -143,6 +143,28 @@
         // 去掉工作流中的“完成”按钮
         $('#btnComplete_wfl').remove();
 
+        if(typeof JoyinWorkFlow != 'undefined') {
+            JoyinWorkFlow.doCheckOnSubmit = function() {
+                var comment = $('#comment').val();
+                if(!comment) {
+                    Joyin.error('请填写修订意见!');
+                    return false;
+                }
+                $('#wfl_comment').val(comment);
+                return true;
+            };
+
+            JoyinWorkFlow.doCheckOnBack = function() {
+                var comment = $('#comment').val();
+                if(!comment) {
+                    Joyin.error('请填写修订意见!');
+                    return false;
+                }
+                $('#wfl_comment').val(comment);
+                return true;
+            }
+        }
+
         // 绑定按钮事件
         $('#InfoCompliance002_btn_save').click(function() {
             saveOrSubmit('save');
