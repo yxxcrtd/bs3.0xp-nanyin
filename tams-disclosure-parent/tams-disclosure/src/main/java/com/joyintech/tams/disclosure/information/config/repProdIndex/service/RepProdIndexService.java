@@ -66,8 +66,8 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
 
     public Page<RepProdIndexDto> selectForExport(Map<String, Object> param) {
         param.put("prodList", StringUtil.isNotEmpty(param.get("prodId"))?(param.get("prodId").toString().split(",")):null);
-        Page<RepProdIndexDto> result = queryForPage( ()
-                -> repProdIndexSMapper.selectInfo(param));
+        Page<RepProdIndexDto> result = queryForPage( Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()),
+                () -> repProdIndexSMapper.selectInfo(param));
         return result;
     }
 
