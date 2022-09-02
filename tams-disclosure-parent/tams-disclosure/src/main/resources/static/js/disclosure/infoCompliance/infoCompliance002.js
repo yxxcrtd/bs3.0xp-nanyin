@@ -143,7 +143,7 @@
         // 去掉工作流中的“完成”按钮
         $('#btnComplete_wfl').remove();
 
-        if(JoyinWorkFlow) {
+        if(typeof JoyinWorkFlow != 'undefined') {
             JoyinWorkFlow.doCheckOnSubmit = function() {
                 var comment = $('#comment').val();
                 if(!comment) {
