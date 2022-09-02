@@ -5,14 +5,17 @@
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="产品主代码">prodId</Cell>
             <Cell order="3" name="产品名称">prodName</Cell>
-            <Cell order="4" name="期间投资关联机构发行证券交易金额">bankTransAmt</Cell>
-            <Cell order="5" name="期间投资关联机构承销证券交易金额">orgTransAmt</Cell>
-            <Cell order="6" name="期间关联方作为交易对手的投融资业务的交易金额">investTransAmt</Cell>
-            <Cell order="7" name="关联方提供服务的交易金额">relateamount</Cell>
-            <Cell order="8" name="生效日期">effdateStr</Cell>
-            <Cell order="9" name="生效截止日期">effdelidateStr</Cell>
-            <Cell order="10" name="更新时间">updateTimeStr</Cell>
-            <Cell order="11" name="更新人">updateUser</Cell>
+            <Cell order="4" name="投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额">creditorAmtStr</Cell>
+            <Cell order="5" name="投资于关联方承销的证券交易金额">bondAmtStr</Cell>
+            <Cell order="6" name="与关联方作为交易对手开展的投融资业务交易金额">investAmtStr</Cell>
+            <Cell order="7" name="投资关联方作为管理人的资产管理产品交易金额">assetAmtStr</Cell>
+            <Cell order="8" name="支付关联方托管费">trustFeeStr</Cell>
+            <Cell order="9" name="支付关联方代销费">sellFeeStr</Cell>
+            <Cell order="10" name="发生其他关联交易金额">otherFeeStr</Cell>
+            <Cell order="11" name="生效日期">effdateStr</Cell>
+            <Cell order="12" name="生效截止日期">effdelidateStr</Cell>
+            <Cell order="13" name="更新时间">updateTimeStr</Cell>
+            <Cell order="14" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

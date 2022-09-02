@@ -4,16 +4,11 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.disclosure.busicommon.common.constants.DictCode;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto;
-import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
-import com.joyintech.tams.disclosure.infoCompliance.service.InfoCompliance001Service;
 import com.joyintech.tams.disclosure.infoCompliance.service.InfoCompliance002Service;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -68,6 +63,7 @@ public class InfoCompliance002Controller extends BaseController {
 
         if(dto != null){
             model.addAttribute("seqno", dto.getSeqno());
+            model.addAttribute("comments", getCommentList(dto.getSeqno()));
         }
         model.addAttribute("entity", dto);
 
@@ -107,8 +103,7 @@ public class InfoCompliance002Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/getCommentList", method = RequestMethod.POST)
-    List<Map<String,Object>> getCommentList(){
-        String seqno = this.getParam("seqno");
+    List<Map<String,Object>> getCommentList(String seqno){
         List<Map<String,Object>> commentList = new ArrayList<Map<String, Object>>();
         //获取审批意见记录
         List<InfoComplianceCommentDto> comments = infoCompliance002Service.getInfoComplianceComment(seqno);
@@ -116,12 +111,13 @@ public class InfoCompliance002Controller extends BaseController {
             Map<String,String> param = new HashMap<String,String>();
             param.put("businessId",seqno);
             param.put("seqnoComment",commentDto.getSeqno());
-            param.put("fileType","03");
-            List<UploadFileDto> fileList = infoCompliance002Service.getFileByBusinessCode(param);
+//            param.put("fileType","03");
+//            List<UploadFileDto> fileList = infoCompliance002Service.getFileByBusinessCode(param);
             Map<String,Object> commentMap = new HashMap<String,Object>();
             commentMap.put("comment",commentDto.getCommentRemark());
             commentMap.put("createUser",commentDto.getCreateUser());
-            commentMap.put("fileList",fileList);
+            commentMap.put("createTime", commentDto.getCreateTime());
+//            commentMap.put("fileList",fileList);
             commentList.add(commentMap);
         }
         return commentList;

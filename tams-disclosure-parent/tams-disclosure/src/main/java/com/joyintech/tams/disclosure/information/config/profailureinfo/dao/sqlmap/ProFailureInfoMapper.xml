@@ -129,8 +129,7 @@
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and
-        REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
+        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
     </update>
 
 

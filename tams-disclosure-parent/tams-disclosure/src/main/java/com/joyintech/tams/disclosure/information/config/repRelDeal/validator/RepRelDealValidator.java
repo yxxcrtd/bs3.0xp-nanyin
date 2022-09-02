@@ -33,25 +33,25 @@ public class RepRelDealValidator implements BeanValidator {
                 errorList.add(new ValidMessage("", "产品名称 不能为空!"));
             }
             if( dto.getCreditorAmt()==null ){
-                errorList.add(new ValidMessage("", "关联方作为融资人的非标准化债权类资产业务交易金额 不能为空!"));
+                errorList.add(new ValidMessage("", "投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额 不能为空!"));
             }
             if(dto.getBondAmt()== null){
-                errorList.add(new ValidMessage("", "产品投资于关联方承销的证券交易金额 不能为空!"));
+                errorList.add(new ValidMessage("", "投资于关联方承销的证券交易金额 不能为空!"));
             }            
             if(dto.getInvestAmt()== null){
-                errorList.add(new ValidMessage("", "产品与关联方作为交易对手开展的投融资业务交易金额 不能为空!"));
+                errorList.add(new ValidMessage("", "与关联方作为交易对手开展的投融资业务交易金额 不能为空!"));
             }
             if(dto.getAssetAmt()== null){
-                errorList.add(new ValidMessage("", "产品投资关联方作为管理人的资产管理产品交易金额 不能为空!"));
+                errorList.add(new ValidMessage("", "投资关联方作为管理人的资产管理产品交易金额 不能为空!"));
             }
             if(dto.getTrustFee()== null){
-                errorList.add(new ValidMessage("", "产品支付关联方托管费 不能为空!"));
+                errorList.add(new ValidMessage("", "支付关联方托管费 不能为空!"));
             }
             if(dto.getSellFee()== null){
                 errorList.add(new ValidMessage("", "支付关联方代销费 不能为空!"));
             }
             if(dto.getOtherFee()== null){
-                errorList.add(new ValidMessage("", "产品发生其他关联交易金额 不能为空!"));
+                errorList.add(new ValidMessage("", "发生其他关联交易金额 不能为空!"));
             }            
             if(dto.getEffdate()== null){
                 errorList.add(new ValidMessage("", "生效日 不能为空!"));

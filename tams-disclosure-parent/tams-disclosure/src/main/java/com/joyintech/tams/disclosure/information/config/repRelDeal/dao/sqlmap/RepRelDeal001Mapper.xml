@@ -19,10 +19,13 @@
         T1.UUID uuid,
         T2.PROD_NAME prodName,
         T1.PUB_DATE pubDate,
-        T1.BANK_TRANS_AMT bankTransAmt,
-        T1.ORG_TRANS_AMT orgTransAmt,
-        T1.INVEST_TRANS_AMT investTransAmt,
-        T1.RELATEAMOUNT relateamount,
+        T1.CREDITOR_AMT   creditorAmt,
+        T1.BOND_AMT    bondAmt,
+        T1.INVEST_AMT investAmt,
+        T1.ASSET_AMT     assetAmt,
+        T1.TRUST_FEE     trustFee,
+        T1.SELL_FEE     sellFee,
+        T1.OTHER_FEE     otherFee,
         T1.EFFDATE effdate,
         T1.EFFDELIDATE effdelidate,
         T1.STATUS status,
@@ -57,14 +60,17 @@
 
     <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
         select
-        T1.UUID uuid,
-        T1.PROD_ID prodId,
-        T1.BANK_TRANS_AMT bankTransAmt,
-        T1.ORG_TRANS_AMT orgTransAmt,
-        T1.INVEST_TRANS_AMT investTransAmt,
-        T1.RELATEAMOUNT relateamount,
-        T1.EFFDATE effdate,
-        T1.EFFDELIDATE effdelidate
+       T1.UUID             uuid,
+       T1.PROD_ID          prodId,
+       T1.CREDITOR_AMT   creditorAmt,
+       T1.BOND_AMT    bondAmt,
+       T1.INVEST_AMT investAmt,
+       T1.ASSET_AMT     assetAmt,
+       T1.TRUST_FEE     trustFee,
+       T1.SELL_FEE     sellFee,
+       T1.OTHER_FEE     otherFee,
+       T1.EFFDATE          effdate,
+       T1.EFFDELIDATE      effdelidate
         from REP_REL_DEAL T1
         where T1.UUID = #{uuid,jdbcType=VARCHAR}
     </select>
@@ -120,33 +126,40 @@
 <!--        TEMP.UPDATE_TIME,TEMP.CREATE_DEPT,TEMP.CREATE_USER,-->
 <!--        TEMP.UPDATE_USER,TEMP.STATUS)-->
 
-        insert into REP_REL_DEAL (PROD_ID,PUB_DATE,BANK_TRANS_AMT,
-        ORG_TRANS_AMT,INVEST_TRANS_AMT,RELATEAMOUNT,
-        EFFDATE,EFFDELIDATE,CREATE_TIME,
-        UPDATE_TIME,CREATE_DEPT,CREATE_USER,
-        UPDATE_USER,STATUS,UUID)
-        values (#{prodId,jdbcType=VARCHAR},#{pubDate,jdbcType=DATE},#{bankTransAmt,jdbcType=DECIMAL},
-        #{orgTransAmt,jdbcType=DECIMAL},#{investTransAmt,jdbcType=DECIMAL},#{relateamount,jdbcType=VARCHAR},
-        #{effdate,jdbcType=DATE},#{effdelidate,jdbcType=DATE},#{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP},#{createDept,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},
-        #{updateUser,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{uuid,jdbcType=VARCHAR})
+        insert into REP_REL_DEAL (UUID, PROD_ID, PUB_DATE,
+        CREDITOR_AMT, BOND_AMT, INVEST_AMT,
+        ASSET_AMT, TRUST_FEE, SELL_FEE,
+        OTHER_FEE, EFFDATE, EFFDELIDATE,
+        ERRORMSG, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        STATUS)
+        values (#{uuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE},
+        #{creditorAmt,jdbcType=DECIMAL}, #{bondAmt,jdbcType=DECIMAL}, #{investAmt,jdbcType=DECIMAL},
+        #{assetAmt,jdbcType=DECIMAL}, #{trustFee,jdbcType=DECIMAL}, #{sellFee,jdbcType=DECIMAL},
+        #{otherFee,jdbcType=DECIMAL}, #{effdate,jdbcType=DATE}, #{effdelidate,jdbcType=DATE},
+        #{errormsg,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+        #{status,jdbcType=VARCHAR})
     </insert>
 
     <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
-    update REP_REL_DEAL
-    set PROD_ID = #{prodId,jdbcType=VARCHAR},
-    PUB_DATE = #{pubDate,jdbcType=DATE},
-    BANK_TRANS_AMT = #{bankTransAmt,jdbcType=DECIMAL},
-    ORG_TRANS_AMT = #{orgTransAmt,jdbcType=DECIMAL},
-    INVEST_TRANS_AMT = #{investTransAmt,jdbcType=DECIMAL},
-    RELATEAMOUNT = #{relateamount,jdbcType=VARCHAR},
-    EFFDATE = #{effdate,jdbcType=DATE},
-    EFFDELIDATE = #{effdelidate,jdbcType=DATE},
-    STATUS = #{status,jdbcType=VARCHAR},
-    UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-    ERRORMSG = #{errormsg,jdbcType=VARCHAR}
-    where UUID = #{uuid,jdbcType=VARCHAR}
+        update REP_REL_DEAL
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PUB_DATE = #{pubDate,jdbcType=DATE},
+            CREDITOR_AMT = #{creditorAmt,jdbcType=DECIMAL},
+            BOND_AMT = #{bondAmt,jdbcType=DECIMAL},
+            INVEST_AMT = #{investAmt,jdbcType=DECIMAL},
+            ASSET_AMT = #{assetAmt,jdbcType=DECIMAL},
+            TRUST_FEE = #{trustFee,jdbcType=DECIMAL},
+            SELL_FEE = #{sellFee,jdbcType=DECIMAL},
+            OTHER_FEE = #{otherFee,jdbcType=DECIMAL},
+            EFFDATE = #{effdate,jdbcType=DATE},
+            EFFDELIDATE = #{effdelidate,jdbcType=DATE},
+            ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </update>
 
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto"  >
@@ -186,10 +199,13 @@
         select
         T1.UUID uuid,
         T1.PROD_ID prodId,
-        T1.BANK_TRANS_AMT bankTransAmt,
-        T1.ORG_TRANS_AMT orgTransAmt,
-        T1.INVEST_TRANS_AMT investTransAmt,
-        T1.RELATEAMOUNT relateamount,
+       T1.CREDITOR_AMT   creditorAmt,
+       T1.BOND_AMT    bondAmt,
+       T1.INVEST_AMT investAmt,
+       T1.ASSET_AMT     assetAmt,
+       T1.TRUST_FEE     trustFee,
+       T1.SELL_FEE     sellFee,
+       T1.OTHER_FEE     otherFee,
         T1.EFFDATE effdate,
         T1.EFFDELIDATE effdelidate
         from REP_REL_DEAL T1
@@ -204,10 +220,13 @@
             SELECT #{uuid,jdbcType=VARCHAR} UUID,
             #{prodId,jdbcType=VARCHAR} PROD_ID,
             #{pubDate,jdbcType=DATE} PUB_DATE,
-            #{bankTransAmt,jdbcType=DECIMAL} BANK_TRANS_AMT,
-            #{orgTransAmt,jdbcType=DECIMAL} ORG_TRANS_AMT,
-            #{investTransAmt,jdbcType=DECIMAL} INVEST_TRANS_AMT,
-            #{relateamount,jdbcType=VARCHAR} RELATEAMOUNT,
+            #{creditorAmt,jdbcType=DECIMAL} CREDITOR_AMT,
+            #{bondAmt,jdbcType=DECIMAL} BOND_AMT,
+            #{investAmt,jdbcType=DECIMAL} INVEST_AMT,
+            #{assetAmt,jdbcType=DECIMAL} ASSET_AMT,
+            #{trustFee,jdbcType=DECIMAL} TRUST_FEE,
+            #{sellFee,jdbcType=DECIMAL} SELL_FEE,
+            #{otherFee,jdbcType=DECIMAL} OTHER_FEE,
             #{effdate,jdbcType=DATE} EFFDATE,
             #{effdelidate,jdbcType=DATE} EFFDELIDATE,
             #{status,jdbcType=VARCHAR} STATUS,
@@ -229,21 +248,27 @@
             WHEN MATCHED THEN UPDATE
             SET
             RRD.PUB_DATE = TEMP.PUB_DATE,
-            RRD.BANK_TRANS_AMT = TEMP.BANK_TRANS_AMT,
-            RRD.ORG_TRANS_AMT = TEMP.ORG_TRANS_AMT,
-            RRD.INVEST_TRANS_AMT = TEMP.INVEST_TRANS_AMT,
-            RRD.RELATEAMOUNT = TEMP.RELATEAMOUNT,
+
+            RRD.CREDITOR_AMT=TEMP.CREDITOR_AMT,
+            RRD.BOND_AMT = TEMP.BOND_AMT,
+            RRD.INVEST_AMT = TEMP.INVEST_AMT,
+            RRD.ASSET_AMT = TEMP.ASSET_AMT,
+            RRD.TRUST_FEE = TEMP.TRUST_FEE,
+            RRD.SELL_FEE = TEMP.SELL_FEE,
+            RRD.OTHER_FEE = TEMP.OTHER_FEE,
+
             RRD.UPDATE_TIME = TEMP.UPDATE_TIME,
             RRD.UPDATE_USER = TEMP.UPDATE_USER,
             RRD.ERRORMSG = ''
             <!-- 未匹配到则插入 -->
-            WHEN NOT MATCHED THEN INSERT(UUID,PROD_ID,PUB_DATE,BANK_TRANS_AMT,
-            ORG_TRANS_AMT,INVEST_TRANS_AMT,RELATEAMOUNT,
+            WHEN NOT MATCHED THEN INSERT(UUID,PROD_ID,PUB_DATE,CREDITOR_AMT,
+            BOND_AMT,INVEST_AMT,ASSET_AMT,TRUST_FEE,SELL_FEE,OTHER_FEE,
             EFFDATE,EFFDELIDATE,CREATE_TIME,
             UPDATE_TIME,CREATE_DEPT,CREATE_USER,
             UPDATE_USER,STATUS)
-            VALUES(TEMP.UUID,TEMP.PROD_ID,TEMP.PUB_DATE,TEMP.BANK_TRANS_AMT,
-            TEMP.ORG_TRANS_AMT,TEMP.INVEST_TRANS_AMT,TEMP.RELATEAMOUNT,
+            VALUES(TEMP.UUID,TEMP.PROD_ID,TEMP.PUB_DATE,TEMP.CREDITOR_AMT,
+            TEMP.BOND_AMT,TEMP.INVEST_AMT,TEMP.TRUST_FEE,
+            TEMP.TRUST_FEE,TEMP.SELL_FEE,TEMP.OTHER_FEE,
             TEMP.EFFDATE,TEMP.EFFDELIDATE,TEMP.CREATE_TIME,
             TEMP.UPDATE_TIME,TEMP.CREATE_DEPT,TEMP.CREATE_USER,
             TEMP.UPDATE_USER,TEMP.STATUS)
@@ -256,7 +281,7 @@
         to_char(A.EFFDELIDATE,'yyyy-mm-dd') effdelidateStr
         from REP_REL_DEAL A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFFDATE,'yyyy-mm-dd'),to_char(A.EFFDELIDATE,'yyyy-mm-dd')) IN (" separator="," close=")">
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFFDATE,'yyyy-mm-dd'),to_char(A.EFFDELIDATE,'yyyy-mm-dd')) IN (" separator="," close=") and A.STATUS='E'">
                 (#{item.prodId},#{item.effdateStr},#{item.effdelidateStr})
             </foreach>
         </where>

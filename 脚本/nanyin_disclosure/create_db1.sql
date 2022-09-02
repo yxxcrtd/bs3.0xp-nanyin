@@ -1306,3 +1306,9 @@ WHERE REP_PROD_TYPE IN ('01','02');
    
 /** UAT变更开发：增加业绩基准表，chenxc，2022-09-01 end **/
 
+
+/** 业绩基准表增加失效日 字段 20220902 add by sunjie start**/
+alter table REP_PROD_BASIC_CHANGE
+	add EXP_DATE DATE;
+COMMENT ON COLUMN REP_PROD_BASIC_CHANGE.EXP_DATE IS '失效日'
+/** 业绩基准表增加失效日 字段 20220902 add by sunjie end**/

@@ -130,8 +130,8 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
-        if (null == tempList.get(0) || tempList.get(0).size() != 7) {
-            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 7), MessageType.错误消息);
+        if (null == tempList.get(0) || tempList.get(0).size() != 10) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 10), MessageType.错误消息);
             return webResult;
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
@@ -194,13 +194,13 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             } else {
                 entity.setProdId(" ");
             }
-            if (StringUtil.isNotEmpty(list.get(5))) {
-                entity.setEffdateStr(list.get(5));
+            if (StringUtil.isNotEmpty(list.get(8))) {
+                entity.setEffdateStr(list.get(8));
             } else {
                 entity.setEffdateStr(" ");
             }
-            if (StringUtil.isNotEmpty(list.get(6))) {
-                entity.setEffdelidateStr(list.get(6));
+            if (StringUtil.isNotEmpty(list.get(9))) {
+                entity.setEffdelidateStr(list.get(9));
             } else {
                 entity.setEffdelidateStr(" ");
             }
@@ -304,9 +304,9 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
         Map<String, List<String>> map = new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
-            if (null == rowData || rowData.size() != 7) {
+            if (null == rowData || rowData.size() != 10) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
-                        this.getMessage("REPORT_COMMON_FILE_E_0030", 7)));
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 10)));
                 break;
             }
             // 验证消息
@@ -318,60 +318,79 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(1))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "期间投资关联机构发行证券交易金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额"));
             } else if (!isBigDecimal(rowData.get(1))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "期间投资关联机构发行证券交易金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额"));
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "期间投资关联机构承销证券交易金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "投资于关联方承销的证券交易金额"));
             } else if (!isBigDecimal(rowData.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "期间投资关联机构承销证券交易金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "投资于关联方承销的证券交易金额"));
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(3))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "期间关联方作为交易对手的投融资业务的交易金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "与关联方作为交易对手开展的投融资业务交易金额"));
             } else if (!isBigDecimal(rowData.get(3))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "期间关联方作为交易对手的投融资业务的交易金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "与关联方作为交易对手开展的投融资业务交易金额"));
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(4))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "关联方提供服务的交易金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "投资关联方作为管理人的资产管理产品交易金额"));
             } else if (!isBigDecimal(rowData.get(4))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "关联方提供服务的交易金额"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "投资关联方作为管理人的资产管理产品交易金额"));
             }
-            Date platDate = DateUtil.platDateFromCache();
+
             if (!StringUtil.isNotEmpty(rowData.get(5))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效日"));
-            } else if (!isDateStr(rowData.get(5).trim())) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效日"));
-            } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(5)), platDate) < 0) {
-                //message.add("生效日不能小于平台日。");
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "支付关联方托管费"));
+            } else if (!isBigDecimal(rowData.get(5))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "支付关联方托管费"));
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(6))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "支付关联方代销费"));
+            } else if (!isBigDecimal(rowData.get(6))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "支付关联方代销费"));
+            }
+
+            if (!StringUtil.isNotEmpty(rowData.get(7))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "发生其他关联交易金额"));
+            } else if (!isBigDecimal(rowData.get(7))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "发生其他关联交易金额"));
+            }
+
+            Date platDate = DateUtil.platDateFromCache();
+            if (!StringUtil.isNotEmpty(rowData.get(8))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效日"));
+            } else if (!isDateStr(rowData.get(8).trim())) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效日"));
+            } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(8)), platDate) < 0) {
+                //message.add("生效日不能小于平台日。");
+            }
+
+            if (!StringUtil.isNotEmpty(rowData.get(9))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效截止日期"));
-            } else if (!this.isDateStr(rowData.get(6).trim())) {
+            } else if (!this.isDateStr(rowData.get(9).trim())) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效截止日期"));
-            } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(6)), platDate) < 0) {
+            } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(9)), platDate) < 0) {
                 //message.add("生效截止日期不能小于平台日。");
             }
 
-            if (StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))) {
-                if (isDateStr(rowData.get(5)) && isDateStr(rowData.get(6))) {
-                    Date effdate = DateUtil.parse(rowData.get(5));
-                    Date effdelidate = DateUtil.parse(rowData.get(6));
+            if (StringUtil.isNotEmpty(rowData.get(8)) && StringUtil.isNotEmpty(rowData.get(9))) {
+                if (isDateStr(rowData.get(8)) && isDateStr(rowData.get(9))) {
+                    Date effdate = DateUtil.parse(rowData.get(8));
+                    Date effdelidate = DateUtil.parse(rowData.get(9));
                     if (DateUtil.compareDate(effdelidate, effdate) < 0) {
                         message.add("生效截止日期不能小于生效日。");
                     }
                 }
             }
 
-            if (StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))
-                    && isDateStr(rowData.get(5).trim()) && isDateStr(rowData.get(6).trim())) {
+            if (StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(8)) && StringUtil.isNotEmpty(rowData.get(9))
+                    && isDateStr(rowData.get(8).trim()) && isDateStr(rowData.get(9).trim())) {
 
-                Date effdate = DateUtil.parse(rowData.get(5).toString().trim());
-                Date effdelidate = DateUtil.parse(rowData.get(6).toString().trim());
+                Date effdate = DateUtil.parse(rowData.get(8).toString().trim());
+                Date effdelidate = DateUtil.parse(rowData.get(9).toString().trim());
                 if (DateUtil.compareDate(effdelidate, effdate) >= 0) {
                     RepRelDealDto ser = new RepRelDealDto();
                     ser.setProdId(rowData.get(0).trim());
@@ -390,17 +409,17 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
                     }
                 }
                 if (map.containsKey(rowData.get(0)
-                        + GlobalConstant.UNDER_LINE + rowData.get(5)
-                        + GlobalConstant.UNDER_LINE + rowData.get(6))) {
+                        + GlobalConstant.UNDER_LINE + rowData.get(8)
+                        + GlobalConstant.UNDER_LINE + rowData.get(9))) {
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
                 }
                 map.put(rowData.get(0)
-                        + GlobalConstant.UNDER_LINE + rowData.get(5)
-                        + GlobalConstant.UNDER_LINE + rowData.get(6), rowData);
+                        + GlobalConstant.UNDER_LINE + rowData.get(8)
+                        + GlobalConstant.UNDER_LINE + rowData.get(9), rowData);
                 if (CollectionUtils.isNotEmpty(message)) {
                     checkResult.add(new ExcelValidDto(rowData.get(0)
-                            + GlobalConstant.UNDER_LINE + rowData.get(5)
-                            + GlobalConstant.UNDER_LINE + rowData.get(6),
+                            + GlobalConstant.UNDER_LINE + rowData.get(8)
+                            + GlobalConstant.UNDER_LINE + rowData.get(9),
                             String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
                 }
                 else {
@@ -408,6 +427,11 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
                     relDealDto.setExcelNum(String.valueOf(i + 2));
                     entities.add(relDealDto);
                 }
+            }else {
+                checkResult.add(new ExcelValidDto(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(8)
+                        + GlobalConstant.UNDER_LINE + rowData.get(9),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
         }
         if (checkResult.isEmpty()) {
@@ -456,10 +480,19 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             repRelDealDto.setAssetAmt(new BigDecimal (rowData.get(4).toString().trim()));
         }
         if (StringUtil.isNotEmpty(rowData.get(5))) {
-            repRelDealDto.setEffdate(DateUtil.parse(rowData.get(5).toString().trim()));
+            repRelDealDto.setTrustFee(new BigDecimal (rowData.get(5).toString().trim()));
         }
         if (StringUtil.isNotEmpty(rowData.get(6))) {
-            repRelDealDto.setEffdelidate(DateUtil.parse(rowData.get(6).toString().trim()));
+            repRelDealDto.setSellFee(new BigDecimal (rowData.get(6).toString().trim()));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(7))) {
+            repRelDealDto.setOtherFee(new BigDecimal (rowData.get(7).toString().trim()));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(8))) {
+            repRelDealDto.setEffdate(DateUtil.parse(rowData.get(8).toString().trim()));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(9))) {
+            repRelDealDto.setEffdelidate(DateUtil.parse(rowData.get(9).toString().trim()));
         }
         repRelDealDto.setStatus("E");
         repRelDealDto.setUuid(IDGenerator.generate(36));
