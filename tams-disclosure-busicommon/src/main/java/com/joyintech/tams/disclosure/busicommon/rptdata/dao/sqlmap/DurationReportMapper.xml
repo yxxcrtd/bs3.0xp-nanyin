@@ -229,7 +229,7 @@
 		from REP_PROD_INFO info
 		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID 
 		where 1=1
-			and info.REP_PROD_TYPE in ('01','02')  /**目产品或单产品**/
+			and info.REP_PROD_TYPE in ('01','02')  /**母产品或单产品**/
 			and (basis.EFF_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE})  
 		<if test="prodId!=null">
 			and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
@@ -239,6 +239,28 @@
 		</if>
 		
 		order by basis.EFF_DATE
+    </select>
+
+    <select id="selectAchievementBasis2" resultType="com.joyintech.tams.common.base.entity.RepProdBasicChange">
+	    select info.PROD_ID
+		    ,basis.EFF_DATE EFF_DATE
+		    ,basis.DATA_TYPE
+		    ,basis.PROPORTION
+		    ,basis.GROUP_ID
+		    ,basis.STATUS
+		    ,basis.UPDATE_TIME
+		from REP_PROD_INFO info
+		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID 
+		where 1=1
+			and info.REP_PROD_TYPE in ('01','02')  /**母产品或单产品**/
+			and basis.update_time<![CDATA[<=]]> #{eDate,jdbcType=DATE})  
+		<if test="prodId!=null">
+			and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		</if>
+		<if test="status!=null">
+			and info.STATUS=#{status,jdbcType=VARCHAR}
+		</if>
+		order by basis.UPDATE_TIME desc
     </select>
     
     <select id="selectNostdCreditor" resultType="com.joyintech.tams.common.base.entity.DisNostdCreditor">
@@ -270,4 +292,38 @@
 		where 1=1 ${sql}
 	</select>
 	
+	<select id="selectProdPlan" resultType="com.joyintech.tams.common.base.entity.DisProdPlanInfo">
+		select PROD_ID
+			,OPEN_START_DATE
+			,OPEN_END_DATE
+			,COLLINGOFF_PERIOD
+			,OPERATION_START_DATE
+			,AUTO_REDEEM_DATE
+			,HOLD_DAYS
+		from DIS_RPDO_PLAN 
+		where DATA_STAUS='E'
+		and RPOD_ID=#{prodId,jdbcType=VARCHAR}
+		and OPERATION_START_DATE>#{startDate,jdbcType=DATE}
+		order by OPERATION_START_DATE
+	</select>
+	
+    <select id="selectAchievementBasis3" resultType="com.joyintech.tams.common.base.entity.RepProdBasicChange">
+	    select
+	    	basis.PROD_ID
+		    ,basis.EFF_DATE EFF_DATE
+		    ,basis.EXP_DATE
+		    ,basis.DATA_TYPE
+		    ,basis.PROPORTION
+		    ,basis.GROUP_ID
+		    ,basis.STATUS
+		    ,basis.UPDATE_TIME
+		from REP_PROD_BASIC_CHANGE basis 
+		where 1=1
+			and ( basis.EFF_DATE <![CDATA[<=]]>#{eDate,jdbcType=DATE} and basis.EXP_DATE <![CDATA[>=]]>#{sDate,jdbcType=DATE} )
+			and basis.STATUS='E'
+		<if test="prodId!=null">
+			and basis.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		</if>
+		order by basis.EFF_DATE
+    </select>	
 </mapper>

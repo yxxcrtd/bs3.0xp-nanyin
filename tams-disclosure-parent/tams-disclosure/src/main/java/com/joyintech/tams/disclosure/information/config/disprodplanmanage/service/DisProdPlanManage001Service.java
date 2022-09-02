@@ -331,80 +331,98 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     prodInfo = disProdPlanManage002Service.getPrdInfo(rowData.get(0), DictCodeListExt1.维护数据状态_有效.getValue());
                 }
             }
-            if (!StringUtil.isNotEmpty(rowData.get(1))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "开放期起始日"));
-            } else if (!isDateStr(rowData.get(1))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "开放期起始日"));
-            }
-            if (!StringUtil.isNotEmpty(rowData.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "开放期结束日"));
-            } else if (!isDateStr(rowData.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "开放期结束日"));
-            }
-            if(prodInfo != null && isDateStr(rowData.get(1))
-                    && DateUtil.compareDate(rowData.get(1), prodInfo.getSetDateStr()) < 0){
-                message.add("开放期起始日不能小于产品成立日期。");
-            }
-            if(isDateStr(rowData.get(1)) && isDateStr(rowData.get(2))
-                    &&  DateUtil.compareDate(rowData.get(2), rowData.get(1)) <= 0){
-                message.add("开放期结束日不能小于开放期起始日。");
-            }
-            if (StringUtil.isNotEmpty(rowData.get(3)) && !isDateStr(rowData.get(3))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "产品冷静期"));
-            }
-            if (!StringUtil.isNotEmpty(rowData.get(4))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "运作起始日"));
-            } else if (!isDateStr(rowData.get(4))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "运作起始日"));
-            }
-            if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(1))
-                    && DateUtil.compareDate(rowData.get(4), rowData.get(1)) < 0){
-                message.add("运作起始日不能小于开放期起始日。");
-            }
-            if (StringUtil.isNotEmpty(rowData.get(5)) && !isDateStr(rowData.get(5))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "自动赎回日"));
-            }
-            if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(5))
-                    && DateUtil.compareDate(rowData.get(4), rowData.get(5)) >= 0){
-                message.add("自动赎回日不能小于运作起始日。");
-            }
-            if (StringUtil.isNotEmpty(rowData.get(6)) && !StringUtils.isNumeric(rowData.get(6))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "客户实际持有天数"));
-            }
+            if(StringUtils.equals("02",prodInfo.getIssuingWay())){
+                message.add("封闭式产品不允许导入排期计划");
+            }else{
+                if (!StringUtil.isNotEmpty(rowData.get(1))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "开放期起始日"));
+                } else if (!isDateStr(rowData.get(1))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "开放期起始日"));
+                }
+                if (!StringUtil.isNotEmpty(rowData.get(2))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "开放期结束日"));
+                } else if (!isDateStr(rowData.get(2))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "开放期结束日"));
+                }
+                if(prodInfo != null && isDateStr(rowData.get(1))
+                        && DateUtil.compareDate(rowData.get(1), prodInfo.getSetDateStr()) < 0){
+                    message.add("开放期起始日不能小于产品成立日期。");
+                }
+                if(isDateStr(rowData.get(1)) && isDateStr(rowData.get(2))
+                        &&  DateUtil.compareDate(rowData.get(2), rowData.get(1)) <= 0){
+                    message.add("开放期结束日不能小于开放期起始日。");
+                }
+                if (StringUtil.isNotEmpty(rowData.get(3)) && !isDateStr(rowData.get(3))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "产品冷静期"));
+                }
+                if (!StringUtil.isNotEmpty(rowData.get(4))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "运作起始日"));
+                } else if (!isDateStr(rowData.get(4))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "运作起始日"));
+                }
+                if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(1))
+                        && DateUtil.compareDate(rowData.get(4), rowData.get(1)) < 0){
+                    message.add("运作起始日不能小于开放期起始日。");
+                }
+                if (StringUtil.isNotEmpty(rowData.get(5)) && !isDateStr(rowData.get(5))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "自动赎回日"));
+                }
 
-            if (prodInfo != null && StringUtils.isNotBlank(prodInfo.getIsPeriod())
-                    && StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), prodInfo.getIsPeriod())) {
-                if (StringUtils.isBlank(rowData.get(5))) {
-                    message.add("客户周期型产品，自动赎回日必填。");
-                } else if (isDateStr(rowData.get(5))
-                        && isDateStr(rowData.get(4))
-                        && DateUtil.compareDate(rowData.get(5), rowData.get(4)) < 0) {
-                    message.add("自动赎回日不能小于运作起始日。");
+                if (StringUtil.isNotEmpty(rowData.get(6)) && !StringUtils.isNumeric(rowData.get(6))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "客户实际持有天数"));
                 }
-                if (StringUtil.isEmpty(rowData.get(6))) {
-                    message.add("客户周期型产品,客户实际持有天数必填。");
-                }
-            }
 
-            if (prodInfo != null &&  StringUtils.isNotBlank(prodInfo.getRaiseType())
-                    && StringUtils.equals(DictCodeListExt5.信披募集方式_私募.getValue(), prodInfo.getRaiseType())) {
-                if (StringUtils.isBlank(rowData.get(3))) {
-                    message.add("募集方式为私募,产品冷静期必填。");
+                if (prodInfo != null && StringUtils.isNotBlank(prodInfo.getIsPeriod())
+                        && StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), prodInfo.getIsPeriod())) {
+                    if (StringUtils.isBlank(rowData.get(5))) {
+                        message.add("客户周期型产品，自动赎回日必填。");
+                    } else if (isDateStr(rowData.get(5))
+                            && isDateStr(rowData.get(4))
+                            && DateUtil.compareDate(rowData.get(5), rowData.get(4)) < 0) {
+                        message.add("自动赎回日不能小于运作起始日。");
+                    }
+                    if (StringUtil.isEmpty(rowData.get(6))) {
+                        message.add("客户周期型产品,客户实际持有天数必填。");
+                    }
+                    if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(5))
+                            && DateUtil.compareDate(rowData.get(4), rowData.get(5)) >= 0){
+                        message.add("自动赎回日不能小于运作起始日。");
+                    }
+                }else if(prodInfo != null && StringUtils.isNotBlank(prodInfo.getIsPeriod())
+                        && StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), prodInfo.getIsPeriod())){
+                    if (!StringUtils.isBlank(rowData.get(5))) {
+                        message.add("非客户周期型产品，自动赎回日不可填。");
+                    }
+                    if (!StringUtil.isEmpty(rowData.get(6))) {
+                        message.add("非客户周期型产品,客户实际持有天数不可填。");
+                    }
                 }
-                // 开放结束日＜产品冷静期＜运作起始日
-                if (isDateStr(rowData.get(3)) && isDateStr(rowData.get(2))
-                        && DateUtil.compareDate(rowData.get(3), rowData.get(2)) <= 0) {
-                    message.add("产品冷静期必须大于开放结束日！");
+
+                if (prodInfo != null &&  StringUtils.isNotBlank(prodInfo.getRaiseType())
+                        && StringUtils.equals(DictCodeListExt5.信披募集方式_私募.getValue(), prodInfo.getRaiseType())) {
+                    if (StringUtils.isBlank(rowData.get(3))) {
+                        message.add("募集方式为私募,产品冷静期必填。");
+                    }
+                    // 开放结束日＜产品冷静期＜运作起始日
+                    if (isDateStr(rowData.get(3)) && isDateStr(rowData.get(2))
+                            && DateUtil.compareDate(rowData.get(3), rowData.get(2)) <= 0) {
+                        message.add("产品冷静期必须大于开放结束日！");
+                    }
+                    if (isDateStr(rowData.get(4)) && isDateStr(rowData.get(3))
+                            && DateUtil.compareDate(rowData.get(4), rowData.get(3)) <= 0) {
+                        message.add("产品冷静期必须小于运作起始日！");
+                    }
+                }else if(prodInfo != null &&  StringUtils.isNotBlank(prodInfo.getRaiseType())
+                        && StringUtils.equals(DictCodeListExt5.信披募集方式_公募.getValue(), prodInfo.getRaiseType())){
+                    if (!StringUtils.isBlank(rowData.get(3))) {
+                        message.add("募集方式为公募,产品冷静期不可填。");
+                    }
                 }
-                if (isDateStr(rowData.get(4)) && isDateStr(rowData.get(3))
-                        && DateUtil.compareDate(rowData.get(4), rowData.get(3)) <= 0) {
-                    message.add("产品冷静期必须小于运作起始日！");
+                if (prodplanMap.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
                 }
+                prodplanMap.put(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
             }
-            if (prodplanMap.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
-            }
-            prodplanMap.put(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2),
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));

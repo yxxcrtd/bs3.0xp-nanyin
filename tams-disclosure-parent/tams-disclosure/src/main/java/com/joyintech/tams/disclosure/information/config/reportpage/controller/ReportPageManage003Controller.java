@@ -177,6 +177,12 @@ public class ReportPageManage003Controller extends BaseController {
 
         }
 
+        if("01".equals(dto.getWorkflowType())){
+            msg = reportPageManage002Service.checkStatus(dto);
+            if(StringUtil.isNotBlank(msg)){
+                return new AjaxResult(msg, MessageType.错误消息);
+            }
+        }
         return commonCheck(bindingResult, operateType);
     }
 

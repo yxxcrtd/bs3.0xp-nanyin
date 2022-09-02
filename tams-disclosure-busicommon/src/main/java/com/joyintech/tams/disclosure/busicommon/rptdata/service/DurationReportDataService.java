@@ -2,21 +2,29 @@ package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
-import com.joyintech.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RepExtConusMapper;
 import com.joyintech.tams.common.base.entity.DisNostdCreditor;
 import com.joyintech.tams.common.base.entity.DisProdAsset;
+import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
 import com.joyintech.tams.common.base.entity.RepAssetsComb;
 import com.joyintech.tams.common.base.entity.RepExtConus;
 import com.joyintech.tams.common.base.entity.RepExtConusKey;
@@ -28,7 +36,6 @@ import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepRelDeal;
 import com.joyintech.tams.common.base.entity.RepReveal;
-import com.joyintech.tams.disclosure.busicommon.common.util.ArithmeticUtil;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
@@ -166,23 +173,24 @@ public class DurationReportDataService implements IReportDataService {
 			for (RepProdInfo child:listProdChildren ) {
 				Map<String,Object> mapChild = new HashMap<String,Object>();
 				mapChild.put("prodId", child.getProdId());
+				List<Map<String,Object>> listBasis = new ArrayList<>();
 				if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
 					mapChild.put("duration",DurationUtil.getQuarterDuration(year, quarter, child.getSetDate()));
 					Date durStartDate = DurationUtil.getQuarterStart(year, quarter);
 					Date durEndDate = DurationUtil.getQuarterEnd(year, quarter);
-					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate)+"%" );
+					listBasis = this.calcAchivementBasis3(child,durStartDate,durEndDate);
 				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
 					mapChild.put("duration",DurationUtil.getHalfYearDuration(year, halfYear, child.getSetDate()));
 					Date durStartDate = DurationUtil.getHalfYearStart(year, halfYear);
 					Date durEndDate = DurationUtil.getHalfYearEnd(year, halfYear);
-					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate)+"%" );
+					listBasis = this.calcAchivementBasis3(child,durStartDate,durEndDate);
 				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
 					mapChild.put("duration",DurationUtil.getYearDuration(year, child.getSetDate()));
 					Date durStartDate = DurationUtil.getYearStart(year);
 					Date durEndDate = DurationUtil.getYearEnd(year);
-					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate)+"%" );
+					listBasis = this.calcAchivementBasis3(child,durStartDate,durEndDate);
 				}				
-				listAchieveBasis.add(mapChild);
+				listAchieveBasis.addAll(listBasis);
 			}
 			reportDto.setListAchieveBasis(listAchieveBasis);
 			
@@ -485,6 +493,108 @@ public class DurationReportDataService implements IReportDataService {
 		return basisValue;
 	}
 	
+	/**
+	 * 【（结束日期的指数行情/起始日期-1工作日的指数行情）-1】/（结束日期-起始日期）*365，截位法保留2位小数
+	 */
+	private BigDecimal calcAchivementBasis2(RepProdInfo prod,Date durStartDate,Date durEndDate) {
+		BigDecimal basisValue = BigDecimal.ZERO;
+		
+		try {
+			Date sDate = durStartDate;
+			Date eDate = durEndDate;
+			
+			//查询指定的产品在统计区间结束日最近的一次有效的变更数据：
+			Map<String,Object> mapParas = new HashMap<>();
+			mapParas.put("prodId", prod.getpProdId());   //这里传入母产品id（P_PROD_ID)，业绩基准明细绑定在母产品上
+			mapParas.put("sDate", sDate);
+			mapParas.put("eDate",eDate);
+			List<RepProdBasicChange> listBasis = durationReportMapper.selectAchievementBasis2(mapParas);
+			
+			//查询指定的产品在统计区间内的有效业绩基准
+			List<RepProdBasicChange> listEffBasis = new ArrayList<>();
+			if (listBasis==null || listBasis.size()<1 ) 
+				return BigDecimal.ZERO;
+			
+			String groupId = listBasis.get(0).getGroupId();
+			for ( RepProdBasicChange item:listBasis ) {
+				if ( "E".equals(item.getStatus()) && groupId.equals(item.getGroupId())) { //有效状态，并且是同一组行情的
+					listEffBasis.add(item);
+				}
+//				//更新日期在统计区间内，且状态为D，说明有变更
+//				if ( item.getUpdateTime()!=null && item.getUpdateTime().compareTo(sDate)>=0 && item.getUpdateTime().compareTo(eDate)<=0 && "D".equals(item.getStatus()) ) {
+//					changeFlag=true;
+//				}
+			}
+			
+			
+			//查询是否在区间内有业绩基准变更，变更的判断规则是变更表的数据记录，与需求中的变更判断思路不一样，经过讨论，按变更履历表来
+			//有无业绩基准变更的依据：查询边变更履历表的EFF_DATE在报表区间内的所有变更履历数据，全部为E的无变更，全部为D的无变更，有E且有D的为有变更；
+			//采用EFF_DATE的依据是：需求说明，如果3月25日做了变更，但EFF_DATE是4月2日，仍然算第一季度无变更
+			//程序中有无业绩基准变更，过滤listBasis状态为D的数据，如果条数减少，就是有变更
+			//非指数变更为指数型产品，变更履历表里面只有E状态的数据，也算变更；
+			//区间内是否有业绩基准变更的标志
+			boolean changeFlag = false;
+			if ( listBasis.get(0).getUpdateTime().compareTo(sDate)>0 )  //变更时间在本次统计区间内，则算有变更 
+				changeFlag = true;
+			
+			//查询指定产品最新的业绩基准指数
+			if ( "02".equals(prod.getIssuingWay()) ) {  //封闭式：max(产品成立日，统计周期开始日）
+				if (prod.getSetDate().compareTo(sDate)>0) {
+					sDate = prod.getSetDate();
+				}
+			} else if ( "01".equals(prod.getIssuingWay()) ) {  //开放式
+				if ( changeFlag==true ) {  //无业绩基准变更：max(产品成立日，统计周期开始日）
+					
+					//计算变更生效日=变更日期后，最近的一次运作起始日
+					Map <String,Object> p= new HashMap<String,Object>();
+					p.put("startDate",listBasis.get(0).getUpdateTime());
+					p.put("prodId",prod.getpProdId());
+//					if ( "01".equals(prod.getRepProdType()) ) //主产品
+//						p.put("prodId",prod.getProdId());
+//					else
+//						p.put("prodId",prod.getpProdId());  //单产品
+					List<DisProdPlanInfo> listPlan = durationReportMapper.selectProdPlan(p);
+					if ( listPlan==null || listPlan.size()<1)
+						sDate = prod.getSetDate();
+					else
+						sDate = listPlan.get(0).getOperationStartDate();
+				} else {  //无业绩基准变更
+					if (prod.getSetDate().compareTo(sDate)>0) {
+						sDate = prod.getSetDate();
+					}
+				}
+			}
+			
+			int days = DateUtil.getBetweenDayNumber(sDate,eDate);
+			
+			//查找指数行情
+			for (RepProdBasicChange basis:listEffBasis ) {
+				BigDecimal val = BigDecimal.ZERO;
+				RepExtConusKey key = new RepExtConusKey();
+				key.setDataType(basis.getDataType());
+				key.setDataDate(holidayService.getPreWorkDate(sDate));
+				RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
+				if ( sConus==null || sConus.getMarketInfo()==null ) {
+					logger.error("没有找到起始日前一工作日行情。");
+					continue;
+				}
+				key.setDataDate(eDate);
+				RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
+				if ( eConus==null || eConus.getMarketInfo()==null ) {
+					logger.error("没有找到起始日前一工作日行情。");
+					continue;
+				}
+				val = ( eConus.getMarketInfo().divide(sConus.getMarketInfo(),20,BigDecimal.ROUND_DOWN ).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
+				val = val.multiply(percent2BigDecimal(basis.getProportion())).divide(new BigDecimal(days),20,BigDecimal.ROUND_DOWN);
+				basisValue = basisValue.add(val);
+			}
+			basisValue = new BigDecimal(100).multiply(basisValue).setScale(2, BigDecimal.ROUND_DOWN);
+		} catch (Exception e) {
+			logger.error("业绩比较基准计算错误！",e);
+		}
+		return basisValue;
+	}	
+	
 	public RepReveal getRepReveal(Map<String, Object> paraMap) {
 		RepReveal repReveal = new RepReveal();
 
@@ -578,4 +688,113 @@ public class DurationReportDataService implements IReportDataService {
     		return null;
     	}
     }
+    
+	/**
+	 * 【（结束日期的指数行情/起始日期-1工作日的指数行情）-1】/（结束日期-起始日期）*365，截位法保留2位小数
+	 */
+	private List<Map<String,Object>> calcAchivementBasis3(RepProdInfo prod,Date durStartDate,Date durEndDate) {
+
+		List<Map<String,Object>> listBasis = new ArrayList<>();
+		try {
+			Date sDate = durStartDate;
+			Date eDate = durEndDate;
+			
+			//查询指定的产品在统计区间结束日最近的一次有效的变更数据：
+			Map<String,Object> mapParas = new HashMap<>();
+			mapParas.put("prodId", prod.getProdId());   //这里传入母产品id（P_PROD_ID)，业绩基准明细绑定在母产品上
+			mapParas.put("sDate", sDate);
+			mapParas.put("eDate",eDate);
+			List<RepProdBasicChange> listChange = durationReportMapper.selectAchievementBasis3(mapParas);
+			
+			if ( listChange==null || listChange.size()<1 ) {
+				logger.error("指定的产品无业绩基准参数设置，子产品编号 :"+mapParas.get("prodId"));
+	        	Map<String,Object> mapBasis = new HashMap<String,Object>();
+	        	mapBasis.put("prodId", prod.getProdId());
+	        	String dur="";
+	    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+	    		dur = sdf.format(durStartDate);
+	    		dur = dur+" - " + sdf.format(durEndDate);
+	        	mapBasis.put("duration", dur);
+	        	BigDecimal  basisValue = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_DOWN);;
+	        	mapBasis.put("achieveBasis", basisValue+"%");
+	        	listBasis.add(mapBasis);
+				return listBasis;
+			}
+			
+			TreeSet<Date> setDate = new TreeSet<Date>();
+			Map<Date,List<RepProdBasicChange>> mapChange = new HashMap<>();
+			//按生效日进行分组，将生效日相同的作为一组
+			for ( RepProdBasicChange basis:listChange ) {
+				Date key = basis.getEffDate();
+				setDate.add(key);
+				List<RepProdBasicChange> list = mapChange.get(key);
+				if ( list==null ) {
+					list = new ArrayList<RepProdBasicChange>();
+					list.add(basis);
+					mapChange.put(key, list);
+				} else {
+					list.add(basis);
+				}
+			}
+			List<Date> listDate = new ArrayList<>(setDate);
+		    Collections.sort(listDate);
+			
+			//循环treemap，按阶段进行计算业绩基准
+	        for ( int i=0;i<listDate.size();i++ ) {
+	        	Map<String,Object> mapBasis = new HashMap<String,Object>();
+	        	mapBasis.put("prodId", prod.getProdId());
+	        	
+	        	Date dsDate = listDate.get(i);
+	        	List<RepProdBasicChange> listDChange = mapChange.get(dsDate);
+	        	
+	        	if ( dsDate.compareTo(sDate)<0 ) {
+	        		dsDate = sDate;
+	        	}
+	        	
+	        	Date deDate = null;
+	        	if ( i<listDate.size()-1 )
+	        		deDate = listDate.get(i+1);  //下一个点的时间
+	        	else
+	        		deDate = eDate;
+	        	
+	        	int days = DateUtil.getBetweenDayNumber(dsDate,deDate);
+	        	String dur="";
+	    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+	    		dur = sdf.format(dsDate);
+	    		dur = dur+" - " + sdf.format(deDate);
+	        	mapBasis.put("duration", dur);
+	        	
+	        	BigDecimal basisValue = BigDecimal.ZERO;
+	    		
+				//查找指数行情
+				for (RepProdBasicChange basis:listDChange ) {
+					BigDecimal val = BigDecimal.ZERO;
+					RepExtConusKey key = new RepExtConusKey();
+					key.setDataType(basis.getDataType());
+					key.setDataDate(holidayService.getPreWorkDate(sDate));
+					RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
+					if ( sConus==null || sConus.getMarketInfo()==null ) {
+						logger.error("没有找到起始日前一工作日行情。");
+						continue;
+					}
+					key.setDataDate(eDate);
+					RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
+					if ( eConus==null || eConus.getMarketInfo()==null ) {
+						logger.error("没有找到起始日前一工作日行情。");
+						continue;
+					}
+					val = ( eConus.getMarketInfo().divide(sConus.getMarketInfo(),20,BigDecimal.ROUND_DOWN ).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
+					val = val.multiply(percent2BigDecimal(basis.getProportion())).divide(new BigDecimal(days),20,BigDecimal.ROUND_DOWN);
+					basisValue = basisValue.add(val);
+				}
+				basisValue = new BigDecimal(100).multiply(basisValue).setScale(2, BigDecimal.ROUND_DOWN);
+				mapBasis.put("achieveBasis", basisValue+"%");
+				listBasis.add(mapBasis);
+	        }
+		} catch (Exception e) {
+			logger.error("业绩比较基准计算错误！",e);
+		}
+		return listBasis;
+	}	
+	
 }
