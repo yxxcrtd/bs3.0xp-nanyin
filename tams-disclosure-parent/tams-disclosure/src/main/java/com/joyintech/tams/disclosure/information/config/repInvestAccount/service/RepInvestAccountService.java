@@ -129,7 +129,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
 
     public Page<RepInvestAccountDto> selectForExport(Map<String, Object> param) {
         param.put("prodList", StringUtil.isNotEmpty(param.get("prodId"))?(param.get("prodId").toString().split(",")):null);
-        Page<RepInvestAccountDto> result = queryForPage(() -> repInvestAccountMapper.selectInfo(param));
+        Page<RepInvestAccountDto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()),
+                () -> repInvestAccountMapper.selectInfo(param));
         return result;
     }
 
