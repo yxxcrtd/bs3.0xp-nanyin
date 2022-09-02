@@ -104,8 +104,8 @@
             to_char(plan.OPEN_END_DATE,'yyyy-mm-dd') openEndDateStr
         from DIS_PROD_PLAN plan
         <where>
-            <foreach collection="list" item="item" open="(plan.PROD_ID,to_char(plan.OPEN_END_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
-                (#{item.prodId},#{item.openEndDateStr,jdbcType=VARCHAR})
+            <foreach collection="list" item="item" open="(plan.PROD_ID,to_char(plan.OPEN_END_DATE,'yyyy-mm-dd')) IN (" separator="," close=") and plan.DATA_STATUS='E' ">
+                (#{item.prodId,jdbcType=VARCHAR},#{item.openEndDateStr,jdbcType=VARCHAR})
             </foreach>
             and plan.DATA_STATUS = 'E'
         </where>
