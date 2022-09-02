@@ -74,7 +74,7 @@
                     <i class="iconfont icon-arrow-down pro-down-icon"></i>
                 </h3>
                 <div class="pro-module-item" style="padding: 8px;">
-                    <div class="layui-form-item" data-th-if="${!comments?.isEmpty()}">
+                    <div class="layui-form-item" data-th-if="${comments != null and !comments.isEmpty()}">
                         <table class="layui-table">
                             <thead>
                                 <tr>
