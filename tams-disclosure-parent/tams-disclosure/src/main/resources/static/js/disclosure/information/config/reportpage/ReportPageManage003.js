@@ -43,10 +43,32 @@
         $('#wfl_comment').val('无').parent().hide();
         // 去掉工作流中的“完成”按钮
         $('#btnComplete_wfl').remove();
+
+        if(typeof JoyinWorkFlow != 'undefined') {
+            JoyinWorkFlow.doCheckOnSubmit = function() {
+                var comment = $('#comment').val();
+                if(!comment) {
+                    Joyin.error('请填写审批意见!');
+                    return false;
+                }
+                $('#wfl_comment').val(comment);
+                return true;
+            };
+
+            JoyinWorkFlow.doCheckOnBack = function() {
+                var comment = $('#comment').val();
+                if(!comment) {
+                    Joyin.error('请填写审批意见!');
+                    return false;
+                }
+                $('#wfl_comment').val(comment);
+                return true;
+            }
+        }
+
 		var workflowType = $("#workflowType").val();
 		//禁用界面
 		if(workflowType !='01'){
-
 			$("#offRepId").attr("disabled",true);
 			//启用下拉框,不可见
 			$("#startDiv").attr("style","display:none");
@@ -57,9 +79,9 @@
 			$("#startRepId").attr("disabled",true);
 		}
 		//修建,修改
-		if(pageModel==='0'){
+		if(pageModel==='0' || pageModel === '1'){
 			$("#commentDiv").hide();
-		} else if(pageModel==='2' || pageModel === '1'){
+		} else if(pageModel==='2'){
 			$("#commentDiv").show();
 		}
 
