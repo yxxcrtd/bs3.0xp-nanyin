@@ -1,6 +1,5 @@
 package com.joyintech.tams.disclosure.common;
 
-import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.dto.WflDefaultUser;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.entity.WorkflowEntity;
@@ -23,14 +22,13 @@ public class MyUserTaskHandlerUserSelector implements UserTaskHandlerUserSelecto
     }
 
     @Override
-    public List<WflDefaultUser> defaultSelected(String processKey, String nodeId, FlowEntity entity, List<WflDefaultUser> defaultUsers) {
+    public List<WflDefaultUser> defaultSelected(String processKey, String taskId, FlowEntity entity, List<WflDefaultUser> defaultUsers) {
         // 流程中
         if(entity != null) {
             // 信批合规管理，最后一级业务经办默认选中流程发起人
             if(StringUtils.equals(entity.getProcessKey(), "fiveprocess")) {
-                // 业务经办节点
-                boolean lastTask = WorkflowContext.getProcessService().isLastUserTask(entity.getCurTaskId());
-                if(lastTask) {
+                // 业务经办节点前一个节点
+                if(StringUtils.equals(entity.getCurNodeId(), "review4")) {
                     WflDefaultUser defaultUser = new WflDefaultUser();
                     defaultUser.setModuleId(processKey);
                     defaultUser.setNodeId(entity.getCurNodeId());
