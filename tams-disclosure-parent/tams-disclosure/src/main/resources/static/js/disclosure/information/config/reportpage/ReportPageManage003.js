@@ -66,6 +66,11 @@
             }
         }
 
+        // 默认驳回节点设置
+        window.getDefaultBackNode = function() {
+            return $('#defaultNodeId').val();
+        }
+
 		var workflowType = $("#workflowType").val();
 		//禁用界面
 		if(workflowType !='01'){

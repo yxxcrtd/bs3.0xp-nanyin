@@ -26,10 +26,12 @@ import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto
 import com.joyintech.tams.disclosure.infoCompliance.service.InfoCompliance002Service;
 import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto;
 import com.joyintech.tams.disclosure.information.config.reportpage.service.ReportPageManage002Service;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +101,11 @@ public class ReportPageManage003Controller extends BaseController {
             model.addAttribute("businessId",entity.getSeqno());
 
             model.addAttribute("comments", getCommentList(entity.getSeqno()));
+
+            // 设置默认驳回节点ID
+            String processInstanceId = WorkflowContext.getWorkFlowService().getProcessInstanceId(workflowId);
+            ActivityImpl activity = WorkflowContext.getProcessService().getFirstTaskDefinition(processInstanceId);
+            model.addAttribute("defaultNodeId", activity.getId());
         }
 
         //如果是启用界面,则处查询出可以禁用的模板
