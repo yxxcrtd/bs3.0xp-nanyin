@@ -3,10 +3,14 @@ package com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.servic
 import java.io.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
 import org.apache.commons.net.ftp.FTPClient;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
@@ -17,11 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RepFtpDetailMapper;
 import com.joyintech.tams.common.base.dao.RepFtpDetailMsgMapper;
 import com.joyintech.tams.common.base.dao.RepFtpPathMapper;
@@ -170,8 +169,7 @@ public class FtpDetailService {
 				reportinfo = ftpDetailMapper.selectProdInfoByProdId(dto.getProdId());
 			}
 			RepReveal repReveal = repRevealMapper.selectByPrimaryKey(dto.getRevealId());
-			
-			
+
 			String filePath = repReveal.getSysFilepath();
 			String fileName = repReveal.getSysFilename();
 			
@@ -179,7 +177,29 @@ public class FtpDetailService {
 				filePath = repReveal.getFilepath();
 				fileName = repReveal.getFilename();
 			}
-			
+
+			//获取文件名称
+			String[] newFileNames = fileName.split("/");
+			String  newFileName = newFileNames[newFileNames.length-1];
+			String prefix = "";
+
+			String reportCategory = repReveal.getReportCategory();
+			//发行公告,运行公告,到期公告,临时公告,销售公告
+			if("01".equals(reportCategory) || "02".equals(reportCategory) || "03".equals(reportCategory) || "04".equals(reportCategory) || "05".equals(reportCategory) ){
+				//如果是母产品,查询发行成功的子产品信息
+				if("01".equals(reportinfo.getRepProdType())){
+					List<RepProdInfo> repInfoList = ftpDetailMapper.selectProdInfoByPProdId(reportinfo.getProdId());
+					prefix = repInfoList.stream().map(RepProdInfo::getProdId).distinct().collect(Collectors.joining(","));
+				} else {
+					prefix = reportinfo.getProdId();
+				}
+				//募集方式
+				prefix = prefix+"_"+SysDataUtil.getNameFromDataDict(DictCodeExt1.信披_募集方式, reportinfo.getRaiseType());
+				//文件类型
+				prefix = prefix + "_" + SysDataUtil.getNameFromDataDict(DictCodeExt1.信披报表类别, reportCategory);
+				fileName = prefix + "_" + newFileName;
+			}
+
 			UploadFile uploadfile = fileAttachmentProcess.fetch(filePath);
 
 			if(StringUtil.isNotEmpty(uploadfile)){
