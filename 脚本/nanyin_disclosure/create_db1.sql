@@ -1309,6 +1309,6 @@ WHERE REP_PROD_TYPE IN ('01','02');
 
 /** 业绩基准表增加失效日 字段 20220902 add by sunjie start**/
 alter table REP_PROD_BASIC_CHANGE
-	add INVALID_DATE DATE;
-COMMENT ON COLUMN REP_PROD_BASIC_CHANGE.INVALID_DATE IS '失效日';
+	add EXP_DATE DATE;
+COMMENT ON COLUMN REP_PROD_BASIC_CHANGE.EXP_DATE IS '失效日'
 /** 业绩基准表增加失效日 字段 20220902 add by sunjie end**/
