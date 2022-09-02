@@ -59,6 +59,9 @@ public class InfoCompliance002Controller extends BaseController {
         } else if(StringUtil.isNotEmpty(workflowId)){
             paramMap.put("workflowId",workflowId);
             dto = infoCompliance002Service.queryInfoCompliance(paramMap);
+            // 设置修订附件编辑状态（待办事项中的任何审批节点都可以编辑修订附件）
+            model.addAttribute("showEdit", true);
+            model.addAttribute("editable", !WorkFlowUtil.isNotFromToDoList() && StringUtils.equals(getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE));
         }
 
         if(dto != null){

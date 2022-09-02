@@ -63,13 +63,9 @@
                 </div>
             </div>
         </div>
-<!--
-        <div id="commentList">
 
-        </div>-->
-
-       <!-- <div id="upLoadDiv3" style="display: none" class="page-component" th:data-path="@{/disclosure/infoCompliance/uploadFile003/init}"
-             th:data-params="|{fileType: '03',businessId: '${seqno ?: ''}', workflowId: '${workflowId ?:''}'}|"></div>-->
+        <div data-th-if="${showEdit}" class="page-component" th:data-path="@{/disclosure/infoCompliance/uploadFile003/init}"
+             th:data-params="|{fileType: '03',businessId: '${seqno ?: ''}', editable:'${editable ?: false}'}|"></div>
 
         <div class="pro-module-wrap" id="commentContent" style="display: none">
             <div class="pro-module">
@@ -78,7 +74,7 @@
                     <i class="iconfont icon-arrow-down pro-down-icon"></i>
                 </h3>
                 <div class="pro-module-item" style="padding: 8px;">
-                    <div class="layui-form-item">
+                    <div class="layui-form-item" data-th-if="${!comments?.isEmpty()}">
                         <table class="layui-table">
                             <thead>
                                 <tr>
@@ -121,9 +117,6 @@
 
 </div>
 <div layout:fragment="script">
-    <script type="text/javascript">
-
-    </script>
     <script data-th-src="@{/js/disclosure/infoCompliance/infoCompliance002.js}" type="text/javascript"></script>
 </div>
 </body>
