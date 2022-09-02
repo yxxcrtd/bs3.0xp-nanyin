@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.RepFtpDetail;
 
+import java.util.List;
+
 @Repository("disclosureFtpDetailMapper")
 public interface FtpDetailMapper {
 
@@ -13,4 +15,9 @@ public interface FtpDetailMapper {
 	RepProdInfo selectProdInfo(String prodId);
 
 	RepProdInfo selectProdInfoByProdId(String prodId);
+
+	/**
+	 * 根据母产品代码查询发行成功的子产品
+	 * */
+	List<RepProdInfo> selectProdInfoByPProdId(String pProdId);
 }

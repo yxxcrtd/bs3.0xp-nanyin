@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -83,7 +84,13 @@ public class SFtpRevealInterf implements RevealInterf{
             		if(StringUtil.equals(DictCodeListExt2.披露方式_手动.getValue(), option)) {
     	        			
     	        			SftpUtil.SFTPconnect(ftpPath.getUsername(),ftpPath.getIp(), StringUtil.toInt(ftpPath.getProt()),  ftpPath.getPassword());
-    	        			SftpUtil.putFile(filePath, ftpPath.getPath());
+							//如果文件不存在则创建文件路径
+							String dateStr = DateUtil.format(new Date(),"yyyyMMdd");
+						    String newFtpPath = ftpPath.getPath() +"/" + dateStr;
+						    if(!SftpUtil.dirIsHave(newFtpPath)){
+								SftpUtil.createMkdir(ftpPath.getPath(),dateStr);
+							}
+    	        			SftpUtil.putFile(filePath, newFtpPath);
     	        			flag = true;
     	        		}
             	}
