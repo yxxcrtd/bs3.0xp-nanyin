@@ -38,9 +38,9 @@
         </div>
         <div class="layui-form-item">
             <div >
-                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="期间投资关联机构发行证券交易金额">期间投资关联机构发行证券交易金额</label>
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额">投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额</label>
                 <div class="layui-input-inline input-inline" >
-                    <input type="text" id="bankTransAmt" name="bankTransAmt" data-th-value='${entity?.bankTransAmt}'
+                    <input type="text" id="creditorAmt" name="creditorAmt" data-th-value='${entity?.creditorAmt}'
                            class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
                            placeholder="请输入内容" required>
                 </div>
@@ -48,9 +48,9 @@
         </div>
         <div class="layui-form-item">
             <div >
-                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="期间投资关联机构承销证券交易金额">期间投资关联机构承销证券交易金额</label>
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="投资于关联方承销的证券交易金额">投资于关联方承销的证券交易金额</label>
                 <div class="layui-input-inline input-inline" >
-                    <input type="text" id="orgTransAmt" name="orgTransAmt" data-th-value='${entity?.orgTransAmt}'
+                    <input type="text" id="bondAmt" name="bondAmt" data-th-value='${entity?.bondAmt}'
                            class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
                            placeholder="请输入内容" required>
                 </div>
@@ -58,9 +58,9 @@
         </div>
         <div class="layui-form-item">
             <div >
-                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="期间关联方作为交易对手的投融资业务的交易金额">期间关联方作为交易对手的投融资业务的交易金额</label>
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="与关联方作为交易对手开展的投融资业务交易金额">与关联方作为交易对手开展的投融资业务交易金额</label>
                 <div class="layui-input-inline input-inline" >
-                    <input type="text" id="investTransAmt" name="investTransAmt" data-th-value='${entity?.investTransAmt}'
+                    <input type="text" id="investAmt" name="investAmt" data-th-value='${entity?.investAmt}'
                            class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
                            placeholder="请输入内容" required>
                 </div>
@@ -68,12 +68,42 @@
         </div>
         <div class="layui-form-item">
             <div >
-                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="关联方提供服务的交易金额">关联方提供服务的交易金额</label>
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="投资关联方作为管理人的资产管理产品交易金额">投资关联方作为管理人的资产管理产品交易金额</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" maxlength="500" id="relateamount" name="relateamount"
-                           class="layui-input form-input" placeholder="请输入内容"
+                    <input type="text"  id="assetAmt" name="assetAmt" data-textrange='2' data-fixtype='2' maxlength=17
+                           class="layui-input form-input text-number" placeholder="请输入内容"
                            data-th-placeholder="#{SysCommon.placeholder}"
-                           data-th-value="${entity?.relateamount}" required>
+                           data-th-value="${entity?.assetAmt}" required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="支付关联方托管费">支付关联方托管费</label>
+                <div class="layui-input-inline input-inline" >
+                    <input type="text" id="trustFee" name="trustFee" data-th-value='${entity?.trustFee}'
+                           class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="支付关联方代销费">支付关联方代销费</label>
+                <div class="layui-input-inline input-inline" >
+                    <input type="text" id="sellFee" name="sellFee" data-th-value='${entity?.sellFee}'
+                           class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="发生其他关联交易金额">发生其他关联交易金额</label>
+                <div class="layui-input-inline input-inline" >
+                    <input type="text" id="otherFee" name="otherFee" data-th-value='${entity?.otherFee}'
+                           class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
+                           placeholder="请输入内容" required>
                 </div>
             </div>
         </div>

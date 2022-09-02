@@ -43,11 +43,11 @@ $(function() {
                 });
         },
         cols : [ {
-            field : 'statusStr',width:'10%',
+            field : 'statusStr',width:'5%',
             title : '数据状态',
             sortField : 'STATUS'
         }, {
-            field : 'status',width:'10%',
+            field : 'status',width:'5%',
             visible :false
         }, {
             field : 'uuid',width:'10%',
@@ -59,30 +59,43 @@ $(function() {
             field : 'prodName',width:'10%',
             title : '产品名称'
         }, {
-            field : 'bankTransAmt',width:'10%',
-            title : '期间投资关联机构发行证券交易金额',
+            field : 'creditorAmt',width:'20%',
+            title : '投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额',
             type : 'number',digit:2
         }, {
-            field : 'orgTransAmt',width:'10%',
-            title : '期间投资关联机构承销证券交易金额',
+            field : 'bondAmt',width:'10%',
+            title : '投资于关联方承销的证券交易金额',
             type : 'number',digit:2
         }, {
-            field : 'investTransAmt',width:'10%',
-            title : '期间关联方作为交易对手的投融资业务的交易金额',
+            field : 'investAmt',width:'10%',
+            title : '与关联方作为交易对手开展的投融资业务交易金额',
             type : 'number',digit:2
         }, {
-            field : 'relateamount',width:'20%',
-            title : '关联方提供服务的交易金额'
-        }, {
-            field : 'effdateStr',width:'10%',
+            field : 'assetAmt',width:'10%',
+            title : '投资关联方作为管理人的资产管理产品交易金额',
+            type : 'number',digit:2
+        },{
+            field : 'trustFee',width:'10%',
+            title : '支付关联方托管费',
+            type : 'number',digit:2
+        },{
+            field : 'sellFee',width:'10%',
+            title : '支付关联方代销费',
+            type : 'number',digit:2
+        },{
+            field : 'otherFee',width:'10%',
+            title : '发生其他关联交易金额',
+            type : 'number',digit:2
+        },{
+            field : 'effdateStr',width:'8%',
             title : '生效日期',
             sortField : 'effdate'
         }, {
-            field : 'effdelidateStr',width:'10%',
+            field : 'effdelidateStr',width:'8%',
             title : '生效截止日期',
             sortField : 'effdelidate'
         },{
-            field : 'updateTime',width:'10%',
+            field : 'updateTime',width:'8%',
             title : '更新时间',
             render : function(data, type, row, meta) {
                 if(row.updateTime != null && row.updateTime != ''){
@@ -90,7 +103,7 @@ $(function() {
                 }
             }
         }, {
-            field : 'updateUser',width:'10%',
+            field : 'updateUser',width:'8%',
             title : '更新人'
         },
             { field:'operation',width:'10%', title: '操作', type:'action', buttons: ['edit', 'delt'],

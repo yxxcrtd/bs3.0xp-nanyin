@@ -14,6 +14,8 @@ import com.joyintech.tams.disclosure.information.config.repRelDeal.validator.Rep
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 @PageId("RepRelDeal002")
@@ -137,5 +139,41 @@ public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntit
 
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
+    }
+
+    //导出时保留两位小数
+    public String getCreditorAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getCreditorAmt()==null?"0.00":decimalFormat.format(this.getCreditorAmt().setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    public String getBondAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getBondAmt()==null?"0.00":decimalFormat.format(this.getBondAmt().setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    public String getInvestAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getInvestAmt()==null?"0.00":decimalFormat.format(this.getInvestAmt().setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    public String getAssetAmtStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getAssetAmt()==null?"0.00":decimalFormat.format(this.getAssetAmt().setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    public String getTrustFeeStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getTrustFee()==null?"0.00":decimalFormat.format(this.getTrustFee().setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    public String getSellFeeStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getSellFee()==null?"0.00":decimalFormat.format(this.getSellFee().setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    public String getOtherFeeStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return this.getOtherFee()==null?"0.00":decimalFormat.format(this.getOtherFee().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 }
