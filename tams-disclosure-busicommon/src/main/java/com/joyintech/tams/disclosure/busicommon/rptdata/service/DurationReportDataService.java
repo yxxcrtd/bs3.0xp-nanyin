@@ -771,7 +771,7 @@ public class DurationReportDataService implements IReportDataService {
 					BigDecimal val = BigDecimal.ZERO;
 					RepExtConusKey key = new RepExtConusKey();
 					key.setDataType(basis.getDataType());
-					key.setDataDate(holidayService.getPreWorkDate(sDate));
+					key.setDataDate(holidayService.getPreWorkDate(sDate,"04"));  //交易所日历的前一天
 					RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( sConus==null || sConus.getMarketInfo()==null ) {
 						logger.error("没有找到起始日前一工作日行情。");
@@ -780,7 +780,7 @@ public class DurationReportDataService implements IReportDataService {
 					key.setDataDate(eDate);
 					RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( eConus==null || eConus.getMarketInfo()==null ) {
-						logger.error("没有找到起始日前一工作日行情。");
+						logger.error("没有找到结束日行情。");
 						continue;
 					}
 					val = ( eConus.getMarketInfo().divide(sConus.getMarketInfo(),20,BigDecimal.ROUND_DOWN ).subtract(BigDecimal.ONE) ).multiply(new BigDecimal(365));
