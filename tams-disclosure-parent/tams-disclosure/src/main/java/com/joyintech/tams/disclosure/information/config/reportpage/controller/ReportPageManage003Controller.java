@@ -22,8 +22,8 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.disclosure.busicommon.common.constants.DictCode;
-import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto;
-import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto;
+import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
+import com.joyintech.tams.disclosure.infoCompliance.service.InfoCompliance002Service;
 import com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportStatusDto;
 import com.joyintech.tams.disclosure.information.config.reportpage.service.ReportPageManage002Service;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -65,6 +64,9 @@ public class ReportPageManage003Controller extends BaseController {
 
     @Autowired
     private PlatformDate platformDate;
+
+    @Autowired
+    private InfoCompliance002Service infoCompliance002Service;
     
     /**
      * 模板启用,禁用界面
@@ -95,6 +97,8 @@ public class ReportPageManage003Controller extends BaseController {
             model.addAttribute("entity",entity);
             //关联上传文件的businessId
             model.addAttribute("businessId",entity.getSeqno());
+
+            model.addAttribute("comments", getCommentList(entity.getSeqno()));
         }
 
         //如果是启用界面,则处查询出可以禁用的模板
@@ -215,4 +219,20 @@ public class ReportPageManage003Controller extends BaseController {
         return new AjaxResult(msg);
     }
 
+    List<Map<String,Object>> getCommentList(String seqno){
+        List<Map<String,Object>> commentList = new ArrayList<Map<String, Object>>();
+        //获取审批意见记录
+        List<InfoComplianceCommentDto> comments = infoCompliance002Service.getInfoComplianceComment(seqno);
+        for(InfoComplianceCommentDto commentDto:comments){
+            Map<String,String> param = new HashMap<String,String>();
+            param.put("businessId",seqno);
+            param.put("seqnoComment",commentDto.getSeqno());
+            Map<String,Object> commentMap = new HashMap<String,Object>();
+            commentMap.put("comment",commentDto.getCommentRemark());
+            commentMap.put("createUser",commentDto.getCreateUser());
+            commentMap.put("createTime", commentDto.getCreateTime());
+            commentList.add(commentMap);
+        }
+        return commentList;
+    }
 }

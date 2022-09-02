@@ -71,6 +71,7 @@ public class UploadFile003Controller extends BaseController {
             model.addAttribute("attachmentFiles", JsonUtils.object2Json(files));
         }
         // 画面参数设置
+        model.addAttribute("fileType",fileType);
         model.addAttribute("businessId",businessId);
         model.addAttribute("editable", getParam("editable"));
         model.addAttribute("loginUser", LoginUserUtil.getUserName());

@@ -3,12 +3,9 @@ package com.joyintech.tams.disclosure.information.config.reportpage.controller;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.listener.FileUploadListener;
 import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
@@ -18,17 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @PageId("ReportUpload001")
@@ -79,7 +70,8 @@ public class ReportUpload001Controller extends BaseController {
             model.addAttribute("attachmentFiles", JsonUtils.object2Json(files));
         }
         // 画面参数设置
-        //model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"), "svrFileCommonDto"));
+        model.addAttribute("businessId",businessId);
+        model.addAttribute("fileType",fileType);
         return super.init(model);
     }
 

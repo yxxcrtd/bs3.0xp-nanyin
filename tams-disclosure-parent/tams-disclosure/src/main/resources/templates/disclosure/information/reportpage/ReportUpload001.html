@@ -37,6 +37,8 @@
                     <div id="fileUploader" class="upload" th:disabled="${pageModel} eq ${pageModelReference}" th:data-data='${attachmentFiles}'
                          data-option="{muiltiple: true, autoUpload: true, type: 'list',fileUploader:'fileUploader'}">
                     </div>
+                    <input type="hidden" id="businessId" name="businessId" data-th-value="${businessId}">
+                    <input type="hidden" id="fileType" name="fileType" data-th-value="${fileType}">
                 </div>
             </div>
         </div>

@@ -161,6 +161,9 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 		dto.setUpdateUser(CommonUtil.getUserName());
 		dto.setUpdateTime(DateUtil.now());
 		reportPageManage002Mapper.updateReportStatus(dto);
+		// 保存修订意见
+		InfoComplianceCommentDto commentDto = new InfoComplianceCommentDto(IDGenerator.generate(),dto.getSeqno(),dto.getComment());
+		infoComplianceMapper.saveInfoComplianceComment(commentDto);
 	}
 
 	//流程作废

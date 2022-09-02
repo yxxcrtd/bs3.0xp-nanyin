@@ -39,7 +39,6 @@ var doprocess = function(){
 function viewPdf(fileNo,fileName){
     var index= fileName.lastIndexOf('.');
     var ext = fileName.substr(index+1).toUpperCase();
-    debugger;
     //如果是pdf或者word则进行预览
     if(ext=='PDF'){
         Joyin.ajax(basePath + 'disclosure/infoCompliance/uploadFile001/getFilePath', {fileNo:fileNo}, function(result) {
@@ -101,10 +100,10 @@ $(function ($) {
             } catch (e) {
                 options = {};
             }
-            debugger;
             options = options || {};
             var businessId = $(this).next('#businessId').val();
-            var url = options.url || JoyinUtil.getRealPath('disclosure/infoCompliance/uploadFile001/uploadFile?businessId='+businessId);
+            var fileType = $('#fileType').val() || '';
+            var url = (options.url || JoyinUtil.getRealPath('disclosure/infoCompliance/uploadFile001/uploadFile')) + '?businessId='+businessId+'&fileType='+fileType;
             var allowfiletype = options.allowFileType || ''/* || 'doc/docx/xls/xlsx/ppt'*/; // 允许任何类型的文件
             var showdelete = options.showDelete;
             var inline = options.inline;
@@ -124,7 +123,6 @@ $(function ($) {
             if(typeof callback === 'string') {
                 callback = eval(callback);
             }
-            debugger;
             var elem = $(this)[0];
             if(muit && type == 'list') {
                 var $table = $('<table class="layui-table"></table>')
@@ -186,7 +184,6 @@ $(function ($) {
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
                             removeFileFromServer(fileNo, function() {
-                                debugger;
                                 var tmpFiles = [];
                                 _.each(initFiles, function(f) {
                                     if(f.fileNo !== fileNo) {
@@ -257,11 +254,9 @@ $(function ($) {
                     files = obj.pushFile();
                     var names = [];
                     var _file = $(_this).siblings(':file');
-                    debugger;
                     console.log(_file);
                     console.log(_file.size);
                     if(muit && type == 'list') {
-                        debugger;
                         // 读取本地文件
                         obj.preview(function(index, file, result){
                             rownum ++;
@@ -278,7 +273,6 @@ $(function ($) {
                                 ,'<td><div class="layui-table-cell">'
                                 ,'</div></td>'
                                 ,'</tr>'].join(''));
-                            debugger;
                             // 单个重传
                             tr.find('.file-reload').on('click', function(){
                                 obj.upload(index, file);
@@ -289,7 +283,6 @@ $(function ($) {
                                 var ff = $(tr).data('file');
                                 if(ff) {
                                     removeFileFromServer(ff.fileNo, function() {
-                                        debugger;
                                         deleteFile(index); // 删除对应的文件
                                         $(tr).remove();
                                         $("#"+fileUploader+" tbody tr").each(function (index,item){
@@ -309,7 +302,6 @@ $(function ($) {
                         return;
                     }
                     $.each(files, function (i, file) {
-                        debugger;
                         if (uploadedFiles[i]) {
                             delete files[i];
                         }
@@ -390,7 +382,6 @@ $(function ($) {
                     _file.val('');
                 }
                 , before: function (obj) {
-                    debugger;
                     console.log(obj);
                     this.data={'pageId':pageId};
                     if(!muit) {

@@ -15,6 +15,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
 import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
 import com.joyintech.tams.disclosure.infoCompliance.service.InfoCompliance002Service;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -176,7 +177,7 @@ public class UploadFile001Controller extends BaseController {
                     UploadFileDto sysFile = new UploadFileDto();
                     sysFile.setBusinessId(businessId);
                     sysFile.setSeqNo(fileInfo.getFileNo());
-                    sysFile.setFileType("03");
+                    sysFile.setFileType(StringUtils.defaultString(request.getParameter("fileType"), "03"));
                     infoComplianceMapper.updateUplodFile(sysFile);
                 }
                 fileInfo.setFileName(fileInfo.getSrcName());
