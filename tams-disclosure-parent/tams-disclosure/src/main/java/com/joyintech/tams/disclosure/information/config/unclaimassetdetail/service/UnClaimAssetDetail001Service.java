@@ -19,7 +19,6 @@ import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.U
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -34,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,37 +137,38 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
-            List<UnClaimAssetDetailDto> entities = this.convertToBean(dataList);
-            List<UnClaimAssetDetailDto> data = this.selectUnClaimAssetByKey(entities);
-            if (data != null && data.size() > 0) {
-                Map<String, List<UnClaimAssetDetailDto>> map = entities.stream().collect(
-                        JoyinCollectors.groupingBy(x ->
-                                x.getProdId()
-                                        + GlobalConstant.UNDER_LINE + x.getEffDateStr()
-                                        + GlobalConstant.UNDER_LINE + x.getEffEndDateStr()
-                        ));
-                // 将序号放入list中
-                List<String> excelNumList = new ArrayList<>();
-                List<Integer> excelNumIntList = new ArrayList<>();
-                for (UnClaimAssetDetailDto dto : data) {
-                    List<UnClaimAssetDetailDto> listTemp = map.get(dto.getProdId()
-                            + GlobalConstant.UNDER_LINE + dto.getEffDateStr()
-                            + GlobalConstant.UNDER_LINE + dto.getEffEndDateStr());
-                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
-                }
-                // 将list进行排序，并转化为string
-                Collections.sort(excelNumIntList);
-                for (Integer rowNo : excelNumIntList) {
-                    excelNumList.add(String.valueOf(rowNo));
-                }
-                webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_0001",
-                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                        MessageType.确认消息);
-            } else {
-                // 防止在进行导入前check时进行了两次的弹框
-                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-            }
+//            List<UnClaimAssetDetailDto> entities = this.convertToBean(dataList);
+//            List<UnClaimAssetDetailDto> data = this.selectUnClaimAssetByKey(entities);
+//            if (data != null && data.size() > 0) {
+//                Map<String, List<UnClaimAssetDetailDto>> map = entities.stream().collect(
+//                        JoyinCollectors.groupingBy(x ->
+//                                x.getProdId()
+//                                        + GlobalConstant.UNDER_LINE + x.getEffDateStr()
+//                                        + GlobalConstant.UNDER_LINE + x.getEffEndDateStr()
+//                        ));
+//                // 将序号放入list中
+//                List<String> excelNumList = new ArrayList<>();
+//                List<Integer> excelNumIntList = new ArrayList<>();
+//                for (UnClaimAssetDetailDto dto : data) {
+//                    List<UnClaimAssetDetailDto> listTemp = map.get(dto.getProdId()
+//                            + GlobalConstant.UNDER_LINE + dto.getEffDateStr()
+//                            + GlobalConstant.UNDER_LINE + dto.getEffEndDateStr());
+//                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+//                }
+//                // 将list进行排序，并转化为string
+//                Collections.sort(excelNumIntList);
+//                for (Integer rowNo : excelNumIntList) {
+//                    excelNumList.add(String.valueOf(rowNo));
+//                }
+//                webResult.setMessage(
+//                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+//                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+//                        MessageType.确认消息);
+//            } else {
+//                // 防止在进行导入前check时进行了两次的弹框
+//                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+//            }
+            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
         } else {
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
@@ -266,25 +267,20 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                 SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
                 try {
                     UnClaimAssetDetailMapper mapper=session.getMapper(UnClaimAssetDetailMapper.class);
-
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("prodId", entities.get(0).getProdId());
+                    map.put("effDate", entities.get(0).getEffDateStr());
+                    map.put("effEndDate", entities.get(0).getEffEndDateStr());
+                    map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
+                    AtomicInteger num = new AtomicInteger(mapper.selectCount(map));
                     entities.forEach(item -> {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("prodId", item.getProdId());
-                        map.put("effDate", item.getEffDateStr());
-                        map.put("effEndDate", item.getEffEndDateStr());
-                        map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
+                        num.addAndGet(1);
+                        item.setUpdateTime(DateUtil.now());
+                        item.setUpdateUser(CommonUtil.getUserName());
+                        item.setNostdAssetId(IDGenerator.generate(36));
                         item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                        if (unClaimAssetDetail002Service.selectDetailList(map).size() > 0) {
-                            mapper.updateImport(item);
-                        } else {
-                            item.setUpdateTime(DateUtil.now());
-                            item.setUpdateUser(CommonUtil.getUserName());
-                            int num = mapper.selectCount(map);
-                            item.setNostdAssetId(IDGenerator.generate(36));
-                            item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                            item.setProjectNo(String.valueOf(num + 1));
-                            mapper.insert(item);
-                        }
+                        item.setProjectNo(String.valueOf(num));
+                        mapper.insert(item);
                     });
                     session.commit();
 
