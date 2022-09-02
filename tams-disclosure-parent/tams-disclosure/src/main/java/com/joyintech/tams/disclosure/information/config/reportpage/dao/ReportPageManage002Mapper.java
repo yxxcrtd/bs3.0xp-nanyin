@@ -54,6 +54,6 @@ public interface ReportPageManage002Mapper {
 
     void updateReportType(RepInfo dto);
 
-    List<RepInfo> getExistInfo(String repId);
+    List<RepInfo> getExistInfo(@Param("repId") String repId);
     List<ReportStatusDto>getList(String repId);
 }

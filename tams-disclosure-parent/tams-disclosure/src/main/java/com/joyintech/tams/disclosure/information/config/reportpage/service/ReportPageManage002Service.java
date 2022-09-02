@@ -38,7 +38,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -276,32 +275,39 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 		}
 	}
 
-	public void checkStatus(ReportStatusDto dto){
+	public String checkStatus(ReportStatusDto dto){
+		String returnMsg = null;
+		Date effDate = DateUtil.parse(dto.getEffDateStr().substring(0,10));
 		//根据启用模板的ID找到是否有同名的信披报表
 		String startRepId=dto.getStartRepId();
-		List<RepInfo>list= reportPageManage002Mapper.getExistInfo(startRepId);
+		List<RepInfo> list= reportPageManage002Mapper.getExistInfo(startRepId);
 		if(!CollectionUtils.isEmpty(list)){
 			//List<String>repIdList=list.stream().map(RepInfo::getRepId).collect(Collectors.toList());
 			for(RepInfo info:list){
 				String repId=info.getRepId();
-				List<ReportStatusDto>statusList=reportPageManage002Mapper.getList(repId);
-				if(CollectionUtils.isEmpty(statusList)){
+				List<ReportStatusDto> statusList=reportPageManage002Mapper.getList(repId);
+				//存在信披模板启用禁用记录表，要check状态，否则不需要
+				if(!CollectionUtils.isEmpty(statusList)){
 					Map<String, List<ReportStatusDto>> statusMap = statusList.stream().collect(Collectors.groupingBy(ReportStatusDto::getStartOff));
-					ReportStatusDto start=statusMap.get("01").get(0);
-//					if(!CollectionUtils.isEmpty(statusMap.get("01"))){
-//						start=statusMap.get("01").get(0);
-//					}
-					if(CollectionUtils.isEmpty(statusMap.get("02"))){
-						//没有禁止生效日，说明存在冲突
-
-					}else{
-						//如果有生效截止日，则新报表的生效日要大于原报表的禁用截止日
+					//01启用;02禁用
+					ReportStatusDto reportStatusEnable = statusMap.get("01").get(0);
+					ReportStatusDto reportStatusDisable = statusMap.get("02").get(0);
+					//若存在一条记录同时是启用状态，则不可再次启用。
+					//若存在多条记录。
+					// 若禁用在启动前[禁用，启用]，则再次启用给出提示；
+					// 若禁用在启用后[启用，禁用]，则再次启用生效日在小于禁用时间内则给出提示。
+					if((statusList.size() == 1 && reportStatusEnable != null)
+						||(statusList.size()> 1 &&
+							((reportStatusDisable.getEffDate().compareTo(reportStatusEnable.getEffDate()) <=0) ||
+									(reportStatusEnable.getEffDate().compareTo(reportStatusDisable.getEffDate()) <=0
+											//&& reportStatusEnable.getEffDate().compareTo(effDate) <= 0
+											&& reportStatusDisable.getEffDate().compareTo(effDate) >=0)))){
+						returnMsg = "报名名称、状态、生效时间（到天）不可重复！";
+						break;
 					}
-
 				}
 			}
-
 		}
-
+		return returnMsg;
 	}
 }
