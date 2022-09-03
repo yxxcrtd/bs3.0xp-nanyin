@@ -195,7 +195,7 @@ $(function ($) {
                             ,'<td>上传成功</td>'
                             ,'<td>'+file.createTimeText+'</td>'
                             ,(_disabled ? actionHtml : '<td><button data-ignore="true" data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
-                            ,'<td><div class="layui-table-cell"><a style="cursor: pointer" onclick="javascript:downLoad(\''+file.fileNo+'\')">下载</a></div></td>'
+                            ,'<td><div class="layui-table-cell"><a style="cursor: pointer" onclick="javascript:viewPdf(\''+file.fileNo+'\',\''+file.fileName+'\')">预览</a>&nbsp;<a style="cursor: pointer" onclick="javascript:downLoad(\''+file.fileNo+'\')">下载</a></div></td>'
                             ,'</tr>'].join(''));
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
@@ -419,7 +419,7 @@ $(function ($) {
                             var tr = fileListView.find('tr#upload-'+ file)
                                 ,tds = tr.children();
                             tds.eq(1).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+res[0].fileNo+'\',\''+res[0].fileName+'\')">' + res[0].fileName + '</a>');
-                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:downLoad(\''+res[0].fileNo+'\')">下载</a>');
+                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+res[0].fileNo+'\',\''+res[0].fileName+'\')">预览</a>&nbsp;<a style="cursor: pointer" onclick="javascript:downLoad(\''+res[0].fileNo+'\')">下载</a>');
                             tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
                             // tds.eq(3).html(''); //清空操作
                             tr.data('file', res[0]);
