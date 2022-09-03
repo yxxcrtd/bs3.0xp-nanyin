@@ -42,7 +42,9 @@ public class WordViewController extends BaseController {
         //通过主键获取文件路径
         if(null != fileAttachmentProcess){
             UploadFile file = fileAttachmentProcess.fetch(fileNo);
-            filePath  = file.getTargetFile().getPath();
+            if(null != file) {
+                filePath = file.getTargetFile().getPath();
+            }
         }
         model.addAttribute("filePath",filePath);
         return super.init(model);
