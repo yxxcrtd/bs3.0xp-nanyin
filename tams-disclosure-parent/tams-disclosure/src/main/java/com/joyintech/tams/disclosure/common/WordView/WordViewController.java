@@ -7,6 +7,7 @@ import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.utils.poi.PoiUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,12 @@ public class WordViewController extends BaseController {
 
                 if(bytes != null) {
                     bis = new ByteArrayInputStream(bytes);
-                    PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
+                    if(StringUtils.endsWith(filePath, ".doc")) {
+                        PoiUtils.docToHtml(bis, response.getOutputStream(), imagePath, null);
+                    }
+                    else {
+                        PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
+                    }
                 }
             }
 
