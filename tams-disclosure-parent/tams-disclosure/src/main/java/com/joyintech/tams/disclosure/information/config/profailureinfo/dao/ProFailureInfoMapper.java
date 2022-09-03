@@ -19,6 +19,8 @@ public interface ProFailureInfoMapper {
 
     int deleteByKey(ProFailureInfo001Dto dto);
 
+    int delete(ProFailureInfo001Dto dto);
+
     int insert(ProFailureInfo001Dto proFailureInfo001Dto);
 
     int updateByKey(ProFailureInfo001Dto dto);

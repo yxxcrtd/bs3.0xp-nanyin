@@ -95,6 +95,10 @@
         UPDATE_USER =#{updateUser,jdbcType=VARCHAR}
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
     </delete>
+    <delete id="delete">
+        delete DIS_PROD_NOCREATE
+        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and DATA_STATUS = 'E'
+    </delete>
 
     <insert id="insert">
         insert into DIS_PROD_NOCREATE (PROD_REGIST_NO, NOCREATE_REASON, IS_SALES_AGENCY,
@@ -232,6 +236,7 @@
             <foreach collection="list" item="item" open="(A.PROD_REGIST_NO,to_char(A.REPORT_ISSUE_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
                 (#{item.prodRegistNo},#{item.reportIssueDateStr})
             </foreach>
+            and A.DATA_STATUS='E'
         </where>
     </select>
 </mapper>
