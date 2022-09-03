@@ -70,7 +70,9 @@
 
     $(function() {
         $('#multFileBtn3').click(function() {
-            if(FileCommon3.getUploadFileInfo().length >=5){
+            var files = FileCommon3.getUploadFileInfo();
+            loginUser = loginUser || '';
+            if(files.filter(f => f.createUser===loginUser || !f.createUser).length >=5){
                 Joyin.error("最大上传5个附件。");
                 return;
             } else {

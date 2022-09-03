@@ -259,8 +259,6 @@ $(function ($) {
                     files = obj.pushFile();
                     var names = [];
                     var _file = $(_this).siblings(':file');
-                    console.log(_file);
-                    console.log(_file.size);
                     if(muit && type == 'list') {
                         // 读取本地文件
                         obj.preview(function(index, file, result){
