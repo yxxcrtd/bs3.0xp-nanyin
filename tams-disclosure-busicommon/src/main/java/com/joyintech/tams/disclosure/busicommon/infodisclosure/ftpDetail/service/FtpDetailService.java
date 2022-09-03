@@ -194,9 +194,9 @@ public class FtpDetailService {
 					prefix = reportinfo.getProdId();
 				}
 				//募集方式
-				prefix = prefix+"_"+SysDataUtil.getNameFromDataDict(DictCodeExt1.信披_募集方式, reportinfo.getRaiseType());
+				prefix = prefix+"_"+reportinfo.getRaiseType();
 				//文件类型
-				prefix = prefix + "_" + SysDataUtil.getNameFromDataDict(DictCodeExt1.信披报表类别, reportCategory);
+				prefix = prefix + "_" + reportCategory;
 				fileName = prefix + "_" + newFileName;
 			}
 
