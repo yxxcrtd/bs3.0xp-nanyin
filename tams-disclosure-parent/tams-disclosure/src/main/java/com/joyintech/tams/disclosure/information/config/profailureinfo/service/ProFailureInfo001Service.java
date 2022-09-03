@@ -76,7 +76,8 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         }
         else {
             dto.setDataStatus("E");
-            proFailureInfoMapper.updateByKey(dto);
+            proFailureInfoMapper.delete(dto);
+            proFailureInfoMapper.insert(dto);
         }
 
     }
