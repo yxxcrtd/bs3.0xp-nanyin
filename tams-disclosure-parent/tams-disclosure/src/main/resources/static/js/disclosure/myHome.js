@@ -220,9 +220,9 @@ function setTableHeight(){
 function redirectUrl(sysDate,field,firstCol,elem){
     //日期参数，默认为系统时间
     var paraDate = sysDate;
-    var T1 = addDate(sysDate, 1);
-    var T2 = addDate(sysDate, 2);
-    var T3 = addDate(sysDate, 3);
+    var T1 = addDate(sysDate, 99);
+    var T2 = addDate(sysDate, 1);
+    var T3 = addDate(sysDate, 2);
     var searchDateStart = $('#searchDate').startDate();
     var searchDateEnd = $('#searchDate').endDate();
     
@@ -306,6 +306,8 @@ function redirectUrl(sysDate,field,firstCol,elem){
 function addDate(date, days) {
     if(days == undefined || days == '') {
         days = 1;
+    }else if(days == 99){
+        days = 0;
     }
     var date = new Date(date);
     date.setDate(date.getDate() + days);
