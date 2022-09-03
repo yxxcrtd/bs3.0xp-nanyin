@@ -130,6 +130,7 @@
             </if>
         </set>
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        and DATA_STATUS = 'E'
     </update>
 
 
@@ -197,9 +198,9 @@
     <select id="hasRepeatedData" resultType="java.lang.Integer">
         select count (1) from DIS_PROD_NOCREATE where
         DATA_STATUS = 'E' and
-        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and
-        NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and
-        REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
+        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+<!--        and NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and-->
+<!--        REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')-->
     </select>
     <select id="isRepeated2"
             resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
