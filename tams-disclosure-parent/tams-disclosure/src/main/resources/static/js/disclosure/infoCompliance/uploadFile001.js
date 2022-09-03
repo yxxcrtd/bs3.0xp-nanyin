@@ -419,7 +419,7 @@ $(function ($) {
                             var tr = fileListView.find('tr#upload-'+ file)
                                 ,tds = tr.children();
                             tds.eq(1).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:viewPdf(\''+res[0].fileNo+'\',\''+res[0].fileName+'\')">' + res[0].fileName + '</a>');
-                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:downLoad(\''+file.fileNo+'\')">下载</a>');
+                            tds.eq(7).find('.layui-table-cell').html('<a style="cursor: pointer" onclick="javascript:downLoad(\''+res[0].fileNo+'\')">下载</a>');
                             tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
                             // tds.eq(3).html(''); //清空操作
                             tr.data('file', res[0]);
