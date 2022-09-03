@@ -283,7 +283,7 @@ $(function ($) {
                                 ,'<td>'+ $('#realName').val() +'</td>'
                                 ,'<td>等待上传</td>'
                                 ,'<td class="layui-hide">'+ file.size +'</td>'
-                                ,'<td>'+ new Date().format('yyyy-MM-dd hh:mm') +'</td>'
+                                ,'<td>'+ new Date().format('yyyy-MM-dd hh:mm:ss') +'</td>'
                                 ,'<td>'
                                 /*,'<button class="layui-btn layui-btn-mini file-reload layui-hide">重传</button>'*/
                                 ,'<button class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button>'
