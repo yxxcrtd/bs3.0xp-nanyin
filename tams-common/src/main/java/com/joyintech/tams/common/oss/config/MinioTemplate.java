@@ -282,7 +282,7 @@ public class MinioTemplate {
             return true;
         }
         String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
-        filePath = filePath.replaceAll(basePath,"");
+        filePath = filePath.replace(basePath,"");
         try {
             minioClient.statObject(
                     StatObjectArgs.builder().bucket(minioProperties.getBucket()).object(filePath).build()

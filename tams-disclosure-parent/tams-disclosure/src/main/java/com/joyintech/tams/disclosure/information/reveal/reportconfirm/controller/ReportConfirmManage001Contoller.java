@@ -594,10 +594,16 @@ public class ReportConfirmManage001Contoller extends BaseController {
         }
         // 获取附件
         UploadFile attachment = fileAttachmentProcess.fetch(sysFilepath);
+		if(attachment ==null){
+			throw new BusinessException("文件不存在！");
+		}
 
 //        String targetFileName = attachment.getFileName();
         // 目标文件
         File targetFile = attachment.getTargetFile();
+		if(targetFile==null){
+			throw new BusinessException("文件不存在！");
+		}
 		InputStream in = null;
         try {
 			if(targetFile.getPath().startsWith("http:")){
