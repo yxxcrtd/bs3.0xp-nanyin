@@ -89,7 +89,10 @@
         REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
    </select>
     <delete id="deleteByKey">
-        update DIS_PROD_NOCREATE set DATA_STATUS = 'D'
+        update DIS_PROD_NOCREATE
+        set DATA_STATUS = 'D',
+        UPDATE_TIME =#{updateTime,jdbcType=TIMESTAMP},
+        UPDATE_USER =#{updateUser,jdbcType=VARCHAR}
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
     </delete>
 
