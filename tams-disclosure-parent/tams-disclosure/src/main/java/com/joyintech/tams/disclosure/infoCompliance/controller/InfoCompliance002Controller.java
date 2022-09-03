@@ -51,17 +51,20 @@ public class InfoCompliance002Controller extends BaseController {
         String seqno = getParam("seqno");
         String viewFlag = getParam("viewFlag");
 
+        // 查看模式
+        boolean readonly = StringUtils.equals(getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE);
         InfoComplianceDto dto = null;
         Map<String,String> paramMap = new HashMap<String,String>();
         if(StringUtil.isNotEmpty(seqno)){
             paramMap.put("seqno",seqno);
             dto = infoCompliance002Service.queryInfoCompliance(paramMap);
+            model.addAttribute("showEdit", readonly);
         } else if(StringUtil.isNotEmpty(workflowId)){
             paramMap.put("workflowId",workflowId);
             dto = infoCompliance002Service.queryInfoCompliance(paramMap);
             // 设置修订附件编辑状态（待办事项中的任何审批节点都可以编辑修订附件）
             model.addAttribute("showEdit", true);
-            model.addAttribute("editable", !WorkFlowUtil.isNotFromToDoList() && StringUtils.equals(getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE));
+            model.addAttribute("editable", !WorkFlowUtil.isNotFromToDoList() && readonly);
         }
 
         if(dto != null){
