@@ -619,6 +619,20 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             // 产品主代码
             if (StringUtil.isEmpty(list.get(8))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
+            }else{
+                if(StringUtils.equals(DictCodeListExt1.是或否_否.getCodeName(), list.get(21))){
+                    //查詢是否存在相同的产品主代码信息，若存在則給出提示
+                    ProdInfoDto prodInfoDto = this.getParentProdInfo(list.get(8));
+                    if(prodInfoDto != null){
+                        message.add(this.getMessage("REPORT_COMMON_FILE_E_0029", "产品主代码"));
+                    }
+                }else{
+                    //查询是否存在普通、相同的产品主代码信息，若存在則給出提示
+                    List<ProdInfoDto> prodInfoDtoList = this.getPtParentProdInfo(list.get(8));
+                    if(prodInfoDtoList!=null && prodInfoDtoList.size()>0){
+                        message.add(this.getMessage("REPORT_COMMON_FILE_E_0029", "产品主代码"));
+                    }
+                }
             }
             // 募集起始日期
             if (StringUtil.isEmpty(list.get(9))) {
@@ -999,5 +1013,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      */
     public ProdInfoDto getParentProdInfo(String prodId) {
         return prodInfoMapper.selectParentProdInfo(prodId);
+    }
+
+    public List<ProdInfoDto> getPtParentProdInfo(String pProdId) {
+        return prodInfoMapper.getPtParentProdInfo(pProdId);
     }
 }
