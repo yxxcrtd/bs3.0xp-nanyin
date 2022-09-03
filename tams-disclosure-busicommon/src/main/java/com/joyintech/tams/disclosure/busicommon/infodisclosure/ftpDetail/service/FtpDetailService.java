@@ -186,17 +186,17 @@ public class FtpDetailService {
 			String reportCategory = repReveal.getReportCategory();
 			//发行公告,运行公告,到期公告,临时公告,销售公告
 			if("01".equals(reportCategory) || "02".equals(reportCategory) || "03".equals(reportCategory) || "04".equals(reportCategory) || "05".equals(reportCategory) ){
-				//如果是母产品,查询发行成功的子产品信息
-				if("01".equals(reportinfo.getRepProdType())){
-					List<RepProdInfo> repInfoList = ftpDetailMapper.selectProdInfoByPProdId(reportinfo.getProdId());
+				//根据P_PROD_ID查询产品信息,部分普通产品也有P_PROD_ID
+				List<RepProdInfo> repInfoList = ftpDetailMapper.selectProdInfoByPProdId(reportinfo.getProdId());
+				if(repInfoList !=null && !repInfoList.isEmpty()){
 					prefix = repInfoList.stream().map(RepProdInfo::getProdId).distinct().collect(Collectors.joining(","));
 				} else {
 					prefix = reportinfo.getProdId();
 				}
 				//募集方式
-				prefix = prefix+"_"+SysDataUtil.getNameFromDataDict(DictCodeExt1.信披_募集方式, reportinfo.getRaiseType());
+				prefix = prefix+"_"+reportinfo.getRaiseType();
 				//文件类型
-				prefix = prefix + "_" + SysDataUtil.getNameFromDataDict(DictCodeExt1.信披报表类别, reportCategory);
+				prefix = prefix + "_" + reportCategory;
 				fileName = prefix + "_" + newFileName;
 			}
 

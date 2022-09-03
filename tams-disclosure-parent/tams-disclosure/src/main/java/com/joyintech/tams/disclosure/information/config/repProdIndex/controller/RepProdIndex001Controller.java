@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.repProdIndex.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -90,18 +91,13 @@ public class RepProdIndex001Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        dto.setUpdateUser(LoginUserUtil.getUserName());
-        ProcessParameter<RepProdIndexDto> processParameter = new ProcessParameter<RepProdIndexDto>();
-        WorkFlowParameter<RepProdIndexDto> params = new WorkFlowParameter<RepProdIndexDto>();
-        params.setPageId("RepProdIndex002");
-        params.setElementId(dto.getElementId());
-        params.setBusinessCode(item->item.getProdId());
-        params.setBusinessType(DictCodeListExt4.共通业务类型_产品基础指标信息维护.getValue());
-        params.setComment(entity ->  "子产品代码" + "(" + entity.getProdId() + ")");
-        processParameter.setOperationType(OperationType.DELETE);
-        processParameter.setWorkFlowParameter(params);
-        String msg =repProdIndexService.start(processParameter, dto.getSelectedItem().toArray(new RepProdIndexDto[dto.getSelectedItem().size()]));
-        return new AjaxResult(msg);
+        List<RepProdIndexDto> selectedItem = dto.getSelectedItem();
+        selectedItem.forEach(e->{
+            e.setOperateType("DELETE");
+            repProdIndexService.doComplete(e,OperationType.DELETE);
+        });
+
+        return new AjaxResult("删除成功",MessageType.提示消息);
     }
 
     /**

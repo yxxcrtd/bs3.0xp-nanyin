@@ -84,11 +84,17 @@
             	 =  #{revealStatus,jdbcType=VARCHAR}
 		</if>
         <if test="finprodIdArr != null and finprodIdArr.length > 0">
-	 		AND REVEAL.PRODID IN
+	 		AND (REVEAL.PRODID IN
 			<foreach item="item" collection="finprodIdArr" index="index"
 				open="(" separator="," close=")">
 				#{item}
 			</foreach>
+		   OR R1.P_PROD_ID IN
+		      <foreach item="item" collection="finprodIdArr" index="index"
+									   open="(" separator="," close=")">
+			#{item}
+		     </foreach>
+		          )
 		</if>
 		<if test="reportName !=null and reportName !='' ">
             AND REVEAL.REPORT_NAME like '%'||#{reportName,jdbcType=VARCHAR}||'%'

@@ -283,6 +283,19 @@ public class ProdInfo002Controller extends BaseController {
         }
         /* NYLCXP-965 子产品的募集起始日、募集结束日要与母产品一致 add by zhouqiang 2022-08-23 end */
 
+        if(StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), dto.getIsGrade())){
+            //查詢是否存在相同的产品主代码信息，若存在則給出提示
+            ProdInfoDto prodInfoDto = prodInfoService.getParentProdInfo(dto.getpProdId());
+            if(prodInfoDto != null){
+                return new AjaxResult("已存在相同产品主代码！", MessageType.错误消息);
+            }
+        }else{
+            //查询是否存在普通、相同的产品主代码信息，若存在則給出提示
+            List<ProdInfoDto> prodInfoDtoList = prodInfoService.getPtParentProdInfo(dto.getpProdId());
+            if(prodInfoDtoList!=null && prodInfoDtoList.size()>0){
+                return new AjaxResult("已存在相同产品主代码！", MessageType.错误消息);
+            }
+        }
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 start */
         //该check与放大镜功能为二阶段内容，暂不处理
         // if(StringUtil.isNotEmpty(dto.getpProdId())&&StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade()){
