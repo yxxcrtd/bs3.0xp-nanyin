@@ -180,6 +180,9 @@
         //修建,修改
         if(pageModel==='0' || pageModel === '1'){
             $("#commentDiv").hide();
+            if($("#btnSubmit_wfl").is(":visible")){
+                $("#commentContent").show();
+            }
         } else if(pageModel==='2'){
             $("#commentContent").show();
             if (!$("#btnSubmit_wfl").is(":visible")){
