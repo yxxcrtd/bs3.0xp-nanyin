@@ -51,7 +51,7 @@
                     Joyin.error('请填写审批意见!');
                     return false;
                 }
-                $('#wfl_comment').val(comment);
+                $('#wfl_comment').val(comment.length > 200 ? comment.substring(0, 200) : comment);
                 return true;
             };
 
@@ -61,7 +61,7 @@
                     Joyin.error('请填写审批意见!');
                     return false;
                 }
-                $('#wfl_comment').val(comment);
+                $('#wfl_comment').val(comment.length > 200 ? comment.substring(0, 200) : comment);
                 return true;
             }
         }
