@@ -93,19 +93,23 @@ public class ReportPageManage003Controller extends BaseController {
             Map<String,String> map = new HashMap<String,String>();
             map.put("workflowId",workflowId);
             ReportStatusDto entity = reportPageManage002Service.selectReportInfo(map);
-            workflowType = entity.getWorkflowType();
-            startRepId = entity.getStartRepId();
-            offRepId = entity.getOffRepId();
-            model.addAttribute("entity",entity);
-            //关联上传文件的businessId
-            model.addAttribute("businessId",entity.getSeqno());
+            if(null != entity) {
+                workflowType = entity.getWorkflowType();
+                startRepId = entity.getStartRepId();
+                offRepId = entity.getOffRepId();
+                model.addAttribute("entity",entity);
+                //关联上传文件的businessId
+                model.addAttribute("businessId",entity.getSeqno());
 
-            model.addAttribute("comments", getCommentList(entity.getSeqno()));
+                model.addAttribute("comments", getCommentList(entity.getSeqno()));
+            }
 
             // 设置默认驳回节点ID
             String processInstanceId = WorkflowContext.getWorkFlowService().getProcessInstanceId(workflowId);
             ActivityImpl activity = WorkflowContext.getProcessService().getFirstTaskDefinition(processInstanceId);
-            model.addAttribute("defaultNodeId", activity.getId());
+            if(null != activity) {
+                model.addAttribute("defaultNodeId", activity.getId());
+            }
         }
 
         //如果是启用界面,则处查询出可以禁用的模板
