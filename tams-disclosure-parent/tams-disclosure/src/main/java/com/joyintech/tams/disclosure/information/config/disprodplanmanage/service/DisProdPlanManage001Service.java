@@ -361,8 +361,8 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "运作起始日"));
                 }
                 if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(1))
-                        && DateUtil.compareDate(rowData.get(4), rowData.get(1)) < 0){
-                    message.add("运作起始日不能小于开放期起始日。");
+                        && DateUtil.compareDate(rowData.get(4), rowData.get(2)) < 0){
+                    message.add("运作起始日不能小于开放期结束日。");
                 }
                 if (StringUtil.isNotEmpty(rowData.get(5)) && !isDateStr(rowData.get(5))) {
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "自动赎回日"));

@@ -231,12 +231,12 @@ public class DisProdPlanManage002Controller extends BaseController {
 			}
 		}
 
-		if(StringUtils.isNotBlank(dto.getProdId()) && dto.getOperationStartDate() != null ){
-		     List<DisProdPlanManage002Dto> list = disProdPlanManage002Service.checkInfo(dto);
-		     if(list.size()>0){
-				 return new AjaxResult("新添加的排期计划的运作起始日大于等于平台日期且不等于该产品其他排期计划的运作起始日！", MessageType.错误消息);
-			 }
-		}
+//		if(StringUtils.isNotBlank(dto.getProdId()) && dto.getOperationStartDate() != null ){
+//		     List<DisProdPlanManage002Dto> list = disProdPlanManage002Service.checkInfo(dto);
+//		     if(list.size()>0){
+//				 return new AjaxResult("新添加的排期计划的运作起始日大于等于平台日期且不等于该产品其他排期计划的运作起始日！", MessageType.错误消息);
+//			 }
+//		}
 
 
 		return commonCheck(bindingResult, operateType);
