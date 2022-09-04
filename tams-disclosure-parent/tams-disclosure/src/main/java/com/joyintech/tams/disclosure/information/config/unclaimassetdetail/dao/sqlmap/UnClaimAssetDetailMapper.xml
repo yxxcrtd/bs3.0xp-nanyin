@@ -2,47 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper" >
 <select id="selectForPage" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
-    SELECT
-        /*DNDC.NOSTD_ASSET_ID,*/
-        DNDC.PROD_ID prodId,
-        RPI.PROD_NAME prodName,
-        DNDC.DATA_STATUS dataStatus,
-        DNDC.EFF_DATE effDate,
-        DNDC.EFF_END_DATE effEndDate,
-         DNDC.UPDATE_USER updateUser,
-        max(dndc.update_time ) updatetime
-    FROM DIS_NOSTD_CREDITOR DNDC
-    LEFT JOIN V_REP_PROD_INFO RPI
-    on DNDC.PROD_ID = RPI.PROD_ID
-    <where>
-        <if test="dataStatus != null and dataStatus != ''">
-        AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
-        </if>
-        <if test="effDateStart != null and effDateStart != ''">
-            <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDateStart},'YYYY-MM-DD') ]]>
-        </if>
-        <if test="effDateEnd != null and effDateEnd != ''">
-            <![CDATA[AND  DNDC.EFF_DATE <= TO_DATE(#{effDateEnd},'YYYY-MM-DD') ]]>
-        </if>
-        <if test="effEndDateStart != null and effEndDateStart != ''">
-            <![CDATA[AND  DNDC.EFF_END_DATE >= TO_DATE(#{effEndDateStart},'YYYY-MM-DD')]]>
-        </if>
-        <if test="effEndDateEnd != null and effEndDateEnd != ''">
-            <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDateEnd},'YYYY-MM-DD')]]>
-        </if>
-        <if test="prodId != null and !prodId.equals('')">
-            AND DNDC.PROD_ID in
-            <foreach collection="prodId" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-    </where>
-    group by dndc.prod_id ,
-        rpi.prod_name ,
-        dndc.data_status ,
-        dndc.eff_date ,
-        dndc.eff_end_date ,
-        dndc.update_user
+       select
+            prodId,
+            prodName,
+            dataStatus,
+            effDate,
+            effEndDate,
+            updatetime,
+            (select d.update_user from DIS_NOSTD_CREDITOR d where d.update_time=updatetime
+            and tmp.prodId=D.PROD_ID
+            and tmp.dataStatus = D.data_status
+            and tmp.effDate=D.eff_date
+            and tmp.effEndDate=D.EFF_END_DATE) updateUser
+        from(
+            SELECT
+                /*DNDC.NOSTD_ASSET_ID,*/
+                DNDC.PROD_ID prodId,
+                RPI.PROD_NAME prodName,
+                DNDC.DATA_STATUS dataStatus,
+                DNDC.EFF_DATE effDate,
+                DNDC.EFF_END_DATE effEndDate,
+                max(dndc.update_time ) updatetime
+            FROM DIS_NOSTD_CREDITOR DNDC
+            LEFT JOIN V_REP_PROD_INFO RPI
+            on DNDC.PROD_ID = RPI.PROD_ID
+            <where>
+                <if test="dataStatus != null and dataStatus != ''">
+                AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+                </if>
+                <if test="effDateStart != null and effDateStart != ''">
+                    <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDateStart},'YYYY-MM-DD') ]]>
+                </if>
+                <if test="effDateEnd != null and effDateEnd != ''">
+                    <![CDATA[AND  DNDC.EFF_DATE <= TO_DATE(#{effDateEnd},'YYYY-MM-DD') ]]>
+                </if>
+                <if test="effEndDateStart != null and effEndDateStart != ''">
+                    <![CDATA[AND  DNDC.EFF_END_DATE >= TO_DATE(#{effEndDateStart},'YYYY-MM-DD')]]>
+                </if>
+                <if test="effEndDateEnd != null and effEndDateEnd != ''">
+                    <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDateEnd},'YYYY-MM-DD')]]>
+                </if>
+                <if test="prodId != null and !prodId.equals('')">
+                    AND DNDC.PROD_ID in
+                    <foreach collection="prodId" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+            group by dndc.prod_id ,
+                rpi.prod_name ,
+                dndc.data_status ,
+                dndc.eff_date ,
+                dndc.eff_end_date )tmp
 </select>
     <select id="selectDetail" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
         SELECT

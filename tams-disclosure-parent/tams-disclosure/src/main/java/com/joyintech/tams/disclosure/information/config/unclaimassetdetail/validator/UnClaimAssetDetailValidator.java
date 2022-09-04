@@ -115,47 +115,47 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
             }
             //校验同一个产品不能有两条数据的生效区间范围有重叠
             //查询产品所有的合作机构数据
-            if (StringUtil.isNotEmpty(dto.getProdId()) && dto.getProdId().length()!=0) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("prodId", dto.getProdId());
-                if(StringUtil.isNotEmpty(dto.getEffDateO())){
-                    map.put("effDateO", DateUtil.format(dto.getEffDateO()));
-                }else{
-                    map.put("effDateO", "");
-                }
-                if(StringUtil.isNotEmpty(dto.getEffEndDateO())){
-                    map.put("effEndDateO", DateUtil.format(dto.getEffEndDateO()));
-                }else{
-                    map.put("effEndDateO", "");
-                }
-
-                if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
-                    map.put("excludeId", dto.getNostdAssetId());
-                }
-                List<UnClaimAssetDetailDto> unClaimAssetDetailDtoList = unClaimAssetDetail002Service.checkNostdExistByProdId(map);
-                List<UnClaimAssetDetailDto> worklowList=unClaimAssetDetail002Service.getWorklowData(dto);
-                if (unClaimAssetDetailDtoList.size() > 0) {
-                    for (UnClaimAssetDetailDto unClaimAssetDetailDto : unClaimAssetDetailDtoList) {
-                        if (!((DateUtil.compareDate(dto.getEffDate(), unClaimAssetDetailDto.getEffDate()) < 0 && DateUtil.compareDate(dto.getEffEndDate(), unClaimAssetDetailDto.getEffDate()) < 0)
-                                || (DateUtil.compareDate(dto.getEffDate(), unClaimAssetDetailDto.getEffEndDate()) > 0 && DateUtil.compareDate(dto.getEffEndDate(), unClaimAssetDetailDto.getEffEndDate()) > 0))) {
-                            resultList.add(new ValidMessage("生效区间范围有重叠！" + "{" + DateUtil.format(unClaimAssetDetailDto.getEffDate(), "yyyy-MM-dd")
-                                    + "-" + DateUtil.format(unClaimAssetDetailDto.getEffEndDate(), "yyyy-MM-dd") + "}"));
-                            break;
-                        }
-                    }
-                }
-
-                if(worklowList.size()>0){
-                    for (UnClaimAssetDetailDto unClaimAssetDetailDto : worklowList) {
-                        if(!((DateUtil.compareDate(dto.getEffDate(),unClaimAssetDetailDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),unClaimAssetDetailDto.getEffDate())<0)
-                                || (DateUtil.compareDate(dto.getEffDate(),unClaimAssetDetailDto.getEffEndDate())>0 && DateUtil.compareDate(dto.getEffEndDate(),unClaimAssetDetailDto.getEffEndDate())>0))){
-                            resultList.add(new ValidMessage("生效区间范围与代办数据有重叠！"+"{"+DateUtil.format(unClaimAssetDetailDto.getEffDate(),"yyyyMMdd")
-                                    +"-"+DateUtil.format(unClaimAssetDetailDto.getEffEndDate(),"yyyyMMdd")+"}"));
-                            break;
-                        }
-                    }
-                }
-            }
+//            if (StringUtil.isNotEmpty(dto.getProdId()) && dto.getProdId().length()!=0) {
+//                Map<String, Object> map = new HashMap<>();
+//                map.put("prodId", dto.getProdId());
+//                if(StringUtil.isNotEmpty(dto.getEffDateO())){
+//                    map.put("effDateO", DateUtil.format(dto.getEffDateO()));
+//                }else{
+//                    map.put("effDateO", "");
+//                }
+//                if(StringUtil.isNotEmpty(dto.getEffEndDateO())){
+//                    map.put("effEndDateO", DateUtil.format(dto.getEffEndDateO()));
+//                }else{
+//                    map.put("effEndDateO", "");
+//                }
+//
+//                if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+//                    map.put("excludeId", dto.getNostdAssetId());
+//                }
+//                List<UnClaimAssetDetailDto> unClaimAssetDetailDtoList = unClaimAssetDetail002Service.checkNostdExistByProdId(map);
+//                List<UnClaimAssetDetailDto> worklowList=unClaimAssetDetail002Service.getWorklowData(dto);
+//                if (unClaimAssetDetailDtoList.size() > 0) {
+//                    for (UnClaimAssetDetailDto unClaimAssetDetailDto : unClaimAssetDetailDtoList) {
+//                        if (!((DateUtil.compareDate(dto.getEffDate(), unClaimAssetDetailDto.getEffDate()) < 0 && DateUtil.compareDate(dto.getEffEndDate(), unClaimAssetDetailDto.getEffDate()) < 0)
+//                                || (DateUtil.compareDate(dto.getEffDate(), unClaimAssetDetailDto.getEffEndDate()) > 0 && DateUtil.compareDate(dto.getEffEndDate(), unClaimAssetDetailDto.getEffEndDate()) > 0))) {
+//                            resultList.add(new ValidMessage("生效区间范围有重叠！" + "{" + DateUtil.format(unClaimAssetDetailDto.getEffDate(), "yyyy-MM-dd")
+//                                    + "-" + DateUtil.format(unClaimAssetDetailDto.getEffEndDate(), "yyyy-MM-dd") + "}"));
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//                if(worklowList.size()>0){
+//                    for (UnClaimAssetDetailDto unClaimAssetDetailDto : worklowList) {
+//                        if(!((DateUtil.compareDate(dto.getEffDate(),unClaimAssetDetailDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),unClaimAssetDetailDto.getEffDate())<0)
+//                                || (DateUtil.compareDate(dto.getEffDate(),unClaimAssetDetailDto.getEffEndDate())>0 && DateUtil.compareDate(dto.getEffEndDate(),unClaimAssetDetailDto.getEffEndDate())>0))){
+//                            resultList.add(new ValidMessage("生效区间范围与代办数据有重叠！"+"{"+DateUtil.format(unClaimAssetDetailDto.getEffDate(),"yyyyMMdd")
+//                                    +"-"+DateUtil.format(unClaimAssetDetailDto.getEffEndDate(),"yyyyMMdd")+"}"));
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
         }
         return resultList;
     }
