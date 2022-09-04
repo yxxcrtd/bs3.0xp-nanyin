@@ -161,7 +161,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
      * @return createTimeStr.
      */
     public String getCreateTimeStr() {
-        return  DateUtil.format(DateUtil.parse(createTimeStr),"yyyy-MM-dd");
+        return  createTimeStr;
     }
    
     /**

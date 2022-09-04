@@ -63,12 +63,14 @@
     LEFT JOIN DIS_SALE_AGENCY dsa on dsa.SEQUENCE_NO = dpa.AGENCY_ID
     WHERE 1=1
     and dsa.AGENCY_NAME is not null
-        <if test="ids != null and ids.size()>0">
-            AND	reveal.id in
-            <foreach collection="ids" item="item" open="(" close=")"
-                     separator=",">
-                #{item}
-            </foreach>
-        </if>
+<!--        <if test="ids != null and ids.size()>0">-->
+<!--            AND	reveal.id in-->
+<!--            <foreach collection="ids" item="item" open="(" close=")"-->
+<!--                     separator=",">-->
+<!--                #{item}-->
+<!--            </foreach>-->
+<!--        </if>-->
+	and to_char(reveal.REVEAL_DATE,'yyyy-MM-dd') = #{date,jdbcType=VARCHAR}
+	and reveal.REVEAL_STATUS='01'
     </select>
 </mapper>

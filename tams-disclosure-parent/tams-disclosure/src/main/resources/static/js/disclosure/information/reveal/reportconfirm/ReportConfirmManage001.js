@@ -137,12 +137,12 @@ $(function () {
 //                		   str += '&nbsp;&nbsp;&nbsp;&nbsp;';
 //                		   str += '<a id="jumpTab" href=\'javascript:redirectUrl2("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传附件" class="iconfont icon-cloud-upload1"></i></a>';
 							   //update by yantianyuan 二级法人按钮改造 end
-							   str +="<i class='iconfont icon-search view'></i>";
+							   str +='<i title="预览" class="iconfont icon-search view"></i>';
 							   return str;
 						   }
 					   }else{
 						   var str = "";
-						   str +="<i class='iconfont icon-search view'></i>";
+						   str +='<i title="预览" class="iconfont icon-search view"></i>';
 						   return str;
 					   }
                 	} 

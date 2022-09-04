@@ -30,8 +30,8 @@
 			,REVEAL.CREATE_TIME createTime
 			,REVEAL.UPDATE_USER updateUser
 			,REVEAL.UPDATE_TIME updateTime
-			,to_char(REVEAL.CREATE_TIME,'yyyy-MM-dd') createTimeStr
-			,to_char(REVEAL.CONFIRM_DATE,'yyyy-MM-dd') confirmDateStr
+			,to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd hh24:mi') createTimeStr
+			,to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd hh24:mi') confirmDateStr
 			,REVEAL.SYS_FILEPATH seqno
 			<!-- add by guozhongbao 报表披露管理  20181204 start -->
 			,REVEAL.REVEAL_CHANNEL revealChannel
@@ -551,7 +551,7 @@
 			,REVEAL.CREATE_TIME createTime
 			,REVEAL.UPDATE_USER updateUser
 			,REVEAL.UPDATE_TIME updateTime
-			,to_char(REVEAL.CREATE_TIME,'yyyy-MM-dd') createTimeStr
+			,to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd hh24:mi') createTimeStr
 			,to_char(REVEAL.CONFIRM_DATE,'yyyy-MM-dd') confirmDateStr
 			,REVEAL.SYS_FILEPATH seqno
 			<!-- add by guozhongbao 报表披露管理  20181204 start -->

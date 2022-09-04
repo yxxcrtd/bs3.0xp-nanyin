@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -50,6 +51,9 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
     @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(ReportRevealManage001Service.class);
 
+
+    @Autowired
+    private ReportRevealManage002Service reportRevealManage002Service;
     /**
      * 根据条件获取表格信息
      * 
@@ -98,9 +102,10 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      */
     public boolean updateRevealStatus(ReportConfirmManageParamDto dto)
         throws IOException {
-        return restTemplate.postForObject(
+        restTemplate.postForObject(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRevealManage001/updateRevealStatus", dto,
             Boolean.class);
+        return  reportRevealManage002Service.genFile();
     }
 
     /**

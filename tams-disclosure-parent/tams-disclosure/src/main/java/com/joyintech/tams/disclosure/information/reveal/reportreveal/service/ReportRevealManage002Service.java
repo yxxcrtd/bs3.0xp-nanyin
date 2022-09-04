@@ -110,21 +110,24 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
         if(!result){
             return false;
         }
-        //2.单条披露成功后，按产品关联的代销机构生成压缩包进行披露
-        //勾选数据的id
-        List<String> ids = listdto.stream().map(ReportConfirmManage001Dto::getId).distinct().collect(Collectors.toList());
-        //查询单据
-        HashMap<String,Object> param=new HashMap<>();
-        param.put("ids",ids);
+        result=genFile();
+
+        return result;
+    }
+
+    public boolean genFile() throws IOException {
+        HashMap<String, Object> param = new HashMap<>();
+        String date = DateUtil.getCurrentDate();
+        param.put("date", date);
         //查询要处理的信披单据，没有关联代销机构的产品对应的单据，不进行披露
-        List<ReportConfirmManage001Dto> list=mapper.getRepRevealList(param);
-        if(list!=null && list.size()>0){
+        List<ReportConfirmManage001Dto> list = mapper.getRepRevealList(param);
+        if (list != null && list.size() > 0) {
             Map<String, List<ReportConfirmManage001Dto>> map = list.stream().collect(Collectors.groupingBy(ReportConfirmManage001Dto::getAgencyName));
-            for(String agencyName : map.keySet()){
+            for (String agencyName : map.keySet()) {
                 List<ReportConfirmManage001Dto> reportConfirmManage001DtoList = map.get(agencyName);
-                if(reportConfirmManage001DtoList!=null && reportConfirmManage001DtoList.size()>0){
-                    boolean generateResult=generatePackageByAgency(agencyName,reportConfirmManage001DtoList);
-                    if(!generateResult){
+                if (reportConfirmManage001DtoList != null && reportConfirmManage001DtoList.size() > 0) {
+                    boolean generateResult = generatePackageByAgency(agencyName, reportConfirmManage001DtoList);
+                    if (!generateResult) {
                         //有生成压缩包失败的，默认全部披露失败，直接结束
                         return false;
                     }
@@ -133,22 +136,19 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
 
             //所有的代销机构都成功生成压缩包，再上传压缩包至指定服务器
 //            int i=1;
-            for(String agencyName : map.keySet()){
+            for (String agencyName : map.keySet()) {
                 String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-                exportFilePath=exportFilePath+ DateUtil.formatDate(DateUtil.getCurrentDate());
+                exportFilePath = exportFilePath + DateUtil.formatDate(DateUtil.getCurrentDate());
                 String zipFileName = this.createFileName("zip");
-                zipFileName=agencyName+zipFileName;
+                zipFileName = agencyName + zipFileName;
                 Boolean isSucess = SendFileUtil.sendToFinanceByFtp(zipFileName, exportFilePath);
-                if(!isSucess){
+                if (!isSucess) {
                     //有上传压缩包失败的，默认全部披露失败，直接结束
                     return false;
                 }
-//                progressBarService.updatePercent("ReportRevealManage001", PROCESS_KEY, Double.parseDouble(String.valueOf(i)) / map.size(), false);
-//                i++;
             }
-            //上传成功，更新披露状态
         }
-        return result;
+        return true;
     }
 
     /**
