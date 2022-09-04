@@ -224,6 +224,8 @@
 	     * 删除页面
 	     */
 	   dataTable.bind('click', '.delt', function(data, index) {
+		   var selArrUseful =[];
+		   selArrUseful.push(data);
 		   var object = {selectedItem: selArrUseful, operateType: "delete"};//请求参数
 		   Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/check', object, function (result) {
 			   Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
@@ -341,13 +343,26 @@
 			   Joyin.alert("数据已删除",7,null,null)
 			   return;
 		   }
-		   Joyin.confirm("确认删除吗？", function(){
-			   var object = {selectedItem: [data], operateType: "delete"};//请求参数
-			   WorkFlow.doDeleteList(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/delete', object,
-				   "DisProdPlanManage001_btn_delete", "DisProdPlanManage002",function(result) {
-					   dataTable.reload();
-					   dataTable2.reload();
-				   });
+		   // Joyin.confirm("确认删除吗？", function(){
+			//    var object = {selectedItem: [data], operateType: "delete"};//请求参数
+			//    WorkFlow.doDeleteList(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/delete', object,
+			// 	   "DisProdPlanManage001_btn_delete", "DisProdPlanManage002",function(result) {
+			// 		   dataTable.reload();
+			// 		   dataTable2.reload();
+			// 	   });
+		   // });
+
+		   var selArrUseful =[];
+		   selArrUseful.push(data);
+		   var object = {selectedItem: selArrUseful, operateType: "delete"};//请求参数
+		   Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/check', object, function (result) {
+			   Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
+				   WorkFlow.doDeleteList(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/delete', object,
+					   "DisProdPlanManage001_btn_delete", "DisProdPlanManage002",function(result) {
+						   dataTable.reload();
+						   dataTable2.reload();
+					   });
+			   });
 		   });
 
 
