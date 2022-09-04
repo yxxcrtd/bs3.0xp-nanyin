@@ -64,8 +64,8 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
 
     public Page<RepRelDealDto> selectForExport(Map<String, Object> param) {
         param.put("prodList", StringUtil.isNotEmpty(param.get("prodId"))?(param.get("prodId").toString().split(",")):null);
-        Page<RepRelDealDto> result = queryForPage( ()
-                -> repRelDeal001Mapper.selectInfo(param));
+        Page<RepRelDealDto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()),
+                () -> repRelDeal001Mapper.selectInfo(param));
         return result;
     }
 

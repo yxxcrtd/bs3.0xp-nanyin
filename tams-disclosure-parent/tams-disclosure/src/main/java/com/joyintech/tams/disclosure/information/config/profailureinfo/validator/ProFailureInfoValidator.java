@@ -25,7 +25,7 @@ public class ProFailureInfoValidator implements BeanValidator {
         if (StringUtil.equals(dto.getOperateType(),"new")){
             int count = proFailureInfo001Service.hasRepeatedData(dto);
             if (count > 0 /* NYLCXP-790  && StringUtil.equals(dto.getStatus(),"E")*/){
-                errorList.add(new ValidMessage("","产品登记编码，不成立原因，报告发布日期不能重复！"));
+                errorList.add(new ValidMessage("","产品登记编码不能重复！"));
             }
         }
         return errorList;

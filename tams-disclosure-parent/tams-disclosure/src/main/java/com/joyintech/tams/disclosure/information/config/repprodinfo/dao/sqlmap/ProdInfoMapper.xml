@@ -855,4 +855,15 @@
         where P_PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
 
+    <select id="getPtParentProdInfo"
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
+        select
+         PROD_ID pProdId,
+         PROD_NAME pProdName
+        from REP_PROD_INFO
+        where STATUS='E'
+        and REP_PROD_TYPE ='02'
+        and P_PROD_ID = #{pProdId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

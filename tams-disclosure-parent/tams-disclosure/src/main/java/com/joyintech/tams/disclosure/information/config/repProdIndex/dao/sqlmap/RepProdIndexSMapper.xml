@@ -356,8 +356,8 @@
         to_char(A.VALUE_DATE,'yyyy-mm-dd') valueDateStr
         from REP_PROD_INDEX A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.VALUE_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
-                (#{item.prodId},#{item.valueDateStr})
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.VALUE_DATE,'yyyy-mm-dd'),A.STATUS) IN (" separator="," close=")">
+                (#{item.prodId},#{item.valueDateStr},'E')
             </foreach>
         </where>
     </select>

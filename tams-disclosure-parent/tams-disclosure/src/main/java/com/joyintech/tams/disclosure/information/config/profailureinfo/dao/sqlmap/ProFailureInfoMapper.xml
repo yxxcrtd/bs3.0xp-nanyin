@@ -89,8 +89,15 @@
         REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
    </select>
     <delete id="deleteByKey">
-        update DIS_PROD_NOCREATE set DATA_STATUS = 'D'
+        update DIS_PROD_NOCREATE
+        set DATA_STATUS = 'D',
+        UPDATE_TIME =#{updateTime,jdbcType=TIMESTAMP},
+        UPDATE_USER =#{updateUser,jdbcType=VARCHAR}
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+    </delete>
+    <delete id="delete">
+        delete DIS_PROD_NOCREATE
+        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and DATA_STATUS = 'E'
     </delete>
 
     <insert id="insert">
@@ -130,6 +137,7 @@
             </if>
         </set>
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        and DATA_STATUS = 'E'
     </update>
 
 
@@ -197,9 +205,9 @@
     <select id="hasRepeatedData" resultType="java.lang.Integer">
         select count (1) from DIS_PROD_NOCREATE where
         DATA_STATUS = 'E' and
-        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR} and
-        NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and
-        REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')
+        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+<!--        and NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR} and-->
+<!--        REPORT_ISSUE_DATE = TO_DATE(#{reportIssueDateStr},'YYYY-MM-DD')-->
     </select>
     <select id="isRepeated2"
             resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
@@ -228,6 +236,7 @@
             <foreach collection="list" item="item" open="(A.PROD_REGIST_NO,to_char(A.REPORT_ISSUE_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
                 (#{item.prodRegistNo},#{item.reportIssueDateStr})
             </foreach>
+            and A.DATA_STATUS='E'
         </where>
     </select>
 </mapper>

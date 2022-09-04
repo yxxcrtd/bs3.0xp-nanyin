@@ -70,6 +70,9 @@
             <if test="repStatus != null">
                 REP_STATUS = #{repStatus,jdbcType=VARCHAR},
             </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
             <if test="updateUser != null">
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>

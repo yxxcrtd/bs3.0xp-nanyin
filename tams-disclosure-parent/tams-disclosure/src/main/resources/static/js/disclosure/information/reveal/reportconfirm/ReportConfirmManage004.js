@@ -58,6 +58,11 @@ $(function () {
 			object.endDate= $('#reportDate').endDate();
 			object.revealEndDate= $('#revealEndDate').val();
 			object.comment= $('#comment').val();
+			var  files=$('#uploadReport').data('getSelectedFiles')();
+			if (files.length==0) {
+				Joyin.error(JoyinUtil.getMessage("报表上传不能为空"));
+				return;
+			}
 			if(object.prodid == "" || object.prodid == null){
 				Joyin.error(JoyinUtil.getMessage("产品名称不能为空"));
 				return;

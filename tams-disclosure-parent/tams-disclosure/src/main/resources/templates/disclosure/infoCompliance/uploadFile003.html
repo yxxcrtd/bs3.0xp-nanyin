@@ -25,24 +25,28 @@
             max-height: 200px;
         }
     </style>
-    <div class="pro-module" data-ignore="true">
-        <h3 class="pro-module-title" data-ignore="true">
-            <span class="title-des" data-ignore="true">修订后附件</span>
-            <a class="layui-btn layui-btn-sm btn-create" data-ignore="true" id="multFileBtn3"><i data-ignore="true" class="iconfont icon-found"></i><span data-ignore="true">新增附件</span></a>
-            <i class="iconfont icon-arrow-down pro-down-icon" data-ignore="true"></i>
+    <div class="pro-module">
+        <h3 class="pro-module-title">
+            <span class="title-des">修订后附件</span>
+            <a class="layui-btn layui-btn-sm btn-create" data-ignore="true" data-th-if="${editable}" id="multFileBtn3"><i class="iconfont icon-found"></i><span>新增附件</span></a>
+            <i class="iconfont icon-arrow-down pro-down-icon"></i>
         </h3>
         <div class="pro-module-item" data-ignore="true">
-            <div data-ignore="true" class="layui-form-item" style="padding: 10px 10px 0 10px;text-align:center;">
-                <div data-ignore="true" class="show">
-                    <div data-ignore="true" id="fileUploader3" class="upload" th:data-data='${attachmentFiles}'
+            <div class="layui-form-item" style="padding: 10px 10px 0 10px;text-align:center;">
+                <div class="show">
+                    <div data-th-data-ignore="${editable}" th:disabled="${!editable}" id="fileUploader3" class="upload" th:data-data='${attachmentFiles}'
                          data-option="{muiltiple: true, autoUpload: true, type: 'list','fileUploader':'fileUploader3'}">
                     </div>
                     <input type="hidden" id="businessId" name="businessId" data-th-value="${businessId}">
+                    <input type="hidden" id="fileType" name="fileType" data-th-value="${fileType}">
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script data-th-inline="javascript" type="text/javascript">
+    var loginUser = /*[[${loginUser}]]*/'';
+</script>
 <script data-th-src="@{/js/disclosure/infoCompliance/uploadFile001.js}" type="text/javascript">
 </script>
 <script data-th-src="@{/js/disclosure/infoCompliance/layui-special.js}" type="text/javascript">
@@ -66,7 +70,9 @@
 
     $(function() {
         $('#multFileBtn3').click(function() {
-            if(FileCommon3.getUploadFileInfo().length >=5){
+            var files = FileCommon3.getUploadFileInfo();
+            loginUser = loginUser || '';
+            if(files.filter(f => f.createUser===loginUser || !f.createUser).length >=5){
                 Joyin.error("最大上传5个附件。");
                 return;
             } else {

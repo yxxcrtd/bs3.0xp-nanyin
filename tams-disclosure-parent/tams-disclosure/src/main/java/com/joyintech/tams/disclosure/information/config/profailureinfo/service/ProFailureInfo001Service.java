@@ -58,7 +58,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         dto.setOperateType(operationType.toString());
         String type = dto.getOperateType();
         if (StringUtil.equals(type, "DELETE")) {
-            proFailureInfoMapper.deleteByKey(dto.getProdRegistNo());
+            proFailureInfoMapper.deleteByKey(dto);
         }
         else if (StringUtil.equals(type, "NEW")) {
             ProFailureInfo001Dto dto1 = proFailureInfoMapper.isRepeated2(dto);
@@ -76,7 +76,8 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         }
         else {
             dto.setDataStatus("E");
-            proFailureInfoMapper.updateByKey(dto);
+            proFailureInfoMapper.delete(dto);
+            proFailureInfoMapper.insert(dto);
         }
 
     }

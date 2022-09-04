@@ -1,25 +1,21 @@
 package com.joyintech.tams.utils.poi;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.common.oss.config.MinioProperties;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.common.oss.service.impl.MinioFileRemoteService;
+import fr.opensagres.poi.xwpf.converter.core.ImageManager;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
+import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
+import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.converter.WordToHtmlConverter;
+import org.apache.poi.hwpf.usermodel.Picture;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,16 +23,15 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.tams.common.oss.config.MinioProperties;
-import com.joyintech.tams.common.oss.service.FileRemoteService;
-import com.joyintech.tams.common.oss.service.impl.MinioFileRemoteService;
-
-import fr.opensagres.poi.xwpf.converter.core.ImageManager;
-import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
-import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
-import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
-import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 功能：
@@ -56,7 +51,6 @@ public class PoiUtils {
     
     public static void docxToHtml(InputStream is, OutputStream os, String imagePath,String keyStr) throws IOException {
         XWPFDocument wordDocument = new XWPFDocument( is );
-
 //        File imageFolderFile = new File(imagePath);
 //        XHTMLOptions options = XHTMLOptions.create().URIResolver(new FileURIResolver(imageFolderFile));
 //        options.setExtractor(new FileImageExtractor(imageFolderFile));
@@ -140,7 +134,69 @@ public class PoiUtils {
         reviseHtml(bos,keyStr);
         bos.writeTo(os);
     }
-    
+
+    // doc转换为html
+    public static void docToHtml(InputStream is, OutputStream os, String imagePath,String keyStr) throws Exception {
+        HWPFDocument wordDocument = new HWPFDocument(is);
+        WordToHtmlConverter wordToHtmlConverter = new WordToHtmlConverter(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
+        // 设置图片的相对路径
+        wordToHtmlConverter.setPicturesManager((a, b, suggestedName, d, e) -> {
+            InputStream fis =null;
+            FileRemoteService minioFileRemoteService = SpringContextUtil.getBean(MinioFileRemoteService.class);
+            MinioProperties minioProperties = SpringContextUtil.getBean(MinioProperties.class);
+            try {
+                String tmpImagePath = StringUtils.defaultIfEmpty(imagePath, "image");
+                //上传图片到minio服务器
+                fis = new ByteArrayInputStream(a);
+                String path = File.separator + tmpImagePath + File.separator + suggestedName;
+                minioFileRemoteService.uploadFile(path, fis);
+                //增加随机数，防止浏览器缓存 modify by zhengbs
+                return minioProperties.getReadPath() + File.separator + minioProperties.getBucket() + path + "?fresh=" + Math.random();
+            } finally {
+                if(fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException ex) {
+                        // ignore
+                    }
+                }
+            }
+        });
+        wordToHtmlConverter.processDocument(wordDocument);
+        List<Picture> pics = wordDocument.getPicturesTable().getAllPictures();
+
+        String outDir = FileNameUtil.createUploadFilePath("");
+        File dirFile = new File(outDir);
+        if (!dirFile.exists()) {
+            dirFile.mkdirs();
+        }
+        StringBuilder imageDir = new StringBuilder();
+        imageDir.append(outDir).append(StringUtils.defaultString(imagePath, "image"));
+        File imagrDirFile = new File(imageDir.toString());
+        if (!imagrDirFile.exists()) {
+            imagrDirFile.mkdirs();
+        }
+        for (Picture pic : pics) {
+            // 生成图片
+            StringBuilder imageFilePath = new StringBuilder();
+            imageFilePath.append(imageDir).append("/").append(pic.suggestFullFileName());
+            pic.writeImageContent(new FileOutputStream(imageFilePath.toString()));
+        }
+        org.w3c.dom.Document htmlDocument = wordToHtmlConverter.getDocument();
+        DOMSource domSource = new DOMSource(htmlDocument);
+        StringBuilder htmlPath = new StringBuilder();
+        htmlPath.append(outDir).append("content.html");
+        StreamResult streamResult = new StreamResult(os/*new File(htmlPath.toString())*/);
+
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer serializer = tf.newTransformer();
+        serializer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
+        serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+        serializer.setOutputProperty(OutputKeys.METHOD, "html");
+        serializer.transform(domSource, streamResult);
+
+//        return htmlPath.toString();
+    }
     
 
     public static void docxToPdf(InputStream is, OutputStream os) throws IOException {

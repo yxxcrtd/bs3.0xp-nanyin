@@ -123,7 +123,8 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
 //            entityList = svrProdFeeDealInterfMapper.selectInfo(param);
 //        }
 //        return entityList;
-        Page<SvrProdFeeDealInterfDto> result = queryForPage(() -> svrProdFeeDealInterfMapper.selectInfo(param));
+        Page<SvrProdFeeDealInterfDto> result = queryForPage( Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()),
+                () -> svrProdFeeDealInterfMapper.selectInfo(param));
         return result;
     }
 

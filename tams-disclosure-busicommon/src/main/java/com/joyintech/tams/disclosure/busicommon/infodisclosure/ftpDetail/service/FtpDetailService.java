@@ -1,12 +1,17 @@
 package com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
 import org.apache.commons.net.ftp.FTPClient;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
@@ -17,11 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RepFtpDetailMapper;
 import com.joyintech.tams.common.base.dao.RepFtpDetailMsgMapper;
 import com.joyintech.tams.common.base.dao.RepFtpPathMapper;
@@ -170,8 +170,7 @@ public class FtpDetailService {
 				reportinfo = ftpDetailMapper.selectProdInfoByProdId(dto.getProdId());
 			}
 			RepReveal repReveal = repRevealMapper.selectByPrimaryKey(dto.getRevealId());
-			
-			
+
 			String filePath = repReveal.getSysFilepath();
 			String fileName = repReveal.getSysFilename();
 			
@@ -179,7 +178,71 @@ public class FtpDetailService {
 				filePath = repReveal.getFilepath();
 				fileName = repReveal.getFilename();
 			}
-			
+
+			//获取文件名称
+			String[] newFileNames = fileName.split("/");
+			String  newFileName = newFileNames[newFileNames.length-1];
+			String prefix = "";
+
+			String reportCategory = repReveal.getReportCategory();
+			//发行公告,运行公告,到期公告,临时公告,销售公告
+			if("01".equals(reportCategory) || "02".equals(reportCategory) || "03".equals(reportCategory) || "04".equals(reportCategory) || "05".equals(reportCategory) ){
+				//根据P_PROD_ID查询产品信息,部分普通产品也有P_PROD_ID
+				List<RepProdInfo> repInfoList = ftpDetailMapper.selectProdInfoByPProdId(reportinfo.getProdId());
+				if(repInfoList !=null && !repInfoList.isEmpty()){
+					prefix = repInfoList.stream().map(RepProdInfo::getProdId).distinct().collect(Collectors.joining(","));
+				} else {
+					prefix = reportinfo.getProdId();
+				}
+				//募集方式
+				prefix = prefix+"_"+reportinfo.getRaiseType();
+				//文件类型
+				prefix = prefix + "_" + reportCategory;
+
+			}
+			String repId = repReveal.getRepId();
+			String fileSuffix = newFileName.substring(newFileName.lastIndexOf("."));
+			//发行公告,产品名称+发行公告
+			if("CP_001_001_001".equals(repId)){
+				newFileName = reportinfo.getProdName() + "发行公告" + fileSuffix;
+			} else if("CP_001_002_003".equals(repId) || "CP_001_002_004".equals(repId)) {
+				//日开产品净值公告（公募现管类）,日开产品净值公告（公募净值型产品）
+				//普通产品文件名命名规则:产品名称+净值公告+（yyyy-MM-dd）
+				if("02".equals(reportinfo.getRepProdType())){
+					newFileName = reportinfo.getProdName() + "净值公告（" + DateUtil.format(repReveal.getEndDate()) +"）"+fileSuffix;
+				}
+				//如果子产品
+				if("03".equals(reportinfo.getRepProdType())){
+					RepProdInfo pRepProdInfo = ftpDetailMapper.selectPProdInfoByCProdId(reportinfo.getProdId());
+					newFileName = pRepProdInfo.getProdName() +"（" + reportinfo.getProdId() + "）净值公告（" + DateUtil.format(repReveal.getEndDate()) +"）"+fileSuffix;
+				}
+			} else if("CP_001_002_005".equals(repId) || "CP_001_002_006".equals(repId)){
+				String suffix = "公告";
+				//每周净值公告
+				if("CP_001_002_006".equals(repId)){
+					suffix = "报告";
+				}
+				//普通产品文件名命名规则:产品名称+净值公告+（yyyy-MM-dd）
+				if("02".equals(reportinfo.getRepProdType())){
+					newFileName = reportinfo.getProdName() + "每周净值"+suffix+fileSuffix;
+				}
+				//如果子产品
+				if("03".equals(reportinfo.getRepProdType())){
+					RepProdInfo pRepProdInfo = ftpDetailMapper.selectPProdInfoByCProdId(reportinfo.getProdId());
+					newFileName = pRepProdInfo.getProdName() +"（" + reportinfo.getProdId() + "）每周净值"+suffix+fileSuffix;
+				}
+			} else if("CP_001_002_015".equals(repId) || "CP_001_002_016".equals(repId)){
+				//季度报告
+				int length = reportinfo.getProdName().length();
+				newFileName = newFileName.replace("第01季度","第1季度");
+				newFileName = newFileName.replace("第02季度","第2季度");
+				newFileName = newFileName.replace("第03季度","第3季度");
+				newFileName = newFileName.replace("第04季度","第4季度");
+				newFileName = newFileName.substring(0,length) + "理财产品" + newFileName.substring(length);
+			}
+
+			fileName = prefix + "_" + newFileName;
+
 			UploadFile uploadfile = fileAttachmentProcess.fetch(filePath);
 
 			if(StringUtil.isNotEmpty(uploadfile)){
