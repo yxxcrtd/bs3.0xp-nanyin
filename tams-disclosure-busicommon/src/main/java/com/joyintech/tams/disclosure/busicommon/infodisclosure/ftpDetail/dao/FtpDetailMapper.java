@@ -20,4 +20,7 @@ public interface FtpDetailMapper {
 	 * 根据母产品代码查询发行成功的子产品
 	 * */
 	List<RepProdInfo> selectProdInfoByPProdId(String pProdId);
+
+	//通过子产品查询母产品
+	RepProdInfo selectPProdInfoByCProdId(String prodId);
 }

@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -197,8 +198,50 @@ public class FtpDetailService {
 				prefix = prefix+"_"+reportinfo.getRaiseType();
 				//文件类型
 				prefix = prefix + "_" + reportCategory;
-				fileName = prefix + "_" + newFileName;
+
 			}
+			String repId = repReveal.getRepId();
+			String fileSuffix = newFileName.substring(newFileName.lastIndexOf("."));
+			//发行公告,产品名称+发行公告
+			if("CP_001_001_001".equals(repId)){
+				newFileName = reportinfo.getProdName() + "发行公告" + fileSuffix;
+			} else if("CP_001_002_003".equals(repId) || "CP_001_002_004".equals(repId)) {
+				//日开产品净值公告（公募现管类）,日开产品净值公告（公募净值型产品）
+				//普通产品文件名命名规则:产品名称+净值公告+（yyyy-MM-dd）
+				if("02".equals(reportinfo.getRepProdType())){
+					newFileName = reportinfo.getProdName() + "净值公告（" + DateUtil.format(repReveal.getEndDate()) +"）"+fileSuffix;
+				}
+				//如果子产品
+				if("03".equals(reportinfo.getRepProdType())){
+					RepProdInfo pRepProdInfo = ftpDetailMapper.selectPProdInfoByCProdId(reportinfo.getProdId());
+					newFileName = pRepProdInfo.getProdName() +"（" + reportinfo.getProdId() + "）净值公告（" + DateUtil.format(repReveal.getEndDate()) +"）"+fileSuffix;
+				}
+			} else if("CP_001_002_005".equals(repId) || "CP_001_002_006".equals(repId)){
+				String suffix = "公告";
+				//每周净值公告
+				if("CP_001_002_006".equals(repId)){
+					suffix = "报告";
+				}
+				//普通产品文件名命名规则:产品名称+净值公告+（yyyy-MM-dd）
+				if("02".equals(reportinfo.getRepProdType())){
+					newFileName = reportinfo.getProdName() + "每周净值"+suffix+fileSuffix;
+				}
+				//如果子产品
+				if("03".equals(reportinfo.getRepProdType())){
+					RepProdInfo pRepProdInfo = ftpDetailMapper.selectPProdInfoByCProdId(reportinfo.getProdId());
+					newFileName = pRepProdInfo.getProdName() +"（" + reportinfo.getProdId() + "）每周净值"+suffix+fileSuffix;
+				}
+			} else if("CP_001_002_015".equals(repId) || "CP_001_002_016".equals(repId)){
+				//季度报告
+				int length = reportinfo.getProdName().length();
+				newFileName = newFileName.replace("第01季度","第1季度");
+				newFileName = newFileName.replace("第02季度","第2季度");
+				newFileName = newFileName.replace("第03季度","第3季度");
+				newFileName = newFileName.replace("第04季度","第4季度");
+				newFileName = newFileName.substring(0,length) + "理财产品" + newFileName.substring(length);
+			}
+
+			fileName = prefix + "_" + newFileName;
 
 			UploadFile uploadfile = fileAttachmentProcess.fetch(filePath);
 
