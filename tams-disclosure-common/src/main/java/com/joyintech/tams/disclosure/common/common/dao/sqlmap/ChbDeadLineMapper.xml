@@ -140,7 +140,7 @@
 			 DPP.OPERATION_START_DATE
 	     </if>
 	     from DIS_PROD_PLAN DPP
-		inner join REP_PROD_INFO RPI on DPP.PROD_ID=RPI.P_PROD_ID
+		inner join REP_PROD_INFO RPI on DPP.PROD_ID=RPI.P_PROD_ID and RPI.REP_PROD_TYPE='03'
 	     where RPI.PROD_ID = #{prodId, jdbcType=VARCHAR}
 	     AND DPP.DATA_STATUS = 'E'
 	     <if test="basisDateType !=null and basisDateType == '04'">
@@ -152,6 +152,30 @@
 	     <if test="basisDateType !=null and basisDateType == '09'">
 	        AND DPP.OPERATION_START_DATE = #{sysDate, jdbcType=DATE}
 	     </if>
+	union all
+		select
+		<if test="basisDateType !=null and basisDateType == '04'">
+			DPP.OPEN_END_DATE
+		</if>
+		<if test="basisDateType !=null and basisDateType == '08'">
+			DPP.OPEN_START_DATE
+		</if>
+		<if test="basisDateType !=null and basisDateType == '09'">
+			DPP.OPERATION_START_DATE
+		</if>
+		from DIS_PROD_PLAN DPP
+		inner join REP_PROD_INFO RPI on DPP.PROD_ID=RPI.P_PROD_ID and RPI.REP_PROD_TYPE='02'
+		where RPI.P_PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND DPP.DATA_STATUS = 'E'
+		<if test="basisDateType !=null and basisDateType == '04'">
+			AND DPP.OPEN_END_DATE = #{sysDate, jdbcType=DATE}
+		</if>
+		<if test="basisDateType !=null and basisDateType == '08'">
+			AND DPP.OPEN_START_DATE = #{sysDate, jdbcType=DATE}
+		</if>
+		<if test="basisDateType !=null and basisDateType == '09'">
+			AND DPP.OPERATION_START_DATE = #{sysDate, jdbcType=DATE}
+		</if>
   </select>
   
   
@@ -238,28 +262,54 @@
 	<select id="getDQSYFPDate" resultType="java.util.Date">
 		SELECT DISTINCT T.SETT_DATE
 		FROM DIS_PROD_BONUSPLAN T
+		left join REP_PROD_INFO R on R.PROD_ID=T.PROD_ID and R.REP_PROD_TYPE='03'
 		WHERE
-			BONUS_MODE=#{type, jdbcType=VARCHAR}
-		  AND SETT_DATE = #{sysDate, jdbcType=DATE}
-		  AND PROD_ID= #{prodId, jdbcType=VARCHAR}
+			T.BONUS_MODE=#{type, jdbcType=VARCHAR}
+		  AND T.SETT_DATE = #{sysDate, jdbcType=DATE}
+		  AND R.PROD_ID= #{prodId, jdbcType=VARCHAR}
+		union all
+		SELECT DISTINCT T.SETT_DATE
+		FROM DIS_PROD_BONUSPLAN T
+				 left join REP_PROD_INFO R on R.PROD_ID=T.PROD_ID and R.REP_PROD_TYPE='02'
+		WHERE
+			T.BONUS_MODE=#{type, jdbcType=VARCHAR}
+		  AND T.SETT_DATE = #{sysDate, jdbcType=DATE}
+		  AND R.P_PROD_ID= #{prodId, jdbcType=VARCHAR}
 	</select>
 
 	<!-- 查询自动赎回日 -->
 	<select id="getZDSHDate" resultType="java.util.Date">
 		SELECT DISTINCT T.AUTO_REDEEM_DATE
 		FROM DIS_PROD_PLAN T
-		left join rep_prod_info t2 on t.prod_id=t2.p_prod_id
+		left join v_rep_prod_info t2 on t.prod_id=t2.prod_id
+		WHERE
+			1=1
+		  AND t.AUTO_REDEEM_DATE = #{sysDate, jdbcType=DATE}
+		  AND t2.PROD_ID= #{prodId, jdbcType=VARCHAR}
+		  and t2.rep_prod_type='02'
+		  AND EXISTS(
+				SELECT 1 FROM DIS_PROD_PLAN T1
+				left join v_rep_prod_info t3 on t1.prod_id=t3.prod_id
+				WHERE
+					T1.OPEN_START_DATE > T.OPEN_START_DATE
+				    AND t3.PROD_ID= #{prodId, jdbcType=VARCHAR}
+				    AND T.AUTO_REDEEM_DATE!=T1.OPERATION_START_DATE
+			)
+		union all
+		SELECT DISTINCT T.AUTO_REDEEM_DATE
+		FROM DIS_PROD_PLAN T
+				 left join rep_prod_info t2 on t.prod_id=t2.p_prod_id
 		WHERE
 			1=1
 		  AND t.AUTO_REDEEM_DATE = #{sysDate, jdbcType=DATE}
 		  AND t2.PROD_ID= #{prodId, jdbcType=VARCHAR}
 		  AND EXISTS(
 				SELECT 1 FROM DIS_PROD_PLAN T1
-				left join rep_prod_info t3 on t1.prod_id=t3.p_prod_id
+								  left join rep_prod_info t3 on t1.prod_id=t3.p_prod_id
 				WHERE
 					T1.OPEN_START_DATE > T.OPEN_START_DATE
-				    AND t3.PROD_ID= #{prodId, jdbcType=VARCHAR}
-				    AND T.AUTO_REDEEM_DATE!=T1.OPERATION_START_DATE
+				  AND t3.PROD_ID= #{prodId, jdbcType=VARCHAR}
+				  AND T.AUTO_REDEEM_DATE!=T1.OPERATION_START_DATE
 			)
 	</select>
 
@@ -290,7 +340,7 @@
 
 	<select id="getMDATE" resultType="java.util.Date">
 		SELECT DISTINCT T.MDATE
-		FROM REP_PROD_INFO T
+		FROM V_REP_PROD_INFO T
 		WHERE
 			1=1
 		  AND T.MDATE = #{sysDate, jdbcType=DATE}

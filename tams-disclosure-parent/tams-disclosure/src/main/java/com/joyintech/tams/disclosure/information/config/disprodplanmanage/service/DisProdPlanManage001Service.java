@@ -349,7 +349,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     message.add("开放期起始日不能小于产品成立日期。");
                 }
                 if(isDateStr(rowData.get(1)) && isDateStr(rowData.get(2))
-                        &&  DateUtil.compareDate(rowData.get(2), rowData.get(1)) <= 0){
+                        &&  DateUtil.compareDate(rowData.get(2), rowData.get(1)) < 0){
                     message.add("开放期结束日不能小于开放期起始日。");
                 }
                 if (StringUtil.isNotEmpty(rowData.get(3)) && !isDateStr(rowData.get(3))) {

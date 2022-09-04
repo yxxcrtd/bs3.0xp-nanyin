@@ -214,7 +214,7 @@ $(function() {
 			if (openStartDate && openEndDate) {
 				var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate)) / (24 * 60 * 60 * 1000);
 				if (days < 0) {
-					Joyin.error(JoyinUtil.getMessage("开放结束日必须大于开放起始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+					Joyin.error(JoyinUtil.getMessage("开放期结束日不能小于开放期起始日！", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
 					$('#openEndDate').val('');
 				}
 			}

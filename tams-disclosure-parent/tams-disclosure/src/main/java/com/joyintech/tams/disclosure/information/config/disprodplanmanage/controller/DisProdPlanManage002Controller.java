@@ -226,8 +226,8 @@ public class DisProdPlanManage002Controller extends BaseController {
 		}
 
 		if(dto.getOpenStartDate()!=null && dto.getOpenEndDate()!=null){
-			if(DateUtil.compareDate(dto.getOpenEndDate(),dto.getOpenStartDate()) <= 0 ){
-				return new AjaxResult("开放结束日必须大于开放起始日！", MessageType.错误消息);
+			if(DateUtil.compareDate(dto.getOpenEndDate(),dto.getOpenStartDate()) < 0 ){
+				return new AjaxResult("开放期结束日不能小于开放期起始日！", MessageType.错误消息);
 			}
 		}
 
