@@ -107,7 +107,8 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 		//查询要处理的信披单据，没有关联代销机构的产品对应的单据，不进行披露
 		List<String> ids = revealList.stream().map(InfoDiscAutoRevealDto::getId).distinct().collect(Collectors.toList());
 		HashMap<String,Object> param=new HashMap<>();
-		param.put("ids",ids);
+		String date = DateUtil.getCurrentDate();
+		param.put("date", date);
 		list = infoDiscAutoRevealEXMapper.getRepRevealListWithSaleAgency(param);
 		//按代销机构分类生成压缩包
 		if(list==null || list.size()<1){
