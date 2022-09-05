@@ -405,4 +405,51 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
     }
+
+    //序号
+    private String number;
+
+    private String zzqj;
+
+    private String zzcf;
+
+    private String zz500;
+
+    private String hs300;
+
+    public Date expDateO;
+    public Date effDateO;
+
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getZzqj() {
+        return zzqj;
+    }
+
+    public String getZzcf() {
+        return zzcf;
+    }
+
+    public String getZz500() {
+        return zz500;
+    }
+
+    public String getHs300() {
+        return hs300;
+    }
+
+    public Date getExpDateO() {
+        return expDateO;
+    }
+
+    public Date getEffDateO() {
+        return effDateO;
+    }
 }
