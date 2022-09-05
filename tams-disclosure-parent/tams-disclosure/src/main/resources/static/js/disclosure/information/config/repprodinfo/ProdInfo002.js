@@ -147,7 +147,7 @@
             console.log(raiseAmt);
             //普通产品不提示
             if (raiseAmt != oldRaiseAmt && isGrade==='01') {
-                Joyin.confirm("是否同步修改其余子产品的总产品募集金额？", function () {
+                Joyin.confirm("是否将维护的母产品信息同步至其他子产品数据中？", function () {
                     object.synchFlag = true;
                     doSaveOrSubmit(object,operateType);
                 },null, function () {
