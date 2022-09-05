@@ -150,8 +150,6 @@
                 Joyin.confirm("是否将维护的母产品信息同步至其他子产品数据中？", function () {
                     object.synchFlag = true;
                     doSaveOrSubmit(object,operateType);
-                },null, function () {
-                    doSaveOrSubmit(object,operateType);
                 });
             }else{
                 doSaveOrSubmit(object,operateType);
