@@ -9,30 +9,30 @@ var RepRelDeal002 = function() {
                 $("#prodName").attr('disabled',true);
             }
 
-            if($('#effdate').val() != '' && $('#effdate').val() != null){
-                if($('#effdate').val()>platDate){
-                    $("#effdate").attr("disabled",false);
-                    if($('#effdelidate').val() != '' && $('#effdelidate').val() != null){
-                        $("#effdelidate").attr("disabled",false);
-                    }
-                }else{
-                    if($('#effdate').val() <= platDate){
-                        $("#effdate").attr("disabled",true);
-                    }
-                }
+            // if($('#effdate').val() != '' && $('#effdate').val() != null){
+            //     if($('#effdate').val()>platDate){
+            //         $("#effdate").attr("disabled",false);
+            //         if($('#effdelidate').val() != '' && $('#effdelidate').val() != null){
+            //             $("#effdelidate").attr("disabled",false);
+            //         }
+            //     }else{
+            //         if($('#effdate').val() <= platDate){
+            //             $("#effdate").attr("disabled",true);
+            //         }
+            //     }
+            //
+            // }
 
-            }
-
-            if($('#effdelidate').val() != '' && $('#effdelidate').val() != null){
-                if($('#effdelidate').val()<=platDate){
-                    $("#effdelidate").attr("disabled",true);
-                    if($('#effdate').val() != '' && $('#effdate').val() != null){
-                        $("#effdate").attr("disabled",true);
-                    }
-                }else{
-                    $("#effdelidate").attr("disabled",false);
-                }
-            }
+            // if($('#effdelidate').val() != '' && $('#effdelidate').val() != null){
+            //     if($('#effdelidate').val()<=platDate){
+            //         $("#effdelidate").attr("disabled",true);
+            //         if($('#effdate').val() != '' && $('#effdate').val() != null){
+            //             $("#effdate").attr("disabled",true);
+            //         }
+            //     }else{
+            //         $("#effdelidate").attr("disabled",false);
+            //     }
+            // }
 
         },
         saveOrSubmit : function(operateType){
@@ -74,22 +74,22 @@ var RepRelDeal002 = function() {
 
 function effdateChange() {
 
-    if($('#effdate').val() != '' && $('#effdate').val() != null){
-        if($('#effdate').val()<platDate){
-            Joyin.error("生效日不能小于平台日！");
-            $('#effdate').val('');
-        }
-    }
+    // if($('#effdate').val() != '' && $('#effdate').val() != null){
+    //     if($('#effdate').val()<platDate){
+    //         Joyin.error("生效日不能小于平台日！");
+    //         $('#effdate').val('');
+    //     }
+    // }
 }
 
 function effdelidateChange() {
 
-    if($('#effdelidate').val() != '' && $('#effdelidate').val() != null){
-        if($('#effdelidate').val()<platDate){
-            Joyin.error("生效截止日不能小于平台日！");
-            $('#effdelidate').val('');
-        }
-    }
+    // if($('#effdelidate').val() != '' && $('#effdelidate').val() != null){
+    //     if($('#effdelidate').val()<platDate){
+    //         Joyin.error("生效截止日不能小于平台日！");
+    //         $('#effdelidate').val('');
+    //     }
+    // }
 
     if($('#effdelidate').val() != '' && $('#effdelidate').val() != null && $('#effdate').val() != '' && $('#effdate').val() != null) {
         if($('#effdelidate').val()< $('#effdate').val()){

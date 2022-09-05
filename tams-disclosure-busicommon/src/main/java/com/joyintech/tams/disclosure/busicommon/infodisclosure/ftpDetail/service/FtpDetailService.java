@@ -191,7 +191,7 @@ public class FtpDetailService {
 				} else {
 					if(StringUtil.equals(reportinfo.getRepProdType(), DictCodeListExt5.信批产品类别_普通产品.getValue())){
 						String prodId = ftpDetailMapper.selectProdIdByProdId(dto.getProdId());
-						reportinfo.setpProdId(prodId);
+						reportinfo.setProdId(prodId);
 					}
 					prefix = reportinfo.getProdId();
 				}
