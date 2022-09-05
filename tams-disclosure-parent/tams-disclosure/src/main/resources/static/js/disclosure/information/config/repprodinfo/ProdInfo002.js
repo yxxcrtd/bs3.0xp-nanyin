@@ -139,11 +139,14 @@
 
         if (pageModel == PAGE_MODEL_EDIT) { //修改 ，判断募集金额是否改变
             var oldRaiseAmt = $("#oldRaiseAmt").val();
+            //是否分级产品
+            var isGrade =$("#isGrade").val();
 
             var raiseAmt = String(object.raiseAmt);
             console.log(oldRaiseAmt);
             console.log(raiseAmt);
-            if (raiseAmt != oldRaiseAmt) {
+            //普通产品不提示
+            if (raiseAmt != oldRaiseAmt && isGrade==='01') {
                 Joyin.confirm("是否同步修改其余子产品的总产品募集金额？", function () {
                     object.synchFlag = true;
                     doSaveOrSubmit(object,operateType);
