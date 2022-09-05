@@ -497,8 +497,8 @@
                 }
             }*/
             {field:'number',width:'5%', title: '序号',sortField:"number"}
-            ,{field:'expDateO',width:'10%',  title: '业绩比较基准生效日',sortField:"expDateO",type:'date'}
-            ,{field:'effDateO',  width:'10%',title: '业绩比较基准生效截止日',sortField:"effDateO",type:'date'}
+            ,{field:'effDateStr',width:'10%',  title: '业绩比较基准生效日',sortField:"expDateO",type:'date'}
+            ,{field:'expDateStr',  width:'10%',title: '业绩比较基准生效截止日',sortField:"effDateO",type:'date'}
             ,{field:'zzqj',width: '10%', title : 'Performance001.zzxz'}
             ,{field:'zzcf',width:'10%', title : 'Performance001.zzxzh'}
             ,{field:'zz500',width:'10%', title : 'Performance001.zzzs'}

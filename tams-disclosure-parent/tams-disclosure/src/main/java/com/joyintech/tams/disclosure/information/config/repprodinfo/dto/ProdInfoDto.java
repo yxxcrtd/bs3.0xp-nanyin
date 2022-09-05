@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.repprodinfo.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -417,8 +418,8 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
 
     private String hs300;
 
-    public Date expDateO;
-    public Date effDateO;
+    public Date expDate;
+    public Date effDate;
 
 
     public String getNumber() {
@@ -445,11 +446,48 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
         return hs300;
     }
 
-    public Date getExpDateO() {
-        return expDateO;
+    public Date getExpDate() {
+        return expDate;
     }
 
-    public Date getEffDateO() {
-        return effDateO;
+    public void setExpDate(Date expDate) {
+        this.expDate = expDate;
+    }
+
+    public Date getEffDate() {
+        return effDate;
+    }
+
+    public void setEffDate(Date effDate) {
+        this.effDate = effDate;
+    }
+
+    private String expDateStr;
+
+    public void setExpDateStr(String expDateStr) {
+        this.expDateStr = expDateStr;
+    }
+
+    public void setEffDateStr(String effDateStr) {
+        this.effDateStr = effDateStr;
+    }
+
+
+    public String getExpDateStr() {
+        if (StringUtil.isNotEmpty(this.expDateStr)) {
+            return this.expDateStr;
+        } else {
+            return DateUtil.format(this.getExpDate());
+        }
+    }
+
+    private String effDateStr;
+
+    public String getEffDateStr() {
+        if (StringUtil.isNotEmpty(this.effDateStr)) {
+            return this.effDateStr;
+        } else {
+            return DateUtil.format(this.getEffDate());
+        }
     }
 }
