@@ -87,4 +87,7 @@ public interface ProdPartner001Mapper extends DisProdPartnerMapper {
     int deleteBtachEquityInfo(@Param("listA") List<ProdPartnerDto> listA);
 
     int selectByProdId(String prodId);
+
+    List<ProdPartnerDto> selectProdPartnerList(@Param("list") List<ProdPartnerDto> list);
+
 }

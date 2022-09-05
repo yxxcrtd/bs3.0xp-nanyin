@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.information.config.prodpartner.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -20,29 +21,29 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dao.ProdPartner001Mapper;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 
+ *
  * 合作机构信息维护
  * 〈功能详细描述〉
  * @author zhouqiang
@@ -179,9 +180,38 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             JoyinMessage ms = new JoyinMessage("导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？",
                     MessageType.确认消息);
             joyinMessages.add(ms);
-        }else{
-            wr.setData(NO_INFO_SHOWOUT);
         }
+
+        List<ProdPartnerDto> entities = this.converToDto(dataList);
+        List<ProdPartnerDto> data = this.selectProdPartnerByKey(entities);
+        if (data != null && data.size() > 0) {
+            Map<String, List<ProdPartnerDto>> map = entities.stream().collect(
+                    JoyinCollectors.groupingBy(x ->
+                            x.getProdId() + GlobalConstant.UNDER_LINE + DateUtil.format(x.getEffDate())
+                                    + GlobalConstant.UNDER_LINE + DateUtil.format(x.getEffEndDate())
+                    ));
+            // 将序号放入list中
+            List<String> excelNumList = new ArrayList<>();
+            List<Integer> excelNumIntList = new ArrayList<>();
+            for (ProdPartnerDto dto : data) {
+                List<ProdPartnerDto> listTemp = map.get(dto.getProdId() + GlobalConstant.UNDER_LINE + DateUtil.format(dto.getEffDate())
+                        + GlobalConstant.UNDER_LINE + DateUtil.format(dto.getEffEndDate()));
+                excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelRowNum()));
+            }
+            // 将list进行排序，并转化为string
+            Collections.sort(excelNumIntList);
+            for (Integer rowNo : excelNumIntList) {
+                excelNumList.add(String.valueOf(rowNo));
+            }
+            wr.setMessage(
+                    this.getMessage("REPORT_COMMON_FILE_C_0001",
+                            StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                    MessageType.确认消息);
+        } else {
+            // 防止在进行导入前check时进行了两次的弹框
+            wr.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+        }
+
         wr.setJoyinMessages(joyinMessages);
         return wr;
     }
@@ -376,6 +406,23 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
         return returnInfoList;
     }
 
+    private List<ProdPartnerDto> converToDto(List<List<String>> dataList)
+            throws ParseException {
+        // 返回的list定义
+        List<ProdPartnerDto> returnInfoList = new ArrayList<ProdPartnerDto>();
+        ProdPartnerDto prodPartnerDto = null;
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list = dataList.get(i);
+            prodPartnerDto = new ProdPartnerDto();
+            prodPartnerDto.setProdId(list.get(0).trim());
+            prodPartnerDto.setEffDate(DateUtil.parse(list.get(2).trim()));
+            prodPartnerDto.setEffEndDate(DateUtil.parse(list.get(3).trim()));
+            prodPartnerDto.setExcelRowNum(String.valueOf(i+2));
+            returnInfoList.add(prodPartnerDto);
+        }
+        return returnInfoList;
+    }
+
 
     /**
      * 分批次执行insertBtachEquityInfo
@@ -470,16 +517,41 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
     }
 
     /**
-     * 更新数据 <功能详细描述>
-     *
-     * @param list 参数
-     * @see
-     * @since 1.0
-     *//*
-    private void updateBtachEquityInfo(List<ProdPartnerDto> list) {
-        simpleRestTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME
-                        + "/ProdPartner001/updateBtachEquityInfo",
-                list, Integer.class);
-    }*/
+     * 分批查询
+     * @param dataList
+     * @return
+     */
+    private List<ProdPartnerDto> selectProdPartnerByKey(List<ProdPartnerDto> dataList) {
+        int maxDataCountOneTime = 1000;
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            return prodPartner001Mapper.selectProdPartnerList(dataList);
+        }
+        // 导入大于1000时，返回值
+        List<ProdPartnerDto> equtiyList = new ArrayList<>();
+
+        List<ProdPartnerDto> newDataList = new ArrayList<>();
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime;
+        List<ProdPartnerDto> listTemp;
+        for (int i = 0; i < part; i++ ) {
+            listTemp = prodPartner001Mapper.selectProdPartnerList(newDataList.subList(0, maxDataCountOneTime));
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            listTemp = prodPartner001Mapper.selectProdPartnerList(newDataList);
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+        }
+        return equtiyList;
+    }
 
 }
