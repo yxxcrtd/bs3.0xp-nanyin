@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 @PageId("Performance002")
 @Controller
@@ -51,9 +52,15 @@ public class Performance002Controller extends BaseController {
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(prodId)) {
             // 根据主键获取业务实体
-            Performance001Dto entity = performance001Service.selectByPrimaryKey(map);
-            entity.setEffDateO(entity.getEffDate());
-            entity.setExpDateO(entity.getExpDate());
+            List<Performance001Dto> entityList = performance001Service.selectByPrimaryKey(map);
+            Performance001Dto entity =new Performance001Dto();
+            entity.setEffDate(entityList.get(0).getEffDate());
+            entity.setExpDate(entityList.get(0).getExpDate());
+            entity.setProdId(entityList.get(0).getProdId());
+            entity.setHs300(entityList.get(0).getProportion());
+            entity.setZz500(entityList.get(1).getProportion());
+            entity.setZzcf(entityList.get(2).getProportion());
+            entity.setZzqj(entityList.get(3).getProportion());
             model.addAttribute("entity", entity);
         }
         else if (StringUtil.isNotEmpty(workflowId)) {

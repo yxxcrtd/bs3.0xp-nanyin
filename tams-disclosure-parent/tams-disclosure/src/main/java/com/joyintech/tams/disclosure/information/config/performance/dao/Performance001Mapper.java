@@ -23,7 +23,7 @@ public interface Performance001Mapper {
 
     int insert(Performance001Dto dto);
 
-    Performance001Dto selectByPrimaryKey(Map map);
+    List<Performance001Dto> selectByPrimaryKey(Map map);
 
     int updateByKey(Performance001Dto dto);
 

@@ -169,7 +169,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     public List getProdIdlist(Map map) {
         return performance001Mapper.getProdIdlist(map);
     }
-    public Performance001Dto selectByPrimaryKey(Map map) {
+    public List<Performance001Dto> selectByPrimaryKey(Map map) {
         return performance001Mapper.selectByPrimaryKey(map);
     }
 
@@ -317,8 +317,9 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                     item.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
-                    Performance001Dto dto = this.selectByPrimaryKey(map);
-                    if (dto != null) {
+//                    Performance001Dto dto = this.selectByPrimaryKey(map);
+                    List<Performance001Dto> dto = this.selectByPrimaryKey(map);
+                    if (dto != null && dto.size()>0) {
                         performance001Mapper.updateByKey(item);
                     } else {
                         item.setUuid(IDGenerator.generate(36));
