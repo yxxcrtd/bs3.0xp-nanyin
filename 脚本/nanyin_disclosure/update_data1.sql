@@ -1228,3 +1228,24 @@ where PARA_CODE  = 'pw_cycle';
 UPDATE SYS_PARA
 SET PARAM_VALUE  = '01'
 where PARA_CODE  = 'pw_initEdit';
+
+
+-- 产品业绩基准维护 脚本 20220905 by sunjie start
+-- 菜单页面脚本
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_030';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_030', 'DIS', null, 'REPORT_006_004', 'Performance001', 2, '03', '产品业绩比较基准维护', 'system', null,sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID like '%Performance00%';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('Performance001', 'DIS', '/disclosure/information/config/performance/Performance001', 'disclosure/information/config/performance/Performance001', 'REPORT_006_004_030', null, null, '02', '01', '产品业绩比较基准维护', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('Performance002', 'DIS', '/disclosure/information/config/performance/Performance002', 'disclosure/information/config/performance/Performance002', null, null, null, '02', '01', '产品业绩比较基准新建', 'system', null, sysdate, 'system', sysdate);
+
+-- 页面控件流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID like '%Performance00%';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('Performance002', 'Performance001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('Performance002', 'Performance002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('Performance002', 'Performance002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+-- 业务类型数据字典
+delete from SYS_DATADICT_LIST where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_CODE = 'DISC';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('COMMON_BUSINESS_TYPE', 'DISC', '产品业绩比较基准维护', 298, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- 产品业绩基准维护 脚本 20220905 by sunjie end
