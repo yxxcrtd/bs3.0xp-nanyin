@@ -45,6 +45,7 @@
 		from REP_PROD_INFO info
 		where REP_PROD_TYPE in ('02','03')  /**母产品或者单产品**/
 		AND info.STATUS='E'
+		and info.SET_DATE<![CDATA[<=]]>#{reportDate,jdbcType=DATE}
 		<if test="pprodid!=null">
 			AND info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
