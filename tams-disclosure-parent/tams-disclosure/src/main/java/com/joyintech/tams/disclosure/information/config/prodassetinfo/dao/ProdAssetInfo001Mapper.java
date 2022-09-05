@@ -89,4 +89,6 @@ public interface ProdAssetInfo001Mapper extends DisProdAssetMapper {
     int deleteBtachEquityInfo(@Param("listA") List<ProdPartnerDto> listA);
 
     List<ProdAssetInfoDto> selectAssetInfoByProdId(String prodId);
+
+    List<ProdAssetInfoDto> selectAssetInfoByKey(@Param("list") List<ProdAssetInfoDto> list);
 }
