@@ -30,6 +30,7 @@ import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.CompareProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
@@ -537,6 +538,33 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             List<ProdInfoDto> entities = new ArrayList<>(dataList.size());
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            //文件中存在某几条数据的“产品主代码”相同，则需要校验除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值必须相同
+            Map<String, List<ProdInfoDto>> prodInfoMap = entities.stream().collect(
+                    JoyinCollectors.groupingBy(ProdInfoDto::getpProdId));
+            for(String key : prodInfoMap.keySet()){
+                List<ProdInfoDto> prodInfoDtos = prodInfoMap.get(key);
+                if (prodInfoDtos.size()==1) {
+                    continue;
+                }
+                Set<String> set = new HashSet<>();
+                boolean flag = true;
+               for(ProdInfoDto prodInfoDto :prodInfoDtos){
+                   CompareProdInfoDto compareProdInfoDto = new CompareProdInfoDto();
+                   BeanUtils.copyProperties(prodInfoDto,compareProdInfoDto);
+                   String compareKey = compareProdInfoDto.toString();
+                   if (set.contains(compareKey)) {
+                       flag = false;
+                   } else {
+                       set.add(compareKey);
+                   }
+               }
+
+               if (!flag) {
+                   checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                           "文件中存在"+prodInfoDtos.size()+"条数据的“产品主代码="+prodInfoDtos.get(0).getpProdId()+"”相同,除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值必须相同"));
+               }
+
+            }
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
                     ProdInfoDto prodInfo = this.selectByProdId(item.getProdId());
