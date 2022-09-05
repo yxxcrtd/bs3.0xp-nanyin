@@ -45,7 +45,7 @@
             { field: 'projectNo',sortable: false, width: 120, title: '序号',edit: false, type: 'text' }
             , { field: 'financier',sortable: false, width: 120, title: '融资客户',edit: true, type: 'text' }
             , { field: 'projectName',sortable: false, title: '项目名称', width: 150, edit: true, type: 'text'}
-            , { field: 'remFinancingPeriod', sortable: false, title: '剩余融资期限', width: 150, edit: true, type: 'text'}
+            , { field: 'remFinancingPeriod', sortable: false, title: '剩余融资期限（天）', width: 150, edit: true, type: 'text'}
             , { field: 'incomeDistribute', edit: true, sortable: false, width: 120, title: '到期收益分配',type: 'text'}
             , { field: 'trdConstruct', sortable: false, title: '交易结构', width: 120, edit: true, type: 'text' }
             , { field: 'riskInfo', sortable: false, title: '风险状况', width: 120, edit: true, type: 'text'}
