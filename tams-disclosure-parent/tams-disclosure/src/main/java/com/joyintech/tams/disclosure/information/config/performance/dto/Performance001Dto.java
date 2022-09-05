@@ -67,6 +67,14 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
     public String effDateOStr;
     public String expDateOStr;
 
+
+
+    public String getUpdateTimeStr() {
+        return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
+    }
+
+
+
     public Date getExpDateO() {
         return expDateO;
     }

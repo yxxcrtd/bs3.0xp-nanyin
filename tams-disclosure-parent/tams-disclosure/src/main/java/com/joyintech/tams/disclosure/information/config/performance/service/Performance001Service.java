@@ -48,7 +48,42 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         }
         Page<Performance001Dto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), ()
                 -> performance001Mapper.select(param));
-        return result;
+        Page<Performance001Dto> result1= new Page<>();
+        List<Performance001Dto> root = result.getRoot();
+        Map<String, List<Performance001Dto>> collect = root.stream().collect(
+                Collectors.groupingBy(item -> item.getProdId() + "_"+item.getEffDateStr() +"_"+ item.getExpDateStr()));
+        List<Performance001Dto> rootList = new LinkedList<>();
+        collect.forEach((k,v)->{
+            Performance001Dto dto =new Performance001Dto();
+            String[] s = k.split("_");
+            dto.setProdId(s[0]);
+            dto.setEffDate(DateUtil.parse(s[1]));
+            dto.setExpDate(DateUtil.parse(s[2]));
+            dto.setStatus(v.get(0).getStatus());
+
+            for (Performance001Dto e : v) {
+                if (StringUtil.equals("01",e.getDataType())) {
+                    dto.setHs300(e.getProportion());
+                    continue;
+                }
+                if (StringUtil.equals("02",e.getDataType())) {
+                    dto.setZz500(e.getProportion());
+                    continue;
+                }
+                if (StringUtil.equals("03",e.getDataType())) {
+                    dto.setZzcf(e.getProportion());
+                    continue;
+                }
+                if (StringUtil.equals("04",e.getDataType())) {
+                    dto.setZzqj(e.getProportion());
+                    continue;
+                }
+            }
+            rootList.add(dto);
+        });
+        result1.setRoot(rootList);
+        result1.setRecords(result.getRecords()/4);
+        return result1;
     }
 
     @Override
