@@ -40,12 +40,12 @@ public class ProdAssetInfoValidator implements BeanValidator {
 
         }else{
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
-                if(DateUtil.compareDate(platDate,dto.getEffDate())>0){
-                    resultList.add(new ValidMessage("生效日要大于等于平台日期！"));
-                }
-                if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-                    resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
-                }
+//                if(DateUtil.compareDate(platDate,dto.getEffDate())>0){
+//                    resultList.add(new ValidMessage("生效日要大于等于平台日期！"));
+//                }
+//                if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
+//                    resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+//                }
                 //生效日截止日期要大于等于生效日
                 if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
                     resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
@@ -64,16 +64,16 @@ public class ProdAssetInfoValidator implements BeanValidator {
                     ProdAssetInfoDto prodAssetInfoDto = prodAssetInfoList.get(0);
                     if(DateUtil.compareDate(prodAssetInfoDto.getEffDate(),platDate)>0){
                         //生效日和生效截止日都是大于平台日的，前台都可以修改，要加校验
-                        if(StringUtil.isNotEmpty(dto.getEffDate())){
-                            if(DateUtil.compareDate(platDate,dto.getEffDate())>0){
-                                resultList.add(new ValidMessage("生效日要大于等于平台日期！"));
-                            }
-                        }
-                        if(StringUtil.isNotEmpty(dto.getEffEndDate())){
-                            if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
-                            }
-                        }
+//                        if(StringUtil.isNotEmpty(dto.getEffDate())){
+//                            if(DateUtil.compareDate(platDate,dto.getEffDate())>0){
+//                                resultList.add(new ValidMessage("生效日要大于等于平台日期！"));
+//                            }
+//                        }
+//                        if(StringUtil.isNotEmpty(dto.getEffEndDate())){
+//                            if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
+//                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+//                            }
+//                        }
                         //生效日截止日期要大于等于生效日
                         if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
                             if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
@@ -82,11 +82,11 @@ public class ProdAssetInfoValidator implements BeanValidator {
                         }
                     }else if(DateUtil.compareDate(prodAssetInfoDto.getEffEndDate(),platDate)>0){
                         //前台生效截止日可修改，要检验生效截止日
-                        if(StringUtil.isNotEmpty(dto.getEffEndDate())){
-                            if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
-                            }
-                        }
+//                        if(StringUtil.isNotEmpty(dto.getEffEndDate())){
+//                            if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
+//                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+//                            }
+//                        }
                         //生效日截止日期要大于等于生效日
                         if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
                             if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
