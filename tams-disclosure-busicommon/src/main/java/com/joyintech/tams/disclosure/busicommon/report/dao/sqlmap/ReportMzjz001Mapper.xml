@@ -12,8 +12,9 @@
 			SETDATE：产品成立日期
 		*/
 		SELECT
+			<!--需求变更  销售代码取值修改   分级产品：子产品名称+子产品代码  改为 子产品代码-->
 			CASE WHEN RPI.IS_GRADE = '01' THEN
-					 to_char(RPI.PROD_NAME) || RPI.PROD_ID
+					 RPI.PROD_ID
 				 ELSE RPI.PROD_ID END innerProdId,
 			CASE WHEN RPI.IS_GRADE = '01' THEN
 					 RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
