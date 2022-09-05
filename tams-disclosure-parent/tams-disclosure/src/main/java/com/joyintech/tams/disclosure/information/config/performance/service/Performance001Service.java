@@ -103,7 +103,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setEffDate(dto.getEffDate());
             dto4.setExpDate(dto.getExpDate());
             dto4.setStatus("E");
-            performance001Mapper.insert(dto3);
+            performance001Mapper.insert(dto4);
         }
         else {
             dto.setStatus("E");
