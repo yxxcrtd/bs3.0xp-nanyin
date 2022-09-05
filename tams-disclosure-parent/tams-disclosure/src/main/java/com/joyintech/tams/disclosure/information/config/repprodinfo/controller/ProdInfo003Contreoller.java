@@ -120,9 +120,9 @@ public class ProdInfo003Contreoller extends BaseController {
         try {
             JoyinMessage joyinMessage = new JoyinMessage("修改成功", MessageType.提示消息);
             dto.getSelectedItem().forEach(e -> {
-                if (StringUtils.equals(DictCodeListExt1.发行状态_确认发行.getValue(), e.getIssueStatus())) {
+//                if (StringUtils.equals(DictCodeListExt1.发行状态_确认发行.getValue(), e.getIssueStatus())) {
                     prodInfoService.updateIssuingStatus(e);
-                }
+//                }
             });
             result.setJoyinMessages(Lists.newArrayList(joyinMessage));
             return result;
