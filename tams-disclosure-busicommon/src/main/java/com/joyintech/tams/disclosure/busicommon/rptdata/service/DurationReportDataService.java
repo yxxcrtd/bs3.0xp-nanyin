@@ -358,7 +358,51 @@ public class DurationReportDataService implements IReportDataService {
 			try {
 				List<RepRelDeal> listRelDeal = durationReportMapper.selectRelDeals (paraMap);
 				if ( listRelDeal!=null && listRelDeal.size()>0 ) {
-					reportDto.setRepRelDeal(CollectionUtils.bean2Map(listRelDeal.get(0)));
+					Map<String,Object> map = CollectionUtils.bean2Map(listRelDeal.get(0));
+					RepRelDeal item = listRelDeal.get(0);
+					//投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额
+					if (item.getCreditorAmt()!=null)
+						map.put("creditorAmt", df.format(item.getCreditorAmt()));
+					else {
+						map.put("creditorAmt", "");
+					}
+					//投资于关联方承销的证券交易金额
+					if (item.getBondAmt()!=null)
+						map.put("bondAmt", df.format(item.getBondAmt()));
+					else {
+						map.put("bondAmt", "");
+					}
+					//与关联方作为交易对手开展的投融资业务交易金额
+					if (item.getInvestAmt()!=null)
+						map.put("investAmt", df.format(item.getInvestAmt()));
+					else {
+						map.put("investAmt", "");
+					}
+					//投资关联方作为管理人的资产管理产品交易金额
+					if (item.getAssetAmt()!=null)
+						map.put("assetAmt", df.format(item.getAssetAmt()));
+					else {
+						map.put("assetAmt", "");
+					}
+					//支付关联方托管费
+					if (item.getTrustFee()!=null)
+						map.put("trustFee", df.format(item.getTrustFee()));
+					else {
+						map.put("trustFee", "");
+					}
+					//支付关联方代销费
+					if (item.getSellFee()!=null)
+						map.put("sellFee", df.format(item.getSellFee()));
+					else {
+						map.put("sellFee", "");
+					}
+					//发生其他关联交易金额
+					if (item.getOtherFee()!=null)
+						map.put("otherFee", df.format(item.getOtherFee()));
+					else {
+						map.put("otherFee", "");
+					}
+					reportDto.setRepRelDeal(map);
 				} else {
 					reportDto.setRepRelDeal(new HashMap<>());
 				}
