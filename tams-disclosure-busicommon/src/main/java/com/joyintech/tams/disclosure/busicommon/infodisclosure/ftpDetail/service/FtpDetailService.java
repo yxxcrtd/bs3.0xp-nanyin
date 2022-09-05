@@ -10,8 +10,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.*;
 import org.apache.commons.net.ftp.FTPClient;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
@@ -32,8 +31,6 @@ import com.joyintech.tams.common.base.entity.RepFtpDetailMsg;
 import com.joyintech.tams.common.base.entity.RepFtpPath;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dao.FtpDetailMapper;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto;
@@ -144,7 +141,7 @@ public class FtpDetailService {
 	
 	/**
 	 * 获取反馈信息接口
-	 * @param dto
+	 * @param
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
@@ -192,6 +189,10 @@ public class FtpDetailService {
 				if(repInfoList !=null && !repInfoList.isEmpty()){
 					prefix = repInfoList.stream().map(RepProdInfo::getProdId).distinct().collect(Collectors.joining(","));
 				} else {
+					if(StringUtil.equals(reportinfo.getRepProdType(), DictCodeListExt5.信批产品类别_普通产品.getValue())){
+						String prodId = ftpDetailMapper.selectProdIdByProdId(dto.getProdId());
+						reportinfo.setpProdId(prodId);
+					}
 					prefix = reportinfo.getProdId();
 				}
 				//募集方式

@@ -80,4 +80,11 @@
 			SELECT P_PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId,jdbcType=VARCHAR}
 		)
 	</select>
+	<select id="selectProdIdByProdId" resultType="java.lang.String">
+		select R.PROD_ID
+		from REP_PROD_INFO R
+		where (R.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			or R.P_PROD_ID = #{prodId,jdbcType=VARCHAR})
+		and R.REP_PROD_TYPE='02'
+	</select>
 </mapper>
