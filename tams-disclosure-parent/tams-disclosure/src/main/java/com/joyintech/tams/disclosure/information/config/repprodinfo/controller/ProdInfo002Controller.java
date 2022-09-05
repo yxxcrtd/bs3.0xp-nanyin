@@ -296,6 +296,10 @@ public class ProdInfo002Controller extends BaseController {
                 return new AjaxResult("已存在相同产品主代码！", MessageType.错误消息);
             }
         }
+        //产品修改需要校验工作流中的数据
+        if(prodInfoService.isInWorkflow(dto.getProdId())){
+            return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+        }
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 start */
         //该check与放大镜功能为二阶段内容，暂不处理
         // if(StringUtil.isNotEmpty(dto.getpProdId())&&StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade()){

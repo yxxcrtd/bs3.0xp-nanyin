@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.information.config.repprodinfo.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -34,6 +35,7 @@ import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfo
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -1017,5 +1019,28 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
     public List<ProdInfoDto> getPtParentProdInfo(String pProdId) {
         return prodInfoMapper.getPtParentProdInfo(pProdId);
+    }
+
+    /**
+     * 判断子产品代码是否在流程中
+     *
+     * @param prodId 子产品代码
+     * @return true：存在流程中数据
+     */
+    public boolean isInWorkflow(String prodId){
+        try {
+            ProcessMark processMark = new ProcessMark();
+            processMark.setPageId("ProdInfo002");
+            processMark.setBusinessDataPk1(prodId);
+            List<String> resultList = WorkflowContext.getProcessMarkService().getBusinessDataInFlow(
+                    processMark);
+            if (!StringUtil.isEmptyList(resultList)) {
+                return true;
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException("处理失败", e);
+        }
+        return false;
     }
 }
