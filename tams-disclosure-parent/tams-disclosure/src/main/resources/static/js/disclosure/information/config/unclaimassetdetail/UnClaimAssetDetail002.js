@@ -113,20 +113,20 @@
         //修改时，如果生效日小于平台日，生效日不能修改
         //若生效日≤平台日＜生效截止日期，则生效日不能修改，生效截止日期可以修改
 
-        if($('#effDate').val() != '' && $('#effDate').val() != null && $('#effEndDate').val() != '' && $('#effEndDate').val() != null){
-            if($('#effDate').val()<=platDate && $('#effEndDate').val()>platDate){
-                $("#effDate").attr("disabled",true);
-                // $("#effEndDate").attr("disabled",true);
-            }
-        }
-
-        //修改时，如果生效截止日小于等于平台日，生效日截止不能修改
-        if($('#effEndDate').val() != '' && $('#effEndDate').val() != null){
-            if($('#effEndDate').val()<=platDate){
-                $("#effDate").attr("disabled",true);
-                $("#effEndDate").attr("disabled",true);
-            }
-        }
+        // if($('#effDate').val() != '' && $('#effDate').val() != null && $('#effEndDate').val() != '' && $('#effEndDate').val() != null){
+        //     if($('#effDate').val()<=platDate && $('#effEndDate').val()>platDate){
+        //         $("#effDate").attr("disabled",true);
+        //         // $("#effEndDate").attr("disabled",true);
+        //     }
+        // }
+        //
+        // //修改时，如果生效截止日小于等于平台日，生效日截止不能修改
+        // if($('#effEndDate').val() != '' && $('#effEndDate').val() != null){
+        //     if($('#effEndDate').val()<=platDate){
+        //         $("#effDate").attr("disabled",true);
+        //         $("#effEndDate").attr("disabled",true);
+        //     }
+        // }
     }
     /**
      * 画面加载完成

@@ -33,19 +33,19 @@
         if(pageModel != PAGE_MODEL_NEW){
             $("#prodName").attr("disabled",true);
         }
-        //修改时，如果生效日小于等于平台日，生效日不能修改
-        if($('#effDate').val() != '' && $('#effDate').val() != null){
-            if($('#effDate').val()<=platDate){
-                $("#effDate").attr("disabled",true);
-            }
-        }
-
-        //修改时，如果生效截止日小于等于平台日，生效日截止不能修改
-        if($('#effEndDate').val() != '' && $('#effEndDate').val() != null){
-            if($('#effEndDate').val()<=platDate){
-                $("#effEndDate").attr("disabled",true);
-            }
-        }
+        // //修改时，如果生效日小于等于平台日，生效日不能修改
+        // if($('#effDate').val() != '' && $('#effDate').val() != null){
+        //     if($('#effDate').val()<=platDate){
+        //         $("#effDate").attr("disabled",true);
+        //     }
+        // }
+        //
+        // //修改时，如果生效截止日小于等于平台日，生效日截止不能修改
+        // if($('#effEndDate').val() != '' && $('#effEndDate').val() != null){
+        //     if($('#effEndDate').val()<=platDate){
+        //         $("#effEndDate").attr("disabled",true);
+        //     }
+        // }
     }
     /**
      * 画面加载完成
