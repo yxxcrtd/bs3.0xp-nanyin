@@ -122,5 +122,19 @@
 		and PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 
+    <select id="selectProdPartnerList"
+            resultType="com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto">
+		select
+		PROD_ID,
+		EFF_DATE,
+		EFF_END_DATE
+		from DIS_PROD_PARTNER
+		<where>
+			<foreach collection="list" item="item" open="(PROD_ID,to_char(EFF_DATE,'yyyy-MM-dd'),to_char(EFF_END_DATE,'yyyy-MM-dd'),DATA_STATUS) IN (" separator="," close=")">
+				(#{item.prodId},to_char(#{item.effDate},'yyyy-MM-dd'),to_char(#{item.effEndDate},'yyyy-MM-dd'),'E')
+			</foreach>
+		</where>
+	</select>
+
 
 </mapper>

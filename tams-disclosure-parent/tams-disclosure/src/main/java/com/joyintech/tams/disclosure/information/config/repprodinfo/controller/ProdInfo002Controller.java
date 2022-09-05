@@ -232,6 +232,19 @@ public class ProdInfo002Controller extends BaseController {
                     && dto.getHoldday() == null) {
                 return new AjaxResult("开放频率为日开且产品类型为净值型,最低持有天数必填", MessageType.错误消息);
             }
+            if(StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), dto.getIsGrade())){
+                //查詢是否存在相同的产品主代码信息，若存在則給出提示
+                ProdInfoDto prodInfoDto = prodInfoService.getParentProdInfo(dto.getpProdId());
+                if(prodInfoDto != null){
+                    return new AjaxResult("已存在相同产品主代码！", MessageType.错误消息);
+                }
+            }else{
+                //查询是否存在普通、相同的产品主代码信息，若存在則給出提示
+                List<ProdInfoDto> prodInfoDtoList = prodInfoService.getPtParentProdInfo(dto.getpProdId());
+                if(prodInfoDtoList!=null && prodInfoDtoList.size()>0){
+                    return new AjaxResult("已存在相同产品主代码！", MessageType.错误消息);
+                }
+            }
         } else if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {//修改
             //产品类型为净值型 01 且开放频率为日开时必填
             if (StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getValue(), dto.getProdType())
@@ -283,19 +296,6 @@ public class ProdInfo002Controller extends BaseController {
         }
         /* NYLCXP-965 子产品的募集起始日、募集结束日要与母产品一致 add by zhouqiang 2022-08-23 end */
 
-        if(StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), dto.getIsGrade())){
-            //查詢是否存在相同的产品主代码信息，若存在則給出提示
-            ProdInfoDto prodInfoDto = prodInfoService.getParentProdInfo(dto.getpProdId());
-            if(prodInfoDto != null){
-                return new AjaxResult("已存在相同产品主代码！", MessageType.错误消息);
-            }
-        }else{
-            //查询是否存在普通、相同的产品主代码信息，若存在則給出提示
-            List<ProdInfoDto> prodInfoDtoList = prodInfoService.getPtParentProdInfo(dto.getpProdId());
-            if(prodInfoDtoList!=null && prodInfoDtoList.size()>0){
-                return new AjaxResult("已存在相同产品主代码！", MessageType.错误消息);
-            }
-        }
         //产品修改需要校验工作流中的数据
         if(prodInfoService.isInWorkflow(dto.getProdId())){
             return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);

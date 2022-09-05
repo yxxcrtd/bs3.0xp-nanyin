@@ -195,8 +195,20 @@ public class FtpDetailService {
 					}
 					prefix = reportinfo.getProdId();
 				}
-				//募集方式
-				prefix = prefix+"_"+reportinfo.getRaiseType();
+				//募集方式:南银官网字典项
+				prefix = prefix+"_"+reportinfo.getRaiseType().replace("0","");
+				//文件类型:转换成南银官网字典项
+				if("01".equals(reportCategory)){
+					reportCategory = "3";
+				} else if("02".equals(reportCategory)){
+					reportCategory = "2";
+				}else if("03".equals(reportCategory)){
+					reportCategory = "4";
+				}else if("04".equals(reportCategory)){
+					reportCategory = "5";
+				}else if("05".equals(reportCategory)){
+					reportCategory = "1";
+				}
 				//文件类型
 				prefix = prefix + "_" + reportCategory;
 
