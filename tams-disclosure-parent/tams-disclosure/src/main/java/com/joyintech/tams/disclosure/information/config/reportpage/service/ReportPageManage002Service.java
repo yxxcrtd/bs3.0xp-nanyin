@@ -293,8 +293,14 @@ public class ReportPageManage002Service extends BaseService<ReportStatusDto> imp
 				if(!CollectionUtils.isEmpty(statusList)){
 					Map<String, List<ReportStatusDto>> statusMap = statusList.stream().collect(Collectors.groupingBy(ReportStatusDto::getStartOff));
 					//01启用;02禁用
-					ReportStatusDto reportStatusEnable = statusMap.get("01").get(0);
-					ReportStatusDto reportStatusDisable = statusMap.get("02").get(0);
+					ReportStatusDto reportStatusEnable = null;
+					ReportStatusDto reportStatusDisable = null;
+					if(statusMap.get("01") != null && statusMap.get("01").size() > 0){
+						reportStatusEnable = statusMap.get("01").get(0);
+					}
+					if(statusMap.get("02") != null && statusMap.get("02").size() > 0){
+						reportStatusDisable = statusMap.get("02").get(0);
+					}
 					//若存在一条记录同时是启用状态，则不可再次启用。
 					//若存在多条记录。
 					// 若禁用在启动前[禁用，启用]，则再次启用给出提示；

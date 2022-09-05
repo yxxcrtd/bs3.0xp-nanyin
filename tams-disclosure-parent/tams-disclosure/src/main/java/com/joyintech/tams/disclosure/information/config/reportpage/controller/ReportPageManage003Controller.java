@@ -160,12 +160,12 @@ public class ReportPageManage003Controller extends BaseController {
             return new AjaxResult(msg, MessageType.错误消息);
         }
 
-        //判断是否有待生效的启用禁用
-        int count = reportPageManage002Service.getInfoStatusAfterSysDate(dto);
-        if(count > 0 ){
-            msg = "模板已经存在大于当前日期待生效的流程";
-            return new AjaxResult(msg, MessageType.错误消息);
-        }
+//        //判断是否有待生效的启用禁用
+//        int count = reportPageManage002Service.getInfoStatusAfterSysDate(dto);
+//        if(count > 0 ){
+//            msg = "模板已经存在大于当前日期待生效的流程";
+//            return new AjaxResult(msg, MessageType.错误消息);
+//        }
         //流程已经在生效日之前已经生效
         if("01".equals(dto.getStartOff())){
             dto.setRepStatus("02");
