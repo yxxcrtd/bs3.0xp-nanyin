@@ -66,14 +66,14 @@
      */
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.ajaxJson(basePath + 'disclosure/information/config/performance/Performance001/check', data, function(editResult){
             Joyin.dialog(JoyinUtil.getLabel("产品业绩比较基准编辑"),
                 basePath + "disclosure/information/config/performance/Performance002/init",
                 "95%", "90%",data,function() {
                     table.reload();
                 });
-        });
     });
+
+
     /**
      * 绑定删除事件
      */
