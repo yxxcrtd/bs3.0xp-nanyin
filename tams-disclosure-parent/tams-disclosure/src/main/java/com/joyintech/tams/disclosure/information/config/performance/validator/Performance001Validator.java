@@ -53,7 +53,7 @@ public class Performance001Validator implements BeanValidator {
                 for (Performance001Dto Performance001Dto : performance001Dtos) {
                     if (!((DateUtil.compareDate(dto.getEffDate(), Performance001Dto.getEffDate()) < 0 && DateUtil.compareDate(dto.getExpDate(), Performance001Dto.getEffDate()) < 0)
                             || (DateUtil.compareDate(dto.getEffDate(), Performance001Dto.getExpDate()) > 0 && DateUtil.compareDate(dto.getExpDate(), Performance001Dto.getExpDate()) > 0))) {
-                        resultList.add(new ValidMessage("生效区间范围有重叠！" + "{" + DateUtil.format(Performance001Dto.getEffDate(), "yyyyMMdd")
+                        resultList.add(new ValidMessage("子产品业绩比较基准区间生效时间不能重叠！" + "{" + DateUtil.format(Performance001Dto.getEffDate(), "yyyyMMdd")
                                 + "-" + DateUtil.format(Performance001Dto.getExpDate(), "yyyyMMdd") + "}"));
                         break;
                     }
@@ -63,7 +63,7 @@ public class Performance001Validator implements BeanValidator {
                 for (Performance001Dto Performance001Dto : worklowList) {
                     if (!((DateUtil.compareDate(dto.getEffDate(), Performance001Dto.getEffDate()) < 0 && DateUtil.compareDate(dto.getExpDate(), Performance001Dto.getEffDate()) < 0)
                             || (DateUtil.compareDate(dto.getEffDate(), Performance001Dto.getExpDate()) > 0 && DateUtil.compareDate(dto.getExpDate(), Performance001Dto.getExpDate()) > 0))) {
-                        resultList.add(new ValidMessage("生效区间范围与代办数据有重叠！" + "{" + DateUtil.format(Performance001Dto.getEffDate(), "yyyyMMdd")
+                        resultList.add(new ValidMessage("子产品业绩比较基准区间生效时间与代办数据有重叠！" + "{" + DateUtil.format(Performance001Dto.getEffDate(), "yyyyMMdd")
                                 + "-" + DateUtil.format(Performance001Dto.getExpDate(), "yyyyMMdd") + "}"));
                         break;
                     }
