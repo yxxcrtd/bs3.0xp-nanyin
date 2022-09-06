@@ -134,7 +134,7 @@
         //新建(点击打开新建画面)
         $('#Performance001_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("产品业绩比较基准新建"),
-                basePath + "disclosure/information/config/performance/Performance002/init","100%", "100%", {pageModel:PAGE_MODEL_NEW},
+                basePath + "disclosure/information/config/performance/Performance002/init","80%", "90%", {pageModel:PAGE_MODEL_NEW},
                 function() {
                     table.reload();
                 });
