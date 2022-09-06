@@ -46,7 +46,7 @@
 	    WHERE 1=1
 	    and STATUS='E'
 	    <if test="prodid!=null">
-	     	AND PROD_ID=#{prodid,jdbcType=VARCHAR}
+	     	AND PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
 		<if test="reportDate!=null">
 			and PAY_DATE=#{reportDate,jdbcType=DATE}
