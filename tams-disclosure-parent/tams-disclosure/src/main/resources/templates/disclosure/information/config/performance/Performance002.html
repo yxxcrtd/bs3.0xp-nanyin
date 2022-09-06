@@ -68,7 +68,14 @@
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{Performance001.zzxz}">中债新综合全价指数收益率</label>
                                     <div class="layui-input-inline input-inline" style="width: 20% !important;">
-                                        <input type="text" id="zzqj" name="zzqj" οnkeyup="value=value.replace(/[^\d]/g,'')"
+                                        <input type="text" id="zzqj" name="zzqj"
+                                               onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
                                                data-th-value='${entity?.zzqj}' required
                                                class="layui-input form-input text-number" data-textrange='2'
                                                placeholder="请输入内容">
@@ -80,7 +87,14 @@
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{Performance001.zzxzh}">中债新综合财富指数（1-3年）收益率【系数】</label>
                                     <div class="layui-input-inline input-inline" style="width: 20% !important;">
-                                        <input type="text" id="zzcf" name="zzcf" οnkeyup="value=value.replace(/[^\d]/g,'')"
+                                        <input type="text" id="zzcf" name="zzcf"
+                                               onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
                                                data-th-value="${entity?.zzcf}" data-textrange="2" required placeholder="请输入内容"
                                                class="layui-input form-input text-number" >
                                     </div>
@@ -91,7 +105,14 @@
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{Performance001.zzzs}">中证500指数收益率【系数】</label>
                                     <div class="layui-input-inline input-inline" style="width: 20% !important;">
-                                        <input type="text" id="zz500" name="zz500" οnkeyup="value=value.replace(/[^\d]/g,'')"
+                                        <input type="text" id="zz500" name="zz500"
+                                               onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
                                                data-th-value='${entity?.zz500}' required
                                                class="layui-input form-input text-number" data-textrange='2'
                                                placeholder="请输入内容">
@@ -103,7 +124,14 @@
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{Performance001.hszs}">沪深300指数收益率【系数】</label>
                                     <div class="layui-input-inline input-inline" style="width: 20% !important;">
-                                        <input type="text" id="hs300" name="hs300" οnkeyup="value=value.replace(/[^\d]/g,'')"
+                                        <input type="text" id="hs300" name="hs300"
+                                               onkeyup="if(this.value < 0){
+                                                       this.value= 0;
+                                                   }else if (value > 100) {
+                                                    this.value= '';
+                                                  }else{
+                                                      this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后2位
+                                                   }"
                                                data-th-value='${entity?.hs300}' required
                                                class="layui-input form-input text-number" data-textrange='2'
                                                placeholder="请输入内容">
