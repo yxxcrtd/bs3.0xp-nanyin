@@ -54,6 +54,8 @@ public class Performance002Controller extends BaseController {
             // 根据主键获取业务实体
             List<Performance001Dto> entityList = performance001Service.selectByPrimaryKey(map);
             Performance001Dto entity =new Performance001Dto();
+            entity.setEffDateO(entityList.get(0).getEffDate());
+            entity.setExpDateO(entityList.get(0).getExpDate());
             entity.setEffDate(entityList.get(0).getEffDate());
             entity.setExpDate(entityList.get(0).getExpDate());
             entity.setProdId(entityList.get(0).getProdId());
