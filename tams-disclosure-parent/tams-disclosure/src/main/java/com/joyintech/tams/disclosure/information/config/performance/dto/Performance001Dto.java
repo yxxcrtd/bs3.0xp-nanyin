@@ -135,7 +135,7 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
         this.effDateStr = effDateStr;
     }
 
-//    @PrimaryKey(PrimaryKey.Field.PK_3)
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getExpDateStr() {
         if (StringUtil.isNotEmpty(this.expDateStr)) {
             return this.expDateStr;
