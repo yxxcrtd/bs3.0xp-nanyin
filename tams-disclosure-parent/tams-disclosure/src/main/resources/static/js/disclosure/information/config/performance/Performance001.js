@@ -9,8 +9,11 @@
         }else {
             prodId = null;
         }
+
          return {
-            prodId:prodId,
+             prodId:prodId,
+             effDate: $('#effDate').val(),
+             expDate: $('#expDate').val()
             // dataStatus:$('#dataStatus').val()
         };
     };

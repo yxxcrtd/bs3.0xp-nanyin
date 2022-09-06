@@ -30,6 +30,12 @@
 					#{item}
 				</foreach>
 			</if>
+			<if test="effDate != null and effDate != ''">
+				AND rpbc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
+			</if>
+			<if test="expDate != null and expDate != ''">
+				AND rpbc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')
+			</if>
 <!--			<if test="dataStatus != null and dataStatus != ''">-->
 <!--				AND	rpbc.DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}-->
 <!--			</if>-->
