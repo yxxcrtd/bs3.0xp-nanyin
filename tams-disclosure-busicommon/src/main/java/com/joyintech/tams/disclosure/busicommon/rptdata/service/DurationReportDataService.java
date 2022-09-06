@@ -7,14 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -797,7 +794,7 @@ public class DurationReportDataService implements IReportDataService {
 	        	
 	        	Date deDate = null;
 	        	if ( i<listDate.size()-1 )
-	        		deDate = listDate.get(i+1);  //下一个点的时间
+	        		deDate = DateUtils.addDays(listDate.get(i+1),-1);  //下一个点的时间-1天
 	        	else
 	        		deDate = eDate;
 	        	
@@ -815,13 +812,13 @@ public class DurationReportDataService implements IReportDataService {
 					BigDecimal val = BigDecimal.ZERO;
 					RepExtConusKey key = new RepExtConusKey();
 					key.setDataType(basis.getDataType());
-					key.setDataDate(holidayService.getPreWorkDate(sDate,"04"));  //交易所日历的前一天
+					key.setDataDate(holidayService.getPreWorkDate(dsDate,"04"));  //交易所日历的前一天
 					RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( sConus==null || sConus.getMarketInfo()==null ) {
 						logger.error("没有找到起始日前一工作日行情。");
 						continue;
 					}
-					key.setDataDate(eDate);
+					key.setDataDate(deDate);
 					RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( eConus==null || eConus.getMarketInfo()==null ) {
 						logger.error("没有找到结束日行情。");

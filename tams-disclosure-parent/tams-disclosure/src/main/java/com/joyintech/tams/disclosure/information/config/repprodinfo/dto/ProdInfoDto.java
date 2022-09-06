@@ -421,6 +421,21 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
     public Date expDate;
     public Date effDate;
 
+    public void setZzqj(String zzqj) {
+        this.zzqj = zzqj;
+    }
+
+    public void setZzcf(String zzcf) {
+        this.zzcf = zzcf;
+    }
+
+    public void setZz500(String zz500) {
+        this.zz500 = zz500;
+    }
+
+    public void setHs300(String hs300) {
+        this.hs300 = hs300;
+    }
 
     public String getNumber() {
         return number;

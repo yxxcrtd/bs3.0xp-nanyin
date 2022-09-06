@@ -113,6 +113,20 @@ public class ProdInfo002Controller extends BaseController {
             }
             //业绩基准变更 modify by kongzhifang 分层产品查母产品的业绩基准，普通产品查自身的业绩基准 NYLCXP-895
             dto.setBasicChangeList(prodBasicChangeService.selectListByProdId(StringUtils.equals(DictCodeListExt5.信批产品类别_普通产品.getValue(), repProdType)?dto.getProdId():dto.getpProdId()));
+            for (ProdBasicChangeDto dto1 : dto.getBasicChangeList()){
+                if (StringUtil.equals(dto1.getDataType(),"01")){
+                    dto.setZzqj(dto1.getProportion());
+                }
+                if (StringUtil.equals(dto1.getDataType(),"03")){
+                    dto.setZzcf(dto1.getProportion());
+                }
+                if (StringUtil.equals(dto1.getDataType(),"04")){
+                    dto.setZz500(dto1.getProportion());
+                }
+                if (StringUtil.equals(dto1.getDataType(),"02")){
+                    dto.setHs300(dto1.getProportion());
+                }
+            }
             model.addAttribute("entity", dto);
 
         }

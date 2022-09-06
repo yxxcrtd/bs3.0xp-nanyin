@@ -50,8 +50,9 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 -> performance001Mapper.select(param));
         Page<Performance001Dto> result1= new Page<>();
         List<Performance001Dto> root = result.getRoot();
+        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
         Map<String, List<Performance001Dto>> collect = root.stream().collect(
-                Collectors.groupingBy(item -> item.getProdId() + "_"+item.getEffDateStr() +"_"+ item.getExpDateStr()));
+                Collectors.groupingBy(item -> item.getProdId() + "_"+DateUtil.format(item.getEffDate())+"_"+ DateUtil.format(item.getExpDate()==null?sysDate:item.getExpDate())));
         List<Performance001Dto> rootList = new LinkedList<>();
         collect.forEach((k,v)->{
             Performance001Dto dto =new Performance001Dto();
@@ -101,7 +102,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setGroupId(dto.getGroupId());
             dto1.setProdId(dto.getProdId());
             dto1.setDataType("01");
-            dto1.setProportion(dto.getZzqj());
+            dto1.setProportion(dto.getZzqj()+"%");
             dto1.setEffDate(dto.getEffDate());
             dto1.setExpDate(dto.getExpDate());
             dto1.setStatus("E");
@@ -112,7 +113,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setGroupId(dto.getGroupId());
             dto2.setProdId(dto.getProdId());
             dto2.setDataType("02");
-            dto2.setProportion(dto.getHs300());
+            dto2.setProportion(dto.getHs300()+"%");
             dto2.setEffDate(dto.getEffDate());
             dto2.setExpDate(dto.getExpDate());
             dto2.setStatus("E");
@@ -123,7 +124,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setGroupId(dto.getGroupId());
             dto3.setProdId(dto.getProdId());
             dto3.setDataType("03");
-            dto3.setProportion(dto.getZzcf());
+            dto3.setProportion(dto.getZzcf()+"%");
             dto3.setEffDate(dto.getEffDate());
             dto3.setExpDate(dto.getExpDate());
             dto3.setStatus("E");
@@ -134,7 +135,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setGroupId(dto.getGroupId());
             dto4.setProdId(dto.getProdId());
             dto4.setDataType("04");
-            dto4.setProportion(dto.getZz500());
+            dto4.setProportion(dto.getZz500()+"%");
             dto4.setEffDate(dto.getEffDate());
             dto4.setExpDate(dto.getExpDate());
             dto4.setStatus("E");
@@ -169,7 +170,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     public List getProdIdlist(Map map) {
         return performance001Mapper.getProdIdlist(map);
     }
-    public Performance001Dto selectByPrimaryKey(Map map) {
+    public List<Performance001Dto> selectByPrimaryKey(Map map) {
         return performance001Mapper.selectByPrimaryKey(map);
     }
 
@@ -185,15 +186,15 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
-        if (null == tempList.get(0) || tempList.get(0).size() != 6) {
-            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 6), MessageType.错误消息);
+        if (null == tempList.get(0) || tempList.get(0).size() != 7) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 7), MessageType.错误消息);
             return webResult;
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
                     ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
-            if (dataList.size() > maxCount) {
+            if (dataList.size() > 5000) {
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
@@ -317,8 +318,9 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                     item.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
-                    Performance001Dto dto = this.selectByPrimaryKey(map);
-                    if (dto != null) {
+//                    Performance001Dto dto = this.selectByPrimaryKey(map);
+                    List<Performance001Dto> dto = this.selectByPrimaryKey(map);
+                    if (dto != null && dto.size()>0) {
                         performance001Mapper.updateByKey(item);
                     } else {
                         item.setUuid(IDGenerator.generate(36));
