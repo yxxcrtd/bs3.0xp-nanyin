@@ -39,8 +39,8 @@
          */
         cols: [
             {field:'uuid',  visible: false},
-            {field:'statusStr',  title: 'ProElementAdj001.dataStatus',sortField:"statusStr"},//数据状态
-            {field:'prodId',  title: 'ProElementAdj001.prodId',sortField:"prodId"}//子产品代码
+            {field:'statusStr',width: 140,  title: 'ProElementAdj001.dataStatus',sortField:"statusStr"},//数据状态
+            {field:'prodId', width: 180, title: 'ProElementAdj001.prodId',sortField:"prodId"}//子产品代码
             ,{field:'effDate', width: 180, title: '业绩比较基准生效日',sortField:"effDate",type:'date'}
             ,{field:'expDate', width: 180, title: '业绩比较基准生效截止日',sortField:"expDate",type:'date'}
             ,{field:'zzqj',width: 260, title : 'Performance001.zzxz', type : 'number'}

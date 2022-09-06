@@ -13,13 +13,13 @@ $(function() {
 		var object = $.serializeToObject('#submitForm');
 		object.operateType = operateType;
 		object.pageModel = pageModel;
-		if (pageModel == PAGE_MODEL_NEW) {
-			object.operateType = 'new';
-		} else if (pageModel == PAGE_MODEL_EDIT) {
-			object.operateType = 'update';
-		}else{
-			object.operateType = 'delete';
-		}
+		// if (pageModel == PAGE_MODEL_NEW) {
+		// 	object.operateType = 'new';
+		// } else if (pageModel == PAGE_MODEL_EDIT) {
+		// 	object.operateType = 'update';
+		// }else{
+		// 	object.operateType = 'delete';
+		// }
 		 Joyin.ajaxJson(basePath + 'disclosure/information/config/performance/Performance002/check',
                  object, function(result) {
                      Joyin.confirm(result.data, function() {
