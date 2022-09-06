@@ -50,8 +50,9 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 -> performance001Mapper.select(param));
         Page<Performance001Dto> result1= new Page<>();
         List<Performance001Dto> root = result.getRoot();
+        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
         Map<String, List<Performance001Dto>> collect = root.stream().collect(
-                Collectors.groupingBy(item -> item.getProdId() + "_"+DateUtil.format(item.getEffDate())+"_"+ DateUtil.format(item.getExpDate())));
+                Collectors.groupingBy(item -> item.getProdId() + "_"+DateUtil.format(item.getEffDate())+"_"+ DateUtil.format(item.getExpDate()==null?sysDate:item.getExpDate())));
         List<Performance001Dto> rootList = new LinkedList<>();
         collect.forEach((k,v)->{
             Performance001Dto dto =new Performance001Dto();
