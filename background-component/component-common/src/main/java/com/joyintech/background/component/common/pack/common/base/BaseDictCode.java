@@ -23,18 +23,4 @@ import com.joyintech.background.component.common.pack.common.constant.DictCode;
  */
 public interface BaseDictCode extends IDictCode {
 
-    /**
-     * 数据状态
-     */
-    DictCode 数据状态 = DictCode.数据状态;
-
-    /**
-     * 流程状态
-     */
-    DictCode 流程状态 = DictCode.流程状态;
-
-    /**
-     * 是否
-     */
-    DictCode 是否 = DictCode.是否;
 }

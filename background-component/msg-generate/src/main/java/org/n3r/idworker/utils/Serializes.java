@@ -68,15 +68,20 @@ public class Serializes {
     public static void writeObject(FileOutputStream fos, Object object) {
         FileChannel channel = fos.getChannel();
         if (!channel.isOpen()) throw new RuntimeException("channel is closed");
-
+        ObjectOutputStream objectOutput = null;
         try {
             channel.position(0);
-            ObjectOutputStream objectOutput = new ObjectOutputStream(fos);
+            objectOutput = new ObjectOutputStream(fos);
             objectOutput.writeObject(object);
             fos.flush();
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
+        	try {
+				objectOutput.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     }
 
