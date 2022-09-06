@@ -304,8 +304,12 @@ public class DurationReportDataService implements IReportDataService {
 							map.put("fairValueStr", df.format(item.getFairValue()));
 						else
 							map.put("fairValueStr", "");
+						if ( item.getPdProp()!=null ) 
+							map.put("pdProp", df.format(item.getPdProp()));
+						else
+							map.put("pdProp", "");						
 						listAssetDetail.add(map);
-					} else {
+					} else {  //多出10条，如果值完全相同也要报出
 						if ( item.getPdProp().equals(pd) && item.getFairValue().equals(fv) ) {
 							item.setPersonalField(++i+"");
 							Map<String,Object> map = CollectionUtils.bean2Map(item);
@@ -313,6 +317,10 @@ public class DurationReportDataService implements IReportDataService {
 								map.put("fairValueStr", df.format(item.getFairValue()));
 							else
 								map.put("fairValueStr", "");
+							if ( item.getPdProp()!=null ) 
+								map.put("pdProp", df.format(item.getPdProp()));
+							else
+								map.put("pdProp", "");							
 							listAssetDetail.add(map);
 						} else {
 							break;
