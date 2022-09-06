@@ -114,13 +114,20 @@ public class FileLock {
 
     @SuppressWarnings("unchecked")
     public <T> T readObject() {
+    	ObjectInputStream objectReader =null;
         try {
             InputStream is = Channels.newInputStream(channel);
-            ObjectInputStream objectReader = new ObjectInputStream(is);
+            objectReader = new ObjectInputStream(is);
             return (T) objectReader.readObject();
         } catch (EOFException e) {
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+        	try {
+				objectReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
 
         return null;
@@ -129,15 +136,21 @@ public class FileLock {
 
     public synchronized boolean writeObject(Object object) {
         if (!channel.isOpen()) return false;
-
+        ObjectOutputStream objectOutput = null;
         try {
             channel.position(0);
             OutputStream out = Channels.newOutputStream(channel);
-            ObjectOutputStream objectOutput = new ObjectOutputStream(out);
+            objectOutput = new ObjectOutputStream(out);
             objectOutput.writeObject(object);
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+        	try {
+				objectOutput.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     }
 }

@@ -48,7 +48,7 @@ public class ReportProdFileManage001Dto extends RepProdFileProdInfoDto implement
 //	//投资比例
 //	private String investPropors;
 	
-	List<RepProdFileFeeInfoDto> feeLists;
+	transient List<RepProdFileFeeInfoDto> feeLists;
 	/**
      * 费用品种代码
      */

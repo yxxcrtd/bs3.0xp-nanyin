@@ -38,7 +38,7 @@ public class Option implements Serializable {
 	/**
 	 * echarts布局
 	 */
-	private Grid grid;
+	private transient Grid grid;
 
 	public Title getTitle() {
 		return title;
