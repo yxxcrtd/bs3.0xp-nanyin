@@ -559,7 +559,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                    }
                }
 
-               if (!flag) {
+               if (flag) {
                    checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                            "文件中存在"+prodInfoDtos.size()+"条数据的“产品主代码="+prodInfoDtos.get(0).getpProdId()+"”相同,除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值必须相同"));
                }
