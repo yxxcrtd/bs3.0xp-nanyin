@@ -101,7 +101,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setGroupId(dto.getGroupId());
             dto1.setProdId(dto.getProdId());
             dto1.setDataType("01");
-            dto1.setProportion(dto.getZzqj());
+            dto1.setProportion(dto.getZzqj()+"%");
             dto1.setEffDate(dto.getEffDate());
             dto1.setExpDate(dto.getExpDate());
             dto1.setStatus("E");
@@ -112,7 +112,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setGroupId(dto.getGroupId());
             dto2.setProdId(dto.getProdId());
             dto2.setDataType("02");
-            dto2.setProportion(dto.getHs300());
+            dto2.setProportion(dto.getHs300()+"%");
             dto2.setEffDate(dto.getEffDate());
             dto2.setExpDate(dto.getExpDate());
             dto2.setStatus("E");
@@ -123,7 +123,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setGroupId(dto.getGroupId());
             dto3.setProdId(dto.getProdId());
             dto3.setDataType("03");
-            dto3.setProportion(dto.getZzcf());
+            dto3.setProportion(dto.getZzcf()+"%");
             dto3.setEffDate(dto.getEffDate());
             dto3.setExpDate(dto.getExpDate());
             dto3.setStatus("E");
@@ -134,7 +134,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setGroupId(dto.getGroupId());
             dto4.setProdId(dto.getProdId());
             dto4.setDataType("04");
-            dto4.setProportion(dto.getZz500());
+            dto4.setProportion(dto.getZz500()+"%");
             dto4.setEffDate(dto.getEffDate());
             dto4.setExpDate(dto.getExpDate());
             dto4.setStatus("E");
