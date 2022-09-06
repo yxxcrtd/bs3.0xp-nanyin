@@ -131,13 +131,13 @@ public class SftpUtil {
         // log.info("下载文件==========:" + remoteFilePath );
         // SftpUtil.downloadSftp(path, fileName, "/tmp");
         // 输入流
-        InputStream is;
-        BufferedReader br;
+        InputStream is=null;
+        BufferedReader br=null;
         try {
             is = sftp.get(remoteFilePath);
             logger.info("输入流为:" + is);
             // 包装输入流
-            InputStreamReader inr;
+            InputStreamReader inr=null;
             try {
                 inr = new InputStreamReader(is, ENCODE);
                 br = new BufferedReader(inr);
@@ -146,15 +146,37 @@ public class SftpUtil {
                 return br;
             }
             catch (Exception e) {
-                // TODO Auto-generated catch block
             	logger.error("error:",e);
                 logger.info("获取流不成功！");
+            } finally {
+            	if ( inr!=null ) {
+            		try {
+						inr.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+            	}
             }
         }
         catch (SftpException e) {
             // TODO Auto-generated catch block
         	logger.error("error:",e);
             logger.info("数据文件：" + fileName + "不存在！");
+        } finally {
+        	if ( br!=null )
+				try {
+					br.close();
+				} catch (IOException e) {
+					logger.error("error:",e);
+				}
+        	if ( is!=null ) {
+        		try {
+					is.close();
+				} catch (IOException e) {
+					logger.error("error:",e);
+				}
+        	}
         }
         return null;
     }

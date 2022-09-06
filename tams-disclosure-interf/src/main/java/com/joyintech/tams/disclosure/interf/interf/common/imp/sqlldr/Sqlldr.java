@@ -93,6 +93,7 @@ public class Sqlldr implements ImpExcutor {
         while ((line = reader.readLine()) != null) {
             LOGGER.info(line);
         }
+        reader.close();
         // 输出日志
         printLog(((SqlldrImpArgument)args).getLog());
         // 删除导入用的临时文件

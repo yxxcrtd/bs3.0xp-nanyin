@@ -230,25 +230,36 @@ public class iMsgServer2015 {
      * @param outputFile 
      * @return 
      */  
-    public  boolean MsgFileSave(String outputFile) {  
-    	 try {
-    	File f = new File(outputFile);
-    	FileOutputStream fos = null;    
-        BufferedInputStream bis = null;    
-        int BUFFER_SIZE = 1024; 
-        byte[] buf = new byte[BUFFER_SIZE];    
-        int size = 0;    
-        bis = new BufferedInputStream(fileContentStream);    
-		fos = new FileOutputStream(f);
-        while ( (size = bis.read(buf)) != -1)     
-          fos.write(buf, 0, size);   
-        bis.close();
-        fos.close();    
-        return true;
-    	 } catch (Exception e) {
- 			e.printStackTrace();
- 			return false;
- 		}    
+	public boolean MsgFileSave(String outputFile) {
+		FileOutputStream fos = null;
+		BufferedInputStream bis = null;
+		try {
+			File f = new File(outputFile);
+			int BUFFER_SIZE = 1024;
+			byte[] buf = new byte[BUFFER_SIZE];
+			int size = 0;
+			bis = new BufferedInputStream(fileContentStream);
+			fos = new FileOutputStream(f);
+			while ((size = bis.read(buf)) != -1)
+				fos.write(buf, 0, size);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			if (bis != null)
+				try {
+					bis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
     }  
  
     public boolean MsgFileLoad(String fileName) throws IOException{

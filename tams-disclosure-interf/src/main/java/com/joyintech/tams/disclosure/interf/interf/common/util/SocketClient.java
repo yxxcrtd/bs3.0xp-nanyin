@@ -33,11 +33,7 @@ public class SocketClient {
         }
         logger.info("操作类型：[Socket客户端], Message：[参数检查成功]");
         // 使用指定的服务器地址和端口号创建Socket
-        Socket socket = createSocket(entity);
-        if (socket == null) {
-            logger.info("操作类型：[Socket客户端], Message：[Socket创建失败]");
-            return returnStr;
-        }
+
         logger.info("操作类型：[Socket客户端], Message：[Socket创建成功]");
         // 发送的XML报文字符串
         String xmlStr = entity.getSendMsg();
@@ -45,7 +41,13 @@ public class SocketClient {
             logger.info("操作类型：[Socket客户端], Message：[请求的报文为空]");
             return returnStr;
         }
+        Socket socket = null;
         try {
+            socket = createSocket(entity);
+            if (socket == null) {
+                logger.info("操作类型：[Socket客户端], Message：[Socket创建失败]");
+                return returnStr;
+            }
             // 由Socket对象获得输出流
             OutputStream out = socket.getOutputStream();
             // 报文长度

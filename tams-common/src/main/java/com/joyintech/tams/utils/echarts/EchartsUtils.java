@@ -458,13 +458,12 @@ public class EchartsUtils {
 			}
 			out = new BufferedWriter(new FileWriter(writename));
 			out.write(option);
-
+			out.flush();
 		} catch (IOException e) {
 			throw new EchartsException( "buildEChartOptionsFile",e.getCause(),"" );
 		}finally {
 			if (out !=null){
 				try {
-					out.flush();
 					out.close();
 				} catch (IOException e) {
 					throw new EchartsException( "buildEChartOptionsFile",e.getCause(),"" );

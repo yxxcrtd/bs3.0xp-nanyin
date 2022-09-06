@@ -200,11 +200,7 @@ public class OfficeMergeUtil {
             outputExcel.write(fos);
             }
         catch (Exception e) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            logger.error(pw.toString() + "_" + e.getMessage(), e);
-//            System.out.println(sw.toString());
-            logger.info(sw.toString());
+            logger.error(e.getMessage(), e);
         }
         finally {
             try {

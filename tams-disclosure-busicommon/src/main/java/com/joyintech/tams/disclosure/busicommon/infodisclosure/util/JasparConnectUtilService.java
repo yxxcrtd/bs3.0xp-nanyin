@@ -392,6 +392,7 @@ public class JasparConnectUtilService {
 			tStringBuffer.append(sTempOneLine);
 
 		}
+		tBufferedReader.close();
 		return tStringBuffer.toString();
 	}
 	/**

@@ -239,7 +239,7 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 		zipFileName=agencyName+zipFileName;
 		File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 		ZipOutputStream zipOut = null;
-		OutputStream toClient=null;
+		//OutputStream toClient=null;
 		String tempDir = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
 		if(!StringUtil.isEmptyList(infoDiscAutoRevealList)){
 			//报表生成临时路径
@@ -249,7 +249,7 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 			try {
 				fos = new FileOutputStream(zipFile);
 				zipOut = new ZipOutputStream(fos);
-				toClient = new BufferedOutputStream(fos);
+				//toClient = new BufferedOutputStream(fos);
 				// 设置UTF8编码
 				zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
 				for (InfoDiscAutoRevealDto report : infoDiscAutoRevealList) {
@@ -366,15 +366,19 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 						downloadFile.delete();
 					}
 				}
-				zipOut.close();
+				//zipOut.close();
 			}
 			catch (Exception e) {
 				logger.error("", e);
 				return false;
 			}finally {
+				if ( zipOut!=null ) {
+					zipOut.close();
+				}
 				if (fos != null){
 					fos.close();
 				}
+				
 			}
 		}
 		return true;

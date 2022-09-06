@@ -26,8 +26,10 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHint;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.springframework.util.CollectionUtils;
 
@@ -474,7 +476,13 @@ public class PoiUtilsHelper {
 						paragraph.setAlignment(styleRow.getCell(1).getParagraphs().get(0).getAlignment());
 						paragraph.setVerticalAlignment(TextAlignment.CENTER);
 						XWPFRun run = paragraph.createRun();
-						run.setFontFamily(fontFamily);
+	                	CTFonts fonts = run.getCTR().getRPr().getRFonts();
+	                	fonts.setAscii(fontFamily);
+	                	fonts.setEastAsia(fontFamily);
+//	                	fonts.setHAnsi(fontFamily);                			
+//	                	fonts.setCs(fontFamily);
+//	                	fonts.setHint(STHint.EAST_ASIA);
+						//run.setFontFamily(fontFamily);
 						if ( fontSize!=-1 )
 							run.setFontSize( fontSize);			
 						run.setText(content,0);			
@@ -490,6 +498,7 @@ public class PoiUtilsHelper {
 	}
 
     public static void createCellsAndCopyStyles(XWPFTableRow targetRow, XWPFTableRow sourceRow,String defaultFontFamily,int defaultFontSize) {
+    	defaultFontFamily = "方正仿宋简体";
         targetRow.getCtRow().setTrPr(sourceRow.getCtRow().getTrPr());
         List<XWPFTableCell> tableCells = sourceRow.getTableCells();
         if (CollectionUtils.isEmpty(tableCells)) {
@@ -509,13 +518,25 @@ public class PoiUtilsHelper {
                 p.getCTP().setPPr(sourceParagraph.getCTP().getPPr());
                 XWPFRun run = p.getRuns().isEmpty() ? p.createRun() : p.getRuns().get(0);
                 if ( sourceParagraph.getRuns()!=null && sourceParagraph.getRuns().size()>0 ) {
-                	run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
+                	CTFonts fonts = run.getCTR().getRPr().getRFonts();
+                	fonts.setAscii(defaultFontFamily);
+                	fonts.setEastAsia(defaultFontFamily);
+//                	fonts.setHAnsi(defaultFontFamily);           
+//                	fonts.setCs(defaultFontFamily);
+//                	fonts.setHint(STHint.EAST_ASIA);
+                	//run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
                 	int fontSzie = sourceParagraph.getRuns().get(0).getFontSize();
 					if ( fontSzie!=-1 )
 						run.setFontSize(fontSzie);                	
                 }
                 else {
-                	run.setFontFamily(defaultFontFamily);
+                	CTFonts fonts = run.getCTR().getRPr().getRFonts();
+                	fonts.setAscii(defaultFontFamily);
+                	fonts.setEastAsia(defaultFontFamily);
+                	//fonts.setHAnsi(defaultFontFamily);           
+                	//fonts.setCs(defaultFontFamily);
+                	//fonts.setHint(STHint.EAST_ASIA);
+                	//run.setFontFamily(defaultFontFamily);
                 	if ( defaultFontSize!=-1 )
                 		run.setFontSize(defaultFontSize);
                 }
@@ -524,13 +545,25 @@ public class PoiUtilsHelper {
                 p.getCTP().setPPr(sourceParagraph.getCTP().getPPr());
                 XWPFRun run = p.getRuns().isEmpty() ? p.createRun() : p.getRuns().get(0);
                 if ( sourceParagraph.getRuns()!=null && sourceParagraph.getRuns().size()>0 ) {
-                	run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
+                	//run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
+                	CTFonts fonts = run.getCTR().getRPr()==null?run.getCTR().addNewRPr().addNewRFonts():run.getCTR().getRPr().getRFonts();
+                	fonts.setAscii(defaultFontFamily);
+                	fonts.setEastAsia(defaultFontFamily);
+                	//fonts.setHAnsi(defaultFontFamily);   
+                	//fonts.setCs(defaultFontFamily);
+                	//fonts.setHint(STHint.EAST_ASIA);
                 	int fontSzie = sourceParagraph.getRuns().get(0).getFontSize();
 					if ( fontSzie!=-1 )
 						run.setFontSize(fontSzie);                	
                 }
                 else {
-                	run.setFontFamily(defaultFontFamily);
+                	CTFonts fonts = run.getCTR().getRPr()==null?run.getCTR().addNewRPr().addNewRFonts():run.getCTR().getRPr().getRFonts();
+                	fonts.setAscii(defaultFontFamily);
+                	fonts.setEastAsia(defaultFontFamily);
+                	//fonts.setHAnsi(defaultFontFamily);   
+                	//fonts.setCs(defaultFontFamily);
+                	//fonts.setHint(STHint.EAST_ASIA);
+                	//run.setFontFamily(defaultFontFamily);
                 	if ( defaultFontSize!=-1 )
                 		run.setFontSize(defaultFontSize);
                 }

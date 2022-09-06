@@ -126,10 +126,11 @@ public final class TxtParseUtil {
         if(null == inStream) {
             return resultList;
         }
+        BufferedReader reader = null;
         try {
             String fileEncoding = StringUtil.getOrElse(reportInterfFileEncoding, "UTF-8");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, fileEncoding));
+            reader = new BufferedReader(new InputStreamReader(inStream, fileEncoding));
             String line = reader.readLine();
             Map<String, String> result = null;
             do{
@@ -156,6 +157,8 @@ public final class TxtParseUtil {
             if (null != inStream) {
                 inStream.close();
             }
+            if ( reader!=null )
+            	reader.close();
         }
         return resultList;
     }
