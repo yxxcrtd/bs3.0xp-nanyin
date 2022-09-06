@@ -300,6 +300,10 @@ public class DurationReportDataService implements IReportDataService {
 							map.put("fairValueStr", df.format(item.getFairValue()));
 						else
 							map.put("fairValueStr", "");
+						if ( item.getPdProp()!=null ) 
+							map.put("pdProp", df.format(item.getPdProp()));
+						else
+							map.put("pdProp", "");							
 						listAssetDetail.add(map);
 					} else {
 						if ( item.getPdProp().equals(pd) && item.getFairValue().equals(fv) ) {
@@ -309,6 +313,10 @@ public class DurationReportDataService implements IReportDataService {
 								map.put("fairValueStr", df.format(item.getFairValue()));
 							else
 								map.put("fairValueStr", "");
+							if ( item.getPdProp()!=null ) 
+								map.put("pdProp", df.format(item.getPdProp()));
+							else
+								map.put("pdProp", "");								
 							listAssetDetail.add(map);
 						} else {
 							break;
