@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.repprodinfo.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -404,5 +405,104 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
 
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
+    }
+
+    //序号
+    private String number;
+
+    private String zzqj;
+
+    private String zzcf;
+
+    private String zz500;
+
+    private String hs300;
+
+    public Date expDate;
+    public Date effDate;
+
+    public void setZzqj(String zzqj) {
+        this.zzqj = zzqj;
+    }
+
+    public void setZzcf(String zzcf) {
+        this.zzcf = zzcf;
+    }
+
+    public void setZz500(String zz500) {
+        this.zz500 = zz500;
+    }
+
+    public void setHs300(String hs300) {
+        this.hs300 = hs300;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getZzqj() {
+        return zzqj;
+    }
+
+    public String getZzcf() {
+        return zzcf;
+    }
+
+    public String getZz500() {
+        return zz500;
+    }
+
+    public String getHs300() {
+        return hs300;
+    }
+
+    public Date getExpDate() {
+        return expDate;
+    }
+
+    public void setExpDate(Date expDate) {
+        this.expDate = expDate;
+    }
+
+    public Date getEffDate() {
+        return effDate;
+    }
+
+    public void setEffDate(Date effDate) {
+        this.effDate = effDate;
+    }
+
+    private String expDateStr;
+
+    public void setExpDateStr(String expDateStr) {
+        this.expDateStr = expDateStr;
+    }
+
+    public void setEffDateStr(String effDateStr) {
+        this.effDateStr = effDateStr;
+    }
+
+
+    public String getExpDateStr() {
+        if (StringUtil.isNotEmpty(this.expDateStr)) {
+            return this.expDateStr;
+        } else {
+            return DateUtil.format(this.getExpDate());
+        }
+    }
+
+    private String effDateStr;
+
+    public String getEffDateStr() {
+        if (StringUtil.isNotEmpty(this.effDateStr)) {
+            return this.effDateStr;
+        } else {
+            return DateUtil.format(this.getEffDate());
+        }
     }
 }

@@ -496,23 +496,13 @@
                     type: 'select', formatoption: true, multiple: false, searchable: true, result: QUOTA_CODE
                 }
             }*/
-            {
-                field: 'dataType', edit: true, sortable: false, width:260, title: '行情代码',  align: 'center',
-                editOption: {
-                    type: 'select', multiple: false, searchable: true, result: QUOTA_CODE
-                }
-            }
-            , {
-                field: 'proportion',
-                sortable: false,
-                title: '系数(%)',
-                width: 100,
-                align: 'left',
-                edit: true,
-                type: 'number',
-                digit: 2
-            }
-            , {field: 'operation', sortable: false, title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
+            {field:'number',width:'5%', title: '序号',sortField:"number"}
+            ,{field:'effDateStr',width:'10%',  title: '业绩比较基准生效日',sortField:"expDateO",type:'date'}
+            ,{field:'expDateStr',  width:'10%',title: '业绩比较基准生效截止日',sortField:"effDateO",type:'date'}
+            ,{field:'zzqj',width: '10%', title : 'Performance001.zzxz'}
+            ,{field:'zzcf',width:'10%', title : 'Performance001.zzxzh'}
+            ,{field:'zz500',width:'10%', title : 'Performance001.zzzs'}
+            ,{field:'hs300',width:'10%', title : 'Performance001.hszs'}
         ],
         addbtn: true,
         done: function () {

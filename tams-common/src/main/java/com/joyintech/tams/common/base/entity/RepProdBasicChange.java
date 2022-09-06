@@ -3,6 +3,10 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+
 import java.util.Date;
 
 public class RepProdBasicChange extends BaseEntity {
@@ -36,10 +40,15 @@ public class RepProdBasicChange extends BaseEntity {
      */
     private String groupId;
 
-    /**
-     * 变更类型
-     */
     private String changeType;
+
+    public String getChangeType() {
+        return changeType;
+    }
+
+    public void setChangeType(String changeType) {
+        this.changeType = changeType;
+    }
 
     /**
      * 取得 主键
@@ -61,6 +70,8 @@ public class RepProdBasicChange extends BaseEntity {
      * 取得 产品代码
      * @return 产品代码
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
+    @NotEmpty(fieldName = "子产品代码",groups={ValidateGroupEdit.class})
     public String getProdId() {
         return prodId;
     }
@@ -77,6 +88,7 @@ public class RepProdBasicChange extends BaseEntity {
      * 取得 生效日
      * @return 生效日
      */
+    @NotEmpty(fieldName = "业绩比较基准生效日",groups={ValidateGroupEdit.class})
     public Date getEffDate() {
         return effDate;
     }
@@ -136,13 +148,5 @@ public class RepProdBasicChange extends BaseEntity {
      */
     public void setGroupId(String groupId) {
         this.groupId = groupId == null ? null : groupId.trim();
-    }
-
-    public String getChangeType() {
-        return changeType;
-    }
-
-    public void setChangeType(String changeType) {
-        this.changeType = changeType == null ? null : changeType.trim();;
     }
 }

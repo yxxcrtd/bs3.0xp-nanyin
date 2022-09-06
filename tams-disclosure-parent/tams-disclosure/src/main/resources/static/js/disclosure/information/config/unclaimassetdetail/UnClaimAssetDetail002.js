@@ -45,7 +45,7 @@
             { field: 'projectNo',sortable: false, width: 120, title: '序号',edit: false, type: 'text' }
             , { field: 'financier',sortable: false, width: 120, title: '融资客户',edit: true, type: 'text' }
             , { field: 'projectName',sortable: false, title: '项目名称', width: 150, edit: true, type: 'text'}
-            , { field: 'remFinancingPeriod', sortable: false, title: '剩余融资期限', width: 150, edit: true, type: 'text'}
+            , { field: 'remFinancingPeriod', sortable: false, title: '剩余融资期限（天）', width: 150, edit: true, type: 'text'}
             , { field: 'incomeDistribute', edit: true, sortable: false, width: 120, title: '到期收益分配',type: 'text'}
             , { field: 'trdConstruct', sortable: false, title: '交易结构', width: 120, edit: true, type: 'text' }
             , { field: 'riskInfo', sortable: false, title: '风险状况', width: 120, edit: true, type: 'text'}
@@ -113,20 +113,20 @@
         //修改时，如果生效日小于平台日，生效日不能修改
         //若生效日≤平台日＜生效截止日期，则生效日不能修改，生效截止日期可以修改
 
-        if($('#effDate').val() != '' && $('#effDate').val() != null && $('#effEndDate').val() != '' && $('#effEndDate').val() != null){
-            if($('#effDate').val()<=platDate && $('#effEndDate').val()>platDate){
-                $("#effDate").attr("disabled",true);
-                // $("#effEndDate").attr("disabled",true);
-            }
-        }
-
-        //修改时，如果生效截止日小于等于平台日，生效日截止不能修改
-        if($('#effEndDate').val() != '' && $('#effEndDate').val() != null){
-            if($('#effEndDate').val()<=platDate){
-                $("#effDate").attr("disabled",true);
-                $("#effEndDate").attr("disabled",true);
-            }
-        }
+        // if($('#effDate').val() != '' && $('#effDate').val() != null && $('#effEndDate').val() != '' && $('#effEndDate').val() != null){
+        //     if($('#effDate').val()<=platDate && $('#effEndDate').val()>platDate){
+        //         $("#effDate").attr("disabled",true);
+        //         // $("#effEndDate").attr("disabled",true);
+        //     }
+        // }
+        //
+        // //修改时，如果生效截止日小于等于平台日，生效日截止不能修改
+        // if($('#effEndDate').val() != '' && $('#effEndDate').val() != null){
+        //     if($('#effEndDate').val()<=platDate){
+        //         $("#effDate").attr("disabled",true);
+        //         $("#effEndDate").attr("disabled",true);
+        //     }
+        // }
     }
     /**
      * 画面加载完成

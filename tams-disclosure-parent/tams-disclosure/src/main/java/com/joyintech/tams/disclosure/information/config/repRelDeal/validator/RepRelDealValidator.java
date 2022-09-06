@@ -64,16 +64,16 @@ public class RepRelDealValidator implements BeanValidator {
             RepRelDealDto repRelDealDto =repRelDealService.selectData(map);
             Date platDate = DateUtil.platDateFromCache();
             if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
-                if(StringUtil.isNotEmpty(dto.getEffdate())) {
-                    if (DateUtil.compareDate(dto.getEffdate(), platDate) < 0) {
-                        errorList.add(new ValidMessage("", "生效日不能小于平台日"));
-                    }
-                }
+//                if(StringUtil.isNotEmpty(dto.getEffdate())) {
+//                    if (DateUtil.compareDate(dto.getEffdate(), platDate) < 0) {
+//                        errorList.add(new ValidMessage("", "生效日不能小于平台日"));
+//                    }
+//                }
 
                 if(StringUtil.isNotEmpty(dto.getEffdelidate())) {
-                    if(DateUtil.compareDate(dto.getEffdelidate(), platDate) < 0){
-                        errorList.add(new ValidMessage("", "生效截止日期不能小于平台日"));
-                    }
+//                    if(DateUtil.compareDate(dto.getEffdelidate(), platDate) < 0){
+//                        errorList.add(new ValidMessage("", "生效截止日期不能小于平台日"));
+//                    }
                     if(StringUtil.isNotEmpty(dto.getEffdate()) && DateUtil.compareDate(dto.getEffdelidate(), dto.getEffdate()) < 0){
                         errorList.add(new ValidMessage("", "生效截止日期不能小于生效日"));
                     }
@@ -82,22 +82,22 @@ public class RepRelDealValidator implements BeanValidator {
 
             }else{
 
-                if(repRelDealDto!=null && StringUtil.isNotEmpty(repRelDealDto.getEffdate())){
-                    if(StringUtil.isNotEmpty(dto.getEffdate())) {
-                        if (DateUtil.compareDate(repRelDealDto.getEffdate(), platDate) > 0) {
-                            if (DateUtil.compareDate(dto.getEffdate(), platDate) < 0) {
-                                errorList.add(new ValidMessage("", "生效日不能小于平台日"));
-                            }
-                        }
-                    }
-                }
+//                if(repRelDealDto!=null && StringUtil.isNotEmpty(repRelDealDto.getEffdate())){
+//                    if(StringUtil.isNotEmpty(dto.getEffdate())) {
+//                        if (DateUtil.compareDate(repRelDealDto.getEffdate(), platDate) > 0) {
+//                            if (DateUtil.compareDate(dto.getEffdate(), platDate) < 0) {
+//                                errorList.add(new ValidMessage("", "生效日不能小于平台日"));
+//                            }
+//                        }
+//                    }
+//                }
 
                 if(repRelDealDto!=null && StringUtil.isNotEmpty(repRelDealDto.getEffdelidate())){
                     if(StringUtil.isNotEmpty(dto.getEffdelidate())) {
                         if (DateUtil.compareDate(repRelDealDto.getEffdelidate(), platDate) > 0) {
-                            if (DateUtil.compareDate(dto.getEffdelidate(), platDate) < 0) {
-                                errorList.add(new ValidMessage("", "生效截止日期不能小于平台日"));
-                            }
+//                            if (DateUtil.compareDate(dto.getEffdelidate(), platDate) < 0) {
+//                                errorList.add(new ValidMessage("", "生效截止日期不能小于平台日"));
+//                            }
                             if(StringUtil.isNotEmpty(dto.getEffdate()) && DateUtil.compareDate(dto.getEffdelidate(), dto.getEffdate()) < 0){
                                 errorList.add(new ValidMessage("", "生效截止日期不能小于生效日"));
                             }

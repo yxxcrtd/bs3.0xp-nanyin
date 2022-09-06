@@ -289,32 +289,12 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 if(!DateUtil.isDateStr(list.get(3).trim())){
                     excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
                             "生效截止日期格式不正确，正确格式：yyyy-MM-dd！"));
-                }else{
+                }else if (DateUtil.isDateStr(list.get(2).trim())){
                     Date effEndDate=DateUtil.parse(list.get(3).trim());
-                    //生效截止日期是否大于等于平台日期
-                    if (DateUtil.compareDate(platDate,effEndDate)>0){
-//                        excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
-//                                "生效截止日期要大于等于平台日期！"));
-                    }
-                    if(DateUtil.isDateStr(list.get(2).trim())){
-                        Date effDate=DateUtil.parse(list.get(2).trim());
-                        if (DateUtil.compareDate(effDate,effEndDate)>0) {
-                            excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
-                                    "生效截止日期要大于等于生效日！"));
-                        }
-                        //生效日、生效截止日格式都正确，通过产品主代码查询系统中该产品已有的生效区间，校验生效区间是否有重叠
-                        if(StringUtil.isNotEmpty(list.get(0))){
-                            List<ProdPartnerDto> dtos = prodPartner001Mapper.selectPartnerByProdId(list.get(0).trim());
-                            for (ProdPartnerDto dto : dtos) {
-                                if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
-                                        || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
-                                    excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
-                                            "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
-                                                    +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
-                                    break;
-                                }
-                            }
-                        }
+                    Date effDate=DateUtil.parse(list.get(2).trim());
+                    if (DateUtil.compareDate(effDate,effEndDate)>0) {
+                        excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
+                                "生效截止日期要大于等于生效日！"));
                     }
                 }
             }
