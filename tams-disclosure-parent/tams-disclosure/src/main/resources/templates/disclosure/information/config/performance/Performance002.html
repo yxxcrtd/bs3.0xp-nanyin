@@ -7,7 +7,7 @@
     <title data-th-text="产品业绩比较基准新建"></title>
     <style>
         .mst-lable{
-            width: 10%;
+            width: 30%;
         }
     </style>
 </head>
@@ -25,7 +25,7 @@
                             <div class="layui-form-item">
                                 <div>
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline" style="width: 20% !important;">
                                         <select id="prodId" name="prodId" class="input-select"
                                                 data-th-initValue="${entity?.prodId}" formatoption="true" data-selection="id"
                                                 data-th-data-url="@{/disclosure/information/config/performance/Performance001/getProdIdlist}"
@@ -39,7 +39,7 @@
                                 <div>
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="业绩比较基准生效日">业绩比较基准生效日</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline" style="width: 20% !important;">
                                         <input id="effDate" name="effDate"
                                                class="layui-input form-input input-dateSelect"
                                                placeholder="请选择时间"
@@ -53,7 +53,7 @@
                                 <div>
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="业绩比较基准生效截止日">业绩比较基准生效截止日</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline" style="width: 20% !important;">
                                         <input id="expDate" name="expDate"
                                                class="layui-input form-input input-dateSelect"
                                                placeholder="请选择时间"
@@ -67,7 +67,7 @@
                                 <div>
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{Performance001.zzxz}">中债新综合全价指数收益率</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline" style="width: 20% !important;">
                                         <input type="text" id="zzqj" name="zzqj" οnkeyup="value=value.replace(/[^\d]/g,'')"
                                                data-th-value='${entity?.zzqj}' required
                                                class="layui-input form-input text-number" data-textrange='2'
@@ -79,7 +79,7 @@
                                 <div>
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{Performance001.zzxzh}">中债新综合财富指数（1-3年）收益率【系数】</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline" style="width: 20% !important;">
                                         <input type="text" id="zzcf" name="zzcf" οnkeyup="value=value.replace(/[^\d]/g,'')"
                                                data-th-value="${entity?.zzcf}" data-textrange="2" required placeholder="请输入内容"
                                                class="layui-input form-input text-number" >
@@ -90,7 +90,7 @@
                                 <div>
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{Performance001.zzzs}">中证500指数收益率【系数】</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline" style="width: 20% !important;">
                                         <input type="text" id="zz500" name="zz500" οnkeyup="value=value.replace(/[^\d]/g,'')"
                                                data-th-value='${entity?.zz500}' required
                                                class="layui-input form-input text-number" data-textrange='2'
@@ -102,7 +102,7 @@
                                 <div>
                                     <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                                            data-th-text="#{Performance001.hszs}">沪深300指数收益率【系数】</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline" style="width: 20% !important;">
                                         <input type="text" id="hs300" name="hs300" οnkeyup="value=value.replace(/[^\d]/g,'')"
                                                data-th-value='${entity?.hs300}' required
                                                class="layui-input form-input text-number" data-textrange='2'
