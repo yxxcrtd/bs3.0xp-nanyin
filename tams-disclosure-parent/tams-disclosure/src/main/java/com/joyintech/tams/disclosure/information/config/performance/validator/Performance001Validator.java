@@ -24,10 +24,10 @@ public class Performance001Validator implements BeanValidator {
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
 
 
-        if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+        if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) ||StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
             //生效日截止日期要大于等于生效日
             if (DateUtil.compareDate(dto.getEffDate(), dto.getExpDate()) > 0) {
-                resultList.add(new ValidMessage("业绩比较基准生效截止日期大于等于业绩比较基准生效日！"));
+                resultList.add(new ValidMessage("业绩比较基准生效截止日期必须大于等于业绩比较基准生效日！"));
             }
         }
 
