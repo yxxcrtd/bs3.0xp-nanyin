@@ -22,9 +22,10 @@ public class Utils {
 
     public static String firstLine(String classResourceName) {
         InputStream inputStream = null;
+        BufferedReader bufferedReader = null;
         try {
             inputStream = classResourceToStream(classResourceName);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
             return bufferedReader.readLine();
         } catch (IOException e) {
@@ -35,6 +36,11 @@ public class Utils {
             } catch (IOException e) {
                 // ignore
             }
+            try {
+				bufferedReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     }
 

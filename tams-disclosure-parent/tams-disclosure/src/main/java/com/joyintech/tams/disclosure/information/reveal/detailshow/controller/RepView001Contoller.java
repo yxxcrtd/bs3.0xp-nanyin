@@ -137,7 +137,7 @@ public class RepView001Contoller extends BaseController {
     	try {
         	Map<String,Object> params = RequestUtil.getPageParam();
         	//String reportFile = params.get("reportFile").toString();
-        	String reportFile = "E:/poi/aa.docx";
+        	String reportFile = params.get("fileName").toString();
 	        byte[] bytes = poiReportService.getFileByteArray(reportFile);
 
 	        if(bytes != null) {

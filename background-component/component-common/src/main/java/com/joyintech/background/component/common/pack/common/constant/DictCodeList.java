@@ -29,47 +29,47 @@ public enum DictCodeList implements com.joyintech.background.component.common.pa
     /**
      *A：新建中、N：新建、U：修改中、M：修改、P：删除中、D：删除、R：作废。
      */
-    数据状态_新建(BaseDictCode.数据状态, "N", "新建"),
+    数据状态_新建(DictCode.数据状态, "N", "新建"),
 
    /**
     *
     */
-    数据状态_新建中(BaseDictCode.数据状态, "A", "新建中"),
+    数据状态_新建中(DictCode.数据状态, "A", "新建中"),
    
    /**
     *
     */
-    数据状态_删除中(BaseDictCode.数据状态, "P", "删除中"),
+    数据状态_删除中(DictCode.数据状态, "P", "删除中"),
    
    /**
     *
     */
-    数据状态_删除(BaseDictCode.数据状态, "D", "删除"),
+    数据状态_删除(DictCode.数据状态, "D", "删除"),
    
    /**
     * 数据状态_修改中
     */
-    数据状态_修改中(BaseDictCode.数据状态,"U","修改中"),
+    数据状态_修改中(DictCode.数据状态,"U","修改中"),
   
    /**
     * 数据状态_修改中
     */
-    数据状态_修改(BaseDictCode.数据状态,"M","修改"),
+    数据状态_修改(DictCode.数据状态,"M","修改"),
 
    /**
     *
     */
-   数据状态_作废(BaseDictCode.数据状态, "R", "作废"),
+   数据状态_作废(DictCode.数据状态, "R", "作废"),
 
    /**
     *
     */
-   是否_是(BaseDictCode.是否, "01", "是"),
+   是否_是(DictCode.是否, "01", "是"),
 
    /**
     *
     */
-   是否_否(BaseDictCode.是否, "02", "否"),
+   是否_否(DictCode.是否, "02", "否"),
 
     ;
 

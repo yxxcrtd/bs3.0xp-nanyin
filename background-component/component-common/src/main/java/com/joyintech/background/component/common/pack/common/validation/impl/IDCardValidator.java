@@ -89,7 +89,7 @@ public class IDCardValidator implements ConstraintValidator<IDCard, String> {
         if (value.length() == 18) {
             ai = value.substring(0, 17);
         }
-        else if (value.length() == 15) {
+        if (value.length() == 15) {
             ai = value.substring(0, 6) + "19" + value.substring(6, 15);
         }
         if (!StringUtils.isNumeric(ai)) {
