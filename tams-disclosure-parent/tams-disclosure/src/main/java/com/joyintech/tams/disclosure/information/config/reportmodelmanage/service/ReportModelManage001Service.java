@@ -433,7 +433,10 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
         File remoteFile = new SafelyFile(reportFile);
 
         if(!remoteFile.exists()){
-            remoteFile.createNewFile();
+            boolean ret = remoteFile.createNewFile();
+            if ( ret==true ) {
+            	logger.info("创建新文件:"+remoteFile.getName());
+            }
         }
 
         return ExportUtil.export(localFileName, remoteFile, false);

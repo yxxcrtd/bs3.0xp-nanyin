@@ -15,7 +15,11 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
 import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
 import com.joyintech.tams.disclosure.infoCompliance.service.InfoCompliance002Service;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.controller.DisProdPlanManage001Controller;
+
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -38,6 +42,8 @@ import java.util.*;
 @RequestMapping("/disclosure/infoCompliance/uploadFile001")
 public class UploadFile001Controller extends BaseController {
 
+    private Logger logger = LoggerFactory.getLogger(UploadFile001Controller.class);
+    
     @Autowired(
             required = false
     )
@@ -111,7 +117,10 @@ public class UploadFile001Controller extends BaseController {
         String uploadFilePath = CacheUtil.getSysParam("upload_file_path");
         File fileMik = new SafelyFile(uploadFilePath);
         if (!fileMik.exists()) {
-            fileMik.mkdirs();
+            boolean ret = fileMik.mkdirs();
+            if ( ret==false ) {
+            	logger.error("创建目录错误："+fileMik.getName());
+            }
         }
 
         List<UploadFile> result = new ArrayList();
@@ -152,11 +161,17 @@ public class UploadFile001Controller extends BaseController {
                 File localFile = new SafelyFile(filePath);
                 File dir = localFile.getParentFile();
                 if (!dir.exists()) {
-                    dir.mkdirs();
+                    boolean ret = dir.mkdirs();
+                    if ( ret==false ) {
+                    	logger.error("创建目录错误："+dir.getName());
+                    }
                 }
 
                 if (!localFile.exists()) {
-                    localFile.createNewFile();
+                    boolean ret = localFile.createNewFile();
+                    if ( ret==true ) {
+                    	logger.info("创建新文件:"+localFile.getName());
+                    }
                 }
 
                 this.copyFile(file.getInputStream(), new FileOutputStream(localFile), file.getSize(), pageId);

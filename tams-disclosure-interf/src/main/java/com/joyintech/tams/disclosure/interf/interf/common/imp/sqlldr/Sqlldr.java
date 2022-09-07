@@ -58,7 +58,10 @@ public class Sqlldr implements ImpExcutor {
         File file = new SafelyFile(control);
         if (!file.exists()) {
             // 如果控制文件不存在，则创建
-            file.createNewFile();
+            boolean ret = file.createNewFile();
+            if ( ret==false ) {
+            	LOGGER.error("删除文件错误："+file.getName());
+            }
         }
         List<String> lines = new ArrayList<>();
         lines.add("load data");
@@ -150,7 +153,10 @@ public class Sqlldr implements ImpExcutor {
         if (filePath != null && filePath.length() > 0) {
             File file = new SafelyFile(filePath);
             if (file.exists()) {
-                file.delete();
+                boolean ret = file.delete();
+                if ( ret==false ) {
+                	LOGGER.error("删除文件错误："+file.getName());
+                }
             }
         }
     }

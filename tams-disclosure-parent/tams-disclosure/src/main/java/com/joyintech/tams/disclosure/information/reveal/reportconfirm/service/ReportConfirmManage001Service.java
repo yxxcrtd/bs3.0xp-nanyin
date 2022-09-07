@@ -240,7 +240,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                         firstFile = new SafelyFile(firstPath);
                         // 判断第一层文件夹是否存在，否则创建
                         if (!firstFile.exists()) {
-                            firstFile.mkdir();
+                            boolean ret = firstFile.mkdir();
+                            if ( ret==false ) {
+                            	logger.error("创建目录错误："+firstFile.getName());
+                            }
                         }
                         String secondPath = firstPath + File.separator + report.getReportCategory();
                         // 第二层目录
@@ -583,7 +586,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
             }
 
         }
-        file.delete();
+        boolean ret = file.delete();
+        if ( ret==false ) {
+        	logger.error("删除文件错误："+file.getName());
+        }
     }
 
     /**

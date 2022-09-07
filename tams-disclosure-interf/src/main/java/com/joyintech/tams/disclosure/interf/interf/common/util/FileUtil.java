@@ -527,7 +527,10 @@ public class FileUtil {
 			// 将文件copy到指定目录
 			FileUtils.copyFileToDirectory(file, directory);
 			// 删除源文件
-			file.delete();
+			boolean ret = file.delete();
+			if ( ret==false ) {
+				logger.error("删除文件错误："+file.getName());
+			}
 		} catch (IOException e) {
 			result.setMessage(InterfConstant.IOEXCEPTION_MSG);
 			result.setStatus(false);
@@ -552,7 +555,10 @@ public class FileUtil {
 		FileDisposeResultEntity result = new FileDisposeResultEntity();
 		try {
 			// 删除源文件
-			file.delete();
+			boolean ret = file.delete();
+			if ( ret==false ) {
+				logger.error("删除文件错误："+file.getName());
+			}
 		} catch (Exception e) {
 			result.setMessage(InterfConstant.DELETE_FILE_FAILURE_MSG);
 			result.setStatus(false);

@@ -47,9 +47,15 @@ public class TisUtil {
 		filename = new SafelyFile(path);
 		//如果本地已存在同名文件，删除本地重新生成
 		if (filename.exists()) {
-			filename.delete();
+			boolean ret = filename.delete();
+			if ( ret==false ) {
+				logger.error("删除文件错误："+filename.getName());
+			}
 		}
-		filename.createNewFile();
+		boolean ret = filename.createNewFile();
+		if ( ret==true ) {
+			logger.info("创建新文件:"+filename.getName());
+		}
 	}
 	/**
 	 * 修改文件的名字
@@ -59,7 +65,10 @@ public class TisUtil {
 	public static void reTxtFilename(String path) throws IOException {
 		File file = new SafelyFile(path);
 		if (filename.exists()) {
-			filename.renameTo(file);
+			boolean ret = filename.renameTo(file);
+			if ( ret==false ) {
+				logger.error("重命名文件错误："+filename.getName()+"--"+file.getName());
+			}
 		}
 	}
 	/** */

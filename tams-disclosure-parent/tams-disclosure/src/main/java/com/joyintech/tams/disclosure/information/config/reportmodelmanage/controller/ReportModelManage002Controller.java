@@ -228,7 +228,10 @@ public class ReportModelManage002Controller extends BaseController {
 				 String sourcePath=this.getParam("fileName");
 				 File sourceFile=new SafelyFile(sourcePath);
 				 if(sourceFile.exists()){
-					 sourceFile.delete();
+					 boolean ret = sourceFile.delete();
+					 if ( ret==false ) {
+							logger.error("删除文件错误："+sourceFile.getName());
+					}
 				 }
 				 String msg = "请输入上传文件夹,并重新上传文件";
 					res =  new AjaxResult(msg, MessageType.错误消息);

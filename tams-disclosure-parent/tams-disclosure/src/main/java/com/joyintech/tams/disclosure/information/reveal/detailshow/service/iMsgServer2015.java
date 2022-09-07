@@ -160,7 +160,10 @@ public class iMsgServer2015 {
     public boolean DelFile(String FileName) {
         File mFile = new File(FileName);
         if (mFile.exists()) {
-                mFile.delete();
+                boolean ret = mFile.delete();
+                if ( ret==false ) {
+                	System.out.println("删除文件错误："+mFile.getName());
+                }
         }else{
         	SetMsgByName("DelFileState", "失败");
         	return false;
@@ -177,7 +180,10 @@ public class iMsgServer2015 {
 	//创建文件夹
 	public boolean MakeDirectory(String FilePath) {
         File mFile = new File(FilePath);
-        mFile.mkdirs();
+        boolean ret = mFile.mkdirs();
+        if ( ret==false ) {
+        	System.out.println("创建目录错误："+mFile.getName());
+        }
         return (mFile.isDirectory());
     }
 
