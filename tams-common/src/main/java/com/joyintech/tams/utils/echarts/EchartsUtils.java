@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -40,6 +42,8 @@ public class EchartsUtils {
 	public static final String ECHARTS_图表类型_曲线图 = "line";
 	public static final String ECHARTS_图表类型_柱状图 = "bar";
 	public static final String ECHARTS_图表类型_饼状图 = "pie";
+	
+	private static Logger logger = LoggerFactory.getLogger(EchartsUtils.class);
 	
 	//private Logger logger = LoggerFactory.getLogger(EchartsUtils.class);
 	
@@ -387,9 +391,16 @@ public class EchartsUtils {
 //		}
 		if (!file.exists()) {
 			File dir = new File(file.getParent());
-			dir.mkdirs();
+			boolean ret = dir.mkdirs();
+			if ( ret==false ) {
+				logger.error("创建目录错误："+dir.getName());
+			}
 			try {
-				file.createNewFile();
+				ret = file.createNewFile();
+				if ( ret ==true ) {
+					logger.info("创建新文件："+file.getName());
+				}
+				
 			} catch (IOException e) {
 				throw new EchartsException( "buildEChartFile",e.getCause(),"" );
 			}
@@ -424,8 +435,12 @@ public class EchartsUtils {
 //				throw new EchartsException("删除文件失败.");
 //			}
 //		}
-		if (jsondata != null && jsondata.exists())
-			jsondata.delete();
+		if (jsondata != null && jsondata.exists()) { 
+			boolean ret = jsondata.delete();
+			if ( ret==false ) {
+				logger.error("删除文件错误："+jsondata.getName());
+			}
+		}
 		//logger.debug("已创建图表：" + file.getPath());
 		return file;
 	}
@@ -445,8 +460,14 @@ public class EchartsUtils {
 			File writename = new File(dataPath);
 			if (!writename.exists()) {
 				File dir = new File(writename.getParent());
-				dir.mkdirs();
-				writename.createNewFile();
+				boolean ret = dir.mkdirs();
+				if ( ret==false ) {
+					logger.error("创建目录错误："+dir.getName());
+				}
+				ret = writename.createNewFile();
+				if ( ret==true ) {
+					logger.info("创建新文件:"+writename.getName());
+				}
 //				boolean ret = dir.mkdirs();
 //				if ( ret==false ) {
 //					throw new IOException("创建文件夹失败.");
