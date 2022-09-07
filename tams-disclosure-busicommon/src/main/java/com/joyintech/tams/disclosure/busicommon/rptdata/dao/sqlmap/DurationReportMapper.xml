@@ -323,6 +323,7 @@
 		    ,basis.STATUS
 		    ,basis.UPDATE_TIME
 		from REP_PROD_BASIC_CHANGE basis 
+		left join REP_PROD_INFO info on basis.PROD_ID=info.PROD_ID
 		where 1=1
 			and ( basis.EFF_DATE <![CDATA[<=]]>#{eDate,jdbcType=DATE} and basis.EXP_DATE <![CDATA[>=]]>#{sDate,jdbcType=DATE} )
 			and basis.STATUS='E'
