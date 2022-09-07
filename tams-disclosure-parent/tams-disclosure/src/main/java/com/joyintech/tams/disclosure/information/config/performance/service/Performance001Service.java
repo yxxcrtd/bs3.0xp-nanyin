@@ -270,15 +270,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 return webResult;
             }
             List<Performance001Dto> entities = this.convertToBean(dataList);
-            
-            List<Performance001Dto> listResult = checkDataDuration(entities);
-            
-            //chenxc: 区间重叠校验
-            if ( listResult.size()>0 ) {
-            	String msg = listResult.get(0).getProdId()+"等产品的生效开始日与结束日的区间有重叠，共"+listResult.size()+"条";
-            	webResult.setMessage(msg, MessageType.错误消息);
-            }
-            
             List<Performance001Dto> data = this.selectPerformanceInfoByKey(entities);
             if (data != null && data.size() > 0) {
                 Map<String, List<Performance001Dto>> map = entities.stream().collect(
@@ -389,7 +380,19 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             List<Performance001Dto> entities = new ArrayList<>(dataList.size());
-            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            List<Performance001Dto> listResult = checkDataDuration(entities);
+            //chenxc: 区间重叠校验
+            if ( listResult.size()>0 ) {
+            	StringBuffer sb=new StringBuffer();
+            	for ( Performance001Dto dto:listResult ) {
+            		 sb.append(dto.getProdId()+","+dto.getEffDate()+","+dto.getExpDate()+"\r\n");
+            	}
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,sb.toString()));
+            }
+            checkResult.clear();
+            checkResult = convertToEntitys(dataList, entities);
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
                     Map<String, Object> map = new HashMap<>();
@@ -559,8 +562,20 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         return list;
     }
 
+    /**
+     * 区间校验
+     * @param listBasis
+     * @return 返回列表有值，为校验不通过的数据
+     */
     private List<Performance001Dto> checkDataDuration(  List<Performance001Dto> listBasis ) {
     	List<Performance001Dto> listResult = new ArrayList<Performance001Dto>();
+    	
+    	for ( Performance001Dto dto:listBasis ) {
+    		if ( dto.getEffDate().compareTo(dto.getExpDate())>=0 ) {
+    			listResult.add(dto);
+    		}
+    	}
+    	
     	Map<String, List<Performance001Dto>> map = listBasis.stream().collect(
                 JoyinCollectors.groupingBy(x ->
                         x.getProdId()
@@ -585,5 +600,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     	}
     	return listResult;
     }
-    
+
+        
 }
