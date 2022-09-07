@@ -1,12 +1,8 @@
 package com.joyintech.tams.disclosure.information.config.performance.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -113,6 +109,13 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
     @Override
     public void doComplete(Performance001Dto dto, OperationType operationType) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = format.parse(DateUtil.format(DateUtil.now()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         dto.setOperateType(operationType.toString());
         String type = dto.getOperateType();
         if (StringUtil.equals(type, "DELETE")) {
@@ -131,6 +134,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setEffDate(dto.getEffDate());
             dto1.setExpDate(dto.getExpDate());
             dto1.setStatus("E");
+            dto1.setUpdateTime(date);
             dto1.setUpdateUser(user);
             performance001Mapper.insert(dto1);
 
@@ -143,6 +147,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setEffDate(dto.getEffDate());
             dto2.setExpDate(dto.getExpDate());
             dto2.setStatus("E");
+            dto2.setUpdateTime(date);
             dto2.setUpdateUser(user);
             performance001Mapper.insert(dto2);
 
@@ -155,6 +160,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setEffDate(dto.getEffDate());
             dto3.setExpDate(dto.getExpDate());
             dto3.setStatus("E");
+            dto3.setUpdateTime(date);
             dto3.setUpdateUser(user);
             performance001Mapper.insert(dto3);
 
@@ -167,6 +173,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setEffDate(dto.getEffDate());
             dto4.setExpDate(dto.getExpDate());
             dto4.setStatus("E");
+            dto4.setUpdateTime(date);
             dto4.setUpdateUser(user);
             performance001Mapper.insert(dto4);
         }
@@ -474,6 +481,13 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             } else if (!isDateStr(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "业绩比较基准生效截止日"));
             }
+           //校验截止日大于生效日
+            Date expDate=DateUtil.parse(rowData.get(2).trim());
+            Date effDate=DateUtil.parse(rowData.get(1).trim());
+            if (DateUtil.compareDate(effDate,expDate)>=0) {
+                message.add("业绩比较基准生效截止日不能小于业绩比较基准生效日!");
+            }
+
             if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合全价指数收益率【系数】"));
             }
@@ -538,6 +552,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             return false;
     }
 
+    //判断是否保留两位小数
     public boolean isTwo(String s){
         if (!s.contains(".")){
             return false;
