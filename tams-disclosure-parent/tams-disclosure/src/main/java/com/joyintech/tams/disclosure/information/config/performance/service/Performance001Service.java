@@ -17,7 +17,6 @@ import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.performance.dao.Performance001Mapper;
 import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
-import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -107,7 +106,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setGroupId(dto.getGroupId());
             dto1.setProdId(dto.getProdId());
             dto1.setDataType("01");
-            dto1.setProportion(dto.getZzqj()+"%");
+            dto1.setProportion(dto.getZzqj());
             dto1.setEffDate(dto.getEffDate());
             dto1.setExpDate(dto.getExpDate());
             dto1.setStatus("E");
@@ -118,7 +117,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setGroupId(dto.getGroupId());
             dto2.setProdId(dto.getProdId());
             dto2.setDataType("02");
-            dto2.setProportion(dto.getHs300()+"%");
+            dto2.setProportion(dto.getHs300());
             dto2.setEffDate(dto.getEffDate());
             dto2.setExpDate(dto.getExpDate());
             dto2.setStatus("E");
@@ -129,7 +128,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setGroupId(dto.getGroupId());
             dto3.setProdId(dto.getProdId());
             dto3.setDataType("03");
-            dto3.setProportion(dto.getZzcf()+"%");
+            dto3.setProportion(dto.getZzcf());
             dto3.setEffDate(dto.getEffDate());
             dto3.setExpDate(dto.getExpDate());
             dto3.setStatus("E");
@@ -140,7 +139,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setGroupId(dto.getGroupId());
             dto4.setProdId(dto.getProdId());
             dto4.setDataType("04");
-            dto4.setProportion(dto.getZz500()+"%");
+            dto4.setProportion(dto.getZz500());
             dto4.setEffDate(dto.getEffDate());
             dto4.setExpDate(dto.getExpDate());
             dto4.setStatus("E");
@@ -243,8 +242,11 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
                     ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
-            if (dataList.size() > 5000) {
-                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+            if (dataList.size() > maxCount) {
+                webResult.setMessage(
+                this.getMessage("REPORT_COMMON_FILE_E_003C",
+                        maxCount),
+                        MessageType.错误消息);
                 return webResult;
             }
             List<Performance001Dto> entities = this.convertToBean(dataList);
@@ -355,6 +357,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
         List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             List<Performance001Dto> entities = new ArrayList<>(dataList.size());
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
@@ -362,8 +365,8 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 entities.forEach(item -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("prodId", item.getProdId());
-                    map.put("effDate", item.getEffDate());
-                    map.put("expDate", item.getExpDate());
+                    map.put("effDate", DateUtil.format(item.getEffDate()));
+                    map.put("expDate", DateUtil.format(item.getExpDate()));
                     item.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
@@ -376,6 +379,23 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                         this.doComplete(item, OperationType.NEW);
                     }
                 });
+
+//                for (Performance001Dto dto : entities){
+//                    Map<String, Object> map = new HashMap<>();
+//                    map.put("prodId", dto.getProdId());
+//                    map.put("effDate", dto.getEffDate());
+//                    map.put("expDate", dto.getExpDate());
+//                    dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+//                    dto.setUpdateTime(DateUtil.now());
+//                    dto.setUpdateUser(CommonUtil.getUserName());
+//                    List<Performance001Dto> dto1 = this.selectByPrimaryKey(map);
+//                                        if (dto1 != null && dto1.size()>0) {
+//                        performance001Mapper.updateByKey(dto);
+//                    } else {
+//                        dto.setUuid(IDGenerator.generate(36));
+//                        this.doComplete(dto, OperationType.NEW);
+//                    }
+//                }
             }
             return checkResult;
         } else {
