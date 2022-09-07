@@ -243,8 +243,8 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
                     ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
-            if (dataList.size() > 5000) {
-                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+            if (dataList.size() > maxCount) {
+                webResult.setMessage(this.getMessage("单次最多导入"+maxCount+"条"), MessageType.错误消息);
                 return webResult;
             }
             List<Performance001Dto> entities = this.convertToBean(dataList);
