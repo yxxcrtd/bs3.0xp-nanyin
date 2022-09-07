@@ -825,12 +825,13 @@ public class DurationReportDataService implements IReportDataService {
 					RepExtConusKey key = new RepExtConusKey();
 					key.setDataType(basis.getDataType());
 					key.setDataDate(holidayService.getPreWorkDate(dsDate,"04"));  //交易所日历的前一天
+					key.setStatus("E");
 					RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( sConus==null || sConus.getMarketInfo()==null ) {
 						logger.error("没有找到起始日前一工作日行情。");
 						continue;
 					}
-					key.setDataDate(deDate);
+					key.setDataDate(holidayService.getPreWorkDate(deDate,"04",true));
 					RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( eConus==null || eConus.getMarketInfo()==null ) {
 						logger.error("没有找到结束日行情。");
