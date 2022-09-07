@@ -17,6 +17,8 @@ public interface Performance001Mapper {
 
     List<Performance001Dto> select(Map<String, Object> pageParam);
 
+    List<Performance001Dto> select1(Map<String, Object> pageParam);
+    
     int deleteByKey(Performance001Dto dto);
 
     List<SelectOptionDto> getProdIdlist(Map map);

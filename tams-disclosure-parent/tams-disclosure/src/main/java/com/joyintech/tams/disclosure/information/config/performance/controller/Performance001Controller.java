@@ -46,7 +46,7 @@ public class Performance001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<Performance001Dto> selectAll(){
-        Page<Performance001Dto> page = performance001Service.selectForPage(
+        Page<Performance001Dto> page = performance001Service.selectForPage1(
                 RequestUtil.getParameters(getRequest()));
         return page;
     }

@@ -90,6 +90,17 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         result1.setRecords(result.getRecords()/4);
         return result1;
     }
+    
+    public Page<Performance001Dto> selectForPage1(Map<String, Object> param) {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        String prodId = (String)param.get("prodId");
+        if(StringUtil.isNotEmpty(prodId)){
+            param.put("prodIdList", StringUtil.splitToList(GlobalConstant.COMMA,prodId));
+        }
+        Page<Performance001Dto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), ()
+                -> performance001Mapper.select1(param));
+        return result;
+    }
 
     @Override
     public void doComplete(Performance001Dto dto, OperationType operationType) {
