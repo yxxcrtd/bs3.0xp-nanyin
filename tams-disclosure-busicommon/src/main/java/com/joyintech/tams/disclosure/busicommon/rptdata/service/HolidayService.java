@@ -97,6 +97,31 @@ public class HolidayService {
 	}
 	
 	/**
+	 * 获取前一个工作日，包含当日
+	 * @param currDate
+	 * @return 如果当日是工作日，返回当日，否则返回前一个工作日
+	 */
+	public Date getPreWorkDate(Date currDate,String marketCode,boolean include ) {
+		ChbMktHolidayKey key = new ChbMktHolidayKey();
+		Date iDate = currDate;
+		if ( include==false )
+			iDate = DateUtil.addDay(iDate, -1);
+		do {
+			key.setBusiDate(iDate);
+			key.setMarketCode(marketCode);
+			ChbMktHoliday holiday = chbMktHolidayMapper.selectByPrimaryKey(key);
+			if ( holiday==null ) {
+				return iDate;
+			}
+			if ( "0".equals(holiday.getIsHoliday()) ) {  //工作日
+				return iDate;
+			}
+			iDate = DateUtil.addDay(iDate, -1);
+		} while (true);
+
+	}	
+	
+	/**
 	 * 下一个工作日，不包含当日
 	 * @param currDate
 	 * @return
@@ -115,6 +140,31 @@ public class HolidayService {
 			if ( "0".equals(holiday.getIsHoliday()) ) {  //工作日
 				return iDate;
 			}
+		} while (true);
+
+	}
+	
+	/**
+	 * 下一个工作日，包含当日
+	 * @param currDate
+	 * @return，如果当日是工作日，返回当日，否则返回下一个工作日
+	 */
+	public Date getNextWorkDate(Date currDate,boolean include ) {
+		ChbMktHolidayKey key = new ChbMktHolidayKey();
+		Date iDate = currDate;
+		if ( include==false )
+			iDate = DateUtil.addDay(iDate, 1);
+		do {
+			key.setBusiDate(iDate);
+			key.setMarketCode("01");
+			ChbMktHoliday holiday = chbMktHolidayMapper.selectByPrimaryKey(key);
+			if ( holiday==null ) {
+				return iDate;
+			}
+			if ( "0".equals(holiday.getIsHoliday()) ) {  //工作日
+				return iDate;
+			}
+			iDate = DateUtil.addDay(iDate, 1);
 		} while (true);
 
 	}

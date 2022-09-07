@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -303,9 +307,9 @@ public class DurationReportDataService implements IReportDataService {
 						if ( item.getPdProp()!=null ) 
 							map.put("pdProp", df.format(item.getPdProp()));
 						else
-							map.put("pdProp", "");							
+							map.put("pdProp", "");						
 						listAssetDetail.add(map);
-					} else {
+					} else {  //多出10条，如果值完全相同也要报出
 						if ( item.getPdProp().equals(pd) && item.getFairValue().equals(fv) ) {
 							item.setPersonalField(++i+"");
 							Map<String,Object> map = CollectionUtils.bean2Map(item);
@@ -316,7 +320,7 @@ public class DurationReportDataService implements IReportDataService {
 							if ( item.getPdProp()!=null ) 
 								map.put("pdProp", df.format(item.getPdProp()));
 							else
-								map.put("pdProp", "");								
+								map.put("pdProp", "");							
 							listAssetDetail.add(map);
 						} else {
 							break;
@@ -821,12 +825,13 @@ public class DurationReportDataService implements IReportDataService {
 					RepExtConusKey key = new RepExtConusKey();
 					key.setDataType(basis.getDataType());
 					key.setDataDate(holidayService.getPreWorkDate(dsDate,"04"));  //交易所日历的前一天
+					key.setStatus("E");
 					RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( sConus==null || sConus.getMarketInfo()==null ) {
 						logger.error("没有找到起始日前一工作日行情。");
 						continue;
 					}
-					key.setDataDate(deDate);
+					key.setDataDate(holidayService.getPreWorkDate(deDate,"04",true));
 					RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( eConus==null || eConus.getMarketInfo()==null ) {
 						logger.error("没有找到结束日行情。");
