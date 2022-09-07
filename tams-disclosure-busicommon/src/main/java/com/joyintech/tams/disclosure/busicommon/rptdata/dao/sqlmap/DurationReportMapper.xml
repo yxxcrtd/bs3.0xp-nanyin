@@ -311,7 +311,11 @@
     <select id="selectAchievementBasis3" resultType="com.joyintech.tams.common.base.entity.RepProdBasicChange">
 	    select
 	    	basis.PROD_ID
-		    ,basis.EFF_DATE EFF_DATE
+		    ,(case when basis.EFF_DATE>info.SET_DATE
+            then basis.EFF_DATE
+            else
+                info.SET_DATE 
+            end)  EFF_DATE 
 		    ,basis.EXP_DATE
 		    ,basis.DATA_TYPE
 		    ,basis.PROPORTION
@@ -319,6 +323,7 @@
 		    ,basis.STATUS
 		    ,basis.UPDATE_TIME
 		from REP_PROD_BASIC_CHANGE basis 
+		left join REP_PROD_INFO info on basis.PROD_ID=info.PROD_ID
 		where 1=1
 			and ( basis.EFF_DATE <![CDATA[<=]]>#{eDate,jdbcType=DATE} and basis.EXP_DATE <![CDATA[>=]]>#{sDate,jdbcType=DATE} )
 			and basis.STATUS='E'

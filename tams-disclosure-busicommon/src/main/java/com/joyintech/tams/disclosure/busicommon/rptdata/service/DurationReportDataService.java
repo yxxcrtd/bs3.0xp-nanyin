@@ -810,7 +810,10 @@ public class DurationReportDataService implements IReportDataService {
 	        	else
 	        		deDate = eDate;
 	        	
-	        	int days = DateUtil.getBetweenDayNumber(dsDate,deDate);
+	        	//取行情的日期：取结束日行情，如果结束日是节假日，取前1个工作日
+	        	Date conusEDate = holidayService.getPreWorkDate(deDate,"04",true);
+	        	
+	        	int days = DateUtil.getBetweenDayNumber(dsDate,conusEDate)+1;
 	        	String dur="";
 	    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 	    		dur = sdf.format(dsDate);
@@ -831,7 +834,7 @@ public class DurationReportDataService implements IReportDataService {
 						logger.error("没有找到起始日前一工作日行情。");
 						continue;
 					}
-					key.setDataDate(holidayService.getPreWorkDate(deDate,"04",true));
+					key.setDataDate(conusEDate);
 					RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
 					if ( eConus==null || eConus.getMarketInfo()==null ) {
 						logger.error("没有找到结束日行情。");
