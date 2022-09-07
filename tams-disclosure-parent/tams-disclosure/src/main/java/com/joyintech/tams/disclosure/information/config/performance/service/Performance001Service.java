@@ -1,5 +1,19 @@
 package com.joyintech.tams.disclosure.information.config.performance.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -10,7 +24,11 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
@@ -23,15 +41,6 @@ import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.joyintech.framework.util.DateUtil.DEFAULT_DATETIME_FORMAT_ODS;
 
 @Service
 public class Performance001Service extends CommonExportService<Performance001Dto> implements BaseProcessService<Performance001Dto> {
@@ -266,6 +275,15 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 return webResult;
             }
             List<Performance001Dto> entities = this.convertToBean(dataList);
+            
+            List<Performance001Dto> listResult = checkDataDuration(entities);
+            
+            //chenxc: 区间重叠校验
+            if ( listResult.size()>0 ) {
+            	String msg = listResult.get(0).getProdId()+"等产品的生效开始日与结束日的区间有重叠，共"+listResult.size()+"条";
+            	webResult.setMessage(msg, MessageType.错误消息);
+            }
+            
             List<Performance001Dto> data = this.selectPerformanceInfoByKey(entities);
             if (data != null && data.size() > 0) {
                 Map<String, List<Performance001Dto>> map = entities.stream().collect(
@@ -546,4 +564,31 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         return list;
     }
 
+    private List<Performance001Dto> checkDataDuration(  List<Performance001Dto> listBasis ) {
+    	List<Performance001Dto> listResult = new ArrayList<Performance001Dto>();
+    	Map<String, List<Performance001Dto>> map = listBasis.stream().collect(
+                JoyinCollectors.groupingBy(x ->
+                        x.getProdId()
+                ));
+    	
+    	for ( Entry<String, List<Performance001Dto>> e:map.entrySet() ) {
+    		List<Performance001Dto> list = e.getValue();
+    		Collections.sort(list, new Comparator() {
+				@Override
+    			public int compare( Object dto1,Object dto2 ) {
+    				return ( (Performance001Dto)dto1).getEffDate().compareTo( ((Performance001Dto)dto2).getEffDate());
+    			}
+    		});
+    		
+    		if ( list.size()>1 ) {
+	    		for ( int i=0;i<list.size()-1;i++) {
+	    			if ( list.get(i).getExpDate().compareTo(list.get(i+1).getEffDate())>=0 ) {
+	    				listResult.add(list.get(i));
+	    			}
+	    		}
+    		}
+    	}
+    	return listResult;
+    }
+    
 }
