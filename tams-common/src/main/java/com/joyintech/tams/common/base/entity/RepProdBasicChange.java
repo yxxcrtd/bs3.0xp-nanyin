@@ -24,6 +24,15 @@ public class RepProdBasicChange extends BaseEntity {
      * 生效日
      */
     private Date effDate;
+    private Date expDate;
+
+    public Date getExpDate() {
+        return expDate;
+    }
+
+    public void setExpDate(Date expDate) {
+        this.expDate = expDate;
+    }
 
     /**
      * 指数code

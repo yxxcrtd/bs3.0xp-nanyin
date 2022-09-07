@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.joyintech.framework.util.DateUtil.DEFAULT_DATETIME_FORMAT_ODS;
+
 @Service
 public class Performance001Service extends CommonExportService<Performance001Dto> implements BaseProcessService<Performance001Dto> {
     @Autowired
@@ -52,7 +54,8 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         List<Performance001Dto> root = result.getRoot();
         Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
         Map<String, List<Performance001Dto>> collect = root.stream().collect(
-                Collectors.groupingBy(item -> item.getProdId() + "_"+DateUtil.format(item.getEffDate()==null?sysDate:item.getEffDate())+"_"+ DateUtil.format(item.getExpDate()==null?sysDate:item.getExpDate())));
+                Collectors.groupingBy(item -> item.getProdId() + "_"+DateUtil.format(item.getEffDate()==null?sysDate:item.getEffDate())+"_"
+                        + DateUtil.format(item.getExpDate()==null?sysDate:item.getExpDate())+"_"+item.getUpdateUser()+"_"+DateUtil.format(item.getUpdateTime(),"yyyy-MM-dd HH:mm:ss")));
         List<Performance001Dto> rootList = new LinkedList<>();
         collect.forEach((k,v)->{
             Performance001Dto dto =new Performance001Dto();
@@ -60,6 +63,8 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto.setProdId(s[0]);
             dto.setEffDate(DateUtil.parse(s[1]));
             dto.setExpDate(DateUtil.parse(s[2]));
+            dto.setUpdateUser(s[3]);
+            dto.setUpdateTime(DateUtil.parse(s[4]));
             dto.setStatus(v.get(0).getStatus());
 
             for (Performance001Dto e : v) {

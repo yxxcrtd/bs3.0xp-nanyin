@@ -5,6 +5,7 @@
         <id column="UUID" property="uuid" jdbcType="CHAR" />
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
         <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="EXP_DATE" property="expDate" jdbcType="DATE" />
         <result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
         <result column="PROPORTION" property="proportion" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -16,7 +17,7 @@
         <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        UUID UUID, PROD_ID PROD_ID, EFF_DATE EFF_DATE, DATA_TYPE DATA_TYPE, PROPORTION PROPORTION, 
+        UUID UUID, PROD_ID PROD_ID, EFF_DATE EFF_DATE,EXP_DATE EXP_DATE, DATA_TYPE DATA_TYPE, PROPORTION PROPORTION,
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME, STATUS STATUS, GROUP_ID GROUP_ID
     </sql>
