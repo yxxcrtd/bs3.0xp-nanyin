@@ -223,7 +223,10 @@ public class ReportFileService {
 		//用日期创建路径
 		File file = new File(sb.toString());
 		if ( !file.getParentFile().exists() ) {
-			file.getParentFile().mkdirs();
+			boolean ret = file.getParentFile().mkdirs();
+			if ( ret==false ) {
+				logger.error("创建目录错误："+file.getParentFile().getName());
+			}
 		}
 		return sb.toString();
     }

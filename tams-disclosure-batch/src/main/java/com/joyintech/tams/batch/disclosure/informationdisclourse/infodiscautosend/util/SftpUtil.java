@@ -253,7 +253,10 @@ public class SftpUtil {
 			}
 		} else {
 			// 创建本地目录
-			localFile.mkdirs();
+			boolean ret = localFile.mkdirs();
+			if ( ret==false ) {
+				logger.error("创建目录错误："+localFile.getName());
+			}
 		}
 		try {
 			sftp.get(remoteFile, localDir);

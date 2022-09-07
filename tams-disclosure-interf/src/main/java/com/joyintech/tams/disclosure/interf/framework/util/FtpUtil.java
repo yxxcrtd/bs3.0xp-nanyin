@@ -540,8 +540,10 @@ public class FtpUtil {
                 })) {
                     File localFile = new SafelyFile(localPath + SEPARATOR + ff.getName());
                     if (!localFile.exists()) {
-                        localFile.createNewFile();
-
+                        boolean ret = localFile.createNewFile();
+                        if ( ret==true ) {
+                        	logger.info("创建新文件:"+localFile.getName());
+                        }
                         OutputStream out = null;
                         try {
                              out = new FileOutputStream(localFile);

@@ -232,14 +232,17 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 		exportFilePath=exportFilePath+DateUtil.formatDate(DateUtil.getCurrentDate());
 		File dateFilePath=new SafelyFile(exportFilePath);
 		if ( !dateFilePath.exists()){//若此目录不存在，则创建之
-			dateFilePath.mkdir();
+			boolean ret = dateFilePath.mkdir();
+			if ( ret==false ) {
+				logger.error("创建目录错误："+dateFilePath.getName());
+			}
 		}
 		//生成的压缩包的名称:zipFileName
 		String zipFileName = this.createFileName("zip");
 		zipFileName=agencyName+zipFileName;
 		File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 		ZipOutputStream zipOut = null;
-		//OutputStream toClient=null;
+		OutputStream toClient=null;
 		String tempDir = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
 		if(!StringUtil.isEmptyList(infoDiscAutoRevealList)){
 			//报表生成临时路径
@@ -249,7 +252,7 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 			try {
 				fos = new FileOutputStream(zipFile);
 				zipOut = new ZipOutputStream(fos);
-				//toClient = new BufferedOutputStream(fos);
+				toClient = new BufferedOutputStream(fos);
 				// 设置UTF8编码
 				zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
 				for (InfoDiscAutoRevealDto report : infoDiscAutoRevealList) {
@@ -360,25 +363,27 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 					//zipOut.setEncoding(System.getProperty("file.encoding"));
 					deleteFile(firstFile);
 					if (downloadFilePeople != null) {
-						downloadFilePeople.delete();
+						boolean ret = downloadFilePeople.delete();
+						if ( ret==false ) {
+							logger.error("删除文件错误："+downloadFilePeople.getName());
+						}
 					}
 					if (downloadFile != null) {
-						downloadFile.delete();
+						boolean ret = downloadFile.delete();
+						if ( ret==false ) {
+							logger.error("删除文件错误："+downloadFilePeople.getName());
+						}
 					}
 				}
-				//zipOut.close();
+				zipOut.close();
 			}
 			catch (Exception e) {
 				logger.error("", e);
 				return false;
 			}finally {
-				if ( zipOut!=null ) {
-					zipOut.close();
-				}
 				if (fos != null){
 					fos.close();
 				}
-				
 			}
 		}
 		return true;
@@ -399,7 +404,11 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 			}
 
 		}
-		file.delete();
+		boolean ret = file.delete();
+		if ( ret==false ) {
+			logger.error("删除文件错误："+file.getName());
+		}
+
 	}
 
 	/**
@@ -442,7 +451,10 @@ public class InfoDiscAutoPackAndSendMainService extends AutoSendCBBaseService{
 							downloadFilePeopleTmp.getParent() + File.separator + filename));
 					File parentFile = new File(newFile.getParent());
 					if(!parentFile.exists()){
-						parentFile.mkdirs();
+						boolean ret = parentFile.mkdirs();
+						if ( ret==false ) {
+							logger.error("创建目录错误："+parentFile.getName());
+						}
 					}
 				}
 				FileOutputStream fos = null;

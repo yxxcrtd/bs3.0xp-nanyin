@@ -87,7 +87,10 @@ public class JasperServerGenerator implements ReportGenerator{
 	        File localFile = new File(dest);
 	        File dir = localFile.getParentFile();
 	        if (!dir.exists()) {
-	            dir.mkdirs();
+	            boolean ret = dir.mkdirs();
+	            if ( ret==false ) {
+	            	logger.error("创建目录错误："+dir.getName());
+	            }
 	        }
 
 	         fos = new FileOutputStream(localFile);
