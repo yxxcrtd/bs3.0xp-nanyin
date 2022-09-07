@@ -30,6 +30,12 @@
 					#{item}
 				</foreach>
 			</if>
+			<if test="effDate != null and effDate != ''">
+				AND rpbc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
+			</if>
+			<if test="expDate != null and expDate != ''">
+				AND rpbc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')
+			</if>
 <!--			<if test="dataStatus != null and dataStatus != ''">-->
 <!--				AND	rpbc.DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}-->
 <!--			</if>-->
@@ -111,6 +117,9 @@
 			<if test="effDate != null" >
 				EFF_DATE = #{effDate,jdbcType=DATE},
 			</if>
+			<if test="expDate != null" >
+				EXP_DATE = #{expDate,jdbcType=DATE},
+			</if>
 			<if test="dataType != null" >
 				DATA_TYPE = #{dataType,jdbcType=VARCHAR},
 			</if>
@@ -128,8 +137,8 @@
 			</if>
 		</set>
 		where PROD_ID = #{prodId,jdbcType=VARCHAR}
-		and EFF_DATE = #{effDate,jdbcType=DATE}
-		and EXP_DATE = #{expDate,jdbcType=DATE}
+		and EFF_DATE = #{effDateO,jdbcType=DATE}
+		and EXP_DATE = #{expDateO,jdbcType=DATE}
 	</update>
 
 
@@ -196,7 +205,7 @@
                MAX(mark.HIS_NO) his_no,
                  mark.WORKFLOW_ID
           FROM SYS_DATA_PROCESS_MARK mark
-         WHERE mark.BUSINESS_DATA_PK1 = #{prodId}   GROUP BY mark.WORKFLOW_ID) maxmark
+         WHERE mark.BUSINESS_DATA_PK1 = #{prodId}  GROUP BY mark.WORKFLOW_ID) maxmark
          WHERE maxmark.his_no=mark.his_no
          AND maxmark.workflow_id =mark.workflow_id AND mark.status IN('A','U','P')
          AND mark.business_data_pk1=#{prodId}
