@@ -47,7 +47,7 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
     /**
      * 选中的数据
      */
-    private transient List<Performance001Dto> selectedItem;
+    private  List<Performance001Dto> selectedItem;
 
     /**
      * <意义，目的和功能，以及可能被用到的地方>
