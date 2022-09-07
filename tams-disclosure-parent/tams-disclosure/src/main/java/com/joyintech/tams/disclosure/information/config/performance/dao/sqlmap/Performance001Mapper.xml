@@ -8,62 +8,61 @@
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
         UPDATE_TIME UPDATE_TIME, STATUS STATUS, GROUP_ID GROUP_ID
     </sql>
-	<select id="select"
-			resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">
-		select
-			rpbc.UUID uuid,
-			rpbc.PROD_ID prodId,
-			rpbc.DATA_TYPE dataType,
-			rpbc.EFF_DATE effDate,
-			rpbc.EXP_DATE expDate,
-		    rpbc.STATUS status,
-		    rpbc.PROPORTION proportion,
-			rpbc.UPDATE_USER updateUser,
-			rpbc.UPDATE_TIME updateTime,
-			TO_CHAR(rpbc.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
-		from REP_PROD_BASIC_CHANGE rpbc
-		<where>
-			<if test="prodIdList != null and prodIdList.size()>0">
-				AND	rpbc.PROD_ID in
-				<foreach collection="prodIdList" item="item" open="(" close=")"
-						 separator=",">
-					#{item}
-				</foreach>
-			</if>
-			<if test="effDate != null and effDate != ''">
-				AND rpbc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
-			</if>
-			<if test="expDate != null and expDate != ''">
-				AND rpbc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')
-			</if>
-<!--			<if test="dataStatus != null and dataStatus != ''">-->
-<!--				AND	rpbc.DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}-->
+<!--	<select id="select"-->
+<!--			resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">-->
+<!--		select-->
+<!--			rpbc.UUID uuid,-->
+<!--			rpbc.PROD_ID prodId,-->
+<!--			rpbc.DATA_TYPE dataType,-->
+<!--			rpbc.EFF_DATE effDate,-->
+<!--			rpbc.EXP_DATE expDate,-->
+<!--		    rpbc.STATUS status,-->
+<!--		    rpbc.PROPORTION proportion,-->
+<!--			rpbc.UPDATE_USER updateUser,-->
+<!--			rpbc.UPDATE_TIME updateTime,-->
+<!--			TO_CHAR(rpbc.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr-->
+<!--		from REP_PROD_BASIC_CHANGE rpbc-->
+<!--		<where>-->
+<!--			<if test="prodIdList != null and prodIdList.size()>0">-->
+<!--				AND	rpbc.PROD_ID in-->
+<!--				<foreach collection="prodIdList" item="item" open="(" close=")"-->
+<!--						 separator=",">-->
+<!--					#{item}-->
+<!--				</foreach>-->
 <!--			</if>-->
-		</where>
-	</select>
+<!--			<if test="effDate != null and effDate != ''">-->
+<!--				AND rpbc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')-->
+<!--			</if>-->
+<!--			<if test="expDate != null and expDate != ''">-->
+<!--				AND rpbc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')-->
+<!--			</if>-->
+<!--&lt;!&ndash;			<if test="dataStatus != null and dataStatus != ''">&ndash;&gt;-->
+<!--&lt;!&ndash;				AND	rpbc.DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}&ndash;&gt;-->
+<!--&lt;!&ndash;			</if>&ndash;&gt;-->
+<!--		</where>-->
+<!--	</select>-->
 
-	<select id="select"
+	<select id="select1"
 			resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">
-		select bc.status,bc.prod_id,bc.eff_date,bc.exp_date,bc1.proportion zzqj,bc2.proportion zzcf ,bc3.proportion zz500,bc4.proportion hs300
-		from rep_prod_basic_change bc
+		select bc.status,bc.prod_id prodId,bc.eff_date effDate,bc.exp_date expDate,bc1.proportion zzqj,bc3.proportion zzcf,bc4.proportion zz500,bc2.proportion hs300
+		from (select distinct status,prod_id,eff_date,exp_date from rep_prod_basic_change) bc
 		left join rep_prod_basic_change bc1 on bc.prod_id=bc1.prod_id and bc.eff_date=bc1.eff_date and bc.exp_date=bc1.exp_date and bc1.data_type='01'
 		left join rep_prod_basic_change bc2 on bc.prod_id=bc2.prod_id and bc.eff_date=bc2.eff_date and bc.exp_date=bc2.exp_date and bc2.data_type='02'
-		left join rep_prod_basic_change bc3 on bc.prod_id=bc3.prod_id and bc.eff_date=bc3.eff_date and bc.exp_date=bc3.exp_date and bc1.data_type='03'
-		left join rep_prod_basic_change bc4 on bc.prod_id=bc4.prod_id and bc.eff_date=bc4.eff_date and bc.exp_date=bc4.exp_date and bc1.data_type='04'
-
+		left join rep_prod_basic_change bc3 on bc.prod_id=bc3.prod_id and bc.eff_date=bc3.eff_date and bc.exp_date=bc3.exp_date and bc3.data_type='03'
+		left join rep_prod_basic_change bc4 on bc.prod_id=bc4.prod_id and bc.eff_date=bc4.eff_date and bc.exp_date=bc4.exp_date and bc4.data_type='04'
 		<where>
 			<if test="prodIdList != null and prodIdList.size()>0">
-				AND	rpbc.PROD_ID in
+				AND	bc.PROD_ID in
 				<foreach collection="prodIdList" item="item" open="(" close=")"
 						 separator=",">
 					#{item}
 				</foreach>
 			</if>
 			<if test="effDate != null and effDate != ''">
-				AND rpbc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
+				AND bc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
 			</if>
 			<if test="expDate != null and expDate != ''">
-				AND rpbc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')
+				AND bc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')
 			</if>
 		</where>
 	</select>

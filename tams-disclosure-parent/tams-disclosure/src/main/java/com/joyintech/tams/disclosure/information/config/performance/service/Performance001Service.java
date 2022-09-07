@@ -41,55 +41,55 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     @Autowired
     private JoyinDFSTemplate joyinDFSTemplate;
 
-    public Page<Performance001Dto> selectForPage(Map<String, Object> param) {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        String prodId = (String)param.get("prodId");
-        if(StringUtil.isNotEmpty(prodId)){
-            param.put("prodIdList", StringUtil.splitToList(GlobalConstant.COMMA,prodId));
-        }
-        Page<Performance001Dto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), ()
-                -> performance001Mapper.select(param));
-        Page<Performance001Dto> result1= new Page<>();
-        List<Performance001Dto> root = result.getRoot();
-        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
-        Map<String, List<Performance001Dto>> collect = root.stream().collect(
-                Collectors.groupingBy(item -> item.getProdId() + "_"+DateUtil.format(item.getEffDate()==null?sysDate:item.getEffDate())+"_"
-                        + DateUtil.format(item.getExpDate()==null?sysDate:item.getExpDate())+"_"+item.getUpdateUser()+"_"+DateUtil.format(item.getUpdateTime(),"yyyy-MM-dd HH:mm:ss")));
-        List<Performance001Dto> rootList = new LinkedList<>();
-        collect.forEach((k,v)->{
-            Performance001Dto dto =new Performance001Dto();
-            String[] s = k.split("_");
-            dto.setProdId(s[0]);
-            dto.setEffDate(DateUtil.parse(s[1]));
-            dto.setExpDate(DateUtil.parse(s[2]));
-            dto.setUpdateUser(s[3]);
-            dto.setUpdateTime(DateUtil.parse(s[4]));
-            dto.setStatus(v.get(0).getStatus());
-
-            for (Performance001Dto e : v) {
-                if (StringUtil.equals("01",e.getDataType())) {
-                    dto.setHs300(e.getProportion());
-                    continue;
-                }
-                if (StringUtil.equals("02",e.getDataType())) {
-                    dto.setZz500(e.getProportion());
-                    continue;
-                }
-                if (StringUtil.equals("03",e.getDataType())) {
-                    dto.setZzcf(e.getProportion());
-                    continue;
-                }
-                if (StringUtil.equals("04",e.getDataType())) {
-                    dto.setZzqj(e.getProportion());
-                    continue;
-                }
-            }
-            rootList.add(dto);
-        });
-        result1.setRoot(rootList);
-        result1.setRecords(result.getRecords()/4);
-        return result1;
-    }
+//    public Page<Performance001Dto> selectForPage(Map<String, Object> param) {
+//        Map<String, Object> pageParam = RequestUtil.getPageParam();
+//        String prodId = (String)param.get("prodId");
+//        if(StringUtil.isNotEmpty(prodId)){
+//            param.put("prodIdList", StringUtil.splitToList(GlobalConstant.COMMA,prodId));
+//        }
+//        Page<Performance001Dto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), ()
+//                -> performance001Mapper.select(param));
+//        Page<Performance001Dto> result1= new Page<>();
+//        List<Performance001Dto> root = result.getRoot();
+//        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
+//        Map<String, List<Performance001Dto>> collect = root.stream().collect(
+//                Collectors.groupingBy(item -> item.getProdId() + "_"+DateUtil.format(item.getEffDate()==null?sysDate:item.getEffDate())+"_"
+//                        + DateUtil.format(item.getExpDate()==null?sysDate:item.getExpDate())+"_"+item.getUpdateUser()+"_"+DateUtil.format(item.getUpdateTime(),"yyyy-MM-dd HH:mm:ss")));
+//        List<Performance001Dto> rootList = new LinkedList<>();
+//        collect.forEach((k,v)->{
+//            Performance001Dto dto =new Performance001Dto();
+//            String[] s = k.split("_");
+//            dto.setProdId(s[0]);
+//            dto.setEffDate(DateUtil.parse(s[1]));
+//            dto.setExpDate(DateUtil.parse(s[2]));
+//            dto.setUpdateUser(s[3]);
+//            dto.setUpdateTime(DateUtil.parse(s[4]));
+//            dto.setStatus(v.get(0).getStatus());
+//
+//            for (Performance001Dto e : v) {
+//                if (StringUtil.equals("01",e.getDataType())) {
+//                    dto.setHs300(e.getProportion());
+//                    continue;
+//                }
+//                if (StringUtil.equals("02",e.getDataType())) {
+//                    dto.setZz500(e.getProportion());
+//                    continue;
+//                }
+//                if (StringUtil.equals("03",e.getDataType())) {
+//                    dto.setZzcf(e.getProportion());
+//                    continue;
+//                }
+//                if (StringUtil.equals("04",e.getDataType())) {
+//                    dto.setZzqj(e.getProportion());
+//                    continue;
+//                }
+//            }
+//            rootList.add(dto);
+//        });
+//        result1.setRoot(rootList);
+//        result1.setRecords(result.getRecords()/4);
+//        return result1;
+//    }
     
     public Page<Performance001Dto> selectForPage1(Map<String, Object> param) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
@@ -216,10 +216,10 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 "/com/joyintech/tams/disclosure/information/config/performance/conf/export_conf.xml").dataSource(
                 DataSourceType.MASERT);
     }
-    @Override
-    public Page<Performance001Dto> selectPageData(Map<String, Object> selectParam) {
-        return this.selectForPage(selectParam);
-    }
+//    @Override
+//    public Page<Performance001Dto> selectPageData(Map<String, Object> selectParam) {
+//        return this.selectForPage(selectParam);
+//    }
 
 //    public Page<SelectOptionDto> getProdIdlist(Map map) {
 //        Map<String, Object> pageParam = RequestUtil.getPageParam();
@@ -433,31 +433,31 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             // 验证消息
             List<String> message = new ArrayList<>();
          
-            if (!StringUtil.isNotEmpty(rowData.get(0))){
+            if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else if (!prodList.contains(rowData.get(0).trim())){
                 message.add("子产品代码未在产品基本信息表中维护。");
             }
-            if (!StringUtil.isNotEmpty(rowData.get(1))){
+            if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准生效日"));
             } else if (!isDateStr(rowData.get(1))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "业绩比较基准生效日"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(2))){
+            if (!StringUtil.isNotEmpty(rowData.get(2).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准生效截止日"));
             } else if (!isDateStr(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "业绩比较基准生效截止日"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(3))){
+            if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合全价指数收益率【系数】"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(4))){
+            if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合财富指数（1-3年）收益率【系数】"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(5))){
+            if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中证500指数收益率【系数】"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(6))){
+            if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "沪深300指数收益率【系数】"));
             }
             if (map.containsKey(rowData.get(0)
