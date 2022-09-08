@@ -647,8 +647,20 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 ));
     	
     	for ( Entry<String, List<Performance001Dto>> e:map.entrySet() ) {
+    		
+            Map<String, Object> mapPara = new HashMap<String,Object>();
+            List<String> listProd = new ArrayList<String>();
+            listProd.add(e.getKey());
+            mapPara.put("prodIdList", listProd);
+            mapPara.put("status","E");
+            List<Performance001Dto> listPerformance = performance001Mapper.select1(mapPara);
+    		
     		List<Performance001Dto> list = e.getValue();
-    		Collections.sort(list, new Comparator() {
+    		//list.addAll(listPerformance);
+    		List<Performance001Dto> listAll = new ArrayList<Performance001Dto>();
+    		listAll.addAll(list);
+    		listAll.addAll(listPerformance);
+    		Collections.sort(listAll, new Comparator() {
 				@Override
     			public int compare( Object dto1,Object dto2 ) {
     				return ( (Performance001Dto)dto1).getEffDate().compareTo( ((Performance001Dto)dto2).getEffDate());
@@ -658,13 +670,13 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             // 验证消息
             List<String> message = new ArrayList<>();
             message.add("本条数据与下一条数据有效期区间重叠。");
-    		if ( list.size()>1 ) {
-	    		for ( int i=0;i<list.size()-1;i++) {
-	    			if ( list.get(i).getExpDate().compareTo(list.get(i+1).getEffDate())>=0 ) {
-	                    checkResult.add(new ExcelValidDto(list.get(i).getProdId()
-	                            + GlobalConstant.UNDER_LINE + sdf.format(list.get(i).getEffDate())
-	                            + GlobalConstant.UNDER_LINE + sdf.format(list.get(i).getExpDate()),
-	                            list.get(i).getPersonalField(), StringUtil.joinString(message, "<br>")));
+    		if ( listAll.size()>1 ) {
+	    		for ( int i=0;i<listAll.size()-1;i++) {
+	    			if ( listAll.get(i).getExpDate().compareTo(listAll.get(i+1).getEffDate())>=0 ) {
+	                    checkResult.add(new ExcelValidDto(listAll.get(i).getProdId()
+	                            + GlobalConstant.UNDER_LINE + sdf.format(listAll.get(i).getEffDate())
+	                            + GlobalConstant.UNDER_LINE + sdf.format(listAll.get(i).getExpDate()),
+	                            listAll.get(i).getPersonalField(), StringUtil.joinString(message, "<br>")));
 	    			}
 	    		}
     		}

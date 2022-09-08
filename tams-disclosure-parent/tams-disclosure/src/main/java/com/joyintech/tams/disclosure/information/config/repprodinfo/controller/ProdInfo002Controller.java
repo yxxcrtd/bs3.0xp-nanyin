@@ -154,6 +154,7 @@ public class ProdInfo002Controller extends BaseController {
             List<String> listProd = new ArrayList<String>();
             listProd.add(dto.getProdId());
             mapPara.put("prodIdList", listProd);
+            mapPara.put("status", "E");
             List<Performance001Dto> listBasis = performance001Mapper.select1(mapPara);
             dto.setPerformaceList(listBasis);
             
