@@ -412,7 +412,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                     map.put("effDate", DateUtil.format(item.getEffDate()));
                     map.put("expDate", DateUtil.format(item.getExpDate()));
                     item.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                    item.setUpdateTime(DateUtil.now());
+//                    item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
 //                    Performance001Dto dto = this.selectByPrimaryKey(map);
                     List<Performance001Dto> dto = this.selectByPrimaryKey(map);
@@ -546,7 +546,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     }
 
     public boolean isValidData(double s){
-        if (s>=100||s<0){
+        if (s>100||s<0){
             return true;
         }else
             return false;
