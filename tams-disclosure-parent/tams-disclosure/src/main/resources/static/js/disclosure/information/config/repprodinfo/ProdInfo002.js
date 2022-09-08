@@ -123,7 +123,7 @@
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.basicChangeList = mockTradeTable.getAllRows();
-
+		object.performaceList = mockTradeTable.getAllRows();
         if(object.holdday){
             if(!( /(^[0-9]\d*$)/.test(object.holdday))){
                 Joyin.error("最低持有天数必须为大于等于0的整数");
@@ -282,7 +282,7 @@
             }else{
                 element.val(value);
             }
-            if(id == 'basicChangeList'){
+            if(id == 'performaceList'){
                 // 表格
                 $('#mockTradeTable').data('joyintable').reload({
                     data : value,
@@ -483,7 +483,7 @@
 
     // 模拟交易列表
     var mockTradeTable = $("#mockTradeTable").joyintable({
-        data: basicChangeList == null ? [] : basicChangeList,
+        data: performaceList == null ? [] : performaceList,
         //data:[],
         searchOnInit: true,
         checkbox: false,

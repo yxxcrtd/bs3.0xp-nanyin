@@ -1,5 +1,10 @@
 package com.joyintech.tams.disclosure.information.config.repprodinfo.dto;
 
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
@@ -12,13 +17,10 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.validator.ProdInfoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Date;
-import java.util.List;
 
 @PageId("ProdInfo001")
 @ValidLogic(targetClass = ProdInfoValidator.class, groups = {ValidateGroupEdit.class,
@@ -33,7 +35,11 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
      */
     private transient List<ProdBasicChangeDto> basicChangeList;
 
-
+    /**
+     *  业绩基准变更表
+     */
+    private transient List<Performance001Dto> performaceList;
+    
     //母产品相关字段
 
     /**
@@ -505,4 +511,14 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
             return DateUtil.format(this.getEffDate());
         }
     }
+
+	public List<Performance001Dto> getPerformaceList() {
+		return performaceList;
+	}
+
+	public void setPerformaceList(List<Performance001Dto> performaceList) {
+		this.performaceList = performaceList;
+	}
+    
+    
 }
