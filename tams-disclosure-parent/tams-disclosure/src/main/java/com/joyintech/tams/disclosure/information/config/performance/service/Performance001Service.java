@@ -484,7 +484,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
            //校验截止日大于生效日
             Date expDate=DateUtil.parse(rowData.get(2).trim());
             Date effDate=DateUtil.parse(rowData.get(1).trim());
-            if (DateUtil.compareDate(effDate,expDate)>=0) {
+            if (DateUtil.compareDate(effDate,expDate)>0) {
                 message.add("业绩比较基准生效截止日不能小于业绩比较基准生效日!");
             }
 
@@ -494,36 +494,36 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             if (StringUtil.isNotEmpty(rowData.get(3).trim())&&isValidData(Double.parseDouble(rowData.get(3).trim()))){
                 message.add("中债新综合全价指数收益率【系数】不能大于等于100，且不能小于0！");
             }
-            if (StringUtil.isNotEmpty(rowData.get(3).trim())&& !isTwo(rowData.get(3).trim())){
-                message.add("中债新综合全价指数收益率【系数】需要保留两位小数！");
-            }
+//            if (StringUtil.isNotEmpty(rowData.get(3).trim())&& !isTwo(rowData.get(3).trim())){
+//                message.add("中债新综合全价指数收益率【系数】需要保留两位小数！");
+//            }
             if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合财富指数（1-3年）收益率【系数】"));
             }
             if (StringUtil.isNotEmpty(rowData.get(4).trim()) && isValidData(Double.parseDouble(rowData.get(4).trim()))){
                 message.add("中债新综合财富指数（1-3年）收益率【系数】不能大于等于100，且不能小于0！");
             }
-            if (StringUtil.isNotEmpty(rowData.get(4).trim()) && !isTwo(rowData.get(4).trim())){
-                message.add("中债新综合财富指数（1-3年）收益率【系数】需要保留两位小数！");
-            }
+//            if (StringUtil.isNotEmpty(rowData.get(4).trim()) && !isTwo(rowData.get(4).trim())){
+//                message.add("中债新综合财富指数（1-3年）收益率【系数】需要保留两位小数！");
+//            }
             if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中证500指数收益率【系数】"));
             }
             if (StringUtil.isNotEmpty(rowData.get(5).trim())&&isValidData(Double.parseDouble(rowData.get(5).trim()))){
                 message.add("中证500指数收益率【系数】不能大于等于100，且不能小于0！");
             }
-            if (StringUtil.isNotEmpty(rowData.get(5).trim())&&!isTwo(rowData.get(5).trim())){
-                message.add("中证500指数收益率【系数】需要保留两位小数！");
-            }
+//            if (StringUtil.isNotEmpty(rowData.get(5).trim())&&!isTwo(rowData.get(5).trim())){
+//                message.add("中证500指数收益率【系数】需要保留两位小数！");
+//            }
             if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "沪深300指数收益率【系数】"));
             }
             if (StringUtil.isNotEmpty(rowData.get(6).trim())&&isValidData(Double.parseDouble(rowData.get(6).trim()))){
                 message.add("沪深300指数收益率【系数】不能大于等于100，且不能小于0！");
             }
-            if (StringUtil.isNotEmpty(rowData.get(6).trim())&&!isTwo(rowData.get(6).trim())){
-                message.add("沪深300指数收益率【系数】需要保留两位小数！");
-            }
+//            if (StringUtil.isNotEmpty(rowData.get(6).trim())&&!isTwo(rowData.get(6).trim())){
+//                message.add("沪深300指数收益率【系数】需要保留两位小数！");
+//            }
             if (map.containsKey(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(1)
                     + GlobalConstant.UNDER_LINE + rowData.get(2))) {
