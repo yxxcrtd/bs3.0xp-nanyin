@@ -176,50 +176,54 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setProdId(dto.getProdId());
             dto1.setDataType("01");
             dto1.setStatus("E");
+            dto1.setUuid(IDGenerator.generate(36));
             dto1.setProportion(dto.getZzqj());
             dto1.setEffDate(dto.getEffDate());
             dto1.setExpDate(dto.getExpDate());
             dto1.setEffDateO(dto.getEffDateO());
             dto1.setExpDateO(dto.getExpDateO());
             dto1.setUpdateTime(DateUtil.now());
-            performance001Mapper.updateByKey(dto1);
+//            dto1.setDataType("");
+            performance001Mapper.update(dto1);
 
             Performance001Dto dto2 =new Performance001Dto();
             dto2.setProdId(dto.getProdId());
             dto2.setDataType("02");
             dto2.setStatus("E");
+            dto2.setUuid(IDGenerator.generate(36));
             dto2.setProportion(dto.getHs300());
             dto2.setEffDate(dto.getEffDate());
             dto2.setExpDate(dto.getExpDate());
             dto2.setEffDateO(dto.getEffDateO());
             dto2.setExpDateO(dto.getExpDateO());
             dto2.setUpdateTime(DateUtil.now());
-            performance001Mapper.updateByKey(dto2);
+            performance001Mapper.update(dto2);
 
             Performance001Dto dto3 =new Performance001Dto();
             dto3.setProdId(dto.getProdId());
             dto3.setDataType("03");
             dto3.setStatus("E");
+            dto3.setUuid(IDGenerator.generate(36));
             dto3.setProportion(dto.getZzcf());
             dto3.setEffDate(dto.getEffDate());
             dto3.setExpDate(dto.getExpDate());
             dto3.setEffDateO(dto.getEffDateO());
             dto3.setExpDateO(dto.getExpDateO());
             dto3.setUpdateTime(DateUtil.now());
-            performance001Mapper.updateByKey(dto3);
+            performance001Mapper.update(dto3);
 
             Performance001Dto dto4 =new Performance001Dto();
             dto4.setProdId(dto.getProdId());
             dto4.setDataType("04");
             dto4.setStatus("E");
+            dto4.setUuid(IDGenerator.generate(36));
             dto4.setProportion(dto.getZz500());
             dto4.setEffDate(dto.getEffDate());
             dto4.setExpDate(dto.getExpDate());
             dto4.setEffDateO(dto.getEffDateO());
             dto4.setExpDateO(dto.getExpDateO());
             dto4.setUpdateTime(DateUtil.now());
-            performance001Mapper.updateByKey(dto4);
-
+            performance001Mapper.update(dto4);
 
         }
     }
