@@ -109,13 +109,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
     @Override
     public void doComplete(Performance001Dto dto, OperationType operationType) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = null;
-        try {
-            date = format.parse(DateUtil.format(DateUtil.now()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         dto.setOperateType(operationType.toString());
         String type = dto.getOperateType();
         if (StringUtil.equals(type, "DELETE")) {
@@ -134,7 +127,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setEffDate(dto.getEffDate());
             dto1.setExpDate(dto.getExpDate());
             dto1.setStatus("E");
-            dto1.setUpdateTime(date);
+            dto1.setUpdateTime(DateUtil.now());
             dto1.setUpdateUser(user);
             performance001Mapper.insert(dto1);
 
@@ -147,7 +140,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setEffDate(dto.getEffDate());
             dto2.setExpDate(dto.getExpDate());
             dto2.setStatus("E");
-            dto2.setUpdateTime(date);
+            dto2.setUpdateTime(DateUtil.now());
             dto2.setUpdateUser(user);
             performance001Mapper.insert(dto2);
 
@@ -160,7 +153,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setEffDate(dto.getEffDate());
             dto3.setExpDate(dto.getExpDate());
             dto3.setStatus("E");
-            dto3.setUpdateTime(date);
+            dto3.setUpdateTime(DateUtil.now());
             dto3.setUpdateUser(user);
             performance001Mapper.insert(dto3);
 
@@ -173,7 +166,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setEffDate(dto.getEffDate());
             dto4.setExpDate(dto.getExpDate());
             dto4.setStatus("E");
-            dto4.setUpdateTime(date);
+            dto4.setUpdateTime(DateUtil.now());
             dto4.setUpdateUser(user);
             performance001Mapper.insert(dto4);
         }
