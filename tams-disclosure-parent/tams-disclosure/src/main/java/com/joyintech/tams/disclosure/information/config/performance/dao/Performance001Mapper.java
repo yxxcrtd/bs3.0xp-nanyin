@@ -36,4 +36,6 @@ public interface Performance001Mapper {
 
 
     List<ProcessMark> getWorklowData(String prodId);
+
+    int update(Performance001Dto dto1);
 }
