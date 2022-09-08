@@ -50,7 +50,7 @@
             ,{field:'zzcf',width: 300, title : 'Performance001.zzxzh', type : 'number'}
             ,{field:'zz500',width: 220, title : 'Performance001.zzzs', type : 'number'}
             ,{field:'hs300',width: 220, title : 'Performance001.hszs', type : 'number'}
-            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
+            ,{field:'updateTimeStr',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {
