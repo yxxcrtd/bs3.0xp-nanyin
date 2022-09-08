@@ -160,7 +160,9 @@
             Joyin.ajaxJson(basePath + 'disclosure/information/config/performance/Performance001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
                     WorkFlow.doDeleteList(basePath + 'disclosure/information/config/performance/Performance001/delete', object,
-                        "Performance001_btn_delete", "Performance002");
+                        "Performance001_btn_delete", "Performance002",function () {
+                               table.reload();
+                        });
                 });
             });
         });
