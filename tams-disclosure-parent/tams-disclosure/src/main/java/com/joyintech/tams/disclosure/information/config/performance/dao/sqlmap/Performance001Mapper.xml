@@ -192,7 +192,7 @@
 		and EFF_DATE = #{effDateO,jdbcType=DATE}
 		and EXP_DATE = #{expDateO,jdbcType=DATE}
 		and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
-		and STATUS = 'E'
+		and STATUS != 'D'
 	</update>
 
 
