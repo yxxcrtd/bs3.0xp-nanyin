@@ -63,6 +63,9 @@
 					#{item}
 				</foreach>
 			</if>
+			<if test="status != null and status!=''">
+				and bc.STATUS=#{status,jdbcType=VARCHAR}
+			</if>
 			<if test="effDate != null and effDate != ''">
 				AND bc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
 			</if>
