@@ -360,29 +360,29 @@ public class ProdInfo002Controller extends BaseController {
         // }
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 end */
 
-        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {
-            if (CollectionUtils.isEmpty(dto.getBasicChangeList())) {
-                return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
-            }
-            Set<String> setChangeDto = new HashSet<>();
-            boolean flag=true;
-            for (ProdBasicChangeDto i : dto.getBasicChangeList()) {
-                if (StringUtils.isBlank(i.getDataType()) || StringUtils.isBlank(i.getProportion())) {
-                    return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
-                } else {
-                    setChangeDto.add(i.getDataType());
-                }
-                if(new BigDecimal(i.getProportion()).compareTo(BigDecimal.ZERO)<=0){
-                    flag=false;
-                }
-            }
-            if (setChangeDto.size() != dto.getBasicChangeList().size()) {
-                return new AjaxResult("行情代码重复", MessageType.错误消息);
-            }
-            if (!flag) {
-                return new AjaxResult("系数不能小于等于0", MessageType.错误消息);
-            }
-        }
+//        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {
+//            if (CollectionUtils.isEmpty(dto.getBasicChangeList())) {
+//                return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
+//            }
+//            Set<String> setChangeDto = new HashSet<>();
+//            boolean flag=true;
+//            for (ProdBasicChangeDto i : dto.getBasicChangeList()) {
+//                if (StringUtils.isBlank(i.getDataType()) || StringUtils.isBlank(i.getProportion())) {
+//                    return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
+//                } else {
+//                    setChangeDto.add(i.getDataType());
+//                }
+//                if(new BigDecimal(i.getProportion()).compareTo(BigDecimal.ZERO)<=0){
+//                    flag=false;
+//                }
+//            }
+//            if (setChangeDto.size() != dto.getBasicChangeList().size()) {
+//                return new AjaxResult("行情代码重复", MessageType.错误消息);
+//            }
+//            if (!flag) {
+//                return new AjaxResult("系数不能小于等于0", MessageType.错误消息);
+//            }
+//        }
         return commonCheck(bindingResult, operateType);
     }
 
