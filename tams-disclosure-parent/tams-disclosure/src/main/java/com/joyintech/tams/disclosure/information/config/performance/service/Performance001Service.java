@@ -395,14 +395,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
             //chenxc: 区间重叠校验
             checkResult.addAll(checkDataDuration(entities));
-//            if ( listResult.size()>0 ) {
-//            	StringBuffer sb=new StringBuffer();
-//            	for ( Performance001Dto dto:listResult ) {
-//            		 sb.append(dto.getProdId()+","+dto.getEffDate()+","+dto.getExpDate()+"\r\n");
-//            	}
-//            	
-//                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,sb.toString()));
-//            }            
             
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
