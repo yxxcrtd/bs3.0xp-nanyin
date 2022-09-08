@@ -109,13 +109,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
     @Override
     public void doComplete(Performance001Dto dto, OperationType operationType) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = null;
-        try {
-            date = format.parse(DateUtil.format(DateUtil.now()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         dto.setOperateType(operationType.toString());
         String type = dto.getOperateType();
         if (StringUtil.equals(type, "DELETE")) {
@@ -134,7 +127,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setEffDate(dto.getEffDate());
             dto1.setExpDate(dto.getExpDate());
             dto1.setStatus("E");
-            dto1.setUpdateTime(date);
+            dto1.setUpdateTime(DateUtil.now());
             dto1.setUpdateUser(user);
             performance001Mapper.insert(dto1);
 
@@ -147,7 +140,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setEffDate(dto.getEffDate());
             dto2.setExpDate(dto.getExpDate());
             dto2.setStatus("E");
-            dto2.setUpdateTime(date);
+            dto2.setUpdateTime(DateUtil.now());
             dto2.setUpdateUser(user);
             performance001Mapper.insert(dto2);
 
@@ -160,7 +153,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setEffDate(dto.getEffDate());
             dto3.setExpDate(dto.getExpDate());
             dto3.setStatus("E");
-            dto3.setUpdateTime(date);
+            dto3.setUpdateTime(DateUtil.now());
             dto3.setUpdateUser(user);
             performance001Mapper.insert(dto3);
 
@@ -173,7 +166,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setEffDate(dto.getEffDate());
             dto4.setExpDate(dto.getExpDate());
             dto4.setStatus("E");
-            dto4.setUpdateTime(date);
+            dto4.setUpdateTime(DateUtil.now());
             dto4.setUpdateUser(user);
             performance001Mapper.insert(dto4);
         }
@@ -188,6 +181,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setExpDate(dto.getExpDate());
             dto1.setEffDateO(dto.getEffDateO());
             dto1.setExpDateO(dto.getExpDateO());
+            dto1.setUpdateTime(DateUtil.now());
             performance001Mapper.updateByKey(dto1);
 
             Performance001Dto dto2 =new Performance001Dto();
@@ -199,6 +193,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setExpDate(dto.getExpDate());
             dto2.setEffDateO(dto.getEffDateO());
             dto2.setExpDateO(dto.getExpDateO());
+            dto2.setUpdateTime(DateUtil.now());
             performance001Mapper.updateByKey(dto2);
 
             Performance001Dto dto3 =new Performance001Dto();
@@ -210,6 +205,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setExpDate(dto.getExpDate());
             dto3.setEffDateO(dto.getEffDateO());
             dto3.setExpDateO(dto.getExpDateO());
+            dto3.setUpdateTime(DateUtil.now());
             performance001Mapper.updateByKey(dto3);
 
             Performance001Dto dto4 =new Performance001Dto();
@@ -221,6 +217,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setExpDate(dto.getExpDate());
             dto4.setEffDateO(dto.getEffDateO());
             dto4.setExpDateO(dto.getExpDateO());
+            dto4.setUpdateTime(DateUtil.now());
             performance001Mapper.updateByKey(dto4);
 
 
@@ -414,7 +411,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                     map.put("effDate", DateUtil.format(item.getEffDate()));
                     map.put("expDate", DateUtil.format(item.getExpDate()));
                     item.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                    item.setUpdateTime(DateUtil.now());
+//                    item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
 //                    Performance001Dto dto = this.selectByPrimaryKey(map);
                     List<Performance001Dto> dto = this.selectByPrimaryKey(map);
@@ -486,46 +483,46 @@ public class Performance001Service extends CommonExportService<Performance001Dto
            //校验截止日大于生效日
             Date expDate=DateUtil.parse(rowData.get(2).trim());
             Date effDate=DateUtil.parse(rowData.get(1).trim());
-            if (DateUtil.compareDate(effDate,expDate)>=0) {
+            if (DateUtil.compareDate(effDate,expDate)>0) {
                 message.add("业绩比较基准生效截止日不能小于业绩比较基准生效日!");
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合全价指数收益率【系数】"));
             }
-            if (isValidData(Double.parseDouble(rowData.get(3).trim()))){
-                message.add("中债新综合全价指数收益率【系数】不能大于等于100，且不能小于0！");
+            if (StringUtil.isNotEmpty(rowData.get(3).trim())&&isValidData(Double.parseDouble(rowData.get(3).trim()))){
+                message.add("中债新综合全价指数收益率【系数】不能大于100，且不能小于0！");
             }
-            if (!isTwo(rowData.get(3).trim())){
-                message.add("中债新综合全价指数收益率【系数】需要保留两位小数！");
-            }
+//            if (StringUtil.isNotEmpty(rowData.get(3).trim())&& !isTwo(rowData.get(3).trim())){
+//                message.add("中债新综合全价指数收益率【系数】需要保留两位小数！");
+//            }
             if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合财富指数（1-3年）收益率【系数】"));
             }
-            if (isValidData(Double.parseDouble(rowData.get(4).trim()))){
-                message.add("中债新综合财富指数（1-3年）收益率【系数】不能大于等于100，且不能小于0！");
+            if (StringUtil.isNotEmpty(rowData.get(4).trim()) && isValidData(Double.parseDouble(rowData.get(4).trim()))){
+                message.add("中债新综合财富指数（1-3年）收益率【系数】不能大于100，且不能小于0！");
             }
-            if (!isTwo(rowData.get(4).trim())){
-                message.add("中债新综合财富指数（1-3年）收益率【系数】需要保留两位小数！");
-            }
+//            if (StringUtil.isNotEmpty(rowData.get(4).trim()) && !isTwo(rowData.get(4).trim())){
+//                message.add("中债新综合财富指数（1-3年）收益率【系数】需要保留两位小数！");
+//            }
             if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中证500指数收益率【系数】"));
             }
-            if (isValidData(Double.parseDouble(rowData.get(5).trim()))){
-                message.add("中证500指数收益率【系数】不能大于等于100，且不能小于0！");
+            if (StringUtil.isNotEmpty(rowData.get(5).trim())&&isValidData(Double.parseDouble(rowData.get(5).trim()))){
+                message.add("中证500指数收益率【系数】不能大于100，且不能小于0！");
             }
-            if (!isTwo(rowData.get(5).trim())){
-                message.add("中证500指数收益率【系数】需要保留两位小数！");
-            }
+//            if (StringUtil.isNotEmpty(rowData.get(5).trim())&&!isTwo(rowData.get(5).trim())){
+//                message.add("中证500指数收益率【系数】需要保留两位小数！");
+//            }
             if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "沪深300指数收益率【系数】"));
             }
-            if (isValidData(Double.parseDouble(rowData.get(6).trim()))){
-                message.add("沪深300指数收益率【系数】不能大于等于100，且不能小于0！");
+            if (StringUtil.isNotEmpty(rowData.get(6).trim())&&isValidData(Double.parseDouble(rowData.get(6).trim()))){
+                message.add("沪深300指数收益率【系数】不能大于100，且不能小于0！");
             }
-            if (!isTwo(rowData.get(6).trim())){
-                message.add("沪深300指数收益率【系数】需要保留两位小数！");
-            }
+//            if (StringUtil.isNotEmpty(rowData.get(6).trim())&&!isTwo(rowData.get(6).trim())){
+//                message.add("沪深300指数收益率【系数】需要保留两位小数！");
+//            }
             if (map.containsKey(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(1)
                     + GlobalConstant.UNDER_LINE + rowData.get(2))) {
@@ -548,7 +545,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     }
 
     public boolean isValidData(double s){
-        if (s>=100||s<0){
+        if (s>100||s<0){
             return true;
         }else
             return false;

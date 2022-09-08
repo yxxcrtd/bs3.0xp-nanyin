@@ -42,7 +42,7 @@
          */
         cols: [
             {field:'uuid',  visible: false},
-            {field:'statusStr',width: 140,  title: 'ProElementAdj001.dataStatus',sortField:"statusStr"},//数据状态
+            {field:'statusStr',width: 140,  title: 'ProElementAdj001.dataStatus',sortField:"status"},//数据状态
             {field:'prodId', width: 180, title: 'ProElementAdj001.prodId',sortField:"prodId"}//子产品代码
             ,{field:'effDate', width: 180, title: '业绩比较基准生效日',sortField:"effDate",type:'date'}
             ,{field:'expDate', width: 180, title: '业绩比较基准生效截止日',sortField:"expDate",type:'date'}
@@ -50,7 +50,7 @@
             ,{field:'zzcf',width: 300, title : 'Performance001.zzxzh', type : 'number'}
             ,{field:'zz500',width: 220, title : 'Performance001.zzzs', type : 'number'}
             ,{field:'hs300',width: 220, title : 'Performance001.hszs', type : 'number'}
-            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
+            ,{field:'updateTimeStr',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {
