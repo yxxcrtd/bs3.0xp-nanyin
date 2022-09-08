@@ -181,6 +181,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setExpDate(dto.getExpDate());
             dto1.setEffDateO(dto.getEffDateO());
             dto1.setExpDateO(dto.getExpDateO());
+            dto1.setUpdateTime(DateUtil.now());
             performance001Mapper.updateByKey(dto1);
 
             Performance001Dto dto2 =new Performance001Dto();
@@ -192,6 +193,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setExpDate(dto.getExpDate());
             dto2.setEffDateO(dto.getEffDateO());
             dto2.setExpDateO(dto.getExpDateO());
+            dto2.setUpdateTime(DateUtil.now());
             performance001Mapper.updateByKey(dto2);
 
             Performance001Dto dto3 =new Performance001Dto();
@@ -203,6 +205,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setExpDate(dto.getExpDate());
             dto3.setEffDateO(dto.getEffDateO());
             dto3.setExpDateO(dto.getExpDateO());
+            dto3.setUpdateTime(DateUtil.now());
             performance001Mapper.updateByKey(dto3);
 
             Performance001Dto dto4 =new Performance001Dto();
@@ -214,6 +217,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setExpDate(dto.getExpDate());
             dto4.setEffDateO(dto.getEffDateO());
             dto4.setExpDateO(dto.getExpDateO());
+            dto4.setUpdateTime(DateUtil.now());
             performance001Mapper.updateByKey(dto4);
 
 
