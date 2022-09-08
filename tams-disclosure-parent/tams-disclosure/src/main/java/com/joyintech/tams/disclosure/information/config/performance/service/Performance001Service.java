@@ -237,10 +237,10 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 "/com/joyintech/tams/disclosure/information/config/performance/conf/export_conf.xml").dataSource(
                 DataSourceType.MASERT);
     }
-//    @Override
-//    public Page<Performance001Dto> selectPageData(Map<String, Object> selectParam) {
-//        return this.selectForPage(selectParam);
-//    }
+    @Override
+    public Page<Performance001Dto> selectPageData(Map<String, Object> selectParam) {
+        return this.selectForPage1(selectParam);
+    }
 
 //    public Page<SelectOptionDto> getProdIdlist(Map map) {
 //        Map<String, Object> pageParam = RequestUtil.getPageParam();
