@@ -44,7 +44,9 @@
 
 	<select id="select1"
 			resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">
-		select bc.status status,bc.prod_id prodId,bc.eff_date effDate,bc.exp_date expDate,bc1.proportion zzqj,bc3.proportion zzcf,bc4.proportion zz500,bc2.proportion hs300,
+		select 
+		rownum personalField
+		,bc.status status,bc.prod_id prodId,bc.eff_date effDate,bc.exp_date expDate,bc1.proportion zzqj,bc3.proportion zzcf,bc4.proportion zz500,bc2.proportion hs300,
 -- 		to_char(bc.UPDATE_TIME,'yyyy-mm-dd hh24:mi') updateTime,
         bc.a updateTime,
 		bc.UPDATE_USER updateUser

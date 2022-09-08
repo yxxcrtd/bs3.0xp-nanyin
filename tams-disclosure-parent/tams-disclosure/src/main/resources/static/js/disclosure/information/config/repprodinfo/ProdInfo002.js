@@ -496,7 +496,7 @@
                     type: 'select', formatoption: true, multiple: false, searchable: true, result: QUOTA_CODE
                 }
             }*/
-            {field:'number',width:'5%', title: '序号',sortField:"number"}
+            {field:'personalField',width:'5%', title: '序号',sortField:"number"}
             ,{field:'effDateStr',width:'10%',  title: '业绩比较基准生效日'}
             ,{field:'expDate',width:'10%',title: '业绩比较基准生效截止日',type:'date'}
             ,{field:'zzqj',width: '10%', title : 'Performance001.zzxz'}
