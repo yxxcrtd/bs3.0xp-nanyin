@@ -481,37 +481,50 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
             if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合全价指数收益率【系数】"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(3).trim())&&isValidData(Double.parseDouble(rowData.get(3).trim()))){
+            } else if (!isNumber(rowData.get(3).trim())){
+            	message.add("中债新综合全价指数收益率【系数】必须是数字");
+            } else if (isValidData(Double.parseDouble(rowData.get(3).trim()))){
                 message.add("中债新综合全价指数收益率【系数】不能大于100，且不能小于0！");
+            }
+
+            if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合财富指数（1-3年）收益率【系数】"));
+            } else if (!isNumber(rowData.get(3).trim())){
+            	message.add("中债新综合财富指数（1-3年）收益率【系数】必须是数字");
+            } else if (isValidData(Double.parseDouble(rowData.get(4).trim()))){
+                message.add("中债新综合财富指数（1-3年）收益率【系数】不能大于100，且不能小于0！");
+            }
+            
+            if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中证500指数收益率【系数】"));
+            } else if (!isNumber(rowData.get(5).trim())){
+            	message.add("中证500指数收益率【系数】必须是数字");
+            } else if (StringUtil.isNotEmpty(rowData.get(5).trim())&&isValidData(Double.parseDouble(rowData.get(5).trim()))){
+                message.add("中证500指数收益率【系数】不能大于100，且不能小于0！");
+            }
+            
+            if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "沪深300指数收益率【系数】"));
+            } else if (!isNumber(rowData.get(6).trim())){
+            	message.add("沪深300指数收益率【系数】必须是数字");
+            } else if (StringUtil.isNotEmpty(rowData.get(6).trim())&&isValidData(Double.parseDouble(rowData.get(6).trim()))){
+                message.add("沪深300指数收益率【系数】不能大于100，且不能小于0！");
             }
 //            if (StringUtil.isNotEmpty(rowData.get(3).trim())&& !isTwo(rowData.get(3).trim())){
 //                message.add("中债新综合全价指数收益率【系数】需要保留两位小数！");
 //            }
-            if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合财富指数（1-3年）收益率【系数】"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(4).trim()) && isValidData(Double.parseDouble(rowData.get(4).trim()))){
-                message.add("中债新综合财富指数（1-3年）收益率【系数】不能大于100，且不能小于0！");
-            }
+
+
 //            if (StringUtil.isNotEmpty(rowData.get(4).trim()) && !isTwo(rowData.get(4).trim())){
 //                message.add("中债新综合财富指数（1-3年）收益率【系数】需要保留两位小数！");
 //            }
-            if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中证500指数收益率【系数】"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(5).trim())&&isValidData(Double.parseDouble(rowData.get(5).trim()))){
-                message.add("中证500指数收益率【系数】不能大于100，且不能小于0！");
-            }
+
+
 //            if (StringUtil.isNotEmpty(rowData.get(5).trim())&&!isTwo(rowData.get(5).trim())){
 //                message.add("中证500指数收益率【系数】需要保留两位小数！");
 //            }
-            if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "沪深300指数收益率【系数】"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(6).trim())&&isValidData(Double.parseDouble(rowData.get(6).trim()))){
-                message.add("沪深300指数收益率【系数】不能大于100，且不能小于0！");
-            }
+
+
 //            if (StringUtil.isNotEmpty(rowData.get(6).trim())&&!isTwo(rowData.get(6).trim())){
 //                message.add("沪深300指数收益率【系数】需要保留两位小数！");
 //            }
@@ -660,4 +673,10 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     	dto.setPersonalField(idx+"");
     	return dto;
     }
+    
+	public static boolean isNumber(String str ){
+		if (str==null || str.trim().equals("")) return false;
+		return str.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
+	}
+	
 }
