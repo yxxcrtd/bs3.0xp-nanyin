@@ -391,17 +391,11 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             List<Performance001Dto> entities = new ArrayList<>(dataList.size());
             
             List<ExcelValidDto> checkResult = new ArrayList<>();
-            List<Performance001Dto> listResult = checkDataDuration(entities);
-            //chenxc: 区间重叠校验
-            if ( listResult.size()>0 ) {
-            	StringBuffer sb=new StringBuffer();
-            	for ( Performance001Dto dto:listResult ) {
-            		 sb.append(dto.getProdId()+","+dto.getEffDate()+","+dto.getExpDate()+"\r\n");
-            	}
-                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,sb.toString()));
-            }
-            checkResult.clear();
             checkResult = convertToEntitys(dataList, entities);
+
+            //chenxc: 区间重叠校验
+            checkResult.addAll(checkDataDuration(entities));
+            
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
                     Map<String, Object> map = new HashMap<>();
@@ -536,7 +530,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             else {
-                entities.add(this.convertToEntity(rowData));
+                entities.add(this.convertToEntity(rowData,i+2));
             }
         }
         return checkResult;
@@ -626,15 +620,10 @@ public class Performance001Service extends CommonExportService<Performance001Dto
      * @param listBasis
      * @return 返回列表有值，为校验不通过的数据
      */
-    private List<Performance001Dto> checkDataDuration(  List<Performance001Dto> listBasis ) {
-    	List<Performance001Dto> listResult = new ArrayList<Performance001Dto>();
-    	
-    	for ( Performance001Dto dto:listBasis ) {
-    		if ( dto.getEffDate().compareTo(dto.getExpDate())>=0 ) {
-    			listResult.add(dto);
-    		}
-    	}
-    	
+    private List<ExcelValidDto> checkDataDuration(  List<Performance001Dto> listBasis ) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ss");
     	Map<String, List<Performance001Dto>> map = listBasis.stream().collect(
                 JoyinCollectors.groupingBy(x ->
                         x.getProdId()
@@ -649,16 +638,26 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     			}
     		});
     		
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            message.add("本条数据与下一条数据有效期区间重叠。");
     		if ( list.size()>1 ) {
 	    		for ( int i=0;i<list.size()-1;i++) {
 	    			if ( list.get(i).getExpDate().compareTo(list.get(i+1).getEffDate())>=0 ) {
-	    				listResult.add(list.get(i));
+	                    checkResult.add(new ExcelValidDto(list.get(i).getProdId()
+	                            + GlobalConstant.UNDER_LINE + sdf.format(list.get(i).getEffDate())
+	                            + GlobalConstant.UNDER_LINE + sdf.format(list.get(i).getExpDate()),
+	                            list.get(i).getPersonalField(), StringUtil.joinString(message, "<br>")));
 	    			}
 	    		}
     		}
     	}
-    	return listResult;
+    	return checkResult;
     }
-
-        
+    
+    private Performance001Dto convertToEntity(List<String> rowData,int idx) {
+    	Performance001Dto dto = convertToEntity(rowData);
+    	dto.setPersonalField(idx+"");
+    	return dto;
+    }
 }
