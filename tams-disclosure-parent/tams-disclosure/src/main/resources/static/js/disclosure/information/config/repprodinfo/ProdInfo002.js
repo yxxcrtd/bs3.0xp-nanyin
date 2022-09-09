@@ -301,6 +301,11 @@
             if($('#issuingWay').val()=='02'){
                 $('#openFreq').attr("disabled",true);
             }
+            if (openFreqGlobal && prodTypeGlobal && openFreqGlobal == '01' && prodTypeGlobal == '01') {
+                $("#holdday").attr("disabled", false);
+            }else{
+                $("#holdday").attr("disabled", true);
+            }
         }
         // if(pageModel=== PAGE_MODEL_NEW){
         //     $('#isGrade').change(function () {
