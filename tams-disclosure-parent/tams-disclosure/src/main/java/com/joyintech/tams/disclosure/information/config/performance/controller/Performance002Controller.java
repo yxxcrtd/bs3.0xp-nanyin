@@ -45,10 +45,12 @@ public class Performance002Controller extends BaseController {
         String prodId = getParam("prodId");
         String effDate = getParam("effDateStr");
         String expDate = getParam("expDateStr");
+        String status = getParam("status");
         HashMap map = new HashMap();
         map.put("prodId",prodId);
         map.put("effDate",effDate);
         map.put("expDate",expDate);
+        map.put("status",status);
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(prodId)) {
             // 根据主键获取业务实体
@@ -62,15 +64,73 @@ public class Performance002Controller extends BaseController {
             if (entityList.get(0).getDataType()!=null && StringUtil.equals(entityList.get(0).getDataType(),"01")){
                 entity.setZzqj(entityList.get(0).getProportion());
             }
+            if (entityList.get(0).getDataType()!=null && StringUtil.equals(entityList.get(0).getDataType(),"02")){
+                entity.setHs300(entityList.get(0).getProportion());
+            }
+            if (entityList.get(0).getDataType()!=null && StringUtil.equals(entityList.get(0).getDataType(),"03")){
+                entity.setZzcf(entityList.get(0).getProportion());
+            }
+            if (entityList.get(0).getDataType()!=null && StringUtil.equals(entityList.get(0).getDataType(),"04")){
+                entity.setZz500(entityList.get(0).getProportion());
+            }
+
+            if (entityList.get(1).getDataType()!=null && StringUtil.equals(entityList.get(1).getDataType(),"01")){
+                entity.setZzqj(entityList.get(1).getProportion());
+            }
             if (entityList.get(1).getDataType()!=null && StringUtil.equals(entityList.get(1).getDataType(),"02")){
                 entity.setHs300(entityList.get(1).getProportion());
+            }
+            if (entityList.get(1).getDataType()!=null && StringUtil.equals(entityList.get(1).getDataType(),"03")){
+                entity.setZzcf(entityList.get(1).getProportion());
+            }
+            if (entityList.get(1).getDataType()!=null && StringUtil.equals(entityList.get(1).getDataType(),"04")){
+                entity.setZz500(entityList.get(1).getProportion());
+            }
+
+            if (entityList.get(2).getDataType()!=null && StringUtil.equals(entityList.get(2).getDataType(),"01")){
+                entity.setZzqj(entityList.get(2).getProportion());
+            }
+            if (entityList.get(2).getDataType()!=null && StringUtil.equals(entityList.get(2).getDataType(),"02")){
+                entity.setHs300(entityList.get(2).getProportion());
             }
             if (entityList.get(2).getDataType()!=null && StringUtil.equals(entityList.get(2).getDataType(),"03")){
                 entity.setZzcf(entityList.get(2).getProportion());
             }
+            if (entityList.get(2).getDataType()!=null && StringUtil.equals(entityList.get(2).getDataType(),"04")){
+                entity.setZz500(entityList.get(2).getProportion());
+            }
+
+            if (entityList.get(3).getDataType()!=null && StringUtil.equals(entityList.get(3).getDataType(),"01")){
+                entity.setZzqj(entityList.get(3).getProportion());
+            }
+            if (entityList.get(3).getDataType()!=null && StringUtil.equals(entityList.get(3).getDataType(),"02")){
+                entity.setHs300(entityList.get(3).getProportion());
+            }
+            if (entityList.get(3).getDataType()!=null && StringUtil.equals(entityList.get(3).getDataType(),"03")){
+                entity.setZzcf(entityList.get(3).getProportion());
+            }
             if (entityList.get(3).getDataType()!=null && StringUtil.equals(entityList.get(3).getDataType(),"04")){
                 entity.setZz500(entityList.get(3).getProportion());
             }
+
+
+
+
+//            for(Performance001Dto performance001Dto : entityList){
+//                if (StringUtil.equals(performance001Dto.getDataType(),"01")){
+//                    entity.setZzqj(performance001Dto.getProportion());
+//                }
+//                if (StringUtil.equals(performance001Dto.getDataType(),"02")){
+//                    entity.setZzqj(performance001Dto.getProportion());
+//                }
+//                if (StringUtil.equals(performance001Dto.getDataType(),"03")){
+//                    entity.setZzqj(performance001Dto.getProportion());
+//                }
+//                if (StringUtil.equals(performance001Dto.getDataType(),"04")){
+//                    entity.setZzqj(performance001Dto.getProportion());
+//                }
+//
+//            }
 //            entity.setHs300(entityList.get(0).getProportion());
 //            entity.setZz500(entityList.get(1).getProportion());
 //            entity.setZzcf(entityList.get(2).getProportion());
