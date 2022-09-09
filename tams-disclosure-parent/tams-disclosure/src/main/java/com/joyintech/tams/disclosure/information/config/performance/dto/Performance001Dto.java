@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.performance.dto;
 
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -68,6 +69,17 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
     public String expDateOStr;
 
 
+    private String workflowId;
+
+
+    public String getWorkflowId() {
+        return workflowId;
+    }
+
+
+    public void setWorkflowId(String workflowId) {
+        this.workflowId = workflowId;
+    }
 
     public String getUpdateTimeStr() {
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
@@ -229,4 +241,21 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
     public String getStatusStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, super.getStatus());
     }
+
+//    public String getUpdateUserStr(){
+//        return SecurityUtil.getLoginUser().getUserName();
+//    }
+    private String updateUser;
+
+
+
+//    @Override
+//    public String getUpdateUser() {
+//        return this.getUpdateUser();
+//    }
+//
+//    @Override
+//    public void setUpdateUser(String updateUser) {
+//        this.setUpdateUser(updateUser);
+//    }
 }

@@ -42,6 +42,7 @@ public class Performance002Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, new DictCode[] {DictCode.是否});
         String workflowId = getParam("workflowId");
+        model.addAttribute("workflowId",workflowId);
         String prodId = getParam("prodId");
         String effDate = getParam("effDateStr");
         String expDate = getParam("expDateStr");

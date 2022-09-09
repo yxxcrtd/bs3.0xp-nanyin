@@ -623,8 +623,8 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         return performance001Mapper.selectPerformanceByProdId(param);
     }
 
-    public List<Performance001Dto> getWorklowData(String prodId) {
-        List<ProcessMark> processMarkList = performance001Mapper.getWorklowData(prodId);
+    public List<Performance001Dto> getWorklowData(Performance001Dto dto) {
+        List<ProcessMark> processMarkList = performance001Mapper.getWorklowData(dto);
         List<Performance001Dto> list = new ArrayList<>();
         if (processMarkList != null && processMarkList.size() > 0){
             for (ProcessMark processMark : processMarkList){

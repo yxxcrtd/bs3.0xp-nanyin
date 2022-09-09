@@ -48,7 +48,7 @@ public class Performance001Validator implements BeanValidator {
 //            param.put("excludeId",dto.getProdAssetId());
 //        }
             List<Performance001Dto> performance001Dtos = performance001Service.selectPerformanceByProdId(map);
-            List<Performance001Dto> worklowList = performance001Service.getWorklowData(dto.getProdId());
+            List<Performance001Dto> worklowList = performance001Service.getWorklowData(dto);
             if (performance001Dtos.size() > 0) {
                 for (Performance001Dto Performance001Dto : performance001Dtos) {
                     if (!((DateUtil.compareDate(dto.getEffDate(), Performance001Dto.getEffDate()) < 0 && DateUtil.compareDate(dto.getExpDate(), Performance001Dto.getEffDate()) < 0)
@@ -64,13 +64,13 @@ public class Performance001Validator implements BeanValidator {
                     if (!((DateUtil.compareDate(dto.getEffDate(), performance001Dto.getEffDate()) < 0 && DateUtil.compareDate(dto.getExpDate(), performance001Dto.getEffDate()) < 0)
                             || (DateUtil.compareDate(dto.getEffDate(), performance001Dto.getExpDate()) > 0 && DateUtil.compareDate(dto.getExpDate(), performance001Dto.getExpDate()) > 0)
                     )) {
-                        if (DateUtil.compareDate(dto.getEffDate(), performance001Dto.getEffDate()) != 0 && DateUtil.compareDate(dto.getExpDate(), performance001Dto.getExpDate()) != 0){
+//                        if (DateUtil.compareDate(dto.getEffDate(), performance001Dto.getEffDate()) != 0 && DateUtil.compareDate(dto.getExpDate(), performance001Dto.getExpDate()) != 0){
                             resultList.add(new ValidMessage("子产品业绩比较基准区间生效时间与代办数据有重叠！" + "{" + DateUtil.format(performance001Dto.getEffDate(), "yyyyMMdd")
                                     + "-" + DateUtil.format(performance001Dto.getExpDate(), "yyyyMMdd") + "}"));
                             break;
                         }
                     }
-                }
+//                }
             }
 
         }

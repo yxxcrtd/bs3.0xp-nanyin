@@ -35,7 +35,7 @@ public interface Performance001Mapper {
     List<Performance001Dto> selectPerformanceByProdId(Map<String, Object> map);
 
 
-    List<ProcessMark> getWorklowData(String prodId);
+    List<ProcessMark> getWorklowData(Performance001Dto dto);
 
     int update(Performance001Dto dto1);
 }
