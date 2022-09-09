@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,7 +118,8 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         }
         else if (StringUtil.equals(type, "NEW")) {
             dto.setGroupId(IDGenerator.generate(36));
-            String user = CommonUtil.getUserName();
+            String user = SecurityUtil.getLoginUser().getRealName();
+
             //分四条记录插入
             Performance001Dto dto1 =new Performance001Dto();
             dto1.setUuid(IDGenerator.generate(36));
@@ -406,6 +409,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                     map.put("prodId", item.getProdId());
                     map.put("effDate", DateUtil.format(item.getEffDate()));
                     map.put("expDate", DateUtil.format(item.getExpDate()));
+                    map.put("status","E");
                     item.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
