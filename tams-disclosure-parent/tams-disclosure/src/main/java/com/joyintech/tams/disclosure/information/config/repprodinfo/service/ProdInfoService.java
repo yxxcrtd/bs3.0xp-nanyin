@@ -355,8 +355,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             dto.setProdName(dto.getpProdName());
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
-            prodInfoMapper.updateByPrimaryKeySelective(dto);
         }
+        prodInfoMapper.updateByPrimaryKeySelective(dto);
 
     }
 
