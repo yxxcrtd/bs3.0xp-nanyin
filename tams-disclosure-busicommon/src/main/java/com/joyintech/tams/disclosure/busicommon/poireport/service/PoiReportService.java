@@ -913,6 +913,7 @@ public class PoiReportService {
 			if (listReports.size() > 0) {
 				dataMap = listReports.get(0);
 				dataMap.put("prodId",repReveal.getProdid());
+				dataMap.put("prodId_xx",repReveal.getProdid());
 				dataMap.put("repId",params.get("repid"));
 			} else{
 				return resultMap;
@@ -921,7 +922,7 @@ public class PoiReportService {
 
 
 		String rptType = params.get("uri").toString();
-		String prodId = StringUtil.isNotEmpty(repReveal.getProdid())?repReveal.getProdid():params.get("prodid").toString();
+		String prodId = StringUtil.isNotEmpty(repReveal.getProdid())?repReveal.getProdid():(StringUtil.isNotEmpty(params.get("prodid"))?params.get("prodid").toString():"");
 
 		if (StringUtil.isNotEmpty(rptType)) {
 			//对所有报告的通用校验
