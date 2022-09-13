@@ -187,6 +187,12 @@
 			<if test="updateTime != null" >
 				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
 			</if>
+			<if test="effDate != null" >
+				EFF_DATE = #{effDate,jdbcType=DATE},
+			</if>
+			<if test="expDate != null" >
+				EXP_DATE = #{expDate,jdbcType=DATE},
+			</if>
 		</set>
 		where PROD_ID = #{prodId,jdbcType=VARCHAR}
 		and EFF_DATE = #{effDateO,jdbcType=DATE}
