@@ -332,7 +332,10 @@ public class FtpDetailService {
 							downloadFilePeopleTmp.getParent() + File.separator + filename));
 					File parentFile = new File(newFile.getParent());
 					if(!parentFile.exists()){
-						parentFile.mkdirs();
+						boolean ret = parentFile.mkdirs();
+						if ( ret==false ) {
+							logger.error("创建目录错误："+parentFile.getName());
+						}
 					}
 				}
 				FileOutputStream fos = null;

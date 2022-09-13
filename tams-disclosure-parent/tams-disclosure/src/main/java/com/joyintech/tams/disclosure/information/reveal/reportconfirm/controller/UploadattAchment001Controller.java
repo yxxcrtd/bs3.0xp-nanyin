@@ -1,5 +1,32 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.dto.UploadFile;
@@ -12,25 +39,9 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao.UploadattAchment001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.UploadFileDto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.service.ReportConfirmManage004Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.*;
 
 @Controller
 @PageId("UploadattAchment001")
@@ -57,7 +68,8 @@ public class UploadattAchment001Controller extends BaseController {
 
     @Autowired
     private UploadattAchment001Mapper uploadattAchment001Mapper;
-
+    
+	private Logger logger = LoggerFactory.getLogger(UploadattAchment001Controller.class);
 
     @Override
     public String init(Model model) {
@@ -147,7 +159,10 @@ public class UploadattAchment001Controller extends BaseController {
                 }
 
                 if (!localFile.exists()) {
-                    localFile.createNewFile();
+                    boolean ret = localFile.createNewFile();
+                    if ( ret==true ) {
+                    	logger.info("创建新文件:"+file.getName());
+                    }
                 }
 
                 this.copyFile(file.getInputStream(), new FileOutputStream(localFile), file.getSize(), pageId);
