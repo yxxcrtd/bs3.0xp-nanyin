@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,8 @@ public class ReportZqxkfgg001Service implements IReportDataService {
     @Autowired
     private HolidayService holidayService;
 
+    @Autowired
+    private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
@@ -90,6 +94,12 @@ public class ReportZqxkfgg001Service implements IReportDataService {
 
                 if (generateFlag) {
                     //查询产品信息
+                    //判断是普通产品还是子产品
+                    RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(searchparam);
+                    if(StringUtil.isNotEmpty(info)){
+                        searchparam.put("prodId",info.getProdId());
+                        prodId=info.getProdId();
+                    }
                     reportZqxkfgg001Dto = reportZqxkfgg001Mapper.getProdInfo(searchparam);
                     if (reportZqxkfgg001Dto.getSetDate() != null) {
                         reportZqxkfgg001Dto.setSetDateT(DateUtil.format(reportZqxkfgg001Dto.getSetDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
