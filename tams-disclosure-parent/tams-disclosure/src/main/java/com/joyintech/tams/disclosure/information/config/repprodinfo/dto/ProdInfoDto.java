@@ -1,8 +1,14 @@
 package com.joyintech.tams.disclosure.information.config.repprodinfo.dto;
 
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -11,13 +17,10 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.validator.ProdInfoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Date;
-import java.util.List;
 
 @PageId("ProdInfo001")
 @ValidLogic(targetClass = ProdInfoValidator.class, groups = {ValidateGroupEdit.class,
@@ -32,6 +35,10 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
      */
     private transient List<ProdBasicChangeDto> basicChangeList;
 
+    /**
+     *  业绩基准变更表
+     */
+    private transient List<Performance001Dto> performaceList;
 
     //母产品相关字段
 
@@ -41,7 +48,7 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
     @NotEmpty(fieldName = "产品名称")
     private String  pProdName ;
 
-/*    *//**
+    /*    *//**
      * 母产品   若为分级产品，此处填写母产品的产品简称
      *//*
     private String  prodAbbr ;
@@ -132,7 +139,7 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
 
 
     public String getNatureInvestName() {
-       // return natureInvestName;
+        // return natureInvestName;
         return SysDataUtil.getNameFromDataDict(DictCodeExt1.信披_投资性质,getNatureInvest());
     }
 
@@ -228,7 +235,7 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
     }
 
     public String getSetDateStr() {
-       // return setDateStr;
+        // return setDateStr;
         if(StringUtils.isNotBlank(this.setDateStr)){
             return this.setDateStr ;
         }else{
@@ -242,7 +249,7 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
     }
 
     public String getPdStatusName() {
-       // return pdStatusName;
+        // return pdStatusName;
         return SysDataUtil.getNameFromDataDict(DictCodeExt1.信披_产品状态,getPdStatus());
     }
 
@@ -405,4 +412,113 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
     }
+
+    //序号
+    private String number;
+
+    private String zzqj;
+
+    private String zzcf;
+
+    private String zz500;
+
+    private String hs300;
+
+    public Date expDate;
+    public Date effDate;
+
+    public void setZzqj(String zzqj) {
+        this.zzqj = zzqj;
+    }
+
+    public void setZzcf(String zzcf) {
+        this.zzcf = zzcf;
+    }
+
+    public void setZz500(String zz500) {
+        this.zz500 = zz500;
+    }
+
+    public void setHs300(String hs300) {
+        this.hs300 = hs300;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getZzqj() {
+        return zzqj;
+    }
+
+    public String getZzcf() {
+        return zzcf;
+    }
+
+    public String getZz500() {
+        return zz500;
+    }
+
+    public String getHs300() {
+        return hs300;
+    }
+
+    public Date getExpDate() {
+        return expDate;
+    }
+
+    public void setExpDate(Date expDate) {
+        this.expDate = expDate;
+    }
+
+    public Date getEffDate() {
+        return effDate;
+    }
+
+    public void setEffDate(Date effDate) {
+        this.effDate = effDate;
+    }
+
+    private String expDateStr;
+
+    public void setExpDateStr(String expDateStr) {
+        this.expDateStr = expDateStr;
+    }
+
+    public void setEffDateStr(String effDateStr) {
+        this.effDateStr = effDateStr;
+    }
+
+
+    public String getExpDateStr() {
+        if (StringUtil.isNotEmpty(this.expDateStr)) {
+            return this.expDateStr;
+        } else {
+            return DateUtil.format(this.getExpDate());
+        }
+    }
+
+    private String effDateStr;
+
+    public String getEffDateStr() {
+        if (StringUtil.isNotEmpty(this.effDateStr)) {
+            return this.effDateStr;
+        } else {
+            return DateUtil.format(this.getEffDate());
+        }
+    }
+
+    public List<Performance001Dto> getPerformaceList() {
+        return performaceList;
+    }
+
+    public void setPerformaceList(List<Performance001Dto> performaceList) {
+        this.performaceList = performaceList;
+    }
+
+
 }

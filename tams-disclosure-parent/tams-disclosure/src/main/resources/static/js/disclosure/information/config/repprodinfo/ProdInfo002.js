@@ -123,7 +123,7 @@
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.basicChangeList = mockTradeTable.getAllRows();
-
+        object.performaceList = mockTradeTable.getAllRows();
         if(object.holdday){
             if(!( /(^[0-9]\d*$)/.test(object.holdday))){
                 Joyin.error("最低持有天数必须为大于等于0的整数");
@@ -213,29 +213,29 @@
     }
 
     var resetForm = function(id,value,pageId){
-            var element;
-            if($('#'+id).size() > 0){
-                element = $('#'+id);
-            }else{
-                element = $('input[name=' + id + ']');
-            }
+        var element;
+        if($('#'+id).size() > 0){
+            element = $('#'+id);
+        }else{
+            element = $('input[name=' + id + ']');
+        }
 
-            //下拉框特殊处理
-            if (element.hasClass('input-select')) {
-                element.val(value).trigger('change');
-            }else if(element.hasClass('input-checkbox')){
-                //单选按钮特殊处理
-                element.val(value).trigger('change');
-            }else if ($('#' + id).attr('lay-skin') === 'switch') {
-                //switch 特殊处理
-                $('#' + id).prop('checked', false);
-                // 是否,有无
-                if (value === 'Y' || value === '01') {
-                    $('#' + id).prop('checked', true);
-                }
-            }else{
-                element.val(value);
+        //下拉框特殊处理
+        if (element.hasClass('input-select')) {
+            element.val(value).trigger('change');
+        }else if(element.hasClass('input-checkbox')){
+            //单选按钮特殊处理
+            element.val(value).trigger('change');
+        }else if ($('#' + id).attr('lay-skin') === 'switch') {
+            //switch 特殊处理
+            $('#' + id).prop('checked', false);
+            // 是否,有无
+            if (value === 'Y' || value === '01') {
+                $('#' + id).prop('checked', true);
             }
+        }else{
+            element.val(value);
+        }
     }
 
     var resetSelectForm = function(){
@@ -247,48 +247,48 @@
     }
 
     var setData = function(id, value ,pageId) {
-            // 基本信息
-            var element;
-            if(pageId != '' && pageId != undefined){
-                id = pageId + '_' + id;
+        // 基本信息
+        var element;
+        if(pageId != '' && pageId != undefined){
+            id = pageId + '_' + id;
+        }
+        if($('#'+id).size() > 0){
+            element = $('#'+id);
+        }else{
+            element = $('input[name=' + id + ']');
+        }
+        //下拉框特殊处理
+        if (element.hasClass('input-select')) {
+            element.val(value).trigger('change');
+        }else if (element.hasClass('input-dateSelect')) {
+            //日期框特殊处理
+            if (value){
+                element.val(new Date(value).format('yyyy-MM-dd'));
             }
-            if($('#'+id).size() > 0){
-                element = $('#'+id);
-            }else{
-                element = $('input[name=' + id + ']');
+        }else if(element.hasClass('input-checkbox')){
+            //单选按钮特殊处理
+            element.val(value).trigger('change');
+        }else if ($('#' + id).attr('lay-skin') === 'switch') {
+            //switch 特殊处理
+            $('#' + id).prop('checked', false);
+            $('#' + id).next().removeClass('layui-form-onswitch').trigger('change');
+            $('#' + id).next().find("em").text('否');
+            // 是否,有无
+            if (value === 'Y' || value === '01') {
+                $('#' + id).prop('checked', true);
+                $('#' + id).next().addClass('layui-form-onswitch').trigger('change');
+                $('#' + id).next().find("em").text('是');
             }
-            //下拉框特殊处理
-            if (element.hasClass('input-select')) {
-                element.val(value).trigger('change');
-            }else if (element.hasClass('input-dateSelect')) {
-                //日期框特殊处理
-                if (value){
-                    element.val(new Date(value).format('yyyy-MM-dd'));
-                }
-            }else if(element.hasClass('input-checkbox')){
-                //单选按钮特殊处理
-                element.val(value).trigger('change');
-            }else if ($('#' + id).attr('lay-skin') === 'switch') {
-                //switch 特殊处理
-                $('#' + id).prop('checked', false);
-                $('#' + id).next().removeClass('layui-form-onswitch').trigger('change');
-                $('#' + id).next().find("em").text('否');
-                // 是否,有无
-                if (value === 'Y' || value === '01') {
-                    $('#' + id).prop('checked', true);
-                    $('#' + id).next().addClass('layui-form-onswitch').trigger('change');
-                    $('#' + id).next().find("em").text('是');
-                }
-            }else{
-                element.val(value);
-            }
-            if(id == 'basicChangeList'){
-                // 表格
-                $('#mockTradeTable').data('joyintable').reload({
-                    data : value,
-                    url : null
-                });
-            }
+        }else{
+            element.val(value);
+        }
+        if(id == 'performaceList'){
+            // 表格
+            $('#mockTradeTable').data('joyintable').reload({
+                data : value,
+                url : null
+            });
+        }
 
     }
 
@@ -300,11 +300,6 @@
             $('#btnSave_wfl').hide();
             if($('#issuingWay').val()=='02'){
                 $('#openFreq').attr("disabled",true);
-            }
-            if (openFreqGlobal && prodTypeGlobal && openFreqGlobal == '01' && prodTypeGlobal == '01') {
-                $("#holdday").attr("disabled", false);
-            }else{
-                $("#holdday").attr("disabled", true);
             }
         }
         // if(pageModel=== PAGE_MODEL_NEW){
@@ -488,7 +483,7 @@
 
     // 模拟交易列表
     var mockTradeTable = $("#mockTradeTable").joyintable({
-        data: basicChangeList == null ? [] : basicChangeList,
+        data: performaceList == null ? [] : performaceList,
         //data:[],
         searchOnInit: true,
         checkbox: false,
@@ -501,23 +496,13 @@
                     type: 'select', formatoption: true, multiple: false, searchable: true, result: QUOTA_CODE
                 }
             }*/
-            {
-                field: 'dataType', edit: true, sortable: false, width:260, title: '行情代码',  align: 'center',
-                editOption: {
-                    type: 'select', multiple: false, searchable: true, result: QUOTA_CODE
-                }
-            }
-            , {
-                field: 'proportion',
-                sortable: false,
-                title: '系数(%)',
-                width: 100,
-                align: 'left',
-                edit: true,
-                type: 'number',
-                digit: 2
-            }
-            , {field: 'operation', sortable: false, title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
+            {field:'personalField',width:'5%', title: '序号',sortField:"number"}
+            ,{field:'effDateStr',width:'10%',  title: '业绩比较基准生效日'}
+            ,{field:'expDate',width:'10%',title: '业绩比较基准生效截止日',type:'date'}
+            ,{field:'zzqj',width: '10%', title : 'Performance001.zzxz'}
+            ,{field:'zzcf',width:'10%', title : 'Performance001.zzxzh'}
+            ,{field:'zz500',width:'10%', title : 'Performance001.zzzs'}
+            ,{field:'hs300',width:'10%', title : 'Performance001.hszs'}
         ],
         addbtn: true,
         done: function () {
