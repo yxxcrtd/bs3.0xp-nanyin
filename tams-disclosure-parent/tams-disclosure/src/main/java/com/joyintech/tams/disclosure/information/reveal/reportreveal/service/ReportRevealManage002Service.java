@@ -30,6 +30,7 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.Ftp
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service.FtpDetailService;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.controller.UploadattAchment001Controller;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageParamDto;
 import com.joyintech.tams.disclosure.information.reveal.reportreveal.dao.ReportRevealManageEX001Mapper;
@@ -98,6 +99,8 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
      */
     private static final String PROCESS_KEY = "exportProcessBar";
 
+	private Logger logger = LoggerFactory.getLogger(UploadattAchment001Controller.class);
+	
     /**
      * 手动披露
      * @param listdto
@@ -202,7 +205,10 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
         exportFilePath=exportFilePath+ DateUtil.formatDate(DateUtil.getCurrentDate());
         File dateFilePath=new SafelyFile(exportFilePath);
         if ( !dateFilePath.exists()){//若此目录不存在，则创建之
-            dateFilePath.mkdir();
+            boolean ret = dateFilePath.mkdir();
+            if ( ret==false ) {
+            	logger.error("创建目录错误："+dateFilePath.getName());
+            }
         }
         //生成的压缩包的名称:zipFileName
         String zipFileName = this.createFileName("zip");
@@ -365,7 +371,10 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
             }
 
         }
-        file.delete();
+        boolean ret = file.delete();
+        if ( ret==false ) {
+        	logger.error("删除文件错误："+file.getName());
+        }
     }
 
     /**
