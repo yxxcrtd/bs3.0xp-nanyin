@@ -141,6 +141,9 @@ public class UnClaimAssetDetail002Controller extends BaseController {
             dto.setUpdateTime(sysDate);
             dto.setUpdateUser(CommonUtil.getUserName());
             for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()){
+                unclaimDto.setProdId(dto.getProdId());
+                unclaimDto.setEffDate(dto.getEffDate());
+                unclaimDto.setEffEndDate(dto.getEffEndDate());
                 unclaimDto.setUpdateTime(dto.getUpdateTime());
                 unclaimDto.setUpdateUser(CommonUtil.getUserName());
             }

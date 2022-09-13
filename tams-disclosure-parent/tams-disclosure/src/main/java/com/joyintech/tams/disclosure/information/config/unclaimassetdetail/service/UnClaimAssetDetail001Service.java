@@ -99,6 +99,28 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
 
     @Override
     public void doComplete(UnClaimAssetDetailDto dto, OperationType operationType) {
+        unClaimAssetDetailMapper.deleteOnReal(dto);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("prodId", dto.getProdId());
+        map.put("effDate",dto.getEffDateStr());
+        map.put("effEndDate", dto.getEffEndDateStr());
+        map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
+        Integer num = unClaimAssetDetailMapper.selectCount(map);
+
+        for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()){
+            String code = IDGenerator.generate(36);
+            if (unclaimDto.getProdId()==null){
+                unclaimDto.setProdId(dto.getProdId());
+            }
+            num+=1;
+            unclaimDto.setDataStatus("E");
+            unclaimDto.setNostdAssetId(code);
+            unclaimDto.setEffDate(dto.getEffDate());
+            unclaimDto.setEffEndDate(dto.getEffEndDate());
+            unclaimDto.setProjectNo(String.valueOf(num));
+            unClaimAssetDetailMapper.insert(unclaimDto);
+        }
     }
 
     /**
@@ -271,14 +293,14 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                     map.put("prodId", entities.get(0).getProdId());
                     map.put("effDate", entities.get(0).getEffDateStr());
                     map.put("effEndDate", entities.get(0).getEffEndDateStr());
-                    map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
+                    map.put("dataStatus", DictCodeListExt1.维护数据状态_待处理.getValue());
                     AtomicInteger num = new AtomicInteger(mapper.selectCount(map));
                     entities.forEach(item -> {
                         num.addAndGet(1);
                         item.setUpdateTime(DateUtil.now());
                         item.setUpdateUser(CommonUtil.getUserName());
                         item.setNostdAssetId(IDGenerator.generate(36));
-                        item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                        item.setDataStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
                         item.setProjectNo(String.valueOf(num));
                         mapper.insert(item);
                     });

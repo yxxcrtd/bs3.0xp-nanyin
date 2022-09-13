@@ -61,6 +61,8 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
      */
     private String updateTimeStr;
 
+    public String id;
+
 //    public String getUpdateTimeStr() {
 //        return updateTimeStr;
 //    }
@@ -218,5 +220,14 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
 
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
+    }
+
+    @PrimaryKey(PrimaryKey.Field.PK_4)
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

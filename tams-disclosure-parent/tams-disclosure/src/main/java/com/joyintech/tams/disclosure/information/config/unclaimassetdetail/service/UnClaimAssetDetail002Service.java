@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Service
 public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAssetDetailDto>
     implements BaseProcessService<UnClaimAssetDetailDto> {
@@ -54,11 +56,15 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
 
         if (OperationType.DELETE.equals(type)) {
             //删除,删除该产品所投该生效区间所有非标资产,逻辑删除,更新数据状态为D：无效
-                HashMap map =new HashMap();
-                map.put("prodId",dto.getProdId());
-                map.put("eddDate", DateUtil.format(dto.getEffDate()));
-                map.put("effEndDate",DateUtil.format(dto.getEffEndDate()));
-                 unClaimAssetDetailMapper.deleteOnStatus(map);
+//                HashMap map =new HashMap();
+//                map.put("prodId",dto.getProdId());
+//                map.put("eddDate", DateUtil.format(dto.getEffDate()));
+//                map.put("effEndDate",DateUtil.format(dto.getEffEndDate()));
+//                map.put("dataStatus",dto.getDataStatus());
+//                 unClaimAssetDetailMapper.deleteOnStatus(map);
+
+            List<UnClaimAssetDetailDto> dtoList = dto.getUnclaimList();
+            unClaimAssetDetailMapper.deleteByNostdAssetId(dtoList);
         }
         else if (OperationType.NEW.equals(type)) {//新建
 //            for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()
@@ -84,18 +90,26 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
         }
         else {
             //编辑后更新  全删全插，覆盖掉 删除按照prodId,effDate,effEndDate
-            UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
-            unClaimAssetDetailDto.setProdId(dto.getProdId());
-                unClaimAssetDetailMapper.deleteOnReal(dto);
+            unClaimAssetDetailMapper.deleteOnReal(dto);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId", dto.getProdId());
+            map.put("effDate",dto.getEffDateStr());
+            map.put("effEndDate", dto.getEffEndDateStr());
+            map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
+            Integer num = unClaimAssetDetailMapper.selectCount(map);
+
             for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()){
                 String code = IDGenerator.generate(36);
                 if (unclaimDto.getProdId()==null){
-                    unclaimDto.setProdId(unClaimAssetDetailDto.getProdId());
+                    unclaimDto.setProdId(dto.getProdId());
                 }
+                num+=1;
                 unclaimDto.setDataStatus("E");
                 unclaimDto.setNostdAssetId(code);
                 unclaimDto.setEffDate(dto.getEffDate());
                 unclaimDto.setEffEndDate(dto.getEffEndDate());
+                unclaimDto.setProjectNo(String.valueOf(num));
                 unClaimAssetDetailMapper.insert(unclaimDto);
             }
         }
