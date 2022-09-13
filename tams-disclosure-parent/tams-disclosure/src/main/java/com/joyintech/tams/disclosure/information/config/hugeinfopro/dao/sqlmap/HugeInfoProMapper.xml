@@ -14,6 +14,7 @@
           RPT_ISSUE_DATE rptIssueDate,
           DEAL_DATE dealDate,
           UPDATE_TIME updateTime,
+          UPDATE_USER updateUser,
         TO_CHAR(UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
        from
           DIS_LARGE_REDEMPTION
