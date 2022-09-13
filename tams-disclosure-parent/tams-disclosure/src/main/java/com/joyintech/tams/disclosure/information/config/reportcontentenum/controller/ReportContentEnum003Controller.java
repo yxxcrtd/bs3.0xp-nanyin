@@ -137,14 +137,14 @@ public class ReportContentEnum003Controller extends BaseController {
 		//获取平台日期
 		Date sysDate = iPlatformDate.getSysDate();
 		Date indexDate = dto.getIndexDate();
-		if (indexDate.compareTo(sysDate) < 0 ){
-			msg = "生效日期必须大于等于平台日";
-			return new AjaxResult(msg, MessageType.错误消息);
-		}
+//		if (indexDate.compareTo(sysDate) < 0 ){
+//			msg = "生效日期必须大于等于平台日";
+//			return new AjaxResult(msg, MessageType.错误消息);
+//		}
 		Date endDate = dto.getEndDate();
 		//生效截止日期必须大于生效日期
-		if(endDate.compareTo(indexDate) <=0){
-			msg = "生效截止日期必须大于生效日期";
+		if(endDate.compareTo(indexDate) <0){
+			msg = "生效截止日期必须大于等于生效日期";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
 
