@@ -1174,3 +1174,10 @@ where a.page_id in ('ProElementAdj002',
 update  sys_wfl_business_module a set a.module_id = 'twoApproval'
 where a.page_id ='ReportConfirmManage001' and a.element_id='ReportConfirmManage001_btn_submit';
 -- add by zhengxiaolian 2022-08-31 报表确认改为二级流程 end
+
+-- add by zhengxiaolian 2022-09-13 非标增加批量审批流程 start
+delete from sys_wfl_business_module a where a.page_id='UnClaimAssetDetail002' and ELEMENT_ID='UnClaimAssetDetail001_btn_submit';
+
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('UnClaimAssetDetail002', 'UnClaimAssetDetail001_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+-- add by zhengxiaolian 2022-09-13 非标增加批量审批流程 end

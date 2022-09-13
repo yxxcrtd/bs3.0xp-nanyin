@@ -130,7 +130,7 @@
             };
 
             Joyin.confirm(JoyinUtil.getLabel("请确认是否进行批量审批？"), function(){
-                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/submit', object, "UnClaimAssetDetail001_btn_submit", "UnClaimAssetDetail001",function(){
+                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/submit', object, "UnClaimAssetDetail001_btn_submit", "UnClaimAssetDetail002",function(){
                 });
             });
         });

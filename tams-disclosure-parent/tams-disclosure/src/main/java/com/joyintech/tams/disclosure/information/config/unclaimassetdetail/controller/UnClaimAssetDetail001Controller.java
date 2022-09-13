@@ -217,7 +217,7 @@ public class UnClaimAssetDetail001Controller extends BaseController {
 
         ProcessParameter<UnClaimAssetDetailDto> processParameter = new ProcessParameter<UnClaimAssetDetailDto>();
         WorkFlowParameter<UnClaimAssetDetailDto> params = new WorkFlowParameter<UnClaimAssetDetailDto>();
-        params.setPageId("UnClaimAssetDetail001");
+        params.setPageId("UnClaimAssetDetail002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getProdId());
         params.setBusinessType(DictCodeListExt4.共通业务类型_非标债权类资产明细维护.getValue());
