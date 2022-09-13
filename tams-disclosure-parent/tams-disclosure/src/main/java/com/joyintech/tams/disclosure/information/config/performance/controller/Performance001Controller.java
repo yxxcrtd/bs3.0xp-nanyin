@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -46,7 +47,7 @@ public class Performance001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<Performance001Dto> selectAll(){
-        Page<Performance001Dto> page = performance001Service.selectForPage(
+        Page<Performance001Dto> page = performance001Service.selectForPage1(
                 RequestUtil.getParameters(getRequest()));
         return page;
     }

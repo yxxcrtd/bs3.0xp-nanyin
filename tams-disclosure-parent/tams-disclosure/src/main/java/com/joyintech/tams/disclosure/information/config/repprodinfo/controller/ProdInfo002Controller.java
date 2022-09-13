@@ -10,26 +10,22 @@
 
 package com.joyintech.tams.disclosure.information.config.repprodinfo.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.constant.*;
-import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
-import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
-import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdBasicChangeService;
-import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.validation.Valid;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -44,13 +40,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.*;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt4;
+import com.joyintech.tams.constant.DictCodeListExt5;
+import com.joyintech.tams.disclosure.information.config.performance.dao.Performance001Mapper;
+import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdBasicChangeService;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 报表模板管理新建
@@ -73,6 +87,8 @@ public class ProdInfo002Controller extends BaseController {
     @Autowired
     ProdBasicChangeService prodBasicChangeService;
 
+    @Autowired
+    private Performance001Mapper performance001Mapper;
     /**
      * 日志
      */
@@ -133,6 +149,15 @@ public class ProdInfo002Controller extends BaseController {
                     dto.setEffDateStr(DateUtil.format(dto1.getEffDate()));
                 }
             }
+            
+            Map<String, Object> mapPara = new HashMap<String,Object>();
+            List<String> listProd = new ArrayList<String>();
+            listProd.add(dto.getProdId());
+            mapPara.put("prodIdList", listProd);
+            mapPara.put("status", "E");
+            List<Performance001Dto> listBasis = performance001Mapper.select1(mapPara);
+            dto.setPerformaceList(listBasis);
+            
             model.addAttribute("entity", dto);
 
         }
@@ -335,29 +360,29 @@ public class ProdInfo002Controller extends BaseController {
         // }
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 end */
 
-        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {
-            if (CollectionUtils.isEmpty(dto.getBasicChangeList())) {
-                return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
-            }
-            Set<String> setChangeDto = new HashSet<>();
-            boolean flag=true;
-            for (ProdBasicChangeDto i : dto.getBasicChangeList()) {
-                if (StringUtils.isBlank(i.getDataType()) || StringUtils.isBlank(i.getProportion())) {
-                    return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
-                } else {
-                    setChangeDto.add(i.getDataType());
-                }
-                if(new BigDecimal(i.getProportion()).compareTo(BigDecimal.ZERO)<=0){
-                    flag=false;
-                }
-            }
-            if (setChangeDto.size() != dto.getBasicChangeList().size()) {
-                return new AjaxResult("行情代码重复", MessageType.错误消息);
-            }
-            if (!flag) {
-                return new AjaxResult("系数不能小于等于0", MessageType.错误消息);
-            }
-        }
+//        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {
+//            if (CollectionUtils.isEmpty(dto.getBasicChangeList())) {
+//                return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
+//            }
+//            Set<String> setChangeDto = new HashSet<>();
+//            boolean flag=true;
+//            for (ProdBasicChangeDto i : dto.getBasicChangeList()) {
+//                if (StringUtils.isBlank(i.getDataType()) || StringUtils.isBlank(i.getProportion())) {
+//                    return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
+//                } else {
+//                    setChangeDto.add(i.getDataType());
+//                }
+//                if(new BigDecimal(i.getProportion()).compareTo(BigDecimal.ZERO)<=0){
+//                    flag=false;
+//                }
+//            }
+//            if (setChangeDto.size() != dto.getBasicChangeList().size()) {
+//                return new AjaxResult("行情代码重复", MessageType.错误消息);
+//            }
+//            if (!flag) {
+//                return new AjaxResult("系数不能小于等于0", MessageType.错误消息);
+//            }
+//        }
         return commonCheck(bindingResult, operateType);
     }
 

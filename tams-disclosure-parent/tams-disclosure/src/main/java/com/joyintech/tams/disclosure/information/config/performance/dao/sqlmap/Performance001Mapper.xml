@@ -8,41 +8,73 @@
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
         UPDATE_TIME UPDATE_TIME, STATUS STATUS, GROUP_ID GROUP_ID
     </sql>
-	<select id="select"
+<!--	<select id="select"-->
+<!--			resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">-->
+<!--		select-->
+<!--			rpbc.UUID uuid,-->
+<!--			rpbc.PROD_ID prodId,-->
+<!--			rpbc.DATA_TYPE dataType,-->
+<!--			rpbc.EFF_DATE effDate,-->
+<!--			rpbc.EXP_DATE expDate,-->
+<!--		    rpbc.STATUS status,-->
+<!--		    rpbc.PROPORTION proportion,-->
+<!--			rpbc.UPDATE_USER updateUser,-->
+<!--			rpbc.UPDATE_TIME updateTime,-->
+<!--			TO_CHAR(rpbc.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr-->
+<!--		from REP_PROD_BASIC_CHANGE rpbc-->
+<!--		<where>-->
+<!--			<if test="prodIdList != null and prodIdList.size()>0">-->
+<!--				AND	rpbc.PROD_ID in-->
+<!--				<foreach collection="prodIdList" item="item" open="(" close=")"-->
+<!--						 separator=",">-->
+<!--					#{item}-->
+<!--				</foreach>-->
+<!--			</if>-->
+<!--			<if test="effDate != null and effDate != ''">-->
+<!--				AND rpbc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')-->
+<!--			</if>-->
+<!--			<if test="expDate != null and expDate != ''">-->
+<!--				AND rpbc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')-->
+<!--			</if>-->
+<!--&lt;!&ndash;			<if test="dataStatus != null and dataStatus != ''">&ndash;&gt;-->
+<!--&lt;!&ndash;				AND	rpbc.DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}&ndash;&gt;-->
+<!--&lt;!&ndash;			</if>&ndash;&gt;-->
+<!--		</where>-->
+<!--	</select>-->
+
+	<select id="select1"
 			resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">
-		select
-			rpbc.UUID uuid,
-			rpbc.PROD_ID prodId,
-			rpbc.DATA_TYPE dataType,
-			rpbc.EFF_DATE effDate,
-			rpbc.EXP_DATE expDate,
-		    rpbc.STATUS status,
-		    rpbc.PROPORTION proportion,
-			rpbc.UPDATE_USER updateUser,
-			rpbc.UPDATE_TIME updateTime,
-			TO_CHAR(rpbc.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
-		from REP_PROD_BASIC_CHANGE rpbc
+		select 
+		rownum personalField
+		,bc.status status,bc.prod_id prodId,bc.eff_date effDate,bc.exp_date expDate,bc1.proportion zzqj,bc3.proportion zzcf,bc4.proportion zz500,bc2.proportion hs300,
+-- 		to_char(bc.UPDATE_TIME,'yyyy-mm-dd hh24:mi') updateTime,
+        bc.a updateTime,
+		bc.UPDATE_USER updateUser
+		from (select distinct status,prod_id,eff_date,exp_date ,to_char(UPDATE_TIME,'yyyy-mm-dd hh:mm:ss') a ,UPDATE_USER from rep_prod_basic_change) bc
+		left join rep_prod_basic_change bc1 on bc.prod_id=bc1.prod_id and bc.eff_date=bc1.eff_date and bc.exp_date=bc1.exp_date and bc1.data_type='01' and bc.status = bc1.status
+		left join rep_prod_basic_change bc2 on bc.prod_id=bc2.prod_id and bc.eff_date=bc2.eff_date and bc.exp_date=bc2.exp_date and bc2.data_type='02' and bc.status = bc2.status
+		left join rep_prod_basic_change bc3 on bc.prod_id=bc3.prod_id and bc.eff_date=bc3.eff_date and bc.exp_date=bc3.exp_date and bc3.data_type='03' and bc.status = bc3.status
+		left join rep_prod_basic_change bc4 on bc.prod_id=bc4.prod_id and bc.eff_date=bc4.eff_date and bc.exp_date=bc4.exp_date and bc4.data_type='04' and bc.status = bc4.status
 		<where>
 			<if test="prodIdList != null and prodIdList.size()>0">
-				AND	rpbc.PROD_ID in
+				AND	bc.PROD_ID in
 				<foreach collection="prodIdList" item="item" open="(" close=")"
 						 separator=",">
 					#{item}
 				</foreach>
 			</if>
+			<if test="status != null and status!=''">
+				and bc.STATUS=#{status,jdbcType=VARCHAR}
+			</if>
 			<if test="effDate != null and effDate != ''">
-				AND rpbc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
+				AND bc.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
 			</if>
 			<if test="expDate != null and expDate != ''">
-				AND rpbc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')
+				AND bc.EXP_DATE = to_date(#{expDate,jdbcType=DATE},'yyyy-MM-dd')
 			</if>
-<!--			<if test="dataStatus != null and dataStatus != ''">-->
-<!--				AND	rpbc.DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}-->
-<!--			</if>-->
 		</where>
 	</select>
-
-
+	
 	<select id="selectForExport"
 			resultType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
 		select
@@ -72,16 +104,19 @@
 		</where>
 	</select>
 	<select id="getProdIdlist" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT
-		r.PROD_ID id,
-		r.PROD_NAME text,
-		r.PROD_ABBR
-		FROM
-		rep_prod_info r
-		where r.REP_PROD_TYPE = '03'
+		select distinct
+		prod.PROD_ID id,
+		case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+		else prod.PROD_NAME end text
+		from
+		REP_PROD_INFO prod
+		left join V_REP_PROD_INFO pprod
+		on prod.p_prod_id = pprod.prod_id
+		where  prod.rep_prod_type in ('02','03')
 		<if test="search != null and search != ''">
-			and (r.PROD_ID like concat(concat('%',#{search}),'%')
-			or r.PROD_NAME like concat(concat('%',#{search}),'%'))
+			and (prod.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or pprod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or prod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
 		</if>
 	</select>
 
@@ -140,7 +175,25 @@
 		and EFF_DATE = #{effDateO,jdbcType=DATE}
 		and EXP_DATE = #{expDateO,jdbcType=DATE}
 	</update>
-
+	<update id="update">
+		update REP_PROD_BASIC_CHANGE
+		<set >
+			<if test="proportion != null" >
+				PROPORTION = #{proportion,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		and EFF_DATE = #{effDateO,jdbcType=DATE}
+		and EXP_DATE = #{expDateO,jdbcType=DATE}
+		and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+		and STATUS != 'D'
+	</update>
 
 
 	<select id="selectByPrimaryKey" resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto" parameterType="java.lang.String" >
@@ -150,10 +203,12 @@
 		where PROD_ID = #{prodId,jdbcType=VARCHAR}
 		and EFF_DATE = to_date(#{effDate,jdbcType=DATE},'YYYY-MM-DD')
 		and EXP_DATE = to_date(#{expDate,jdbcType=DATE},'YYYY-MM-DD')
+		and STATUS = #{status}
 	</select>
 	<select id="selectPerformanceInfoList" parameterType="java.util.List"
 			resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">
 		select
+		distinct
 		A.PROD_ID prodId,
 		to_char(A.EFF_DATE,'yyyy-mm-dd') effDateStr,
 		to_char(A.EXP_DATE,'yyyy-mm-dd') expDateStr
@@ -205,7 +260,7 @@
                MAX(mark.HIS_NO) his_no,
                  mark.WORKFLOW_ID
           FROM SYS_DATA_PROCESS_MARK mark
-         WHERE mark.BUSINESS_DATA_PK1 = #{prodId}  GROUP BY mark.WORKFLOW_ID) maxmark
+         WHERE mark.BUSINESS_DATA_PK1 = #{prodId} and mark.WORKFLOW_ID != #{workflowId,jdbcType=VARCHAR} GROUP BY mark.WORKFLOW_ID) maxmark
          WHERE maxmark.his_no=mark.his_no
          AND maxmark.workflow_id =mark.workflow_id AND mark.status IN('A','U','P')
          AND mark.business_data_pk1=#{prodId}

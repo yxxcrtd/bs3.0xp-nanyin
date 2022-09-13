@@ -123,7 +123,7 @@
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.basicChangeList = mockTradeTable.getAllRows();
-
+		object.performaceList = mockTradeTable.getAllRows();
         if(object.holdday){
             if(!( /(^[0-9]\d*$)/.test(object.holdday))){
                 Joyin.error("最低持有天数必须为大于等于0的整数");
@@ -282,7 +282,7 @@
             }else{
                 element.val(value);
             }
-            if(id == 'basicChangeList'){
+            if(id == 'performaceList'){
                 // 表格
                 $('#mockTradeTable').data('joyintable').reload({
                     data : value,
@@ -300,6 +300,11 @@
             $('#btnSave_wfl').hide();
             if($('#issuingWay').val()=='02'){
                 $('#openFreq').attr("disabled",true);
+            }
+            if (openFreqGlobal && prodTypeGlobal && openFreqGlobal == '01' && prodTypeGlobal == '01') {
+                $("#holdday").attr("disabled", false);
+            }else{
+                $("#holdday").attr("disabled", true);
             }
         }
         // if(pageModel=== PAGE_MODEL_NEW){
@@ -483,7 +488,7 @@
 
     // 模拟交易列表
     var mockTradeTable = $("#mockTradeTable").joyintable({
-        data: basicChangeList == null ? [] : basicChangeList,
+        data: performaceList == null ? [] : performaceList,
         //data:[],
         searchOnInit: true,
         checkbox: false,
@@ -496,7 +501,7 @@
                     type: 'select', formatoption: true, multiple: false, searchable: true, result: QUOTA_CODE
                 }
             }*/
-            {field:'number',width:'5%', title: '序号',sortField:"number"}
+            {field:'personalField',width:'5%', title: '序号',sortField:"number"}
             ,{field:'effDateStr',width:'10%',  title: '业绩比较基准生效日'}
             ,{field:'expDate',width:'10%',title: '业绩比较基准生效截止日',type:'date'}
             ,{field:'zzqj',width: '10%', title : 'Performance001.zzxz'}
