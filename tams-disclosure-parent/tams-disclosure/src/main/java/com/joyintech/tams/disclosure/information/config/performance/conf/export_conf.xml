@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="PerformanceInfo.xlsx" name="产品业绩比较基准维护">
+    <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">
+        <Row>
+            <Cell order="1" name="数据状态">statusStr</Cell>
+            <Cell order="2" name="子产品代码">prodId</Cell>
+            <Cell order="3" name="业绩比较基准生效日">effDateStr</Cell>
+            <Cell order="4" name="业绩比较基准生效截止日">expDateStr</Cell>
+            <Cell order="5" name="中债新综合全价指数收益率【系数】(%)">zzqj</Cell>
+            <Cell order="6" name="中债新综合财富指数（1-3年）收益率【系数】(%)">zzcf</Cell>
+            <Cell order="7" name="中证501指数收益率【系数】(%)">zz500</Cell>
+            <Cell order="8" name="沪深300指数收益率【系数】(%)">hs300</Cell>
+            <Cell order="9" name="更新时间">updateTimeStr</Cell>
+            <Cell order="10" name="更新人">updateUser</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>
