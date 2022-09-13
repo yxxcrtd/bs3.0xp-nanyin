@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ public class BonusReportDataService implements IReportDataService {
 	@Autowired
 	private BonusReportMapper bonusReportMapper;
 
+	@Autowired
+	private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
 	/**
 	 * 日志
 	 */
@@ -45,6 +50,11 @@ public class BonusReportDataService implements IReportDataService {
 		List<Map<String, Object>> listResult = new ArrayList<>();
 		try {
 			// 参数
+			RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(paraMap);
+			if(StringUtil.isNotEmpty(info)){
+				paraMap.put("prodId",info.getProdId());
+			}
+
 			List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
 
 			for (BonusReportDto report : listReport) {  //指定产品后，只有一条数据
