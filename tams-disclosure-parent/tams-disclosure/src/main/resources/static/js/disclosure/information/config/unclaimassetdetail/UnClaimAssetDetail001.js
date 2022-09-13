@@ -128,11 +128,13 @@
                 selectedItem: selArr,
                 operateType:"submit"
             };
-
-            Joyin.confirm(JoyinUtil.getLabel("请确认是否进行批量审批？"), function(){
-                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/submit', object, "UnClaimAssetDetail001_btn_submit", "UnClaimAssetDetail002",function(){
+            Joyin.ajaxJson(basePath + '/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
+                Joyin.confirm(JoyinUtil.getLabel("请确认是否进行批量审批？"), function(){
+                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/submit', object, "UnClaimAssetDetail001_btn_submit", "UnClaimAssetDetail002",function(){
+                    });
                 });
             });
+
         });
 
         $('#UnClaimAssetDetail001_btn_delete').click(function() {

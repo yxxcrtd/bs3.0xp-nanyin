@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
@@ -9,6 +10,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -19,6 +21,7 @@ import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.servi
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.service.UnClaimAssetDetail002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,6 +192,21 @@ public class UnClaimAssetDetail001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupDelete.class}) UnClaimAssetDetailDto dto, BindingResult br)  {
+        AjaxResult result = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        List<UnClaimAssetDetailDto> dtoList = dto.getSelectedItem();
+        for(UnClaimAssetDetailDto tmp:dtoList) {
+            if(unClaimAssetDetail001Service.isInWorkflow(tmp)){
+                errorList.add(new ValidMessage("所选对象中存在流程中的数据！"+SpringContextUtil.getTextValue("产品主代码") + "(" + tmp.getProdId() + ")" + "-"
+                        + SpringContextUtil.getTextValue("生效日") + "("+DateUtil.format(tmp.getEffDate())+")" + "-"
+                        + SpringContextUtil.getTextValue("生效截止日期") + "("+DateUtil.format(tmp.getEffEndDate())+")"));
+                //return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+            }
+        }
+        if(CollectionUtils.isNotEmpty(errorList)){
+            result.setErrorList(errorList);
+            return result;
+        }
         return commonCheck(br, dto.getOperateType());
     }
 

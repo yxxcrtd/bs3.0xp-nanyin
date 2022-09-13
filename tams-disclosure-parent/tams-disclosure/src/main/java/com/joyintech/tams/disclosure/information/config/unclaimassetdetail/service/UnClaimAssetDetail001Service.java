@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.serv
 import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -19,6 +20,7 @@ import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.U
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -430,5 +432,24 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             unClaimAssetDetailDto.setEffEndDate(DateUtil.parse(rowData.get(8)));
         }
         return unClaimAssetDetailDto;
+    }
+
+    public boolean isInWorkflow(UnClaimAssetDetailDto dto){
+        try {
+            ProcessMark processMark = new ProcessMark();
+            processMark.setPageId("UnClaimAssetDetail002");
+            processMark.setBusinessDataPk1(dto.getProdId());
+            processMark.setBusinessDataPk2(dto.getEffDateStr());
+            processMark.setBusinessDataPk3(dto.getEffEndDateStr());
+            List<String> resultList = WorkflowContext.getProcessMarkService().getBusinessDataInFlow(
+                    processMark);
+            if (!StringUtil.isEmptyList(resultList)) {
+                return true;
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException("处理失败", e);
+        }
+        return false;
     }
 }
