@@ -99,6 +99,8 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
 
     @Override
     public void doComplete(UnClaimAssetDetailDto dto, OperationType operationType) {
+        dto.setEffEndDateO(dto.getEffEndDate());
+        dto.setEffDateO(dto.getEffDate());
         unClaimAssetDetailMapper.deleteOnReal(dto);
 
         Map<String, Object> map = new HashMap<>();
