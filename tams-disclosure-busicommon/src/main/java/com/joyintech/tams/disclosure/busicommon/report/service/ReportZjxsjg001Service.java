@@ -3,7 +3,9 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportZjxsjgMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportZjxsjgDto;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.IReportDataService;
@@ -30,6 +32,9 @@ public class ReportZjxsjg001Service implements IReportDataService {
 
     @Autowired
     private ReportZjxsjgMapper reportZjxsjgMapper;
+
+    @Autowired
+    private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
     
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
@@ -48,6 +53,11 @@ public class ReportZjxsjg001Service implements IReportDataService {
         }
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
+        RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(searchparam);
+        if(StringUtil.isNotEmpty(info)){
+            searchparam.put("prodId",info.getProdId());
+            prodId=info.getProdId();
+        }
         ReportZjxsjgDto zjxsjg = reportZjxsjgMapper.queryZjxsjg(searchparam);
         if (zjxsjg == null) {
             return result;
