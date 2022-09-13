@@ -173,7 +173,10 @@ public class InterfUtil {
                         })) {
                             File lf = new SafelyFile(localPath + File.separatorChar + fileName);
                             if (!lf.exists()) {
-                                lf.createNewFile();
+                                boolean ret = lf.createNewFile();
+                                if ( ret==true ) {
+                                	logger.info("创建新文件:"+lf.getName());
+                                }
                                 FileUtils.copyFile(ff, lf);
                             }
                             localFiles.add(lf);
@@ -363,7 +366,10 @@ public class InterfUtil {
                 for (File file : files) {
                     try {
                         if (file.exists() && file.isFile()) {
-                            file.delete();
+                            boolean ret = file.delete();
+                            if ( ret==false ) {
+                            	logger.error("删除文件错误："+file.getName());
+                            }
                         }
                     }
                     catch (Exception e) {

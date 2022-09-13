@@ -376,7 +376,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								secondFile = new SafelyFile(secondPath);
 								// 判断第二层文件夹是否存在，否则创建
 								if(!secondFile.exists()){
-									secondFile.mkdir();
+									boolean ret = secondFile.mkdir();
+									if ( ret==false ) {
+										logger.error("创建目录错误："+secondFile.getName());
+									}
 									//是否需要下载系统生成报表。01：是，02：否
 									if(StringUtil.equals(CacheUtil.getSysParam(
 								                ReportGlobalConstant.IS_NEED_SYSFILE), "01") ){
@@ -474,7 +477,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								compressFile(zipOut, firstFile, firstFile.getName());
 								deleteFile(firstFile);
 								if(downloadFilePeople!=null){
-									downloadFilePeople.delete();
+									boolean ret  = downloadFilePeople.delete();
+									if ( ret==false ) {
+										logger.error("删除文件错误："+downloadFilePeople.getName());
+									}
 								}
 								if(downloadFile!=null){
 									downloadFile.delete();

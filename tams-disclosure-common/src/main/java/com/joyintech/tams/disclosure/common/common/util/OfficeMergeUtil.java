@@ -194,7 +194,10 @@ public class OfficeMergeUtil {
             File outputFile = new SafelyFile(outputFileName);
             File dir = outputFile.getParentFile();
             if (!dir.exists()) {
-                dir.mkdirs();
+                boolean ret = dir.mkdirs();
+                if ( ret==false ) {
+                	logger.error("创建目录错误："+dir.getName());
+                }
             }
             fos = new FileOutputStream(outputFile);
             outputExcel.write(fos);

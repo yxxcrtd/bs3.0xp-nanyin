@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.dao.ChbMktHolidayMapper;
-import com.joyintech.tams.common.base.entity.ChbMktHoliday;
-import com.joyintech.tams.common.base.entity.ChbMktHolidayKey;
 import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.common.base.entity.RepFeeTrd;
 import com.joyintech.tams.common.base.entity.RepReveal;
@@ -162,17 +159,17 @@ public class MatureReportDataService implements IReportDataService {
 			matureReportDto.setRedemFee(BigDecimal.ZERO);
 			for ( RepFeeTrd fee:listFee ) {
 				if ("01".equals(fee.getFeeType()) ) {
-					matureReportDto.setTrustFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
+					matureReportDto.setTrustFee(fee.getAccrual()==null?BigDecimal.ZERO : fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("02".equals(fee.getFeeType()) ) {
-					matureReportDto.setMgrFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
+					matureReportDto.setMgrFee(fee.getAccrual()==null?BigDecimal.ZERO : fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("03".equals(fee.getFeeType()) ) {
-					matureReportDto.setFloatFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
+					matureReportDto.setFloatFee(fee.getAccrual()==null?BigDecimal.ZERO : fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("04".equals(fee.getFeeType()) ) {
-					matureReportDto.setSaleFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
+					matureReportDto.setSaleFee(fee.getAccrual()==null?BigDecimal.ZERO : fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("05".equals(fee.getFeeType()) ) {
-					matureReportDto.setPurFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
+					matureReportDto.setPurFee(fee.getAccrual()==null?BigDecimal.ZERO : fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				} else if ("06".equals(fee.getFeeType()) ) {
-					matureReportDto.setRedemFee(fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
+					matureReportDto.setRedemFee(fee.getAccrual()==null?BigDecimal.ZERO : fee.getAccrual().setScale(2,BigDecimal.ROUND_DOWN));
 				}
 			}
 			listResult.add(CollectionUtils.bean2Map(matureReportDto));

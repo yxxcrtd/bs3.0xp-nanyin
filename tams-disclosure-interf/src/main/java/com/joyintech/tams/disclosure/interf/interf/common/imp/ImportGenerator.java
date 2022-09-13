@@ -273,7 +273,10 @@ public final class ImportGenerator {
 
             // 删除数据文件
             if (tmpFile.exists()) {
-                tmpFile.delete();
+                boolean ret = tmpFile.delete();
+                if ( ret==false ) {
+                	logger.error("删除文件错误："+tmpFile.getName());
+                }
             }
 
             // 删除ftp服务器数据文件

@@ -7,9 +7,13 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
+import com.joyintech.tams.disclosure.information.config.reportmodelmanage.service.ReportModelManage002Service;
 
 /**
  * @author Administrator
@@ -23,6 +27,8 @@ public class ReportFileUtil {
 	
 	public final static String FILE_TYPE_DOCX=".docx";
 	public final static String FILE_TYPE_PDF=".pdf";
+	
+    private static Logger logger = LoggerFactory.getLogger(ReportFileUtil.class);
 	
     /**
      * 获取模板或者报表文件url
@@ -62,7 +68,10 @@ public class ReportFileUtil {
     		//用日期创建路径
     		File file = new File(sb.toString());
     		if ( !file.getParentFile().exists() ) {
-    			file.getParentFile().mkdirs();
+    			boolean ret = file.getParentFile().mkdirs();
+    			if ( ret==false ) {
+    				logger.error("创建目录错误："+file.getParentFile().getName());
+    			}
     		}
     		filename = sb.toString();
     	}

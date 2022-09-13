@@ -160,7 +160,10 @@ public class iMsgServer2015 {
     public boolean DelFile(String FileName) {
         File mFile = new File(FileName);
         if (mFile.exists()) {
-                mFile.delete();
+                boolean ret = mFile.delete();
+                if ( ret==false ) {
+                	System.out.println("删除文件错误："+mFile.getName());
+                }
         }else{
         	SetMsgByName("DelFileState", "失败");
         	return false;
@@ -177,7 +180,10 @@ public class iMsgServer2015 {
 	//创建文件夹
 	public boolean MakeDirectory(String FilePath) {
         File mFile = new File(FilePath);
-        mFile.mkdirs();
+        boolean ret = mFile.mkdirs();
+        if ( ret==false ) {
+        	System.out.println("创建目录错误："+mFile.getName());
+        }
         return (mFile.isDirectory());
     }
 
@@ -230,25 +236,36 @@ public class iMsgServer2015 {
      * @param outputFile 
      * @return 
      */  
-    public  boolean MsgFileSave(String outputFile) {  
-    	 try {
-    	File f = new File(outputFile);
-    	FileOutputStream fos = null;    
-        BufferedInputStream bis = null;    
-        int BUFFER_SIZE = 1024; 
-        byte[] buf = new byte[BUFFER_SIZE];    
-        int size = 0;    
-        bis = new BufferedInputStream(fileContentStream);    
-		fos = new FileOutputStream(f);
-        while ( (size = bis.read(buf)) != -1)     
-          fos.write(buf, 0, size);   
-        bis.close();
-        fos.close();    
-        return true;
-    	 } catch (Exception e) {
- 			e.printStackTrace();
- 			return false;
- 		}    
+	public boolean MsgFileSave(String outputFile) {
+		FileOutputStream fos = null;
+		BufferedInputStream bis = null;
+		try {
+			File f = new File(outputFile);
+			int BUFFER_SIZE = 1024;
+			byte[] buf = new byte[BUFFER_SIZE];
+			int size = 0;
+			bis = new BufferedInputStream(fileContentStream);
+			fos = new FileOutputStream(f);
+			while ((size = bis.read(buf)) != -1)
+				fos.write(buf, 0, size);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			if (bis != null)
+				try {
+					bis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
     }  
  
     public boolean MsgFileLoad(String fileName) throws IOException{

@@ -26,7 +26,10 @@ public class FileLock {
         this.file = file;
 
         try {
-            file.createNewFile(); // create the file if it doesn't exist
+            boolean ret = file.createNewFile(); // create the file if it doesn't exist
+            if ( ret==true ) {
+            	logger.info("创建新文件:"+file.getName());
+            }
             randomFile = new RandomAccessFile(file, "rw");
             channel = randomFile.getChannel();
         } catch (IOException e) {

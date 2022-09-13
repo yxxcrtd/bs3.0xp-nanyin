@@ -193,7 +193,10 @@ public class SftpTools {
          */
         File temp = new SafelyFile(localDir);
         if (!temp.exists()) {
-            temp.mkdirs();
+            boolean ret = temp.mkdirs();
+            if ( ret==false ) {
+            	logger.error("创建目录错误："+temp.getName());
+            }
         }
         File file = new SafelyFile(remoteFile);
         try {
@@ -418,7 +421,10 @@ public class SftpTools {
         File localfile = null;
         FileOutputStream output = null;
         if (!temp.exists()) {
-            temp.mkdirs();
+            boolean ret = temp.mkdirs();
+            if ( ret==false ) {
+            	logger.error("创建目录错误："+temp.getName());
+            }
         }
         try {
             try {

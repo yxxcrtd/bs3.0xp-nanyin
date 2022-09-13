@@ -31,19 +31,33 @@ public class ZipFileUtil {
 
     public static String callCMD( String message ) { 
         Process proess; 
+        InputStreamReader ir = null;
+        LineNumberReader input = null;
         try { 
                 proess = Runtime.getRuntime().exec( message );  
-                InputStreamReader ir = new InputStreamReader(proess.getInputStream()); 
-                LineNumberReader input = new LineNumberReader(ir); 
+                ir = new InputStreamReader(proess.getInputStream()); 
+                input = new LineNumberReader(ir); 
                 String line = ""; 
                 while((line = input.readLine()) != null){ 
 //                    System.out.println(line);
                     logger.info(line);
-                } 
+                }
+                input.close();
                 return line; 
             } catch (IOException e) { 
                 logger.info("fileToxml IOException："+e); 
-            } 
+            } finally {
+            	try {
+					input.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+            	try {
+					ir.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+            }
         return null; 
 
     }

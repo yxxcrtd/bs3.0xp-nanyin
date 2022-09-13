@@ -173,7 +173,10 @@ public class ChbPrdDeclareSubSetService {
                 }
         		FileUtil.copy(file.getPath(), directory+File.separator+newFileName, true);
         	}
-        	file.delete();
+        	boolean ret = file.delete();
+        	if ( ret==false ) {
+        		logger.error("删除文件失败："+ file.getName());
+        	}
         }
 	}
 	
@@ -187,7 +190,11 @@ public class ChbPrdDeclareSubSetService {
         	if(file.isDirectory()){
         		deleteAllFile(file);
         	}
-        	file.delete();
+        	boolean ret = file.delete();
+        	if ( ret==false ) {
+        		logger.error("删除文件失败："+ file.getName());
+        	}
+
         }
 	}
 	

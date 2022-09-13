@@ -168,7 +168,10 @@ public class PoiUtils {
         String outDir = FileNameUtil.createUploadFilePath("");
         File dirFile = new File(outDir);
         if (!dirFile.exists()) {
-            dirFile.mkdirs();
+            boolean ret = dirFile.mkdirs();
+            if ( ret==false ) {
+            	logger.error("创建目录错误："+dirFile.getName());
+            }
         }
         StringBuilder imageDir = new StringBuilder();
         imageDir.append(outDir).append(StringUtils.defaultString(imagePath, "image"));

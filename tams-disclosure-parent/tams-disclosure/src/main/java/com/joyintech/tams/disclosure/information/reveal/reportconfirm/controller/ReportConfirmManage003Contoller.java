@@ -213,7 +213,10 @@ public class ReportConfirmManage003Contoller extends BaseController {
         String localFilePath = CacheUtil.getSysParam(ReportGlobalConstant.DECOMPRESS_FILEPATH);
         File localFilePath1 = new SafelyFile(localFilePath);
 		if(!localFilePath1.exists()){
-			localFilePath1.mkdirs();
+			boolean ret = localFilePath1.mkdirs();
+			if ( ret==false ) {
+				logger.error("创建目录错误："+localFilePath1.getName());
+			}
 		}
 		try{
 			//解压zip格式文件 (File originFile, String targetDir)
@@ -512,7 +515,10 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	    File file = new SafelyFile(sPath);  
 	    // 路径为文件且不为空则进行删除  
 	    if (file.isFile() && file.exists()) {  
-	        file.delete();  
+	        boolean ret = file.delete();
+	        if ( ret==false ) {
+	        	logger.error("创建目录错误："+file.getName());
+	        }
 	        flag = true;  
 	    }  
 	    return flag;  

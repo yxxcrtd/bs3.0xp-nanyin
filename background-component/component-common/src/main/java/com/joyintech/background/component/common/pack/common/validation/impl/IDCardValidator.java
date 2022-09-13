@@ -70,7 +70,7 @@ public class IDCardValidator implements ConstraintValidator<IDCard, String> {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if(StringUtil.isEmpty(value)) {
             return true;

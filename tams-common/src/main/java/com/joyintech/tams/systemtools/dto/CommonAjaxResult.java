@@ -9,13 +9,15 @@ public class CommonAjaxResult extends AjaxResult{
 	@Override
     public void setMessageType(MessageType messageType) {
 		//chenxc:update for pinpoint check,2022-08-25
-		//所有非空值，instanceof将始终返回true，不建议修改，可以对MessageType进行继承
-    	if(messageType instanceof MessageType){
-    		super.setMessageType(messageType);
-    	}else{
-    		MessageType mt = MessageType.valueOf(messageType.toString());
-    		super.setMessageType(mt);
-    	}
+		//所有非空值，instanceof将始终返回true，可以不修改
+		super.setMessageType(messageType);
+		
+//    	if(messageType instanceof MessageType){
+//    		super.setMessageType(messageType);
+//    	}else{
+//    		MessageType mt = MessageType.valueOf(messageType.toString());
+//    		super.setMessageType(mt);
+//    	}
     }
     public void setMessageType(String messageType) {
     	MessageType mt = MessageType.错误消息;

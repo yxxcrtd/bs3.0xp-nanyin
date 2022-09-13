@@ -331,18 +331,18 @@ public class RepEdit001Contoller extends BaseController {
         //System.out.println("OfficeServer.service End");
     }
     
-    public int loadFile (HttpServletResponse response,String inputFilename) throws IOException {
-        FileInputStream fis = new FileInputStream(inputFilename);
-        OutputStream os = response.getOutputStream();
-        int len = 0;
-        byte[] buffer = new byte[1024];
-        while ( (len = fis.read(buffer))!=-1 ) {
-            os.write(buffer,0,len);
-        }
-        fis.close();
-        os.flush();
-
-        return len;
-    }
+//    public int loadFile (HttpServletResponse response,String inputFilename) throws IOException {
+//        FileInputStream fis = new FileInputStream(inputFilename);
+//        OutputStream os = response.getOutputStream();
+//        int len = 0;
+//        byte[] buffer = new byte[1024];
+//        while ( (len = fis.read(buffer))!=-1 ) {
+//            os.write(buffer,0,len);
+//        }
+//        fis.close();
+//        os.flush();
+//
+//        return len;
+//    }
 
 }

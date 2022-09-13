@@ -318,7 +318,7 @@ public class JasparConnectUtilService {
 		if(null!=params.get("portnum")){
 			String portnum = params.get("portnum").toString();
 			//chenxc:update for pinpoint check:“.”或“|”用于正则表达式，2022-08-24
-			//改类已无用，直接删除|和.
+			//该类已无用，直接删除|和.
 			if(portnum.matches("^(([1-9]{1}\\d*)|([0]{1}))\\.((\\d){0,2})?$")){
 				portnum = portnum.split(".")[0];
 			}
@@ -392,6 +392,7 @@ public class JasparConnectUtilService {
 			tStringBuffer.append(sTempOneLine);
 
 		}
+		tBufferedReader.close();
 		return tStringBuffer.toString();
 	}
 	/**
