@@ -951,7 +951,7 @@ function serachKey(){
  	});
 }
 
-function pprodIdChange(){
+function pprodIdChange(modelId){
 	$('#prodid').val("").trigger("change");
 	$('#feename').val("").trigger("change");
 	$('#elementname').val("").trigger("change");
@@ -963,11 +963,11 @@ function feeNameChange(){
 
 function elementNameChange(modelId){
 
-	if(modelId==="DYSDCPTZMB_GM"||modelId==="DYSDCPTZMB"){
-
-		$('#pprodid').val("NYLCSMCP").trigger("change").trigger('blur');
-		//$('#pprodid').select2('destroy').textSelect('setValue', 'NYLCSMCP');
-	}
+	// if(modelId==="DYSDCPTZMB_GM"||modelId==="DYSDCPTZMB"){
+	//
+	// 	$('#pprodid').val("NYLCSMCP").trigger("change").trigger('blur');
+	// 	//$('#pprodid').select2('destroy').textSelect('setValue', 'NYLCSMCP');
+	// }
 }
 
 
