@@ -71,12 +71,15 @@ public class ReportRevealEndDateService {
 		if (prodInfo == null) {
 			prodInfo = poiReportMapper.getProdInfo(busiId);
 		}
-		map.put(到期日, prodInfo.getMdate());
-		map.put(成立日, prodInfo.getSetDate());
-		map.put(募集起始日, prodInfo.getRaiseStrdate());
-		map.put(募集结束日, prodInfo.getRaiseEnddate());
-		map.put(起息日, prodInfo.getVdate());
-		map.put(清盘日, prodInfo.getWindupDate());
+
+		if(StringUtil.isNotEmpty(prodInfo)){
+			map.put(到期日, prodInfo.getMdate());
+			map.put(成立日, prodInfo.getSetDate());
+			map.put(募集起始日, prodInfo.getRaiseStrdate());
+			map.put(募集结束日, prodInfo.getRaiseEnddate());
+			map.put(起息日, prodInfo.getVdate());
+			map.put(清盘日, prodInfo.getWindupDate());
+		}
 		map.put(平台日,commonPlatformDateService.getSysDate());
 
 		String rptType = reportInfo.getUri();
@@ -121,6 +124,13 @@ public class ReportRevealEndDateService {
 			map.put(平台日, holidayService.getNextWorkDay(searchparam));
 		} else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
 			map.put(当期收益分配基准日, repReveal.getEndDate());
+		}else if (rptType.equals(DisReportType.DLXSJGMDGG)) { // 代理销售机构名单公告
+			Map<String, Object> searchparam = new HashMap<>();
+			searchparam.put("busi_date", repReveal.getEndDate());
+			searchparam.put("is_holiday", "0");
+			searchparam.put("market_code", "01");
+			searchparam.put("days", 1);
+			map.put(平台日, holidayService.getAferNWorkDay(searchparam));
 		}
 
 		return map;
