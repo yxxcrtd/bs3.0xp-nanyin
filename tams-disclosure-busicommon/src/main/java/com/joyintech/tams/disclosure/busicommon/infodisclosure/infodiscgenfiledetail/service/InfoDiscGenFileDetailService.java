@@ -400,16 +400,17 @@ public class InfoDiscGenFileDetailService {
 						repInstallFile.setStartDate(startDate);
 					}
 				}
-			}else if(StringUtil.equals(repRule.getRepId(),"CP_001_003_001")
-					||StringUtil.equals(repRule.getRepId(),"CP_001_003_002")){
-				Date endDate=repInstallFile.getEndDate();
-				ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
-						DateUtil.format(endDate), "02", 1);
-				if(holidaymarket001Dto!=null){
-					repInstallFile.setEndDate(holidaymarket001Dto.getBusiDate());
-				}
-				revealList.add(repInstallFile);
 			}
+//			else if(StringUtil.equals(repRule.getRepId(),"CP_001_003_001")
+//					||StringUtil.equals(repRule.getRepId(),"CP_001_003_002")){
+//				Date endDate=repInstallFile.getEndDate();
+//				ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+//						DateUtil.format(endDate), "02", 1);
+//				if(holidaymarket001Dto!=null){
+//					repInstallFile.setEndDate(holidaymarket001Dto.getBusiDate());
+//				}
+//				revealList.add(repInstallFile);
+//			}
 			else if((StringUtil.equals(repRule.getRepId(),"CP_001_002_005")
 					||StringUtil.equals(repRule.getRepId(),"CP_001_002_006"))){
 				Date endDate=repInstallFile.getEndDate();

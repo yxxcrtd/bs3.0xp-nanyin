@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,8 @@ public class MatureReportDataService implements IReportDataService {
 	@Autowired
 	private HolidayService holidayService;
 
+	@Autowired
+	private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
 	/**
 	 * 日志
 	 */
@@ -56,8 +61,17 @@ public class MatureReportDataService implements IReportDataService {
 //			String prodId = (paraMap.get("portnum") == null ? null : paraMap.get("portnum").toString());
 //			Date genDate = (paraMap.get("endDate") == null ? new Date()
 //					: DateUtil.parse(paraMap.get("endDate").toString()));
-			
+			//判断是普通产品还是子产品
+			RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(paraMap);
+			if(StringUtil.isNotEmpty(info)){
+				paraMap.put("pprodId",info.getpProdId());
+				paraMap.put("prodId",info.getProdId());
+			}
+
 			List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
+
+
+
 			if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
 				BonusReportDto dto = listBonusReport.get(0);
 				matureReportDto.setReportTitle(dto.getReportTitle());
