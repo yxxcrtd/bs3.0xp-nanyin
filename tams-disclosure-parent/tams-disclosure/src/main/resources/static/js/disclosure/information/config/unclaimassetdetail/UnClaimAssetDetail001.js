@@ -110,6 +110,33 @@
         $('#UnClaimAssetDetail001_btn_add').click(function() {
             showDialog();
         });
+        $('#UnClaimAssetDetail001_btn_submit').click(function() {
+            if(table!=null && table!=''){
+                var selArr = table.getAllCheckedRows();
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            for(let i=0; i<selArr.length; i++){
+                if(selArr[i].dataStatus!=='A'){
+                    Joyin.error("只能对数据状态是待处理的数据进行批量审批");
+                    return;
+                }
+            }
+            var object = {
+                selectedItem: selArr,
+                operateType:"submit"
+            };
+            Joyin.ajaxJson(basePath + '/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
+                Joyin.confirm(JoyinUtil.getLabel("请确认是否进行批量审批？"), function(){
+                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/submit', object, "UnClaimAssetDetail001_btn_submit", "UnClaimAssetDetail002",function(){
+                    });
+                });
+            });
+
+        });
+
         $('#UnClaimAssetDetail001_btn_delete').click(function() {
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();

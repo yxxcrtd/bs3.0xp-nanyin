@@ -3,8 +3,10 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportJeshMapper;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportJeshDto;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.IReportDataService;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
@@ -34,6 +36,8 @@ public class ReportJesh001Service implements IReportDataService {
     @Autowired
     private ReportCommonService reportCommonService;
 
+    @Autowired
+    private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         Map<String,Object> dataMap = new HashMap<>();
@@ -56,6 +60,13 @@ public class ReportJesh001Service implements IReportDataService {
             pubDateStr = paraMap.get("enddate").toString();
         }
         searchparam.put("rptIssueDate", DateUtil.parse(pubDateStr));
+
+        RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(searchparam);
+        if(StringUtil.isNotEmpty(info)){
+            searchparam.put("prodId",info.getProdId());
+            prodId=info.getProdId();
+        }
+
         ReportJeshDto jeshDto = reportJeshMapper.queryJesh(searchparam);
         if (jeshDto == null) {
             return result;

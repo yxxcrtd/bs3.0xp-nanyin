@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -93,6 +94,9 @@ public class UnClaimAssetDetail002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) UnClaimAssetDetailDto dto, BindingResult result) {
+        if(unClaimAssetDetail001Service.isInWorkflow(dto)){
+            return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+        }
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -108,7 +112,7 @@ public class UnClaimAssetDetail002Controller extends BaseController {
         if (result.hasErrors()) {
             return new AjaxResult();
         }
-        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期
+        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
         ProcessParameter<UnClaimAssetDetailDto> processParameter = new ProcessParameter<UnClaimAssetDetailDto>();
         WorkFlowParameter<UnClaimAssetDetailDto> params = new WorkFlowParameter<UnClaimAssetDetailDto>();
 //        String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator .generate();
@@ -141,6 +145,9 @@ public class UnClaimAssetDetail002Controller extends BaseController {
             dto.setUpdateTime(sysDate);
             dto.setUpdateUser(CommonUtil.getUserName());
             for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()){
+                unclaimDto.setProdId(dto.getProdId());
+                unclaimDto.setEffDate(dto.getEffDate());
+                unclaimDto.setEffEndDate(dto.getEffEndDate());
                 unclaimDto.setUpdateTime(dto.getUpdateTime());
                 unclaimDto.setUpdateUser(CommonUtil.getUserName());
             }

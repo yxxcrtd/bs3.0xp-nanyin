@@ -348,7 +348,9 @@ public class ReportDataService {
 	        repReveal.setRepId(repId);
 
 			if(!StringUtil.isNotEmpty(repReveal.getProdid())){
-				repReveal.setProdid(params.get("prodid").toString());
+				if(StringUtil.isNotEmpty((params.get("prodid")))){
+					repReveal.setProdid(params.get("prodid").toString());
+				}
 			}
 
 	        return repReveal;

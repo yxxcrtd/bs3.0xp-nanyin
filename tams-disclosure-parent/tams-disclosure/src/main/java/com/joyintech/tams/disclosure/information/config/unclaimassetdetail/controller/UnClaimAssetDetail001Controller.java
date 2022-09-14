@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
@@ -9,6 +10,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -19,6 +21,7 @@ import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.servi
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.service.UnClaimAssetDetail002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -59,13 +65,7 @@ public class UnClaimAssetDetail001Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
-//        setSelectOptionToModel(model, DICT_CODES);
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.维护数据状态, null);
-        List<SelectOptionDto> jys = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeListExt1.维护数据状态_有效.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt1.维护数据状态_删除.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute(DictCode.维护数据状态.getValue(), JsonUtils.objectArray2Json(jys.toArray()));
+        setSelectOptionToModel(model, DictCode.维护数据状态);
         return super.init(model);
     }
 
@@ -101,6 +101,21 @@ public class UnClaimAssetDetail001Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
+
+        List<UnClaimAssetDetailDto> dtoList = dto.getSelectedItem();
+        for(UnClaimAssetDetailDto tmp:dtoList) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("prodId", tmp.getProdId());
+            params.put("effDate", tmp.getEffDateStr());
+            params.put("effEndDate", tmp.getEffEndDateStr());
+            params.put("dataStatus", tmp.getDataStatus());
+            List<UnClaimAssetDetailDto> unclaimList = unClaimAssetDetail002Service.selectDetailList(params);
+            unclaimList.forEach(item -> {
+                item.setId(item.getNostdAssetId());
+            });
+            tmp.setUnclaimList(unclaimList);
+        }
+
         ProcessParameter<UnClaimAssetDetailDto> processParameter = new ProcessParameter<UnClaimAssetDetailDto>();
         WorkFlowParameter<UnClaimAssetDetailDto> params = new WorkFlowParameter<UnClaimAssetDetailDto>();
         params.setPageId("UnClaimAssetDetail002");
@@ -113,7 +128,7 @@ public class UnClaimAssetDetail001Controller extends BaseController {
                 + SpringContextUtil.getTextValue("生效截止日期") + "("+DateUtil.format(entity.getEffEndDate())+")" );
         processParameter.setWorkFlowParameter(params);
         String msg = unClaimAssetDetail002Service.start(processParameter,
-                dto.getSelectedItem().toArray(new UnClaimAssetDetailDto[dto.getSelectedItem().size()]));
+                dtoList.toArray(new UnClaimAssetDetailDto[dtoList.size()]));
         return new AjaxResult(msg);
     }
     /**
@@ -177,7 +192,62 @@ public class UnClaimAssetDetail001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupDelete.class}) UnClaimAssetDetailDto dto, BindingResult br)  {
+        AjaxResult result = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        List<UnClaimAssetDetailDto> dtoList = dto.getSelectedItem();
+        for(UnClaimAssetDetailDto tmp:dtoList) {
+            if(unClaimAssetDetail001Service.isInWorkflow(tmp)){
+                errorList.add(new ValidMessage("所选对象中存在流程中的数据！"+SpringContextUtil.getTextValue("产品主代码") + "(" + tmp.getProdId() + ")" + "-"
+                        + SpringContextUtil.getTextValue("生效日") + "("+DateUtil.format(tmp.getEffDate())+")" + "-"
+                        + SpringContextUtil.getTextValue("生效截止日期") + "("+DateUtil.format(tmp.getEffEndDate())+")"));
+                //return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+            }
+        }
+        if(CollectionUtils.isNotEmpty(errorList)){
+            result.setErrorList(errorList);
+            return result;
+        }
         return commonCheck(br, dto.getOperateType());
+    }
+
+
+    @ResponseBody
+    @RequestMapping("submit")
+    public AjaxResult submit(@RequestBody @Validated({
+            ValidateGroupDelete.class}) UnClaimAssetDetailDto dto, BindingResult br)
+            throws Exception {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+
+        List<UnClaimAssetDetailDto> dtoList = dto.getSelectedItem();
+        for(UnClaimAssetDetailDto tmp:dtoList) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("prodId", tmp.getProdId());
+            params.put("effDate", tmp.getEffDateStr());
+            params.put("effEndDate", tmp.getEffEndDateStr());
+            params.put("dataStatus", tmp.getDataStatus());
+            List<UnClaimAssetDetailDto> unclaimList = unClaimAssetDetail002Service.selectDetailList(params);
+            unclaimList.forEach(item -> {
+                item.setId(item.getNostdAssetId());
+            });
+            tmp.setUnclaimList(unclaimList);
+        }
+
+        ProcessParameter<UnClaimAssetDetailDto> processParameter = new ProcessParameter<UnClaimAssetDetailDto>();
+        WorkFlowParameter<UnClaimAssetDetailDto> params = new WorkFlowParameter<UnClaimAssetDetailDto>();
+        params.setPageId("UnClaimAssetDetail002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(item -> item.getProdId());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_非标债权类资产明细维护.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(entity -> SpringContextUtil.getTextValue("产品主代码") + "(" + entity.getProdId() + ")" + "-"
+                + SpringContextUtil.getTextValue("生效日") + "("+DateUtil.format(entity.getEffDate())+")" + "-"
+                + SpringContextUtil.getTextValue("生效截止日期") + "("+DateUtil.format(entity.getEffEndDate())+")" );
+        processParameter.setWorkFlowParameter(params);
+        String msg = unClaimAssetDetail001Service.start(processParameter,
+                dtoList.toArray(new UnClaimAssetDetailDto[dtoList.size()]));
+        return new AjaxResult(msg);
     }
 
 }
