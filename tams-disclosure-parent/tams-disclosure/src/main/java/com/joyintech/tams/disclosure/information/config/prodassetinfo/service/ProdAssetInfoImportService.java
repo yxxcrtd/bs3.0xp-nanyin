@@ -204,9 +204,9 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                 }else{
                     // 验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(sysDate, sdf.parse(list.get(9))) > 0) {
-                        ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i + 2),
-                                this.getMessage("PRODFILE_E_0001", "生效日", "平台日期"));
-                        excelValidDtolist.add(dto);
+//                        ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i + 2),
+//                                this.getMessage("PRODFILE_E_0001", "生效日", "平台日期"));
+//                        excelValidDtolist.add(dto);
                     }
                 }
             }
@@ -217,31 +217,23 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                             this.getMessage("MST_INFO_E_0001"));
                     excelValidDtolist.add(dto);
                 }else{
-                    if (DateUtil.compareDate(sysDate, sdf.parse(list.get(10))) > 0) {
-                        ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
-                                this.getMessage("PRODFILE_E_0001", "生效日截止日", "平台日期"));
-                        excelValidDtolist.add(dto);
-                    }else{
-                        if(DateUtil.isDateStr(list.get(9))){
-                            Date effEndDate=sdf.parse(list.get(10).trim());
-                            Date effDate=sdf.parse(list.get(9).trim());
-                            if(DateUtil.compareDate(effDate, effEndDate) > 0){
-                                ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
-                                        this.getMessage("BUSS_COM_E_0004", "生效日截止日", "生效日"));
-                                excelValidDtolist.add(dto);
-                            }else{
-                                //校验同一产品生效区间是否重叠
-                                if(StringUtil.isNotEmpty(list.get(0))){
-                                    List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(list.get(0).trim());
-                                    for (ProdAssetInfoDto dto : dtos) {
-                                        if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
-                                                || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
-                                            excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
-                                                    "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
-                                                            +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
-                                            break;
-                                        }
-                                    }
+                    if(DateUtil.isDateStr(list.get(9))){
+                        Date effEndDate=sdf.parse(list.get(10).trim());
+                        Date effDate=sdf.parse(list.get(9).trim());
+                        if(DateUtil.compareDate(effDate, effEndDate) > 0){
+                            ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
+                                    this.getMessage("BUSS_COM_E_0004", "生效日截止日", "生效日"));
+                            excelValidDtolist.add(dto);
+                        }else if (StringUtil.isNotEmpty(list.get(0))){
+                            //校验同一产品生效区间是否重叠
+                            List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(list.get(0).trim());
+                            for (ProdAssetInfoDto dto : dtos) {
+                                if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
+                                        || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
+                                    excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                                            "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
+                                                    +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
+                                    break;
                                 }
                             }
                         }
