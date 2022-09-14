@@ -242,12 +242,6 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 if(!DateUtil.isDateStr(list.get(2).trim())){
                     excelValidDtolist.add(new ExcelValidDto(list.get(2), String.valueOf(i+1),
                             "生效日格式不正确，正确格式：yyyy-MM-dd！"));
-                }else{
-                    //验证生效日是否大于等于平台日期
-                    if (DateUtil.compareDate(platDate,DateUtil.parse(list.get(2).trim()))>0){
-//                        excelValidDtolist.add(new ExcelValidDto(list.get(2), String.valueOf(i+1),
-//                                "生效日要大于等于平台日期！"));
-                    }
                 }
             }
             if (!StringUtil.isNotEmpty(list.get(3))){

@@ -90,19 +90,27 @@ public class Sqlldr implements ImpExcutor {
         String command = ((SqlldrImpArgument)args).toString();
 //        LOGGER.info("执行命令：" + sh + command);
         Process process = Runtime.getRuntime().exec(sh + command);
-        BufferedReader reader = new BufferedReader(
-            new InputStreamReader(process.getInputStream()));
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            LOGGER.info(line);
+        BufferedReader reader = null;
+        try {
+	        reader = new BufferedReader(
+	            new InputStreamReader(process.getInputStream()));
+	        String line = null;
+	        while ((line = reader.readLine()) != null) {
+	            LOGGER.info(line);
+	        }
+	        reader.close();
+	        // 输出日志
+	        printLog(((SqlldrImpArgument)args).getLog());
+	        // 删除导入用的临时文件
+	        deleteTmpFile((SqlldrImpArgument)args);
+	        int exitValue = process.waitFor();
+	        return exitValue == 0;
+        } catch (Exception e) {
+        	throw e;
+        } finally {
+        	if ( reader!=null ) 
+        		reader.close();
         }
-        reader.close();
-        // 输出日志
-        printLog(((SqlldrImpArgument)args).getLog());
-        // 删除导入用的临时文件
-        deleteTmpFile((SqlldrImpArgument)args);
-        int exitValue = process.waitFor();
-        return exitValue == 0;
     }
 
     /**
