@@ -1,0 +1,1 @@
+update SYS_PAGE set REMARK='系统管理' where PAGE_ID='SysParaSet001';
