@@ -5,16 +5,14 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
-import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
 import com.joyintech.tams.disclosure.information.config.performance.service.Performance001Service;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.ParseException;
 import java.util.List;
 
 @Controller
@@ -119,7 +118,7 @@ public class Performance001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("importFile")
-    public List<ExcelValidDto> importFile(String fileName)  {
+    public List<ExcelValidDto> importFile(String fileName) throws ParseException {
         return performance001Service.importData(fileName);
     }
 }

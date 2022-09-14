@@ -38,4 +38,6 @@ public interface Performance001Mapper {
     List<ProcessMark> getWorklowData(Performance001Dto dto);
 
     int update(Performance001Dto dto1);
+
+    List<Performance001Dto> selectAssetInfoByProdId(String prodId);
 }

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
+import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +32,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
-import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.performance.dao.Performance001Mapper;
-import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -388,7 +389,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     }
 
 
-    public List<ExcelValidDto> importData(String fileName) {
+    public List<ExcelValidDto> importData(String fileName) throws ParseException {
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
@@ -401,7 +402,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             checkResult = convertToEntitys(dataList, entities);
 
             //chenxc: 区间重叠校验
-            checkResult.addAll(checkDataDuration(entities));
+//            checkResult.addAll(checkDataDuration(entities));
 
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
@@ -451,9 +452,10 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
 
     private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
-                                                 List<Performance001Dto> entities) {
+                                                 List<Performance001Dto> entities) throws ParseException {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<String> prodList =  performance001Mapper.getProdIdlist(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
@@ -481,10 +483,23 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "业绩比较基准生效截止日"));
             }
             //校验截止日大于生效日
-            Date expDate=DateUtil.parse(rowData.get(2).trim());
-            Date effDate=DateUtil.parse(rowData.get(1).trim());
+            Date expDate=sdf.parse(rowData.get(2).trim());
+            Date effDate=sdf.parse(rowData.get(1).trim());
             if (DateUtil.compareDate(effDate,expDate)>0) {
                 message.add("业绩比较基准生效截止日不能小于业绩比较基准生效日!");
+            }
+
+            if(StringUtil.isNotEmpty(rowData.get(0))){
+                List<Performance001Dto> dtos = performance001Mapper.selectAssetInfoByProdId(rowData.get(0).trim());
+                for (Performance001Dto dto : dtos) {
+                    if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(expDate,dto.getExpDate())<0)
+                            || (DateUtil.compareDate(effDate,dto.getExpDate())>0 && DateUtil.compareDate(expDate,dto.getExpDate())>0))){
+                        checkResult.add(new com.joyintech.tams.systemtools.dto.ExcelValidDto(rowData.get(0), String.valueOf(i+2),
+                                "子产品业绩比较基准区间生效时间有重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
+                                        +"-"+DateUtil.format(dto.getExpDate(),"yyyyMMdd")));
+                        break;
+                    }
+                }
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
@@ -673,10 +688,18 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
             // 验证消息
             List<String> message = new ArrayList<>();
-            message.add("本条数据与下一条数据有效期区间重叠。");
+//            for (int i=0;i<e.getValue().size();i++) {
+//                message.add("子产品业绩比较基准区间生效时间有重叠"
+//                    + "{" + DateUtil.format(e.getValue().get(i).getEffDate(), "yyyyMMdd")
+//                   + "-" + DateUtil.format(e.getValue().get(i).getEffDate(), "yyyyMMdd") + "}"
+//                );
+//            }
             if ( listAll.size()>1 ) {
                 for ( int i=0;i<listAll.size()-1;i++) {
                     if ( listAll.get(i).getExpDate().compareTo(listAll.get(i+1).getEffDate())>=0 ) {
+                        String msg = "子产品业绩比较基准区间生效时间有重叠"+"{"+sdf.format(listAll.get(i+1).getEffDate())+"-"+
+                                sdf.format(listAll.get(i+1).getExpDate())+"}";
+                        message.add(msg);
                         checkResult.add(new ExcelValidDto(listAll.get(i).getProdId()
                                 + GlobalConstant.UNDER_LINE + sdf.format(listAll.get(i).getEffDate())
                                 + GlobalConstant.UNDER_LINE + sdf.format(listAll.get(i).getExpDate()),
