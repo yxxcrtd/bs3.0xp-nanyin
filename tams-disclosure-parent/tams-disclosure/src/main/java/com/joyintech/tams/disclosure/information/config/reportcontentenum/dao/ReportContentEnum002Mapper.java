@@ -98,4 +98,6 @@ public interface ReportContentEnum002Mapper {
     List<ReportContentEnum002Dto> findIndexIsQuoteById(String[] idsarr);
 
 	List<TreeNode> selectProdInfo();
+
+	int isOnlyData(ReportContentEnum002Dto dto);
 }

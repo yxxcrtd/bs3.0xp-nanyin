@@ -147,6 +147,11 @@ public class ReportContentEnum003Controller extends BaseController {
 			msg = "生效截止日期必须大于等于生效日期";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
+        int num = reportContentEnum002Service.isOnlyData(dto);
+		if (num>0){
+            msg="同一个指标和同一个产品在同一个生效区间只能有一个指标值!";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
 
 		return commonCheck(bindingResult, operateType);
 	}

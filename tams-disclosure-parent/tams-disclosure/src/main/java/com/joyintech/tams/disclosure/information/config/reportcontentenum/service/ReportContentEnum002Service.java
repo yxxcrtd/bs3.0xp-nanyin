@@ -431,4 +431,8 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		}
 		return parentNodes;
 	}
+
+	public int isOnlyData(ReportContentEnum002Dto dto) {
+		return reportContentEnum002Mapper.isOnlyData(dto);
+	}
 }
