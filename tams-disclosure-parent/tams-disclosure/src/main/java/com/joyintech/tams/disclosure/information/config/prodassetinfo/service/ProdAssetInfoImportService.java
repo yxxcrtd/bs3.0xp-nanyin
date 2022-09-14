@@ -3,12 +3,10 @@ package com.joyintech.tams.disclosure.information.config.prodassetinfo.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.prodassetinfo.dao.ProdAssetInfo001Mapper;
 import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
@@ -16,7 +14,6 @@ import com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPart
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +26,10 @@ import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -73,35 +73,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             JoyinMessage ms = new JoyinMessage("导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？",
                     MessageType.确认消息);
             joyinMessages.add(ms);
-        }
-        List<ProdAssetInfoDto> entities = this.converToDto(dataList);
-        List<ProdAssetInfoDto> data = this.selectProdAssetInfoByKey(entities);
-        if (data != null && data.size() > 0) {
-            Map<String, List<ProdAssetInfoDto>> map = entities.stream().collect(
-                    JoyinCollectors.groupingBy(x ->
-                            x.getProdId() + GlobalConstant.UNDER_LINE + DateUtil.format(x.getEffDate())
-                                    + GlobalConstant.UNDER_LINE + DateUtil.format(x.getEffEndDate())
-                    ));
-            // 将序号放入list中
-            List<String> excelNumList = new ArrayList<>();
-            List<Integer> excelNumIntList = new ArrayList<>();
-            for (ProdAssetInfoDto dto : data) {
-                List<ProdAssetInfoDto> listTemp = map.get(dto.getProdId() + GlobalConstant.UNDER_LINE + DateUtil.format(dto.getEffDate())
-                        + GlobalConstant.UNDER_LINE + DateUtil.format(dto.getEffEndDate()));
-                excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelRowNum()));
-            }
-            // 将list进行排序，并转化为string
-            Collections.sort(excelNumIntList);
-            for (Integer rowNo : excelNumIntList) {
-                excelNumList.add(String.valueOf(rowNo));
-            }
-            wr.setMessage(
-                    this.getMessage("REPORT_COMMON_FILE_C_0001",
-                            StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                    MessageType.确认消息);
-        } else {
-            // 防止在进行导入前check时进行了两次的弹框
-            wr.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+        }else{
+            wr.setData(NO_INFO_SHOWOUT);
         }
         wr.setJoyinMessages(joyinMessages);
         return wr;
@@ -146,11 +119,6 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                         "文件内容为空,没有需要导入的数据！"));
                 return checkFileResult;
             }
-            /*} else {
-                checkFileResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-                        getMessage("BUSS_COM_E_0002", "产品资产组合情况导入")));
-                return checkFileResult;
-            }*/
         }
         return null;
     }
@@ -236,9 +204,9 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                 }else{
                     // 验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(sysDate, sdf.parse(list.get(9))) > 0) {
-//                        ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i + 2),
-//                                this.getMessage("PRODFILE_E_0001", "生效日", "平台日期"));
-//                        excelValidDtolist.add(dto);
+                        ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i + 2),
+                                this.getMessage("PRODFILE_E_0001", "生效日", "平台日期"));
+                        excelValidDtolist.add(dto);
                     }
                 }
             }
@@ -248,13 +216,35 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                     ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
                             this.getMessage("MST_INFO_E_0001"));
                     excelValidDtolist.add(dto);
-                }else if (DateUtil.isDateStr(list.get(9))){
-                    Date effEndDate=sdf.parse(list.get(10).trim());
-                    Date effDate=sdf.parse(list.get(9).trim());
-                    if(DateUtil.compareDate(effDate, effEndDate) > 0){
+                }else{
+                    if (DateUtil.compareDate(sysDate, sdf.parse(list.get(10))) > 0) {
                         ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
-                                this.getMessage("BUSS_COM_E_0004", "生效日截止日", "生效日"));
+                                this.getMessage("PRODFILE_E_0001", "生效日截止日", "平台日期"));
                         excelValidDtolist.add(dto);
+                    }else{
+                        if(DateUtil.isDateStr(list.get(9))){
+                            Date effEndDate=sdf.parse(list.get(10).trim());
+                            Date effDate=sdf.parse(list.get(9).trim());
+                            if(DateUtil.compareDate(effDate, effEndDate) > 0){
+                                ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
+                                        this.getMessage("BUSS_COM_E_0004", "生效日截止日", "生效日"));
+                                excelValidDtolist.add(dto);
+                            }else{
+                                //校验同一产品生效区间是否重叠
+                                if(StringUtil.isNotEmpty(list.get(0))){
+                                    List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(list.get(0).trim());
+                                    for (ProdAssetInfoDto dto : dtos) {
+                                        if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
+                                                || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
+                                            excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                                                    "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
+                                                            +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -329,24 +319,6 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
         prodAssetInfoDto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
         prodAssetInfoDto.setExcelRowNum(String.valueOf(excelRowNum+2));
         return prodAssetInfoDto;
-    }
-
-
-    private List<ProdAssetInfoDto> converToDto(List<List<String>> dataList)
-            throws ParseException {
-        // 返回的list定义
-        List<ProdAssetInfoDto> returnInfoList = new LinkedList<>();
-        ProdAssetInfoDto prodPartnerDto = null;
-        for (int i = 0; i < dataList.size(); i++ ) {
-            List<String> list = dataList.get(i);
-            prodPartnerDto = new ProdAssetInfoDto();
-            prodPartnerDto.setProdId(list.get(0).trim());
-            prodPartnerDto.setEffDate(DateUtil.parse(list.get(9).trim()));
-            prodPartnerDto.setEffEndDate(DateUtil.parse(list.get(10).trim()));
-            prodPartnerDto.setExcelRowNum(String.valueOf(i+2));
-            returnInfoList.add(prodPartnerDto);
-        }
-        return returnInfoList;
     }
 
 
@@ -441,44 +413,6 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
      */
     private void insertBtachEquityInfo(List<ProdAssetInfoDto> list) {
         prodAssetInfo001Mapper.insertBtachEquityInfo(list);
-    }
-
-    /**
-     * 分批查询
-     * @param dataList
-     * @return
-     */
-    private List<ProdAssetInfoDto> selectProdAssetInfoByKey(List<ProdAssetInfoDto> dataList) {
-        int maxDataCountOneTime = 1000;
-        int dataCount = dataList.size();
-        if (dataCount <= maxDataCountOneTime) {
-            return prodAssetInfo001Mapper.selectAssetInfoByKey(dataList);
-        }
-        // 导入大于1000时，返回值
-        List<ProdAssetInfoDto> equtiyList = new ArrayList<>();
-
-        List<ProdAssetInfoDto> newDataList = new ArrayList<>();
-
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime;
-        List<ProdAssetInfoDto> listTemp;
-        for (int i = 0; i < part; i++ ) {
-            listTemp = prodAssetInfo001Mapper.selectAssetInfoByKey(newDataList.subList(0, maxDataCountOneTime));
-            // 不为空，放入返回list中
-            if (CollectionUtils.isNotEmpty(listTemp)) {
-                equtiyList.addAll(listTemp);
-            }
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            listTemp = prodAssetInfo001Mapper.selectAssetInfoByKey(newDataList);
-            // 不为空，放入返回list中
-            if (CollectionUtils.isNotEmpty(listTemp)) {
-                equtiyList.addAll(listTemp);
-            }
-        }
-        return equtiyList;
     }
 
 }
