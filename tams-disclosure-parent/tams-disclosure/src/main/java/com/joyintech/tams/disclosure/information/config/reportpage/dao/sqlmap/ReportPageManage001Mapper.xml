@@ -26,6 +26,7 @@
 			A.REPORT_CATEGORY reportCategory,
 			rfp.NAME reportCategoryName,
 			ris3.update_time updateTime,
+			ris3.WORKFLOW_ID workflowId,
 			nvl(ris2.REMARK,ris1.REMARK) remark
 			from REP_INFO A
 			left join REP_FTP_PATH rfp
@@ -44,7 +45,7 @@
 			where eff_date > #{effDate,jdbcType=TIMESTAMP}
 			) ris2 ON A.REP_ID = ris2.Rep_Id and ris2.rn =1
 			left join (
-			select rep_id,remark,update_Time,rep_status,UPDATE_USER,
+			select rep_id,remark,update_Time,rep_status,UPDATE_USER,WORKFLOW_ID,
 			row_number()over(partition by rep_id order by update_time desc) rn
 			from rep_info_status
 			) ris3 ON A.REP_ID = ris3.Rep_Id and ris3.rn =1
@@ -146,4 +147,18 @@
         delete from REP_JOB_RANGE
         where JOB_ID = #{jobId,jdbcType=VARCHAR}
     </delete>
+
+	<select id="queryList" resultType="com.joyintech.system.workflow.dto.WorkflowMonitor001Dto">
+		SELECT T.SEQ_NO workflowId,
+		case when T.PROCESS_STATE = 'END'
+			then T.UPDATE_USER
+		else T.NEXT_USER end AS nowUser
+		FROM SYS_WFL_BUSINESS_LIST T
+		where T.PAGE_ID = 'ReportPageManage003'
+			AND EXISTS(SELECT 1
+			FROM SYS_WFL_BUSINESS_LIST A
+			WHERE A.SEQ_NO = (SELECT MAX(B.SEQ_NO) FROM SYS_WFL_BUSINESS_LIST B WHERE A.WORKFLOW_ID = B.WORKFLOW_ID)
+			AND T.SEQ_NO = A.SEQ_NO)
+		group by T.SEQ_NO, T.PROCESS_STATE, T.UPDATE_USER, T.NEXT_USER
+	</select>
 </mapper>

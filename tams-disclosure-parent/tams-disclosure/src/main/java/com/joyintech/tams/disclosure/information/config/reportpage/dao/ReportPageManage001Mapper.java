@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.information.config.reportpage.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.system.workflow.dto.WorkflowMonitor001Dto;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SuggestDto;
@@ -55,10 +56,18 @@ public interface ReportPageManage001Mapper {
     List<RepJobRangeDto> findRulePage(String repId);
     /**
      * 根据报表编号删除规则范围数据
-     * @param repId
+     * @param jobId
      * @return
      * @see
      * @since 1.0
      */
     int deleteRangeInfo(String jobId);
+
+    /**
+     * 查询流程当前处理人
+     * @return 流程当前处理人List
+     * @see
+     * @since 1.0
+     */
+    List<WorkflowMonitor001Dto> queryList();
 }
