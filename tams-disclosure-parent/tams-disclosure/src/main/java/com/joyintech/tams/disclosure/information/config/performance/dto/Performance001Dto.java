@@ -238,16 +238,31 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
     }
 
     public String getZzqjStr(){
-        return String.format("%.2f",Double.parseDouble(this.getZzqj())).toString();
+        if (this.getZzqj()!=null){
+            return String.format("%.2f",Double.parseDouble(this.getZzqj())).toString();
+        }
+        return "0.00";
     }
+
     public String getZzcfStr(){
-        return String.format("%.2f",Double.parseDouble(this.getZzcf())).toString();
+        if (this.getZzcf()!=null){
+            return String.format("%.2f",Double.parseDouble(this.getZzcf())).toString();
+        }
+        return "0.00";
+
     }
-    public String getZz500Str(){
-        return String.format("%.2f",Double.parseDouble(this.getZz500())).toString();
+    public String getZz500Str() {
+        if (this.getZz500() != null) {
+            return String.format("%.2f", Double.parseDouble(this.getZz500())).toString();
+        }
+        return "0.00";
     }
+
     public String getHs300Str(){
-        return String.format("%.2f",Double.parseDouble(this.getHs300())).toString();
+        if (this.getHs300() != null) {
+            return String.format("%.2f",Double.parseDouble(this.getHs300())).toString();
+        }
+        return "0.00";
     }
 
     public String getStatusStr(){
