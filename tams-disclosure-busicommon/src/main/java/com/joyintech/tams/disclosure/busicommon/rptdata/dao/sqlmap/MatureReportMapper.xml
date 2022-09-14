@@ -45,7 +45,7 @@
 	    FROM REP_FEE_TRD 
 	    WHERE 1=1
 	    and STATUS='E'
-	    <if test="prodid!=null">
+	    <if test="pprodid!=null">
 	     	AND PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
 		<if test="reportDate!=null">

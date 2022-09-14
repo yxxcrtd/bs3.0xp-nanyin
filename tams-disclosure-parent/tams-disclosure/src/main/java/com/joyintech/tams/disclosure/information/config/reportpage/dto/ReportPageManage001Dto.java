@@ -69,6 +69,22 @@ public class ReportPageManage001Dto extends RepInfo {
     private String remark;
 
     /**
+     * 工作流代码
+     */
+    private String workflowId;
+
+    @Override
+    public String getWorkflowId() {
+        return workflowId;
+    }
+
+    @Override
+    public void setWorkflowId(String workflowId) {
+        this.workflowId = workflowId;
+    }
+
+
+    /**
      * 获取 repScreenParam
      * 
      * @return repScreenParam.

@@ -12,8 +12,10 @@ package com.joyintech.tams.disclosure.information.config.reportpage.service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.workflow.dto.WorkflowMonitor001Dto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
 import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage001Mapper;
@@ -26,9 +28,6 @@ import org.springframework.stereotype.Service;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepScreen;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.JasparConnectUtilService;
@@ -85,8 +84,15 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
          }
          param.put("reportCategoryArr", reportCategoryArr);
 		 List<ReportPageManage001Dto> dtos = reportPageManage001Mapper.findPage(param);
-		 Date sysDate = new Date();
+		//查询流程当前处理人
+		List<WorkflowMonitor001Dto> workflowMonitor001DtoList = reportPageManage001Mapper.queryList();
+		Map<String, List<WorkflowMonitor001Dto>> groupBylist =
+				workflowMonitor001DtoList.stream().collect(Collectors.groupingBy(WorkflowMonitor001Dto::getWorkflowId));
+		Date sysDate = new Date();
          for(ReportPageManage001Dto dto:dtos){
+			 if(StringUtil.isNotBlank(dto.getWorkflowId()) && groupBylist.get(dto.getWorkflowId()).size()>0){
+				 dto.setUpdateUser(groupBylist.get(dto.getWorkflowId()).get(0).getNowUser());
+			 }
 			if(dto.getReportType() == null){
 				dto.setReportTypeName("初始化");
 			} else if("01".equals(dto.getReportType())){
@@ -291,7 +297,7 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
 	/**
      * 根据作业编号查询报表作业范围
      * 
-     * @param jobId
+     * @param
      * @return
      */
     public List<RepJobRangeDto> findRulePage(String repId) {
