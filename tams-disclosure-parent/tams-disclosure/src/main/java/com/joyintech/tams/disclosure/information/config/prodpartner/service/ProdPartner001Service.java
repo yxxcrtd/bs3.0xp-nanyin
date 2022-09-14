@@ -180,38 +180,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             JoyinMessage ms = new JoyinMessage("导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？",
                     MessageType.确认消息);
             joyinMessages.add(ms);
+        }else{
+            wr.setData(NO_INFO_SHOWOUT);
         }
-
-        List<ProdPartnerDto> entities = this.converToDto(dataList);
-        List<ProdPartnerDto> data = this.selectProdPartnerByKey(entities);
-        if (data != null && data.size() > 0) {
-            Map<String, List<ProdPartnerDto>> map = entities.stream().collect(
-                    JoyinCollectors.groupingBy(x ->
-                            x.getProdId() + GlobalConstant.UNDER_LINE + DateUtil.format(x.getEffDate())
-                                    + GlobalConstant.UNDER_LINE + DateUtil.format(x.getEffEndDate())
-                    ));
-            // 将序号放入list中
-            List<String> excelNumList = new ArrayList<>();
-            List<Integer> excelNumIntList = new ArrayList<>();
-            for (ProdPartnerDto dto : data) {
-                List<ProdPartnerDto> listTemp = map.get(dto.getProdId() + GlobalConstant.UNDER_LINE + DateUtil.format(dto.getEffDate())
-                        + GlobalConstant.UNDER_LINE + DateUtil.format(dto.getEffEndDate()));
-                excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelRowNum()));
-            }
-            // 将list进行排序，并转化为string
-            Collections.sort(excelNumIntList);
-            for (Integer rowNo : excelNumIntList) {
-                excelNumList.add(String.valueOf(rowNo));
-            }
-            wr.setMessage(
-                    this.getMessage("REPORT_COMMON_FILE_C_0001",
-                            StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                    MessageType.确认消息);
-        } else {
-            // 防止在进行导入前check时进行了两次的弹框
-            wr.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-        }
-
         wr.setJoyinMessages(joyinMessages);
         return wr;
     }
@@ -295,6 +266,20 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                     if (DateUtil.compareDate(effDate,effEndDate)>0) {
                         excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
                                 "生效截止日期要大于等于生效日！"));
+                    }
+
+                    //生效日、生效截止日格式都正确，通过产品主代码查询系统中该产品已有的生效区间，校验生效区间是否有重叠
+                    if(StringUtil.isNotEmpty(list.get(0))){
+                        List<ProdPartnerDto> dtos = prodPartner001Mapper.selectPartnerByProdId(list.get(0).trim());
+                        for (ProdPartnerDto dto : dtos) {
+                            if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
+                                    || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
+                                excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
+                                        "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
+                                                +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
+                                break;
+                            }
+                        }
                     }
                 }
             }
