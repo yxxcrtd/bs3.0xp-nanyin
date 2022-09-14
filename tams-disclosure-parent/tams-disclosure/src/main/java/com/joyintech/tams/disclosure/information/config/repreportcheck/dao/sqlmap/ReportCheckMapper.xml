@@ -317,7 +317,7 @@
         inner join REP_PROD_INFO t on rrc.PROD_ID=T.P_PROD_ID
         where rrc.DATA_STATUS ='E'
         <if test="prodIdArr != null and prodIdArr.size > 0">
-            AND (rri.PROD_ID IN
+            AND (t.PROD_ID IN
             <foreach item="item" collection="prodIdArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
@@ -426,7 +426,9 @@
         <if test="search != null and search != ''">
             and (PROD_ID like
             concat(concat('%',#{search}),'%')
-            or PROD_NAME like concat(concat('%',#{search}),'%'))
+            or PROD_NAME like concat(concat('%',#{search}),'%')
+            or P_PROD_ID like
+            concat(concat('%',#{search}),'%'))
         </if>
     </select>
 
