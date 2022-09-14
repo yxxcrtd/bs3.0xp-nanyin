@@ -48,12 +48,14 @@ public class ZipFileUtil {
                 logger.info("fileToxml IOException："+e); 
             } finally {
             	try {
-					input.close();
+            		if ( input!=null )
+            			input.close();
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 				}
             	try {
-					ir.close();
+					if ( ir!=null )
+						ir.close();
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 				}

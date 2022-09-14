@@ -78,7 +78,8 @@ public class Serializes {
             throw new RuntimeException(e);
         } finally {
         	try {
-				objectOutput.close();
+				if (objectOutput!=null )
+					objectOutput.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

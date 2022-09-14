@@ -242,7 +242,10 @@ public class ReportConfirmManage003Contoller extends BaseController {
 						String path = FileNameUtil.createUploadFilePath("");
 						File filepath1 = new SafelyFile(path);
 						if(!filepath1.exists()){
-							filepath1.mkdirs();
+							boolean ret = filepath1.mkdirs();
+							if ( ret==false ) {
+								logger.error("创建目录错误："+filepath1.getName());
+							}
 						}
 						String localFileName = getLocalFileName(listFileName.get(i));
 						File file = new SafelyFile(localFileName);

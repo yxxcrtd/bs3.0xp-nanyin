@@ -235,13 +235,13 @@ public class ChbPrdDeclareSubSetService {
 	                        //关闭输入输出流  
 	                        zipOut.closeEntry();  
 	                        bis.close();
-
+	                        bis = null;
 	                    }
 	                }  
 	            }  
 	            zipOut.flush();
 	        }
-	        catch (IOException e) {
+	        catch (Exception e) {
 	            logger.error("组装新的报送文件错误:", e);
 	            throw new Exception(e.getMessage());
 	        }

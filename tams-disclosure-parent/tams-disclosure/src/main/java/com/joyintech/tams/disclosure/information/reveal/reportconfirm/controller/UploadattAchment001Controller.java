@@ -114,7 +114,10 @@ public class UploadattAchment001Controller extends BaseController {
         String uploadFilePath = CacheUtil.getSysParam("upload_file_path");
         File fileMik = new SafelyFile(uploadFilePath);
         if (!fileMik.exists()) {
-            fileMik.mkdirs();
+            boolean ret = fileMik.mkdirs();
+            if ( ret==false ) {
+            	logger.error("创建目录错误："+fileMik.getName());
+            }
         }
 
         List<UploadFile> result = new ArrayList();
