@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.usermodel.BreakClear;
 import org.apache.poi.xwpf.usermodel.Document;
 import org.apache.poi.xwpf.usermodel.TableRowAlign;
 import org.apache.poi.xwpf.usermodel.TextAlignment;
@@ -29,7 +30,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHint;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.springframework.util.CollectionUtils;
 
@@ -81,7 +81,7 @@ public class PoiUtilsHelper {
 					//1.2.替换图片
 					replaceImage(paraCode,runs.get(i),params);
 					//1.1替换文本
-					replaceRun(paraCode,runs.get(i),params);
+					replaceRun(paraCode,paragraph,runs.get(i),params);
 					paraCode=""; 
 				}
 			}
@@ -158,7 +158,7 @@ public class PoiUtilsHelper {
 									r.setText("", 0);
 								    continue;
 								}
-								replaceRun(paraCode,r, params);
+								replaceRun(paraCode,p,r, params);
 								paraCode=""; 
 							}
 						}
@@ -180,7 +180,7 @@ public class PoiUtilsHelper {
 	 * @param params
 	 * @return
 	 */
-	private static XWPFRun replaceRun(String paraCode,XWPFRun run,Map<String, Object> params ) {
+	private static XWPFRun replaceRun(String paraCode,XWPFParagraph paragraph,XWPFRun run,Map<String, Object> params ) {
 	//	System.out.println("table run1:"+run.toString());
 	//	System.out.println("table run2:"+run.getText(run.getTextPosition()));
 		String text = paraCode;
@@ -217,7 +217,21 @@ public class PoiUtilsHelper {
 				text = text.replace(key,v==null?" ":v.toString());
 			}
 			
-			run.setText(text,0);
+			//如果text中含有换行符"\n"，poi不能自动换行，需要进行段落设置
+			if ( text.contains("\n")) {
+				run.setText("", 0);
+				String val[] = text.split("\n");
+				int pos = 0;
+				for ( String v:val ) {
+					XWPFRun newRun = paragraph.insertNewRun(pos);
+					newRun.getCTR().setRPr(run.getCTR().getRPr());
+					newRun.setText(v);
+					newRun.addBreak(BreakClear.ALL);
+					pos ++;//=  v.length();
+				}	
+			} else {
+				run.setText(text,0);
+			}
 		}
 		return run;
 	}
