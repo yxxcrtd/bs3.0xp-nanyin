@@ -20,6 +20,7 @@ import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.U
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -292,30 +293,35 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             if (checkResult.isEmpty()) {
                 SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
                 try {
+                    Map<String,List<UnClaimAssetDetailDto>>tt=entities.stream().collect(
+                            JoyinCollectors.groupingBy(x -> x.getProdId() + GlobalConstant.UNDER_LINE + x.getEffDateStr() + GlobalConstant.UNDER_LINE + x.getEffEndDateStr()));
                     UnClaimAssetDetailMapper mapper=session.getMapper(UnClaimAssetDetailMapper.class);
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("prodId", entities.get(0).getProdId());
-                    map.put("effDate", entities.get(0).getEffDateStr());
-                    map.put("effEndDate", entities.get(0).getEffEndDateStr());
-                    map.put("dataStatus", DictCodeListExt1.维护数据状态_待处理.getValue());
-                    AtomicInteger num = new AtomicInteger(mapper.selectCount(map));
-                    entities.forEach(item -> {
-                        num.addAndGet(1);
-                        item.setUpdateTime(DateUtil.now());
-                        item.setUpdateUser(CommonUtil.getUserName());
-                        item.setNostdAssetId(IDGenerator.generate(36));
-                        item.setDataStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
-                        item.setProjectNo(String.valueOf(num));
-                        mapper.insert(item);
-                    });
-                    session.commit();
+                    for(String key:tt.keySet()){
+                        List<UnClaimAssetDetailDto> entityList=tt.get(key);
+
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("prodId", entityList.get(0).getProdId());
+                        map.put("effDate", entityList.get(0).getEffDateStr());
+                        map.put("effEndDate", entityList.get(0).getEffEndDateStr());
+                        map.put("dataStatus", DictCodeListExt1.维护数据状态_待处理.getValue());
+                        AtomicInteger num = new AtomicInteger(mapper.selectCount(map));
+                        entityList.forEach(item -> {
+                            num.addAndGet(1);
+                            item.setUpdateTime(DateUtil.now());
+                            item.setUpdateUser(CommonUtil.getUserName());
+                            item.setNostdAssetId(IDGenerator.generate(36));
+                            item.setDataStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+                            item.setProjectNo(String.valueOf(num));
+                            mapper.insert(item);
+                        });
+                        session.commit();
+                    }
 
                 }catch (Exception e) {
                     session.rollback();
                 } finally {
                     session.close();
                 }
-
 
 
             }
