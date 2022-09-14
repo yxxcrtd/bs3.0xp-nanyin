@@ -3,17 +3,22 @@
 <mapper namespace="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper" >
 <select id="selectForPage" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
        select
+           (select f_guid from dual) id,
             prodId,
             prodName,
             dataStatus,
             effDate,
             effEndDate,
             updatetime,
-            (select d.update_user from DIS_NOSTD_CREDITOR d where d.update_time=updatetime
-            and tmp.prodId=D.PROD_ID
-            and tmp.dataStatus = D.data_status
-            and tmp.effDate=D.eff_date
-            and tmp.effEndDate=D.EFF_END_DATE) updateUser
+            (select tt.update_user
+                from (select d.update_user, rownum
+                from DIS_NOSTD_CREDITOR d
+                where d.update_time = updatetime
+                and tmp.prodId = D.PROD_ID
+                and tmp.dataStatus = D.data_status
+                and tmp.effDate = D.eff_date
+                and tmp.effEndDate = D.EFF_END_DATE) tt
+                where rownum = 1) updateUser
         from(
             SELECT
                 /*DNDC.NOSTD_ASSET_ID,*/
@@ -537,4 +542,12 @@
 
     </select>
 
+    <update id="deleteByNostdAssetId" parameterType="java.util.List">
+        update DIS_NOSTD_CREDITOR DNDC set DATA_STATUS = 'D'
+        <where>
+            <foreach collection="list" item="dto" open="DNDC.NOSTD_ASSET_ID in (" close=")" separator=",">
+                #{dto.id}
+            </foreach>
+        </where>
+    </update>
 </mapper>
