@@ -67,7 +67,7 @@ public class MatureReportDataService implements IReportDataService {
 				matureReportDto.seteDate(dto.geteDate());
 				
 				if ( "02".equals(dto.getBonusMode()) ) {  //分红方式==到期兑付
-					matureReportDto.setmDate( holidayService.getNextWorkDate(dto.getSettDate()) );
+					matureReportDto.setmDate( dto.getSettDate() );
 				} else {
 					matureReportDto.setmDate(dto.getSettDate());
 				}
@@ -105,7 +105,7 @@ public class MatureReportDataService implements IReportDataService {
 	        	
 	        	//运行天数
 	        	if ( report.getLastSettDate().compareTo(report.geteDate())==0 ){
-	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate())+1);
+	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate()));
 	        	} else {
 	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate()));
 	        	}

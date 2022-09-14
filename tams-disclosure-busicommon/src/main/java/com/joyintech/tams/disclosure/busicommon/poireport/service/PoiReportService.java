@@ -423,10 +423,16 @@ public class PoiReportService {
 
 		if(StringUtil.equals(repReveal.getRepId(),"CP_001_003_001")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_003_002")){
-			ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadline("01",
-					com.joyintech.framework.util.DateUtil.format(revealEndDate), "01", 1);
+			ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getChbDeadlineZero("01",
+					com.joyintech.framework.util.DateUtil.format(revealEndDate), "02");
 			if(holidaymarket001Dto!=null){
-				revealEndDate=holidaymarket001Dto.getBusiDate();
+				String[] t= "09:00:00".split(":");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(holidaymarket001Dto.getBusiDate());
+				cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(t[0]));
+				cal.set(Calendar.MINUTE, Integer.parseInt(t[1]));
+				cal.set(Calendar.SECOND, Integer.parseInt(t[2]));
+				revealEndDate=cal.getTime();
 			}
 		}
 
