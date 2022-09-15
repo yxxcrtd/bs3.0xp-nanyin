@@ -274,7 +274,10 @@ public class ReportModelManage002Controller extends BaseController {
 				 String TEMPLATE_DELETE_TYPE  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_DELETE_TYPE); 
 				 if(null!=TEMPLATE_DELETE_TYPE&&TEMPLATE_DELETE_TYPE.equals(DisclosureDictCodeList.是否_是.getValue())){
 					 FileUtil.deleteDir(filepath2);
-					 filepath2.mkdirs();
+					 boolean ret = filepath2.mkdirs();
+					 if ( ret==false ) {
+							logger.error("创建目录错误："+filepath2.getName());
+					}
 				 }
 				 
 			 }
