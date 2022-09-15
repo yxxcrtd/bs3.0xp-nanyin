@@ -1273,3 +1273,6 @@ VALUES ('Performance001', 'Performance001_TABROW_edit', '01', '01', null, '编�
 
 INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 VALUES ('Performance001', 'Performance001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+-- 解决 NYXPUAT-107【需求变更】报表指标管理，规则设置选择产品名称，同一个指标和同一个产品在同一个生效区间只能有一个产品
+delete from SYS_PAGE_DICTLIST where PAGE_ID = 'ReportContentEnum003' and DICT_ID = 'RULE_TYPE1' AND DICT_ITEM_VAL IN ('INVEST_TYPE','ISSUE_STATUS','IS_INDEX','IS_PERIOD','OPEN_FREQ','PROD_TYPE','RAISE_TYPE','ISSUING_WAY','REP_PROD_TYPE');

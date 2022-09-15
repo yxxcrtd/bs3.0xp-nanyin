@@ -1,0 +1,1 @@
+update SYS_MENU set REMARK='系统管理' where MENU_ID='SYSTEM_001';
