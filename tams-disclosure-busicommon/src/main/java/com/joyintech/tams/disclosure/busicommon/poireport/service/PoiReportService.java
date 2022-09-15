@@ -387,7 +387,9 @@ public class PoiReportService {
 		if(!(StringUtil.equals(repReveal.getRepId(),"CP_001_002_003")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_004")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_005")
-				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_006"))){
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_006")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_007")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_008"))){
 			if (StringUtil.isNotEmpty(params.get("prodId"))) {
 				repReveal.setProdid(params.get("prodId").toString());
 			} else {

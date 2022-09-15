@@ -139,7 +139,8 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
                     ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
             if (dataList.size() > maxCount) {
-                webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
+                webResult.setMessage( this.getMessage("REPORT_COMMON_FILE_E_003C",
+                        maxCount), MessageType.错误消息);
                 return webResult;
             }
             List<RepRelDealDto> entities = this.convertToBean(dataList);

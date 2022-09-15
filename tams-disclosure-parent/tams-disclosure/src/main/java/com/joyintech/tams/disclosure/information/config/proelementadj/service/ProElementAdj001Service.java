@@ -233,56 +233,56 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             } else if(!prodList.contains(rowData.get(1))){
                 message.add("子产品代码未在产品基本信息表中维护。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(2)) && rowData.get(2).length() > 500){
+            if (StringUtil.isNotEmpty(rowData.get(3)) && rowData.get(3).length() > 500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整此产品要素原因"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(3)) && rowData.get(3).length() > 500){
+            if (StringUtil.isNotEmpty(rowData.get(4)) && rowData.get(4).length() > 500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "此产品要素调整描述文字1"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(4)) && rowData.get(4).length() > 500){
+            if (StringUtil.isNotEmpty(rowData.get(5)) && rowData.get(5).length() > 500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "此产品要素调整描述文字2"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(5))){
+            if (!StringUtil.isNotEmpty(rowData.get(6))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整要素"));
-            } else if (rowData.get(5).length() > 500){
+            } else if (rowData.get(6).length() > 500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整要素"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(6))){
+            if (!StringUtil.isNotEmpty(rowData.get(7))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整前"));
-            } else if (rowData.get(6).length() > 500){
+            } else if (rowData.get(7).length() > 500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整前"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(7))){
+            if (!StringUtil.isNotEmpty(rowData.get(8))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整后"));
-            } else if (rowData.get(7).length() > 500){
+            } else if (rowData.get(8).length() > 500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整后"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(8))){
+            if (!StringUtil.isNotEmpty(rowData.get(9))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效时间"));
-            } else if(!isDateStr(rowData.get(8))){
+            } else if(!isDateStr(rowData.get(9))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效时间"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(9)) && rowData.get(9).length() > 500) {
+            if (StringUtil.isNotEmpty(rowData.get(10)) && rowData.get(10).length() > 500) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "对此要素调整(原因)"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(10)) && rowData.get(10).length() > 500){
+            if (StringUtil.isNotEmpty(rowData.get(11)) && rowData.get(11).length() > 500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整此要素（补充说明文1）"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(11)) && rowData.get(11).length() > 500){
+            if (StringUtil.isNotEmpty(rowData.get(12)) && rowData.get(12).length() > 500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整此要素（补充说明文2）"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(12))){
+            if (!StringUtil.isNotEmpty(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
-            }else if(!isDateStr(rowData.get(12))){
+            }else if(!isDateStr(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
             }
             if (map.containsKey(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(5))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
-            map.put(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(5), rowData);
+            map.put(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(6), rowData);
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(rowData.get(1)
-                        + GlobalConstant.UNDER_LINE + rowData.get(5),
+                        + GlobalConstant.UNDER_LINE + rowData.get(6),
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             else {
@@ -300,38 +300,38 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
         if (StringUtil.isNotEmpty(rowData.get(1))) {
             proElementAdj001Dto.setProdId(rowData.get(1));
         }
-        if (StringUtil.isNotEmpty(rowData.get(2))) {
-            proElementAdj001Dto.setAdjReason(rowData.get(2));
-        }
         if (StringUtil.isNotEmpty(rowData.get(3))) {
-            proElementAdj001Dto.setProdAdjRemark(rowData.get(3));
+            proElementAdj001Dto.setAdjReason(rowData.get(3));
         }
         if (StringUtil.isNotEmpty(rowData.get(4))) {
-            proElementAdj001Dto.setProdAdjRemark2(rowData.get(4));
+            proElementAdj001Dto.setProdAdjRemark(rowData.get(4));
         }
         if (StringUtil.isNotEmpty(rowData.get(5))) {
-            proElementAdj001Dto.setAdjField(rowData.get(5));
+            proElementAdj001Dto.setProdAdjRemark2(rowData.get(5));
         }
         if (StringUtil.isNotEmpty(rowData.get(6))) {
-            proElementAdj001Dto.setPreAdjust(rowData.get(6));
+            proElementAdj001Dto.setAdjField(rowData.get(6));
         }
         if (StringUtil.isNotEmpty(rowData.get(7))) {
-            proElementAdj001Dto.setAfterAdjust(rowData.get(7));
+            proElementAdj001Dto.setPreAdjust(rowData.get(7));
         }
         if (StringUtil.isNotEmpty(rowData.get(8))) {
-            proElementAdj001Dto.setEffDate(DateUtil.parse(rowData.get(8)));
+            proElementAdj001Dto.setAfterAdjust(rowData.get(8));
         }
         if (StringUtil.isNotEmpty(rowData.get(9))) {
-            proElementAdj001Dto.setAdjReason2(rowData.get(9));
+            proElementAdj001Dto.setEffDate(DateUtil.parse(rowData.get(9)));
         }
         if (StringUtil.isNotEmpty(rowData.get(10))) {
-            proElementAdj001Dto.setFieldAdjRemark(rowData.get(10));
+            proElementAdj001Dto.setAdjReason2(rowData.get(10));
         }
         if (StringUtil.isNotEmpty(rowData.get(11))) {
-            proElementAdj001Dto.setFieldAdjRemark2(rowData.get(11));
+            proElementAdj001Dto.setFieldAdjRemark(rowData.get(11));
         }
         if (StringUtil.isNotEmpty(rowData.get(12))) {
-            proElementAdj001Dto.setRptIssueDate(DateUtil.parse(rowData.get(12)));
+            proElementAdj001Dto.setFieldAdjRemark2(rowData.get(12));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            proElementAdj001Dto.setRptIssueDate(DateUtil.parse(rowData.get(2)));
         }
         return proElementAdj001Dto;
     }
