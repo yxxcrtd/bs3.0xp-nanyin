@@ -168,6 +168,10 @@ public class ReportContentEnum003Controller extends BaseController {
 	public AjaxResult save(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		dto.setIndexType(DictCodeListExt2.指标类型_录入型.getValue());
+		String indexDetail = dto.getIndexDetail();
+		if (indexDetail.length()>500) {
+			return new AjaxResult("适用产品范围说明长度不能超过500",MessageType.错误消息);
+		}
 		if (StringUtils.isEmpty(dto.getId())) {
 			dto.setId(IDGenerator.generate());
 			reportContentEnum002Service.insert(dto);
