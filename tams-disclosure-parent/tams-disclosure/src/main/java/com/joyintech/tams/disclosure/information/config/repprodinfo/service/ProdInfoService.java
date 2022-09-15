@@ -30,7 +30,6 @@ import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
-import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.CompareProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
@@ -408,8 +407,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
-        if (null == tempList.get(0) || tempList.get(0).size() != 27) {
-            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 27), MessageType.错误消息);
+        if (null == tempList.get(0) || tempList.get(0).size() != 26) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 26), MessageType.错误消息);
             return webResult;
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
@@ -538,33 +537,6 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             List<ProdInfoDto> entities = new ArrayList<>(dataList.size());
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
-            //文件中存在某几条数据的“产品主代码”相同，则需要校验除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值必须相同
-//            Map<String, List<ProdInfoDto>> prodInfoMap = entities.stream().collect(
-//                    JoyinCollectors.groupingBy(ProdInfoDto::getpProdId));
-//            for(String key : prodInfoMap.keySet()){
-//                List<ProdInfoDto> prodInfoDtos = prodInfoMap.get(key);
-//                if (prodInfoDtos.size()==1) {
-//                    continue;
-//                }
-//                Set<String> set = new HashSet<>();
-//                boolean flag = true;
-//               for(ProdInfoDto prodInfoDto :prodInfoDtos){
-//                   CompareProdInfoDto compareProdInfoDto = new CompareProdInfoDto();
-//                   BeanUtils.copyProperties(prodInfoDto,compareProdInfoDto);
-//                   String compareKey = compareProdInfoDto.toString();
-//                   if (set.contains(compareKey)) {
-//                       flag = false;
-//                   } else {
-//                       set.add(compareKey);
-//                   }
-//               }
-//
-//               if (flag) {
-//                   checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-//                           "文件中存在"+prodInfoDtos.size()+"条数据的“产品主代码="+prodInfoDtos.get(0).getpProdId()+"”相同,除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值必须相同"));
-//               }
-//
-//            }
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
                     ProdInfoDto prodInfo = this.selectByProdId(item.getProdId());
@@ -590,16 +562,16 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         Map<String, List<String>> prodMap = new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
-            if (null == list || list.size() != 27) {
+            if (null == list || list.size() != 26) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
-                        this.getMessage("REPORT_COMMON_FILE_E_0030", 27)));
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 26)));
                 break;
             }
             // 验证消息
             List<String> message = new ArrayList<>();
             for (int j = i + 1; j < dataList.size(); j++) {
                 if (dataList.get(i).get(8).equals(dataList.get(j).get(8))) {
-                    for (int k = 3; k < 27; k++) {
+                    for (int k = 3; k < 26; k++) {
                         if (!dataList.get(i).get(k).equals(dataList.get(j).get(k))) {
                             message.add("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
                             if (CollectionUtils.isNotEmpty(message)) {
@@ -804,20 +776,20 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
             }
             //校验产品业绩比较基准格式
-            if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(22))
-                    && StringUtil.isNotEmpty(list.get(23))) {
-                List<ProdBasicChangeDto> changeList = prodBasicChangeService.analyseDate(list.get(23));
-                if (CollectionUtils.isEmpty(changeList)) {
-                    message.add("产品业绩比较基准格式不正确。");
-                }
-            }
-            if (StringUtil.isEmpty(list.get(24))) {
+//            if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(22))
+//                    && StringUtil.isNotEmpty(list.get(23))) {
+//                List<ProdBasicChangeDto> changeList = prodBasicChangeService.analyseDate(list.get(23));
+//                if (CollectionUtils.isEmpty(changeList)) {
+//                    message.add("产品业绩比较基准格式不正确。");
+//                }
+//            }
+            if (StringUtil.isEmpty(list.get(23))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "投资性质"));
             }
-            if (StringUtil.isEmpty(list.get(25))) {
+            if (StringUtil.isEmpty(list.get(24))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品托管人名称"));
             }
-            if (StringUtil.isEmpty(list.get(26))) {
+            if (StringUtil.isEmpty(list.get(25))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "托管部门"));
             }
 
@@ -958,21 +930,21 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             //是否是指数型产品
             entity.setIsIndex(SysCommDataUtil.getCodeFromDataDictByName(DictCode.是或否, list.get(22)));
         }
+//        if (StringUtil.isNotEmpty(list.get(23))) {
+//            //产品业绩比较基准
+//            entity.setPerformCompare(list.get(23).toString());
+//        }
         if (StringUtil.isNotEmpty(list.get(23))) {
-            //产品业绩比较基准
-            entity.setPerformCompare(list.get(23).toString());
-        }
-        if (StringUtil.isNotEmpty(list.get(24))) {
             //投资性质
             entity.setNatureInvest(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_投资性质, list.get(24)));
         }
-        if (StringUtil.isNotEmpty(list.get(25))) {
+        if (StringUtil.isNotEmpty(list.get(24))) {
             //产品托管人名称
-            entity.setAcctChnname(list.get(25));
+            entity.setAcctChnname(list.get(24));
         }
-        if (StringUtil.isNotEmpty(list.get(26))) {
+        if (StringUtil.isNotEmpty(list.get(25))) {
             //托管部门
-            entity.setTrustpart(list.get(26));
+            entity.setTrustpart(list.get(25));
         }
         return entity;
     }
