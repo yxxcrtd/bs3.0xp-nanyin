@@ -202,6 +202,12 @@ public class ReportZqxkfgg001Service implements IReportDataService {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         repReveal.setProdid(prodId);
+        Map<String, Object> param = new HashMap<>();
+        param.put("prodId", prodId);
+        RepProdInfo info=reportRkcpjz001Mapper.getProdId(param);
+        if(StringUtil.isNotEmpty(info)){
+            repReveal.setProdid(info.getpProdId());
+        }
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate( (Date)(paraMap.get("reportDate")));
         return repReveal;
