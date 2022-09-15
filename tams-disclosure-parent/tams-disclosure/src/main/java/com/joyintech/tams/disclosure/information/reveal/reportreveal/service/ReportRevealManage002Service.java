@@ -351,28 +351,31 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                         }
                     }
                 }
-                toClient.close();
-                toClient = null;
-                zipOut.close();
-                zipOut=null;
+//                toClient.close();
+//                toClient = null;
+//                zipOut.close();
+//                zipOut=null;
             }
             catch (Exception e) {
                 log.error("", e);
                 return false;
             }finally {
-                if (fos != null){
-                	fos.flush();
-                    fos.close();
-                }
-                if ( zipOut!=null ) {
-                	zipOut.flush();
-                	zipOut.close();
-                }
-                if ( toClient!=null ) {
-                	toClient.flush();
-                	toClient.close();
-                }
-                
+            	try {
+	                if (fos != null){
+	                	fos.flush();
+	                    fos.close();
+	                }
+	                if ( zipOut!=null ) {
+	                	zipOut.flush();
+	                	zipOut.close();
+	                }
+	                if ( toClient!=null ) {
+	                	toClient.flush();
+	                	toClient.close();
+	                }
+            	} catch (Exception e) {
+            		logger.error("资源关闭错误。",e);
+            	}
             }
         }
         return true;
