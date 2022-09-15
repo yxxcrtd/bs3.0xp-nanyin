@@ -638,10 +638,16 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 							compressFile2(zipOut, baseFile,baseFile.getName());
 							deleteFile(baseFile);
 							if(downloadFilePeople!=null){
-								downloadFilePeople.delete();
+								boolean ret = downloadFilePeople.delete();
+								if ( ret==false ) {
+									logger.error("删除文件错误："+downloadFilePeople.getName());
+								}
 							}
 							if(downloadFile!=null){
-								downloadFile.delete();
+								boolean ret = downloadFile.delete();
+								if ( ret==false ) {
+									logger.error("删除文件错误："+downloadFilePeople.getName());
+								}
 							}
 						}
 
