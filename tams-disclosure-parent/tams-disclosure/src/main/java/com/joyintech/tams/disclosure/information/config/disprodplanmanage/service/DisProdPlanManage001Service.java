@@ -371,6 +371,12 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 if (StringUtil.isNotEmpty(rowData.get(6)) && !StringUtils.isNumeric(rowData.get(6))) {
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "客户实际持有天数"));
                 }
+                if (StringUtil.isNotEmpty(rowData.get(6)) && StringUtils.isNumeric(rowData.get(6))) {
+                    Integer days=new Integer(rowData.get(6));
+                    if(days<=0){
+                        message.add("客户实际持有天数必须大于0");
+                    }
+                }
 
                 if (prodInfo != null && StringUtils.isNotBlank(prodInfo.getIsPeriod())
                         && StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), prodInfo.getIsPeriod())) {
