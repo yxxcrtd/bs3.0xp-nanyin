@@ -151,9 +151,13 @@
         V_REP_PROD_INFO
         where status='E' AND PD_STATUS NOT IN ('02','03')
     </select>
+
+
     <select id="isOnlyData" resultType="java.lang.Integer">
-        select count(1) from REP_INDEX_SUB r1 where r1.PRI_ID = #{priId,jdbcType=VARCHAR} AND r1.INDEX_DETAIL = #{indexDetail,jdbcType=VARCHAR} and
-        r1.INDEX_DATE = #{indexDate,jdbcType=DATE} and r1.END_DATE =#{endDate,jdbcType=DATE}
+        select count(1) from REP_INDEX_SUB r1 where r1.PRI_ID = #{priId,jdbcType=VARCHAR} AND
+        r1.INDEX_DETAIL = #{indexDetail,jdbcType=VARCHAR} and
+        (<![CDATA[r1.INDEX_DATE <= #{indexDate,jdbcType=DATE} ]]>and <![CDATA[r1.END_DATE >= #{indexDate,jdbcType=DATE} ]]>) or
+        ( <![CDATA[r1.INDEX_DATE <= #{endDate,jdbcType=DATE} ]]> and <![CDATA[r1.INDEX_DATE >= #{endDate,jdbcType=DATE} ]]>)
     </select>
 
 </mapper>
