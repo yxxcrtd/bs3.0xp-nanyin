@@ -12,10 +12,16 @@
 			object.uploadFileList = FileCommon.getUploadFileInfo();
 		}
 		object.operationType = operateType;
+		var msg='';
+		if (operateType === 'save') {
+			 msg='请确认是否要保存?';
+		} else {
+			msg='请确认是否要提交?';
+		}
 		Joyin.ajaxJson(
 			basePath+ 'disclosure/information/reportpage/ReportPageManage003/check',object,
 			function(result) {
-				Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil
+				Joyin.confirm(JoyinUtil.getMessage(msg, JoyinUtil
 					.getLabel("SysCommon.submit")), function() {
 					if(operateType === 'save'){
 						WorkFlow.doSaveList(basePath + 'disclosure/information/reportpage/ReportPageManage003/save', object, "ReportPageManage003_btn_save");
