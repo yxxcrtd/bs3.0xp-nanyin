@@ -134,6 +134,11 @@ public class ReportContentEnum003Controller extends BaseController {
 			msg = "生效截止日期不能为空";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
+
+		if(!StringUtil.isNotEmpty(dto.getIndexValue())){
+			msg = "指标值不能为空";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
 		//获取平台日期
 		Date sysDate = iPlatformDate.getSysDate();
 		Date indexDate = dto.getIndexDate();

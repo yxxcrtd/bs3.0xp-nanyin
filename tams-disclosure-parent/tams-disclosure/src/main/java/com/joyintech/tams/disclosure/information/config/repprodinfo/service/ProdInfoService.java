@@ -936,7 +936,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 //        }
         if (StringUtil.isNotEmpty(list.get(23))) {
             //投资性质
-            entity.setNatureInvest(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_投资性质, list.get(24)));
+            entity.setNatureInvest(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_投资性质, list.get(23)));
         }
         if (StringUtil.isNotEmpty(list.get(24))) {
             //产品托管人名称

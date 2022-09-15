@@ -37,7 +37,7 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	/**
 	 * 指标值
 	 */
-	@NotEmpty(fieldName = "指标值")
+//	@NotEmpty(fieldName = "指标值")
 	private String indexValue;
 
 	/**
