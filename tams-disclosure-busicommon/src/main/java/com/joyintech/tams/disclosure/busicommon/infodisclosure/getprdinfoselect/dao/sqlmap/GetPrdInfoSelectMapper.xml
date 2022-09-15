@@ -137,7 +137,7 @@
 		distinct RPI.PROD_ID id,
 		RPI.PROD_NAME text
 		from
-		V_REP_PROD_INFO RPI
+		rep_prod_info RPI
 		<if test="flag != null and flag != '' and flag == '01'">
 			inner join DIS_PROD_FEEDISCOUNT DPF on DPF.PROD_REGIST_NO=RPI.PROD_RE and DPF.DATA_STATUS='E'
 		</if>
