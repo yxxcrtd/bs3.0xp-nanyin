@@ -18,7 +18,7 @@ public interface Performance001Mapper {
 //    List<Performance001Dto> select(Map<String, Object> pageParam);
 
     List<Performance001Dto> select1(Map<String, Object> pageParam);
-    
+
     int deleteByKey(Performance001Dto dto);
 
     List<SelectOptionDto> getProdIdlist(Map map);
@@ -38,4 +38,6 @@ public interface Performance001Mapper {
     List<ProcessMark> getWorklowData(Performance001Dto dto);
 
     int update(Performance001Dto dto1);
+
+    List<Performance001Dto> selectAssetInfoByProdId(String prodId);
 }

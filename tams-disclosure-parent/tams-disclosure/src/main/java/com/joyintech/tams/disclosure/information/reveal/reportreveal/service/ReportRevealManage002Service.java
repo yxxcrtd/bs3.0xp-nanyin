@@ -339,10 +339,16 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                     //zipOut.setEncoding(System.getProperty("file.encoding"));
                     deleteFile(firstFile);
                     if (downloadFilePeople != null) {
-                        downloadFilePeople.delete();
+                        boolean ret = downloadFilePeople.delete();
+                        if ( ret==false ) {
+                        	logger.error("删除文件错误："+downloadFilePeople.getName());
+                        }
                     }
                     if (downloadFile != null) {
-                        downloadFile.delete();
+                        boolean ret = downloadFile.delete();
+                        if ( ret==false ) {
+                        	logger.error("删除文件错误："+downloadFilePeople.getName());
+                        }
                     }
                 }
                 toClient.close();

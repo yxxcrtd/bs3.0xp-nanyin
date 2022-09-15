@@ -174,7 +174,10 @@ public class SftpUtil {
 			File file = new File(remoteFileName);
 			File temp = new File(localDir);
 			if (!temp.exists()) {
-				temp.mkdirs();
+				boolean ret = temp.mkdirs();
+				if ( ret==false ) {
+					logger.error("创建目录错误："+temp.getName());
+				}
 			}
 			if (isDir(remoteFileName)) {
 				List<String> names = getSFtpFile(remoteFileName);

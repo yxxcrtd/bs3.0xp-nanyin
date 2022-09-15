@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
+import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +32,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
-import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.performance.dao.Performance001Mapper;
-import com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -97,7 +98,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 //        result1.setRecords(result.getRecords()/4);
 //        return result1;
 //    }
-    
+
     public Page<Performance001Dto> selectForPage1(Map<String, Object> param) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         String prodId = (String)param.get("prodId");
@@ -280,42 +281,43 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                     ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
             if (dataList.size() > maxCount) {
                 webResult.setMessage(
-                this.getMessage("REPORT_COMMON_FILE_E_003C",
-                        maxCount),
+                        this.getMessage("REPORT_COMMON_FILE_E_003C",
+                                maxCount),
                         MessageType.错误消息);
                 return webResult;
             }
             List<Performance001Dto> entities = this.convertToBean(dataList);
             List<Performance001Dto> data = this.selectPerformanceInfoByKey(entities);
-            if (data != null && data.size() > 0) {
-                Map<String, List<Performance001Dto>> map = entities.stream().collect(
-                        JoyinCollectors.groupingBy(x ->
-                                x.getProdId()
-                                        + GlobalConstant.UNDER_LINE + x.getEffDateStr()
-                                        + GlobalConstant.UNDER_LINE + x.getExpDateStr()
-                        ));
-                // 将序号放入list中
-                List<String> excelNumList = new ArrayList<>();
-                List<Integer> excelNumIntList = new ArrayList<>();
-                for (Performance001Dto dto : data) {
-                    List<Performance001Dto> listTemp = map.get(dto.getProdId()
-                            + GlobalConstant.UNDER_LINE + dto.getEffDateStr()
-                            + GlobalConstant.UNDER_LINE + dto.getExpDateStr());
-                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
-                }
-                // 将list进行排序，并转化为string
-                Collections.sort(excelNumIntList);
-                for (Integer rowNo : excelNumIntList) {
-                    excelNumList.add(String.valueOf(rowNo));
-                }
-                webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_0001",
-                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                        MessageType.确认消息);
-            } else {
+//            if (data != null && data.size() > 0) {
+//                Map<String, List<Performance001Dto>> map = entities.stream().collect(
+//                        JoyinCollectors.groupingBy(x ->
+//                                x.getProdId()
+//                                        + GlobalConstant.UNDER_LINE + x.getEffDateStr()
+//                                        + GlobalConstant.UNDER_LINE + x.getExpDateStr()
+//                        ));
+//                // 将序号放入list中
+//                List<String> excelNumList = new ArrayList<>();
+//                List<Integer> excelNumIntList = new ArrayList<>();
+//                for (Performance001Dto dto : data) {
+//                    List<Performance001Dto> listTemp = map.get(dto.getProdId()
+//                            + GlobalConstant.UNDER_LINE + dto.getEffDateStr()
+//                            + GlobalConstant.UNDER_LINE + dto.getExpDateStr());
+//                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+//                }
+//                // 将list进行排序，并转化为string
+//                Collections.sort(excelNumIntList);
+//                for (Integer rowNo : excelNumIntList) {
+//                    excelNumList.add(String.valueOf(rowNo));
+//                }
+//                webResult.setMessage(
+//                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+//                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+//                        MessageType.确认消息);
+//            }
+//            else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-            }
+//            }
         } else {
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
@@ -388,7 +390,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
     }
 
 
-    public List<ExcelValidDto> importData(String fileName) {
+    public List<ExcelValidDto> importData(String fileName) throws ParseException {
         SysUploadFileInfo suf = new SysUploadFileInfo();
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
@@ -396,13 +398,13 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             List<Performance001Dto> entities = new ArrayList<>(dataList.size());
-            
+
             List<ExcelValidDto> checkResult = new ArrayList<>();
             checkResult = convertToEntitys(dataList, entities);
 
             //chenxc: 区间重叠校验
-            checkResult.addAll(checkDataDuration(entities));
-            
+//            checkResult.addAll(checkDataDuration(entities));
+
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
                     Map<String, Object> map = new HashMap<>();
@@ -449,11 +451,12 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         }
     }
 
-    
+
     private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
-                                                 List<Performance001Dto> entities) {
+                                                 List<Performance001Dto> entities) throws ParseException {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<String> prodList =  performance001Mapper.getProdIdlist(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
@@ -464,7 +467,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             }
             // 验证消息
             List<String> message = new ArrayList<>();
-         
+
             if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else if (!prodList.contains(rowData.get(0).trim())){
@@ -480,17 +483,30 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             } else if (!isDateStr(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "业绩比较基准生效截止日"));
             }
-           //校验截止日大于生效日
-            Date expDate=DateUtil.parse(rowData.get(2).trim());
-            Date effDate=DateUtil.parse(rowData.get(1).trim());
+            //校验截止日大于生效日
+            Date expDate=sdf.parse(rowData.get(2).trim());
+            Date effDate=sdf.parse(rowData.get(1).trim());
             if (DateUtil.compareDate(effDate,expDate)>0) {
                 message.add("业绩比较基准生效截止日不能小于业绩比较基准生效日!");
+            }
+
+            if(StringUtil.isNotEmpty(rowData.get(0))){
+                List<Performance001Dto> dtos = performance001Mapper.selectAssetInfoByProdId(rowData.get(0).trim());
+                for (Performance001Dto dto : dtos) {
+                    if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(expDate,dto.getExpDate())<0)
+                            || (DateUtil.compareDate(effDate,dto.getExpDate())>0 && DateUtil.compareDate(expDate,dto.getExpDate())>0))){
+                        checkResult.add(new com.joyintech.tams.systemtools.dto.ExcelValidDto(rowData.get(0), String.valueOf(i+2),
+                                "子产品业绩比较基准区间生效时间有重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
+                                        +"-"+DateUtil.format(dto.getExpDate(),"yyyyMMdd")));
+                        break;
+                    }
+                }
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合全价指数收益率【系数】"));
             } else if (!isNumber(rowData.get(3).trim())){
-            	message.add("中债新综合全价指数收益率【系数】必须是数字");
+                message.add("中债新综合全价指数收益率【系数】必须是数字");
             } else if (isValidData(Double.parseDouble(rowData.get(3).trim()))){
                 message.add("中债新综合全价指数收益率【系数】不能大于100，且不能小于0！");
             }
@@ -498,23 +514,23 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合财富指数（1-3年）收益率【系数】"));
             } else if (!isNumber(rowData.get(3).trim())){
-            	message.add("中债新综合财富指数（1-3年）收益率【系数】必须是数字");
+                message.add("中债新综合财富指数（1-3年）收益率【系数】必须是数字");
             } else if (isValidData(Double.parseDouble(rowData.get(4).trim()))){
                 message.add("中债新综合财富指数（1-3年）收益率【系数】不能大于100，且不能小于0！");
             }
-            
+
             if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中证500指数收益率【系数】"));
             } else if (!isNumber(rowData.get(5).trim())){
-            	message.add("中证500指数收益率【系数】必须是数字");
+                message.add("中证500指数收益率【系数】必须是数字");
             } else if (StringUtil.isNotEmpty(rowData.get(5).trim())&&isValidData(Double.parseDouble(rowData.get(5).trim()))){
                 message.add("中证500指数收益率【系数】不能大于100，且不能小于0！");
             }
-            
+
             if (!StringUtil.isNotEmpty(rowData.get(6).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "沪深300指数收益率【系数】"));
             } else if (!isNumber(rowData.get(6).trim())){
-            	message.add("沪深300指数收益率【系数】必须是数字");
+                message.add("沪深300指数收益率【系数】必须是数字");
             } else if (StringUtil.isNotEmpty(rowData.get(6).trim())&&isValidData(Double.parseDouble(rowData.get(6).trim()))){
                 message.add("沪深300指数收益率【系数】不能大于100，且不能小于0！");
             }
@@ -643,60 +659,68 @@ public class Performance001Service extends CommonExportService<Performance001Dto
      */
     private List<ExcelValidDto> checkDataDuration(  List<Performance001Dto> listBasis ) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ss");
-    	Map<String, List<Performance001Dto>> map = listBasis.stream().collect(
+        Map<String, List<Performance001Dto>> map = listBasis.stream().collect(
                 JoyinCollectors.groupingBy(x ->
                         x.getProdId()
                 ));
-    	
-    	for ( Entry<String, List<Performance001Dto>> e:map.entrySet() ) {
-    		
+
+        for ( Entry<String, List<Performance001Dto>> e:map.entrySet() ) {
+
             Map<String, Object> mapPara = new HashMap<String,Object>();
             List<String> listProd = new ArrayList<String>();
             listProd.add(e.getKey());
             mapPara.put("prodIdList", listProd);
             mapPara.put("status","E");
             List<Performance001Dto> listPerformance = performance001Mapper.select1(mapPara);
-    		
-    		List<Performance001Dto> list = e.getValue();
-    		//list.addAll(listPerformance);
-    		List<Performance001Dto> listAll = new ArrayList<Performance001Dto>();
-    		listAll.addAll(list);
-    		listAll.addAll(listPerformance);
-    		Collections.sort(listAll, new Comparator() {
-				@Override
-    			public int compare( Object dto1,Object dto2 ) {
-    				return ( (Performance001Dto)dto1).getEffDate().compareTo( ((Performance001Dto)dto2).getEffDate());
-    			}
-    		});
-    		
+
+            List<Performance001Dto> list = e.getValue();
+            //list.addAll(listPerformance);
+            List<Performance001Dto> listAll = new ArrayList<Performance001Dto>();
+            listAll.addAll(list);
+            listAll.addAll(listPerformance);
+            Collections.sort(listAll, new Comparator() {
+                @Override
+                public int compare( Object dto1,Object dto2 ) {
+                    return ( (Performance001Dto)dto1).getEffDate().compareTo( ((Performance001Dto)dto2).getEffDate());
+                }
+            });
+
             // 验证消息
             List<String> message = new ArrayList<>();
-            message.add("本条数据与下一条数据有效期区间重叠。");
-    		if ( listAll.size()>1 ) {
-	    		for ( int i=0;i<listAll.size()-1;i++) {
-	    			if ( listAll.get(i).getExpDate().compareTo(listAll.get(i+1).getEffDate())>=0 ) {
-	                    checkResult.add(new ExcelValidDto(listAll.get(i).getProdId()
-	                            + GlobalConstant.UNDER_LINE + sdf.format(listAll.get(i).getEffDate())
-	                            + GlobalConstant.UNDER_LINE + sdf.format(listAll.get(i).getExpDate()),
-	                            listAll.get(i).getPersonalField(), StringUtil.joinString(message, "<br>")));
-	    			}
-	    		}
-    		}
-    	}
-    	return checkResult;
+//            for (int i=0;i<e.getValue().size();i++) {
+//                message.add("子产品业绩比较基准区间生效时间有重叠"
+//                    + "{" + DateUtil.format(e.getValue().get(i).getEffDate(), "yyyyMMdd")
+//                   + "-" + DateUtil.format(e.getValue().get(i).getEffDate(), "yyyyMMdd") + "}"
+//                );
+//            }
+            if ( listAll.size()>1 ) {
+                for ( int i=0;i<listAll.size()-1;i++) {
+                    if ( listAll.get(i).getExpDate().compareTo(listAll.get(i+1).getEffDate())>=0 ) {
+                        String msg = "子产品业绩比较基准区间生效时间有重叠"+"{"+sdf.format(listAll.get(i+1).getEffDate())+"-"+
+                                sdf.format(listAll.get(i+1).getExpDate())+"}";
+                        message.add(msg);
+                        checkResult.add(new ExcelValidDto(listAll.get(i).getProdId()
+                                + GlobalConstant.UNDER_LINE + sdf.format(listAll.get(i).getEffDate())
+                                + GlobalConstant.UNDER_LINE + sdf.format(listAll.get(i).getExpDate()),
+                                listAll.get(i).getPersonalField(), StringUtil.joinString(message, "<br>")));
+                    }
+                }
+            }
+        }
+        return checkResult;
     }
-    
+
     private Performance001Dto convertToEntity(List<String> rowData,int idx) {
-    	Performance001Dto dto = convertToEntity(rowData);
-    	dto.setPersonalField(idx+"");
-    	return dto;
+        Performance001Dto dto = convertToEntity(rowData);
+        dto.setPersonalField(idx+"");
+        return dto;
     }
-    
-	public static boolean isNumber(String str ){
-		if (str==null || str.trim().equals("")) return false;
-		return str.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
-	}
-	
+
+    public static boolean isNumber(String str ){
+        if (str==null || str.trim().equals("")) return false;
+        return str.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
+    }
+
 }

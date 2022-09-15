@@ -8,7 +8,6 @@ $(function() {
 	 * 修改/新建
 	 */
 	var saveOrSubmit = function(operateType) {
-		debugger;
 		var object = $.serializeToObject('#submitForm');
 		object.pageModel = pageModel;
 		object.operateType = operateType;

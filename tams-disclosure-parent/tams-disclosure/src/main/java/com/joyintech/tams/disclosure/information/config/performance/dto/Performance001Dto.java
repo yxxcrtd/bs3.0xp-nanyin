@@ -237,12 +237,39 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
         this.hs300 = hs300;
     }
 
+    public String getZzqjStr(){
+        if (this.getZzqj()!=null){
+            return String.format("%.2f",Double.parseDouble(this.getZzqj())).toString();
+        }
+        return "0.00";
+    }
+
+    public String getZzcfStr(){
+        if (this.getZzcf()!=null){
+            return String.format("%.2f",Double.parseDouble(this.getZzcf())).toString();
+        }
+        return "0.00";
+
+    }
+    public String getZz500Str() {
+        if (this.getZz500() != null) {
+            return String.format("%.2f", Double.parseDouble(this.getZz500())).toString();
+        }
+        return "0.00";
+    }
+
+    public String getHs300Str(){
+        if (this.getHs300() != null) {
+            return String.format("%.2f",Double.parseDouble(this.getHs300())).toString();
+        }
+        return "0.00";
+    }
 
     public String getStatusStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, super.getStatus());
     }
 
-//    public String getUpdateUserStr(){
+    //    public String getUpdateUserStr(){
 //        return SecurityUtil.getLoginUser().getUserName();
 //    }
     private String updateUser;

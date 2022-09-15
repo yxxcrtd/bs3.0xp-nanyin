@@ -147,6 +147,11 @@ public class ReportContentEnum003Controller extends BaseController {
 			msg = "生效截止日期必须大于等于生效日期";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
+        int num = reportContentEnum002Service.isOnlyData(dto);
+		if (num>0){
+            msg="同一个指标和同一个产品在同一个生效区间只能有一个指标值!";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
 
 		return commonCheck(bindingResult, operateType);
 	}
@@ -163,6 +168,10 @@ public class ReportContentEnum003Controller extends BaseController {
 	public AjaxResult save(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		dto.setIndexType(DictCodeListExt2.指标类型_录入型.getValue());
+		String indexDetail = dto.getIndexDetail();
+		if (indexDetail.length()>500) {
+			return new AjaxResult("适用产品范围说明长度不能超过500",MessageType.错误消息);
+		}
 		if (StringUtils.isEmpty(dto.getId())) {
 			dto.setId(IDGenerator.generate());
 			reportContentEnum002Service.insert(dto);
