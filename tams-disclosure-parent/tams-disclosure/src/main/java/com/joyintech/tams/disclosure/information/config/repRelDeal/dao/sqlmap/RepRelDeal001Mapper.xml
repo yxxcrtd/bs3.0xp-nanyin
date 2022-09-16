@@ -173,7 +173,7 @@
         select *
         from REP_REL_DEAL
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
-        and STATUS not in ('D')
+        and STATUS  in ('E')
         and (
         (EFFDATE &lt;= #{effdate,jdbcType=DATE} and EFFDELIDATE &gt;= #{effdelidate,jdbcType=DATE})
         or (EFFDATE &gt;= #{effdate,jdbcType=DATE} and EFFDATE &lt;= #{effdelidate,jdbcType=DATE})
