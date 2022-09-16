@@ -180,10 +180,16 @@ public class PoiReportModelManage002Controller extends BaseController {
 			 File filepath = new SafelyFile(uploadFilePath);///home/tamsuser/jasper
 		     File filepath2=new SafelyFile(uploadFilePath+this.getParam("folder"));///NB/GLJY
 			 if(!filepath.exists()){
-				 filepath.mkdirs();
+				 boolean ret = filepath.mkdirs();
+				 if ( ret==false ) {
+						logger.error("创建目录错误："+filepath.getName());
+				}
 			 }
 			 if(!filepath2.exists()){
-				 filepath2.mkdirs();
+				 boolean ret = filepath2.mkdirs();
+				 if ( ret==false ) {
+						logger.error("创建目录错误："+filepath2.getName());
+				}
 			 }
 			 if(filepath.exists()&&filepath.isDirectory()){
 				 //获取已经下载的文件，并且转化为文件流

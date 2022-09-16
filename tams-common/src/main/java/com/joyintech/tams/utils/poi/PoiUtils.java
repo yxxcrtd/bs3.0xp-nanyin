@@ -177,7 +177,10 @@ public class PoiUtils {
         imageDir.append(outDir).append(StringUtils.defaultString(imagePath, "image"));
         File imagrDirFile = new File(imageDir.toString());
         if (!imagrDirFile.exists()) {
-            imagrDirFile.mkdirs();
+            boolean ret = imagrDirFile.mkdirs();
+            if ( ret==false ) {
+            	logger.error("创建目录错误："+imagrDirFile.getName());
+            }
         }
         for (Picture pic : pics) {
             // 生成图片
