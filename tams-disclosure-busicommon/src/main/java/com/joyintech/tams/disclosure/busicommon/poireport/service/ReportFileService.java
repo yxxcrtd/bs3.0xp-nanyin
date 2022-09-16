@@ -12,7 +12,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportZqxkfgg001Mapper;
+import com.joyintech.tams.disclosure.busicommon.report.dto.ReportZqxkfgg001Dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,9 @@ public class ReportFileService {
 
 	@Autowired
 	private ReportInfoMapper reportInfoMapper;
+
+	@Autowired
+	private ReportZqxkfgg001Mapper reprortZqxkfgg001Mapper;
 
 	@Autowired
 	private CommonPlatformDateService commonPlatformDateService;
@@ -145,11 +151,19 @@ public class ReportFileService {
     	if ( genDate==null )
     		genDate = commonPlatformDateService.getSysDate();
    		String dirname = sdf.format(genDate);
-   		
-   		//文件的名称，用params里面的值替换变量，如：{prodName}{prodid}{enddate}开放公告
-    	String filename = replacePara(reportInfo.getFileName(),params);
-    	
-   		StringBuffer sb = new StringBuffer();
+
+		//文件的名称，用params里面的值替换变量，如：{prodName}{prodid}{enddate}开放公告
+		String filename="";
+		//周期开放公告特殊处理
+		if(StringUtil.equals(reportInfo.getUri(),"ZQXCPKFGG_GMCP")||
+				StringUtil.equals(reportInfo.getUri(),"ZQXCPKFGG_GMCPDSH")){
+			ReportZqxkfgg001Dto reportZqxkfgg001Dto = reprortZqxkfgg001Mapper.getProdInfo(params);
+			String  endDatef = DateUtil.format(DateUtil.parse((String)params.get("enddate")), DateUtil.DEFAULT_DATE_FORMAT_CN);
+			filename=reportZqxkfgg001Dto.getTitleName()+endDatef+"开放公告";
+		}else {
+			filename = replacePara(reportInfo.getFileName(),params);
+		}
+		StringBuffer sb = new StringBuffer();
 		sb.append(dirname);
 		sb.append(SEPARATOR);
 		sb.append(filename);
