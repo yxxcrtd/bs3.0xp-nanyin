@@ -253,7 +253,10 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                     firstFile = new SafelyFile(firstPath);
                     // 判断第一层文件夹是否存在，否则创建
                     if (!firstFile.exists()) {
-                        firstFile.mkdir();
+                        boolean ret = firstFile.mkdir();
+                        if ( ret==false ) {
+                        	logger.error("创建目录错误："+firstFile.getName());
+                        }
                     }
                     // 是否需要打包系统生成报表。01：是，02：否
                     if (StringUtil.equals(CacheUtil.getSysParam(ReportGlobalConstant.IS_NEED_SYSFILE), "01")) {
@@ -336,21 +339,43 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                     //zipOut.setEncoding(System.getProperty("file.encoding"));
                     deleteFile(firstFile);
                     if (downloadFilePeople != null) {
-                        downloadFilePeople.delete();
+                        boolean ret = downloadFilePeople.delete();
+                        if ( ret==false ) {
+                        	logger.error("删除文件错误："+downloadFilePeople.getName());
+                        }
                     }
                     if (downloadFile != null) {
-                        downloadFile.delete();
+                        boolean ret = downloadFile.delete();
+                        if ( ret==false ) {
+                        	logger.error("删除文件错误："+downloadFilePeople.getName());
+                        }
                     }
                 }
-                zipOut.close();
+//                toClient.close();
+//                toClient = null;
+//                zipOut.close();
+//                zipOut=null;
             }
             catch (Exception e) {
                 log.error("", e);
                 return false;
             }finally {
-                if (fos != null){
-                    fos.close();
-                }
+            	try {
+	                if (fos != null){
+	                	fos.flush();
+	                    fos.close();
+	                }
+	                if ( zipOut!=null ) {
+	                	zipOut.flush();
+	                	zipOut.close();
+	                }
+	                if ( toClient!=null ) {
+	                	toClient.flush();
+	                	toClient.close();
+	                }
+            	} catch (Exception e) {
+            		logger.error("资源关闭错误。",e);
+            	}
             }
         }
         return true;
@@ -417,7 +442,10 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                             downloadFilePeopleTmp.getParent() + File.separator + filename));
                     File parentFile = new File(newFile.getParent());
                     if(!parentFile.exists()){
-                        parentFile.mkdirs();
+                        boolean ret = parentFile.mkdirs();
+                        if ( ret==false ) {
+                        	logger.error("创建目录错误："+parentFile.getName());
+                        }
                     }
                 }
                 FileOutputStream fos = null;

@@ -175,7 +175,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             File localFile = new SafelyFile(localFilePath);
 
             if(!localFile.exists()){
-                    localFile.createNewFile();
+                    boolean ret = localFile.createNewFile();
+                    if ( ret==true ) {
+                    	logger.info("创建新文件:"+localFile.getName());
+                    }
             }
 
             if(type.equals("docx")){

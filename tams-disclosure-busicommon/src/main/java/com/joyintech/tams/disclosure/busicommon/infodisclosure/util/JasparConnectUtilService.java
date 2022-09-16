@@ -119,7 +119,10 @@ public class JasparConnectUtilService {
 			File localFile = new SafelyFile(path+ File.separator+filePathName);
 			File dir = localFile.getParentFile();
 			if (!dir.exists()) {
-				dir.mkdirs();
+				boolean ret = dir.mkdirs();
+				if ( ret==false ) {
+					logger.error("创建目录错误："+dir.getName());
+				}
 			}
 			logger.info("判断是否有指定文件夹结束=====");
 			logger.info("写文件开始=====");
@@ -178,7 +181,10 @@ public class JasparConnectUtilService {
 		String path = CacheUtil.getSysParam("REPORT_FILE_PATH");
 		File filepath = new SafelyFile(path);
 		if(!filepath.exists()){
-			filepath.mkdirs();
+			boolean ret = filepath.mkdirs();
+			if ( ret==false ) {
+				logger.error("创建目录错误："+filepath.getName());
+			}
 		}
 		String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE
 				+ DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -265,7 +271,10 @@ public class JasparConnectUtilService {
 		File localFile = new SafelyFile(path+ File.separator+fileName);
 		File dir = localFile.getParentFile();
 		if (!dir.exists()) {
-			dir.mkdirs();
+			boolean ret = dir.mkdirs();
+			if ( ret==false ) {
+				logger.error("创建目录错误："+dir.getName());
+			}
 		}
 
 		FileOutputStream fos = null;
@@ -334,7 +343,10 @@ public class JasparConnectUtilService {
 		String path = FileNameUtil.createUploadFilePath("");
 		File filepath = new SafelyFile(path);
 		if(!filepath.exists()){
-			filepath.mkdirs();
+			boolean ret = filepath.mkdirs();
+			if ( ret==false ) {
+				logger.error("创建目录错误："+filepath.getName());
+			}
 		}
 		//修改生成文件时间戳.避免文件生成少的问题
 		fileName = fileName + GlobalConstant.UNDER_LINE + System.currentTimeMillis() +GlobalConstant.POINT+ fileType;
