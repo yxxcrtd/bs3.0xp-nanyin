@@ -1312,3 +1312,8 @@ alter table REP_PROD_BASIC_CHANGE
 	add EXP_DATE DATE;
 COMMENT ON COLUMN REP_PROD_BASIC_CHANGE.EXP_DATE IS '失效日'
 /** 业绩基准表增加失效日 字段 20220902 add by sunjie end**/
+
+
+/**修改CHECK表产品代码的最大长度*/
+alter table REP_REPORT_CHECK  modify   PROD_ID varchar2(1000);
+/**修改CHECK表产品代码的最大长度*/
