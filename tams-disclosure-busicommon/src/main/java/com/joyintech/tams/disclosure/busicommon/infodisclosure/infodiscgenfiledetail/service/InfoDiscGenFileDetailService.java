@@ -382,10 +382,10 @@ public class InfoDiscGenFileDetailService {
 						int month = 1;
 						switch (halfOfYear) {
 							case 1:
-								month = 1;
+								month = 0;
 								break;
 							case 2:
-								month = 7;
+								month = 6;
 								break;
 						}
 						calendar.set(calendar.get(1), month, 1);
