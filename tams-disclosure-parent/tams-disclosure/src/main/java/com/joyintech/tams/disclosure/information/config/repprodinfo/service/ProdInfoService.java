@@ -723,8 +723,13 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
 
             //校验最低持有天数是否必填
-            if (StringUtil.equals(list.get(15),"现管类产品") && StringUtil.isNotEmpty(list.get(18))) {
-                message.add("产品类型是现管类产品时，最低持有天数不可填。");
+//            if (StringUtil.equals(list.get(15),"现管类产品") && StringUtil.isNotEmpty(list.get(18))) {
+//                message.add("产品类型是现管类产品时，最低持有天数不可填。");
+//            }
+            if (!StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getCodeName(), list.get(15))
+                    || !StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), list.get(17))
+                    && StringUtil.isNotEmpty(list.get(18))) {
+                message.add("产品的开放频率不为日开或者产品类型不为净值型时，最低持有天数不可填。");
             }
 
             //校验产品运作方式
