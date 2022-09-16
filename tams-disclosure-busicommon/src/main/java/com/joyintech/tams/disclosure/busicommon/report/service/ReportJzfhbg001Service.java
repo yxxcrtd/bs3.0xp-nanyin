@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,9 @@ public class ReportJzfhbg001Service implements IReportDataService {
     @Autowired
     private HolidayService holidayService;
 
+    @Autowired
+    private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -66,6 +71,15 @@ public class ReportJzfhbg001Service implements IReportDataService {
         ReportJzfhbg001Dto reportJzfhbg001Dto = new ReportJzfhbg001Dto();
         //产品代码：子产品代码为空的话，取父产品代码
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("prodId", prodId);
+        //判断是普通产品还是子产品
+        RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(param);
+        if(StringUtil.isNotEmpty(info)){
+            param.put("prodId",info.getProdId());
+            prodId=info.getProdId();
+        }
         //收益分配基准日
         String settDateStr = (String) paraMap.get("enddate");
         //判断是 净值及分红报告（私募封闭式） 还是 净值及分红报告（私募开放式） 的模板
@@ -269,6 +283,12 @@ public class ReportJzfhbg001Service implements IReportDataService {
                 settdate = bonusplan.getSettDate();
             }
             paraMap.put("cusFileName",reportJzfhbg001Dto.getTitleName()+DateUtil.format(settdate, DateUtil.ABB_DATE_FORMAT_CN));
+        }
+        Map<String, Object> param = new HashMap<>();
+        param.put("prodId", prodId);
+        RepProdInfo info=reportRkcpjz001Mapper.getProdId(param);
+        if(StringUtil.isNotEmpty(info)){
+            repReveal.setProdid(info.getpProdId());
         }
         return repReveal;
     }
