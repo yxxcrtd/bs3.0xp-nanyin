@@ -208,6 +208,12 @@ public class OfficeMergeUtil {
             logger.error(pw.toString() + "_" + e.getMessage(), e);
 //            System.out.println(sw.toString());
             logger.info(sw.toString());
+            pw.close();
+            try {
+				sw.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
         }
         finally {
             try {

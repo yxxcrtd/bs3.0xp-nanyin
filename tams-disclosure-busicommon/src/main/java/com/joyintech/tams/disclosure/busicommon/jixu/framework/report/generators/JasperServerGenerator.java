@@ -140,18 +140,27 @@ public class JasperServerGenerator implements ReportGenerator{
     }
     
     public static String readInputStreamToString(InputStream inputStream) throws IOException {
-    	BufferedReader tBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-    	 
-        StringBuffer tStringBuffer = new StringBuffer();
-
-        String sTempOneLine = "";
-
-        while ((sTempOneLine = tBufferedReader.readLine()) != null){
-
-            tStringBuffer.append(sTempOneLine);
-
-        }
-        return tStringBuffer.toString();
+    	BufferedReader tBufferedReader = null;
+    	try {
+	    	tBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+	    	 
+	        StringBuffer tStringBuffer = new StringBuffer();
+	
+	        String sTempOneLine = "";
+	
+	        while ((sTempOneLine = tBufferedReader.readLine()) != null){
+	
+	            tStringBuffer.append(sTempOneLine);
+	
+	        }
+	        return tStringBuffer.toString();
+    	} catch ( Exception e ) {
+    		e.printStackTrace();
+    		return null;
+    	} finally {
+            if ( tBufferedReader!=null ) 
+            	tBufferedReader.close();
+    	}
     }
     
     public static byte[] readInputStream(InputStream inputStream) throws IOException {

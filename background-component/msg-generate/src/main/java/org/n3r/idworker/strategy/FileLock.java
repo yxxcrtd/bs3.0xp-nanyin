@@ -127,7 +127,8 @@ public class FileLock {
             throw new RuntimeException(e);
         } finally {
         	try {
-				objectReader.close();
+        		if ( objectReader!=null )
+        			objectReader.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -150,7 +151,8 @@ public class FileLock {
             throw new RuntimeException(e);
         } finally {
         	try {
-				objectOutput.close();
+				if ( objectOutput!=null )
+					objectOutput.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -28,19 +28,21 @@ public class Utils {
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
             return bufferedReader.readLine();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         } finally {
-            if (inputStream != null) try {
-                inputStream.close();
-            } catch (IOException e) {
-                // ignore
-            }
-            try {
-				bufferedReader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+        	if ( bufferedReader!=null )
+        		try {
+        			bufferedReader.close();
+        		} catch (IOException e) {
+        			e.printStackTrace();
+        		}
+            if (inputStream != null) 
+            	try {
+            		inputStream.close();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
         }
     }
 

@@ -483,7 +483,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 									}
 								}
 								if(downloadFile!=null){
-									downloadFile.delete();
+									boolean ret = downloadFile.delete();
+									if ( ret==false ) {
+										logger.error("删除文件错误："+downloadFile.getName());
+									}
 								}
 							}
 				        	zipOut.close();
@@ -513,7 +516,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 							String reportCategoryName=reportConfirmManage001Mapper.getReportCategoryName(report.getReportCategory());
 							File baseFile=new SafelyFile(basePath);
 							if(!baseFile.exists()){
-								baseFile.mkdir();
+								boolean ret = baseFile.mkdir();
+								if ( ret==false ) {
+									logger.error("创建目录错误："+baseFile.getName());
+								}
 							}
 							// 存在人工上传的报表
 							String downloadPathPeople = null;
@@ -632,10 +638,16 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 							compressFile2(zipOut, baseFile,baseFile.getName());
 							deleteFile(baseFile);
 							if(downloadFilePeople!=null){
-								downloadFilePeople.delete();
+								boolean ret = downloadFilePeople.delete();
+								if ( ret==false ) {
+									logger.error("删除文件错误："+downloadFilePeople.getName());
+								}
 							}
 							if(downloadFile!=null){
-								downloadFile.delete();
+								boolean ret = downloadFile.delete();
+								if ( ret==false ) {
+									logger.error("删除文件错误："+downloadFilePeople.getName());
+								}
 							}
 						}
 
@@ -772,7 +784,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 		           }
 		          
 		     }
-		     file.delete();
+		     boolean ret = file.delete();
+		     if ( ret==false ) {
+		    		logger.error("删除文件错误："+file.getName());
+		    }
 		}
 		
 		/**
