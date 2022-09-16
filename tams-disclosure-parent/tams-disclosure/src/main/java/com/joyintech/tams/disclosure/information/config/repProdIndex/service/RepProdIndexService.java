@@ -374,6 +374,8 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品实收资本"));
             } else if (!isBigDecimal(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "子产品实收资本"));
+            }else if (new BigDecimal(rowData.get(4)).compareTo(new BigDecimal(0)) <= 0) {
+                message.add("子产品实收资本需要大于0。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(5))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品单位净值"));
@@ -439,7 +441,10 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "母产品实收资本"));
             } else if (!isBigDecimal(rowData.get(11))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "母产品实收资本"));
-            } else {
+            }else if (new BigDecimal(rowData.get(11)).compareTo(new BigDecimal(0)) <= 0) {
+                message.add("母产品实收资本需要大于0。");
+            }
+            else {
                 dto2.setpCapital(new BigDecimal(rowData.get(11)));
             }
             if (!StringUtil.isNotEmpty(rowData.get(12))) {

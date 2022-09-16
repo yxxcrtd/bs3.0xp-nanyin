@@ -49,7 +49,7 @@ $(function () {
     	            });
     	        }
     	}else{
-    		Joyin.alert("请选择左侧的指标库",2);
+    		Joyin.alert("请选择左侧的报表文本库",2);
     	}
        
     };
@@ -75,12 +75,12 @@ $(function () {
 			if(!allLoadFalg){
 				s_id = data.id;
 				indexName=data.indexName;
-				document.getElementById("span").innerText ="指标编号:" +data.id + "    指标名称:" +data.indexName;
+				document.getElementById("span").innerText ="报表文本编号:" +data.id + "    报表文本名称:" +data.indexName;
 				allLoadTable();
 			}else{
 				s_id = data.id;
 				indexName=data.indexName;
-				document.getElementById("span").innerText ="指标编号:" +data.id + "    指标名称:" +data.indexName;
+				document.getElementById("span").innerText ="报表文本编号:" +data.id + "    报表文本名称:" +data.indexName;
 				reloadTable(data.id);
 			}
 			
@@ -117,7 +117,7 @@ $(function () {
 	        }); 
 		    $(".scheme.edit.icon-edit").click(function (event){
 		    	event.stopPropagation();// 阻止事件冒泡
-		    	Joyin.dialog(JoyinUtil.getLabel("修改指标名称（ "+ "<span style='color:red'> * </span>" + "必填）"),
+		    	Joyin.dialog(JoyinUtil.getLabel("修改报表文本名称（ "+ "<span style='color:red'> * </span>" + "必填）"),
 		                basePath + "disclosure/information/config/reportcontentenum/ReportContentEnum002/init",
 		                "60%", "70%", {pageModel:PAGE_MODEL_EDIT, id: data.id, operateType: "edit"},function(){
 		                	$("#typeAssets-title").click();//右侧 tab 还原
@@ -128,7 +128,7 @@ $(function () {
 		    });
 		    $(".scheme.icon-copy").click(function (event){
 		    	event.stopPropagation();// 阻止事件冒泡
-		    	Joyin.dialog(JoyinUtil.getLabel("复制指标名称（ "+ "<span style='color:red'> * </span>" + "必填）"),
+		    	Joyin.dialog(JoyinUtil.getLabel("复制报表文本名称（ "+ "<span style='color:red'> * </span>" + "必填）"),
         	            basePath + "disclosure/information/config/reportcontentenum/ReportContentEnum002/init",
         	            "60%", "55%", {pageModel:PAGE_MODEL_EDIT, id: data.id , operateType: "copy"},function(){
         	            	$("#typeAssets-title").click();//右侧 tab 还原
@@ -157,8 +157,8 @@ $(function () {
 		},
         checkbox:false,
 		cols: [
-			{field:'indexName', title: '指标名称', sortable: false,},
-			{field:'id', title: '指标id', sortable: false,visible:false}
+			{field:'indexName', title: '报表文本名称', sortable: false,},
+			{field:'id', title: '报表文本id', sortable: false,visible:false}
 		],
 		done:function(){
 			$('#indexIdTable').next().find("thead").remove();// 删除表头
@@ -176,7 +176,7 @@ $(function () {
     	/** 事件绑定: 指标名称-新建 */
     	$("#ReportContentEnum001_btn_add_index").click(function(event){
     		event.stopPropagation();// 阻止事件冒泡
-            Joyin.dialog(JoyinUtil.getLabel("新建指标名称（ "+ "<span style='color:red'> * </span>" + "必填）"),
+            Joyin.dialog(JoyinUtil.getLabel("新建报表文本名称（ "+ "<span style='color:red'> * </span>" + "必填）"),
                 basePath + "disclosure/information/config/reportcontentenum/ReportContentEnum002/init",
                 "60%", "70%", {pageModel:PAGE_MODEL_NEW},function(){                
                 	indexIdTable.reload();//加载左侧指标列表
@@ -206,10 +206,10 @@ $(function () {
 	    checkbox:true,
 		cols: [
             {field:'id', width:260, title: '主键',visible:false},
-            {field:'indexName', width:260, title: '指标名称',visible:false},
+            {field:'indexName', width:260, title: '报表文本名称',visible:false},
             {field:'indexFile', width:260, title: '文件名称',visible:false},
 			{field:'indexDateStr', width:100, title: '生效日期',sort: true,sortField:"indexDate"},
-			{field:'indexValue', width:260, title: '指标值'
+			{field:'indexValue', width:260, title: '报表文本值'
 				,render: function (data, type, row, meta) {
                     if(row.indexType=='02'){
                     	return '<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.indexFile)+ '">' + data + '</a>';
@@ -259,13 +259,13 @@ $(function () {
 		 */
 		$("#ReportContentEnum003_btn_add").click(function(event){	
 			if(getSchemeId().id!=null){
-				Joyin.dialog(JoyinUtil.getLabel("新建自定义指标报表管理（ "+ "<span style='color:red'> * </span>" + "必填）"),
+				Joyin.dialog(JoyinUtil.getLabel("新建自定义报表文本管理（ "+ "<span style='color:red'> * </span>" + "必填）"),
 			               basePath + "disclosure/information/config/reportcontentenum/ReportContentEnum003/init",
 			               "60%", "80%", {pageModel:PAGE_MODEL_EDIT, operateType: "add",priId:s_id,indexName:indexName},function(){
 			            	   typeAssetsTable.reload();
 			       });
 			}else{
-				Joyin.alert("请选择左侧的指标库",2);
+				Joyin.alert("请选择左侧的报表文本库",2);
 			}
 					
 		});
@@ -295,7 +295,7 @@ $(function () {
 		 * 绑定事件：自定义指标报表管理 - 编辑
 		 */
 		typeAssetsTable.bind('click', '.edit', function(data, index) {
-		   	Joyin.dialog(JoyinUtil.getLabel("编辑自定义指标报表管理（ "+ "<span style='color:red'> * </span>" + "必填）"),
+		   	Joyin.dialog(JoyinUtil.getLabel("编辑自定义报表文本管理（ "+ "<span style='color:red'> * </span>" + "必填）"),
 		               basePath + "disclosure/information/config/reportcontentenum/ReportContentEnum003/init",
 		               "70%", "80%", {pageModel:PAGE_MODEL_EDIT, id: data.id, operateType: "edit" ,priId:data.priId},function(){
 		            	   typeAssetsTable.reload();
