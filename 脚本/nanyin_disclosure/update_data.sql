@@ -1181,3 +1181,10 @@ delete from sys_wfl_business_module a where a.page_id='UnClaimAssetDetail002' an
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('UnClaimAssetDetail002', 'UnClaimAssetDetail001_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 -- add by zhengxiaolian 2022-09-13 非标增加批量审批流程 end
+
+-- add by zhengxiaolian 2022-09-16 页面名称修改 start
+update sys_page a set a.remark='产品净值信息' where a.page_id='RepProdIndex001';
+update sys_menu a set a.remark='产品净值信息' where a.page_id='RepProdIndex001';
+update sys_page a set a.remark='报表文本描述' where a.page_id='ReportContentEnum001';
+update sys_menu a set a.remark='报表文本描述' where a.page_id='ReportContentEnum001';
+-- add by zhengxiaolian 2022-09-16 页面名称修改 end
