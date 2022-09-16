@@ -32,7 +32,7 @@
 			left join REP_FTP_PATH rfp
 			on A.REPORT_CATEGORY=rfp.ID
 			left join (
-			select rep_id,remark,eff_date,rep_status,UPDATE_USER,WORKFLOW_ID,
+			select rep_id,remark,eff_date,rep_status,UPDATE_USER,
 			row_number()over(partition by rep_id order by eff_date desc) rn
 			from rep_info_status
 			where eff_date <![CDATA[<=]]>  #{effDate,jdbcType=TIMESTAMP}
@@ -45,7 +45,7 @@
 			where eff_date > #{effDate,jdbcType=TIMESTAMP}
 			) ris2 ON A.REP_ID = ris2.Rep_Id and ris2.rn =1
 			left join (
-			select rep_id,remark,update_Time,rep_status,UPDATE_USER,
+			select rep_id,remark,update_Time,rep_status,UPDATE_USER,WORKFLOW_ID,
 			row_number()over(partition by rep_id order by update_time desc) rn
 			from rep_info_status
 			) ris3 ON A.REP_ID = ris3.Rep_Id and ris3.rn =1
