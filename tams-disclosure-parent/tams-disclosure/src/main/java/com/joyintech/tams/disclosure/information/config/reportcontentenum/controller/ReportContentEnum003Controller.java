@@ -149,7 +149,7 @@ public class ReportContentEnum003Controller extends BaseController {
 		}
         int num = reportContentEnum002Service.isOnlyData(dto);
 		if (num>0){
-            msg="同一个指标和同一个产品在同一个生效区间只能有一个指标值!";
+            msg="生效区间重叠！";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
 

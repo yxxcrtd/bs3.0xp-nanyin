@@ -244,17 +244,17 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             }
             if (!StringUtil.isNotEmpty(rowData.get(6))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整要素"));
-            } else if (rowData.get(6).length() > 500){
+            } else if (rowData.get(6).length() > 1500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整要素"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(7))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整前"));
-            } else if (rowData.get(7).length() > 500){
+            } else if (rowData.get(7).length() > 1500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整前"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(8))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整后"));
-            } else if (rowData.get(8).length() > 500){
+            } else if (rowData.get(8).length() > 1500){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整后"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(9))){

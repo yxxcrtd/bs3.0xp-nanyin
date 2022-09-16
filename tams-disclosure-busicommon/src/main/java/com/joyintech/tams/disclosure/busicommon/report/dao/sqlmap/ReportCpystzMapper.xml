@@ -12,7 +12,7 @@
 				dpa.adj_reason adjustReason,
 				dpa.prod_adj_remark remark1,
 				dpa.prod_adj_remark2 remark2
-			from rep_prod_info rpi
+			from v_rep_prod_info rpi
 			inner join dis_prod_adjust dpa
 			on rpi.prod_re = dpa.prod_regist_no
 			and dpa.data_status = 'E'
@@ -40,7 +40,7 @@
 			max(dpa.adj_reason2) adjustReason,
 			max(dpa.field_adj_remark) remark1,
 			max(dpa.field_adj_remark2) remark2
-		from rep_prod_info rpi
+		from v_rep_prod_info rpi
 		inner join dis_prod_adjust dpa
 		on rpi.prod_re = dpa.prod_regist_no
 		and dpa.data_status = 'E'
@@ -92,7 +92,7 @@
 			dpa.AFTER_ADJUST,
 			dpa.EFF_DATE
 		from dis_prod_adjust dpa
-		inner join rep_prod_info rpi
+		inner join v_rep_prod_info rpi
 		on rpi.prod_re = dpa.prod_regist_no
 		and rpi.status = 'E'
 		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
