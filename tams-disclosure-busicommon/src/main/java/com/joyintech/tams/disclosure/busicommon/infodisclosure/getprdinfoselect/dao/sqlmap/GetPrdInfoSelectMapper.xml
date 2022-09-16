@@ -194,8 +194,11 @@
 			or
 			DPF.FEENAME like '%' || #{search, jdbcType=VARCHAR} || '%')
 		</if>
-		<if test="pprodid != null and pprodid != ''">
-			and p_prod_id = #{pprodid}
+		<if test="prodList != null and prodList.size() > 0">
+			AND p_prod_id in
+			<foreach collection="prodList" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
 		</if>
 		)where NUM=1
 	</select>

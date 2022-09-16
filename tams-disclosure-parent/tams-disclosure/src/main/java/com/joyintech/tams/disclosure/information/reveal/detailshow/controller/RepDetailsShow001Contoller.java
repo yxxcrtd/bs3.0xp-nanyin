@@ -49,6 +49,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -443,6 +446,12 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@ResponseBody
 	public Page<SelectOptionDto> getFeeNameList(){
 		Map<String, Object> param=RequestUtil.getPageParam();
+		String prodId=(String)param.get("pprodid");
+		List<String> prodList=new ArrayList<>();
+		if(StringUtil.isNotEmpty(prodId)){
+			prodList= Arrays.asList(prodId.split(","));
+		}
+		param.put("prodList",prodList);
 		Page<SelectOptionDto> feeNameList = getPrdInfoSelectService.getFeeNameList(param);
 		return feeNameList;
 	}
