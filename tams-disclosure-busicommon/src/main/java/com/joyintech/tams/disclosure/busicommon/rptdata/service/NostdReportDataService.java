@@ -11,11 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
-import com.joyintech.tams.disclosure.busicommon.rptdata.dto.BonusReportDto;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dao.NostdReportMapper;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 
 /**
@@ -30,7 +29,7 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 public class NostdReportDataService implements IReportDataService {
 
 	@Autowired
-	private RepProdInfoMapper repProdInfoMapper;
+	private NostdReportMapper nostdReportMapper;
 
 	/**
 	 * 日志
@@ -44,7 +43,10 @@ public class NostdReportDataService implements IReportDataService {
 
 		try {
 			String prodId = paraMap.get("pprodid").toString();
-			RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
+			List<RepProdInfo> listProdInfo = nostdReportMapper.selectProdInfo(prodId);
+			RepProdInfo prodInfo = new RepProdInfo();
+			if ( listProdInfo!=null && listProdInfo.size()>0 )
+				prodInfo = listProdInfo.get(0);
 			Map<String,Object> dataMap = new HashMap<>();
 			dataMap.put("reportDate", DateUtil.parse(paraMap.get("enddate").toString()));
 			dataMap.putAll(CollectionUtils.bean2Map(prodInfo));

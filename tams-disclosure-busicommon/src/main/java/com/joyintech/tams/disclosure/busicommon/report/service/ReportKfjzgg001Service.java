@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,8 @@ public class ReportKfjzgg001Service implements IReportDataService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
+    @Autowired
+    private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
     /**
      * 3.生成规则：
      * 根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告；
@@ -70,6 +73,18 @@ public class ReportKfjzgg001Service implements IReportDataService {
         try {
             if (StringUtil.isNotEmpty(prodId) && StringUtil.isNotEmpty(openEndDateStr)) {
                 Map<String, Object> searchparam = new HashMap<>();
+
+                Map<String, Object> param = new HashMap<>();
+                param.put("prodId", prodId);
+                //判断是普通产品还是子产品
+                RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(param);
+                if(StringUtil.isNotEmpty(info)){
+                    searchparam.put("prodId",info.getProdId());
+                    prodId=info.getProdId();
+                }
+
+
+
                 searchparam.put("prodId", prodId);
                 searchparam.put("openEndDateStr", openEndDateStr);
 
@@ -211,6 +226,12 @@ public class ReportKfjzgg001Service implements IReportDataService {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         repReveal.setProdid(prodId);
+        Map<String, Object> param = new HashMap<>();
+        param.put("prodId", prodId);
+        RepProdInfo info=reportRkcpjz001Mapper.getProdId(param);
+        if(StringUtil.isNotEmpty(info)){
+            repReveal.setProdid(info.getpProdId());
+        }
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate((Date) (paraMap.get("reportDate")));
         return repReveal;

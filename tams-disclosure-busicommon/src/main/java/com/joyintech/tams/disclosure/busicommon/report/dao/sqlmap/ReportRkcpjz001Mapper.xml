@@ -130,4 +130,13 @@
 		  and v.rep_prod_type='02'
 	</select>
 
+	<select id="getPProdId" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
+		select
+			v.P_PROD_ID pProdId,
+			v.PROD_ID prodId
+		from REP_PROD_INFO v
+		where v.PROD_ID = #{prodId}
+		  and v.rep_prod_type='03'
+	</select>
+
 </mapper>

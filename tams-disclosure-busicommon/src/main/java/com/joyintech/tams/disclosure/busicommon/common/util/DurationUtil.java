@@ -129,12 +129,18 @@ public class DurationUtil {
 	
 	public static Date getYearStart(int year) {
 		Calendar eDate = Calendar.getInstance();
+		eDate.set(Calendar.HOUR_OF_DAY, 0);
+		eDate.set(Calendar.MINUTE, 0);
+		eDate.set(Calendar.SECOND, 0);		
 		eDate.set(year,0,1);
 		return eDate.getTime();
 	}
 	
 	public static Date getYearEnd(int year) {
 		Calendar eDate = Calendar.getInstance();
+		eDate.set(Calendar.HOUR_OF_DAY, 0);
+		eDate.set(Calendar.MINUTE, 0);
+		eDate.set(Calendar.SECOND, 0);		
 		eDate.set(year,11,31);
 		return eDate.getTime();
 	}
