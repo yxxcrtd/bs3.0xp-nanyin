@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.rptdata.dao.NostdReportMapper">
+    
+    <select id="selectProdInfo" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
+		select
+		   *
+		from
+		    REP_PROD_INFO info
+		where
+			info.STATUS = 'E'
+			<if test="prodId!=null">
+				and (
+					(info.PROD_ID=#{prodId,jdbcType=VARCHAR} and info.REP_PROD_TYPE='01')
+					or 
+					(info.P_PROD_ID=#{prodId,jdbcType=VARCHAR} and info.REP_PROD_TYPE='02')
+				)
+			</if>
+    </select>
+    
+</mapper>
