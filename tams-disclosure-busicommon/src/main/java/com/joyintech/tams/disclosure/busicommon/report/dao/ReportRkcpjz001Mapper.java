@@ -35,4 +35,6 @@ public interface ReportRkcpjz001Mapper {
 
     RepProdInfo getPProdInfo(Map<String, Object> searchParam);
     RepProdInfo getProdId(Map<String, Object> searchParam);
+
+    RepProdInfo getPProdId(Map<String, Object> searchParam);
 }
