@@ -389,7 +389,14 @@ public class PoiReportService {
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_005")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_006")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_007")
-				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_008"))){
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_008")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_009")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_010")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_011")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_012")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_013")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_014")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_007_001"))){
 			if (StringUtil.isNotEmpty(params.get("prodId"))) {
 				repReveal.setProdid(params.get("prodId").toString());
 			} else {
