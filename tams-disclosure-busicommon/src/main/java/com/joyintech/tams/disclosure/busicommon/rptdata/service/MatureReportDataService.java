@@ -66,6 +66,10 @@ public class MatureReportDataService implements IReportDataService {
 			if(StringUtil.isNotEmpty(info)){
 				paraMap.put("pprodId",info.getpProdId());
 				paraMap.put("prodId",info.getProdId());
+			}else {
+				RepProdInfo info2=reportRkcpjz001Mapper.getPProdId(paraMap);
+				paraMap.put("pprodid",info2.getpProdId());
+				paraMap.put("prodId",info2.getProdId());
 			}
 
 			List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
