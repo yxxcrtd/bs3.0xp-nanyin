@@ -134,13 +134,18 @@ public class ReportContentEnum003Controller extends BaseController {
 			msg = "生效截止日期不能为空";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
+
+		if(!StringUtil.isNotEmpty(dto.getIndexValue())){
+			msg = "指标值不能为空";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
 		//获取平台日期
 		Date sysDate = iPlatformDate.getSysDate();
 		Date indexDate = dto.getIndexDate();
-		if (indexDate.compareTo(sysDate) < 0 ){
-			msg = "生效日期必须大于等于平台日";
-			return new AjaxResult(msg, MessageType.错误消息);
-		}
+//		if (indexDate.compareTo(sysDate) < 0 ){
+//			msg = "生效日期必须大于等于平台日";
+//			return new AjaxResult(msg, MessageType.错误消息);
+//		}
 		Date endDate = dto.getEndDate();
 		//生效截止日期必须大于生效日期
 		if(endDate.compareTo(indexDate) <0){
@@ -149,7 +154,7 @@ public class ReportContentEnum003Controller extends BaseController {
 		}
         int num = reportContentEnum002Service.isOnlyData(dto);
 		if (num>0){
-            msg="生效区间重叠！";
+            msg="同一个指标和同一个产品在同一个生效区间只能有一个指标值!";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
 
