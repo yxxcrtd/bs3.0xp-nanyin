@@ -147,4 +147,12 @@ public class RepInvestAccount001Controller extends BaseController {
     public List<ExcelValidDto> importFile(String fileName)  {
         return repInvestAccountService.importData(fileName);
     }
+
+
+    @ResponseBody
+    @RequestMapping("queryAccountNum")
+    public List<SelectOptionDto> queryAccountNum() {
+        List<SelectOptionDto> list = repInvestAccountService.queryAccountNum(RequestUtil.getPageParam());
+        return list;
+    }
 }

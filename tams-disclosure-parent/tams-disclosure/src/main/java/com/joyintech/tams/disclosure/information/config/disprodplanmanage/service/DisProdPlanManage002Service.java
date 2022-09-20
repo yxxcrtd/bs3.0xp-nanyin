@@ -161,4 +161,8 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
     public List<DisProdPlanManage002Dto> checkInfo(DisProdPlanManage002Dto dto){
         return disProdPlanManage002Mapper.checkInfo(dto);
     }
+
+    public int hasRepeatedData(DisProdPlanManage002Dto dto) {
+        return disProdPlanManage002Mapper.hasRepeatedData(dto);
+    }
 }

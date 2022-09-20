@@ -866,5 +866,12 @@
         and REP_PROD_TYPE ='02'
         and P_PROD_ID = #{pProdId,jdbcType=VARCHAR}
     </select>
+    <select id="hasReapetData" resultType="java.lang.Integer">
+        select count(1) from REP_PROD_INFO
+        <where>
+            P_PROD_ID = #{pProdId,jdbcType=VARCHAR}
+            and PROD_RE = #{prodRe,jdbcType=VARCHAR}
+        </where>
+    </select>
 
 </mapper>
