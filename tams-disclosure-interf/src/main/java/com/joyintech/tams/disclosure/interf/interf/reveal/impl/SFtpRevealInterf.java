@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tools.util.SFtpConnect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -75,33 +76,27 @@ public class SFtpRevealInterf implements RevealInterf{
 	 * @throws Exception
 	 */
 	public Boolean ftpPushFile(RepFtpPath ftpPath,String filePath,String filename, String option) {
-		boolean flag = false;
-
-			
-            // sftp登录
-        	try {
-        		if(StringUtil.isNotEmpty(ftpPath)) {
-            		if(StringUtil.equals(DictCodeListExt2.披露方式_手动.getValue(), option)) {
-    	        			
-    	        			SftpUtil.SFTPconnect(ftpPath.getUsername(),ftpPath.getIp(), StringUtil.toInt(ftpPath.getProt()),  ftpPath.getPassword());
-							//如果文件不存在则创建文件路径
-							String dateStr = DateUtil.format(new Date(),"yyyyMMdd");
-						    String newFtpPath = ftpPath.getPath() +"/" + dateStr;
-						    if(!SftpUtil.dirIsHave(newFtpPath)){
-								SftpUtil.createMkdir(ftpPath.getPath(),dateStr);
-							}
-    	        			SftpUtil.putFile(filePath, newFtpPath);
-    	        			flag = true;
-    	        		}
-            	}
-			} catch (Exception e) {
-				flag = false;
-				logger.error("发送文件失败:",e);
-			}finally {
-				SftpUtil.SFTPDisConnect();
-
+		SFtpConnect sFtpConnect = null;
+		// sftp登录
+		try {
+			if(StringUtil.isNotEmpty(ftpPath) && StringUtil.equals(DictCodeListExt2.披露方式_手动.getValue(), option)) {
+				sFtpConnect = SFtpConnect.build(ftpPath.getIp(), StringUtil.toInt(ftpPath.getProt()), ftpPath.getUsername(), ftpPath.getPassword());
+				//如果文件不存在则创建文件路径
+				String dateStr = DateUtil.format(new Date(),"yyyyMMdd");
+				String newFtpPath = ftpPath.getPath() +"/" + dateStr;
+				sFtpConnect.mkdir(newFtpPath);
+				sFtpConnect.upload(filePath, newFtpPath);
+				return true;
 			}
-		return flag;
+		} catch (Exception e) {
+			logger.error("发送文件失败:",e);
+		}finally {
+			if(null != sFtpConnect) {
+				sFtpConnect.close();
+			}
+
+		}
+		return false;
 	}
 
 	@Override

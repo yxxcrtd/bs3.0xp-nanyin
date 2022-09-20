@@ -62,14 +62,16 @@ public class MatureReportDataService implements IReportDataService {
 //			Date genDate = (paraMap.get("endDate") == null ? new Date()
 //					: DateUtil.parse(paraMap.get("endDate").toString()));
 			//判断是普通产品还是子产品
-			RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(paraMap);
-			if(StringUtil.isNotEmpty(info)){
-				paraMap.put("pprodId",info.getpProdId());
-				paraMap.put("prodId",info.getProdId());
-			}else {
-				RepProdInfo info2=reportRkcpjz001Mapper.getPProdId(paraMap);
-				paraMap.put("pprodid",info2.getpProdId());
-				paraMap.put("prodId",info2.getProdId());
+			if (StringUtil.equals("batch", paraMap.get("opttype"))) {
+				RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(paraMap);
+				if(StringUtil.isNotEmpty(info)){
+					paraMap.put("pprodId",info.getpProdId());
+					paraMap.put("prodId",info.getProdId());
+				}else {
+					RepProdInfo info2=reportRkcpjz001Mapper.getPProdId(paraMap);
+					paraMap.put("pprodid",info2.getpProdId());
+					paraMap.put("prodId",info2.getProdId());
+				}
 			}
 
 			List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
