@@ -351,4 +351,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
     public RepInvestAccountDto checkExistData(RepInvestAccountDto dto) {
         return repInvestAccountMapper.checkExistData(dto);
     }
+
+    public List<SelectOptionDto> queryAccountNum(Map<String, Object> map) {
+         return repInvestAccountMapper.queryAccountNum(map);
+    }
 }

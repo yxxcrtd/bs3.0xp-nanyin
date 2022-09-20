@@ -618,6 +618,12 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(7))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品登记编码"));
             }
+            ProdInfoDto dto = new ProdInfoDto();
+            dto.setpProdId(list.get(8));
+            dto.setProdRe(list.get(7));
+            if (this.hasReapetData(dto)>0){
+                message.add("该主产品代码已存在相同的产品登记代码");
+            }
             // 产品主代码
             if (StringUtil.isEmpty(list.get(8))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
@@ -716,15 +722,20 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 message.add("发行方式不是开放式，开放频率不需要填写。");
             }
             if (StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getCodeName(), list.get(15))
-                    && StringUtils.isNotEmpty(list.get(17))
+                    && StringUtils.isEmpty(list.get(18))
                     && StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), list.get(17))
                     && StringUtils.isEmpty(list.get(18))) {
                 message.add("开放频率为日开且产品类型为净值型，最低持有天数必填。");
             }
 
             //校验最低持有天数是否必填
-            if (StringUtil.equals(list.get(15),"现管类产品") && StringUtil.isNotEmpty(list.get(18))) {
-                message.add("产品类型是现管类产品时，最低持有天数不可填。");
+//            if (StringUtil.equals(list.get(15),"现管类产品") && StringUtil.isNotEmpty(list.get(18))) {
+//                message.add("产品类型是现管类产品时，最低持有天数不可填。");
+//            }
+            if ((!StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getCodeName(), list.get(15))
+                    || !StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), list.get(17)))
+                    && StringUtil.isNotEmpty(list.get(18))) {
+                message.add("产品的开放频率不为日开或者产品类型不为净值型时，最低持有天数不可填。");
             }
 
             //校验产品运作方式
@@ -1042,5 +1053,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             throw new RuntimeException("处理失败", e);
         }
         return false;
+    }
+
+    public int hasReapetData(ProdInfoDto dto) {
+        return prodInfoMapper.hasReapetData(dto);
     }
 }

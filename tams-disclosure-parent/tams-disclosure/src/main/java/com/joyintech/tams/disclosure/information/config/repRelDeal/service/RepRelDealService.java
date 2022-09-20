@@ -453,11 +453,14 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
                                 break loop;
                             }
                         }
+//                        if (CollectionUtils.isNotEmpty(message)) {
+//                            checkResult.add(new ExcelValidDto(dto1.getEffdateStr()+GlobalConstant.UNDER_LINE+dto1.getEffdelidateStr(), String.valueOf(dto1.getExcelNum()+ 2), StringUtil.joinString(message, "<br>")));
+//                        }
                     }
                 }
             }
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY, StringUtil.joinString(message, "<br>")));
+                checkResult.add(new ExcelValidDto(realmap.entrySet().stream().findFirst().get().getValue().get(0).getEffdateStr()+GlobalConstant.UNDER_LINE+realmap.entrySet().stream().findFirst().get().getValue().get(0).getEffdelidateStr(), String.valueOf(realmap.entrySet().stream().findFirst().get().getValue().get(0).getExcelNum()), StringUtil.joinString(message, "<br>")));
             }
         }
         return checkResult;

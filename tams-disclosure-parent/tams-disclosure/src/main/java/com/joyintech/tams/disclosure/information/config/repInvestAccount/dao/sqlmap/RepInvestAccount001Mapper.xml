@@ -54,7 +54,7 @@
                 and ric.ACCOUNT_NUM = #{accountNum,jdbcType=VARCHAR}
             </if>
             <if test='accountName != null and !accountName.equals("")'>
-                and ric.ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR}
+                and ric.ACCOUNT_NUM = #{accountName,jdbcType=VARCHAR}
             </if>
             <if test="status != null and ! status.equals('')">
                 and ric.STATUS = #{status,jdbcType=VARCHAR}
@@ -176,6 +176,21 @@
             <foreach collection="list" item="item" open="A.PROD_ID IN (" separator="," close=")">
                 #{item.prodId}
             </foreach>
+            and A.STATUS = 'E'
         </where>
+    </select>
+    <select id="queryAccountNum" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+               distinct
+               ACCOUNT_NUM id,
+               ACCOUNT_NAME text
+        from REP_INVEST_ACCOUNT
+        <where>
+            <if test="search != null and search != ''">
+                and (ACCOUNT_NUM like concat(concat('%',#{search}),'%')
+                or ACCOUNT_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+
     </select>
 </mapper>
