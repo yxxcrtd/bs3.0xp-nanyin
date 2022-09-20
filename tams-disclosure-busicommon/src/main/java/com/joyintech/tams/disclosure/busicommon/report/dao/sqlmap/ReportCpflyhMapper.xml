@@ -39,7 +39,7 @@
 			rpi.raise_type raise_type,
 			max(dpf.fee_dis_remark) remark,
 		    dpf.feename feename
-		from rep_prod_info rpi
+		from v_rep_prod_info rpi
 		inner join dis_prod_feediscount dpf
 		on rpi.prod_re = dpf.prod_regist_no
 		and dpf.data_status = 'E'
@@ -98,7 +98,7 @@
 			dpf.THIS_AFTER_FEERATE,
 			dpf.THIS_END_FEERATE
 		from dis_prod_feediscount dpf
-		inner join rep_prod_info rpi
+		inner join v_rep_prod_info rpi
 		on rpi.prod_re = dpf.prod_regist_no
 		and rpi.status = 'E'
 		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}

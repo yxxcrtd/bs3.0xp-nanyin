@@ -1317,3 +1317,7 @@ COMMENT ON COLUMN REP_PROD_BASIC_CHANGE.EXP_DATE IS '失效日'
 /**修改CHECK表产品代码的最大长度*/
 alter table REP_REPORT_CHECK  modify   PROD_ID varchar2(1000);
 /**修改CHECK表产品代码的最大长度*/
+
+/**修改rep_reveal表产品代码的最大长度*/
+alter table rep_reveal modify PRODID  varchar2(1000);
+/**修改rep_reveal表产品代码的最大长度*/
