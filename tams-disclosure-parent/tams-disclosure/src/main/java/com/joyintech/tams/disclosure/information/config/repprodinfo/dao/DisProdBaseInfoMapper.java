@@ -59,4 +59,6 @@ public interface DisProdBaseInfoMapper  {
     List<ProdInfoDto> selectProdList(@Param("list") List<ProdInfoDto> list);
 
     List<ProdInfoDto> getPtParentProdInfo(@Param("pProdId") String pProdId);
+
+    int hasReapetData(ProdInfoDto dto);
 }

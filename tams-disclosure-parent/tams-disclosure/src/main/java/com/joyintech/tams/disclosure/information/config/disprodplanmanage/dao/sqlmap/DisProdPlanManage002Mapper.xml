@@ -183,4 +183,10 @@
             and status = #{status,jdbcType=VARCHAR}
         </if>
     </select>
+    <select id="hasRepeatedData" resultType="java.lang.Integer">
+        select count(1) from DIS_PROD_PLAN
+       <where>
+           PROD_ID=#{prodId} and OPERATION_START_DATE =#{operationStartDate,jdbcType=DATE}
+       </where>
+    </select>
 </mapper>

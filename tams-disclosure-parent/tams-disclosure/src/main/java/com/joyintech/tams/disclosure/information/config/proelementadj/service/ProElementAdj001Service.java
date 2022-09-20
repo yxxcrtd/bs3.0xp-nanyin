@@ -128,7 +128,6 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
     public Page<SelectOptionDto> getRegistNoList(Map map) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")),()->proElementAdjMapper.getRegistNoList(map));
-
     }
 
 
