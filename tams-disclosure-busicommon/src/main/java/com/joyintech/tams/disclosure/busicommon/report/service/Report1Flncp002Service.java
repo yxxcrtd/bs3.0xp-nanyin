@@ -52,8 +52,9 @@ public class Report1Flncp002Service implements IReportDataService {
         String feename = paraMap.get("feename").toString();
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("feename", feename);
+        List<String> prodlist1=new ArrayList<>();
         if (null != paraMap.get("pprodid")) {
-            List<String> prodlist1 = StringUtil.splitToList(GlobalConstant.COMMA, paraMap.get("pprodid").toString());
+             prodlist1 = StringUtil.splitToList(GlobalConstant.COMMA, paraMap.get("pprodid").toString());
             searchparam.put("prodlist", prodlist1);
         }
         String pubDateStr = commonPlatformDateService.getSysDateStr();
@@ -70,6 +71,11 @@ public class Report1Flncp002Service implements IReportDataService {
         Report1FlncpDto cpnflDto = reportCpflyhMapper.query1Flncp(searchparam);
         if (cpnflDto == null) {
             return result;
+        }
+        //新增校验产品缺失情况
+        List<String>  serchProdList=Arrays.asList(cpnflDto.getProdId().split(","));
+        if(serchProdList.size()<prodlist1.size()){
+            dataMap.put("nullFlag", null);
         }
         // 费用名称
         dataMap.put("feeName", cpnflDto.getFeename());

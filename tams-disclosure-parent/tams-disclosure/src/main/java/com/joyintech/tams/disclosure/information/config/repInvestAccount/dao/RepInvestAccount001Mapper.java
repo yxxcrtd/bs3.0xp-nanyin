@@ -32,4 +32,6 @@ public interface RepInvestAccount001Mapper {
     RepInvestAccountDto checkExistData(RepInvestAccountDto record);
 
     List<RepInvestAccountDto> selectInvestAccountList(@Param("list") List<RepInvestAccountDto> list);
+
+    List<SelectOptionDto> queryAccountNum(Map<String, Object> map);
 }

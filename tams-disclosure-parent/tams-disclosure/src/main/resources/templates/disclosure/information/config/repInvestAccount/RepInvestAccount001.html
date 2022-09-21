@@ -30,14 +30,23 @@
                 <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
                     <label class="layui-form-label form-lable"
                            data-th-text="账号">账号</label>
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <input type="text" id="accountNum" name="accountNum" class="layui-input form-input" placeholder="请输入内容">-->
+<!--                    </div>-->
                     <div class="layui-input-inline input-inline">
-                        <input type="text" id="accountNum" name="accountNum" class="layui-input form-input" placeholder="请输入内容">
+                        <select type="text" id="accountNum" name="accountNum"  data-selection="id"
+                                class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.accountNum}'
+                                data-th-data-url="@{/disclosure/information/config/repInvestAccount/RepInvestAccount001/queryAccountNum}" allowClear="true">
+                        </select>
                     </div>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-lable" data-th-text="账户名称">账户名称</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" id="accountName" name="accountName" class="layui-input form-input" placeholder="请输入内容">
+                        <select type="text" id="accountName" name="accountNum"  data-selection="text"
+                                class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.accountNum}'
+                                data-th-data-url="@{/disclosure/information/config/repInvestAccount/RepInvestAccount001/queryAccountNum}" allowClear="true">
+                        </select>
 
                     </div>
                 </div>

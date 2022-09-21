@@ -248,6 +248,11 @@ public class ProdInfo002Controller extends BaseController {
                 return new AjaxResult("子产品代码已存在", MessageType.错误消息);
             }
         }
+
+        //NYLCXP-1284【产品基础数据维护】导入和新建未校验产品登记编码的唯一性
+        if (prodInfoService.hasReapetData(dto)>0){
+            return new AjaxResult("该主产品代码已存在相同的产品登记代码！",MessageType.错误消息);
+        }
         return result;
     }
 
@@ -526,7 +531,7 @@ public class ProdInfo002Controller extends BaseController {
             errList.add(new ValidMessage(this.getMessage("COMMON_E_0008",
                     "产品主代码")));
             ar.setData(errList);
-        }
+            }
         return ar;
     }
 

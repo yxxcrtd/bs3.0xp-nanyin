@@ -10,7 +10,7 @@
 			rpi.raise_type raise_type,
 			noc.nocreate_reason nocreate_reason,
 			noc.is_sales_agency is_sales_agency
-		from rep_prod_info rpi
+		from v_rep_prod_info rpi
 		inner join dis_prod_nocreate noc
 		on rpi.prod_re = noc.prod_regist_no
 		and noc.data_status = 'E'

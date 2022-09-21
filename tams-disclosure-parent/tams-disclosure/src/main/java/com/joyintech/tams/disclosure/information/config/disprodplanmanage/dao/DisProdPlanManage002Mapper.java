@@ -93,4 +93,6 @@ public interface DisProdPlanManage002Mapper {
 	int delete1(DisProdPlanManage002Dto entity);
 
 	ProdInfoDto selectByProdStatus(@Param("prodId") String prodId, @Param("status") String status);
+
+	int hasRepeatedData(DisProdPlanManage002Dto dto);
 }
