@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.busicommon.report.dao;
 
 import com.joyintech.tams.disclosure.busicommon.report.dto.Report1CpnflDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.Report1FlncpDto;
+import com.joyintech.tams.disclosure.busicommon.report.dto.ReportProdadjDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportProdfeeDto;
 import org.springframework.stereotype.Repository;
 
@@ -54,4 +55,6 @@ public interface ReportCpflyhMapper {
      * @since 1.0
      */
     List<ReportProdfeeDto> qureyProdlist(Map<String, Object> params);
+
+    ReportProdadjDto qureyProdName(Map<String, Object> params);
 }
