@@ -363,13 +363,13 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                 return false;
             }finally {
             	try {
+                    if ( zipOut!=null ) {
+                        zipOut.flush();
+                        zipOut.close();
+                    }
 	                if (fos != null){
 	                	fos.flush();
 	                    fos.close();
-	                }
-	                if ( zipOut!=null ) {
-	                	zipOut.flush();
-	                	zipOut.close();
 	                }
 	                if ( toClient!=null ) {
 	                	toClient.flush();

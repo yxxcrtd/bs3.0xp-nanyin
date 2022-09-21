@@ -9,6 +9,7 @@ import com.joyintech.tams.disclosure.busicommon.common.constants.GlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportCpflyhMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.Report1FlncpDto;
+import com.joyintech.tams.disclosure.busicommon.report.dto.ReportProdadjDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportProdfeeDto;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.IReportDataService;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
@@ -125,9 +126,25 @@ public class Report1Flncp001Service implements IReportDataService {
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
-        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+//        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        String adjField = paraMap.get("feename").toString();
+        Map<String,Object> searchparam = new HashMap<>();
+        String rptType = paraMap.get("uri").toString();
+        if (rptType.equals(DisReportType.DFLDCPMB1_GM) ) {
+            searchparam.put("raiseType", DictCodeListExt2.募集方式_中债_公募.getValue());
+        } else {
+            searchparam.put("raiseType", DictCodeListExt2.募集方式_中债_私募.getValue());
+        }
+        searchparam.put("adjField",adjField);
+        searchparam.put("enddate", paraMap.get("enddate").toString());
+        ReportProdadjDto dto=reportCpflyhMapper.qureyProdName(searchparam);
+        if (dto != null) {
+            repReveal.setProdid(dto.getProdId());
+            paraMap.put("pprodName",dto.getProdName());
+        }
+
         Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
-        repReveal.setProdid(prodId);
+//        repReveal.setProdid(prodId);
         repReveal.setEndDate(enddate);
         paraMap.put("enddate_filename", DateUtil.format(enddate, DateUtil.DEFAULT_OTHER_FORMAT));
         return repReveal;
