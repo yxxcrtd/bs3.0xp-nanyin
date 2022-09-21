@@ -13,7 +13,9 @@ package com.joyintech.tams.disclosure.information.reveal.reportreveal.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +107,10 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
         restTemplate.postForObject(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRevealManage001/updateRevealStatus", dto,
             Boolean.class);
-        return  reportRevealManage002Service.genFile();
+        String data=dto.getData();
+        List<ReportConfirmManage001Dto> listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
+        List<String> prodIds = listdto.stream().distinct().map(ReportConfirmManage001Dto::getProdid).collect(Collectors.toList());
+        return  reportRevealManage002Service.genFile(prodIds);
     }
 
     /**
