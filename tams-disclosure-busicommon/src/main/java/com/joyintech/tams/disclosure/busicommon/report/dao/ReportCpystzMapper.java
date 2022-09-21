@@ -54,4 +54,7 @@ public interface ReportCpystzMapper {
      * @since 1.0
      */
     List<ReportProdadjDto> qureyProdlist(Map<String, Object> params);
+
+    ReportProdadjDto qureyProdName(Map<String, Object> params);
+
 }

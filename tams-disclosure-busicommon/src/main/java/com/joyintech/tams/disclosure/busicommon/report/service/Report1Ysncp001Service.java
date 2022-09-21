@@ -133,11 +133,26 @@ public class Report1Ysncp001Service implements IReportDataService {
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
-        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
-        String adjField = (String)paraMap.get("elementname");
+        //String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        String adjField = paraMap.get("elementname").toString();
+        Map<String,Object> searchparam = new HashMap<>();
+        String rptType = paraMap.get("uri").toString();
+        if (rptType.equals(DisReportType.DYSDCPTZMB_GM) ) {
+            searchparam.put("raiseType", DictCodeListExt2.募集方式_中债_公募.getValue());
+        } else {
+            searchparam.put("raiseType", DictCodeListExt2.募集方式_中债_私募.getValue());
+        }
+        searchparam.put("adjField",adjField);
+        searchparam.put("enddate", paraMap.get("enddate").toString());
+        ReportProdadjDto dto=reportCpystzMapper.qureyProdName(searchparam);
+        if (dto != null) {
+            repReveal.setProdid(dto.getProdId());
+            paraMap.put("pprodName",dto.getProdName());
+        }
+
         DisProdAdjust disProdAdjust = disProdAdjustMapper.selectByPrimaryKey(adjField);
         Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
-        repReveal.setProdid(prodId);
+
         repReveal.setEndDate(enddate);
         paraMap.put("fieldname", disProdAdjust.getAdjField());
         paraMap.put("enddate_filename", DateUtil.format(enddate, DateUtil.DEFAULT_OTHER_FORMAT));

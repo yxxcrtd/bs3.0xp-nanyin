@@ -110,4 +110,21 @@
 		AND dpa.rpt_issue_date = #{rptIssueDate}
 		order by dpa.EFF_DATE
 	</select>
+
+	<select id="qureyProdName" parameterType="java.util.Map" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportProdadjDto">
+		select
+		listagg(rpi.prod_id, ',') within group(order by rpi.prod_id asc ) prodId,
+		listagg(rpi.prod_name, ',') within group(order by rpi.prod_id asc ) prodName
+		from dis_prod_adjust dpa
+		inner join v_rep_prod_info rpi
+		on rpi.prod_re = dpa.prod_regist_no
+		and rpi.status = 'E'
+		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR}
+		and rpi.rep_prod_type in ('01','02')
+		where dpa.adj_field = (select adj_field
+		from dis_prod_adjust t
+		where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})
+		and dpa.data_status = 'E'
+		AND to_char(dpa.rpt_issue_date,'yyyy-MM-dd') = #{enddate,jdbcType=VARCHAR}
+	</select>
 </mapper>
