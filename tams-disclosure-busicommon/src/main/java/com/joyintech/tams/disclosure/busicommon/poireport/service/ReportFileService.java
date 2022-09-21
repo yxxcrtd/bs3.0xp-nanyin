@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportZqxkfgg001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportZqxkfgg001Dto;
@@ -209,8 +210,8 @@ public class ReportFileService {
 	 * @return eg:/2022-08-22/A001产品发行公告.docx
 	 */
     public String getExportFileName(Date genDate,String fileName,String fileType) {
-    	//TODO:wanghaimin:update root url
-    	String reportPath = "";//  CacheUtil.getSysParam(ReportGlobalConstant.REPORT_FILE_PATH);
+
+    	String reportPath = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_FILE_PATH);
 
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
    		String dirname = sdf.format(genDate);
@@ -220,6 +221,7 @@ public class ReportFileService {
 		sb.append(dirname);
 		sb.append("/");
 		sb.append(fileName);
+		sb.append(IDGenerator.generate());//增加一个随机的uuid作为文件名称，防止并发导出出现的异常
 		sb.append(fileType);
 		//用日期创建路径
 		File file = new File(sb.toString());
