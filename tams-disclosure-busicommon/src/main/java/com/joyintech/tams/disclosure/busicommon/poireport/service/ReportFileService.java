@@ -201,38 +201,25 @@ public class ReportFileService {
 	}
 	
 	/**
-	 * 获取报表文件名称
-	 * @param repId
+	 * 获取报表文件名称：从文件服务器上将文件下载到应用服务器上，保存的临时文件路径和名称
+	 * 用于文件导出时，先从文件服务器（minio）将文件下载到应用服务器，然后用于客户端文件导出；
 	 * @param genDate，生成日期，为空的话，取平台时间
-	 * @param params，文件名称需要替换的参数
+	 * @param fileName，文件名称需要替换的参数
 	 * @param fileType,.docx,.pdf
 	 * @return eg:/2022-08-22/A001产品发行公告.docx
 	 */
-    public String getReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType) {
+    public String getExportFileName(Date genDate,String fileName,String fileType) {
     	//TODO:wanghaimin:update root url
     	String reportPath = "";//  CacheUtil.getSysParam(ReportGlobalConstant.REPORT_FILE_PATH);
 
-		ReportInfo reportInfo = null;
-		try {
-			reportInfo = reportInfoMapper.getReportInfoByID(repId);
-		} catch (Exception e) {
-			logger.error("获取报表模板错误。",e);
-			return "";
-		}
-		
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    	if ( genDate==null )
-    		genDate = commonPlatformDateService.getSysDate();
    		String dirname = sdf.format(genDate);
    		
-   		//文件的名称，用params里面的值替换变量，如：{prodName}{prodid}{enddate}开放公告
-    	String filename = replacePara(reportInfo.getFileName(),params);
-    	
    		StringBuffer sb = new StringBuffer();
 		sb.append(reportPath);
 		sb.append(dirname);
 		sb.append("/");
-		sb.append(filename);
+		sb.append(fileName);
 		sb.append(fileType);
 		//用日期创建路径
 		File file = new File(sb.toString());
