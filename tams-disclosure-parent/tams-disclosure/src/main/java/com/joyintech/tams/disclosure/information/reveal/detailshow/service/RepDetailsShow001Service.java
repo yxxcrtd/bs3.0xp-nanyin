@@ -424,29 +424,42 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         String prodId = "";
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
-        String reportFile = reportFileService.getTempOSSReportFileName(reportId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
-        File f = new File(reportFile);
-        //String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+ReportFileService.FILE_TYPE_DOCX;
-        String localFileName = f.getName();
+        
+        //远程minio文件服务器上文件全路径名称
+        String minioFileName = reportFileService.getTempOSSReportFileName(reportId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
+        
+        //应用服务器上的临时文件名称：从minio服务器上下载的应用服务器上的文件名称
+        String appServerTempFileName = "";
+
+        //下载到客户机子上的文件名称
+        String localFileName = "";
+        
+        if ( minioFileName!=null && minioFileName.length()>0 ) {
+        	File f =  new File(minioFileName);
+        	localFileName = f.getName();
+        } else {
+        	throw new IOException("导出文件失败：文件不存在.");
+        }
+        
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
-            ByteArrayInputStream bis = null;
-            byte[] bytes = poiReportService.getFileByteArray(reportFile);
+        	appServerTempFileName = reportFileService.getExportFileName(genDate,localFileName,ReportFileService.FILE_TYPE_PDF);
+            localFileName = localFileName.replace(ReportFileService.FILE_TYPE_DOCX, ReportFileService.FILE_TYPE_PDF);
+            
+        	ByteArrayInputStream bis = null;
+            byte[] bytes = poiReportService.getFileByteArray(minioFileName);
             if(bytes!=null){
                 bis = new ByteArrayInputStream(bytes);
             }
-            String fileNamePdf = reportFileService.getReportFileName(reportId,genDate,params,ReportFileService.FILE_TYPE_PDF);
-
-            FileOutputStream fos = new FileOutputStream(fileNamePdf);
+            FileOutputStream fos = new FileOutputStream(appServerTempFileName);
             PoiUtils.docxToPdf(bis,fos);
-            reportFile = fileNamePdf;
-            localFileName = localFileName.replace(ReportFileService.FILE_TYPE_DOCX, ReportFileService.FILE_TYPE_PDF);
         }else{
-        	String  localReportFile = reportFileService.getReportFileName(reportId,genDate,params,ReportFileService.FILE_TYPE_DOCX);
+        	appServerTempFileName = reportFileService.getExportFileName(genDate,localFileName,ReportFileService.FILE_TYPE_DOCX);
+        	
         	FileOutputStream fos = null;
-           byte[] bytes = poiReportService.getFileByteArray(reportFile);
+           byte[] bytes = poiReportService.getFileByteArray(minioFileName);
            if(bytes !=null){
                try{
-                   fos = new FileOutputStream(localReportFile);
+                   fos = new FileOutputStream(appServerTempFileName);
                    fos.write(bytes);
                }catch(Exception e){
                    logger.error("写本地副本发生异常",e);
@@ -460,14 +473,13 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                        }
                    }
                }
-               reportFile = localReportFile;
            }else{
                throw new FileNotFoundException("远程下载文件失败");
            }
         }
 
-        File remoteFile = new SafelyFile(reportFile);
-
+        //应用服务器上的文件，不是文件服务器上的文件
+        File remoteFile = new SafelyFile(appServerTempFileName);
         if(!remoteFile.exists()){
         	boolean ret = remoteFile.createNewFile();
         	if ( ret==false ) {

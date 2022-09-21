@@ -97,10 +97,6 @@ $(function() {
                     function(){table.reload();});
             });
         }else{
-           /* data.pageModel=PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("查看"),
-                basePath + "disclosure/information/config/repprodinfo/ProdInfo002/init",
-                "99%", "95%", data);*/
              Joyin.error("当前产品不能修改 !");
         }
     });

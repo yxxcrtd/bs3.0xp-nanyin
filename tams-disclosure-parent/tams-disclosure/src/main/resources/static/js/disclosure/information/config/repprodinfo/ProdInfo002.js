@@ -1,5 +1,6 @@
 (function () {
-
+    var param = null;
+    var newParam=null;
     var laydate = layui.laydate;
     var prodIdInit = $('#prodId').val();
     var openFreqGlobal = $('#openFreqGlobal').val();
@@ -143,10 +144,22 @@
             var isGrade =$("#isGrade").val();
 
             var raiseAmt = String(object.raiseAmt);
-            console.log(oldRaiseAmt);
-            console.log(raiseAmt);
+            debugger;
+            newParam = object;
+            var num = 0;
+            var changedFiled = new Array();
+            for (let key1 in param){
+                var value1 = param[key1];
+                for (let key2 in newParam){
+                    var value2 = newParam[key2];
+                    if (key1===key2 && value1!=value2) {
+                        changedFiled[num]=key1;
+                        num++;
+                    }
+                }
+            }
             //普通产品不提示
-            if (raiseAmt != oldRaiseAmt && isGrade==='01') {
+            if (isGrade==='01'&&!((num==1&&(changedFiled[0]=='prodName'||changedFiled[0]=='setDate')) ||(num==2 && (changedFiled[0]=='prodName' && changedFiled[1]=='setDate') ))) {
                 Joyin.confirm("是否将维护的母产品信息同步至其他子产品数据中？", function () {
                     object.synchFlag = true;
                     doSaveOrSubmit(object,operateType);
@@ -296,6 +309,8 @@
      * 画面加载完成
      */
     var data = $(function () {
+        debugger;
+        param=$.serializeToObject('#submitForm');
         if (pageModel === PAGE_MODEL_EDIT) {
             $('#btnSave_wfl').hide();
             if($('#issuingWay').val()=='02'){

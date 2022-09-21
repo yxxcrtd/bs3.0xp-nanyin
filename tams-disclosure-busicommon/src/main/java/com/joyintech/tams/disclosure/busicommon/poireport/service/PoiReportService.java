@@ -614,14 +614,14 @@ public class PoiReportService {
 	 * @Param [reportType, reportInfo, reportDate, portnum, fileType]
 	 * @return java.lang.String
 	 **/
-	public String getRomteFilePath(ReportInfo reportInfo, Map<String,Object> params,
-								   String fileType){
-		Date genDate = new Date();
-		if ( params.get("reportDate")!=null )
-			genDate = (Date)params.get("reportDte");
-		String localFilePath = reportFileService.getReportFileName(reportInfo.getReportID(), genDate, params, fileType);
-		return minioFileRemoteService.getRemoteFilePathName(localFilePath);
-	}
+//	public String getRomteFilePath(ReportInfo reportInfo, Map<String,Object> params,
+//								   String fileType){
+//		Date genDate = new Date();
+//		if ( params.get("reportDate")!=null )
+//			genDate = (Date)params.get("reportDte");
+//		String localFilePath = reportFileService.getReportFileName(reportInfo.getReportID(), genDate, params, fileType);
+//		return minioFileRemoteService.getRemoteFilePathName(localFilePath);
+//	}
 	/**
 	 * @Author ZY22350
 	 * @Description //创建OSS文件名称，其中针对模板暂时不处理
