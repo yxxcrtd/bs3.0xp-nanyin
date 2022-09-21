@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportZqxkfgg001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportZqxkfgg001Dto;
@@ -201,38 +202,26 @@ public class ReportFileService {
 	}
 	
 	/**
-	 * 获取报表文件名称
-	 * @param repId
+	 * 获取报表文件名称：从文件服务器上将文件下载到应用服务器上，保存的临时文件路径和名称
+	 * 用于文件导出时，先从文件服务器（minio）将文件下载到应用服务器，然后用于客户端文件导出；
 	 * @param genDate，生成日期，为空的话，取平台时间
-	 * @param params，文件名称需要替换的参数
+	 * @param fileName，文件名称需要替换的参数
 	 * @param fileType,.docx,.pdf
 	 * @return eg:/2022-08-22/A001产品发行公告.docx
 	 */
-    public String getReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType) {
-    	//TODO:wanghaimin:update root url
-    	String reportPath = "";//  CacheUtil.getSysParam(ReportGlobalConstant.REPORT_FILE_PATH);
+    public synchronized String getExportFileName(Date genDate,String fileName,String fileType) {
 
-		ReportInfo reportInfo = null;
-		try {
-			reportInfo = reportInfoMapper.getReportInfoByID(repId);
-		} catch (Exception e) {
-			logger.error("获取报表模板错误。",e);
-			return "";
-		}
-		
+    	String reportPath = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_FILE_PATH);
+
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    	if ( genDate==null )
-    		genDate = commonPlatformDateService.getSysDate();
    		String dirname = sdf.format(genDate);
    		
-   		//文件的名称，用params里面的值替换变量，如：{prodName}{prodid}{enddate}开放公告
-    	String filename = replacePara(reportInfo.getFileName(),params);
-    	
    		StringBuffer sb = new StringBuffer();
 		sb.append(reportPath);
 		sb.append(dirname);
 		sb.append("/");
-		sb.append(filename);
+		sb.append(fileName);
+		sb.append(IDGenerator.generate());//增加一个随机的uuid作为文件名称，防止并发导出出现的异常
 		sb.append(fileType);
 		//用日期创建路径
 		File file = new File(sb.toString());
@@ -257,6 +246,13 @@ public class ReportFileService {
 			//text = replaceText(text,listExp,params);
 			for ( String key:listExp) {
 				Object val = params.get(key);
+				if ( "halfyear".equals(key) ) {
+					if ( "01".equals(val) ) {
+						val = "（上半）";
+					} else if ( "02".equals(val) ) {
+						val = "（下半）";
+					}
+				}
 				String src = "{"+key+"}";
 				expressText = expressText.replace(src,val==null?"":val.toString());
 			}

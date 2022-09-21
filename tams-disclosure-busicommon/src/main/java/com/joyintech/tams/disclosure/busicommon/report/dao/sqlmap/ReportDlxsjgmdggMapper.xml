@@ -4,7 +4,7 @@
 
 	<select id="queryDlxsjmd" resultType="java.lang.String">
 		select
-			listagg(dsa.agency_name, '、') within group(order by dsa.agency_name) saleOrgName
+			listagg(dsa.agency_name, '、') within group(order by dsa.agreement_vdate asc ,dsa.agency_name asc) saleOrgName
 		from dis_sale_agency dsa
 		where dsa.AGREEMENT_VDATE &lt;= #{curDate}
 		and dsa.AGREEMENT_MDATE &gt; #{curDate}

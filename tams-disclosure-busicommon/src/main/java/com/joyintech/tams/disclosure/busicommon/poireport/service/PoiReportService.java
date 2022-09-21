@@ -614,14 +614,14 @@ public class PoiReportService {
 	 * @Param [reportType, reportInfo, reportDate, portnum, fileType]
 	 * @return java.lang.String
 	 **/
-	public String getRomteFilePath(ReportInfo reportInfo, Map<String,Object> params,
-								   String fileType){
-		Date genDate = new Date();
-		if ( params.get("reportDate")!=null )
-			genDate = (Date)params.get("reportDte");
-		String localFilePath = reportFileService.getReportFileName(reportInfo.getReportID(), genDate, params, fileType);
-		return minioFileRemoteService.getRemoteFilePathName(localFilePath);
-	}
+//	public String getRomteFilePath(ReportInfo reportInfo, Map<String,Object> params,
+//								   String fileType){
+//		Date genDate = new Date();
+//		if ( params.get("reportDate")!=null )
+//			genDate = (Date)params.get("reportDte");
+//		String localFilePath = reportFileService.getReportFileName(reportInfo.getReportID(), genDate, params, fileType);
+//		return minioFileRemoteService.getRemoteFilePathName(localFilePath);
+//	}
 	/**
 	 * @Author ZY22350
 	 * @Description //创建OSS文件名称，其中针对模板暂时不处理
@@ -994,7 +994,7 @@ public class PoiReportService {
 				//净值及分红报告
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String settDate=(String) dataMap.get("settDate");
-				if(poiReportMapper.checkBaseDate(prodId,settDate)<1){
+				if(poiReportMapper.checkBaseDate(params.get("pprodId").toString(),settDate)<1){
 					resultSb.append((index++)+"："+"分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
 				}
 			}
