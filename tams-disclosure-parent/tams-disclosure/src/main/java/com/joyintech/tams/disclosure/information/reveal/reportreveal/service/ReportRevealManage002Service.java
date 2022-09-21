@@ -108,23 +108,25 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
     public boolean updateRevealStatusEX(List<ReportConfirmManage001Dto> listdto) throws IOException{
         boolean result=true;
         //1.先将单条数据披露，发送文件至指定服务器
-        result=this.updateRevealStatusByRevealId(listdto);
+       // result=this.updateRevealStatusByRevealId(listdto);
         //有披露失败的，默认全部失败，直接结束
         if(!result){
             return false;
         }
-        result=genFile();
+        List<String> prodIds = listdto.stream().distinct().map(ReportConfirmManage001Dto::getProdid).collect(Collectors.toList());
+        result=genFile(prodIds);
 
         return result;
     }
 
-    public boolean genFile() throws IOException {
+    public boolean genFile(List<String> prodIds) throws IOException {
         HashMap<String, Object> param = new HashMap<>();
         String date = DateUtil.getCurrentDate();
         param.put("date", date);
         //查询要处理的信披单据，没有关联代销机构的产品对应的单据，不进行披露
         List<ReportConfirmManage001Dto> list = mapper.getRepRevealList(param);
         if (list != null && list.size() > 0) {
+            list=list.stream().filter(dto->prodIds.contains(dto.getProdid())).collect(Collectors.toList());
             Map<String, List<ReportConfirmManage001Dto>> map = list.stream().collect(Collectors.groupingBy(ReportConfirmManage001Dto::getAgencyName));
             for (String agencyName : map.keySet()) {
                 List<ReportConfirmManage001Dto> reportConfirmManage001DtoList = map.get(agencyName);
