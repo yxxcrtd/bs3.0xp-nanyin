@@ -1321,3 +1321,11 @@ alter table REP_REPORT_CHECK  modify   PROD_ID varchar2(1000);
 /**修改rep_reveal表产品代码的最大长度*/
 alter table rep_reveal modify PRODID  varchar2(1000);
 /**修改rep_reveal表产品代码的最大长度*/
+
+
+-- 修改 REP_REL_DEAL 表 某些字段精度 修改前需要删除表数据才能执行 目前已在TEST_02库执行 测试不必再执行 若要执行先对有用数据进行备份
+-- NYLCXP-1241 关联交易情况新建和修改，支付关联方托管费、支付关联方代销费、发生其他关联交易金额三个字段填写数据的小数位后填写超过5的数字后，会自动向个位进1
+ delete from REP_REL_DEAL ;
+ alter table REP_REL_DEAL modify (SELL_FEE NUMBER(30,4));
+ alter table REP_REL_DEAL modify (TRUST_FEE NUMBER(30,4));
+ alter table REP_REL_DEAL modify (OTHER_FEE NUMBER(30,4));
