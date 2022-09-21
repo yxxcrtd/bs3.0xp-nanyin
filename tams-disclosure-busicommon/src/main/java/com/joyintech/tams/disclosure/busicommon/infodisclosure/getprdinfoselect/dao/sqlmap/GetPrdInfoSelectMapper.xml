@@ -200,6 +200,9 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
+		<if test="raiseType != null and raiseType != ''">
+			and RPI.raise_type = #{raiseType}
+		</if>
 		)where NUM=1
 	</select>
 
@@ -210,7 +213,7 @@
 		DPA.PROD_ADJUST_ID id,
 		DPA.ADJ_FIELD text,
 		RPI.P_PROD_ID parentId,
-		RANK() OVER(PARTITION BY DPA.ADJ_FIELD,DPA.PROD_ID order by DPA.PROD_ADJUST_ID) NUM
+		RANK() OVER(PARTITION BY DPA.ADJ_FIELD order by DPA.PROD_ADJUST_ID) NUM
 		from
 		DIS_PROD_ADJUST DPA
 		left join REP_PROD_INFO RPI on DPA.prod_id=RPI.prod_id
@@ -221,6 +224,9 @@
 		</if>
 		<if test="pprodid != null and pprodid != ''">
 			and p_prod_id = #{pprodid}
+		</if>
+		<if test="raiseType != null and raiseType != ''">
+			and RPI.raise_type = #{raiseType}
 		</if>
 		)where NUM=1
 	</select>

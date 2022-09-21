@@ -71,7 +71,7 @@
 		reveal.REVEAL_END_DATE revealEndDate,
 		dsa.AGENCY_NAME saleAgency
 	FROM REP_REVEAL reveal
-	left join REP_PROD_INFO info on reveal.PRODID=info.PROD_ID
+	left join REP_PROD_INFO info on reveal.PRODID=info.PROD_ID or reveal.PRODID=info.P_PROD_ID
 	LEFT JOIN DIS_PROD_AGENCY dpa on dpa.PROD_ID = nvl(info.P_PROD_ID,info.PROD_ID)
 	LEFT JOIN DIS_SALE_AGENCY dsa on dsa.SEQUENCE_NO = dpa.AGENCY_ID
 	WHERE 1=1

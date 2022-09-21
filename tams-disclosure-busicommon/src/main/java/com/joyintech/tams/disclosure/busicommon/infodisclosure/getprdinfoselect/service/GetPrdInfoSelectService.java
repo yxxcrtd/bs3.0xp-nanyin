@@ -142,10 +142,22 @@ public class GetPrdInfoSelectService extends BaseService {
 	}
 
 	public Page<SelectOptionDto> getFeeNameList(Map<String, Object> paraMap){
+		String repId=(String) paraMap.get("repId");
+		if(StringUtil.equals("CP_001_004_010",repId)||StringUtil.equals("CP_001_004_008",repId)){
+			paraMap.put("raiseType","01");
+		} else if (StringUtil.equals("CP_001_004_009",repId)||StringUtil.equals("CP_001_004_011",repId)) {
+			paraMap.put("raiseType","02");
+		}
 		return this.queryForPage(GetPrdInfoSelectMapper.class, "getFeeNameList", paraMap);
 	}
 
 	public List<SelectOptionDto> getElementNameList1(Map<String, Object> paraMap){
+		String repId=(String) paraMap.get("repId");
+		if(StringUtil.equals("CP_001_004_014",repId)){
+			paraMap.put("raiseType","01");
+		} else if (StringUtil.equals("CP_001_004_015",repId)) {
+			paraMap.put("raiseType","02");
+		}
 		return getPrdInfoSelectMapper.getElementNameList(paraMap);
 	}
 
