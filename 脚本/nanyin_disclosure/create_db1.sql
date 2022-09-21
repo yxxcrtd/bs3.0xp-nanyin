@@ -1329,3 +1329,8 @@ alter table rep_reveal modify PRODID  varchar2(1000);
  alter table REP_REL_DEAL modify (SELL_FEE NUMBER(30,4));
  alter table REP_REL_DEAL modify (TRUST_FEE NUMBER(30,4));
  alter table REP_REL_DEAL modify (OTHER_FEE NUMBER(30,4));
+
+
+ -- NYLCXP-1262 产品要素调整，无法导入成功，因字段长度限制太小
+ alter table DIS_PROD_ADJUST modify PRE_ADJUST NVARCHAR2(600);
+ alter table DIS_PROD_ADJUST modify AFTER_ADJUST NVARCHAR2(600);
