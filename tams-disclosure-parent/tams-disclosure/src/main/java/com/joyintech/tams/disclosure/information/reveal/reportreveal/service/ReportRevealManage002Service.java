@@ -108,7 +108,7 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
     public boolean updateRevealStatusEX(List<ReportConfirmManage001Dto> listdto) throws IOException{
         boolean result=true;
         //1.先将单条数据披露，发送文件至指定服务器
-       // result=this.updateRevealStatusByRevealId(listdto);
+        result=this.updateRevealStatusByRevealId(listdto);
         //有披露失败的，默认全部失败，直接结束
         if(!result){
             return false;
