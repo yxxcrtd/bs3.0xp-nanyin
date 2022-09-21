@@ -246,6 +246,13 @@ public class ReportFileService {
 			//text = replaceText(text,listExp,params);
 			for ( String key:listExp) {
 				Object val = params.get(key);
+				if ( "halfyear".equals(key) ) {
+					if ( "01".equals(val) ) {
+						val = "（上半）";
+					} else if ( "02".equals(val) ) {
+						val = "（下半）";
+					}
+				}
 				String src = "{"+key+"}";
 				expressText = expressText.replace(src,val==null?"":val.toString());
 			}
