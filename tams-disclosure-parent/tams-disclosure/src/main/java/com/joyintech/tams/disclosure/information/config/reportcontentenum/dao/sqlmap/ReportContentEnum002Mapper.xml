@@ -159,5 +159,14 @@
         (<![CDATA[r1.INDEX_DATE <= #{indexDate,jdbcType=DATE} ]]>and <![CDATA[r1.END_DATE >= #{indexDate,jdbcType=DATE} ]]>) or
         ( <![CDATA[r1.INDEX_DATE <= #{endDate,jdbcType=DATE} ]]> and <![CDATA[r1.INDEX_DATE >= #{endDate,jdbcType=DATE} ]]>)
     </select>
-
+    <select id="selectExistsData" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+        select * from REP_INDEX_SUB r1 where r1.PRI_ID = #{priId,jdbcType=VARCHAR}
+        <if test="id != null and id!=''" >
+            and r1.id !=#{id,jdbcType=VARCHAR}
+        </if>
+        AND ((r1.INDEX_DATE &lt;= #{indexDate,jdbcType=DATE} and r1.end_date &gt;= #{indexDate,jdbcType=DATE}) or
+        (r1.INDEX_DATE &lt;= #{endDate,jdbcType=DATE} and r1.end_date &gt;= #{endDate,jdbcType=DATE})
+        or (#{indexDate,jdbcType=DATE} &lt;= r1.INDEX_DATE and  #{endDate,jdbcType=DATE} &gt;=r1.end_date)
+        )
+    </select>
 </mapper>
