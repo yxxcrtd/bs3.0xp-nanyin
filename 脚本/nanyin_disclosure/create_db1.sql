@@ -1334,3 +1334,8 @@ alter table rep_reveal modify PRODID  varchar2(1000);
  -- NYLCXP-1262 产品要素调整，无法导入成功，因字段长度限制太小
  alter table DIS_PROD_ADJUST modify PRE_ADJUST NVARCHAR2(600);
  alter table DIS_PROD_ADJUST modify AFTER_ADJUST NVARCHAR2(600);
+ 
+ /**修改REP_INSTALL_LOG_DETAIL表产品代码的最大长度*/
+ alter table  REP_INSTALL_LOG_DETAIL modify PRODID  varchar2(1000);
+ alter table  REP_INSTALL_LOG_DETAIL modify PROD_NAME  varchar2(2000);
+/**修改REP_INSTALL_LOG_DETAIL表产品代码的最大长度*/
