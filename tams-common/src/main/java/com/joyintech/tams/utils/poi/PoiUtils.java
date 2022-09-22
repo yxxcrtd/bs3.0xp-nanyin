@@ -42,7 +42,7 @@ public class PoiUtils {
     private static Logger logger = LoggerFactory.getLogger(PoiUtils.class);
 
     public static void mergeDocx(String tempateFile,OutputStream os,Map<String,Object> params ) throws Exception {
-        PoiUtilsHelper.mergeParasToDocx(tempateFile,os,params);
+        PoiUtilsHelper2.mergeParasToDocx(tempateFile,os,params);
     }
 
     public static void docxToHtml(InputStream is, OutputStream os, String imagePath) throws IOException {
