@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.config.reportcontentenum.service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,6 +26,7 @@ import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.Re
 import com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -432,7 +434,33 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		return parentNodes;
 	}
 
-	public int isOnlyData(ReportContentEnum002Dto dto) {
-		return reportContentEnum002Mapper.isOnlyData(dto);
+	public boolean isOnlyData(ReportContentEnum002Dto dto) {
+		boolean flag=true;
+		List<ReportContentEnum002Dto>list=reportContentEnum002Mapper.selectExistsData(dto);
+		if(CollectionUtils.isNotEmpty(list)){
+			if(!StringUtils.isNotEmpty(dto.getIndexDetail())){
+				flag=false;
+			}else{
+				for (ReportContentEnum002Dto tmp:list) {
+					if(!StringUtils.isNotEmpty(tmp.getIndexDetail())){
+						flag=false;
+						break;
+					}else{
+						String s1=StringUtil.substring(dto.getIndexDetail(),dto.getIndexDetail().indexOf("=")+1,dto.getIndexDetail().indexOf(";"));
+						String s2=StringUtil.substring(tmp.getIndexDetail(),tmp.getIndexDetail().indexOf("=")+1,tmp.getIndexDetail().indexOf(";"));
+						List<String>list1=StringUtil.splitToList(",",s1);
+						List<String>list2=StringUtil.splitToList(",",s2);
+						List<String> existsList = list1.stream().filter(list2::contains).collect(Collectors.toList());
+						if(CollectionUtils.isNotEmpty(existsList)){
+							flag=false;
+							break;
+						}
+					}
+				}
+			}
+
+		}
+		return flag;
+		//return reportContentEnum002Mapper.isOnlyData(dto);
 	}
 }
