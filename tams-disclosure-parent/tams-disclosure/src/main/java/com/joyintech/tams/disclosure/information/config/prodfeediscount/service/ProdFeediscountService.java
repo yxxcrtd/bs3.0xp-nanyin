@@ -344,20 +344,20 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 entity.setAfterFeerate(list.get(5));
             }
             if (StringUtil.isNotEmpty(list.get(6)) && isDateStr(list.get(6))) {
-                entity.setStartDate(DateUtil.parse(list.get(6)));
+                entity.setStartDate(list.get(6));
             }
             if (StringUtil.isNotEmpty(list.get(7)) && isDateStr(list.get(7))) {
-                entity.setEndDate(DateUtil.parse(list.get(7)));
+                entity.setEndDate(list.get(7));
             }
 
             if (StringUtil.isNotEmpty(list.get(8)) && isNumber(list.get(8))) {
-                entity.setThisPreFeerate(new BigDecimal(list.get(8)));
+                entity.setThisPreFeerate(list.get(8));
             }
             if (StringUtil.isNotEmpty(list.get(9)) && isNumber(list.get(9))) {
-                entity.setThisAfterFeerate( new BigDecimal(list.get(9)));
+                entity.setThisAfterFeerate(list.get(9));
             }
             if (StringUtil.isNotEmpty(list.get(10)) && isNumber(list.get(10))) {
-                entity.setThisEndFeerate( new BigDecimal(list.get(10)));
+                entity.setThisEndFeerate(list.get(10));
             }
             if (StringUtil.isNotEmpty(list.get(11))) {
                 entity.setFeeDisRemark(list.get(11));
@@ -437,34 +437,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                     message.add("子产品代码不存在。");
                 }
             }
-            if (StringUtil.isEmpty(rowData.get(3))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "优惠的费用"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(6)) && !isDateStr(rowData.get(6))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "优惠起始时间"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(7)) && !isDateStr(rowData.get(7))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "优惠截止时间"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(8)) && !isNumber(rowData.get(8))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "本次优惠前费率"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(9)) && !isNumber(rowData.get(9))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "本次优惠后费率"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(10)) && !isNumber(rowData.get(10))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "本次优惠结束后费率"));
-            }
             if (StringUtil.isEmpty(rowData.get(12))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
             }else if(!isDateStr(rowData.get(12))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(6)) && isDateStr(rowData.get(6))
-                    && StringUtil.isNotEmpty(rowData.get(7)) && isDateStr(rowData.get(7))){
-                if (DateUtil.compareDate(rowData.get(7),rowData.get(6)) < 0) {
-                    message.add("优惠截止时间必须大于优惠起始时间。");
-                }
             }
             String key = rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(1)
@@ -517,19 +493,19 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             feediscountDto.setAfterFeerate( rowData.get(5));
         }
         if (StringUtil.isNotEmpty(rowData.get(6))) {
-            feediscountDto.setStartDate(DateUtil.parse(rowData.get(6)));
+            feediscountDto.setStartDate(rowData.get(6));
         }
         if (StringUtil.isNotEmpty(rowData.get(7))) {
-            feediscountDto.setEndDate(DateUtil.parse(rowData.get(7)));
+            feediscountDto.setEndDate(rowData.get(7));
         }
         if (StringUtil.isNotEmpty(rowData.get(8))) {
-            feediscountDto.setThisPreFeerate(new BigDecimal(rowData.get(8)));
+            feediscountDto.setThisPreFeerate(rowData.get(8));
         }
         if (StringUtil.isNotEmpty(rowData.get(9))) {
-            feediscountDto.setThisAfterFeerate( new BigDecimal(rowData.get(9)));
+            feediscountDto.setThisAfterFeerate(rowData.get(9));
         }
         if (StringUtil.isNotEmpty(rowData.get(10))) {
-            feediscountDto.setThisEndFeerate( new BigDecimal(rowData.get(10)));
+            feediscountDto.setThisEndFeerate(rowData.get(10));
         }
         if (StringUtil.isNotEmpty(rowData.get(11))) {
             feediscountDto.setFeeDisRemark(rowData.get(11));
