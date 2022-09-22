@@ -180,6 +180,8 @@ public class FtpDetailService {
 			String[] newFileNames = fileName.split("/");
 			String  newFileName = newFileNames[newFileNames.length-1];
 			String prefix = "";
+			//产品代码后缀
+			String  instrprd="";
 
 			String reportCategory = repReveal.getReportCategory();
 			//发行公告,运行公告,到期公告,临时公告,销售公告
@@ -197,6 +199,7 @@ public class FtpDetailService {
 				}
 				//募集方式:南银官网字典项
 				prefix = prefix+"_"+reportinfo.getRaiseType().replace("0","");
+				instrprd="_"+reportinfo.getRaiseType().replace("0","");
 				//文件类型:转换成南银官网字典项
 				if("01".equals(reportCategory)){
 					reportCategory = "3";
@@ -211,7 +214,7 @@ public class FtpDetailService {
 				}
 				//文件类型
 				prefix = prefix + "_" + reportCategory;
-
+				instrprd=instrprd + "_" + reportCategory;
 			}
 			String repId = repReveal.getRepId();
 			String fileSuffix = newFileName.substring(newFileName.lastIndexOf("."));
@@ -252,9 +255,19 @@ public class FtpDetailService {
 				newFileName = newFileName.replace("第03季度","第3季度");
 				newFileName = newFileName.replace("第04季度","第4季度");
 				newFileName = newFileName.substring(0,length) + "理财产品" + newFileName.substring(length);
+			}else if("CP_001_004_017".equals(repId) || "CP_001_004_016".equals(repId)){
+				//巨额赎回公告
+				String suffix = "公告";
+				//查询巨赎的产品代码
+			    String pdListName=ftpDetailMapper.selectJsProdIdInfo(repReveal);
+				newFileName = pdListName+instrprd+"关于"+reportinfo.getProdName() + pdListName+"发生巨额赎回的"+suffix+fileSuffix;
 			}
 
-			fileName = prefix + "_" + newFileName;
+			if("CP_001_004_017".equals(repId) || "CP_001_004_016".equals(repId)){
+				fileName=newFileName;
+			}else{
+				fileName = prefix + "_" + newFileName;
+			}
 
 			UploadFile uploadfile = fileAttachmentProcess.fetch(filePath);
 
