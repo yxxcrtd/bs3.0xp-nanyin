@@ -185,7 +185,7 @@ public class FtpDetailService {
 
 			String reportCategory = repReveal.getReportCategory();
 			//发行公告,运行公告,到期公告,临时公告,销售公告
-			if("01".equals(reportCategory) || "02".equals(reportCategory) || "03".equals(reportCategory) || "04".equals(reportCategory) || "05".equals(reportCategory) ){
+			if("01".equals(reportCategory) || "02".equals(reportCategory) || "03".equals(reportCategory) || "04".equals(reportCategory) || "05".equals(reportCategory)){
 				//根据P_PROD_ID查询产品信息,部分普通产品也有P_PROD_ID
 				List<RepProdInfo> repInfoList = ftpDetailMapper.selectProdInfoByPProdId(reportinfo.getProdId());
 				if(repInfoList !=null && !repInfoList.isEmpty()){
@@ -261,9 +261,16 @@ public class FtpDetailService {
 				//查询巨赎的产品代码
 			    String pdListName=ftpDetailMapper.selectJsProdIdInfo(repReveal);
 				newFileName = pdListName+instrprd+"关于"+reportinfo.getProdName() + pdListName+"发生巨额赎回的"+suffix+fileSuffix;
+			}else if("CP_001_007_001".equals(repId)){
+				//分红计算清单
+				String suffix = "公告";
+				newFileName=reportinfo.getProdId()+"_"+reportinfo.getRaiseType().replace("0","")+ "_"+"6"+"_"+
+						repReveal.getProdName()+"("+repReveal.getProdid()+")"+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
+						suffix+fileSuffix;
 			}
 
-			if("CP_001_004_017".equals(repId) || "CP_001_004_016".equals(repId)){
+			if("CP_001_004_017".equals(repId) || "CP_001_004_016".equals(repId)||
+			  StringUtil.isEmpty(prefix)){
 				fileName=newFileName;
 			}else{
 				fileName = prefix + "_" + newFileName;
