@@ -560,6 +560,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                                                 List<ProdInfoDto> entities) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> prodMap = new HashMap<>();
+        Map<String,String>  messagemap=new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
             if (null == list || list.size() != 26) {
@@ -569,17 +570,22 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             // 验证消息
             List<String> message = new ArrayList<>();
-            for (int j = i + 1; j < dataList.size(); j++) {
-                if (dataList.get(i).get(8).equals(dataList.get(j).get(8))) {
-                    for (int k = 3; k < 26; k++) {
-                        if (!dataList.get(i).get(k).equals(dataList.get(j).get(k))) {
-                            message.add("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+            if(messagemap.containsKey(dataList.get(i).get(8))){
+                message.add("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+            }else{
+                for (int j = i + 1; j < dataList.size(); j++) {
+                    if (dataList.get(i).get(8).equals(dataList.get(j).get(8))) {
+                        for (int k = 3; k < 26; k++) {
+                            if (!dataList.get(i).get(k).equals(dataList.get(j).get(k))) {
+                                message.add("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+                                messagemap.put(dataList.get(i).get(8),"存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+                                if (CollectionUtils.isNotEmpty(message)) {
+                                    break;
+                                }
+                            }
                             if (CollectionUtils.isNotEmpty(message)) {
                                 break;
                             }
-                        }
-                        if (CollectionUtils.isNotEmpty(message)) {
-                            break;
                         }
                     }
                 }

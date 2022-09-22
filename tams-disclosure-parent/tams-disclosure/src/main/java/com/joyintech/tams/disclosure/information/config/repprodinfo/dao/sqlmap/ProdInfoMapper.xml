@@ -761,7 +761,6 @@
             <if test="raiseAmt != null">
                 RAISE_AMT = #{raiseAmt,jdbcType=DECIMAL},
             </if>
-             STATUS='E'
         </set>
         where P_PROD_ID = #{pProdId,jdbcType=VARCHAR}
     </update>
