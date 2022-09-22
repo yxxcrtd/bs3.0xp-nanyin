@@ -265,6 +265,7 @@ public class FtpDetailService {
 				//分红计算清单
 				String suffix = "分红计算清单";
 				if(StringUtil.equals("02",reportinfo.getRepProdType())){
+					//普通产品
 					newFileName=reportinfo.getProdId()+"_"+reportinfo.getRaiseType().replace("0","")+ "_"+"6"+"_"+
 							repReveal.getProdName()+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
 							suffix+fileSuffix;
@@ -283,7 +284,15 @@ public class FtpDetailService {
 					newFileName=repReveal.getProdName()+"("+repReveal.getProdid()+")"+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
 							suffix+fileSuffix;
 				}
+			}else if("CP_001_002_017".equals(repId) || "CP_001_002_018".equals(repId)){
+				if(newFileName.contains("（上半）")){
+					newFileName=newFileName.replace("（上半）","（半）");
+				}
+				if(newFileName.contains("（下半）")){
+					newFileName.replace("（下半）","（半）");
+				}
 			}
+
 
 			if("CP_001_004_017".equals(repId) || "CP_001_004_016".equals(repId)||
 			  StringUtil.isEmpty(prefix)){
