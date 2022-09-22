@@ -263,10 +263,26 @@ public class FtpDetailService {
 				newFileName = pdListName+instrprd+"关于"+reportinfo.getProdName() + pdListName+"发生巨额赎回的"+suffix+fileSuffix;
 			}else if("CP_001_007_001".equals(repId)){
 				//分红计算清单
-				String suffix = "公告";
-				newFileName=reportinfo.getProdId()+"_"+reportinfo.getRaiseType().replace("0","")+ "_"+"6"+"_"+
-						repReveal.getProdName()+"("+repReveal.getProdid()+")"+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
-						suffix+fileSuffix;
+				String suffix = "分红计算清单";
+				if(StringUtil.equals("02",reportinfo.getRepProdType())){
+					newFileName=reportinfo.getProdId()+"_"+reportinfo.getRaiseType().replace("0","")+ "_"+"6"+"_"+
+							repReveal.getProdName()+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
+							suffix+fileSuffix;
+				}else{
+					newFileName=reportinfo.getProdId()+"_"+reportinfo.getRaiseType().replace("0","")+ "_"+"6"+"_"+
+							repReveal.getProdName()+"("+repReveal.getProdid()+")"+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
+							suffix+fileSuffix;
+				}
+			}else if("CP_001_002_013".equals(repId) || "CP_001_002_014".equals(repId)){
+				//净值及分红报告（私募开放式）||净值及分红报告（私募封闭式）
+				String suffix = "净值及分红报告";
+				if(StringUtil.equals("02",reportinfo.getRepProdType())){
+					//普通产品
+					newFileName=repReveal.getProdName()+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+suffix+fileSuffix;
+				}else{
+					newFileName=repReveal.getProdName()+"("+repReveal.getProdid()+")"+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
+							suffix+fileSuffix;
+				}
 			}
 
 			if("CP_001_004_017".equals(repId) || "CP_001_004_016".equals(repId)||
