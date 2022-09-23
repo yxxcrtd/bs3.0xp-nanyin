@@ -576,7 +576,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             if (!flag) {
                 checkResult.add(new ExcelValidDto(rowData.get(0)
                         + GlobalConstant.UNDER_LINE + rowData.get(2),
-                        String.valueOf(i + 2), "文件中对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等。"));
+                        String.valueOf(i + 2), "产品类型是净值型，对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等。"));
             }
             map.put(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
             if (CollectionUtils.isNotEmpty(message)) {
