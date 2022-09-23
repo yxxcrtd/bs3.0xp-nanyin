@@ -1339,3 +1339,6 @@ alter table rep_reveal modify PRODID  varchar2(1000);
  alter table  REP_INSTALL_LOG_DETAIL modify PRODID  varchar2(1000);
  alter table  REP_INSTALL_LOG_DETAIL modify PROD_NAME  varchar2(2000);
 /**修改REP_INSTALL_LOG_DETAIL表产品代码的最大长度*/
+
+--NYLCXP-1322 产品排期计划，客户实际持有天数最多填写5位数字，系统只能填写四位
+alter table DIS_PROD_PLAN modify HOLD_DAYS NUMBER(5);
