@@ -263,7 +263,7 @@
         from REP_PROD_INDEX T1
         where T1.PROD_ID = #{prodId,jdbcType=VARCHAR}
         and T1.VALUE_DATE = #{valueDate,jdbcType=DATE}
-        and T1.STATUS != 'D'
+        and T1.STATUS = 'E'
     </select>
 
     <select id="selectPProdInfo" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
