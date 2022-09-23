@@ -10,11 +10,11 @@
         <result column="FEENAME" property="feename" jdbcType="VARCHAR" />
         <result column="PRE_FEERATE" property="preFeerate" jdbcType="DECIMAL" />
         <result column="AFTER_FEERATE" property="afterFeerate" jdbcType="DECIMAL" />
-        <result column="START_DATE" property="startDate" jdbcType="DATE" />
-        <result column="END_DATE" property="endDate" jdbcType="DATE" />
-        <result column="THIS_PRE_FEERATE" property="thisPreFeerate" jdbcType="DECIMAL" />
-        <result column="THIS_AFTER_FEERATE" property="thisAfterFeerate" jdbcType="DECIMAL" />
-        <result column="THIS_END_FEERATE" property="thisEndFeerate" jdbcType="DECIMAL" />
+        <result column="START_DATE" property="startDate" jdbcType="VARCHAR" />
+        <result column="END_DATE" property="endDate" jdbcType="VARCHAR" />
+        <result column="THIS_PRE_FEERATE" property="thisPreFeerate" jdbcType="VARCHAR" />
+        <result column="THIS_AFTER_FEERATE" property="thisAfterFeerate" jdbcType="VARCHAR" />
+        <result column="THIS_END_FEERATE" property="thisEndFeerate" jdbcType="VARCHAR" />
         <result column="FEE_DIS_REMARK" property="feeDisRemark" jdbcType="VARCHAR" />
         <result column="RPT_ISSUE_DATE" property="rptIssueDate" jdbcType="DATE" />
         <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
@@ -168,19 +168,19 @@
                 #{afterFeerate,jdbcType=VARCHAR},
             </if>
             <if test="startDate != null" >
-                #{startDate,jdbcType=DATE},
+                #{startDate,jdbcType=VARCHAR},
             </if>
             <if test="endDate != null" >
-                #{endDate,jdbcType=DATE},
+                #{endDate,jdbcType=VARCHAR},
             </if>
             <if test="thisPreFeerate != null" >
-                #{thisPreFeerate,jdbcType=DECIMAL},
+                #{thisPreFeerate,jdbcType=VARCHAR},
             </if>
             <if test="thisAfterFeerate != null" >
-                #{thisAfterFeerate,jdbcType=DECIMAL},
+                #{thisAfterFeerate,jdbcType=VARCHAR},
             </if>
             <if test="thisEndFeerate != null" >
-                #{thisEndFeerate,jdbcType=DECIMAL},
+                #{thisEndFeerate,jdbcType=VARCHAR},
             </if>
             <if test="feeDisRemark != null" >
                 #{feeDisRemark,jdbcType=VARCHAR},
@@ -292,11 +292,11 @@
             FEENAME = #{feename,jdbcType=VARCHAR},
             PRE_FEERATE = #{preFeerate,jdbcType=VARCHAR},
             AFTER_FEERATE = #{afterFeerate,jdbcType=VARCHAR},
-            START_DATE = #{startDate,jdbcType=DATE},
-            END_DATE = #{endDate,jdbcType=DATE},
-            THIS_PRE_FEERATE = #{thisPreFeerate,jdbcType=DECIMAL},
-            THIS_AFTER_FEERATE = #{thisAfterFeerate,jdbcType=DECIMAL},
-            THIS_END_FEERATE = #{thisEndFeerate,jdbcType=DECIMAL},
+            START_DATE = #{startDate,jdbcType=VARCHAR},
+            END_DATE = #{endDate,jdbcType=VARCHAR},
+            THIS_PRE_FEERATE = #{thisPreFeerate,jdbcType=VARCHAR},
+            THIS_AFTER_FEERATE = #{thisAfterFeerate,jdbcType=VARCHAR},
+            THIS_END_FEERATE = #{thisEndFeerate,jdbcType=VARCHAR},
             FEE_DIS_REMARK = #{feeDisRemark,jdbcType=VARCHAR},
             RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE},
             DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
@@ -460,10 +460,10 @@
             and FEENAME = #{feename,jdbcType=VARCHAR}
             and DATA_STATUS = 'E'
         <if test="startDate != null" >
-            and START_DATE = #{startDate,jdbcType=DATE}
+            and START_DATE = #{startDate,jdbcType=VARCHAR}
         </if>
         <if test="endDate != null" >
-            and END_DATE = #{endDate,jdbcType=DATE}
+            and END_DATE = #{endDate,jdbcType=VARCHAR}
         </if>
         <if test="isSalesAgency != null" >
             and IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR}
@@ -490,19 +490,19 @@
             and AFTER_FEERATE is null
         </if>
         <if test="thisPreFeerate != null" >
-            and THIS_PRE_FEERATE = #{thisPreFeerate,jdbcType=DECIMAL}
+            and THIS_PRE_FEERATE = #{thisPreFeerate,jdbcType=VARCHAR}
         </if>
         <if test="thisPreFeerate == null" >
             and THIS_PRE_FEERATE is null
         </if>
         <if test="thisAfterFeerate != null" >
-            and THIS_AFTER_FEERATE = #{thisAfterFeerate,jdbcType=DECIMAL}
+            and THIS_AFTER_FEERATE = #{thisAfterFeerate,jdbcType=VARCHAR}
         </if>
         <if test="thisAfterFeerate == null" >
             and THIS_AFTER_FEERATE is null
         </if>
         <if test="thisEndFeerate != null" >
-            and THIS_END_FEERATE = #{thisEndFeerate,jdbcType=DECIMAL}
+            and THIS_END_FEERATE = #{thisEndFeerate,jdbcType=VARCHAR}
         </if>
         <if test="thisEndFeerate == null" >
             and THIS_END_FEERATE is null
