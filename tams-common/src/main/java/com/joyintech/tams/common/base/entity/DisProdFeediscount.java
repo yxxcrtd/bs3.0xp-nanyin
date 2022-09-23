@@ -57,30 +57,27 @@ public class DisProdFeediscount extends BaseEntity {
     /**
      * 优化起始时间
      */
-    private Date startDate;
+    private String startDate;
 
     /**
      * 优惠截至时间
      */
-    private Date endDate;
+    private String endDate;
 
     /**
      * 本次优惠前费率
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal thisPreFeerate;
+    private String thisPreFeerate;
 
     /**
      * 本次优惠后费率
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal thisAfterFeerate;
+    private String thisAfterFeerate;
 
     /**
      * 本次优惠结束后费率
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal thisEndFeerate;
+    private String thisEndFeerate;
 
     /**
      * 对此费率优惠调整（补充性）描述文字
@@ -235,7 +232,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 优化起始时间
      * @return 优化起始时间
      */
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
@@ -243,8 +240,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 优化起始时间
      * @param startDate 优化起始时间
      */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
@@ -252,7 +248,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 优惠截至时间
      * @return 优惠截至时间
      */
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -260,8 +256,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 优惠截至时间
      * @param endDate 优惠截至时间
      */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
@@ -269,7 +264,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 本次优惠前费率
      * @return 本次优惠前费率
      */
-    public BigDecimal getThisPreFeerate() {
+    public String getThisPreFeerate() {
         return thisPreFeerate;
     }
 
@@ -277,7 +272,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 本次优惠前费率
      * @param thisPreFeerate 本次优惠前费率
      */
-    public void setThisPreFeerate(BigDecimal thisPreFeerate) {
+    public void setThisPreFeerate(String thisPreFeerate) {
         this.thisPreFeerate = thisPreFeerate;
     }
 
@@ -285,7 +280,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 本次优惠后费率
      * @return 本次优惠后费率
      */
-    public BigDecimal getThisAfterFeerate() {
+    public String getThisAfterFeerate() {
         return thisAfterFeerate;
     }
 
@@ -293,7 +288,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 本次优惠后费率
      * @param thisAfterFeerate 本次优惠后费率
      */
-    public void setThisAfterFeerate(BigDecimal thisAfterFeerate) {
+    public void setThisAfterFeerate(String thisAfterFeerate) {
         this.thisAfterFeerate = thisAfterFeerate;
     }
 
@@ -301,7 +296,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 本次优惠结束后费率
      * @return 本次优惠结束后费率
      */
-    public BigDecimal getThisEndFeerate() {
+    public String getThisEndFeerate() {
         return thisEndFeerate;
     }
 
@@ -309,7 +304,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 本次优惠结束后费率
      * @param thisEndFeerate 本次优惠结束后费率
      */
-    public void setThisEndFeerate(BigDecimal thisEndFeerate) {
+    public void setThisEndFeerate(String thisEndFeerate) {
         this.thisEndFeerate = thisEndFeerate;
     }
 

@@ -87,4 +87,18 @@
 			or R.P_PROD_ID = #{prodId,jdbcType=VARCHAR})
 		and R.REP_PROD_TYPE='02'
 	</select>
+
+	<select id="selectJsProdIdInfo" resultType="java.lang.String"
+			parameterType="com.joyintech.tams.common.base.entity.RepReveal">
+        select
+		listagg(dlr.prod_id, '、') within group(order by dlr.prod_id) saleCode
+		from rep_prod_info rpi
+		inner join dis_large_redemption dlr
+		on rpi.prod_re = dlr.prod_regist_no
+		AND dlr.rpt_issue_date =#{endDate, jdbcType=DATE}
+		and dlr.data_status = 'E'
+		where rpi.prod_id = #{prodid,jdbcType=VARCHAR}
+		and rpi.status = 'E'
+		and rpi.rep_prod_type in ('01','02')
+	</select>
 </mapper>

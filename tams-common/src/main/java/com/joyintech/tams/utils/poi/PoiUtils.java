@@ -405,7 +405,8 @@ public class PoiUtils {
         			}
         		}
         		if ( startRow>0 && i>startRow )
-        			cols.get(colIdx).remove();   //删除后续的列
+        			if ( colIdx<cols.size())
+        				cols.get(colIdx).remove();   //删除后续的列
         	}
         }
         

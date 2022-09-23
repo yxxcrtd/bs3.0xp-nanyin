@@ -420,24 +420,25 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             List<ProdInfoDto> entities = this.convertToBean(dataList);
             List<ProdInfoDto> data = this.selectProdInfoByKey(entities);
             if (data != null && data.size() > 0) {
-                Map<String, List<ProdInfoDto>> prodInfoMap = entities.stream().collect(
-                        JoyinCollectors.groupingBy(ProdInfoDto::getProdId));
-                // 将序号放入list中
-                List<String> excelNumList = new ArrayList<>();
-                List<Integer> excelNumIntList = new ArrayList<>();
-                for (ProdInfoDto prodInfoDto : data) {
-                    List<ProdInfoDto> listTemp = prodInfoMap.get(prodInfoDto.getProdId());
-                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
-                }
-                // 将list进行排序，并转化为string
-                Collections.sort(excelNumIntList);
-                for (Integer rowNo : excelNumIntList) {
-                    excelNumList.add(String.valueOf(rowNo));
-                }
-                webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_0001",
-                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                        MessageType.确认消息);
+//                Map<String, List<ProdInfoDto>> prodInfoMap = entities.stream().collect(
+//                        JoyinCollectors.groupingBy(ProdInfoDto::getProdId));
+//                // 将序号放入list中
+//                List<String> excelNumList = new ArrayList<>();
+//                List<Integer> excelNumIntList = new ArrayList<>();
+//                for (ProdInfoDto prodInfoDto : data) {
+//                    List<ProdInfoDto> listTemp = prodInfoMap.get(prodInfoDto.getProdId());
+//                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+//                }
+//                // 将list进行排序，并转化为string
+//                Collections.sort(excelNumIntList);
+//                for (Integer rowNo : excelNumIntList) {
+//                    excelNumList.add(String.valueOf(rowNo));
+//                }
+//                webResult.setMessage(
+//                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+//                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+//                        MessageType.确认消息);
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             } else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
@@ -560,6 +561,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                                                 List<ProdInfoDto> entities) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> prodMap = new HashMap<>();
+        Map<String,String>  messagemap=new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
             if (null == list || list.size() != 26) {
@@ -569,17 +571,22 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             // 验证消息
             List<String> message = new ArrayList<>();
-            for (int j = i + 1; j < dataList.size(); j++) {
-                if (dataList.get(i).get(8).equals(dataList.get(j).get(8))) {
-                    for (int k = 3; k < 26; k++) {
-                        if (!dataList.get(i).get(k).equals(dataList.get(j).get(k))) {
-                            message.add("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+            if(messagemap.containsKey(dataList.get(i).get(8))){
+                message.add("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+            }else{
+                for (int j = i + 1; j < dataList.size(); j++) {
+                    if (dataList.get(i).get(8).equals(dataList.get(j).get(8))) {
+                        for (int k = 3; k < 26; k++) {
+                            if (!dataList.get(i).get(k).equals(dataList.get(j).get(k))) {
+                                message.add("存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+                                messagemap.put(dataList.get(i).get(8),"存在数据与其产品主代码相同,则除子产品代码、子产品名称、子产品成立日期外，其余字段的值必须相同! ");
+                                if (CollectionUtils.isNotEmpty(message)) {
+                                    break;
+                                }
+                            }
                             if (CollectionUtils.isNotEmpty(message)) {
                                 break;
                             }
-                        }
-                        if (CollectionUtils.isNotEmpty(message)) {
-                            break;
                         }
                     }
                 }

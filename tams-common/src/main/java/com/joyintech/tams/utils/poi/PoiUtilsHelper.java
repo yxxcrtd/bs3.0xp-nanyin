@@ -251,6 +251,8 @@ public class PoiUtilsHelper {
             } else {  
                 // Cells which join (merge) the first one, are set with CONTINUE  
                 cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);  
+                if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
+                	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
             }  
         }  
     }  
@@ -269,6 +271,8 @@ public class PoiUtilsHelper {
                 cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
             } else {
                 cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+                if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
+                	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
             }
         }
     }

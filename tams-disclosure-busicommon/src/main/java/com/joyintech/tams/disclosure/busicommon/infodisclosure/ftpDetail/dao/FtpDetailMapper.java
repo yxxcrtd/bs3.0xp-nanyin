@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dao;
 
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,7 @@ public interface FtpDetailMapper {
 	RepProdInfo selectPProdInfoByCProdId(String prodId);
 
     String selectProdIdByProdId(@Param("prodId") String prodId);
+
+    //查询巨额赎回的产品信息
+	String  selectJsProdIdInfo(RepReveal repReveal);
 }

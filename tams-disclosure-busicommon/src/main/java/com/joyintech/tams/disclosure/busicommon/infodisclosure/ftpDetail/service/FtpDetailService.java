@@ -180,10 +180,12 @@ public class FtpDetailService {
 			String[] newFileNames = fileName.split("/");
 			String  newFileName = newFileNames[newFileNames.length-1];
 			String prefix = "";
+			//产品代码后缀
+			String  instrprd="";
 
 			String reportCategory = repReveal.getReportCategory();
 			//发行公告,运行公告,到期公告,临时公告,销售公告
-			if("01".equals(reportCategory) || "02".equals(reportCategory) || "03".equals(reportCategory) || "04".equals(reportCategory) || "05".equals(reportCategory) ){
+			if("01".equals(reportCategory) || "02".equals(reportCategory) || "03".equals(reportCategory) || "04".equals(reportCategory) || "05".equals(reportCategory)){
 				//根据P_PROD_ID查询产品信息,部分普通产品也有P_PROD_ID
 				List<RepProdInfo> repInfoList = ftpDetailMapper.selectProdInfoByPProdId(reportinfo.getProdId());
 				if(repInfoList !=null && !repInfoList.isEmpty()){
@@ -197,6 +199,7 @@ public class FtpDetailService {
 				}
 				//募集方式:南银官网字典项
 				prefix = prefix+"_"+reportinfo.getRaiseType().replace("0","");
+				instrprd="_"+reportinfo.getRaiseType().replace("0","");
 				//文件类型:转换成南银官网字典项
 				if("01".equals(reportCategory)){
 					reportCategory = "3";
@@ -211,7 +214,7 @@ public class FtpDetailService {
 				}
 				//文件类型
 				prefix = prefix + "_" + reportCategory;
-
+				instrprd=instrprd + "_" + reportCategory;
 			}
 			String repId = repReveal.getRepId();
 			String fileSuffix = newFileName.substring(newFileName.lastIndexOf("."));
@@ -252,9 +255,51 @@ public class FtpDetailService {
 				newFileName = newFileName.replace("第03季度","第3季度");
 				newFileName = newFileName.replace("第04季度","第4季度");
 				newFileName = newFileName.substring(0,length) + "理财产品" + newFileName.substring(length);
+			}else if("CP_001_004_017".equals(repId) || "CP_001_004_016".equals(repId)){
+				//巨额赎回公告
+				String suffix = "公告";
+				//查询巨赎的产品代码
+			    String pdListName=ftpDetailMapper.selectJsProdIdInfo(repReveal);
+				newFileName = pdListName+instrprd+"关于"+reportinfo.getProdName() + pdListName+"发生巨额赎回的"+suffix+fileSuffix;
+			}else if("CP_001_007_001".equals(repId)){
+				//分红计算清单
+				String suffix = "分红计算清单";
+				if(StringUtil.equals("02",reportinfo.getRepProdType())){
+					//普通产品
+					newFileName=reportinfo.getProdId()+"_"+reportinfo.getRaiseType().replace("0","")+ "_"+"6"+"_"+
+							repReveal.getProdName()+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
+							suffix+fileSuffix;
+				}else{
+					newFileName=reportinfo.getProdId()+"_"+reportinfo.getRaiseType().replace("0","")+ "_"+"6"+"_"+
+							repReveal.getProdName()+"("+repReveal.getProdid()+")"+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
+							suffix+fileSuffix;
+				}
+			}else if("CP_001_002_013".equals(repId) || "CP_001_002_014".equals(repId)){
+				//净值及分红报告（私募开放式）||净值及分红报告（私募封闭式）
+				String suffix = "净值及分红报告";
+				if(StringUtil.equals("02",reportinfo.getRepProdType())){
+					//普通产品
+					newFileName=repReveal.getProdName()+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+suffix+fileSuffix;
+				}else{
+					newFileName=repReveal.getProdName()+"("+repReveal.getProdid()+")"+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
+							suffix+fileSuffix;
+				}
+			}else if("CP_001_002_017".equals(repId) || "CP_001_002_018".equals(repId)){
+				if(newFileName.contains("（上半）")){
+					newFileName=newFileName.replace("（上半）","（半）");
+				}
+				if(newFileName.contains("（下半）")){
+					newFileName.replace("（下半）","（半）");
+				}
 			}
 
-			fileName = prefix + "_" + newFileName;
+
+			if("CP_001_004_017".equals(repId) || "CP_001_004_016".equals(repId)||
+			  StringUtil.isEmpty(prefix)){
+				fileName=newFileName;
+			}else{
+				fileName = prefix + "_" + newFileName;
+			}
 
 			UploadFile uploadfile = fileAttachmentProcess.fetch(filePath);
 
