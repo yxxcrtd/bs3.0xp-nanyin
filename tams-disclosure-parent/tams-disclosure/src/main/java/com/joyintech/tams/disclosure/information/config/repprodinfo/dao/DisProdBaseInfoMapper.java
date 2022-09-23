@@ -61,4 +61,10 @@ public interface DisProdBaseInfoMapper  {
     List<ProdInfoDto> getPtParentProdInfo(@Param("pProdId") String pProdId);
 
     int hasReapetData(ProdInfoDto dto);
+
+    /**
+     * 查询所有产品登记编码
+     * @return
+     */
+    List<ProdInfoDto>  selectReAll();
 }

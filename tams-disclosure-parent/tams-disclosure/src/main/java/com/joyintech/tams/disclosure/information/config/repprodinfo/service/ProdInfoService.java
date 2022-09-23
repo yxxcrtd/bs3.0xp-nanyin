@@ -50,6 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -562,6 +563,17 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> prodMap = new HashMap<>();
         Map<String,String>  messagemap=new HashMap<>();
+        //查询产品登记编码
+        List<ProdInfoDto>   reprodList=prodInfoMapper.selectReAll();
+        //产品登记编码作key，父产品代码作为value
+        Map<String,String>  frepMap=(reprodList.stream().filter(s -> s.getpProdId()!=null).collect(Collectors.toList())).
+                stream().collect(JoyinCollectors.toMap(x -> x.getProdRe(), x -> x.getpProdId()));
+        //产品登记编码作key，母产品的产品代码作为value
+        Map<String,String>  repMap=(reprodList.stream().filter(s -> s.getpProdId()==null).collect(Collectors.toList())).
+                stream().collect(JoyinCollectors.toMap(x -> x.getProdRe(), x -> x.getProdId()));
+
+        //校验文件里产品登记编码重复的容器
+        Map<String,String>  remap=new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
             if (null == list || list.size() != 26) {
@@ -649,6 +661,30 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     }
                 }
             }
+            /**校验产品登记编码重复性 start*/
+            if(frepMap.keySet().contains(list.get(7))){
+                //主产品代码不一致
+                if(!StringUtil.equals(list.get(8),frepMap.get(list.get(7)))){
+                    message.add("产品登记编码具有唯一性， 产品登记编码跟产品主代码是唯一对应的。");
+                }
+            }
+            if(repMap.keySet().contains(list.get(7))){
+                //母产品代码不一致
+                if(!StringUtil.equals(list.get(0),frepMap.get(list.get(7)))){
+                    message.add("产品登记编码具有唯一性， 产品登记编码跟产品主代码是唯一对应的。");
+                }
+            }
+            if(StringUtil.isNotEmpty(list.get(7))&&
+                    StringUtil.isNotEmpty(list.get(8))){
+                if(remap.keySet().contains(list.get(7))){
+                    if(!StringUtil.equals(list.get(8),remap.get(list.get(7)))){
+                        message.add("产品登记编码重复");
+                    }
+                }else {
+                    remap.put(list.get(7),list.get(8));
+                }
+            }
+            /**校验产品登记编码重复性 end*/
             // 募集起始日期
             if (StringUtil.isEmpty(list.get(9))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "募集起始日期"));

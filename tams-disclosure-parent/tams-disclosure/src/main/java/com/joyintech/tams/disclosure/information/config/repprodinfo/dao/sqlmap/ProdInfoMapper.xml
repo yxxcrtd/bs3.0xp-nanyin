@@ -873,4 +873,12 @@
         </where>
     </select>
 
+    <select id="selectReAll"  resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
+        select
+         prod_id prodId,
+         p_prod_id pProdId,
+         PROD_RE prodRe
+         from REP_PROD_INFO
+        where status='E'
+    </select>
 </mapper>
