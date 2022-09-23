@@ -53,7 +53,7 @@
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("产品费率优惠查看"),
                 basePath + "disclosure/information/config/prodfeediscount/ProdFeediscount002/init",
-                "60%", "99%", {workflowId:data.workflowId,prodDiscountId:data.prodDiscountId,pageModel:PAGE_MODEL_REFERENCE},function(){table.reload();});
+                "99%", "99%", {workflowId:data.workflowId,prodDiscountId:data.prodDiscountId,pageModel:PAGE_MODEL_REFERENCE},function(){table.reload();});
         },
         /**
          * 定义表头
@@ -96,7 +96,7 @@
         //Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/check', data, function(editResult){
             Joyin.dialog(JoyinUtil.getLabel("产品费率优惠编辑"),
                 basePath + "disclosure/information/config/prodfeediscount/ProdFeediscount002/init",
-                "60%", "90%",{workflowId:data.workflowId,prodDiscountId:data.prodDiscountId,pageModel:PAGE_MODEL_EDIT},function() {
+                "99%", "99%",{workflowId:data.workflowId,prodDiscountId:data.prodDiscountId,pageModel:PAGE_MODEL_EDIT},function() {
                     table.reload();
                 });
        // });
@@ -243,7 +243,7 @@
         $('#ProdFeediscount001_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("产品费率优惠新建"),
                 basePath + "disclosure/information/config/prodfeediscount/ProdFeediscount002/init",
-                "60%", "100%", {pageModel:PAGE_MODEL_NEW},
+                "99%", "99%", {pageModel:PAGE_MODEL_NEW},
                 function() {
                     table.reload();
                 });
