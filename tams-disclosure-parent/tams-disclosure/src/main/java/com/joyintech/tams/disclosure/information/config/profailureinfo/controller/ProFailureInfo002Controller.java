@@ -50,13 +50,14 @@ public class ProFailureInfo002Controller extends BaseController {
         String prodRegistNo = getParam("prodRegistNo");
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(prodRegistNo)) {
+            String dataStatus = getParam("dataStatus");
             String nocreateReason = getParam("nocreateReason");
             String reportIssueDate = getParam("reportIssueDate");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             long l = Long.parseLong(reportIssueDate);
             String date = sdf.format(l);
             // 根据主键获取业务实体
-            ProFailureInfo001Dto entity = proFailureInfo001Service.selectOne(prodRegistNo,nocreateReason,date);
+            ProFailureInfo001Dto entity = proFailureInfo001Service.selectOne(prodRegistNo,nocreateReason,date,dataStatus);
             model.addAttribute("entity", entity);
         }
         // 来自代办 现在是不走流程

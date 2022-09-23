@@ -69,7 +69,7 @@
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
           AND NOCREATE_REASON= #{nocreateReason,jdbcType=VARCHAR}
           AND TO_CHAR(REPORT_ISSUE_DATE,'yyyy-MM-dd')= #{date,jdbcType=VARCHAR}
-          AND DATA_STATUS='E'
+          AND DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}
     </select>
 
 
