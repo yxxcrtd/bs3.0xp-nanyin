@@ -11,6 +11,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.busicommon.report.dto.ReportGrahDto;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dao.RepProdIndexSMapper;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
@@ -27,8 +28,10 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class RepProdIndexService extends CommonExportService<RepProdIndexDto> implements BaseProcessService<RepProdIndexDto> {
@@ -547,6 +550,33 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             }
             if (map.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            }
+            boolean flag =true;
+            for (int j = 1; j < dataList.size(); j++ ) {
+                List<String> rowDataJ = dataList.get(j);
+                if (StringUtil.equals(rowData.get(1),rowDataJ.get(1)) && StringUtil.equals(rowData.get(2),rowDataJ.get(2))) {
+
+                    if (!StringUtil.equals(rowData.get(9), rowDataJ.get(9))) {
+                        flag=false;
+                    }
+                    if (!StringUtil.equals(rowData.get(10), rowDataJ.get(10))) {
+                        flag=false;
+                    }
+                    if (!StringUtil.equals(rowData.get(11), rowDataJ.get(11))) {
+                        flag=false;
+                    }
+                    if (!StringUtil.equals(rowData.get(12), rowDataJ.get(12))) {
+                        flag=false;
+                    }
+                    if (!StringUtil.equals(rowData.get(13), rowDataJ.get(13))) {
+                        flag=false;
+                    }
+                }
+            }
+            if (!flag) {
+                checkResult.add(new ExcelValidDto(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(2),
+                        String.valueOf(i + 2), "文件中对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等。"));
             }
             map.put(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
             if (CollectionUtils.isNotEmpty(message)) {
