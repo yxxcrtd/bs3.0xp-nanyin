@@ -42,7 +42,7 @@ public class PoiUtils {
     private static Logger logger = LoggerFactory.getLogger(PoiUtils.class);
 
     public static void mergeDocx(String tempateFile,OutputStream os,Map<String,Object> params ) throws Exception {
-        PoiUtilsHelper2.mergeParasToDocx(tempateFile,os,params);
+        PoiUtilsHelper.mergeParasToDocx(tempateFile,os,params);
     }
 
     public static void docxToHtml(InputStream is, OutputStream os, String imagePath) throws IOException {
@@ -405,7 +405,8 @@ public class PoiUtils {
         			}
         		}
         		if ( startRow>0 && i>startRow )
-        			cols.get(colIdx).remove();   //删除后续的列
+        			if ( colIdx<cols.size())
+        				cols.get(colIdx).remove();   //删除后续的列
         	}
         }
         

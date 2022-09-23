@@ -74,7 +74,7 @@
                                 <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                                     <label class="layui-form-label form-label-wrap">优惠的费用</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" maxlength="50" id="feename" name="feename"
+                                        <input type="text" maxLength="500" id="feename" name="feename"
                                                class="layui-input form-input" placeholder="请输入内容"
                                                data-th-placeholder="#{SysCommon.placeholder}"
                                                data-th-value="${entity?.feename}"  required>
@@ -85,7 +85,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="preFeerate" name="preFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="7"
+                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="500"
                                                data-th-value="${entity?.preFeerate}">
                                     </div>
                                     <!--<div class="layui-input-inline input-inline">
@@ -107,7 +107,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="afterFeerate" name="afterFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="7"
+                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="500"
                                                data-th-value="${entity?.afterFeerate}">
                                     </div>
                                     <!--<div class="layui-input-inline input-inline">
@@ -130,9 +130,9 @@
                                     <label class="layui-form-label form-label-wrap" >优惠起始时间</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="startDate" name="startDate"
-                                               class="layui-input form-input input-dateSelect"
+                                               class="layui-input form-input"
                                                placeholder="请选择时间"
-                                               data-th-value="${#dates.format(entity?.startDate,'yyyy-MM-dd')}"
+                                               data-th-value="${entity?.startDate}" maxLength="500"
                                                data-th-placeholder="#{SysCommon.placeholder}"/>
                                     </div>
                                 </div>
@@ -140,9 +140,9 @@
                                     <label class="layui-form-label form-label-wrap" >优惠截止时间</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="endDate" name="endDate"
-                                               class="layui-input form-input input-dateSelect"
+                                               class="layui-input form-input"
                                                placeholder="请选择时间"
-                                               data-th-value="${#dates.format(entity?.endDate,'yyyy-MM-dd')}"
+                                               data-th-value="${entity?.endDate}" maxLength="500"
                                                data-th-placeholder="#{SysCommon.placeholder}"/>
                                     </div>
                                 </div>
@@ -151,14 +151,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input type="text"  id="thisPreFeerate" name="thisPreFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="7"
-                                               onkeyup="if(this.value < 0){
-                                                   this.value= 0;
-                                               }else if (value >= 100) {
-                                                this.value= '';
-                                              }else{
-                                                  this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/) // 只能输入小数点后4位
-                                               }"
+                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="500"
                                                data-th-value="${entity?.thisPreFeerate}">
                                     </div>
                                 </div>
@@ -170,14 +163,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input type="text"  id="thisAfterFeerate" name="thisAfterFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="7"
-                                               onkeyup="if(this.value < 0){
-                                                   this.value= 0;
-                                               }else if (value >= 100) {
-                                                this.value= '';
-                                              }else{
-                                                  this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/) // 只能输入小数点后4位
-                                               }"
+                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="500"
                                                data-th-value="${entity?.thisAfterFeerate}">
                                     </div>
                                 </div>
@@ -187,14 +173,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="thisEndFeerate" name="thisEndFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="7"
-                                               onkeyup="if(this.value < 0){
-                                                   this.value= 0;
-                                               }else if (value >= 100) {
-                                                this.value= '';
-                                              }else{
-                                                  this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/) // 只能输入小数点后4位
-                                               }"
+                                               data-th-placeholder="#{SysCommon.placeholder}" maxLength="500"
                                                data-th-value="${entity?.thisEndFeerate}">
                                     </div>
                                 </div>

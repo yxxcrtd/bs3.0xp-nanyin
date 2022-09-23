@@ -29,6 +29,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
@@ -159,6 +160,8 @@ public class PoiUtilsHelper2 {
             } else {  
                 // Cells which join (merge) the first one, are set with CONTINUE  
                 cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);  
+                if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
+                	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
             }  
         }  
     }  
@@ -177,6 +180,8 @@ public class PoiUtilsHelper2 {
                 cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
             } else {
                 cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+                if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
+                	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
             }
         }
     }
@@ -350,38 +355,30 @@ public class PoiUtilsHelper2 {
             if (CollectionUtils.isEmpty(sourceParagraphs)) {
                 continue;
             }
+            
             XWPFParagraph sourceParagraph = sourceParagraphs.get(0);
+            
+            String fontName = defaultFontFamily;
+    		int fontSize = defaultFontSize;
+            if ( sourceParagraph.getRuns()!=null && sourceParagraph.getRuns().size()>0 ) {
+            	if ( sourceParagraph.getRuns().get(0).getFontName()!=null && sourceParagraph.getRuns().get(0).getFontName().length()>0 )
+            		fontName = sourceParagraph.getRuns().get(0).getFontName();
+            	if ( sourceParagraph.getRuns().get(0).getFontSize()>0 ) {
+            		fontSize = sourceParagraph.getRuns().get(0).getFontSize();
+            	}
+            }
+            
             List<XWPFParagraph> targetParagraphs = newCell.getParagraphs();
             if (CollectionUtils.isEmpty(targetParagraphs)) {
                 XWPFParagraph p = newCell.addParagraph();
                 p.getCTP().setPPr(sourceParagraph.getCTP().getPPr());
                 XWPFRun run = p.getRuns().isEmpty() ? p.createRun() : p.getRuns().get(0);
-                if ( sourceParagraph.getRuns()!=null && sourceParagraph.getRuns().size()>0 ) {
-                	run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
-                	int fontSzie = sourceParagraph.getRuns().get(0).getFontSize();
-					if ( fontSzie!=-1 )
-						run.setFontSize(fontSzie);                	
-                }
-                else {
-                	run.setFontFamily(defaultFontFamily);
-                	if ( defaultFontSize!=-1 )
-                		run.setFontSize(defaultFontSize);
-                }
+                setFont(run,fontName,fontSize);
             } else {
                 XWPFParagraph p = targetParagraphs.get(0);
                 p.getCTP().setPPr(sourceParagraph.getCTP().getPPr());
                 XWPFRun run = p.getRuns().isEmpty() ? p.createRun() : p.getRuns().get(0);
-                if ( sourceParagraph.getRuns()!=null && sourceParagraph.getRuns().size()>0 ) {
-                	run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
-                	int fontSzie = sourceParagraph.getRuns().get(0).getFontSize();
-					if ( fontSzie!=-1 )
-						run.setFontSize(fontSzie);                	
-                }
-                else {
-                	run.setFontFamily(defaultFontFamily);
-                	if ( defaultFontSize!=-1 )
-                		run.setFontSize(defaultFontSize);
-                }
+                setFont(run,fontName,fontSize);
             }
         }
     }
@@ -590,4 +587,23 @@ public class PoiUtilsHelper2 {
 		return count;
 	}
 	
+	private static void setFont(XWPFRun run,String fontName,int fontSize ) {
+    	CTFonts fonts = run.getCTR().getRPr()==null?run.getCTR().addNewRPr().addNewRFonts():run.getCTR().getRPr().getRFonts();
+    	fonts.setAscii(fontName);
+    	fonts.setEastAsia(fontName);
+    	//fonts.setHAnsi(defaultFontFamily);   
+    	//fonts.setCs(defaultFontFamily);
+    	//fonts.setHint(STHint.EAST_ASIA);
+    	//run.setFontFamily(defaultFontFamily);
+    	if ( fontSize!=-1 )
+    		run.setFontSize(fontSize);
+    	
+    	
+    	/*
+		run.setFontFamily(sourceParagraph.getRuns().get(0).getFontFamily());
+        int fontSzie = sourceParagraph.getRuns().get(0).getFontSize();
+		if ( fontSzie!=-1 )
+			run.setFontSize(fontSzie);                
+    	 */
+	}
 }
