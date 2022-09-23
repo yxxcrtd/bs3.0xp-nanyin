@@ -420,24 +420,25 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             List<ProdInfoDto> entities = this.convertToBean(dataList);
             List<ProdInfoDto> data = this.selectProdInfoByKey(entities);
             if (data != null && data.size() > 0) {
-                Map<String, List<ProdInfoDto>> prodInfoMap = entities.stream().collect(
-                        JoyinCollectors.groupingBy(ProdInfoDto::getProdId));
-                // 将序号放入list中
-                List<String> excelNumList = new ArrayList<>();
-                List<Integer> excelNumIntList = new ArrayList<>();
-                for (ProdInfoDto prodInfoDto : data) {
-                    List<ProdInfoDto> listTemp = prodInfoMap.get(prodInfoDto.getProdId());
-                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
-                }
-                // 将list进行排序，并转化为string
-                Collections.sort(excelNumIntList);
-                for (Integer rowNo : excelNumIntList) {
-                    excelNumList.add(String.valueOf(rowNo));
-                }
-                webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_0001",
-                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                        MessageType.确认消息);
+//                Map<String, List<ProdInfoDto>> prodInfoMap = entities.stream().collect(
+//                        JoyinCollectors.groupingBy(ProdInfoDto::getProdId));
+//                // 将序号放入list中
+//                List<String> excelNumList = new ArrayList<>();
+//                List<Integer> excelNumIntList = new ArrayList<>();
+//                for (ProdInfoDto prodInfoDto : data) {
+//                    List<ProdInfoDto> listTemp = prodInfoMap.get(prodInfoDto.getProdId());
+//                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+//                }
+//                // 将list进行排序，并转化为string
+//                Collections.sort(excelNumIntList);
+//                for (Integer rowNo : excelNumIntList) {
+//                    excelNumList.add(String.valueOf(rowNo));
+//                }
+//                webResult.setMessage(
+//                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+//                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+//                        MessageType.确认消息);
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             } else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
