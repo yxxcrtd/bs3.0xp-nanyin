@@ -36,6 +36,7 @@ var RepRelDeal002 = function() {
 
         },
         saveOrSubmit : function(operateType){
+            debugger;
             var param = {};
             param.operateType = operateType;
             param.pageModel = pageModel;
