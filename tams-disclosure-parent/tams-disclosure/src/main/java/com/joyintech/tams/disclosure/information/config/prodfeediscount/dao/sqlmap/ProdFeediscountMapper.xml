@@ -517,4 +517,87 @@
     <select id="getProdId" resultType="java.lang.String">
         SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId} AND REP_PROD_TYPE != '01'
     </select>
+
+    <select id="getProdFeeDiscount" resultMap="BaseResultMap">
+        SELECT
+        <include refid="com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.ProdFeediscountMapper.Base_Column_List" />
+        FROM DIS_PROD_FEEDISCOUNT WHERE
+        PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        and to_char(RPT_ISSUE_DATE,'yyyy-MM-dd') = #{rptIssueDateStr,jdbcType=VARCHAR}
+        and FEENAME = #{feename,jdbcType=VARCHAR}
+        and DATA_STATUS = 'E'
+        <choose>
+            <when test="startDate !=null and startDate != ''">
+                AND START_DATE =  #{startDate,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND START_DATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="endDate !=null and endDate != ''">
+                AND END_DATE =  #{endDate,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND END_DATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="prodDisRemark !=null and prodDisRemark != ''">
+                AND PROD_DIS_REMARK =  #{prodDisRemark,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND PROD_DIS_REMARK is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="preFeerate !=null and preFeerate != ''">
+                AND PRE_FEERATE =  #{preFeerate,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND PRE_FEERATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="afterFeerate !=null and afterFeerate != ''">
+                AND AFTER_FEERATE =  #{afterFeerate,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND AFTER_FEERATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="thisPreFeerate !=null and thisPreFeerate != ''">
+                AND THIS_PRE_FEERATE =  #{thisPreFeerate,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND THIS_PRE_FEERATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="thisAfterFeerate !=null and thisAfterFeerate != ''">
+                AND THIS_AFTER_FEERATE =  #{thisAfterFeerate,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND THIS_AFTER_FEERATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="thisEndFeerate !=null and thisEndFeerate != ''">
+                AND THIS_END_FEERATE =  #{thisEndFeerate,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND THIS_END_FEERATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="feeDisRemark !=null and feeDisRemark != ''">
+                AND FEE_DIS_REMARK =  #{feeDisRemark,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND FEE_DIS_REMARK is null
+            </otherwise>
+        </choose>
+    </select>
 </mapper>
