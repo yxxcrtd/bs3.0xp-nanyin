@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.repreportcheck.service;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.tams.common.oss.service.impl.MinioFileRemoteService;
+import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import com.joyintech.tams.utils.poi.PoiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,16 @@ public class ReportCheck003Service {
             byte[] bytes = minioFileRemoteService.getFile2ByteArray(targetFile.getPath());
             if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);
-                PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
+                
+//                if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+//        				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) 
+//        				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
+                if ( targetFile.getName().contains("年度报告")) { // 定期公告-季度/半年度/年度报告指数型和非指数型
+                	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath,"4.其它费用");
+                } else {
+                	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
+                }
+                
             }
         } catch (Exception e ) {
             logger.error("查询数据错误。",e);
