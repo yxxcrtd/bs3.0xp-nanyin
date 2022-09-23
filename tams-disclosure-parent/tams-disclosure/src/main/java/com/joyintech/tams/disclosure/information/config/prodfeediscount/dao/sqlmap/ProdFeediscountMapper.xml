@@ -8,8 +8,8 @@
         <result column="IS_SALES_AGENCY" property="isSalesAgency" jdbcType="VARCHAR" />
         <result column="PROD_DIS_REMARK" property="prodDisRemark" jdbcType="VARCHAR" />
         <result column="FEENAME" property="feename" jdbcType="VARCHAR" />
-        <result column="PRE_FEERATE" property="preFeerate" jdbcType="DECIMAL" />
-        <result column="AFTER_FEERATE" property="afterFeerate" jdbcType="DECIMAL" />
+        <result column="PRE_FEERATE" property="preFeerate" jdbcType="VARCHAR" />
+        <result column="AFTER_FEERATE" property="afterFeerate" jdbcType="VARCHAR" />
         <result column="START_DATE" property="startDate" jdbcType="VARCHAR" />
         <result column="END_DATE" property="endDate" jdbcType="VARCHAR" />
         <result column="THIS_PRE_FEERATE" property="thisPreFeerate" jdbcType="VARCHAR" />
