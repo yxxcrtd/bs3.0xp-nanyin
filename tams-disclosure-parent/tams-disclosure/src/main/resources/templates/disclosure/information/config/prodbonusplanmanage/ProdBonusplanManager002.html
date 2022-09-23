@@ -105,10 +105,10 @@
 					超额业绩报酬收取比例（%）<i class="iconfont must" style="display: inline;">*</i></label>
 				<div class="layui-input-inline input-inline">
 					<input type="text" id="excessAchievementProp" name="excessAchievementProp" placeholder=""
-						   class="layui-input form-input " maxLength="5"
+						   class="layui-input form-input " maxLength="7"
 						   onkeyup="if(this.value < 0){
 							   this.value= 0;
-						   }else if (value >= 100) {
+						   }else if (value >= 10000) {
 							this.value= '';
 						  }else{
 							  this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后两位
@@ -138,10 +138,10 @@
 				<div class="layui-input-inline input-inline">
 					<input type="text" id="achievementBasisProp" name="achievementBasisProp" placeholder=""
 						   class="layui-input form-input "
-						   maxLength="5"
+						   maxLength="7"
 						   onkeyup="if(this.value < 0){
 							   this.value= 0;
-						   }else if (value >= 100) {
+						   }else if (value >= 10000) {
 							this.value= '';
 						  }else{
 							  this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后两位
