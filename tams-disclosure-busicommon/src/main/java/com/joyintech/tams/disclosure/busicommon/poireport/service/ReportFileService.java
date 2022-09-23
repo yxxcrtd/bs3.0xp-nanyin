@@ -158,6 +158,9 @@ public class ReportFileService {
 		//周期开放公告特殊处理
 		if(StringUtil.equals(reportInfo.getUri(),"ZQXCPKFGG_GMCP")||
 				StringUtil.equals(reportInfo.getUri(),"ZQXCPKFGG_GMCPDSH")){
+			if(StringUtil.isNotEmpty(params.get("innerProdId"))){
+				params.put("prodId",params.get("innerProdId"));
+			}
 			ReportZqxkfgg001Dto reportZqxkfgg001Dto = reprortZqxkfgg001Mapper.getProdInfo(params);
 			String  endDatef = DateUtil.format(DateUtil.parse((String)params.get("enddate")), DateUtil.DEFAULT_DATE_FORMAT_CN);
 			filename=reportZqxkfgg001Dto.getTitleName()+endDatef+"开放公告";

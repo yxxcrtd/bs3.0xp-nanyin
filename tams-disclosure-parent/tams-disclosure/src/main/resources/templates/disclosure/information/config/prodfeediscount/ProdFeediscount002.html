@@ -24,8 +24,8 @@
                         <div class="pro-module-item" >
                             <input type="hidden" id="prodDiscountId" name="prodDiscountId" class="layui-input form-input" placeholder="主键id"  data-th-value="${entity?.prodDiscountId}">
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-lable" >产品登记编码</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable">产品登记编码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="prodRegistNo" name="prodRegistNo" class="input-select"
                                                 data-th-initValue="${entity?.prodRegistNo}" formatoption="false"
@@ -39,8 +39,8 @@
 
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-lable" >子产品代码</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >子产品代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="prodId" name="prodId" class="input-select"
                                                 data-th-initValue="${entity?.prodId}"
@@ -52,8 +52,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap">此产品优惠调整描述文字</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable">此产品优惠调整描述文字</label>
                                     <div class="layui-input-inline input-inline">
                                         <textarea  maxlength="500" id="prodDisRemark" name="prodDisRemark"
                                                class="layui-textarea" placeholder="一产多费时,此字段未非空必填字段,一费多产时,此字段为空,不必填字段"
@@ -63,8 +63,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap">优惠的费用</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable">优惠的费用</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxLength="500" id="feename" name="feename"
                                                class="layui-input form-input" placeholder="请输入内容"
@@ -74,8 +74,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap" >优惠前费率</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >优惠前费率</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="preFeerate" name="preFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
@@ -85,8 +85,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap" >优惠后费率</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >优惠后费率</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="afterFeerate" name="afterFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
@@ -96,8 +96,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item" >
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap" >优惠起始时间</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >优惠起始时间</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="startDate" name="startDate"
                                                class="layui-input form-input"
@@ -108,8 +108,8 @@
                                 </div>
 
                                 <div class="layui-form-item" >
-                                    <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10" >
-                                        <label class="layui-form-label form-label-wrap" >优惠截止时间</label>
+                                    <div  >
+                                        <label class="layui-form-label form-lable mst-lable" >优惠截止时间</label>
                                         <div class="layui-input-inline input-inline">
                                             <input id="endDate" name="endDate"
                                                    class="layui-input form-input"
@@ -121,8 +121,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap" >本次优惠前费率</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >本次优惠前费率</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text"  id="thisPreFeerate" name="thisPreFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
@@ -133,8 +133,8 @@
                             </div>
                             <div class="layui-form-item">
 
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap" >本次优惠后费率</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >本次优惠后费率</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text"  id="thisAfterFeerate" name="thisAfterFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
@@ -145,8 +145,8 @@
 
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap" >本次优惠结束后费率</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >本次优惠结束后费率</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="thisEndFeerate" name="thisEndFeerate"
                                                class="layui-input form-input" placeholder="请输入内容"
@@ -156,8 +156,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap" >对此费率优惠调整描述文字</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >对此费率优惠调整描述文字</label>
                                     <div class="layui-input-inline input-inline">
                                         <textarea  maxlength="500" id="feeDisRemark" name="feeDisRemark"
                                                class="layui-textarea" placeholder="一费多产时,此字段未非空必填字段,一产多费时,此字段为空,不必填字段"
@@ -167,8 +167,8 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md9 layui-col-sm4 layui-col-lg10">
-                                    <label class="layui-form-label form-label-wrap" >报告发布日期</label>
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >报告发布日期</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="rptIssueDate" name="rptIssueDate"
                                                class="layui-input form-input input-dateSelect"

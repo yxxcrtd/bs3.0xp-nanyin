@@ -370,6 +370,8 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
 
                 if (StringUtil.isNotEmpty(rowData.get(6)) && !StringUtils.isNumeric(rowData.get(6))) {
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "客户实际持有天数"));
+                }else if (rowData.get(6).length() > 5) {
+                    message.add("客户实际持有天数超过最大长度！");
                 }
                 if (StringUtil.isNotEmpty(rowData.get(6)) && StringUtils.isNumeric(rowData.get(6))) {
                     Integer days=new Integer(rowData.get(6));
