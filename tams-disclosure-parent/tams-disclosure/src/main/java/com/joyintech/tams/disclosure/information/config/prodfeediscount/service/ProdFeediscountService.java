@@ -44,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -289,7 +290,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             List<ProdFeediscountDto> entities = this.convertToBean(dataList);
             List<String> excelNumList = new ArrayList<>();
             entities.forEach(x -> {
-                if (this.selectData(x) != null) {
+                if ( CollectionUtils.isNotEmpty(this.getProdFeeDiscount(x))) {
                     excelNumList.add(x.getExcelNum());
                 }
             });
@@ -397,11 +398,16 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
-                    if (this.selectData(item) == null) {
-                        item.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
-                        item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-                        this.insert(item);
+                    List<ProdFeediscountDto> prodFeeDiscount = getProdFeeDiscount(item);
+                    if (CollectionUtils.isNotEmpty(prodFeeDiscount)) {
+                        List<String> prodDiscountIds = prodFeeDiscount.stream().map(ProdFeediscountDto::getProdDiscountId).collect(Collectors.toList());
+                        prodDiscountIds.forEach(id->{
+                            prodFeediscountMapper.deleteByPrimaryKey(id);
+                        });
                     }
+                    item.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
+                    item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                    this.insert(item);
                 });
             }
             return checkResult;
@@ -455,7 +461,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                     + GlobalConstant.UNDER_LINE + rowData.get(11)
                     + GlobalConstant.UNDER_LINE + rowData.get(12);
             if (map.contains(key)) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+                message.add("不可创建重复数据");
             } else {
                 map.add(key);
             }
