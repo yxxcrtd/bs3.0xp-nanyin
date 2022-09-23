@@ -1,7 +1,9 @@
 package com.joyintech.tams.utils.poi;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -35,7 +37,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.springframework.util.CollectionUtils;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.layout.font.FontProvider;
 import com.joyintech.framework.util.JsonUtils;
+import com.lowagie.text.Paragraph;
 
 /**
  * 主要功能：实现将docx文档中的参数，用指定的参数集合替换功能
@@ -606,4 +613,33 @@ public class PoiUtilsHelper2 {
 			run.setFontSize(fontSzie);                
     	 */
 	}
+	
+	    public static void htmlToPdf(InputStream bis,FileOutputStream fos) throws IOException {
+	    	final String resourcesDir = System.getProperty("user.dir") + "/src/main/resources";
+	        String path = resourcesDir + "/template/template.html";
+	        String destPath = resourcesDir + "/template/template.pdf";
+	        ConverterProperties converterProperties = new ConverterProperties();
+	        FontProvider dfp = new DefaultFontProvider();
+	        //添加字体库
+	        dfp.addDirectory("C:/Windows/Fonts");
+	        converterProperties.setFontProvider(dfp);
+            HtmlConverter.convertToPdf(bis, fos, converterProperties);
+
+	    }
+	    
+//	    public void htmlToPdf3(InputStream bis,FileOutputStream fos) throws Exception {
+//	        ITextRenderer renderer = new ITextRenderer();
+//	        renderer.setDocument(new File(path));
+//	        ITextFontResolver resolver = renderer.getFontResolver();
+//	        //添加字体，解决中文不显示的问题
+//	        resolver.addFont(resourcesDir + "/font/simsun.ttc", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+//	        renderer.layout();
+//	        renderer.createPDF(fos);
+//	        fos.close();
+//	    }
+	    
+//	    public static void main(String[] args) throws Exception {
+//	        htmlToPdf();
+//	    }
+
 }
