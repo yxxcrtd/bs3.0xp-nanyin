@@ -48,6 +48,7 @@
         }
 
         showHidePerformDiv(isIndexUpdate);
+        changePerformCompare(isIndexUpdate)
     }
     var init = 0;
     var initProdInsId = '';
@@ -544,10 +545,13 @@
     //当“是否是指数型产品”为“否”时可填，否则不可填
     function changePerformCompare(isIndex) {
         if (isIndex == '02') {
+            $("#pershCompare").show();
             $("#performCompare").attr("disabled", false);
         } else {
+            $("#pershCompare").hide();
             $("#performCompare").val("");
             $("#performCompare").attr("disabled", true);
+
         }
     }
 
