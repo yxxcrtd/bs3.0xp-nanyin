@@ -35,6 +35,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,6 +156,14 @@ public class ProdFeediscount002Controller extends BaseController {
 	  @RequestMapping("/checkSave")
 	  public AjaxResult checkSave(@RequestBody ProdFeediscountDto dto){
 	      AjaxResult result = prodFeediscountService.check(dto);
+		  String operateType = dto.getOperateType();
+		  if (StringUtil.equals(operateType,"new")) {
+			  if(CollectionUtils.isNotEmpty(prodFeediscountService.getProdFeeDiscount(dto))) {
+				  result.setStatuCode(500);
+				  result.setMessage("不可创建重复数据！",MessageType.警告消息);
+				  return result;
+			  }
+		  }
 	      if(result.getErrorList().isEmpty()){
 	          result.setData(this.getMessage("DIS_COMMON_C_0001", this.getMessage("SysCommon.save")));
 	      }
@@ -164,7 +173,17 @@ public class ProdFeediscount002Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody @Valid ProdFeediscountDto dto, BindingResult bindingResult) {
-		String operateType = dto.getOperateType();
+
+		  String operateType = dto.getOperateType();
+		if (StringUtil.equals(operateType,"new")) {
+			AjaxResult result = new AjaxResult();
+			if(CollectionUtils.isNotEmpty(prodFeediscountService.getProdFeeDiscount(dto))) {
+				result.setStatuCode(500);
+				result.setMessage("不可创建重复数据！",MessageType.警告消息);
+				return result;
+			}
+		}
+		AjaxResult result = prodFeediscountService.check(dto);
 		return commonCheck(bindingResult, operateType);
 	}
 

@@ -200,9 +200,8 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
      * @return
      */
     public AjaxResult check(ProdFeediscountDto dto) {
-        Set<String> message = new HashSet<String>();
-
         AjaxResult result = new AjaxResult();
+        Set<String> message = new HashSet<String>();
         if (CollectionUtils.isNotEmpty(message)) {
             List<ValidMessage> errorList = new ArrayList<>();
             message.forEach(action -> {
@@ -547,5 +546,9 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         }else{
             return false;
         }
+    }
+
+    public List<ProdFeediscountDto> getProdFeeDiscount(ProdFeediscountDto record){
+        return prodFeediscountMapper.getProdFeeDiscount(record);
     }
 }
