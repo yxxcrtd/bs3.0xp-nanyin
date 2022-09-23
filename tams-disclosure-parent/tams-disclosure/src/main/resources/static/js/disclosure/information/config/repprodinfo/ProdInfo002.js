@@ -515,10 +515,10 @@
             {field:'personalField',width:'5%', title: '序号',sortField:"number"}
             ,{field:'effDateStr',width:'10%',  title: '业绩比较基准生效日'}
             ,{field:'expDate',width:'10%',title: '业绩比较基准生效截止日',type:'date'}
-            ,{field:'zzqj',width: '10%', title : 'Performance001.zzxz'}
-            ,{field:'zzcf',width:'10%', title : 'Performance001.zzxzh'}
-            ,{field:'zz500',width:'10%', title : 'Performance001.zzzs'}
-            ,{field:'hs300',width:'10%', title : 'Performance001.hszs'}
+            ,{field:'zzqj',width: '10%', title : 'Performance001.zzxz',type : 'number'}
+            ,{field:'zzcf',width:'10%', title : 'Performance001.zzxzh',type : 'number'}
+            ,{field:'zz500',width:'10%', title : 'Performance001.zzzs',type : 'number'}
+            ,{field:'hs300',width:'10%', title : 'Performance001.hszs',type : 'number'}
         ],
         addbtn: true,
         done: function () {
