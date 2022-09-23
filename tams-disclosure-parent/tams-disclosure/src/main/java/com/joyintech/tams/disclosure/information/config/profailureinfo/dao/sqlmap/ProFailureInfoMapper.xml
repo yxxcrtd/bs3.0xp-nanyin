@@ -57,12 +57,12 @@
     <select id="selectOne"
             resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
         select
+        distinct
             PROD_REGIST_NO prodRegistNo,
             DATA_STATUS dataStatus,
             NOCREATE_REASON nocreateReason,
             REPORT_ISSUE_DATE reportIssueDate,
             IS_SALES_AGENCY isSalesAgency,
-            DATA_SOURCE,
             UPDATE_TIME,
             UPDATE_USER
         from DIS_PROD_NOCREATE

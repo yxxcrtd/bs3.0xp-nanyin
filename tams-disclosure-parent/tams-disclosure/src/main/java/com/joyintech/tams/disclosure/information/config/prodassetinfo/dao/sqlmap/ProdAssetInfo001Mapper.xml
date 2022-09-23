@@ -126,6 +126,7 @@
 				'yyyy-MM-dd')
 			</if>
 		</where>
+		order by dpa.UPDATE_TIME desc
 	</select>
 	<select id="selectForExport"
 			resultType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">

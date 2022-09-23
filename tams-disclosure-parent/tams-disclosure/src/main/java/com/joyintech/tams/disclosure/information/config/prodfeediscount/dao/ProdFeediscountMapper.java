@@ -54,4 +54,6 @@ public interface ProdFeediscountMapper {
     List<ProdFeediscountDto> selectData(ProdFeediscountDto record);
 
     String getProdId(@Param("prodId") String prodId);
+
+    List<ProdFeediscountDto> getProdFeeDiscount(ProdFeediscountDto record);
 }

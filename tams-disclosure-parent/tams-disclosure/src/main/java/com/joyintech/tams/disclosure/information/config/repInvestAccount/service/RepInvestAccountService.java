@@ -140,16 +140,16 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
         suf.setPath(fileName);
         joyinDFSTemplate.fetch(suf);
         List<List<String>> tempList = ExcelUtil.getTempList(fileName);
-        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {
+        if (StringUtil.isEmptyList(tempList) || CollectionUtils.isEmpty(tempList)) {  //空文件
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
-        if (null == tempList.get(0) || tempList.get(0).size() != 4) {
+        if (null == tempList.get(0) || tempList.get(0).size() != 4) {  //格式不正确
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 4), MessageType.错误消息);
             return webResult;
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
-        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {  //导入的最大数不能超过5000
             int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
                     ? 50000 : Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
             if (dataList.size() > maxCount) {
@@ -158,7 +158,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
             }
             List<RepInvestAccountDto> entities = this.convertToBean(dataList);
             List<RepInvestAccountDto> data = this.selectInvestAccountByKey(entities);
-            if (data != null && data.size() > 0) {
+            if (data != null && data.size() > 0) {  
+            	//对导入的数据与数据库已有的数据进行重复校验，校验规则：有相同产品id的数据判断为重复
                 Map<String, List<RepInvestAccountDto>> map = entities.stream().collect(
                         JoyinCollectors.groupingBy(RepInvestAccountDto::getProdId));
                 // 将序号放入list中
@@ -173,6 +174,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
                 for (Integer rowNo : excelNumIntList) {
                     excelNumList.add(String.valueOf(rowNo));
                 }
+                //数据重复，覆盖确认？
                 webResult.setMessage(
                         this.getMessage("REPORT_COMMON_FILE_C_0001",
                                 StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
@@ -181,7 +183,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             }
-        } else {
+        } else {  //文件中没有需要导入的数据
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
@@ -275,7 +277,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
                 });
             }
             return checkResult;
-        } else {
+        } else {  //文件中无数据
             List<ExcelValidDto> checkResult = new ArrayList<>();
             checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                     this.getMessage("REPORT_COMMON_FILE_E_0016")));
@@ -312,7 +314,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
             if (!StringUtil.isNotEmpty(rowData.get(3))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "开户单位"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(0)) && map.containsKey(rowData.get(0))) {
+            if (StringUtil.isNotEmpty(rowData.get(0)) && map.containsKey(rowData.get(0))) {  //导入的文件中存在重复数据
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
             if (StringUtil.isNotEmpty(rowData.get(0))) {
