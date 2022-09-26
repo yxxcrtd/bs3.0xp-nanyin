@@ -332,6 +332,7 @@
         from REP_PROD_INDEX T
         left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
         where rpi.P_PROD_ID = #{pProdId,jdbcType=VARCHAR}
+          and to_char(T.VALUE_DATE,'yyyy-MM-dd') = #{valueDateStr,jdbcType=VARCHAR}
         and T.STATUS != 'D'
     </select>
     <select id="selectProdId" resultType="java.lang.String">
