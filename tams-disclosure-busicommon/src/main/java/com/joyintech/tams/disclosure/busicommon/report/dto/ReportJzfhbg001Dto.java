@@ -46,6 +46,7 @@ public class ReportJzfhbg001Dto {
    private String subValue;
    private String enddate;
 
+   private String pprodId;
 
    public String getEnddate() {
       return enddate;
@@ -214,5 +215,13 @@ public class ReportJzfhbg001Dto {
 
    public void setSetDate(Date setDate) {
       this.setDate = setDate;
+   }
+
+   public String getPprodId() {
+      return pprodId;
+   }
+
+   public void setPprodId(String pprodId) {
+      this.pprodId = pprodId;
    }
 }

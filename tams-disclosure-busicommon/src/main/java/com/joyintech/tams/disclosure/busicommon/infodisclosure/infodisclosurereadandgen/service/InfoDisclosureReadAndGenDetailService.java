@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
 
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -887,7 +888,8 @@ public class InfoDisclosureReadAndGenDetailService{
 					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
 					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
 					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
-					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_信批产品类别.getValue())){
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_信批产品类别.getValue())
+					||StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())){
 				sqlVal.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
 						.append(dto.getRuleType4()).append("'");
 			}else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
