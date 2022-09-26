@@ -450,6 +450,30 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             if (StringUtil.isNotBlank(rowData.get(2)) && rowData.get(2).length()>500){
                 message.add("此产品优惠调整（补充性）描述文字字符不能超过500");
             }
+            if (StringUtil.isNotBlank(rowData.get(3)) && rowData.get(3).length()>500){
+                message.add("优惠的费用字符不能超过500");
+            }
+            if (StringUtil.isNotBlank(rowData.get(4)) && rowData.get(4).length()>500){
+                message.add("优惠前费率字符不能超过500");
+            }
+            if (StringUtil.isNotBlank(rowData.get(5)) && rowData.get(5).length()>500){
+                message.add("优惠后费率字符不能超过500");
+            }
+            if (StringUtil.isNotBlank(rowData.get(6)) && rowData.get(6).length()>500){
+                message.add("优惠起始时间字符不能超过500");
+            }
+            if (StringUtil.isNotBlank(rowData.get(7)) && rowData.get(7).length()>500){
+                message.add("优惠截止时间字符不能超过500");
+            }
+            if (StringUtil.isNotBlank(rowData.get(8)) && rowData.get(8).length()>500){
+                message.add("本次优惠前费率字符不能超过500");
+            }
+            if (StringUtil.isNotBlank(rowData.get(9)) && rowData.get(9).length()>500){
+                message.add("本次优惠后费率字符不能超过500");
+            }
+            if (StringUtil.isNotBlank(rowData.get(10)) && rowData.get(10).length()>500){
+                message.add("本次优惠结束后费率字符不能超过500");
+            }
             if (StringUtil.isNotBlank(rowData.get(11)) && rowData.get(11).length()>500){
                 message.add("对此费率优惠调整（补充性）描述文字字符不能超过500");
             }
