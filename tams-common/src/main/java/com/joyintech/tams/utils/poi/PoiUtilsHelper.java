@@ -247,10 +247,16 @@ public class PoiUtilsHelper {
             XWPFTableCell cell = table.getRow(row).getCell(cellIndex);  
             if ( cellIndex == fromCell ) {  
                 // The first merged cell is set with RESTART merge value  
-                cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);  
+            	if ( cell.getCTTc().getTcPr()!=null )
+            		cell.getCTTc().getTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            	else
+            		cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
             } else {  
                 // Cells which join (merge) the first one, are set with CONTINUE  
-                cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);  
+            	if ( cell.getCTTc().getTcPr()!=null )
+            		cell.getCTTc().getTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            	else
+            		cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
                 if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
                 	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
             }  
@@ -268,9 +274,15 @@ public class PoiUtilsHelper {
         for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
             XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
             if (rowIndex == fromRow) {
-                cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
+            	if ( cell.getCTTc().getTcPr()!=null )
+            		cell.getCTTc().getTcPr().addNewVMerge().setVal(STMerge.RESTART);
+            	else
+            		cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
             } else {
-                cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            	if ( cell.getCTTc().getTcPr()!=null )
+            		cell.getCTTc().getTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            	else
+            		cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
                 if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
                 	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
             }
