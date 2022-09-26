@@ -107,6 +107,8 @@
 		from dis_prod_feediscount t
 		where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
 		and dpf.data_status = 'E'
+		and dpf.PRE_FEERATE   IS NOT NULL
+		and dpf.AFTER_FEERATE IS NOT NULL
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in
 			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">

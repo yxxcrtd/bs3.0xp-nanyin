@@ -196,11 +196,13 @@ public class ProdBonusplanManager002Controller extends BaseController {
         String operateType = dto.getOperateType();
         String pageModel = dto.getPageModel();
         if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {//新增
-            ProdBonusplanDto existDto = prodBonusplanManager001Service.selectByProdId(dto.getProdId());
+            ProdBonusplanDto existDto = prodBonusplanManager001Service.selectByProdId(dto.getProdName());
             if(StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(),dto.getBonusMode())
                 && existDto !=null ){
                 return new AjaxResult("当分红方式选择到期兑付时，一个子产品代码只能有一条数据", MessageType.错误消息);
             }
+            dto.setProdId(dto.getProdName());
+            dto.setBonusPlanId(dto.getBonusMode());
             ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto);
             if(existDto2 != null){
                 return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);

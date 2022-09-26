@@ -320,6 +320,8 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             }
             if (!StringUtil.isNotEmpty(rowData.get(1))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "不成立原因"));
+            }else if (rowData.get(1).length()>1000){
+                message.add("不成立原因超过限制字数");
             }
             if (!StringUtil.isNotEmpty(rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
