@@ -483,8 +483,8 @@
         to_char(plan.SETT_DATE,'yyyy-mm-dd') settDateStr
         from DIS_PROD_BONUSPLAN plan
         <where>
-            <foreach collection="list" item="item" open="(plan.PROD_ID,plan.BONUS_MODE,to_char(plan.SETT_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
-                (#{item.prodId},#{item.bonusMode},#{item.settDateStr})
+            <foreach collection="list" item="item" open="(plan.PROD_ID,plan.BONUS_MODE,to_char(plan.SETT_DATE,'yyyy-mm-dd'),plan.DATA_STATUS) IN (" separator="," close=")">
+                (#{item.prodId},#{item.bonusMode},#{item.settDateStr},'E')
             </foreach>
         </where>
     </select>
