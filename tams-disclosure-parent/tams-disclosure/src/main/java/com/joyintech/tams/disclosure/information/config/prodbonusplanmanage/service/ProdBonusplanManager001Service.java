@@ -343,6 +343,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                     }else {
                         item.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
                         item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                        prodBonusplanMapper.deleteDisProdBonusPlan(serchdto);
                         prodBonusplanManager002Service.insert(item);
                     }
                 });

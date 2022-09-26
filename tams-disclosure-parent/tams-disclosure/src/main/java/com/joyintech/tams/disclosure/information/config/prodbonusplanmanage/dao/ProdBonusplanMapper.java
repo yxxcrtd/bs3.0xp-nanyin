@@ -32,6 +32,8 @@ public interface ProdBonusplanMapper {
 
 	int deleteByPrimaryKey(String bonusPlanId);
 
+	int deleteDisProdBonusPlan(ProdBonusplanDto record);
+
 	int insert(ProdBonusplanDto record);
 
 	int insertSelective(ProdBonusplanDto record);
