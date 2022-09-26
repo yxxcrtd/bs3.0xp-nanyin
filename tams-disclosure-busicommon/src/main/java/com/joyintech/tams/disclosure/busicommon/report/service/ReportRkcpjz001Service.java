@@ -55,7 +55,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
         logger.info("日开产品净值公告（公募净值型产品）【{}】开始生成", JsonUtils.object2Json(paraMap));
         String echartsCmdPath = CacheUtil.getSysParam(ReportGlobalConstant.POI_ECHARTS_PIC_EXPORT_PATH);
         String tmpImagePath = CacheUtil.getSysParam(ReportGlobalConstant.POI_ECHARTS_TMPFILE_PATH);
-        //产品代码：子产品代码为空的话，取父产品代码
+                //产品代码：子产品代码为空的话，取父产品代码
         String prodId =  (paraMap.get("prodid") == null ? (String)paraMap.get("pprodid") : (String)paraMap.get("prodid"));
         //净值日
         String valueDate = (String)paraMap.get("enddate");
@@ -219,7 +219,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
         //近一个月（工作日）份额累计净值走势图或近一个月份(自然日)七日年化收益率走势图
         Map<String, Object> prodTotalValueChart = getImageMap(imagePath2);
         dataMap.put("${@image:image2}", prodTotalValueChart);
-
+        dataMap.put("cusFileName",dataMap.get("titleName"));
         resultMap.add(dataMap);
         return resultMap;
     }
