@@ -60,6 +60,13 @@
 		</foreach>
 	</delete>
 
+	<delete id="deleteDisProdAsset">
+		delete from DIS_PROD_ASSET
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		AND to_char(EFF_DATE,'yyyy-MM-dd')=#{effDate,jdbcType=VARCHAR}
+		AND to_char(EFF_END_DATE,'yyyy-MM-dd')=#{effEndDate,jdbcType=VARCHAR}
+	</delete>
+
 	<select id="queryProdIdInfo"
 			resultType="com.joyintech.framework.select.SelectOptionDto">
 		select PROD_ID id,

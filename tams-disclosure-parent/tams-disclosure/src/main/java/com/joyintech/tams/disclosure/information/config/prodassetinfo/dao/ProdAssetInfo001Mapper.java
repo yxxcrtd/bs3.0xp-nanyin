@@ -88,6 +88,8 @@ public interface ProdAssetInfo001Mapper extends DisProdAssetMapper {
      */
     int deleteBtachEquityInfo(@Param("listA") List<ProdPartnerDto> listA);
 
+    int deleteDisProdAsset(@Param("prodId") String prodId,@Param("effDate") String effDate,@Param("effEndDate") String effEndDate);
+
     List<ProdAssetInfoDto> selectAssetInfoByProdId(String prodId);
 
     List<ProdAssetInfoDto> selectAssetInfoByKey(@Param("list") List<ProdAssetInfoDto> list);

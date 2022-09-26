@@ -13,6 +13,7 @@
 		*/
 		SELECT
 			RPI.PROD_ID innerProdId,
+			RPI.p_Prod_Id pprodId,
 			CASE WHEN RPI.IS_GRADE = '01' THEN
 					 RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
 				 ELSE RPI.PROD_NAME END titleName,
