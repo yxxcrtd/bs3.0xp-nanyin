@@ -173,8 +173,21 @@ public class PoiUtilsHelper2 {
             		cell.getCTTc().getTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
             	else
             		cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
-                if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
-                	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
+            	
+            	//删除被合并单元格的内容
+            	if ( cell.getParagraphs()!=null ) {
+            		for ( XWPFParagraph p:cell.getParagraphs() ) {
+            			
+            			List<XWPFRun> listRuns = p.getRuns();
+            			if ( listRuns!=null ) {
+            				for ( int i=0;i<p.getRuns().size();i++) {
+            					p.removeRun(i);
+            				}
+            			}
+            		}
+            	}
+//                if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
+//                	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
             }  
         }  
     }  
@@ -199,8 +212,22 @@ public class PoiUtilsHelper2 {
             		cell.getCTTc().getTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
             	else
             		cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
-                if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
-                	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
+            	
+            	//删除被合并单元格的内容
+            	if ( cell.getParagraphs()!=null ) {
+            		for ( XWPFParagraph p:cell.getParagraphs() ) {
+            			
+            			List<XWPFRun> listRuns = p.getRuns();
+            			if ( listRuns!=null ) {
+            				for ( int i=0;i<p.getRuns().size();i++) {
+            					p.removeRun(i);
+            				}
+            			}
+            		}
+            	}
+            	
+//                if ( cell.getParagraphs().get(0).getRuns()!=null && cell.getParagraphs().get(0).getRuns().size()>0)
+//                	cell.getParagraphs().get(0).getRuns().get(0).setText("",0);
             }
         }
     }

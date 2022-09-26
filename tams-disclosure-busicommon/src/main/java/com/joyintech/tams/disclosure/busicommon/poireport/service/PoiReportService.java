@@ -995,6 +995,9 @@ public class PoiReportService {
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
 				String settDate=(String) dataMap.get("settDate");
 				String pprodId=StringUtil.isNotEmpty(params.get("pprodId"))?params.get("pprodId").toString():dataMap.get("pprodId").toString();
+				if(StringUtil.equals(params.get("opttype"),"batch")){
+					pprodId=dataMap.get("pprodId").toString();
+				}
 				if(poiReportMapper.checkBaseDate(pprodId,settDate)<1){
 					resultSb.append((index++)+"："+"分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
 				}

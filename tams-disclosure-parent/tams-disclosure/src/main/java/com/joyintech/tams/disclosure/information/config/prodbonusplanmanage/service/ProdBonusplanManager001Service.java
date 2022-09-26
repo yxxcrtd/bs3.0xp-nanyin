@@ -226,7 +226,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                     excelNumList.add(String.valueOf(rowNo));
                 }
                 webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                        this.getMessage("REPORT_COMMON_FILE_C_0001_001",
                                 StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
                         MessageType.确认消息);
             } else {
@@ -254,8 +254,11 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             } else {
                 entity.setProdId(" ");
             }
-            if (StringUtil.isNotEmpty(list.get(1))) {
-                entity.setBonusMode(list.get(1));
+            if (StringUtil.isNotEmpty(list.get(1)) && StringUtil.equals(list.get(1),"1-份额分红后净值为1")) {
+                entity.setBonusMode(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue());
+            } else if (StringUtil.isNotEmpty(list.get(1)) && StringUtil.equals(list.get(1),"2-到期兑付"))
+            {
+                entity.setBonusMode(DictCodeListExt3.信披_分红方式_到期兑付.getValue());
             } else {
                 entity.setBonusMode(" ");
             }
@@ -340,6 +343,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                     }else {
                         item.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
                         item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                        prodBonusplanMapper.deleteDisProdBonusPlan(serchdto);
                         prodBonusplanManager002Service.insert(item);
                     }
                 });

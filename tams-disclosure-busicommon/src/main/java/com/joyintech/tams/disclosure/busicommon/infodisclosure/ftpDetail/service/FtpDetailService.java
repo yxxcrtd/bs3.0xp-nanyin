@@ -187,19 +187,21 @@ public class FtpDetailService {
 			//发行公告,运行公告,到期公告,临时公告,销售公告
 			if("01".equals(reportCategory) || "02".equals(reportCategory) || "03".equals(reportCategory) || "04".equals(reportCategory) || "05".equals(reportCategory)){
 				//根据P_PROD_ID查询产品信息,部分普通产品也有P_PROD_ID
-				List<RepProdInfo> repInfoList = ftpDetailMapper.selectProdInfoByPProdId(reportinfo.getProdId());
-				if(repInfoList !=null && !repInfoList.isEmpty()){
-					prefix = repInfoList.stream().map(RepProdInfo::getProdId).distinct().collect(Collectors.joining(","));
-				} else {
-					if(StringUtil.equals(reportinfo.getRepProdType(), DictCodeListExt5.信批产品类别_普通产品.getValue())){
-						String prodId = ftpDetailMapper.selectProdIdByProdId(dto.getProdId());
-						reportinfo.setProdId(prodId);
+				if(reportinfo!=null) {
+					List<RepProdInfo> repInfoList = ftpDetailMapper.selectProdInfoByPProdId(reportinfo.getProdId());
+					if (repInfoList != null && !repInfoList.isEmpty()) {
+						prefix = repInfoList.stream().map(RepProdInfo::getProdId).distinct().collect(Collectors.joining(","));
+					} else {
+						if (StringUtil.equals(reportinfo.getRepProdType(), DictCodeListExt5.信批产品类别_普通产品.getValue())) {
+							String prodId = ftpDetailMapper.selectProdIdByProdId(dto.getProdId());
+							reportinfo.setProdId(prodId);
+						}
+						prefix = reportinfo.getProdId();
 					}
-					prefix = reportinfo.getProdId();
+					//募集方式:南银官网字典项
+					prefix = prefix + "_" + reportinfo.getRaiseType().replace("0", "");
+					instrprd = "_" + reportinfo.getRaiseType().replace("0", "");
 				}
-				//募集方式:南银官网字典项
-				prefix = prefix+"_"+reportinfo.getRaiseType().replace("0","");
-				instrprd="_"+reportinfo.getRaiseType().replace("0","");
 				//文件类型:转换成南银官网字典项
 				if("01".equals(reportCategory)){
 					reportCategory = "3";
@@ -213,7 +215,11 @@ public class FtpDetailService {
 					reportCategory = "1";
 				}
 				//文件类型
-				prefix = prefix + "_" + reportCategory;
+				if(StringUtil.isEmpty(prefix)){
+					prefix =  reportCategory;
+				}else{
+					prefix = prefix + "_" + reportCategory;
+				}
 				instrprd=instrprd + "_" + reportCategory;
 			}
 			String repId = repReveal.getRepId();
