@@ -200,7 +200,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
      * @param dataList
      * @return
      */
-    private List<HugeInfoPro001Dto> selectHugeInfoByKey(List<HugeInfoPro001Dto> dataList) {
+    public List<HugeInfoPro001Dto> selectHugeInfoByKey(List<HugeInfoPro001Dto> dataList) {
         int maxDataCountOneTime = 1000;
         int dataCount = dataList.size();
         if (dataCount <= maxDataCountOneTime) {

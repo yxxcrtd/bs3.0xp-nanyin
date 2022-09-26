@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.hugeinfopro.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -27,8 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @PageId("HugeInfoPro002")
 @Controller
@@ -77,6 +77,18 @@ public class HugeInfoPro002Controller extends BaseController {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }
+        if (StringUtil.equals(dto.getOperateType(),"new")) {
+            List<HugeInfoPro001Dto> paramList =new ArrayList<>(1);
+            paramList.add(dto);
+            List<HugeInfoPro001Dto> list = hugeInfoPro001Service.selectHugeInfoByKey(paramList);
+            if (list.size()>0) {
+                 AjaxResult ajax=new AjaxResult();
+                 ajax.setStatuCode(500);
+                 ajax.setMessage("新建数据已存在！", MessageType.警告消息);
+                return ajax;
+            }
+        }
+
         return commonCheck(result, dto.getOperateType());
     }
 
