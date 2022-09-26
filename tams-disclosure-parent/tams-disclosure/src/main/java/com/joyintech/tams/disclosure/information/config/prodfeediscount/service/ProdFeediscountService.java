@@ -447,6 +447,13 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             }else if(!isDateStr(rowData.get(12))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
             }
+            if (StringUtil.isNotBlank(rowData.get(2)) && rowData.get(2).length()>500){
+                message.add("此产品优惠调整（补充性）描述文字字符不能超过500");
+            }
+            if (StringUtil.isNotBlank(rowData.get(11)) && rowData.get(11).length()>500){
+                message.add("对此费率优惠调整（补充性）描述文字字符不能超过500");
+            }
+
             String key = rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(1)
                     + GlobalConstant.UNDER_LINE + rowData.get(2)
