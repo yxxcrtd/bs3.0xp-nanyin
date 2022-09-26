@@ -168,7 +168,7 @@
         PROD_RE text
         FROM
         rep_prod_info
-        WHERE PROD_RE IS NOT NULL
+        WHERE PROD_RE IS NOT NULL and STATUS = 'E'
             <if test="search != null and search != ''">
                 and (PROD_RE like
                 concat(concat('%',#{search}),'%'))
@@ -189,7 +189,7 @@
         FROM
         rep_prod_info
         <where>
-             REP_PROD_TYPE in ('02','03')
+            STATUS='E' AND  REP_PROD_TYPE in ('02','03')
             <if test="prodRegistNo != null and !prodRegistNo.equals('')">
                 AND PROD_RE=#{prodRegistNo}
             </if>
