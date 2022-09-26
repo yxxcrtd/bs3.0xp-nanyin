@@ -30,6 +30,9 @@ public interface Performance001Mapper {
     int updateByKey(Performance001Dto dto);
 
 
+    int updateByDataType(Performance001Dto dto);
+
+
     List<Performance001Dto> selectPerformanceInfoList(@Param("list") List<Performance001Dto> list);
 
     List<Performance001Dto> selectPerformanceByProdId(Map<String, Object> map);

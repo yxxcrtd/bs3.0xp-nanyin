@@ -417,7 +417,20 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 //                    Performance001Dto dto = this.selectByPrimaryKey(map);
                     List<Performance001Dto> dto = this.selectByPrimaryKey(map);
                     if (dto != null && dto.size()>0) {
-                        performance001Mapper.updateByKey(item);
+                        item.setEffDateStr(DateUtil.format(item.getEffDate()));
+                        item.setExpDateStr(DateUtil.format(item.getExpDate()));
+                        item.setDataType("01");
+                        item.setProportion(item.getZzqj());
+                        performance001Mapper.updateByDataType(item);
+                        item.setDataType("02");
+                        item.setProportion(item.getHs300());
+                        performance001Mapper.updateByDataType(item);
+                        item.setDataType("03");
+                        item.setProportion(item.getZzcf());
+                        performance001Mapper.updateByDataType(item);
+                        item.setDataType("04");
+                        item.setProportion(item.getZz500());
+                        performance001Mapper.updateByDataType(item);
                     } else {
                         item.setUuid(IDGenerator.generate(36));
                         this.doComplete(item, OperationType.NEW);

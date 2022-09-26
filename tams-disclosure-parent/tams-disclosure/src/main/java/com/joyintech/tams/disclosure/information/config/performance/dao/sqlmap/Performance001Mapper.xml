@@ -175,6 +175,36 @@
 		and EFF_DATE = #{effDateO,jdbcType=DATE}
 		and EXP_DATE = #{expDateO,jdbcType=DATE}
 	</update>
+	<update id="updateByDataType" parameterType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto" >
+		update REP_PROD_BASIC_CHANGE
+		<set >
+			<if test="prodId != null" >
+				PROD_ID = #{prodId,jdbcType=VARCHAR},
+			</if>
+			<if test="effDate != null" >
+				EFF_DATE = #{effDate,jdbcType=DATE},
+			</if>
+			<if test="expDate != null" >
+				EXP_DATE = #{expDate,jdbcType=DATE},
+			</if>
+			<if test="proportion != null" >
+				PROPORTION = #{proportion,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null" >
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		and to_char(EFF_DATE,'yyyy-MM-dd') = #{effDateStr,jdbcType=VARCHAR}
+		and to_char(EXP_DATE,'yyyy-MM-dd') = #{expDateStr,jdbcType=VARCHAR}
+        and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+	</update>
 	<update id="update">
 		update REP_PROD_BASIC_CHANGE
 		<set >
