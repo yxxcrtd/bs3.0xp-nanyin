@@ -269,6 +269,13 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                             //校验同一产品生效区间是否重叠
                             List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(list.get(0).trim());
                             for (ProdAssetInfoDto dto : dtos) {
+
+                                if (StringUtil.equals(list.get(0).trim(),dto.getProdId()) &&
+                                        DateUtil.compareDate(DateUtil.parse(list.get(9).trim()),dto.getEffDate())==0&&
+                                        DateUtil.compareDate(DateUtil.parse(list.get(10).trim()),dto.getEffEndDate())==0){
+                                    continue;
+                                }
+
                                 if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
                                         || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))
                                 && !(DateUtil.compareDate(effDate,dto.getEffDate())==0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())==0)){
@@ -373,6 +380,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
      * @since 1.0
      */
     public void dealAfterCheck(List<ProdAssetInfoDto> equityList) {
+        equityList.forEach(item->{prodAssetInfo001Mapper.deleteDisProdAsset(item.getProdId(),item.getEffDateStr(),item.getEffEndDateStr());});
         this.insertBtachEquityInfoByPart(equityList);
         /*List<ProdAssetInfoDto> listN = new ArrayList<ProdAssetInfoDto>();
         ProdAssetInfoDto prodAssetInfoDto=new ProdAssetInfoDto();
