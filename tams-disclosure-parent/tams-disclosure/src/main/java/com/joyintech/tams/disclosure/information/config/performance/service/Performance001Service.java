@@ -483,24 +483,17 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "业绩比较基准生效截止日"));
             }
             //校验截止日大于生效日
-            Date expDate=sdf.parse(rowData.get(2).trim());
-            Date effDate=sdf.parse(rowData.get(1).trim());
-            if (DateUtil.compareDate(effDate,expDate)>0) {
-                message.add("业绩比较基准生效截止日不能小于业绩比较基准生效日!");
+            if (StringUtil.isNotEmpty(rowData.get(2).trim())&& StringUtil.isNotEmpty(rowData.get(1).trim())){
+                Date expDate=sdf.parse(rowData.get(2).trim());
+                Date effDate=sdf.parse(rowData.get(1).trim());
+                if (DateUtil.compareDate(effDate,expDate)>0) {
+                    message.add("业绩比较基准生效截止日不能小于业绩比较基准生效日!");
+                }
+
             }
 
-            if(StringUtil.isNotEmpty(rowData.get(0))){
-                List<Performance001Dto> dtos = performance001Mapper.selectAssetInfoByProdId(rowData.get(0).trim());
-                for (Performance001Dto dto : dtos) {
-                    if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(expDate,dto.getExpDate())<0)
-                            || (DateUtil.compareDate(effDate,dto.getExpDate())>0 && DateUtil.compareDate(expDate,dto.getExpDate())>0))){
-                        checkResult.add(new com.joyintech.tams.systemtools.dto.ExcelValidDto(rowData.get(0), String.valueOf(i+2),
-                                "子产品业绩比较基准区间生效时间有重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
-                                        +"-"+DateUtil.format(dto.getExpDate(),"yyyyMMdd")));
-                        break;
-                    }
-                }
-            }
+
+
 
             if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "中债新综合全价指数收益率【系数】"));
