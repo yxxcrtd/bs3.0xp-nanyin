@@ -161,7 +161,7 @@ public class ProdFeediscount001Controller extends BaseController {
 		WorkFlowParameter<ProdFeediscountDto> params = new WorkFlowParameter<ProdFeediscountDto>();
 		params.setPageId("ProdFeediscount002");
 		params.setElementId(dto.getElementId());
-		params.setBusinessCode(dto.getProdDiscountId());
+		params.setBusinessCode(item -> item.getProdId());
 		params.setBusinessType(DictCodeListExt4.共通业务类型_产品费率优惠.getValue());
 		params.setComment(entity -> "产品费率优惠-产品代码"+ "(" + entity.getProdId() + ")");
 		processParameter.setOperationType(OperationType.DELETE);
