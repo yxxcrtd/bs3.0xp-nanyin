@@ -597,6 +597,9 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                     Date end1=DateUtil.parse(rowData.get(2).trim());
                     Date start2=dto.getEffDate();
                     Date end2=dto.getExpDate();
+                    if(DateUtil.compareDate(start1,start2)==0&&DateUtil.compareDate(end1,end2)==0){
+                            break;
+                        }
                     if(compareTwoTime(start1, end1, start2, end2)){
                         message.add("业绩基准生效区间与库中已有记录有重叠");
                         break;
