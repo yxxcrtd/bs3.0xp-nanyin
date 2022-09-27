@@ -421,24 +421,24 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             List<ProdInfoDto> entities = this.convertToBean(dataList);
             List<ProdInfoDto> data = this.selectProdInfoByKey(entities);
             if (data != null && data.size() > 0) {
-//                Map<String, List<ProdInfoDto>> prodInfoMap = entities.stream().collect(
-//                        JoyinCollectors.groupingBy(ProdInfoDto::getProdId));
-//                // 将序号放入list中
-//                List<String> excelNumList = new ArrayList<>();
-//                List<Integer> excelNumIntList = new ArrayList<>();
-//                for (ProdInfoDto prodInfoDto : data) {
-//                    List<ProdInfoDto> listTemp = prodInfoMap.get(prodInfoDto.getProdId());
-//                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
-//                }
-//                // 将list进行排序，并转化为string
-//                Collections.sort(excelNumIntList);
-//                for (Integer rowNo : excelNumIntList) {
-//                    excelNumList.add(String.valueOf(rowNo));
-//                }
-//                webResult.setMessage(
-//                        this.getMessage("REPORT_COMMON_FILE_C_0001",
-//                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-//                        MessageType.确认消息);
+                Map<String, List<ProdInfoDto>> prodInfoMap = entities.stream().collect(
+                        JoyinCollectors.groupingBy(ProdInfoDto::getProdId));
+                // 将序号放入list中
+                List<String> excelNumList = new ArrayList<>();
+                List<Integer> excelNumIntList = new ArrayList<>();
+                for (ProdInfoDto prodInfoDto : data) {
+                    List<ProdInfoDto> listTemp = prodInfoMap.get(prodInfoDto.getProdId());
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+                }
+                // 将list进行排序，并转化为string
+                Collections.sort(excelNumIntList);
+                for (Integer rowNo : excelNumIntList) {
+                    excelNumList.add(String.valueOf(rowNo));
+                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             } else {
                 // 防止在进行导入前check时进行了两次的弹框
@@ -637,29 +637,29 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(7))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品登记编码"));
             }
-            ProdInfoDto dto = new ProdInfoDto();
-            dto.setpProdId(list.get(8));
-            dto.setProdRe(list.get(7));
-            if (this.hasReapetData(dto)>0){
-                message.add("该主产品代码已存在相同的产品登记代码");
-            }
+//            ProdInfoDto dto = new ProdInfoDto();
+//            dto.setpProdId(list.get(8));
+//            dto.setProdRe(list.get(7));
+//            if (this.hasReapetData(dto)>0){
+//                message.add("该主产品代码已存在相同的产品登记代码");
+//            }
             // 产品主代码
             if (StringUtil.isEmpty(list.get(8))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
             }else{
-                if(StringUtils.equals(DictCodeListExt1.是或否_否.getCodeName(), list.get(21))){
-                    //查詢是否存在相同的产品主代码信息，若存在則給出提示
-                    ProdInfoDto prodInfoDto = this.getParentProdInfo(list.get(8));
-                    if(prodInfoDto != null){
-                        message.add(this.getMessage("REPORT_COMMON_FILE_E_0029", "产品主代码"));
-                    }
-                }else{
-                    //查询是否存在普通、相同的产品主代码信息，若存在則給出提示
-                    List<ProdInfoDto> prodInfoDtoList = this.getPtParentProdInfo(list.get(8));
-                    if(prodInfoDtoList!=null && prodInfoDtoList.size()>0){
-                        message.add(this.getMessage("REPORT_COMMON_FILE_E_0029", "产品主代码"));
-                    }
-                }
+//                if(StringUtils.equals(DictCodeListExt1.是或否_否.getCodeName(), list.get(21))){
+//                    //查詢是否存在相同的产品主代码信息，若存在則給出提示
+//                    ProdInfoDto prodInfoDto = this.getParentProdInfo(list.get(8));
+//                    if(prodInfoDto != null){
+//                        message.add(this.getMessage("REPORT_COMMON_FILE_E_0029", "产品主代码"));
+//                    }
+//                }else{
+//                    //查询是否存在普通、相同的产品主代码信息，若存在則給出提示
+//                    List<ProdInfoDto> prodInfoDtoList = this.getPtParentProdInfo(list.get(8));
+//                    if(prodInfoDtoList!=null && prodInfoDtoList.size()>0){
+//                        message.add(this.getMessage("REPORT_COMMON_FILE_E_0029", "产品主代码"));
+//                    }
+//                }
             }
             /**校验产品登记编码重复性 start*/
             if(frepMap.keySet().contains(list.get(7))){
@@ -671,7 +671,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if(repMap.keySet().contains(list.get(7))){
                 //母产品代码不一致
                 if(!StringUtil.equals(list.get(0),frepMap.get(list.get(7)))){
-                    message.add("产品登记编码具有唯一性， 产品登记编码跟产品主代码是唯一对应的。");
+                    if(!message.contains("产品登记编码具有唯一性， 产品登记编码跟产品主代码是唯一对应的。")){
+                        message.add("产品登记编码具有唯一性， 产品登记编码跟产品主代码是唯一对应的。");
+                    }
                 }
             }
             if(StringUtil.isNotEmpty(list.get(7))&&
