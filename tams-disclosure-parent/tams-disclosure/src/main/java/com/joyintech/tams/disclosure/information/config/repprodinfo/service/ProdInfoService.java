@@ -671,7 +671,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if(repMap.keySet().contains(list.get(7))){
                 //母产品代码不一致
                 if(!StringUtil.equals(list.get(0),frepMap.get(list.get(7)))){
-                    message.add("产品登记编码具有唯一性， 产品登记编码跟产品主代码是唯一对应的。");
+                    if(!message.contains("产品登记编码具有唯一性， 产品登记编码跟产品主代码是唯一对应的。")){
+                        message.add("产品登记编码具有唯一性， 产品登记编码跟产品主代码是唯一对应的。");
+                    }
                 }
             }
             if(StringUtil.isNotEmpty(list.get(7))&&
