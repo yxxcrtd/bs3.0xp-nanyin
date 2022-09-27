@@ -45,6 +45,7 @@ $(function() {
 			var data = $('#prodId').select2("data")[0].object;
 			$('#prodRegistNo').textSelect('setValue',data);
 		});
+		$('#prodRegistNo').prop("disabled",true);
 		if (pageModel == PAGE_MODEL_EDIT){
 			$('#prodRegistNo').prop("disabled",true);
 			$('#prodId').prop("disabled",true);
