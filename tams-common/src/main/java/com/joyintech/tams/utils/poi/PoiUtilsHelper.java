@@ -300,7 +300,6 @@ public class PoiUtilsHelper {
             	//删除被合并单元格的内容
             	if ( cell.getParagraphs()!=null ) {
             		for ( XWPFParagraph p:cell.getParagraphs() ) {
-            			
             			List<XWPFRun> listRuns = p.getRuns();
             			if ( listRuns!=null ) {
             				for ( int i=0;i<p.getRuns().size();i++) {

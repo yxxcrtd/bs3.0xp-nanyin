@@ -633,7 +633,7 @@ public class PoiUtilsHelper2 {
 		return count;
 	}
 	
-	private static void setFont(XWPFRun run,String fontName,int fontSize ) {
+	public static void setFont(XWPFRun run,String fontName,int fontSize ) {
     	CTFonts fonts = run.getCTR().getRPr()==null?run.getCTR().addNewRPr().addNewRFonts():run.getCTR().getRPr().getRFonts();
     	fonts.setAscii(fontName);
     	fonts.setEastAsia(fontName);

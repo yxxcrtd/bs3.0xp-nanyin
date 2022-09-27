@@ -562,6 +562,26 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                     + GlobalConstant.UNDER_LINE + rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
+            //校验日期区间不重叠
+            for(int j = i+1; j < dataList.size(); j++){
+                List<String> rowDataj = dataList.get(i);
+                //产品代码相等时则校验
+                if(StringUtil.equals(rowData.get(0).trim(),rowDataj.get(0).trim())){
+                    try{
+                        //获取开始日，结束日
+                        Date start1=DateUtil.parse(rowData.get(1).trim());
+                        Date end1=DateUtil.parse(rowData.get(2).trim());
+                        Date start2=DateUtil.parse(rowDataj.get(1).trim());
+                        Date end2=DateUtil.parse(rowDataj.get(2).trim());
+                        if(compareTwoTime(start1, end1, start2, end2)){
+                            message.add("业绩基准生效区间与其他记录有重叠");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
             map.put(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(1)
                     + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
@@ -597,6 +617,18 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         else {
             return false;
         }
+    }
+
+    public  Boolean compareTwoTime(Date startOne, Date endOne, Date startTwo, Date endTwo) {
+        //after 当start1小于等于end2时返回flase  before end1大于等于start2返回flase
+        if ((!startOne.after(endTwo)) && (!endOne.before(startTwo))) {
+            System.out.println("时间重叠");
+            //时间重叠
+            return true;
+        }
+        System.out.println("时间不重叠");
+        //时间不重叠
+        return false;
     }
 
     private Performance001Dto convertToEntity(List<String> rowData) {
