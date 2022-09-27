@@ -205,6 +205,7 @@ $(function() {
         table.bind('click', '.edit', function(data, index) {
             var object = {pageModel:PAGE_MODEL_EDIT,
                 prodId: data.prodId,
+                status: data.status,
                 valueDate: data.valueDateStr,
                 operateType: PAGE_MODEL_EDIT};//请求参数
             Joyin.dialog(JoyinUtil.getLabel("产品净值信息维护编辑"),
