@@ -43,4 +43,7 @@ public interface Performance001Mapper {
     int update(Performance001Dto dto1);
 
     List<Performance001Dto> selectAssetInfoByProdId(String prodId);
+
+
+    List<Performance001Dto>  seletformanceInfoList();
 }

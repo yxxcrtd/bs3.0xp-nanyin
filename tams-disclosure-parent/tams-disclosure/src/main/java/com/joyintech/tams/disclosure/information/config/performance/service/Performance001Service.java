@@ -470,6 +470,10 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         Map<String, List<String>> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<String> prodList =  performance001Mapper.getProdIdlist(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
+        //查询库里的生效日
+        List<Performance001Dto>  kList=performance001Mapper.seletformanceInfoList();
+        Map<String,List<Performance001Dto>>   lmap=kList.stream().collect(Collectors.groupingBy(Performance001Dto::getProdId));
+
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
             if (null == rowData || rowData.size() != 7) {
@@ -564,7 +568,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             }
             //校验日期区间不重叠
             for(int j = i+1; j < dataList.size(); j++){
-                List<String> rowDataj = dataList.get(i);
+                List<String> rowDataj = dataList.get(j);
                 //产品代码相等时则校验
                 if(StringUtil.equals(rowData.get(0).trim(),rowDataj.get(0).trim())){
                     try{
@@ -582,6 +586,27 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
                 }
             }
+            //校验与库中生效区间是否有重叠
+            if(lmap!=null&&lmap.containsKey(rowData.get(0).trim())){
+                List<Performance001Dto> listp=lmap.get(rowData.get(0).trim());
+                for(Performance001Dto dto:listp){
+                    //获取开始日，结束日
+                    //获取开始日，结束日
+                    try{
+                    Date start1=DateUtil.parse(rowData.get(1).trim());
+                    Date end1=DateUtil.parse(rowData.get(2).trim());
+                    Date start2=dto.getEffDate();
+                    Date end2=dto.getExpDate();
+                    if(compareTwoTime(start1, end1, start2, end2)){
+                        message.add("业绩基准生效区间与库中已有记录有重叠");
+                        break;
+                    }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             map.put(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(1)
                     + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
