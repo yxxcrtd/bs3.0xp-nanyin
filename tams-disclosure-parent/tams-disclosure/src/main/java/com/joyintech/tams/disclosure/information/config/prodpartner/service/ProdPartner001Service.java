@@ -201,7 +201,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             // 将list进行排序，并转化为string
             Collections.sort(excelNumIntList);
             for (Integer rowNo : excelNumIntList) {
-                excelNumList.add(String.valueOf(rowNo));
+                if(!excelNumList.contains(String.valueOf(rowNo))){
+                    excelNumList.add(String.valueOf(rowNo));
+                }
             }
             wr.setMessage(
                     this.getMessage("REPORT_COMMON_FILE_C_0001",
