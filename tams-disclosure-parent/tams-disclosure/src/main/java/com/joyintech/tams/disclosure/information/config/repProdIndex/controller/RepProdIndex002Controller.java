@@ -46,6 +46,8 @@ public class RepProdIndex002Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.产品费用交易费用类型);
         Map<String, Object> parm = RequestUtil.getPageParam();
+        String status = getParam("status");
+        parm.put("status",status);
         String pageModel = this.getParam("pageModel");
         if(parm.containsKey("valueDate")){
             parm.put("valueDate", DateUtil.parse(parm.get("valueDate").toString()));

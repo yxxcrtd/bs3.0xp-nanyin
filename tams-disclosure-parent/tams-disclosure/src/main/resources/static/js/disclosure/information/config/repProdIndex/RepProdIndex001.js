@@ -36,6 +36,7 @@ $(function() {
                 "99%", "99%", {
                     pageModel: PAGE_MODEL_REFERENCE,
                     prodId: data.prodId,
+                    status: data.status,
                     valueDate: data.valueDateStr
                 });
         },
