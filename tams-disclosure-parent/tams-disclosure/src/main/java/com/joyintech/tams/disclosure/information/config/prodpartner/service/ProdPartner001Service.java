@@ -306,6 +306,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                         if(StringUtil.isNotEmpty(list.get(0))){
                             List<ProdPartnerDto> dtos = prodPartner001Mapper.selectPartnerByProdId(list.get(0).trim());
                             for (ProdPartnerDto dto : dtos) {
+                                if(DateUtil.compareDate(effDate,dto.getEffDate())==0&&DateUtil.compareDate(effEndDate,dto.getEffEndDate())==0){
+                                    break;
+                                }
                                 if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
                                         || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
                                     excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
