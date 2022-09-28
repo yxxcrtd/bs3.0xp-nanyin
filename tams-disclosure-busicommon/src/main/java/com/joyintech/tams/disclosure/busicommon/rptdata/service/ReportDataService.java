@@ -1,9 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.disclosure.busicommon.report.service.*;
@@ -40,7 +38,7 @@ public class ReportDataService {
 
 	@Autowired
 	private DurationReportDataService durationReportDataService;
-	
+
 	@Autowired
 	private ReportFxgg001Service reportFxgg001Service;
 
@@ -94,7 +92,7 @@ public class ReportDataService {
 
 	@Autowired
 	private ReportJzfhbg001Service reportJzfhbg001Service;
-	
+
 	public List<Map<String, Object>> queryTestDatas(Map<String, Object> params) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("${prodName}", "得利宝8号");
@@ -237,7 +235,7 @@ public class ReportDataService {
 		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
 				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
 				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
-				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
+		) { // 定期公告-季度/半年度/年度报告指数型和非指数型
 			service = durationReportDataService;
 		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
 			service = reportFxgg001Service;
@@ -269,158 +267,160 @@ public class ReportDataService {
 			service = reportZqxkfgg001Service;
 		} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
 			service = reportKfqzjfhgg001Service;
-		}else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+		} else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
 			service = reportKfjzgg001Service;
-		}else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
+		} else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
 			service = reportMzjz001Service;
-		}else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
+		} else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
 			service = reportJzfhbg001Service;
 		}
 
 		return service.queryDatas(params);
 	}
-	
-	 public RepReveal getRepReveal(Map<String, Object> params) {
-	    	RepReveal repReveal = new RepReveal();
-	        
-	        String rptType= "";
-			if (params.get("uri") != null) 
-				rptType = params.get("uri").toString();
 
-	        //repReveal.setRepId(repId);
-	        //repReveal.setProdid(prodId);
-	        //repReveal.setStartDate();
-	        //repReveal.setEndDate(endDate);
-	        
-	        // 分红计算清单
-	        if (rptType.equals(DisReportType.FHJSQD)) {
-	        	repReveal = bonusReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
-	        	repReveal = settReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
-	        	repReveal = matureReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
-	        	repReveal = nostdReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
-	                || rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
-	                || rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
-	        ) { // 定期公告-季度/半年度/年度报告指数型和非指数型
-	        	repReveal = durationReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
-				repReveal = reportFxgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告
-				repReveal = reportBclgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.ZJCPXSJGGG)) { // 增加产品销售机构公告
-				repReveal = reportZjxsjg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DCPDFLMB1_GM) || rptType.equals(DisReportType.DCPDFLMB1_SM)) { // 单产品多费率模板1
-				repReveal = report1Cpnfl001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DCPDFLMB2_GM) || rptType.equals(DisReportType.DCPDFLMB2_SM)) { // 单产品多费率模板2
-				repReveal = report1Cpnfl002Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DFLDCPMB1_GM) || rptType.equals(DisReportType.DFLDCPMB1_SM)) { // 单费率多产品模板1
-				repReveal = report1Flncp001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DFLDCPMB2_GM) || rptType.equals(DisReportType.DFLDCPMB2_SM)) { // 单费率多产品模板2
-				repReveal = report1Flncp002Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DCPDYSTZMB_GM) || rptType.equals(DisReportType.DCPDYSTZMB_SM)) { // 单产品多要素调整模板
-				repReveal = report1Cpnys001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DYSDCPTZMB_GM) || rptType.equals(DisReportType.DYSDCPTZMB)) { // 单要素多产品调整模板
-				repReveal = report1Ysncp001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.JESHGG_GM) || rptType.equals(DisReportType.JESHGBG_SM)) { // 巨额赎回模板
-				repReveal = reportJesh001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DLXSJGMDGG)) { // 代理销售机构名单公告
-				repReveal = reportDlxsjgmdgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.CPKFQGG) || rptType.equals(DisReportType.CPKFQBG)) { // 产品开放期公告（公募）、产品开放期报告（私募）
-				repReveal = reportKfqgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.RKCPJZ_GMXGL) || rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
-				repReveal = reportRkcpjz001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP) || rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
-				repReveal = reportZqxkfgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
-				repReveal = reportKfqzjfhgg001Service.getRepReveal(params);
-			}else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
-				repReveal = reportKfjzgg001Service.getRepReveal(params);
-			}else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
-				repReveal = reportMzjz001Service.getRepReveal(params);
-			}else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
-				repReveal = reportJzfhbg001Service.getRepReveal(params);
-			}
-	        
-	        String repId=(String)params.get("repid").toString();
-	        repReveal.setRepId(repId);
+	public RepReveal getRepReveal(Map<String, Object> params) {
+		RepReveal repReveal = new RepReveal();
 
-			if(!StringUtil.isNotEmpty(repReveal.getProdid())){
-				if(StringUtil.isNotEmpty((params.get("prodid")))){
-					repReveal.setProdid(params.get("prodid").toString());
-				}
-			}
+		String rptType = "";
+		if (params.get("uri") != null)
+			rptType = params.get("uri").toString();
 
-	        return repReveal;
-	    }
-	 
-	 /**
-	  * 统一处理报表的时间：包括开始日期何结束日期
-	  * @param params
-	  */
-	 public void collateReportDateParams(Map<String,Object> params ) {
-	        String repId=(String)params.get("repid");
-	        
-	        String rptType= "";
-	    	
-			if (params.get("uri") != null) 
-				rptType = params.get("uri").toString();
-			
-			RepReveal repReveal  = new RepReveal ();
-	        // 分红计算清单
-	        if (rptType.equals(DisReportType.FHJSQD)) {
-	        	repReveal = bonusReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
-	        	repReveal = settReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
-	        	repReveal = matureReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
-	        	repReveal = nostdReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
-	                || rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
-	                || rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
-	        ) { // 定期公告-季度/半年度/年度报告指数型和非指数型
-	        	repReveal = durationReportDataService.getRepReveal(params);
-	        } else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
-				repReveal = reportFxgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告
-				repReveal = reportBclgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.ZJCPXSJGGG)) { // 增加产品销售机构公告
-				repReveal = reportZjxsjg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DCPDFLMB1_GM) || rptType.equals(DisReportType.DCPDFLMB1_SM)) { // 单产品多费率模板1
-				repReveal = report1Cpnfl001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DCPDFLMB2_GM) || rptType.equals(DisReportType.DCPDFLMB2_SM)) { // 单产品多费率模板2
-				repReveal = report1Cpnfl002Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DFLDCPMB1_GM) || rptType.equals(DisReportType.DFLDCPMB1_SM)) { // 单费率多产品模板1
-				repReveal = report1Flncp001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DFLDCPMB2_GM) || rptType.equals(DisReportType.DFLDCPMB2_SM)) { // 单费率多产品模板2
-				repReveal = report1Flncp002Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DCPDYSTZMB_GM) || rptType.equals(DisReportType.DCPDYSTZMB_SM)) { // 单产品多要素调整模板
-				repReveal = report1Cpnys001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DYSDCPTZMB_GM) || rptType.equals(DisReportType.DYSDCPTZMB)) { // 单要素多产品调整模板
-				repReveal = report1Ysncp001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.JESHGG_GM) || rptType.equals(DisReportType.JESHGBG_SM)) { // 巨额赎回模板
-				repReveal = reportJesh001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.DLXSJGMDGG)) { // 代理销售机构名单公告
-				repReveal = reportDlxsjgmdgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.CPKFQGG) || rptType.equals(DisReportType.CPKFQBG)) { // 产品开放期公告（公募）、产品开放期报告（私募）
-				repReveal = reportKfqgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.RKCPJZ_GMXGL) || rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
-				repReveal = reportRkcpjz001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP) || rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
-				repReveal = reportZqxkfgg001Service.getRepReveal(params);
-			} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
-				repReveal = reportKfqzjfhgg001Service.getRepReveal(params);
-			}else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
-				repReveal = reportKfjzgg001Service.getRepReveal(params);
-			}else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
-				repReveal = reportMzjz001Service.getRepReveal(params);
-			}else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
-				repReveal = reportJzfhbg001Service.getRepReveal(params);
+		//repReveal.setRepId(repId);
+		//repReveal.setProdid(prodId);
+		//repReveal.setStartDate();
+		//repReveal.setEndDate(endDate);
+
+		// 分红计算清单
+		if (rptType.equals(DisReportType.FHJSQD)) {
+			repReveal = bonusReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
+			repReveal = settReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
+			repReveal = matureReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
+			repReveal = nostdReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
+				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+		) { // 定期公告-季度/半年度/年度报告指数型和非指数型
+			repReveal = durationReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
+			repReveal = reportFxgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告
+			repReveal = reportBclgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.ZJCPXSJGGG)) { // 增加产品销售机构公告
+			repReveal = reportZjxsjg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DCPDFLMB1_GM) || rptType.equals(DisReportType.DCPDFLMB1_SM)) { // 单产品多费率模板1
+			repReveal = report1Cpnfl001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DCPDFLMB2_GM) || rptType.equals(DisReportType.DCPDFLMB2_SM)) { // 单产品多费率模板2
+			repReveal = report1Cpnfl002Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DFLDCPMB1_GM) || rptType.equals(DisReportType.DFLDCPMB1_SM)) { // 单费率多产品模板1
+			repReveal = report1Flncp001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DFLDCPMB2_GM) || rptType.equals(DisReportType.DFLDCPMB2_SM)) { // 单费率多产品模板2
+			repReveal = report1Flncp002Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DCPDYSTZMB_GM) || rptType.equals(DisReportType.DCPDYSTZMB_SM)) { // 单产品多要素调整模板
+			repReveal = report1Cpnys001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DYSDCPTZMB_GM) || rptType.equals(DisReportType.DYSDCPTZMB)) { // 单要素多产品调整模板
+			repReveal = report1Ysncp001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.JESHGG_GM) || rptType.equals(DisReportType.JESHGBG_SM)) { // 巨额赎回模板
+			repReveal = reportJesh001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DLXSJGMDGG)) { // 代理销售机构名单公告
+			repReveal = reportDlxsjgmdgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.CPKFQGG) || rptType.equals(DisReportType.CPKFQBG)) { // 产品开放期公告（公募）、产品开放期报告（私募）
+			repReveal = reportKfqgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.RKCPJZ_GMXGL) || rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
+			repReveal = reportRkcpjz001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP) || rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
+			repReveal = reportZqxkfgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+			repReveal = reportKfqzjfhgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+			repReveal = reportKfjzgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
+			repReveal = reportMzjz001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
+			repReveal = reportJzfhbg001Service.getRepReveal(params);
+		}
+
+		String repId = (String) params.get("repid").toString();
+		repReveal.setRepId(repId);
+
+		if (!StringUtil.isNotEmpty(repReveal.getProdid())) {
+			if (StringUtil.isNotEmpty((params.get("prodid")))) {
+				repReveal.setProdid(params.get("prodid").toString());
 			}
-	        //params.put("startDate",repReveal.getStartDate());  //报表的开始日期
-	        params.put("reportDate",repReveal.getEndDate());  //报表的结束日期
-	 }
+		}
+
+		return repReveal;
+	}
+
+	/**
+	 * 统一处理报表的时间：包括开始日期何结束日期
+	 *
+	 * @param params
+	 */
+	public void collateReportDateParams(Map<String, Object> params) {
+		String repId = (String) params.get("repid");
+
+		String rptType = "";
+
+		if (params.get("uri") != null)
+			rptType = params.get("uri").toString();
+
+		RepReveal repReveal = new RepReveal();
+		// 分红计算清单
+		if (rptType.equals(DisReportType.FHJSQD)) {
+			repReveal = bonusReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
+			repReveal = settReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
+			repReveal = matureReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
+			repReveal = nostdReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
+				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+		) { // 定期公告-季度/半年度/年度报告指数型和非指数型
+			repReveal = durationReportDataService.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
+			repReveal = reportFxgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告
+			repReveal = reportBclgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.ZJCPXSJGGG)) { // 增加产品销售机构公告
+			repReveal = reportZjxsjg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DCPDFLMB1_GM) || rptType.equals(DisReportType.DCPDFLMB1_SM)) { // 单产品多费率模板1
+			repReveal = report1Cpnfl001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DCPDFLMB2_GM) || rptType.equals(DisReportType.DCPDFLMB2_SM)) { // 单产品多费率模板2
+			repReveal = report1Cpnfl002Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DFLDCPMB1_GM) || rptType.equals(DisReportType.DFLDCPMB1_SM)) { // 单费率多产品模板1
+			repReveal = report1Flncp001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DFLDCPMB2_GM) || rptType.equals(DisReportType.DFLDCPMB2_SM)) { // 单费率多产品模板2
+			repReveal = report1Flncp002Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DCPDYSTZMB_GM) || rptType.equals(DisReportType.DCPDYSTZMB_SM)) { // 单产品多要素调整模板
+			repReveal = report1Cpnys001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DYSDCPTZMB_GM) || rptType.equals(DisReportType.DYSDCPTZMB)) { // 单要素多产品调整模板
+			repReveal = report1Ysncp001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.JESHGG_GM) || rptType.equals(DisReportType.JESHGBG_SM)) { // 巨额赎回模板
+			repReveal = reportJesh001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.DLXSJGMDGG)) { // 代理销售机构名单公告
+			repReveal = reportDlxsjgmdgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.CPKFQGG) || rptType.equals(DisReportType.CPKFQBG)) { // 产品开放期公告（公募）、产品开放期报告（私募）
+			repReveal = reportKfqgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.RKCPJZ_GMXGL) || rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
+			repReveal = reportRkcpjz001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP) || rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
+			repReveal = reportZqxkfgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+			repReveal = reportKfqzjfhgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+			repReveal = reportKfjzgg001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
+			repReveal = reportMzjz001Service.getRepReveal(params);
+		} else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
+			repReveal = reportJzfhbg001Service.getRepReveal(params);
+		}
+		//params.put("startDate",repReveal.getStartDate());  //报表的开始日期
+		params.put("reportDate", repReveal.getEndDate());  //报表的结束日期
+	}
 }
+
