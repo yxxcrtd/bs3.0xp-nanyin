@@ -119,7 +119,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         }
         else if (StringUtil.equals(type, "NEW")) {
             dto.setGroupId(IDGenerator.generate(36));
-            String user = SecurityUtil.getLoginUser().getRealName();
 
             //分四条记录插入
             Performance001Dto dto1 =new Performance001Dto();
@@ -132,7 +131,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto1.setExpDate(dto.getExpDate());
             dto1.setStatus("E");
             dto1.setUpdateTime(DateUtil.now());
-            dto1.setUpdateUser(user);
             performance001Mapper.insert(dto1);
 
             Performance001Dto dto2 =new Performance001Dto();
@@ -145,7 +143,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto2.setExpDate(dto.getExpDate());
             dto2.setStatus("E");
             dto2.setUpdateTime(DateUtil.now());
-            dto2.setUpdateUser(user);
             performance001Mapper.insert(dto2);
 
             Performance001Dto dto3 =new Performance001Dto();
@@ -158,7 +155,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto3.setExpDate(dto.getExpDate());
             dto3.setStatus("E");
             dto3.setUpdateTime(DateUtil.now());
-            dto3.setUpdateUser(user);
             performance001Mapper.insert(dto3);
 
             Performance001Dto dto4 =new Performance001Dto();
@@ -171,7 +167,6 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             dto4.setExpDate(dto.getExpDate());
             dto4.setStatus("E");
             dto4.setUpdateTime(DateUtil.now());
-            dto4.setUpdateUser(user);
             performance001Mapper.insert(dto4);
         }
         else {
