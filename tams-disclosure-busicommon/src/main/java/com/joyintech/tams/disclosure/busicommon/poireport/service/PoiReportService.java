@@ -954,6 +954,23 @@ public class PoiReportService {
 								break;
 							}
 						}
+						List<HashMap<String,String>> li=(List<HashMap<String,String>>)dataMap.get(key);
+						Boolean  flag=true;
+						for (int i=0;i<li.size();i++){
+							HashMap<String,String> pmap=(HashMap<String,String>)li.get(i);
+							for(String pk:pmap.keySet()){
+								if (!StringUtil.isNotEmpty(pmap.get(pk))||
+								StringUtil.equals("-",pmap.get(pk))){
+									resultSb.append((index++)+"："+"生成信披报告所需数据有缺失，请到【报表数据校验】功能查阅当前报表详情。<br>");
+									flag=false;
+									break;
+								}
+							}
+							if(!flag){
+								break;
+							}
+						}
+
 					}else{
 						if (!StringUtil.isNotEmpty(dataMap.get(key))) {
 							if (!dataMap.containsKey(key+"_xx")) {
