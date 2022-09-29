@@ -311,7 +311,7 @@ public class FtpDetailService {
 				if (dto.getProdId().contains(",")){
 					String raiseType = "";
 					ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(dto.getReportId());
-					if (reportInfo != null && reportInfo.getReportName().contains("公墓")) {
+					if (reportInfo != null && reportInfo.getReportName().contains("公募")) {
 						raiseType="1";
 					}
 					if (reportInfo != null && reportInfo.getReportName().contains("私募")) {
