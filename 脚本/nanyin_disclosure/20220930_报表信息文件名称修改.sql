@@ -1,0 +1,12 @@
+update rep_info set FILE_NAME='关于{prodname}费率优惠的公告' where REP_ID='CP_001_004_004';
+update rep_info set FILE_NAME='关于{prodname}费率优惠的报告' where REP_ID='CP_001_004_005';
+update rep_info set FILE_NAME='关于{prodname}费率优惠的公告' where REP_ID='CP_001_004_006';
+update rep_info set FILE_NAME='关于{prodname}费率优惠的报告' where REP_ID='CP_001_004_007';
+update rep_info set FILE_NAME='关于南银理财部分理财产品{prodFeeName}费率优惠的公告' where REP_ID='CP_001_004_008';
+update rep_info set FILE_NAME='关于南银理财部分理财产品{prodFeeName}费率优惠的报告' where REP_ID='CP_001_004_009';
+update rep_info set FILE_NAME='关于南银理财部分理财产品{prodFeeName}费率优惠的公告' where REP_ID='CP_001_004_010';
+update rep_info set FILE_NAME='关于南银理财部分理财产品{prodFeeName}费率优惠的报告' where REP_ID='CP_001_004_011';
+update rep_info set FILE_NAME='关于调整{prodname}相关要素的公告' where REP_ID='CP_001_004_012';
+update rep_info set FILE_NAME='关于调整{prodname}相关要素的报告' where REP_ID='CP_001_004_013';
+update rep_info set FILE_NAME='关于调整南银理财部分公募理财产品{fieldname}的公告' where REP_ID='CP_001_004_014';
+update rep_info set FILE_NAME='关于调整南银理财部分私募理财产品{fieldname}的报告' where REP_ID='CP_001_004_015';

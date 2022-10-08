@@ -52,11 +52,15 @@ $(function () {
 
 	    			}
 	    		}
+
 				if(getKey==='prodid'){
 					obj['prodname']=$('#'+ids[i].key).find("option:selected").text();
 				}
 				if(getKey==='pprodid'){
 					obj['pprodname']=$('#'+ids[i].key).find("option:selected").text();
+				}
+				if(getKey==='feename'){
+					obj['prodFeeName']=$('#'+ids[i].key).find("option:selected").text();
 				}
         	}
     		if(obj.startDate&&obj.endDate){
@@ -579,7 +583,6 @@ $(function () {
 						editFlag=true
 					}
 				}
-
 				Joyin.ajax('previewReport', params, function(result) {
 					$container.html(result);
 					previewFlag=true;

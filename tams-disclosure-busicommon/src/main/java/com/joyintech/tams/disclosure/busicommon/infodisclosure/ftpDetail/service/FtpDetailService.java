@@ -11,6 +11,8 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import org.apache.commons.net.ftp.FTPClient;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
@@ -67,7 +69,7 @@ public class FtpDetailService {
     private RepFtpPathMapper repFtpPathMapper;
 	
 	@Autowired
-	private RepProdInfoMapper repProdInfoMapper;
+	private ReportInfoMapper reportInfoMapper;
 	
 	@Autowired
 	private RepRevealMapper repRevealMapper;
@@ -304,7 +306,19 @@ public class FtpDetailService {
 			  StringUtil.isEmpty(prefix)){
 				fileName=newFileName;
 			}else{
-				fileName = prefix + "_" + newFileName;
+				 fileName = prefix + "_" + newFileName;
+				//多产品处理
+				if (dto.getProdId().contains(",")){
+					String raiseType = "";
+					ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(dto.getReportId());
+					if (reportInfo != null && reportInfo.getReportName().contains("公募")) {
+						raiseType="1";
+					}
+					if (reportInfo != null && reportInfo.getReportName().contains("私募")) {
+						raiseType="2";
+					}
+					fileName = dto.getProdId()+"_"+raiseType+"_"+fileName;
+				}
 			}
 
 			UploadFile uploadfile = fileAttachmentProcess.fetch(filePath);

@@ -28,6 +28,7 @@ import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.ProdFeediscountMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -442,6 +443,14 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                     message.add("子产品代码不存在。");
                 }
             }
+            if (StringUtil.isNotBlank(rowData.get(0)) && StringUtil.isNotBlank(rowData.get(1))) {
+                ProdInfoDto prodInfoDto = prodInfoService.selectByProdId(rowData.get(1));
+                if (prodInfoDto!=null && !StringUtil.equals(prodInfoDto.getProdRe(),rowData.get(0))) {
+                    message.add("子产品代码和产品登记编码不匹配。");
+                }
+
+            }
+
             if (StringUtil.isEmpty(rowData.get(12))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
             }else if(!isDateStr(rowData.get(12))){
