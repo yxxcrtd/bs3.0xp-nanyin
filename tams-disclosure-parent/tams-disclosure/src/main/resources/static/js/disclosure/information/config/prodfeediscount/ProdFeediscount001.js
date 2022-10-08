@@ -68,10 +68,10 @@
             , {field:'afterFeerate',  title: '优惠后费率',sortField:"afterFeerate",width:120,sortable:false}
             , {field:'startDate',  title: '优惠起始时间',sortField:"startDate",type:'date',width:120}
             , {field:'endDate',  title: '优惠截止时间',sortField:"endDate",type:'date',width:120}
-            , {field:'thisPreFeerate',  title: '本次优惠前费率',sortField:"thisPreFeerate",width:120,sortable:false}
-            , {field:'thisAfterFeerate',  title: '本次优惠后费率',sortField:"thisAfterFeerate",width:120,sortable:false}
-            , {field:'thisEndFeerate',  title: '本次优惠结束后费率',sortField:"thisEndFeerate",width:120,sortable:false}
-            , {field:'feeDisRemark',  title: '对此费率优惠调整描述文字',sortField:"feeDisRemark",width:200,sortable:false}
+            // , {field:'thisPreFeerate',  title: '本次优惠前费率',sortField:"thisPreFeerate",width:120,sortable:false}
+            // , {field:'thisAfterFeerate',  title: '本次优惠后费率',sortField:"thisAfterFeerate",width:120,sortable:false}
+            // , {field:'thisEndFeerate',  title: '本次优惠结束后费率',sortField:"thisEndFeerate",width:120,sortable:false}
+            ,{field:'feeDisRemark',  title: '对此费率优惠调整描述文字',sortField:"feeDisRemark",width:200,sortable:false}
             ,{field:'rptIssueDate',  title: '报告发布日期',sortField:"rptIssueDate",type:'date',width:120}
             ,{field:'dataStatusName',  title: '数据状态',sortField:"dataStatus",width:100}
             ,{field:'updateDateStr',  title: '更新时间',sortField:"updateTime",type:'date',width:180}

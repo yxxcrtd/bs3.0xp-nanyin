@@ -276,8 +276,8 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
-        if (null == tempList.get(0) || tempList.get(0).size() != 13) {
-            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 13), MessageType.错误消息);
+        if (null == tempList.get(0) || tempList.get(0).size() != 10) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 10), MessageType.错误消息);
             return webResult;
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
@@ -351,20 +351,20 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 entity.setEndDate(list.get(7));
             }
 
-            if (StringUtil.isNotEmpty(list.get(8)) && isNumber(list.get(8))) {
-                entity.setThisPreFeerate(list.get(8));
+//            if (StringUtil.isNotEmpty(list.get(8)) && isNumber(list.get(8))) {
+//                entity.setThisPreFeerate(list.get(8));
+//            }
+//            if (StringUtil.isNotEmpty(list.get(9)) && isNumber(list.get(9))) {
+//                entity.setThisAfterFeerate(list.get(9));
+//            }
+//            if (StringUtil.isNotEmpty(list.get(10)) && isNumber(list.get(10))) {
+//                entity.setThisEndFeerate(list.get(10));
+//            }
+            if (StringUtil.isNotEmpty(list.get(8))) {
+                entity.setFeeDisRemark(list.get(8));
             }
-            if (StringUtil.isNotEmpty(list.get(9)) && isNumber(list.get(9))) {
-                entity.setThisAfterFeerate(list.get(9));
-            }
-            if (StringUtil.isNotEmpty(list.get(10)) && isNumber(list.get(10))) {
-                entity.setThisEndFeerate(list.get(10));
-            }
-            if (StringUtil.isNotEmpty(list.get(11))) {
-                entity.setFeeDisRemark(list.get(11));
-            }
-            if (StringUtil.isNotEmpty(list.get(12)) && isDateStr(list.get(12))) {
-                entity.setRptIssueDateStr(list.get(12));
+            if (StringUtil.isNotEmpty(list.get(9)) && isDateStr(list.get(9))) {
+                entity.setRptIssueDateStr(list.get(9));
             } else {
                 entity.setRptIssueDateStr(" ");
             }
@@ -426,9 +426,9 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         List<String> map = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
-            if (null == rowData || rowData.size() != 13) {
+            if (null == rowData || rowData.size() != 10) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
-                        this.getMessage("REPORT_COMMON_FILE_E_0030", 13)));
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 10)));
                 break;
             }
             // 验证消息
@@ -474,16 +474,16 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             if (StringUtil.isNotBlank(rowData.get(7)) && rowData.get(7).length()>500){
                 message.add("优惠截止时间字符不能超过500");
             }
+//            if (StringUtil.isNotBlank(rowData.get(8)) && rowData.get(8).length()>500){
+//                message.add("本次优惠前费率字符不能超过500");
+//            }
+//            if (StringUtil.isNotBlank(rowData.get(9)) && rowData.get(9).length()>500){
+//                message.add("本次优惠后费率字符不能超过500");
+//            }
+//            if (StringUtil.isNotBlank(rowData.get(10)) && rowData.get(10).length()>500){
+//                message.add("本次优惠结束后费率字符不能超过500");
+//            }
             if (StringUtil.isNotBlank(rowData.get(8)) && rowData.get(8).length()>500){
-                message.add("本次优惠前费率字符不能超过500");
-            }
-            if (StringUtil.isNotBlank(rowData.get(9)) && rowData.get(9).length()>500){
-                message.add("本次优惠后费率字符不能超过500");
-            }
-            if (StringUtil.isNotBlank(rowData.get(10)) && rowData.get(10).length()>500){
-                message.add("本次优惠结束后费率字符不能超过500");
-            }
-            if (StringUtil.isNotBlank(rowData.get(11)) && rowData.get(11).length()>500){
                 message.add("对此费率优惠调整（补充性）描述文字字符不能超过500");
             }
 
@@ -543,20 +543,20 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         if (StringUtil.isNotEmpty(rowData.get(7))) {
             feediscountDto.setEndDate(rowData.get(7));
         }
+//        if (StringUtil.isNotEmpty(rowData.get(8))) {
+//            feediscountDto.setThisPreFeerate(rowData.get(8));
+//        }
+//        if (StringUtil.isNotEmpty(rowData.get(9))) {
+//            feediscountDto.setThisAfterFeerate(rowData.get(9));
+//        }
+//        if (StringUtil.isNotEmpty(rowData.get(10))) {
+//            feediscountDto.setThisEndFeerate(rowData.get(10));
+//        }
         if (StringUtil.isNotEmpty(rowData.get(8))) {
-            feediscountDto.setThisPreFeerate(rowData.get(8));
+            feediscountDto.setFeeDisRemark(rowData.get(8));
         }
         if (StringUtil.isNotEmpty(rowData.get(9))) {
-            feediscountDto.setThisAfterFeerate(rowData.get(9));
-        }
-        if (StringUtil.isNotEmpty(rowData.get(10))) {
-            feediscountDto.setThisEndFeerate(rowData.get(10));
-        }
-        if (StringUtil.isNotEmpty(rowData.get(11))) {
-            feediscountDto.setFeeDisRemark(rowData.get(11));
-        }
-        if (StringUtil.isNotEmpty(rowData.get(12))) {
-            feediscountDto.setRptIssueDate(DateUtil.parse(rowData.get(12)));
+            feediscountDto.setRptIssueDate(DateUtil.parse(rowData.get(9)));
         }
         return feediscountDto;
     }
