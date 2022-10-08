@@ -95,12 +95,14 @@ $(function() {
     });
 
     $('#feeType').change(function(){
-        if ($('#feeType').val() === '05'|| $('#feeType').val() === '06' || $('#feeType').val() === '07') {
+        //调整为 当费用类型为“客户收益”时必填 二阶段变更
+        if ($('#feeType').val() === '07') {
             $("#amt").attr("required", "required");
         } else {
             $('#amt').removeAttr("required");
         }
-        if ($('#feeType').val() === '01'|| $('#feeType').val() === '02' || $('#feeType').val() === '03' || $('#feeType').val() === '04') {
+        //调整为 费用类型为“托管费”“管理费（固定）”“管理费（赎回）”“销售费”“申购费”“赎回费”时必填 二阶段变更
+        if ($('#feeType').val() === '01'|| $('#feeType').val() === '02' || $('#feeType').val() === '03' || $('#feeType').val() === '04' || $('#feeType').val() === '05'|| $('#feeType').val() === '06') {
             $("#accrual").attr("required", "required");
         } else {
             $('#accrual').removeAttr("required");

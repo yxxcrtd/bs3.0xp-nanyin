@@ -373,17 +373,18 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "费用类型"));
             } else if (!StringUtil.isNotEmpty(this.getFeeTYPE(rowData.get(1)))) {
                 message.add(this.getMessage("费用类型值不正确。"));
-            } else if ((rowData.get(1).trim().equals("申购费") ||
-                    rowData.get(1).trim().equals("赎回费") ||
-                    rowData.get(1).trim().equals("客户收益")) &&
+            } else if (rowData.get(1).trim().equals("客户收益") &&
                     (!StringUtil.isNotEmpty(rowData.get(2)))) {
-                message.add("当费用类型为“申购费”“赎回费”“客户收益”时费用金额不能为空。");
+                message.add("当费用类型为“客户收益”时费用金额不能为空。");
             } else if ((rowData.get(1).trim().equals("托管费") ||
                     rowData.get(1).trim().equals("管理费（固定）") ||
                     rowData.get(1).trim().equals("管理费（超额）")||
-                    rowData.get(1).trim().equals("销售费")) &&
+                    rowData.get(1).trim().equals("销售费")||
+                    rowData.get(1).trim().equals("申购费")||
+                    rowData.get(1).trim().equals("赎回费")
+            ) &&
                     (!StringUtil.isNotEmpty(rowData.get(3)))) {
-                message.add("当费用类型为“托管费”“管理费（固定）”“管理费（超额）”“销售费”时自成立以来发生额（贷方）不可为空。");
+                message.add("当费用类型为“托管费”“管理费（固定）”“管理费（超额）”“销售费”“申购费”“赎回费”时自成立以来发生额（贷方）不可为空。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "支付日"));
