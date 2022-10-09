@@ -13,10 +13,11 @@ package com.joyintech.tams.disclosure.information.config.reportcontentenum.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.select.TreeNode;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.joyintech.framework.select.TreeNode;
+import com.joyintech.tams.common.base.entity.RepIndexSub;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum003Dto;
 /**
@@ -102,4 +103,6 @@ public interface ReportContentEnum002Mapper {
 	int isOnlyData(ReportContentEnum002Dto dto);
 
 	List<ReportContentEnum002Dto> selectExistsData(ReportContentEnum002Dto dto);
+	
+	List<ReportContentEnum002Dto> selectRepIndex(ReportContentEnum002Dto dto);
 }

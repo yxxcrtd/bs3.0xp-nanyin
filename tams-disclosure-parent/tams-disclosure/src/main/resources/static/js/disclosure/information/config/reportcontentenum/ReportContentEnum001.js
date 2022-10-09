@@ -157,7 +157,7 @@ $(function () {
 		},
 		checkbox:false,
 		cols: [
-			{field:'indexName', title: '报表文本名称', sortable: false,},
+			{field:'indexName', title: '报表文本名称', sortable: false},
 			{field:'id', title: '报表文本id', sortable: false,visible:false}
 		],
 		done:function(){
@@ -208,7 +208,8 @@ $(function () {
 			{field:'id', width:260, title: '主键',visible:false},
 			{field:'indexName', width:260, title: '报表文本名称',visible:false},
 			{field:'indexFile', width:260, title: '文件名称',visible:false},
-			{field:'indexDateStr', width:100, title: '生效日期',sort: true,sortField:"indexDate"},
+			{field:'indexYear', width:100, title: '年度',sort: true,sortField:"indexYear"},
+			{field:'indexPeriod', width:100, title: '指标类型',sort: true,sortField:"indexPeriod"},
 			{field:'indexValue', width:260, title: '报表文本值'
 				,render: function (data, type, row, meta) {
 					if(row.indexType=='02'){
@@ -250,7 +251,7 @@ $(function () {
 				}
 
 			}
-		],
+		]
 	});
 
 	var typeAssetsBind = function() {

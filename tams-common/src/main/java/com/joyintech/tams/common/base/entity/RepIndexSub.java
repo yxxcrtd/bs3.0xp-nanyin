@@ -55,6 +55,17 @@ public class RepIndexSub extends BaseEntity {
      * 生效截止日期
      */
     private Date endDate;
+    
+    /**
+     * 指标年度
+     */
+    private String indexYear;
+    
+    /**
+     * 指标周期：S1-一季度，S2-二季度，S3-三季度，S4-四季度，HY-半年度，TY-年度
+     */
+    private String indexPeriod;
+    
     /**
      * 取得 主键ID
      * @return 主键ID
@@ -206,4 +217,22 @@ public class RepIndexSub extends BaseEntity {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+	public String getIndexYear() {
+		return indexYear;
+	}
+
+	public void setIndexYear(String indexYear) {
+		this.indexYear = indexYear;
+	}
+
+	public String getIndexPeriod() {
+		return indexPeriod;
+	}
+
+	public void setIndexPeriod(String indexPeriod) {
+		this.indexPeriod = indexPeriod;
+	}
+    
+    
 }

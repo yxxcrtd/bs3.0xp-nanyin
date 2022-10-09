@@ -7,12 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -37,6 +33,7 @@ import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepRelDeal;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
@@ -82,6 +79,7 @@ public class DurationReportDataService implements IReportDataService {
 			Date currDate = new Date();
 			Date reportDate = new Date();
 			String rptType = paraMap.get("uri").toString();
+			String indexPeriod = DictCodeListExt5.指标周期_一季度.getValue();
 			try {
 
 				year = Integer.parseInt(paraMap.get("year").toString());
@@ -90,13 +88,32 @@ public class DurationReportDataService implements IReportDataService {
 				if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
 					quarter= Integer.parseInt(paraMap.get("quarter").toString());
 					reportDate = DurationUtil.getQuarterEnd(year, quarter);
+					
+					switch (quarter) {
+					case 1:
+						indexPeriod = DictCodeListExt5.指标周期_一季度.getValue();
+						break;
+					case 2:
+						indexPeriod = DictCodeListExt5.指标周期_二季度.getValue();
+						break;
+					case 3:
+						indexPeriod = DictCodeListExt5.指标周期_三季度.getValue();
+						break;
+					default:
+						indexPeriod = DictCodeListExt5.指标周期_四季度.getValue();
+					}
+						
 				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
 					halfYear= Integer.parseInt(paraMap.get("halfyear").toString());
 					reportDate = DurationUtil.getHalfYearEnd(year,halfYear);
+					indexPeriod = DictCodeListExt5.指标周期_半年.getValue();					
 				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
 					reportDate = DurationUtil.getYearEnd(year);
+					indexPeriod = DictCodeListExt5.指标周期_全年.getValue();
 				}
 				paraMap.put("reportDate", reportDate);
+				paraMap.put("indexPeriod",indexPeriod);
+				paraMap.put("indexYear", year+"");
 				//paraMap.put("prodId",paraMap.get("pprodid"));   //定期报告维度：母产品或者单产品
 			} catch (Exception e ) {
 				logger.error("报表参数错误.");

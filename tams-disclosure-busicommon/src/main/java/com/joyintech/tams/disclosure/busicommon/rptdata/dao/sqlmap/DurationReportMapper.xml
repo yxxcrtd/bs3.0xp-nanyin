@@ -18,7 +18,7 @@
 		,INFO.SET_DATE   eDate /**成立日**/
 		,info.MDATE  /**到期日**/
 		,'南银理财有限责任公司' prodManager  /**管理人**/
-		,info.ACCT_CHNNAME  prodTruster /**托管人**/
+		,bank.TRU_SIMPLE_NAME  prodTruster /**托管人**/
 		,info.REP_PROD_TYPE  /**信披产品类型，母子产品，单产品**/
 		,PINDEX.CAPITAL    /**期末余额**/
 		,trunc(pindex.P_ASSETS/pindex.ASSETS_VALUE,4)*100  leverage  /**杠杆率**/
@@ -26,6 +26,7 @@
 		from V_REP_PROD_INFO info
 		left join REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E' and #{reportDate,jdbcType=DATE}=pindex.VALUE_DATE
 		left join DIS_PROD_PARTNER PARTNER ON INFO.PROD_ID=PARTNER.PROD_ID AND #{reportDate,jdbcType=DATE} between partner.EFF_DATE and partner.EFF_END_DATE and partner.DATA_STATUS='E'
+		left join DIS_TRU_BANK bank on info.ACCT_CHNNAME=bank.TRU_NAME and bank.DATA_STATUS='E'
 		where REP_PROD_TYPE in ('01','02')  /**母产品或者单产品**/
 		AND info.STATUS='E'
 		<if test="pprodid!=null">
@@ -99,8 +100,11 @@
 		<if test="indexId!=null">
 			and rindex.PRI_ID=#{indexId,jdbcType=VARCHAR}
 		</if>
-		<if test="reportDate!=null">
-			and #{reportDate,jdbcType=DATE} between rindex.INDEX_DATE and rindex.END_DATE
+		<if test="indexYear!=null">
+			and rindex.index_year=#{indexYear,jdbcType=VARCHAR}
+		</if>
+		<if test="indexYear!=null">
+			and rindex.index_period=#{indexPeriod,jdbcType=VARCHAR}
 		</if>
 	</select>
 

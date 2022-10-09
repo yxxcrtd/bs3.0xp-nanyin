@@ -68,8 +68,7 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	/**
 	 * 生效日期
 	 */
-	@NotEmpty(fieldName = "生效日期")
-	private Date indexDate;
+		private Date indexDate;
 	/**
 	 * 生效日期
 	 */

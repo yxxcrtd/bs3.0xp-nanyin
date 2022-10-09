@@ -87,6 +87,8 @@ public class ReportContentEnum003Controller extends BaseController {
 		this.setSelectOptionToModel(model, DictCodeExt1.开放频率);
 		this.setSelectOptionToModel(model, DictCodeExt1.发行方式_信批);
 		this.setSelectOptionToModel(model, DictCodeExt1.信批产品类别);
+		this.setSelectOptionToModel(model, DictCodeExt1.指标年度);
+		this.setSelectOptionToModel(model, DictCodeExt1.指标周期);
 		String id = getParam("id");
 		String operateType = getParam("operateType");
 		ReportContentEnum002Dto dto = new ReportContentEnum002Dto();
@@ -126,14 +128,18 @@ public class ReportContentEnum003Controller extends BaseController {
 	public AjaxResult check(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
-		if(!StringUtil.isNotEmpty(dto.getIndexDate())){
-			msg = "生效日期不能为空";
+//		if(!StringUtil.isNotEmpty(dto.getIndexDate())){
+//			msg = "生效日期不能为空";
+//			return new AjaxResult(msg, MessageType.错误消息);
+//		}
+		if(!StringUtil.isNotEmpty(dto.getIndexYear())){
+			msg = "指标年度不能为空";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
-		if(!StringUtil.isNotEmpty(dto.getEndDate())){
-			msg = "生效截止日期不能为空";
-			return new AjaxResult(msg, MessageType.错误消息);
-		}
+//		if(!StringUtil.isNotEmpty(dto.getEndDate())){
+//			msg = "生效截止日期不能为空";
+//			return new AjaxResult(msg, MessageType.错误消息);
+//		}
 
 		if(!StringUtil.isNotEmpty(dto.getIndexValue())){
 			msg = "指标值不能为空";
@@ -141,21 +147,27 @@ public class ReportContentEnum003Controller extends BaseController {
 		}
 		//获取平台日期
 		Date sysDate = iPlatformDate.getSysDate();
-		Date indexDate = dto.getIndexDate();
+//		Date indexDate = dto.getIndexDate();
 //		if (indexDate.compareTo(sysDate) < 0 ){
 //			msg = "生效日期必须大于等于平台日";
 //			return new AjaxResult(msg, MessageType.错误消息);
 //		}
-		Date endDate = dto.getEndDate();
+//		Date endDate = dto.getEndDate();
 		//生效截止日期必须大于生效日期
-		if(endDate.compareTo(indexDate) <0){
-			msg = "生效截止日期必须大于等于生效日期";
+//		if(endDate.compareTo(indexDate) <0){
+//			msg = "生效截止日期必须大于等于生效日期";
+//			return new AjaxResult(msg, MessageType.错误消息);
+//		}
+		
+		if ( reportContentEnum002Service.isDuplicatedIndex(dto)==true ){
+			msg="指标重复，已有相同的指标数据!";
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
-		if (!reportContentEnum002Service.isOnlyData(dto)){
-			msg="生效区间重叠！";
-			return new AjaxResult(msg, MessageType.错误消息);
-		}
+
+//		if (!reportContentEnum002Service.isOnlyData(dto)){
+//			msg="生效区间重叠！";
+//			return new AjaxResult(msg, MessageType.错误消息);
+//		}
 
 		return commonCheck(bindingResult, operateType);
 	}
