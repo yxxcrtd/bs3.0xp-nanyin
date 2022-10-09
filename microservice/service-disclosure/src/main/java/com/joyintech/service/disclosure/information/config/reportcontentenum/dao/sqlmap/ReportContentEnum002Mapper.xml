@@ -13,7 +13,9 @@
       pb.CREATE_USER as createUser, /** 制作人**/
       to_char(pb.UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss') as updateTimeFmt,
       pb.AUDIT_STATUS  as auditStatus, /**审核状态**/
-      pb.INDEX_DETAIL as indexDetail  /*适用范围说明*/
+      pb.INDEX_DETAIL as indexDetail,  /*适用范围说明*/
+      pb.INDEX_YEAR,                    /*指标年度*/
+      pb.INDEX_PERIOD                /*指标周期*/
        from REP_INDEX_SUB pb
          inner join  REP_INDEX_PRIMARY  py
            on pb.PRI_ID=py.ID  

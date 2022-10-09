@@ -10,22 +10,15 @@
  
 package com.joyintech.tams.disclosure.information.config.reportcontentenum.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.joyintech.framework.base.intf.DataDictItem;
-import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.dao.RepJobRangeMapper;
-import com.joyintech.tams.common.base.entity.RepIndexSub;
-import com.joyintech.tams.constant.DictCodeExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum001Mapper;
-import com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,16 +27,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jcraft.jsch.JSchException;
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.progressbar.ProgressBarService;
+import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.dao.RepIndexSubMapper;
+import com.joyintech.tams.common.base.dao.RepJobRangeMapper;
+import com.joyintech.tams.common.base.entity.RepIndexSub;
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.common.common.service.BaseCommonService;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
+import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum001Mapper;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum002Mapper;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum003Dto;
+import com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 /**
  * 右侧表格service
  * 〈一句话功能简述〉
@@ -462,5 +471,25 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		}
 		return flag;
 		//return reportContentEnum002Mapper.isOnlyData(dto);
+	}
+	
+	/**
+	 * 判断指标是否重复，重复条件：相同年份、相同指标周期、相同的指标类型、相同的指标PRI_ID，且审核状态相同
+	 * @param dto
+	 * @return
+	 */
+	public boolean isDuplicatedIndex(ReportContentEnum002Dto dto) {
+		boolean ret = false;
+		//为了防止破坏前端传入的参数，根据需要查询的条件，重建参数dto
+		ReportContentEnum002Dto para = new ReportContentEnum002Dto();
+		para.setPriId(dto.getPriId());
+		para.setIndexType(dto.getIndexType()==null?"01":dto.getIndexType());
+		para.setAuditStatus(dto.getAuditStatus()==null?"E":dto.getAuditStatus());
+		para.setIndexYear(dto.getIndexYear());
+		para.setIndexPeriod(dto.getIndexPeriod());
+		List<ReportContentEnum002Dto>list=reportContentEnum002Mapper.selectRepIndex(para);
+		if ( list!=null && list.size()>0 )
+			ret = true;
+		return ret;
 	}
 }

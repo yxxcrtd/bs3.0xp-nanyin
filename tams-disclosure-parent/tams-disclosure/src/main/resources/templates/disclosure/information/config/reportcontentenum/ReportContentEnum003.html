@@ -34,26 +34,31 @@
 		<div class="layui-form-item">
 			<div class="layui-inline layui-col-md8">
 				<label class="layui-form-label form-lable" style="width: 180px;">
-					<i class="iconfont must" style="display: inline;">*</i> 生效日期
+					<i class="iconfont must" style="display: inline;">*</i> 年度
 				</label>
 				<div class="layui-input-inline input-inline">
-					<input type="text" id="indexDate" name="indexDate"
-						   placeholder="请选择日期"
-						   class="layui-input form-input input-dateSelect"
-						   data-th-Value="${entity?.indexDateStr}" allowClear="true">
+					<input id="indexYear" name="indexYear"
+						   class="layui-input form-input input-select" 
+						   placeholder="请选择年度"
+						   data-th-formatoption="false" 
+						   data-th-data-result="${DIS_INDEX_YEAR}"
+						   allowClear="true"> </input>
 				</div>
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<div class="layui-inline layui-col-md8">
 				<label class="layui-form-label form-lable" style="width: 180px;">
-					<i class="iconfont must" style="display: inline;">*</i> 生效截止日期
+					<i class="iconfont must" style="display: inline;">*</i> 指标类型
 				</label>
 				<div class="layui-input-inline input-inline">
-					<input type="text" id="endDate" name="endDate"
-						   placeholder="请选择日期"
-						   class="layui-input form-input input-dateSelect"
-						   data-th-Value="${entity?.endDateStr}" allowClear="true">
+					<input id="indexPeriod" name="indexPeriod"
+						   class="layui-input form-input input-select" 
+						   placeholder="请选择指标类型"
+						   data-th-formatoption="false" 
+						   data-th-data-result="${DIS_INDEX_PERIOD}"
+						   allowClear="true"
+						   autosort="false"> </input>
 				</div>
 			</div>
 		</div>

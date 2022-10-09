@@ -92,6 +92,13 @@ public enum DictCodeExt1 implements BaseDictCode {
     信披报表类别("DIS_REPORT_STYLE"),
 
     信披数据校验比较符("REP_CHECK_TYPE"),
+    
+    /**
+     * 信披指标年度,指标周期
+     */
+    指标年度("DIS_INDEX_YEAR"),
+    指标周期("DIS_INDEX_PERIOD"),
+    
     ;
     private String value;
 

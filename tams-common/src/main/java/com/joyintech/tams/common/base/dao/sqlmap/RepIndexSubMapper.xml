@@ -22,7 +22,7 @@
         ID ID, PRI_ID PRI_ID, INDEX_NAME INDEX_NAME, INDEX_VALUE INDEX_VALUE, INDEX_TYPE INDEX_TYPE, 
         INDEX_DATE INDEX_DATE, INDEX_FILE INDEX_FILE, INDEX_DETAIL INDEX_DETAIL, CREATE_DEPT CREATE_DEPT, 
         CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        AUDIT_STATUS AUDIT_STATUS,END_DATE
+        AUDIT_STATUS AUDIT_STATUS,END_DATE,INDEX_YEAR,INDEX_PERIOD
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -49,12 +49,14 @@
             INDEX_VALUE, INDEX_TYPE, INDEX_DATE, 
             INDEX_FILE, INDEX_DETAIL, CREATE_DEPT, 
             CREATE_USER, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, AUDIT_STATUS,END_DATE)
+            UPDATE_TIME, AUDIT_STATUS,END_DATE,
+            INDEX_YEAR,INDEX_PERIOD)
         values (#{id,jdbcType=VARCHAR}, #{priId,jdbcType=VARCHAR}, #{indexName,jdbcType=VARCHAR}, 
             #{indexValue,jdbcType=VARCHAR}, #{indexType,jdbcType=VARCHAR}, #{indexDate,jdbcType=DATE}, 
             #{indexFile,jdbcType=VARCHAR}, #{indexDetail,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{auditStatus,jdbcType=VARCHAR},#{endDate,jdbcType=DATE})
+            #{updateTime,jdbcType=TIMESTAMP}, #{auditStatus,jdbcType=VARCHAR},#{endDate,jdbcType=DATE},
+            #{indexYear,jdbcType=VARCHAR},#{indexPeriod,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepIndexSub" >
         insert into REP_INDEX_SUB
@@ -193,6 +195,12 @@
             <if test="endDate != null">
                 END_DATE = #{endDate,jdbcType=VARCHAR},
             </if>
+            <if test="indexYear != null">
+                INDEX_YEAR = #{indexYear,jdbcType=VARCHAR},
+            </if>
+            <if test="indexPeriod != null">
+                INDEX_PERIOD = #{indexPeriod,jdbcType=VARCHAR},
+            </if>
         </set>
         where ID = #{id,jdbcType=VARCHAR}
     </update>
@@ -207,7 +215,9 @@
             INDEX_DETAIL = #{indexDetail,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            AUDIT_STATUS = #{auditStatus,jdbcType=VARCHAR}
+            AUDIT_STATUS = #{auditStatus,jdbcType=VARCHAR},
+            INDEX_YEAR = #{indexYear,jdbcType=VARCHAR},
+            INDEX_PERIOD = #{indexPeriod,jdbcType=VARCHAR}
         where ID = #{id,jdbcType=VARCHAR}
     </update>
 </mapper>
