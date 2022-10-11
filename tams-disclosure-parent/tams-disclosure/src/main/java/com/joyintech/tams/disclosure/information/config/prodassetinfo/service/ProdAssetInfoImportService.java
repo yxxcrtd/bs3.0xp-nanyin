@@ -233,12 +233,12 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                     excelValidDtolist.add(dto);
                 }
             }
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
             // 获取平台日期
             Date sysDate = DateUtil.platDateFromCache();
             // 验证生效日
             if(StringUtil.isNotEmpty(list.get(9))){
-                if(!DateUtil.isDateStr(list.get(9))){
+                if(!isDateStr(list.get(9))){
                     ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i + 2),
                             this.getMessage("MST_INFO_E_0001"));
                     excelValidDtolist.add(dto);
@@ -253,12 +253,12 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             }
             //验证生效日截止日
             if(StringUtil.isNotEmpty(list.get(10))){
-                if(!DateUtil.isDateStr(list.get(10))){
+                if(!isDateStr(list.get(10))){
                     ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
                             this.getMessage("MST_INFO_E_0001"));
                     excelValidDtolist.add(dto);
                 }else{
-                    if(DateUtil.isDateStr(list.get(9))){
+                    if(isDateStr(list.get(9))){
                         Date effEndDate=sdf.parse(list.get(10).trim());
                         Date effDate=sdf.parse(list.get(9).trim());
                         if(DateUtil.compareDate(effDate, effEndDate) > 0){
@@ -455,6 +455,17 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
      */
     private void insertBtachEquityInfo(List<ProdAssetInfoDto> list) {
         prodAssetInfo001Mapper.insertBtachEquityInfo(list);
+    }
+
+    public static boolean isDateStr(String str) {
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
+        try {
+            format.setLenient(false);
+            format.parse(str);
+            return true;
+        } catch (Exception var3) {
+            return false;
+        }
     }
 
 }
