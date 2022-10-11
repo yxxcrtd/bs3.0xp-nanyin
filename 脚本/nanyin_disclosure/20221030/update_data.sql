@@ -59,3 +59,99 @@ INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('RepProdIndexGz002', 'RepProdIndex002_btn_submit', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('RepProdIndexGz002', 'RepProdIndex002_btn_save', 'oneApproval', 'system', '0001',sysdate, 'system',sysdate, 'ALL', '02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('RepProdIndexGz002', 'RepProdIndex001_btn_delete', 'noneApproval', 'system', '0001',sysdate, 'shan', sysdate, 'ALL', '02');
+
+-- add by zhengxiaolian 2022-10-11 报表复核相关页面 start
+delete from sys_menu a where a.page_id='EstimateReveal001';
+
+delete from sys_menu a where a.page_id='ReportReview001';
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_002_104', 'DIS', null, 'REPORT_006_002', 'ReportReview001', 4, '02', '报表复核管理', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_page a where a.page_id='ReportReview001';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportReview001', 'DIS', '/disclosure/information/reveal/reportreview/ReportReview001', 'disclosure/information/reveal/reportreview/ReportReview001', 'REPORT_006_002_104', null, null, '02', '02', '报表复核管理', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_menu a where a.page_id='ReportReviewTg001';
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_002_105', 'DIS', null, 'REPORT_006_002', 'ReportReviewTg001', 5, '02', '托管复核管理', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_page a where a.page_id='ReportReviewTg001';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportReviewTg001', 'DIS', '/disclosure/information/reveal/reportreviewtg/ReportReviewTg001', 'disclosure/information/reveal/reportreviewtg/ReportReviewTg001', 'REPORT_006_002_105', null, null, '02', '02', '托管复核管理', 'system', null, sysdate, 'system', sysdate);
+
+update sys_menu a set a.order_no='6' where a.menu_id='REPORT_006_002_103';
+
+delete from sys_page a where a.page_id='ReportConfirmManage005';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportConfirmManage005', 'DIS', '/disclosure/information/reveal/reportconfirm/ReportConfirmManage005', 'disclosure/information/reveal/reportconfirm/ReportConfirmManage005', null, null, null, '02', '01', '确认并推送复核', 'system', null, sysdate, 'system', sysdate);
+-- add by zhengxiaolian 2022-10-11 报表复核相关页面 end
+
+-- add by zhengxiaolian 2022-10-11 复核状态数据字典 start
+delete from sys_datadict where DICT_CODE='REVIEW_STATUS' ;
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REVIEW_STATUS', 'DIS', '复核状态', null, '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE='REVIEW_STATUS' ;
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_STATUS', '01', '待复核', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_STATUS', '02', '已推送披露', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_STATUS', '03', '已推送托管', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_STATUS', '04', '被托管退回', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_STATUS', '05', '被披露退回', 5, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_STATUS', '06', '退回确认', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-10-11 复核状态数据字典 end
+
+-- add by zhengxiaolian 2022-10-11 托管复核状态数据字典 start
+delete from sys_datadict where DICT_CODE='REVIEW_TG_STATUS' ;
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REVIEW_TG_STATUS', 'DIS', '托管复核状态', null, '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE='REVIEW_TG_STATUS' ;
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_TG_STATUS', '01', '待复核', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_TG_STATUS', '02', '已推送披露', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REVIEW_TG_STATUS', '03', '被披露退回', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-10-11 托管复核状态数据字典 end
+
+--add by zhengxiaolian 2022-10-11 复核页面枚举值修改
+delete from sys_page_dictlist where PAGE_ID='ReportReview001' and DICT_ID='REVIEW_STATUS';
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportReview001', '999999', 'REVIEW_STATUS', '01', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportReview001', '999999', 'REVIEW_STATUS', '02', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportReview001', '999999', 'REVIEW_STATUS', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportReview001', '999999', 'REVIEW_STATUS', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportReview001', '999999', 'REVIEW_STATUS', '05', null, null, 'system', null, sysdate, 'system', sysdate, null);
+--add by zhengxiaolian 2022-10-11 复核页面枚举值修改
+
