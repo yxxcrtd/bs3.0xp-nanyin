@@ -108,7 +108,18 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     指标周期_四季度(DictCodeExt1.指标周期,"Q4","四季度"),
     指标周期_半年(DictCodeExt1.指标周期,"HY","半年"),
     指标周期_全年(DictCodeExt1.指标周期,"TY","全年"),
-   
+
+
+    复核状态_待复核(DictCodeExt1.复核状态,"01","待复核"),
+    复核状态_已推送披露(DictCodeExt1.复核状态,"02","已推送披露"),
+    复核状态_已推送托管(DictCodeExt1.复核状态,"03","已推送托管"),
+    复核状态_被托管退回(DictCodeExt1.复核状态,"04","被托管退回"),
+    复核状态_被披露退回(DictCodeExt1.复核状态,"05","被披露退回"),
+    复核状态_被退回确认(DictCodeExt1.复核状态,"06","退回确认"),
+
+    托管复核状态_待复核(DictCodeExt1.托管复核状态,"01","待复核"),
+    托管复核状态_已推送披露(DictCodeExt1.托管复核状态,"02","已推送披露"),
+    托管复核状态_被披露退回(DictCodeExt1.托管复核状态,"03","被披露退回"),
     ;
     /**
      * 对应于数据字典code

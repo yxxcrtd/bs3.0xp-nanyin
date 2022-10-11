@@ -652,4 +652,54 @@
 		</set>
 		WHERE ID = #{id,jdbcType=VARCHAR}
 	</update>
+
+	<update id="confirmStatusByList" parameterType="java.util.List">
+		update REP_REVEAL
+		set
+		CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR},
+		CONFIRM_DATE = #{confirmDate,jdbcType=DATE},
+		CONFIRM_USER = #{confirmUser,jdbcType=VARCHAR}
+		,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		,IS_CONFIRM='01',
+		,UPDATE_TIME = sysdate
+		where 1=1
+		and id in
+		<foreach collection="dataList" item="item" index="index" separator="," open="(" close=")">
+			#{item.id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<delete id="deleteReviewStatusByList" parameterType="java.util.List">
+		delete from REP_REVEAL_REVIEW
+		where 1=1
+		  and REVEAL_ID in
+		<foreach collection="dataList" item="item" index="index" separator="," open="(" close=")">
+			#{item.revealId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<insert id="insertReviewStatusList" parameterType="java.util.List">
+		insert into REP_REVEAL_REVIEW (UUID,REVEAL_ID,REVIEW_STATUS,REVIEW_TG_STATUS,REVIEW_USER,REVIEW_TIME,REVIEW_TG_USER,REVIEW_TG_TIME,
+		CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME, CREATE_DEPT)
+		select A.* from (
+		<foreach collection="dataList" item="item" index="index" separator="union all">
+			select
+			#{item.uuid,jdbcType=VARCHAR} UUID,
+			#{item.revealId,jdbcType=VARCHAR} REVEAL_ID,
+			#{item.reviewStatus,jdbcType=VARCHAR} REVIEW_STATUS,
+			#{item.reviewTgStatus,jdbcType=VARCHAR} REVIEW_TG_STATUS,
+			#{item.reviewUser,jdbcType=VARCHAR} REVIEW_USER,
+			#{item.reviewTime,jdbcType=TIMESTAMP} REVIEW_TIME,
+			#{item.reviewTgUser,jdbcType=VARCHAR} REVIEW_TG_USER,
+			#{item.reviewTgTime,jdbcType=VARCHAR} REVIEW_TG_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+			from dual
+		</foreach>
+		)A
+	</insert>
+
 </mapper>

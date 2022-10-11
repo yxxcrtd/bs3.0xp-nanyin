@@ -12,25 +12,27 @@ package com.joyintech.tams.disclosure.information.reveal.reportconfirm.service;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ZipFileUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.RepRevealReview;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,11 +45,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
@@ -94,6 +91,8 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
      */
     private static Logger log = LoggerFactory.getLogger(ReportConfirmManage001Service.class);
 
+    @Value("${application.reportInsertCount}")
+    public  String reportInsertCount;
     /**
      * 根据条件获取表格信息
      *
@@ -838,5 +837,82 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
     public String getProcessInstanceId(String workflowId){
         return reportConfirmManage001Mapper.getProcessInstanceId(workflowId);
+    }
+
+
+    public void doConfirm(ReportConfirmManage001Dto dto) throws IOException {
+        String data=dto.getData();
+        List<ReportConfirmManage001Dto> dataList = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
+
+        if (StringUtil.isEmptyList(dataList)) {
+            return;
+        }
+
+        RepRevealReview repRevealReview=null;
+        List<RepRevealReview>reviewList=new ArrayList<RepRevealReview>();
+        for (ReportConfirmManage001Dto tmp:dataList) {
+            tmp.setConfirmUser(LoginUserUtil.getUserName());
+            tmp.setUpdateUser(tmp.getConfirmUser());
+            tmp.setConfirmStatus(DictCodeList.确认状态_已确认.getValue());
+            tmp.setConfirmDate(new Date());
+            tmp.setCheckUser(LoginUserUtil.getUserName());
+            tmp.setCheckTime(new Date());
+
+            reportConfirmManage001Mapper.updateConfirmStatusById(tmp);
+
+            repRevealReview=new RepRevealReview();
+            repRevealReview.setUuid(UUID.randomUUID().toString());
+            repRevealReview.setRevealId(tmp.getId());
+            repRevealReview.setReviewUser(dto.getReviewUser());
+            repRevealReview.setReviewStatus(DictCodeListExt5.复核状态_待复核.getValue());
+            reviewList.add(repRevealReview);
+        }
+
+//        int maxDataCountOneTime = Integer.parseInt(reportInsertCount);
+//        int dataCount = dataList.size();
+//        if (dataCount <= maxDataCountOneTime) {
+//            reportConfirmManage001Mapper.confirmStatusByList(dataList);
+//            return;
+//        }
+//        List<ReportConfirmManage001Dto> newDataList = new ArrayList<ReportConfirmManage001Dto>();
+//        newDataList.addAll(dataList);
+//        // 分批处理
+//        int part = dataCount / maxDataCountOneTime; // 分批数
+//        for (int i = 0; i < part; i++) {
+//            reportConfirmManage001Mapper.confirmStatusByList(newDataList.subList(0, maxDataCountOneTime));
+//            newDataList.subList(0, maxDataCountOneTime).clear();
+//        }
+//        // 最后剩下的数据
+//        if (!CollectionUtils.isEmptyList(newDataList)) {
+//            reportConfirmManage001Mapper.confirmStatusByList(newDataList);
+//        }
+
+
+        this.insertReviewStatus(reviewList);
+
+    }
+
+    public void insertReviewStatus(List<RepRevealReview>reviewList){
+        int maxDataCountOneTime = Integer.parseInt(reportInsertCount);
+        int dataCount = reviewList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            reportConfirmManage001Mapper.deleteReviewStatusByList(reviewList);
+            reportConfirmManage001Mapper.insertReviewStatusList(reviewList);
+            return;
+        }
+        List<RepRevealReview> newDataList = new ArrayList<RepRevealReview>();
+        newDataList.addAll(reviewList);
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        for (int i = 0; i < part; i++) {
+            reportConfirmManage001Mapper.deleteReviewStatusByList(newDataList.subList(0, maxDataCountOneTime));
+            reportConfirmManage001Mapper.insertReviewStatusList(newDataList.subList(0, maxDataCountOneTime));
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (!CollectionUtils.isEmptyList(newDataList)) {
+            reportConfirmManage001Mapper.deleteReviewStatusByList(newDataList);
+            reportConfirmManage001Mapper.insertReviewStatusList(newDataList);
+        }
     }
 }

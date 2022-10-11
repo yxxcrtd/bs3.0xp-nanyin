@@ -87,6 +87,14 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     //产品代销机构:单据披露按照代销机构维度生成压缩包 add by zhouqiang start
     private String agencyName;
 
+    private String reviewUser;
+    public String getReviewUser() {
+        return reviewUser;
+    }
+
+    public void setReviewUser(String reviewUser) {
+        this.reviewUser = reviewUser;
+    }
     public String getAgencyName() {
         return agencyName;
     }

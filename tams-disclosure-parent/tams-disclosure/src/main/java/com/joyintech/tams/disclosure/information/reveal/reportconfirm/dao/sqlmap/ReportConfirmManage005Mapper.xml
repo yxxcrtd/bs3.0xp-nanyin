@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage005Mapper">
+    <select id="getUserList" resultType="com.joyintech.system.base.entity.SysUser">
+        select
+            USER_ID userId,
+            USER_NAME userName,
+            REAL_NAME realName
+        from SYS_USER su
+        where 1=1
+            and su.DEPT_CODE='000000'
+        <if test="searchValue != null and searchValue != ''">
+            and (su.USER_NAME like
+            concat(concat('%',#{searchValue}),'%')
+            or su.REAL_NAME like concat(concat('%',#{searchValue}),'%'))
+        </if>
+    </select>
+</mapper>

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.common.base.entity.RepRevealReview;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.RepReveal;
@@ -275,4 +276,9 @@ public interface ReportConfirmManage001Mapper {
     List<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paramMap);
 
     int backUpdate(ReportConfirmManage001Dto dto);
+    int confirmStatusByList(@Param("dataList")List<ReportConfirmManage001Dto> dataList);
+
+    int deleteReviewStatusByList(@Param("dataList")List<RepRevealReview> dataList);
+
+    int insertReviewStatusList(@Param("dataList")List<RepRevealReview> dataList);
 }

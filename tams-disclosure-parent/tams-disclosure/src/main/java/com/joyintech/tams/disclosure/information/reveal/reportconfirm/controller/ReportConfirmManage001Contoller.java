@@ -632,4 +632,21 @@ public class ReportConfirmManage001Contoller extends BaseController {
 
 
     }
+
+	@ResponseBody
+	@RequestMapping("confirmCheck")
+	public AjaxResult confirmCheck(@Valid ReportConfirmManage001Dto dto, BindingResult result) throws IOException {
+		String data=dto.getData();
+		List<ReportConfirmManage001Dto> listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
+		return new AjaxResult();
+	}
+
+	@ResponseBody
+	@RequestMapping("confirm")
+	public AjaxResult confirm(@Valid ReportConfirmManage001Dto dto, BindingResult result) throws IOException {
+		//String data=dto.getData();
+		//List<ReportConfirmManage001Dto> listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
+		reportConfirmManage001Service.doConfirm(dto);
+		return new AjaxResult();
+	}
 }
