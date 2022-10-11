@@ -451,9 +451,9 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
 
             }
 
-            if (StringUtil.isEmpty(rowData.get(12))){
+            if (StringUtil.isEmpty(rowData.get(9))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
-            }else if(!isDateStr(rowData.get(12))){
+            }else if(!isDateStr(rowData.get(9))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
             }
             if (StringUtil.isNotBlank(rowData.get(2)) && rowData.get(2).length()>500){
@@ -496,10 +496,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                     + GlobalConstant.UNDER_LINE + rowData.get(6)
                     + GlobalConstant.UNDER_LINE + rowData.get(7)
                     + GlobalConstant.UNDER_LINE + rowData.get(8)
-                    + GlobalConstant.UNDER_LINE + rowData.get(9)
-                    + GlobalConstant.UNDER_LINE + rowData.get(10)
-                    + GlobalConstant.UNDER_LINE + rowData.get(11)
-                    + GlobalConstant.UNDER_LINE + rowData.get(12);
+                    + GlobalConstant.UNDER_LINE + rowData.get(9);
             if (map.contains(key)) {
                 message.add("不可创建重复数据");
             } else {

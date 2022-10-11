@@ -47,3 +47,15 @@ values ('DIS_INDEX_PERIOD', 'HY', '半年', 5, 'TY', 'system', null, sysdate, 's
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_INDEX_PERIOD', 'TY', '全年', 6, 'TY', 'system', null, sysdate, 'system', sysdate, null);	
 
+-- 产品净值信息（估值）菜单页面
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_019';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_019', 'SVR', null, 'REPORT_006_004', 'RepProdIndexGz001', 12, '02', '产品净值信息(估值)', 'system', null, sysdate, 'system',sysdate);
+
+delete from SYS_PAGE where PAGE_ID like '%RepProdIndexGz00%';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepProdIndexGz001', 'SVR', '/disclosure/information/config/repProdIndexGz/RepProdIndexGz001', 'disclosure/information/config/repProdIndexGz/RepProdIndexGz001', 'REPORT_006_004_019', null, null, '02', '01', '产品净值信息(估值)', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepProdIndexGz002', 'SVR', '/disclosure/information/config/repProdIndexGz/RepProdIndexGz002', 'disclosure/information/config/repProdIndexGz/RepProdIndexGz002', null, null, null, '02', '01', '产品净值信息(估值)编辑', 'system', null, SYSDATE, 'system', SYSDATE);
+
+-- 产品净值信息（估值）流程模板配置
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('RepProdIndexGz002', 'RepProdIndex002_btn_submit', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('RepProdIndexGz002', 'RepProdIndex002_btn_save', 'oneApproval', 'system', '0001',sysdate, 'system',sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('RepProdIndexGz002', 'RepProdIndex001_btn_delete', 'noneApproval', 'system', '0001',sysdate, 'shan', sysdate, 'ALL', '02');

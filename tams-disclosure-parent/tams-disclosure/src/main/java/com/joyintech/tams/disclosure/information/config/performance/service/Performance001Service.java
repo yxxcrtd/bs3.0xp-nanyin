@@ -463,7 +463,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                                                  List<Performance001Dto> entities) throws ParseException {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         List<String> prodList =  performance001Mapper.getProdIdlist(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         //查询库里的生效日
         List<Performance001Dto>  kList=performance001Mapper.seletformanceInfoList();
@@ -682,7 +682,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 
 
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         try {
             format.setLenient(false);
             format.parse(str);

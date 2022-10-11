@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -270,9 +271,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                         "生效日 不能为空！"));
             }else{
                 //判断日期格式是否正确
-                if(!DateUtil.isDateStr(list.get(2).trim())){
+                if(!isDateStr(list.get(2).trim())){
                     excelValidDtolist.add(new ExcelValidDto(list.get(2), String.valueOf(i+1),
-                            "生效日格式不正确，正确格式：yyyy-MM-dd！"));
+                            "生效日格式不正确，正确格式：yyyy/MM/dd！"));
                 }else{
                     //验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(platDate,DateUtil.parse(list.get(2).trim()))>0){
@@ -288,9 +289,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 }
             }else{
                 //判断日期格式是否正确
-                if(!DateUtil.isDateStr(list.get(3).trim())){
+                if(!isDateStr(list.get(3).trim())){
                     excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
-                            "生效截止日期格式不正确，正确格式：yyyy-MM-dd！"));
+                            "生效截止日期格式不正确，正确格式：yyyy/MM/dd！"));
                 }else{
                     Date effEndDate=DateUtil.parse(list.get(3).trim());
                     //生效截止日期是否大于等于平台日期
@@ -557,6 +558,16 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             }
         }
         return equtiyList;
+    }
+    public static boolean isDateStr(String str) {
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
+        try {
+            format.setLenient(false);
+            format.parse(str);
+            return true;
+        } catch (Exception var3) {
+            return false;
+        }
     }
 
 }

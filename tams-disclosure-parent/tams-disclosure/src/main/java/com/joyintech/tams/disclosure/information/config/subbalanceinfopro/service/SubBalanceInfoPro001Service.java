@@ -286,7 +286,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
     }
 
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         try {
             format.setLenient(false);
             format.parse(str);
