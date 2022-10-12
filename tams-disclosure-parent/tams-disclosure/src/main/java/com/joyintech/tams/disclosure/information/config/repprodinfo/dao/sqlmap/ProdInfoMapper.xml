@@ -560,37 +560,8 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         update REP_PROD_INFO
-        set PROD_NAME           = #{prodName,jdbcType=VARCHAR},
-            SET_DATE            = #{setDate,jdbcType=DATE},
-            RAISE_AMT           = #{raiseAmt,jdbcType=DECIMAL},
-            PROD_ABBR           = #{prodAbbr,jdbcType=VARCHAR},
-            PROD_RE             = #{prodRe,jdbcType=VARCHAR},
-            P_PROD_ID           = #{pProdId,jdbcType=VARCHAR},
-            RAISE_STRDATE       = #{raiseStrdate,jdbcType=DATE},
-            RAISE_ENDDATE       = #{raiseEnddate,jdbcType=DATE},
-            MDATE               = #{mdate,jdbcType=DATE},
-            RAISE_TYPE          = #{raiseType,jdbcType=VARCHAR},
-            PERFORM_COMPARE     = #{performCompare,jdbcType=VARCHAR},
-            IS_PERIOD           = #{isPeriod,jdbcType=VARCHAR},
-            IS_GRADE            = #{isGrade,jdbcType=VARCHAR},
-            IS_INDEX            = #{isIndex,jdbcType=VARCHAR},
-            OPEN_FREQ           = #{openFreq,jdbcType=VARCHAR},
-            NATURE_INVEST       = #{natureInvest,jdbcType=VARCHAR},
-            PROD_TYPE           = #{prodType,jdbcType=VARCHAR},
-            ISSUING_WAY         = #{issuingWay,jdbcType=VARCHAR},
-            ACCT_CHNNAME        = #{acctChnname,jdbcType=VARCHAR},
-            PROFIT_TYPE         = #{profitType,jdbcType=VARCHAR},
-            PD_STATUS           = #{pdStatus,jdbcType=VARCHAR},
-            PROD_SERIES         = #{prodSeries,jdbcType=VARCHAR},
-            UPDATE_USER         = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME         = #{updateTime,jdbcType=TIMESTAMP},
-            STATUS              = #{status,jdbcType=VARCHAR},
-            ISSUE_STATUS        = #{issueStatus,jdbcType=VARCHAR},
-            REP_PROD_TYPE       = #{repProdType,jdbcType=VARCHAR},
-            HOLDDAY             = #{holdday,jdbcType=DECIMAL},
-            TRUSTPART           = #{trustpart,jdbcType=VARCHAR},
-            ERRORMSG            = #{errormsg,jdbcType=VARCHAR},
-            ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR}
+        set
+            STATUS              = #{status,jdbcType=VARCHAR}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 
