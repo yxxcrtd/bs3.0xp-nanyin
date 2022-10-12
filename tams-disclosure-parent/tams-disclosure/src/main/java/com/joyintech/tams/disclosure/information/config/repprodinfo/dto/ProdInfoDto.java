@@ -521,4 +521,13 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
     }
 
 
+    private String dataStatus;
+
+    public String getDataStatus() {
+        return dataStatus;
+    }
+
+    public void setDataStatus(String dataStatus) {
+        this.dataStatus = dataStatus;
+    }
 }

@@ -458,6 +458,7 @@
         where STATUS = 'E'
           and PROD_ID = #{prodId,jdbcType=VARCHAR}
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         update REP_PROD_INFO
         <set>
@@ -593,7 +594,12 @@
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 
-
+    <update id="updateStatus" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
+        update REP_PROD_INFO
+        set
+            STATUS = #{status,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
     <select id="searchProdList" parameterType="java.util.Map"
             resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
         select * from (
@@ -881,4 +887,36 @@
          from REP_PROD_INFO
         where status='E'
     </select>
+    <select id="selectHisData"
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
+        select STATUS,PROD_ID from REP_PROD_INFO_HIS where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </select>
+
+
+    <insert id="saveHisData">
+         insert into REP_PROD_INFO_HIS (PROD_ID, PROD_NAME, SET_DATE,
+                                   RAISE_AMT, PROD_ABBR, PROD_RE,
+                                   P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE,
+                                   MDATE, RAISE_TYPE, PERFORM_COMPARE,
+                                   IS_PERIOD, IS_GRADE, IS_INDEX,
+                                   OPEN_FREQ, NATURE_INVEST, PROD_TYPE,
+                                   ISSUING_WAY, ACCT_CHNNAME, PROFIT_TYPE,
+                                   PD_STATUS, PROD_SERIES, CREATE_USER,
+                                   CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+                                   UPDATE_TIME, STATUS, ISSUE_STATUS,
+                                   REP_PROD_TYPE, HOLDDAY, TRUSTPART,
+                                   ERRORMSG, ISSUE_STATUS_REMARK , WORKFLOW_ID)
+        values (#{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{setDate,jdbcType=DATE},
+                #{raiseAmt,jdbcType=DECIMAL}, #{prodAbbr,jdbcType=VARCHAR}, #{prodRe,jdbcType=VARCHAR},
+                #{pProdId,jdbcType=VARCHAR}, #{raiseStrdate,jdbcType=DATE}, #{raiseEnddate,jdbcType=DATE},
+                #{mdate,jdbcType=DATE}, #{raiseType,jdbcType=VARCHAR}, #{performCompare,jdbcType=VARCHAR},
+                #{isPeriod,jdbcType=VARCHAR}, #{isGrade,jdbcType=VARCHAR}, #{isIndex,jdbcType=VARCHAR},
+                #{openFreq,jdbcType=VARCHAR}, #{natureInvest,jdbcType=VARCHAR}, #{prodType,jdbcType=VARCHAR},
+                #{issuingWay,jdbcType=VARCHAR}, #{acctChnname,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR},
+                #{pdStatus,jdbcType=VARCHAR}, #{prodSeries,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+                #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{issueStatus,jdbcType=VARCHAR},
+                #{repProdType,jdbcType=VARCHAR}, #{holdday,jdbcType=DECIMAL}, #{trustpart,jdbcType=VARCHAR},
+                #{errormsg,jdbcType=VARCHAR}, #{issueStatusRemark,jdbcType=VARCHAR} ,#{workflowId,jdbcType=VARCHAR})
+    </insert>
 </mapper>

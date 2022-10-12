@@ -73,7 +73,7 @@ $(function() {
             ,{field:'updateUser', sortable:false, width:100, title: '更新人'}
             ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action',
                 buttons: ['edit', 'delt'],render: function (data, type, row, meta) {
-                    if (row.status == 'D')
+                    if (row.status == 'D'|| row.status == 'C')
                         return '';
                     else
                         return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +

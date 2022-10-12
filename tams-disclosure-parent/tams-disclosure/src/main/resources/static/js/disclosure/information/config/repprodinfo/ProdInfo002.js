@@ -121,6 +121,7 @@
 
 
     function saveOrSubmit(operateType) {
+        debugger;
         var object = $.serializeToObject('#submitForm');
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -145,7 +146,6 @@
             var isGrade =$("#isGrade").val();
 
             var raiseAmt = String(object.raiseAmt);
-            debugger;
             newParam = object;
             var num = 0;
             var changedFiled = new Array();
@@ -310,7 +310,6 @@
      * 画面加载完成
      */
     var data = $(function () {
-        debugger;
         param=$.serializeToObject('#submitForm');
         if (pageModel === PAGE_MODEL_EDIT) {
             $('#btnSave_wfl').hide();

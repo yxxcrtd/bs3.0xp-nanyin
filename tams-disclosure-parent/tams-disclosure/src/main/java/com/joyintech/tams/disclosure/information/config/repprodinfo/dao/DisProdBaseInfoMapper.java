@@ -26,6 +26,7 @@ public interface DisProdBaseInfoMapper  {
     int updateByPrimaryKeySelective(ProdInfoDto record);
 
     int updateByPrimaryKey(ProdInfoDto record);
+    int updateStatus(ProdInfoDto record);
 
     List<ProdInfoDto> searchProdList(Map<String, Object> params);
 
@@ -67,4 +68,8 @@ public interface DisProdBaseInfoMapper  {
      * @return
      */
     List<ProdInfoDto>  selectReAll();
+
+    int saveHisData(ProdInfoDto dto);
+
+    ProdInfoDto selectHisData(String workflowId);
 }

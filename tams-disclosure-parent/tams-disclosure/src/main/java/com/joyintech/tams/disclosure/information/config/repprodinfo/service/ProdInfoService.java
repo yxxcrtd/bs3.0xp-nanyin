@@ -17,6 +17,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -1026,6 +1027,30 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         }
     }
 
+    @Override
+    public void doInsert(ProdInfoDto dto, OperationType type) {
+        //如果是提交按钮,则数据状态设置为待复核
+        if("submit".equals(dto.getOperateType())){
+            // 数据存入留痕表备份 流程作废方便恢复
+            dto.setStatus(dto.getDataStatus());
+            prodInfoMapper.saveHisData(dto);
+
+            //进入流程，数据状态改为 待复核
+            ProdInfoDto prodInfoDto = new ProdInfoDto();
+            BeanUtil.copyPropertiesIgnoreNull(prodInfoDto,dto);
+            prodInfoDto.setStatus("C");
+            prodInfoMapper.updateByPrimaryKey(prodInfoDto);
+        }
+    }
+
+    @Override
+    public void doDelete(String workflowId) {
+         //查留痕表对应workflowId的数据，并还原数据状态
+        ProdInfoDto dto = prodInfoMapper.selectHisData(workflowId);
+        ProdInfoDto prodInfoDto = new ProdInfoDto();
+        BeanUtil.copyPropertiesIgnoreNull(prodInfoDto,dto);
+        prodInfoMapper.updateStatus(prodInfoDto);
+    }
 
     public void updateIssuingStatus(ProdInfoDto dto) {
         //如果子产品发布状态为发布成功，则更新母产品的发布状态为:发布成功

@@ -102,3 +102,14 @@ COMMENT ON COLUMN "REP_REVEAL_REVIEW"."CREATE_DEPT" IS '创建部门';
 
 COMMENT ON TABLE "REP_REVEAL_REVIEW" IS '报表复核状态表';
 -- add by zhengxiaolian 2022-10-11  报表复核状态表 end
+
+
+-- 创建 产品基本信息留痕表 流程废弃还原数据
+create table REP_PROD_INFO_HIS as select * from REP_PROD_INFO where 1=2;
+alter table REP_PROD_INFO_HIS add WORKFLOW_ID VARCHAR2(32);
+alter table REP_PROD_INFO_HIS add constraint REP_PROD_INFO_HIS_pk unique (WORKFLOW_ID);
+
+-- 数据状态下拉框 增加待复核
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('MAINTAIN_STATUS', 'C', '待复核', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- 产品基本信息 增加待复核
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ProdInfo001', '999999', 'MAINTAIN_STATUS', 'C', null, null, 'system', null, sysdate, 'system', sysdate, null);
