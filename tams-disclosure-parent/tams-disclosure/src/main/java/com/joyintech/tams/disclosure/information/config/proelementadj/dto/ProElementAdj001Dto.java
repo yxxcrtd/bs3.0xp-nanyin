@@ -112,6 +112,9 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
     public Date getEffDate() {
         return super.getEffDate();
     }
+    public String getEffDateStr() {
+        return super.getEffDate()==null?null: DateUtil.format(super.getEffDate(),"yyyy/MM/dd");
+    }
 
 
     @Override
