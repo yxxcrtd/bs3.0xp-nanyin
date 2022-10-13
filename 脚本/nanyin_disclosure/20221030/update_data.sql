@@ -156,3 +156,5 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('ReportReview001', '999999', 'REVIEW_STATUS', '05', null, null, 'system', null, sysdate, 'system', sysdate, null);
 --add by zhengxiaolian 2022-10-11 复核页面枚举值修改
 
+-- 业务类型名称更改 2022-10-13
+UPDATE SYS_DATADICT_LIST set ITEM_VALUE = '产品净值信息' where DICT_CODE = 'COMMON_BUSINESS_TYPE' AND ITEM_CODE = 'SVR13';
