@@ -487,15 +487,15 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准生效日"));
             } else if (!isDateStr(rowData.get(1))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "业绩比较基准生效日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "业绩比较基准生效日"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(2).trim())){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准生效截止日"));
             } else if (!isDateStr(rowData.get(2))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "业绩比较基准生效截止日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "业绩比较基准生效截止日"));
             }
             //校验截止日大于生效日
-            if (StringUtil.isNotEmpty(rowData.get(2).trim())&& StringUtil.isNotEmpty(rowData.get(1).trim())){
+            if (StringUtil.isNotEmpty(rowData.get(2).trim())&& StringUtil.isNotEmpty(rowData.get(1).trim())&&isDateStr(rowData.get(1))&&isDateStr(rowData.get(1))){
                 Date expDate=sdf.parse(rowData.get(2).trim());
                 Date effDate=sdf.parse(rowData.get(1).trim());
                 if (DateUtil.compareDate(effDate,expDate)>0) {
