@@ -239,6 +239,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 null);
         List<List<String>> dataList = excelUtil.readToList(0, 0, 0);
         List<ExcelValidDto> excelValidDtolist=new ArrayList<>();
+
+        // 验证消息
+        List<String> message = new ArrayList<>();
         if(dataList.size()<2){
             excelValidDtolist.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                       "文件内容为空,没有需要导入的数据！"));
@@ -253,27 +256,22 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             List<String> list = dataList.get(i);
             //字段非空检查
             if (!StringUtil.isNotEmpty(list.get(0))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
-                        "产品主代码 不能为空！"));
+                message.add("产品主代码 不能为空！");
             }else{
                 //判断产品主代码是否存在
                 if(!checkProdIdExist(list.get(0).trim())){
-                    excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
-                            "产品主代码未在系统中维护！"));
+                    message.add("产品主代码未在系统中维护！");
                 }
             }
             if(!StringUtil.isNotEmpty(list.get(1))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(1), String.valueOf(i+1),
-                        "合作机构 不能为空！"));
+                message.add("合作机构 不能为空!");
             }
             if (!StringUtil.isNotEmpty(list.get(2))){
-                excelValidDtolist.add(new ExcelValidDto(list.get(2), String.valueOf(i+1),
-                        "生效日 不能为空！"));
+                message.add("生效日 不能为空！");
             }else{
                 //判断日期格式是否正确
                 if(!isDateStr(list.get(2).trim())){
-                    excelValidDtolist.add(new ExcelValidDto(list.get(2), String.valueOf(i+1),
-                            "生效日格式不正确，正确格式：yyyy/MM/dd！"));
+                    message.add("生效日格式不正确，正确格式：yyyy/MM/dd！");
                 }else{
                     //验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(platDate,DateUtil.parse(list.get(2).trim()))>0){
@@ -284,14 +282,12 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             }
             if (!StringUtil.isNotEmpty(list.get(3))){
                 if (DateUtil.compareDate(platDate,DateUtil.parse(list.get(3).trim()))>0){
-                    excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
-                            "生效截止日期 不能为空！"));
+                    message.add("生效截止日期 不能为空！");
                 }
             }else{
                 //判断日期格式是否正确
                 if(!isDateStr(list.get(3).trim())){
-                    excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
-                            "生效截止日期格式不正确，正确格式：yyyy/MM/dd！"));
+                    message.add("生效截止日期格式不正确，正确格式：yyyy/MM/dd！");
                 }else{
                     Date effEndDate=DateUtil.parse(list.get(3).trim());
                     //生效截止日期是否大于等于平台日期
@@ -302,8 +298,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                     if(DateUtil.isDateStr(list.get(2).trim())){
                         Date effDate=DateUtil.parse(list.get(2).trim());
                         if (DateUtil.compareDate(effDate,effEndDate)>0) {
-                            excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
-                                    "生效截止日期要大于等于生效日！"));
+                            message.add("生效截止日期要大于等于生效日！");
                         }
                         //生效日、生效截止日格式都正确，通过产品主代码查询系统中该产品已有的生效区间，校验生效区间是否有重叠
                         if(StringUtil.isNotEmpty(list.get(0))){
@@ -317,12 +312,20 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                                     excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
                                             "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
                                                     +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
+                                    message.add("生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
+                                            +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd"));
                                     break;
                                 }
                             }
                         }
                     }
                 }
+            }
+            if (CollectionUtils.isNotEmpty(message)) {
+                excelValidDtolist.add(new ExcelValidDto(list.get(0)
+                        + GlobalConstant.UNDER_LINE + list.get(1)
+                        + GlobalConstant.UNDER_LINE + list.get(2),
+                        String.valueOf(i + 1), StringUtil.joinString(message, "<br>")));
             }
         }
         if(StringUtil.isEmptyList(excelValidDtolist)){
