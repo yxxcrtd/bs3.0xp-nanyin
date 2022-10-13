@@ -89,6 +89,8 @@ public interface DisProdPlanManage002Mapper {
 
 	List<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> paraMap);
 
+	List<SelectOptionDto> getMontherAndCommonProdIdNew(Map<String, Object> paraMap);
+
 	List<DisProdPlanManage002Dto> checkInfo(DisProdPlanManage002Dto dto);
 
 	int delete1(DisProdPlanManage002Dto entity);
@@ -102,4 +104,5 @@ public interface DisProdPlanManage002Mapper {
 	DisProdPlanManage002Dto selectHisData(String workflowId);
 
     DisProdPlanManage002Dto selectCfsj(@Param("prodId") String prodId, @Param("operationStartDate") String operationStartDate);
+
 }

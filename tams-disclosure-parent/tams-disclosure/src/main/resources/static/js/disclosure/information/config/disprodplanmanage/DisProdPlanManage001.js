@@ -396,6 +396,18 @@
 			  return modelSelectParam;
          });
 	   };
+
+	 	function addrule() {
+			Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
+				{},function () {
+					var finprodIds = $('#finprodIds').data('finprodIds');
+					if(finprodIds.length ==0){
+						return;
+					}
+					$('#finprodId').textSelect('setValue',finprodIds);
+				});
+			return;
+		};
 	   $(function(){
 		   // 页面配置调用初始化方法；
 		   if(isModelSelect == 'yes'){
@@ -404,6 +416,8 @@
 			   //search();
 			   dataTable2.load();
 		   }
+
+		   $('#DisProdPlanManage001_btn_add').click(addrule);
 
 		   //导出
 		   $('#DisProdPlanManage001_btn_export').click(function () {
