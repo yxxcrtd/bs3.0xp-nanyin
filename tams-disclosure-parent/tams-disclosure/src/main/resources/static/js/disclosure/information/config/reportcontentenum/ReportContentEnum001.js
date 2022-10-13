@@ -244,9 +244,9 @@ $(function () {
 					if(purviewElements.indexOf('_delete')!=-1){
 						html +='<i class="btn layui-icon delete" title="删除">&#xe640;</i>';
 					}
-					if(purviewElements.indexOf('_manual')!=-1){
-						html +="<i class = 'iconfont icon-copy manual' title='复制'></i>";
-					}
+//					if(purviewElements.indexOf('_manual')!=-1){
+//						html +="<i class = 'iconfont icon-copy manual' title='复制'></i>";
+//					}
 					return html;
 				}
 
@@ -319,18 +319,18 @@ $(function () {
 //		       });
 		});
 
-		typeAssetsTable.bind('click', '.manual', function(data, index) {
-			var object = {};
-			object.id = data.id;
-			object.operateType = "delete";
-//		   	Joyin.ajaxJson(basePath + 'disclosure/information/config/reportcontentenum/ReportContentEnum001/check', object, function(result) {
-			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("复制")), function(){
-				Joyin.ajaxJson(basePath + 'disclosure/information/config/reportcontentenum/ReportContentEnum001/copyindexDetial', object, function(result) {
-					typeAssetsTable.reload();
-				});
-			});
-//		       });
-		});
+//		typeAssetsTable.bind('click', '.manual', function(data, index) {
+//			var object = {};
+//			object.id = data.id;
+//			object.operateType = "delete";
+////		   	Joyin.ajaxJson(basePath + 'disclosure/information/config/reportcontentenum/ReportContentEnum001/check', object, function(result) {
+//			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("复制")), function(){
+//				Joyin.ajaxJson(basePath + 'disclosure/information/config/reportcontentenum/ReportContentEnum001/copyindexDetial', object, function(result) {
+//					typeAssetsTable.reload();
+//				});
+//			});
+////		       });
+//		});
 
 		/**批量删除**/
 		$('#ReportContentEnum003_btn_delete').click(function() {
