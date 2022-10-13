@@ -113,3 +113,15 @@ alter table REP_PROD_INFO_HIS add constraint REP_PROD_INFO_HIS_pk unique (WORKFL
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('MAINTAIN_STATUS', 'C', '待复核', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- 产品基本信息 增加待复核
 INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ProdInfo001', '999999', 'MAINTAIN_STATUS', 'C', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+-- 创建 产品排期计划留痕表 流程废弃还原数据
+create table DIS_PROD_PLAN_HIS as select * from DIS_PROD_PLAN where 1=2;
+alter table DIS_PROD_PLAN_HIS add WORKFLOW_ID VARCHAR2(32);
+
+--  创建 产品净值信息留痕表 流程废弃还原数据
+create table REP_PROD_INDEX_HIS as select * from REP_PROD_INDEX where 1=2;
+alter table REP_PROD_INDEX_HIS add WORKFLOW_ID VARCHAR2(32);
+
+-- 创建 产品净值信息(估值) 留痕表 流程废弃还原数据
+create table REP_PROD_INDEX_GZ_HIS as select * from REP_PROD_INDEX_GZ where 1=2;
+alter table REP_PROD_INDEX_GZ_HIS add WORKFLOW_ID VARCHAR2(32);
