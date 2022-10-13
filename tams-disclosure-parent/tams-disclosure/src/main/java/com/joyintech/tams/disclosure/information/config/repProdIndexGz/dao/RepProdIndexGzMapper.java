@@ -41,4 +41,14 @@ public interface RepProdIndexGzMapper {
     RepProdIndexGzDto checkExistData(RepProdIndexGzDto record);
 
     List<RepProdIndexGzDto> selectProdIndexList(@Param("list") List<RepProdIndexGzDto> list);
+
+    int saveHisData(RepProdIndexGzDto dto);
+
+    int updateByPrimaryKey(RepProdIndexGzDto repProdIndexGzDto);
+
+    RepProdIndexGzDto selectHisData(String workflowId);
+
+    int updateStatus(RepProdIndexGzDto repProdIndexGzDto);
+
+    RepProdIndexGzDto selectCfsj(@Param("prodId") String prodId, @Param("valueDate") String valueDate);
 }

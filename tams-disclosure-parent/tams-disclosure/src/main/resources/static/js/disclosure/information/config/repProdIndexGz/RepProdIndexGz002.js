@@ -11,9 +11,11 @@ var RepProdIndex002 = function() {
             }
         },
         saveOrSubmit : function(operateType){
+            var object = $.serializeToObject('#submitForm');
             var param = {};
             param.operateType = operateType;
             param.pageModel = pageModel;
+            param.dataStatus = object.dataStatus;
             param.prodId = $("#prodId").val();
             param.prodName = $("#prodName").val();
             param.pProdId = $("#pProdId").val();

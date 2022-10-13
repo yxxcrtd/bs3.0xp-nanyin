@@ -168,16 +168,17 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             }
             List<DisProdPlanManage002Dto> entities = this.convertToBean(dataList);
             List<DisProdPlanManage002Dto> data = this.selectProdPlanByKey(entities);
+
             if (data != null && data.size() > 0) {
                 Map<String, List<DisProdPlanManage002Dto>> planMap = entities.stream().collect(
                         JoyinCollectors.groupingBy(
-                                x -> x.getProdId() + GlobalConstant.UNDER_LINE + x.getOpenEndDateStr()
+                                x -> x.getProdId() + GlobalConstant.UNDER_LINE + x.getOperationStartDateStr()
                         ));
                 // 将序号放入list中
                 List<String> excelNumList = new ArrayList<>();
                 List<Integer> excelNumIntList = new ArrayList<>();
                 for (DisProdPlanManage002Dto plandto : data) {
-                    List<DisProdPlanManage002Dto> listTemp = planMap.get(plandto.getProdId() + GlobalConstant.UNDER_LINE + plandto.getOpenEndDateStr());
+                    List<DisProdPlanManage002Dto> listTemp = planMap.get(plandto.getProdId() + GlobalConstant.UNDER_LINE + plandto.getOperationStartDateStr());
                     excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
                 }
                 // 将list进行排序，并转化为string
@@ -218,6 +219,11 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 entity.setOpenEndDateStr(list.get(2));
             } else {
                 entity.setOpenEndDateStr(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(4))) {
+                entity.setOperationStartDateStr(list.get(4));
+            } else {
+                entity.setOperationStartDateStr(" ");
             }
             entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
@@ -268,7 +274,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
     }
 
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
         try {
             format.setLenient(false);
             format.parse(str);
@@ -319,6 +325,11 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                         this.getMessage("REPORT_COMMON_FILE_E_0030", 7)));
                 break;
             }
+//            DisProdPlanManage002Dto dto = disProdPlanManage002Service.selectCfsj(rowData.get(0),rowData.get(4));
+//            if (StringUtil.equals(dto.getDataStatus(),"C")){
+//                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+//                        this.getMessage("DIS_001")));
+//            }
             // 验证消息
             List<String> message = new ArrayList<>();
             ProdInfoDto prodInfo = new ProdInfoDto();
@@ -334,6 +345,10 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             if(StringUtils.equals("02",prodInfo.getIssuingWay())){
                 message.add("封闭式产品不允许导入排期计划");
             }else{
+                DisProdPlanManage002Dto dto = disProdPlanManage002Service.selectCfsj(rowData.get(0),rowData.get(4));
+                if (StringUtil.equals(dto.getDataStatus(),"C")){
+                    message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+                }
                 if (!StringUtil.isNotEmpty(rowData.get(1))) {
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "开放期起始日"));
                 } else if (!isDateStr(rowData.get(1))) {

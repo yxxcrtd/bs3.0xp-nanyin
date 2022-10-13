@@ -200,8 +200,11 @@ public class DisProdPlanManage001Dto extends BaseEntity{
 		this.prodName = prodName;
 	}
 
+//	public String getDataStatusName() {
+//		return dataStatusName;
+//	}
 	public String getDataStatusName() {
-		return dataStatusName;
+		return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
 	}
 
 	public void setDataStatusName(String dataStatusName) {

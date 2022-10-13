@@ -550,4 +550,96 @@
             </foreach>
         </where>
     </update>
+
+    <insert id="saveHisData">
+        insert into DIS_NOSTD_CREDITOR_HIS ( NOSTD_ASSET_ID,PROD_ID,EFF_DATE,EFF_END_DATE,FINANCIER,
+         PROJECT_NO,
+         PROJECT_NAME,REM_FINANCING_PERIOD,INCOME_DISTRIBUTE,
+        TRD_CONSTRUCT,RISK_INFO ,DATA_STATUS,
+        DATA_SOURCE,CREATE_USER ,CREATE_TIME,UPDATE_USER,
+         UPDATE_TIME, WORKFLOW_ID
+         )
+        values (#{nostdAssetId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{effEndDate,jdbcType=DATE},
+        #{financier,jdbcType=VARCHAR},
+        #{projectNo,jdbcType=VARCHAR},
+        #{projectName,jdbcType=VARCHAR}, #{remFinancingPeriod,jdbcType=VARCHAR}, #{incomeDistribute,jdbcType=VARCHAR},
+            #{trdConstruct,jdbcType=VARCHAR}, #{riskInfo,jdbcType=VARCHAR},
+            #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR}
+            )
+    </insert>
+
+    <update id="update">
+        update DIS_NOSTD_CREDITOR
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="effEndDate != null" >
+                EFF_END_DATE = #{effEndDate,jdbcType=DATE},
+            </if>
+            <if test="financier != null" >
+                FINANCIER = #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="projectNo != null" >
+                PROJECT_NO = #{projectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null" >
+                PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="remFinancingPeriod != null" >
+                REM_FINANCING_PERIOD = #{remFinancingPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeDistribute != null" >
+                INCOME_DISTRIBUTE = #{incomeDistribute,jdbcType=VARCHAR},
+            </if>
+            <if test="trdConstruct != null" >
+                TRD_CONSTRUCT = #{trdConstruct,jdbcType=VARCHAR},
+            </if>
+            <if test="riskInfo != null" >
+                RISK_INFO = #{riskInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectHisData"
+            resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+        select distinct
+            NOSTD_ASSET_ID,
+            DATA_STATUS,
+            PROD_ID
+      from DIS_NOSTD_CREDITOR_HIS where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateByPrimaryKey">
+           update DIS_NOSTD_CREDITOR
+        set
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+            where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </update>
 </mapper>

@@ -52,7 +52,7 @@
             ,{field:'updateUser', title: 'UnClaimAssetDetail002.updateUser', width:150}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {
-                    if (row.dataStatus == 'D')
+                    if (row.dataStatus == 'D' || row.dataStatus == 'C')
                         return '';
                     else
                         return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +

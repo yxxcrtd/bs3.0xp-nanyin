@@ -244,4 +244,14 @@ public class RepProdIndexGzDto extends RepProdIndex implements ITableRow, Proces
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
     }
+
+    private String dataStatus;
+
+    public String getDataStatus() {
+        return dataStatus;
+    }
+
+    public void setDataStatus(String dataStatus) {
+        this.dataStatus = dataStatus;
+    }
 }

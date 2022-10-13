@@ -8,13 +8,11 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
+import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndexGz.dao.RepProdIndexGzMapper;
 import com.joyintech.tams.disclosure.information.config.repProdIndexGz.dto.RepProdIndexGzDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
@@ -99,6 +97,29 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
                 repProdIndexGzMapper.delete2(entity);
             }
         }
+    }
+
+    @Override
+    public void doInsert(RepProdIndexGzDto dto, OperationType type) {
+        // 数据存入留痕表备份 流程作废方便恢复
+        dto.setStatus(dto.getDataStatus());
+        repProdIndexGzMapper.saveHisData(dto);
+
+        //进入流程，数据状态改为 待复核
+        RepProdIndexGzDto repProdIndexGzDto = new RepProdIndexGzDto();
+        BeanUtil.copyPropertiesIgnoreNull(repProdIndexGzDto,dto);
+        repProdIndexGzDto.setStatus("C");
+        repProdIndexGzMapper.updateByPrimaryKey(repProdIndexGzDto);
+
+    }
+
+    @Override
+    public void doDelete(String workflowId) {
+        //查留痕表对应workflowId的数据，并还原数据状态
+        RepProdIndexGzDto dto = repProdIndexGzMapper.selectHisData(workflowId);
+        RepProdIndexGzDto repProdIndexGzDto = new RepProdIndexGzDto();
+        BeanUtil.copyPropertiesIgnoreNull(repProdIndexGzDto,dto);
+        repProdIndexGzMapper.updateStatus(repProdIndexGzDto);
     }
 
     /**
@@ -279,7 +300,7 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
     }
 
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
         try {
             format.setLenient(false);
             format.parse(str);
@@ -343,6 +364,10 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
             List<String> message = new ArrayList<>();
             RepProdIndexGzDto dto1 = new RepProdIndexGzDto();
             RepProdIndexGzDto dto2 = new RepProdIndexGzDto();
+            RepProdIndexGzDto dto = repProdIndexGzMapper.selectCfsj(rowData.get(0),rowData.get(2));
+            if (StringUtil.equals(dto.getStatus(),"C")){
+                message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+            }
             if (!StringUtil.isNotEmpty(rowData.get(0))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else if (!this.selectProdId(rowData.get(0))){

@@ -30,6 +30,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
@@ -603,6 +604,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         }
                     }
                 }
+            }
+            //todo 待复核数据不能导入(已完成 需要模板自测)
+            ProdInfoDto dto = prodInfoMapper.selectCfsj(list.get(0));
+            if (StringUtil.equals(dto.getStatus(),"C")){
+                message.add("导入文件中有与待复核数据重复的数据,不允许导入");
             }
             // 子产品代码
             if (StringUtil.isEmpty(list.get(0))) {

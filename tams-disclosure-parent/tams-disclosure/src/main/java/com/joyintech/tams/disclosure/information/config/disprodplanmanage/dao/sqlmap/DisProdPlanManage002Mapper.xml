@@ -112,17 +112,8 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto" >
         update DIS_PROD_PLAN
-        set PROD_ID = #{prodId,jdbcType=VARCHAR},
-            OPEN_START_DATE = #{openStartDate,jdbcType=DATE},
-            OPEN_END_DATE = #{openEndDate,jdbcType=DATE},
-            COLLINGOFF_PERIOD = #{collingoffPeriod,jdbcType=DATE},
-            OPERATION_START_DATE = #{operationStartDate,jdbcType=DATE},
-            AUTO_REDEEM_DATE = #{autoRedeemDate,jdbcType=DATE},
-            HOLD_DAYS = #{holdDays,jdbcType=DECIMAL},
-            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
-            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        set
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
             where PROD_PLAN_ID = #{prodPlanId,jdbcType=VARCHAR}
     </update>
 
@@ -188,5 +179,47 @@
        <where>
            PROD_ID=#{prodId} and OPERATION_START_DATE =#{operationStartDate,jdbcType=DATE}
        </where>
+    </select>
+
+
+
+    <insert id="saveHisData">
+           insert into DIS_PROD_PLAN_HIS (PROD_PLAN_ID, PROD_ID, OPEN_START_DATE,
+                                   OPEN_END_DATE, COLLINGOFF_PERIOD, OPERATION_START_DATE,
+                                   AUTO_REDEEM_DATE, HOLD_DAYS, DATA_STATUS,
+                                   DATA_SOURCE, CREATE_USER, CREATE_TIME,
+                                   UPDATE_USER, UPDATE_TIME, CREATE_DEPT, WORKFLOW_ID
+        )
+        values (#{prodPlanId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{openStartDate,jdbcType=DATE},
+                #{openEndDate,jdbcType=DATE}, #{collingoffPeriod,jdbcType=DATE}, #{operationStartDate,jdbcType=DATE},
+                #{autoRedeemDate,jdbcType=DATE}, #{holdDays,jdbcType=DECIMAL}, #{dataStatus,jdbcType=VARCHAR},
+                #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR},#{workflowId,jdbcType=VARCHAR}
+               )
+
+    </insert>
+
+
+    <select id="selectHisData"
+            resultType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto">
+      select distinct
+      PROD_PLAN_ID,
+      DATA_STATUS,
+      PROD_ID,
+      OPEN_END_DATE
+      from DIS_PROD_PLAN_HIS where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectCfsj"
+            resultType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto">
+        select
+                distinct
+                DATA_STATUS,
+                PROD_ID,
+                OPERATION_START_DATE
+        from
+                DIS_PROD_PLAN
+        where
+            PROD_ID = #{prodId,jdbcType=VARCHAR} and OPERATION_START_DATE =TO_DATE(#{operationStartDate},'YYYY-MM-DD')
+
     </select>
 </mapper>

@@ -92,6 +92,7 @@ public class DisProdPlanManage002Controller extends BaseController {
 		this.setSelectOptionToModel(model,DictCode.信披_数据状态ED);
 		
 		String id = this.getParam("prodPlanId");
+		String dataStatus = this.getParam("dataStatus");
 		/*if (StringUtil.isNotEmpty(id)) {
 			model.addAttribute("entity", disProdPlanManage002Service.getDisProdPlanManage002Dto(id));
 		}*/

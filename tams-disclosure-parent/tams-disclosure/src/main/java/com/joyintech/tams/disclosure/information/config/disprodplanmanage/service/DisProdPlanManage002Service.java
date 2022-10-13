@@ -14,6 +14,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -152,6 +153,30 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
         }
     }
 
+    @Override
+    public void doInsert(DisProdPlanManage002Dto dto, OperationType type) {
+        //如果是提交按钮,则数据状态设置为待复核
+        if("update".equals(dto.getOperateType())){
+            // 数据存入留痕表备份 流程作废方便恢复
+            disProdPlanManage002Mapper.saveHisData(dto);
+
+            //进入流程，数据状态改为 待复核
+            DisProdPlanManage002Dto disProdPlanManage002Dto = new DisProdPlanManage002Dto();
+            BeanUtil.copyPropertiesIgnoreNull(disProdPlanManage002Dto,dto);
+            disProdPlanManage002Dto.setDataStatus("C");
+            disProdPlanManage002Mapper.update(disProdPlanManage002Dto);
+        }
+    }
+
+    @Override
+    public void doDelete(String workflowId) {
+        //查留痕表对应workflowId的数据，并还原数据状态
+        DisProdPlanManage002Dto dto = disProdPlanManage002Mapper.selectHisData(workflowId); //暂时只查数据状态
+//        DisProdPlanManage002Dto disProdPlanManage002Dto = new DisProdPlanManage002Dto();
+//        BeanUtil.copyPropertiesIgnoreNull(disProdPlanManage002Dto,dto);
+        disProdPlanManage002Mapper.updateByPrimaryKey(dto);
+    }
+
     public Page<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> paraMap) {
         Page<SelectOptionDto> page = queryForPageForSelectReturn(()
                 -> disProdPlanManage002Mapper.getMontherAndCommonProdId(paraMap));
@@ -164,5 +189,9 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
 
     public int hasRepeatedData(DisProdPlanManage002Dto dto) {
         return disProdPlanManage002Mapper.hasRepeatedData(dto);
+    }
+
+    public DisProdPlanManage002Dto selectCfsj(String prodId, String operationStartDate) {
+        return disProdPlanManage002Mapper.selectCfsj(prodId,operationStartDate);
     }
 }

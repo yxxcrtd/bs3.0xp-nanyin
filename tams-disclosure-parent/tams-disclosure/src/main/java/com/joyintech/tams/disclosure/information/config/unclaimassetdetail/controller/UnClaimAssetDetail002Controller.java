@@ -67,6 +67,7 @@ public class UnClaimAssetDetail002Controller extends BaseController {
             //新建画面DTO
              UnClaimAssetDetailDto dto = new UnClaimAssetDetailDto();
             //赋基本信息的初始值，这与所投非标资产的基本信息一致
+            dto.setNostdAssetId(unclaimList.get(0).getNostdAssetId());
             dto.setProdId(unclaimList.get(0).getProdId());
             dto.setEffDate(unclaimList.get(0).getEffDate());
             dto.setEffEndDate(unclaimList.get(0).getEffEndDate());

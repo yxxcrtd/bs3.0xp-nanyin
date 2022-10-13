@@ -13,8 +13,10 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportGrahDto;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dao.RepProdIndexSMapper;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -99,6 +101,29 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                 repProdIndexSMapper.delete2(entity);
             }
         }
+    }
+
+    @Override
+    public void doInsert(RepProdIndexDto dto, OperationType type) {
+        // 数据存入留痕表备份 流程作废方便恢复
+        dto.setStatus(dto.getDataStatus());
+        repProdIndexSMapper.saveHisData(dto);
+
+        //进入流程，数据状态改为 待复核
+        RepProdIndexDto repProdIndexDto = new RepProdIndexDto();
+        BeanUtil.copyPropertiesIgnoreNull(repProdIndexDto,dto);
+        repProdIndexDto.setStatus("C");
+        repProdIndexSMapper.updateByPrimaryKey(repProdIndexDto);
+
+    }
+
+    @Override
+    public void doDelete(String workflowId) {
+        //查留痕表对应workflowId的数据，并还原数据状态
+        RepProdIndexDto dto = repProdIndexSMapper.selectHisData(workflowId);
+        RepProdIndexDto repProdIndexDto = new RepProdIndexDto();
+        BeanUtil.copyPropertiesIgnoreNull(repProdIndexDto,dto);
+        repProdIndexSMapper.updateStatus(repProdIndexDto);
     }
 
     /**
@@ -279,7 +304,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
     }
 
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
         try {
             format.setLenient(false);
             format.parse(str);
@@ -343,6 +368,10 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             List<String> message = new ArrayList<>();
             RepProdIndexDto dto1 = new RepProdIndexDto();
             RepProdIndexDto dto2 = new RepProdIndexDto();
+            RepProdIndexDto dto = repProdIndexSMapper.selectCfsj(rowData.get(0),rowData.get(2));
+            if (StringUtil.equals(dto.getStatus(),"C")){
+                message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+            }
             if (!StringUtil.isNotEmpty(rowData.get(0))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else if (!this.selectProdId(rowData.get(0))){

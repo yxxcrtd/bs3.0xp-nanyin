@@ -211,10 +211,11 @@
 	     * 编辑页面
 	     */
 	   dataTable.bind('click', '.edit', function(data, index) {
+	   	   debugger;
 	    	data.operateType = "edit";
 	    	Joyin.dialog(JoyinUtil.getLabel("编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init"),
-	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,prodPlanId:data.prodPlanId},
+	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,prodPlanId:data.prodPlanId,dataStatus: data.dataStatus},
 	                function(data){
 	                	dataTable.reload();
 	                	dataTable2.reload();
@@ -311,7 +312,7 @@
 			   ,{field:'updateUser',  title: '更新人',width:100}
 			   ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
 				   render: function (data, type, row, meta) {
-					   if (row.dataStatus == 'D')
+					   if (row.dataStatus == 'D' || row.dataStatus == 'C')
 						   return '';
 					   else
 						   return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
@@ -329,7 +330,7 @@
 	    	data.operateType = "edit";
 	    	Joyin.dialog(JoyinUtil.getLabel("产品排期计划编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init"),
-	                "60%", "90%", {pageModel:PAGE_MODEL_EDIT,prodPlanId:data.prodPlanId},
+	                "60%", "90%", {pageModel:PAGE_MODEL_EDIT,prodPlanId:data.prodPlanId,dataStatus: data.dataStatus},
 	                function(data){
 	                	dataTable.reload();
 	                	dataTable2.reload();

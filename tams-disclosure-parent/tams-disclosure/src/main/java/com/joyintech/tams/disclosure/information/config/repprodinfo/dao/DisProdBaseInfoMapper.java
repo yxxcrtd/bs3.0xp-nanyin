@@ -72,4 +72,6 @@ public interface DisProdBaseInfoMapper  {
     int saveHisData(ProdInfoDto dto);
 
     ProdInfoDto selectHisData(String workflowId);
+
+    ProdInfoDto selectCfsj(String prodId);
 }

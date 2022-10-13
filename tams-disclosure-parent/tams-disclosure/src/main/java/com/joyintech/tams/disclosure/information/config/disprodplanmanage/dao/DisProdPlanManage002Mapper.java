@@ -80,6 +80,7 @@ public interface DisProdPlanManage002Mapper {
 	 * @param dto
 	 */
 	void update(DisProdPlanManage002Dto dto);
+	void updateByPrimaryKey(DisProdPlanManage002Dto dto);
 	/**
 	 * 删除
 	 * @param param
@@ -95,4 +96,10 @@ public interface DisProdPlanManage002Mapper {
 	ProdInfoDto selectByProdStatus(@Param("prodId") String prodId, @Param("status") String status);
 
 	int hasRepeatedData(DisProdPlanManage002Dto dto);
+
+	int saveHisData(DisProdPlanManage002Dto dto);
+
+	DisProdPlanManage002Dto selectHisData(String workflowId);
+
+    DisProdPlanManage002Dto selectCfsj(@Param("prodId") String prodId, @Param("operationStartDate") String operationStartDate);
 }

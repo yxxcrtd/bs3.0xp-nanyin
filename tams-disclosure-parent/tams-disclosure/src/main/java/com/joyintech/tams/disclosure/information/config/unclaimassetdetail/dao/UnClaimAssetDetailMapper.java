@@ -126,4 +126,12 @@ public interface UnClaimAssetDetailMapper  {
     List<ProcessMark> getWorklowData(UnClaimAssetDetailDto detailDto);
 
     int deleteByNostdAssetId(@Param("list") List<UnClaimAssetDetailDto> list);
+
+    int saveHisData(UnClaimAssetDetailDto dto);
+
+    int update(UnClaimAssetDetailDto unClaimAssetDetailDto);
+
+    UnClaimAssetDetailDto selectHisData(String workflowId);
+
+    int updateByPrimaryKey(UnClaimAssetDetailDto dto);
 }

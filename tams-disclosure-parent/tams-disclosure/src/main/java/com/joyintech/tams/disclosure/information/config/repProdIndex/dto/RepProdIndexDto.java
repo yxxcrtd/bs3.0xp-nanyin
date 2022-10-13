@@ -244,4 +244,14 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
     }
+
+    private String dataStatus;
+
+    public String getDataStatus() {
+        return dataStatus;
+    }
+
+    public void setDataStatus(String dataStatus) {
+        this.dataStatus = dataStatus;
+    }
 }

@@ -862,6 +862,14 @@
             resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
         select STATUS,PROD_ID from REP_PROD_INFO_HIS where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
     </select>
+    <select id="selectCfsj"
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
+        select PROD_ID,
+               STATUS
+        from
+        REP_PROD_INFO
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
 
 
     <insert id="saveHisData">

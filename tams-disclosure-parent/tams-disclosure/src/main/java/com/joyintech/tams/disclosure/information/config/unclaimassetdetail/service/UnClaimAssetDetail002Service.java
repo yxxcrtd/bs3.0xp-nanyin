@@ -3,10 +3,12 @@ package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.serv
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
@@ -113,6 +115,28 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
                 unClaimAssetDetailMapper.insert(unclaimDto);
             }
         }
+    }
+
+    @Override
+    public void doInsert(UnClaimAssetDetailDto dto, OperationType type) {
+            // 数据存入留痕表备份 流程作废方便恢复
+            unClaimAssetDetailMapper.saveHisData(dto);
+
+            //进入流程，数据状态改为 待复核
+            UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
+            BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto,dto);
+            unClaimAssetDetailDto.setDataStatus("C");
+            unClaimAssetDetailMapper.update(unClaimAssetDetailDto);
+
+    }
+
+    @Override
+    public void doDelete(String workflowId) {
+        //查留痕表对应workflowId的数据，并还原数据状态
+        UnClaimAssetDetailDto dto = unClaimAssetDetailMapper.selectHisData(workflowId);
+        UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
+        BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto,dto);
+        unClaimAssetDetailMapper.updateByPrimaryKey(dto);
     }
     /**
      * 查询产品所有的非标资产信息

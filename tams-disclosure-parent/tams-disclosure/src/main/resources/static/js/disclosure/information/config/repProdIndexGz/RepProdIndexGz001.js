@@ -129,7 +129,7 @@ $(function() {
         },
             { field:'operation',width:'10%', title: '操作', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {
-                    if (row.status == 'D')
+                    if (row.status == 'D' || row.status == 'C')
                         return '';
                     else
                         return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +

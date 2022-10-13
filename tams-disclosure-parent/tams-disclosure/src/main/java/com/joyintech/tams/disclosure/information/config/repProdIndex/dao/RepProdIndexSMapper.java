@@ -42,4 +42,14 @@ public interface RepProdIndexSMapper {
     RepProdIndexDto checkExistData(RepProdIndexDto record);
 
     List<RepProdIndexDto> selectProdIndexList(@Param("list") List<RepProdIndexDto> list);
+
+    int saveHisData(RepProdIndexDto dto);
+
+    RepProdIndexDto selectHisData(String workflowId);
+
+    int updateStatus(RepProdIndexDto repProdIndexDto);
+
+    int updateByPrimaryKey(RepProdIndexDto repProdIndexDto);
+
+    RepProdIndexDto selectCfsj(@Param("prodId") String prodId, @Param("valueDate") String valueDate);
 }
