@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.prodassetinfo.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
@@ -172,6 +173,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
      */
     private List<ExcelValidDto> convertToEntity(List<List<String>> dataList, List<ProdAssetInfoDto> entities) throws ParseException {
         List<ExcelValidDto> checkContextResult = new ArrayList<>();
+        // 验证消息
+        List<String> message = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++) {
             List<String> list = dataList.get(i);
             List<ExcelValidDto> excelValidDtolist = new ArrayList<ExcelValidDto>();
@@ -188,49 +191,36 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                     "穿透后商品及金融衍生品类资产占总资产比例","穿透前混合类资产占总资产比例","穿透后混合类资产占总资产比例","生效日","生效截止日期"};
             for (int j = 0; j < list.size(); j++) {
                 if (list.get(j) == null || list.get(j).length()==0) {
-                    ExcelValidDto dto = new ExcelValidDto(list.get(j), String.valueOf(i + 2),
-                            fildsStr[j] + "不能为空！");
-                    excelValidDtolist.add(dto);
+                    message.add(fildsStr[j] + "不能为空！");
                 }
             }
             //检查表内的产品主代码在系统中是否存在
             if(StringUtil.isNotEmpty(list.get(0))){
                 if(!checkProdIdExist(list.get(0).trim())){
-                    excelValidDtolist.add(
-                            new ExcelValidDto(dataList.get(i).get(0), String.valueOf(i+2),
-                                    "产品主代码不存在！"));
+                    message.add("产品主代码不存在！");
                 }
             }
             //验证比例值是否合法
             for (int index = 1; index < list.size()-2; index++){
                 if(StringUtil.isNotEmpty(list.get(index))){
                     if(!isBigDecimal(list.get(index).trim())){
-                        ExcelValidDto dto = new ExcelValidDto(list.get(index), String.valueOf(i + 2),
-                                fildsStr[index]+"字段数据格式不正确！");
-                        excelValidDtolist.add(dto);
-
+                        message.add(fildsStr[index]+"字段数据格式不正确！");
                     }
                     if (isBigDecimal(list.get(index).trim()) && new BigDecimal(list.get(index).trim()).signum()== -1){
-                        ExcelValidDto dto1 = new ExcelValidDto(list.get(index), String.valueOf(i + 2),
-                                fildsStr[index]+"字段不能为负数！");
-                        excelValidDtolist.add(dto1);
+                        message.add(fildsStr[index]+"字段不能为负数！");
                     }
                 }
             }
             //验证穿透前，穿透后资产占比总和是否>100
             if(isBigDecimal(list.get(1).trim()) && isBigDecimal(list.get(3).trim()) && isBigDecimal(list.get(5).trim()) && isBigDecimal(list.get(7).trim())){
                 if(ArithmeticUtil.doAdd(new BigDecimal(list.get(1).trim()),new BigDecimal(list.get(3).trim()),new BigDecimal(list.get(5).trim()),new BigDecimal(list.get(7).trim())).compareTo(new BigDecimal(100))>0){
-                    ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i + 2),
-                            "穿透前资产占比总和大于100");
-                    excelValidDtolist.add(dto);
+                    message.add("穿透前资产占比总和大于100");
                 }
             }
 
             if(isBigDecimal(list.get(2).trim()) && isBigDecimal(list.get(4).trim()) && isBigDecimal(list.get(6).trim()) && isBigDecimal(list.get(8).trim())){
                 if(ArithmeticUtil.doAdd(new BigDecimal(list.get(2).trim()),new BigDecimal(list.get(4).trim()),new BigDecimal(list.get(6).trim()),new BigDecimal(list.get(8).trim())).compareTo(new BigDecimal(100))>0){
-                    ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i + 2),
-                            "穿透后资产占比总和大于100");
-                    excelValidDtolist.add(dto);
+                    message.add("穿透后资产占比总和大于100");
                 }
             }
             SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
@@ -239,9 +229,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             // 验证生效日
             if(StringUtil.isNotEmpty(list.get(9))){
                 if(!isDateStr(list.get(9))){
-                    ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i + 2),
-                            this.getMessage("MST_INFO_E_0001"));
-                    excelValidDtolist.add(dto);
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0032","生效日"));
                 }else{
                     // 验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(sysDate, sdf.parse(list.get(9))) > 0) {
@@ -254,17 +242,13 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             //验证生效日截止日
             if(StringUtil.isNotEmpty(list.get(10))){
                 if(!isDateStr(list.get(10))){
-                    ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
-                            this.getMessage("MST_INFO_E_0001"));
-                    excelValidDtolist.add(dto);
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0032","生效截止日"));
                 }else{
                     if(isDateStr(list.get(9))){
                         Date effEndDate=sdf.parse(list.get(10).trim());
                         Date effDate=sdf.parse(list.get(9).trim());
                         if(DateUtil.compareDate(effDate, effEndDate) > 0){
-                            ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
-                                    this.getMessage("BUSS_COM_E_0004", "生效日截止日", "生效日"));
-                            excelValidDtolist.add(dto);
+                            message.add(this.getMessage("BUSS_COM_E_0004", "生效日截止日", "生效日"));
                         }else if (StringUtil.isNotEmpty(list.get(0))){
                             //校验同一产品生效区间是否重叠
                             List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(list.get(0).trim());
@@ -279,9 +263,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                                 if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
                                         || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))
                                 && !(DateUtil.compareDate(effDate,dto.getEffDate())==0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())==0)){
-                                    excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
-                                            "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
-                                                    +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
+                                    message.add("生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
+                                            +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd"));
                                     break;
                                 }
                             }
@@ -289,12 +272,19 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                     }
                 }
             }
+            if (CollectionUtils.isNotEmpty(message)) {
+                excelValidDtolist.add(new ExcelValidDto(list.get(0)
+                        + GlobalConstant.UNDER_LINE + list.get(1)
+                        + GlobalConstant.UNDER_LINE + list.get(2),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+            }
             //数据格式校验都通过后，转成目标bean
             if(StringUtil.isEmptyList(excelValidDtolist)){
                 entities.add(convertToBean(list,i));
             }
             checkContextResult.addAll(excelValidDtolist);
         }
+
         // 检查表内数据同一个产品是否有生效区间重合的
         if (entities.size() >= 2) {
             Map<String, List<ProdAssetInfoDto>> map = entities.stream().collect(Collectors.groupingBy(ProdAssetInfoDto::getProdId));
