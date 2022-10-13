@@ -13,8 +13,9 @@ package com.joyintech.tams.disclosure.information.config.reportcontentenum.dto;
 import java.util.Date;
 import java.util.List;
 
-import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RepIndexSub;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 
 public class ReportContentEnum002Dto extends RepIndexSub {
@@ -271,5 +272,9 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 
 	public void setEndDateStr(String endDateStr) {
 		this.endDateStr = endDateStr;
+	}
+	
+	public String getIndexPeriodStr () {
+		return SysDataUtil.getNameFromDataDict(DictCodeExt1.指标周期, this.getIndexPeriod());
 	}
 }
