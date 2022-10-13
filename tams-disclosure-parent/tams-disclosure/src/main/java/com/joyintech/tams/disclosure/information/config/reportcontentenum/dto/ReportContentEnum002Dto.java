@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.tams.common.base.entity.RepIndexSub;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
@@ -38,7 +39,7 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	/**
 	 * 指标值
 	 */
-//	@NotEmpty(fieldName = "指标值")
+	@NotEmpty(fieldName = "指标值")
 	private String indexValue;
 
 	/**
@@ -92,6 +93,12 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	
 	private String updateTimeFmt;
 
+	@NotEmpty(fieldName = "年度")
+	private String indexYear;
+	
+	@NotEmpty(fieldName = "指标类型")
+	private String indexPreriod;
+	
 	public Date getIndexDate() {
 		return indexDate;
 	}

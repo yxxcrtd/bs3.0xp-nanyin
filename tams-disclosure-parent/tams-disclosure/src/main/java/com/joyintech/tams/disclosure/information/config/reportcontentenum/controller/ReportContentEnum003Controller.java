@@ -128,23 +128,23 @@ public class ReportContentEnum003Controller extends BaseController {
 	public AjaxResult check(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
-//		if(!StringUtil.isNotEmpty(dto.getIndexDate())){
-//			msg = "生效日期不能为空";
-//			return new AjaxResult(msg, MessageType.错误消息);
+////		if(!StringUtil.isNotEmpty(dto.getIndexDate())){
+////			msg = "生效日期不能为空";
+////			return new AjaxResult(msg, MessageType.错误消息);
+////		}
+//		if(!StringUtil.isNotEmpty(dto.getIndexYear())){
+//			msg = "请输入年度。";
 //		}
-		if(!StringUtil.isNotEmpty(dto.getIndexYear())){
-			msg = "指标年度不能为空";
-			return new AjaxResult(msg, MessageType.错误消息);
-		}
-//		if(!StringUtil.isNotEmpty(dto.getEndDate())){
-//			msg = "生效截止日期不能为空";
-//			return new AjaxResult(msg, MessageType.错误消息);
+//		if(!StringUtil.isNotEmpty(dto.getIndexPeriod())){
+//			msg += "\r\n请输入指标类型。";
 //		}
+//
+//		if(!StringUtil.isNotEmpty(dto.getIndexValue())){
+//			msg += "\r\n请输入报表文本值。";
+//		}
+//		if ( !msg.isEmpty())
+//			return new AjaxResult(msg, MessageType.错误消息);
 
-		if(!StringUtil.isNotEmpty(dto.getIndexValue())){
-			msg = "指标值不能为空";
-			return new AjaxResult(msg, MessageType.错误消息);
-		}
 		//获取平台日期
 		Date sysDate = iPlatformDate.getSysDate();
 //		Date indexDate = dto.getIndexDate();
@@ -185,8 +185,8 @@ public class ReportContentEnum003Controller extends BaseController {
 		String msg = StringUtil.EMPTY;
 		dto.setIndexType(DictCodeListExt2.指标类型_录入型.getValue());
 		String indexDetail = dto.getIndexDetail();
-		if (indexDetail.length()>500) {
-			return new AjaxResult("适用产品范围说明长度不能超过500",MessageType.错误消息);
+		if (indexDetail.length()>50000) {
+			return new AjaxResult("适用产品范围说明长度不能超过50000",MessageType.错误消息);
 		}
 		if (StringUtils.isEmpty(dto.getId())) {
 			dto.setId(IDGenerator.generate());
