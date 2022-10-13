@@ -25,13 +25,13 @@ public class ReportContentEnum001Dto extends RepIndexPrimary {
 	/**
 	 * 主键ID
 	 */
-	@NotEmpty(fieldName = "指标代码")
+	@NotEmpty(fieldName = "报表文本代码")
 	private String id;
 
 	/**
 	 * 指标名称
 	 */
-	@NotEmpty(fieldName = "指标名称")
+	@NotEmpty(fieldName = "报表文本名称")
 	private String indexName;
 
 	/**
