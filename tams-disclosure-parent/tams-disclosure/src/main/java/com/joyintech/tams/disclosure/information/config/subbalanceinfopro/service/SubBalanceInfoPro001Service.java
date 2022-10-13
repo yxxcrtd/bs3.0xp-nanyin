@@ -349,7 +349,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "余额日期"));
             } else if (!isDateStr(rowData.get(1))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "余额日期"));
-            } else if (rowData.get(1).compareTo(DateUtil.format(DateUtil.platDateFromCache())) > 0) {
+            } else if (rowData.get(1).compareTo(DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
                 message.add("余额日期不能大于平台日。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(2))) {
