@@ -622,7 +622,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品成立日期"));
             } else if (!isDateStr(list.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "子产品成立日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "子产品成立日期"));
             }
             // 产品状态
             if (StringUtil.isEmpty(list.get(3))) {
@@ -698,13 +698,13 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(9))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "募集起始日期"));
             } else if (!isDateStr(list.get(9))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "募集起始日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "募集起始日期"));
             }
             // 募集结束日期
             if (StringUtil.isEmpty(list.get(10))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "募集结束日期"));
             } else if (!isDateStr(list.get(10))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "募集结束日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "募集结束日期"));
             }
             // 产品募集金额
             if (StringUtil.isEmpty(list.get(11))) {
@@ -716,13 +716,13 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(12))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品成立日期"));
             } else if (!isDateStr(list.get(12))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "产品成立日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "产品成立日期"));
             }
             // 产品到期日
             if (StringUtil.isEmpty(list.get(13))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品到期日"));
             } else if (!isDateStr(list.get(13))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "产品到期日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "产品到期日"));
             }
             // 募集方式
             if (StringUtil.isEmpty(list.get(14))) {

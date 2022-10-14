@@ -454,7 +454,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             if (StringUtil.isEmpty(rowData.get(9))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
             }else if(!isDateStr(rowData.get(9))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "报告发布日期"));
             }
             if (StringUtil.isNotBlank(rowData.get(2)) && rowData.get(2).length()>500){
                 message.add("此产品优惠调整（补充性）描述文字字符不能超过500");
