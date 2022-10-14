@@ -164,7 +164,7 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
             DisProdPlanManage002Dto disProdPlanManage002Dto = new DisProdPlanManage002Dto();
             BeanUtil.copyPropertiesIgnoreNull(disProdPlanManage002Dto,dto);
             disProdPlanManage002Dto.setDataStatus("C");
-            disProdPlanManage002Mapper.update(disProdPlanManage002Dto);
+            disProdPlanManage002Mapper.updateByPrimaryKey(disProdPlanManage002Dto);
         }
     }
 
