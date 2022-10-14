@@ -165,3 +165,9 @@ delete from sys_page a where a.page_id='ReportReview002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportReview002', 'DIS', '/disclosure/information/reveal/reportreview/ReportReview002', 'disclosure/information/reveal/reportreview/ReportReview002', null, null, null, '02', '01', '托管行选择', 'system', null, sysdate, 'system', sysdate);
 -- add by zhengxiaolian 2022-10-14 托管行选择页面 end
+
+-- 产品排期计划主产品搜索树页面 2022-10-14
+delete from SYS_PAGE where PAGE_ID = 'DisProdPlanManage003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DisProdPlanManage003', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage003', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
