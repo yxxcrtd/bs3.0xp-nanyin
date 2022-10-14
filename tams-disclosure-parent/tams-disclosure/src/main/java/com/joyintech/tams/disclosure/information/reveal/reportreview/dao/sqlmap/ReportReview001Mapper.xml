@@ -59,7 +59,7 @@
         FROM
             REP_REVEAL REVEAL
                 inner join REP_REVEAL_REVIEW REVIEW on REVEAL.ID = REVIEW.REVEAL_ID
-                and REVIEW.REVIEW_USER = #{loginUser}
+                and REVIEW.REVIEW_USER = #{loginUser} and REVIEW.REVIEW_STATUS != #{REVIEW_STATUS_06}
                 left join REP_PROD_INFO R1 on REVEAL.PRODID = R1.PROD_ID
                 left join REP_PROD_INFO R2 on R1.P_PROD_ID = R2.PROD_ID
                 left join (SELECT * FROM(
@@ -73,5 +73,110 @@
                 left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
         where 1=1
           and REVEAL.status ='E'
+            <if test="pProdIdArr != null and pProdIdArr.length > 0">
+                AND REVEAL.PRODID IN
+                <foreach item="item" collection="pProdIdArr" index="index"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="prodIdArr != null and prodIdArr.length > 0">
+                AND REVEAL.PRODID IN
+                <foreach item="item" collection="prodIdArr" index="index"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="reportTypeArr != null and reportTypeArr.length > 0">
+                AND REVEAL.REPORT_CATEGORY IN
+                <foreach item="item" collection="reportTypeArr" index="index"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="reportName != null and reportName!=''">
+                AND REVEAL.REPORT_NAME =#{reportName,jdbcType=VARCHAR}
+            </if>
+            <if test="reportTypeArr != null and reportTypeArr.length > 0">
+                AND REVEAL.REPORT_CATEGORY IN
+                <foreach item="item" collection="reportTypeArr" index="index"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="reviewStatusArr != null and reviewStatusArr.length > 0">
+                AND REVIEW.REVIEW_STATUS IN
+                <foreach item="item" collection="reviewStatusArr" index="index"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="reviewTimeStart !=null and reviewTimeStart !='' ">
+                AND to_char(REVIEW.REVIEW_TIME,'yyyy-mm-dd') <![CDATA[>=]]> #{reviewTimeStart,jdbcType=VARCHAR}
+            </if>
+            <if test="reviewTimeEnd !=null and reviewTimeEnd !='' ">
+                AND to_char(REVIEW.REVIEW_TIME,'yyyy-mm-dd') <![CDATA[<=]]> #{reviewTimeEnd,jdbcType=VARCHAR}
+            </if>
     </select>
+
+    <update id="updateReviewStatus">
+        update REP_REVEAL_REVIEW r
+        set
+            r.REVIEW_STATUS=#{reviewStatus,jdbcType=VARCHAR},
+            r.REVIEW_TIME=#{reviewTime,jdbcType=DATE},
+            r.UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+            r.UPDATE_TIME=sysdate
+        WHERE 1=1
+        AND r.REVEAL_ID in
+        <foreach collection="idList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateReviewInfo">
+        update REP_REVEAL_REVIEW r
+        set
+        r.REVIEW_STATUS=#{reviewStatus,jdbcType=VARCHAR},
+        r.REVIEW_TIME=#{reviewTime,jdbcType=DATE},
+        r.REVIEW_USER=#{updateUser,jdbcType=VARCHAR},
+        r.UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+        r.UPDATE_TIME=#{reviewTime,jdbcType=DATE}
+        WHERE 1=1
+        AND r.REVEAL_ID in
+        <foreach collection="idList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getTgGroupList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select * from (
+        SELECT
+        distinct GROUP_ID id,
+        GROUP_NAME text
+        FROM
+        REP_REVIEW_GROUP
+        )
+        where
+        1=1
+        <if test="searchValue != null and searchValue != ''">
+            and text like concat(concat('%',#{searchValue}),'%')
+        </if>
+    </select>
+
+    <update id="updateReviewTgInfo">
+        update REP_REVEAL_REVIEW r
+        set
+        r.REVIEW_STATUS=#{reviewStatus,jdbcType=VARCHAR},
+        r.REVIEW_TIME=#{reviewTime,jdbcType=DATE},
+        r.REVIEW_USER=#{updateUser,jdbcType=VARCHAR},
+        r.REVIEW_TG_GROUP=#{reviewTgGroup,jdbcType=VARCHAR},
+        r.REVIEW_TG_STATUS=#{reviewTgStatus,jdbcType=VARCHAR},
+        r.UPDATE_USER= #{reviewUser,jdbcType=VARCHAR},
+        r.UPDATE_TIME=#{reviewTime,jdbcType=DATE}
+        WHERE 1=1
+        AND r.REVEAL_ID in
+        <foreach collection="idList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

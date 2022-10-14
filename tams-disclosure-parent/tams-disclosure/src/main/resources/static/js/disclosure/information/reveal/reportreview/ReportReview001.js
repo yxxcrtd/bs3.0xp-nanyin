@@ -9,6 +9,7 @@
             prodId: $('#prodId').val() == null ? null : $('#prodId').val().join(","),
             reportType: $('#reportType').val() == null ? null : $('#reportType').val().join(","),
             reviewStatus: $('#reviewStatus').val() == null ? null : $('#reviewStatus').val().join(","),
+            reportName: $('#reportName').val(),
             reviewTimeStart: $('#reviewTime').startDate(),
             reviewTimeEnd: $('#reviewTime').endDate(),
         };
@@ -28,7 +29,18 @@
         cols: [
             { field: 'id', title: 'id', visible: false },
             { field: 'reviewStatus', title: 'reviewStatus', sort: true, visible: false },
-            { field: 'reviewStatusStr', title: '复核状态', width: 90, sort: true, sortField: "reviewStatus"},
+            { field: 'reviewStatusStr', title: '复核状态', width: 120, sort: true, sortField: "reviewStatus"
+                ,render: function (data, type, row, meta) {
+                    if(row.reviewStatus==='02'||row.reviewStatus==='03'){
+                        return '<span class="layui-badge-rim layui-bg-blue">'+row.reviewStatusStr+'</span>';
+                    }else if(row.reviewStatus==='01'){
+                        return '<span class="layui-badge-rim layui-bg-red">'+row.reviewStatusStr+'</span>';
+                    }else if(row.reviewStatus==='04'||row.reviewStatus==='05'){
+                        return '<span class="layui-badge-rim layui-bg-orange">'+row.reviewStatusStr+'</span>';
+                    }else{
+                        return '';
+                    }
+                }},
             { field: 'reviewTimeStr', title: '复核时间', width: 150, sort: true },
             { field: 'reviewUser', title: '复核人', width: 100, sort: true },
             { field: 'prodid', title: '产品代码', width: 150, sort: true },
@@ -74,7 +86,7 @@
         Joyin.dialog(JoyinUtil.getLabel("文件预览"),
             basePath + "disclosure/information/config/repreportcheck/ReportCheck003/init",
             "95%", "96%", {
-                fileNo: data.fileNo
+                fileNo: data.confirmFilePath
             });
     });
 
@@ -82,40 +94,182 @@
      * 导出选中的表格数据
      */
     var exportExcel = function () {
-        var paramObj = getSearchParams();//请求参数json格式
-        Joyin.exportExcel('export', paramObj);//导出（共通）
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
     };
+
+    //下载模板
+    var download = function(){
+        var object =null;
+        var rowArr = table.getAllCheckedRows();// 所有选中行数据
+        var ids = [];
+
+        //// 不点击查询，直接点击导出所有报表文件;点击查询，未勾选，导出所有报表文件；点击查询，已勾选，导出勾选 报表文件 zhangyf 20190109
+        if(rowArr == null || rowArr.length ==0){
+            layer.msg("请勾选一个数据！");
+        }
+        else {
+            for(var i = 0 ; i<rowArr.length ; i++){
+                ids[i] = rowArr[i].id;
+            }
+            Joyin.exportExcel('downloadReport', {id:JSON.stringify(ids),data:JSON.stringify(rowArr)});
+        }
+    };
+
+    /**
+     * 退回数据
+     */
+    var returnData = function () {
+        var object ={};
+        var idList = [];
+        if (table != null && table !== '') {
+            var selArr = table.getAllCheckedRows();
+        }
+        if (!selArr || selArr.length === 0) {
+            Joyin.error(JoyinUtil.getMessage("未选择数据"));
+            return;
+        }
+
+        for(let i = 0 ; i<selArr.length ; i++){
+            if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
+                Joyin.error("数据已经复核，不能执行退回操作！");
+                break;
+            }
+            else {
+                idList[i] = selArr[i].id;
+            }
+        }
+        if(idList.length !== 0 && idList.length === selArr.length){
+            Joyin.confirm("是否取消确认？", function(){
+                object.id = JSON.stringify(idList);
+                object.data = JSON.stringify(selArr)
+                console.log(object)
+                Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreview/ReportReview001/returnData', object, function(result) {
+                    table.reload();
+                });
+            });
+        }
+    };
+
+    /**
+     * 退回数据
+     */
+    var pushReveal = function () {
+        var object ={};
+        var idList = [];
+        if (table != null && table !== '') {
+            var selArr = table.getAllCheckedRows();
+        }
+        if (!selArr || selArr.length === 0) {
+            Joyin.error(JoyinUtil.getMessage("未选择数据！"));
+            return;
+        }
+
+        for(let i = 0 ; i<selArr.length ; i++){
+            if(selArr[i].confirmStatus==='02' || selArr[i].confirmStatus==='03'){
+                Joyin.error("数据已经复核");
+                break;
+            }
+            else {
+                idList[i] = selArr[i].id;
+            }
+        }
+        if(idList.length !== 0 && idList.length === selArr.length){
+            Joyin.confirm("所选数据，您已经审核通过，现直接推送到待披露？", function(){
+                object.id = JSON.stringify(idList);
+                object.data = JSON.stringify(selArr)
+                console.log(object)
+                Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreview/ReportReview001/pushReveal', object, function(result) {
+                    table.reload();
+                });
+            });
+        }
+    };
+
+
+    var pushTg = function() {
+        var object ={};
+        var idList = [];
+        if (table != null && table !== '') {
+            var selArr = table.getAllCheckedRows();
+        }
+        if (!selArr || selArr.length === 0) {
+            Joyin.error(JoyinUtil.getMessage("未选择数据！"));
+            return;
+        }
+
+        for(let i = 0 ; i<selArr.length ; i++){
+            if(selArr[i].confirmStatus==='02' || selArr[i].confirmStatus==='03'){
+                Joyin.error("数据已经复核");
+                break;
+            }
+            else {
+                idList[i] = selArr[i].id;
+            }
+        }
+        if(idList.length !== 0 && idList.length === selArr.length){
+            Joyin.confirm('所选数据，您已经审核通过，现直接推送到托管复核？', function(){
+                let objectDate = {};
+                //点击确认之后给出弹框
+                Joyin.dialog(JoyinUtil.getLabel("请选择托管行（只能选择1个）"),
+                    JoyinUtil.getRealPath("/disclosure/information/reveal/reportreview/ReportReview002/init?"),
+                    "30%", "50%", objectDate,
+                    function(data){
+                        if(top.data != null){
+                            console.log(top.data)
+                            objectDate.id = JSON.stringify(idList);
+                            objectDate.reviewTgGroup=top.data.id
+                            Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreview/ReportReview001/pushTg', objectDate, function(result) {
+                                table.reload();
+                            });
+
+                        }
+                    });
+
+            }, function() {
+                console.log('取消');
+            });
+        }
+
+    }
 
     /**
      * 画面加载完成
      */
     $(function () {
-        // //导出
-        // $('#ReportCheck001_btn_export').click(function () {
-        //     exportExcel();
-        // });
+        //导出
+        $('#ReportReview001_btn_export').click(function () {
+            exportExcel();
+        });
         //初始化查询
         $('#ReportReview001_btn_search').click(function () {
             table.load();
         });
-        //
-        // $('#ReportCheck001_btn_tips').click(function () {
-        //     if (table != null && table != '') {
-        //         var selArr = table.getAllCheckedRows();
-        //     }
-        //     if (!selArr || selArr.length == 0) {
-        //         Joyin.error(JoyinUtil.getMessage("请勾选数据"));
-        //         return;
-        //     }
-        //     var object = { selectedItem: selArr, operateType: "delete" };//请求参数
-        //     Joyin.confirm("是否不再对勾选数据的错误信息进行提示", function () {
-        //         Joyin.ajaxJson(basePath + 'disclosure/information/config/repreportcheck/ReportCheck001/delete', object,
-        //             function (result) {
-        //                 table.reload();
-        //             });
-        //     });
-        // });
 
+        $('#ReportReview001_btn_back').click(function () {
+            returnData();
+        });
+        $('#ReportReview001_btn_push_reveal').click(function () {
+            pushReveal();
+        });
+
+        $('#ReportReview001_btn_push_tg').click(function () {
+            pushTg();
+        });
+
+        $('#ReportReview001_btn_export_file').click(function() {
+            download();
+        });
 
     });
 }());

@@ -647,6 +647,6 @@ public class ReportConfirmManage001Contoller extends BaseController {
 		//String data=dto.getData();
 		//List<ReportConfirmManage001Dto> listdto = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
 		reportConfirmManage001Service.doConfirm(dto);
-		return new AjaxResult();
+		return new AjaxResult("确认成功");
 	}
 }

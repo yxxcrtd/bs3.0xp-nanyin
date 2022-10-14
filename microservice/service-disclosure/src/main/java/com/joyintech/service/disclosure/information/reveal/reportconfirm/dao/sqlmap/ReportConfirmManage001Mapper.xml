@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage001Mapper">
-    <select id="queryPageList" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+	<select id="queryPageList" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportReview001Dto">
 		select * from (SELECT
-			REVEAL.ID id
-			,REVEAL.REP_ID repId
-			,REVEAL.REPORT_NAME reportName
-			,decode(R1.REP_PROD_TYPE,'03',R2.PROD_NAME,decode(R1.PROD_NAME,null,REVEAL.PROD_NAME,R1.PROD_NAME)) prodName
-			,REVEAL.PRODID prodid
-			,case when
-				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
-			 then to_char(REVEAL.END_DATE,'yyyy-mm-dd')
-			 else to_char(REVEAL.START_DATE,'yyyy-mm-dd') || '--'||to_char(REVEAL.END_DATE,'yyyy-mm-dd')
-			 end  reportDate
-			,REVEAL.END_DATE endDate
-			,REVEAL.START_DATE startDate
-			,REVEAL.SYS_FILENAME sysFilename
-			,REVEAL.SYS_FILEPATH sysFilepath
-			,REVEAL.REVEAL_DATE revealDate  /**披露日**/
-			,REVEAL.FILEPATH filepath
-			,REVEAL.FILENAME filename
-			,REVEAL.CONFIRM_STATUS confirmStatus
-			<!-- ,decode(REVEAL.CONFIRM_STATUS,'01','已确认','未确认') confirmStatusName -->
-			,REVEAL.REVEAL_STATUS revealStatus
-			<!-- ,decode(REVEAL.REVEAL_STATUS,'01','已披露','未披露') revealStatusName -->
-			,REVEAL.STATUS status
-			,REVEAL.CREATE_USER createUser
-			,REVEAL.CREATE_DEPT createDept
-			,REVEAL.CREATE_TIME createTime
-			,REVEAL.UPDATE_USER updateUser
-			,REVEAL.UPDATE_TIME updateTime
-			,to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd hh24:mi') createTimeStr
-			,to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd hh24:mi') confirmDateStr
-			,REVEAL.SYS_FILEPATH seqno
-			<!-- add by guozhongbao 报表披露管理  20181204 start -->
-			,REVEAL.REVEAL_CHANNEL revealChannel
-			,REVEAL.IS_CONFIRM isConfirm
-			,REVEAL.IS_REVEAL isReveal
-			<!-- add by guozhongbao 报表披露管理 20181204 end -->
-			,REVEAL.DETAIL detail
-			,to_char(REVEAL.TIME,'yyyy-MM-dd') uploadTime
-		<!--,REVEAL.CONFIRM_USER confirmUser-->
-			,REVEAL.REPORT_CATEGORY reportCategory
-			,rfp.NAME reportCategoryName
-			,to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd hh24:mi') revealEndDateStr
-			,REVEAL.ANNEX annex
-			,REVEAL.ANNEX_PATH  annexPath
-			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
-			,fp.finprod_id finprodId
-			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
-            ,decode(REVEAL.REVEAL_STATUS,'01',decode(T2.REAL_NAME,'system','系统自动披露',T2.REAL_NAME),null) revealUser
-		<!--,decode(REVEAL.CONFIRM_STATUS,'1',decode(REVEAL.IS_CONFIRM,'01',F1.REAL_NAME,'系统自动确认'),null) confirmUser-->
-	     	,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F1.REAL_NAME,'系统自动确认'),null) confirmUser
-		    ,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F2.REAL_NAME,'系统自动确认'),null) checkUser
-		    ,decode(REVEAL.CONFIRM_STATUS,'1',nvl(REVEAL.CHECK_TIME,REVEAL.CONFIRM_DATE),null) checkTime
-		<!--,REVEAL.CHECK_TIME checkTime-->
+		REVEAL.ID id
+		,REVEAL.REP_ID repId
+		,REVEAL.REPORT_NAME reportName
+		,decode(R1.REP_PROD_TYPE,'03',R2.PROD_NAME,decode(R1.PROD_NAME,null,REVEAL.PROD_NAME,R1.PROD_NAME)) prodName
+		,REVEAL.PRODID prodid
+		,case when
+		REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
+		then to_char(REVEAL.END_DATE,'yyyy-mm-dd')
+		else to_char(REVEAL.START_DATE,'yyyy-mm-dd') || '--'||to_char(REVEAL.END_DATE,'yyyy-mm-dd')
+		end  reportDate
+		,REVEAL.END_DATE endDate
+		,REVEAL.START_DATE startDate
+		,REVEAL.SYS_FILENAME sysFilename
+		,REVEAL.SYS_FILEPATH sysFilepath
+		,REVEAL.REVEAL_DATE revealDate  /**披露日**/
+		,REVEAL.FILEPATH filepath
+		,REVEAL.FILENAME filename
+		,REVEAL.CONFIRM_STATUS confirmStatus
+		,REVEAL.REVEAL_STATUS revealStatus
+		,REVEAL.STATUS status
+		,REVEAL.CREATE_USER createUser
+		,REVEAL.CREATE_DEPT createDept
+		,REVEAL.CREATE_TIME createTime
+		,REVEAL.UPDATE_USER updateUser
+		,REVEAL.UPDATE_TIME updateTime
+		,to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd hh24:mi') createTimeStr
+		,to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd hh24:mi') confirmDateStr
+		,REVEAL.SYS_FILEPATH seqno
+		,REVEAL.REVEAL_CHANNEL revealChannel
+		,REVEAL.IS_CONFIRM isConfirm
+		,REVEAL.IS_REVEAL isReveal
+		,REVEAL.DETAIL detail
+		,to_char(REVEAL.TIME,'yyyy-MM-dd') uploadTime
+		,REVEAL.REPORT_CATEGORY reportCategory
+		,rfp.NAME reportCategoryName
+		,to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd hh24:mi') revealEndDateStr
+		,REVEAL.ANNEX annex
+		,REVEAL.ANNEX_PATH  annexPath
+		,decode(REVEAL.REVEAL_STATUS,'01',decode(T2.REAL_NAME,'system','系统自动披露',T2.REAL_NAME),null) revealUser
+		,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F1.REAL_NAME,'系统自动确认'),null) confirmUser
+		,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F2.REAL_NAME,'系统自动确认'),null) checkUser
+		,decode(REVEAL.CONFIRM_STATUS,'1',nvl(REVEAL.CHECK_TIME,REVEAL.CONFIRM_DATE),null) checkTime
+		<if test="revealPage!=null">
+			,review.REVIEW_USER reviewUser,
+			review.REVIEW_TIME reviewTime,
+			review.REVIEW_TG_USER reviewTgUser,
+			review.REVIEW_TG_TIME reviewTgTime,
+			review.REVIEW_TG_GROUP reviewTgGroup
+		</if>
 		FROM REP_REVEAL REVEAL
 		left join REP_PROD_INFO R1 on REVEAL.PRODID = R1.PROD_ID
 		left join REP_PROD_INFO R2 on R1.P_PROD_ID = R2.PROD_ID
+		<if test="revealPage!=null">
+			inner join REP_REVEAL_REVIEW review on review.REVEAL_ID=REVEAL.id and (review.REVIEW_STATUS='02' or review.REVIEW_TG_STATUS='02')
+		</if>
 		left join (SELECT * FROM(
 		SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
 		FROM SYS_USER su
@@ -70,107 +70,88 @@
 		SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
 		FROM SYS_USER su
 		) F where F.ronum = 1) F2 on REVEAL.CHECK_USER = F2.USER_NAME
-		left join rep_info info on REVEAL.rep_id = info.rep_id
 		left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
-		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
-		LEFT JOIN fin_product fp
-		ON fp.FINPROD_MARKET_ID = REVEAL.PRODID
-		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
 		where 1=1
 		and REVEAL.status ='E'/*有效*/
-		AND FP.P_FINPROD_ID IS NULL
 		<if test="revealStatus!=null and revealStatus != ''">
-	      AND decode(REVEAL.REVEAL_STATUS,null,'1',REVEAL.REVEAL_STATUS)
-            	 =  #{revealStatus,jdbcType=VARCHAR}
+			AND decode(REVEAL.REVEAL_STATUS,null,'1',REVEAL.REVEAL_STATUS)
+			=  #{revealStatus,jdbcType=VARCHAR}
 		</if>
-        <if test="finprodIdArr != null and finprodIdArr.length > 0">
-	 		AND (REVEAL.PRODID IN
+		<if test="finprodIdArr != null and finprodIdArr.length > 0">
+			AND (REVEAL.PRODID IN
 			<foreach item="item" collection="finprodIdArr" index="index"
-				open="(" separator="," close=")">
+					 open="(" separator="," close=")">
 				#{item}
 			</foreach>
-		   OR R1.P_PROD_ID IN
-		      <foreach item="item" collection="finprodIdArr" index="index"
-									   open="(" separator="," close=")">
-			#{item}
-		     </foreach>
-		          )
+			OR R1.P_PROD_ID IN
+			<foreach item="item" collection="finprodIdArr" index="index"
+					 open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			)
 		</if>
 		<if test="reportName !=null and reportName !='' ">
-            AND REVEAL.REPORT_NAME like '%'||#{reportName,jdbcType=VARCHAR}||'%'
-        </if>
+			AND REVEAL.REPORT_NAME like '%'||#{reportName,jdbcType=VARCHAR}||'%'
+		</if>
 		<if test="valDateBegin !=null and valDateBegin !='' ">
-            AND to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
-        </if>
-        <if test="valDateEnd !=null and valDateEnd !='' ">
-            AND to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
-        </if>
-        <if test="confirmStatus !=null and confirmStatus !='' ">
-            AND decode(REVEAL.CONFIRM_STATUS,null,'02',REVEAL.CONFIRM_STATUS)
-            	 =  #{confirmStatus,jdbcType=VARCHAR}
-        </if>
-        <if test="confirmDateBegin !=null and confirmDateBegin !='' ">
-            AND to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{confirmDateBegin,jdbcType=VARCHAR}
-        </if>
-        <if test="confirmDateEnd !=null and confirmDateEnd !='' ">
-            AND to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{confirmDateEnd,jdbcType=VARCHAR}
-        </if>
-        <if test="confirmTypeArr != null and confirmTypeArr.length > 0">
-	 		AND REVEAL.IS_CONFIRM IN
+			AND to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
+		</if>
+		<if test="valDateEnd !=null and valDateEnd !='' ">
+			AND to_char(REVEAL.CREATE_TIME,'yyyy-mm-dd') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="confirmStatus !=null and confirmStatus !='' ">
+			AND decode(REVEAL.CONFIRM_STATUS,null,'02',REVEAL.CONFIRM_STATUS)
+			=  #{confirmStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="confirmDateBegin !=null and confirmDateBegin !='' ">
+			AND to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{confirmDateBegin,jdbcType=VARCHAR}
+		</if>
+		<if test="confirmDateEnd !=null and confirmDateEnd !='' ">
+			AND to_char(REVEAL.CONFIRM_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{confirmDateEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="confirmTypeArr != null and confirmTypeArr.length > 0">
+			AND REVEAL.IS_CONFIRM IN
 			<foreach item="item" collection="confirmTypeArr" index="index"
-				open="(" separator="," close=")">
+					 open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		<if test="revealChanelArr != null and revealChanelArr.length > 0">
-	 		and(
+			and(
 			<foreach item="item" collection="revealChanelArr" index="index"
-				separator="OR">
-				 REVEAL.REVEAL_CHANNEL like '%'||#{item}||'%'
-				
+					 separator="OR">
+				REVEAL.REVEAL_CHANNEL like '%'||#{item}||'%'
+
 			</foreach>
 			)
 		</if>
 		<if test="revealDateBegin !=null and revealDateBegin !='' ">
-            AND to_char(REVEAL.REVEAL_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealDateBegin,jdbcType=VARCHAR}
-        </if>
-        <if test="revealDateEnd !=null and revealDateEnd !='' ">
-            AND to_char(REVEAL.REVEAL_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealDateEnd,jdbcType=VARCHAR}
-        </if>
-        <!-- <if test="confromPage == null or confromPage == ''">
-	        <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
-	            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
-	        </if>
-	        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
-	            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
-	        </if>
-        </if>
-        <if test="confromPage != null and confromPage != ''">
-        	<if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
-	            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
-	        </if>
-        </if> -->
-        <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
-            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
-        </if>
-        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
-            AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
-        </if>
-        <if test="repTypeArr != null and repTypeArr.length > 0">
-	 		AND REVEAL.REPORT_CATEGORY IN
+			AND to_char(REVEAL.REVEAL_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealDateBegin,jdbcType=VARCHAR}
+		</if>
+		<if test="revealDateEnd !=null and revealDateEnd !='' ">
+			AND to_char(REVEAL.REVEAL_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealDateEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
+			AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+		</if>
+		<if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+			AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="repTypeArr != null and repTypeArr.length > 0">
+			AND REVEAL.REPORT_CATEGORY IN
 			<foreach item="item" collection="repTypeArr" index="index"
-				open="(" separator="," close=")">
+					 open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
-        order by 
+		order by
 		REVEAL.CONFIRM_STATUS ASC,
 		<if test="confrom != null and confrom !='' ">
 			REVEAL.REVEAL_STATUS DESC,
 		</if>
 		REVEAL.CONFIRM_DATE DESC,
 		REVEAL.UPDATE_TIME DESC) where 1=1
-    </select>
+	</select>
     
     <update id="updateRepRevealById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
 	      update REP_REVEAL

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportReview001Dto;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
@@ -177,7 +178,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
      * @see
      * @since 1.0
      */
-    public List<ReportConfirmManage001Dto> queryPageList(Map<String, Object> params) {
+    public List<ReportReview001Dto> queryPageList(Map<String, Object> params) {
       //获取获取理财产品类型
     	String profitType = (String)params.get("profitType");
         String finprodId = (String)params.get("finprodId");
