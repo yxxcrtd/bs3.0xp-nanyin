@@ -13,13 +13,10 @@ package com.joyintech.service.disclosure.information.reveal.reportconfirm.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileInfoDto;
-import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto;
-import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.BokNetValueCfmFileDto;
-import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
 import com.joyintech.tams.common.base.entity.RepReveal;
 
 /**
@@ -40,7 +37,7 @@ public interface ReportConfirmManage001Mapper {
      * @see
      * @since 1.0
      */
-    List<ReportConfirmManage001Dto> queryPageList(Map<String, Object> params);
+    List<ReportReview001Dto> queryPageList(Map<String, Object> params);
 
     /**
      * <一句话功能简述>

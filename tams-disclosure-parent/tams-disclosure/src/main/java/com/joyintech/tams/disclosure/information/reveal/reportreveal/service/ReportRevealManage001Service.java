@@ -16,6 +16,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeListExt5;
+import com.joyintech.tams.disclosure.information.reveal.reportreveal.dao.ReportRevealManageEX001Mapper;
+import com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +44,15 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  * @since 1.0
  */
 @Service
-public class ReportRevealManage001Service extends CommonExportService<ReportConfirmManage001Dto> implements BaseProcessService<ReportConfirmManage001Dto> {
+public class ReportRevealManage001Service extends CommonExportService<ReportReview001Dto> implements BaseProcessService<ReportReview001Dto> {
 
     /**
      * 报表下载临时路径
      */
     public static final String KEY_REPORT_DOWNLOAD_PATH = "REPORT_DOWNLOAD_PATH";
+
+    @Autowired
+    private ReportRevealManageEX001Mapper reportRevealManageEX001Mapper;
 
     /**
      * 日志
@@ -63,9 +70,9 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      * @return 表格信息
      * @throws Exception
      */
-    public Page<ReportConfirmManage001Dto> findPage(Map<String, Object> params){
+    public Page<ReportReview001Dto> findPage(Map<String, Object> params){
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRevealManage001/findPage",
-            params, ReportConfirmManage001Dto.class);
+            params, ReportReview001Dto.class);
     }
 
     /**
@@ -76,17 +83,17 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      * @see
      * @since 1.0
      */
-    public List<ReportConfirmManage001Dto> queryPageList(Map<String, Object> params) {
+    public List<ReportReview001Dto> queryPageList(Map<String, Object> params) {
         return restTemplate.postForList(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRevealManage001/queryPageList", params,
-            ReportConfirmManage001Dto.class);
+                ReportReview001Dto.class);
     }
 
     /**
      * 估值表余额表状态表 - 确认状态和下发状态更新
      */
     @Override
-    public void doComplete(ReportConfirmManage001Dto entity, OperationType type) {
+    public void doComplete(ReportReview001Dto entity, OperationType type) {
 //        entity.setRevealUser(SecurityUtil.getLoginUser().getUserName());
         restTemplate.postForObject(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRevealManage001/doComplete/" + type.name(), entity,
@@ -122,10 +129,21 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      * @see
      * @since 1.0
      */
-    public boolean updateConfirmStatusWithGoBack(ReportConfirmManageParamDto dto)
-        throws IOException {
-        return restTemplate.postForObject(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRevealManage001/updateConfirmStatusWithGoBack", dto,
-            Boolean.class);
+    public void updateConfirmStatusWithGoBack(ReportReview001Dto dto) throws IOException {
+        //需要判断上一步是托管还是普通复核，然后退到对应节点
+        String data = dto.getData();
+        List<ReportReview001Dto> rDtoList = JsonUtils.json2List(data, ReportReview001Dto.class);
+        for (ReportReview001Dto tmp : rDtoList){
+            if(StringUtil.isNotEmpty(tmp.getReviewTgGroup())){
+                //上一步是托管
+                //复核表数据更新
+                tmp.setReviewTgStatus(DictCodeListExt5.托管复核状态_被披露退回.getValue());
+                reportRevealManageEX001Mapper.backToTgReview(tmp);
+            }else{
+                //上一步是复核
+                tmp.setReviewStatus(DictCodeListExt5.复核状态_被披露退回.getValue());
+                reportRevealManageEX001Mapper.backToReview(tmp);
+            }
+        }
     }
 }

@@ -20,6 +20,13 @@ public class ReportReview001Dto extends ReportConfirmManage001Dto {
     private String confirmFileName;
 
     private String confirmFilePath;
+
+    private String reviewTgGroup;
+
+    private String reviewTgUser;
+
+    private Date reviewTgTime;
+    private String reviewTgStatus;
     public String getReviewStatus() {
         return reviewStatus;
     }
@@ -42,8 +49,17 @@ public class ReportReview001Dto extends ReportConfirmManage001Dto {
                 SysDataUtil.getNameFromDataDict(DictCodeExt1.复核状态, this.getReviewStatus()):this.getReviewStatus();
     }
 
+    public String getReviewTgStatusStr(){
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCodeExt1.托管复核状态, this.getReviewTgStatus()))?
+                SysDataUtil.getNameFromDataDict(DictCodeExt1.托管复核状态, this.getReviewTgStatus()):this.getReviewTgStatus();
+    }
+
     public String getReviewTimeStr(){
         return DateUtil.format(this.getReviewTime(),"yyyy-MM-dd HH:mm");
+    }
+
+    public String getReviewTgTimeStr(){
+        return DateUtil.format(this.getReviewTgTime(),"yyyy-MM-dd HH:mm");
     }
 
     public String getConfirmFileName() {
@@ -60,5 +76,37 @@ public class ReportReview001Dto extends ReportConfirmManage001Dto {
 
     public void setConfirmFilePath(String confirmFilePath) {
         this.confirmFilePath = confirmFilePath;
+    }
+
+    public String getReviewTgGroup() {
+        return reviewTgGroup;
+    }
+
+    public void setReviewTgGroup(String reviewTgGroup) {
+        this.reviewTgGroup = reviewTgGroup;
+    }
+
+    public String getReviewTgUser() {
+        return reviewTgUser;
+    }
+
+    public void setReviewTgUser(String reviewTgUser) {
+        this.reviewTgUser = reviewTgUser;
+    }
+
+    public Date getReviewTgTime() {
+        return reviewTgTime;
+    }
+
+    public void setReviewTgTime(Date reviewTgTime) {
+        this.reviewTgTime = reviewTgTime;
+    }
+
+    public String getReviewTgStatus() {
+        return reviewTgStatus;
+    }
+
+    public void setReviewTgStatus(String reviewTgStatus) {
+        this.reviewTgStatus = reviewTgStatus;
     }
 }

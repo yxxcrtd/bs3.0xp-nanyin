@@ -54,6 +54,16 @@ $(function () {
                         }
                     }
                 },
+                {field:'revealDate', title: 'revealDate',width:100, sort: true,visible:false},
+                {field:'revealDateStr', title: '披露时间',width:100, sort: true,sortField:"revealDate"
+                    ,render: function (data, type, row, meta) {
+                        if(row.revealStatus=='01'){
+                            return '<span class="">'+row.revealDateStr+'</span>';
+                        }else{
+                            return '';
+                        }
+                    }
+                },
                 {field:'prodid', title: '产品代码',width:150, sort: true},
                 {field:'prodName', title: '产品名称',width:150, sort: true},
                 {field:'reportName', title: '报表名称',width:100,sort: true},
@@ -74,19 +84,13 @@ $(function () {
                 {field:'createTimeStr', title: '生成时间',width:100, sort: true},
                 {field:'confirmDateStr', title: '确认时间',width:100, sort: true},
                 {field:'isConfirmName', title: '确认方式',width:100, sort: true,sortField:"isConfirm"},
-                {field:'revealDate', title: 'revealDate',width:100, sort: true,visible:false},
-                {field:'revealDateStr', title: '披露时间',width:100, sort: true,sortField:"revealDate"
-                	,render: function (data, type, row, meta) {
-                    	if(row.revealStatus=='01'){
-                            return '<span class="">'+row.revealDateStr+'</span>';
-                        }else{
-                        	return '';
-                        }
-                    }
-                },
-                {field:'revealChannelName', title: '披露渠道',width:100, sort: true,sortField:"revealChannel"},
-                {field:'isRevealName', title: '披露方式',width:100, sort: true,sortField:"isReveal"},
-                {field:'revealUser', title: '披露人',width:100, sort: true,sortField:"revealUser"},
+                { field: 'reviewTimeStr', title: '报表复核时间', width: 150, sort: true },
+                { field: 'reviewUser', title: '复核人', width: 100, sort: true },
+                { field: 'reviewTgTimeStr', title: '托管复核时间', width: 150, sort: true },
+                { field: 'reviewTgUser', title: '托管复核人', width: 100, sort: true },
+                // {field:'revealChannelName', title: '披露渠道',width:100, sort: true,sortField:"revealChannel"},
+                // {field:'isRevealName', title: '披露方式',width:100, sort: true,sortField:"isReveal"},
+                // {field:'revealUser', title: '披露人',width:100, sort: true,sortField:"revealUser"},
                 {field:'annex', title: '附件',width:100, sort: true
                 	,render: function (data, type, row, meta) {
                           return '<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.annexPath)+ '">'+ data +'</a>'

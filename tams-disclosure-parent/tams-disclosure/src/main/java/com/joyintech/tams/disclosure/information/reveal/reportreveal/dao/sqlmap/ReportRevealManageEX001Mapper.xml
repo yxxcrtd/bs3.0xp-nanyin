@@ -73,4 +73,23 @@
 	and to_char(reveal.REVEAL_DATE,'yyyy-MM-dd') = #{date,jdbcType=VARCHAR}
 	and reveal.REVEAL_STATUS='01'
     </select>
+
+	<update id="backToTgReview" parameterType="com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto">
+		update REP_REVEAL_REVIEW review
+		set review.REVIEW_TG_USER =null,
+			review.REVIEW_TG_TIME=null,
+			review.REVIEW_TG_STATUS = #{reviewTgStatus,jdbcType=VARCHAR},
+			review.UPDATE_TIME=sysdate,
+			review.UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+		where review.REVEAL_ID=#{id,jdbcType=VARCHAR}
+	</update>
+	<update id="backToReview" parameterType="com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto">
+		update REP_REVEAL_REVIEW review
+		set
+			review.REVIEW_TIME=null,
+			review.REVIEW_STATUS = #{reviewStatus,jdbcType=VARCHAR},
+			review.UPDATE_TIME=sysdate,
+			review.UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+		where review.REVEAL_ID=#{id,jdbcType=VARCHAR}
+	</update>
 </mapper>

@@ -23,6 +23,7 @@ import javax.validation.Valid;
 
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.tams.disclosure.information.reveal.reportreveal.service.ReportRevealManage002Service;
+import com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,14 +184,14 @@ public class ReportRevealManage001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ReportConfirmManage001Dto> findPage(){
+    public Page<ReportReview001Dto> findPage(){
 	  String workflowId =this.getParam("workflowId");
     	
-    	Page<ReportConfirmManage001Dto> page;
+    	Page<ReportReview001Dto> page;
     	
     	if(StringUtil.isNotEmpty(workflowId)){
     		page = new Page<>();
-    		List<ReportConfirmManage001Dto> list = new ArrayList<>();
+    		List<ReportReview001Dto> list = new ArrayList<>();
     		list.add(reportRevealManage001Service.getBussinessEntityByWorkflowId(workflowId));
     		page.setRoot(list);
 
@@ -324,7 +325,7 @@ public class ReportRevealManage001Contoller extends BaseController {
             proParam.setWorkFlowParameter(params);
             
             try {
-                msg = reportRevealManage001Service.start(proParam, dto);
+                //msg = reportRevealManage001Service.start(proParam, dto);
             }
             catch (Exception e) {
                 getLogger().error("启动流程失败：", e);
@@ -378,10 +379,9 @@ public class ReportRevealManage001Contoller extends BaseController {
 
     @ResponseBody
     @RequestMapping("goBack")
-    public AjaxResult goBack(@Valid ReportConfirmManageParamDto dto, BindingResult result, String operateType) {
+    public AjaxResult goBack(@Valid ReportReview001Dto dto, BindingResult result, String operateType) {
         try {
-            @SuppressWarnings("unused")
-			boolean result1 =  reportRevealManage001Service.updateConfirmStatusWithGoBack(dto);
+			 reportRevealManage001Service.updateConfirmStatusWithGoBack(dto);
         }
         catch (IOException e) {
         	logger.error("error:",e);
@@ -402,10 +402,10 @@ public class ReportRevealManage001Contoller extends BaseController {
     public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
          Map<String, Object> paraMap = RequestUtil.getPageParam();
-         List<ReportConfirmManage001Dto> dtoList;
+         List<ReportReview001Dto> dtoList;
          if (datas == null) {
         	 dtoList = reportRevealManage001Service.queryPageList(paraMap);
-        	 for (ReportConfirmManage001Dto single : dtoList) {
+        	 for (ReportReview001Dto single : dtoList) {
         		 List<String> revealChannelList = StringUtil.splitToList(",", single.getRevealChannel());
         		 List<String> revealChannelNameList = new ArrayList<String>();
      			 for (String string : revealChannelList) {
@@ -414,7 +414,7 @@ public class ReportRevealManage001Contoller extends BaseController {
      			 single.setRevealChannelName(StringUtil.joinString(revealChannelNameList, ","));
 			 }
 //        	 dtoList = this.findPage().getRoot();
-        	 for (ReportConfirmManage001Dto dto : dtoList) {
+        	 for (ReportReview001Dto dto : dtoList) {
                  if(StringUtil.equals(DictCodeListExt2.披露状态_未披露.getValue(), dto.getRevealStatus())
                          ||StringUtil.equals(DictCodeListExt2.披露状态_生成失败.getValue(), dto.getRevealStatus())) {
                      dto.setRevealDate(null);
@@ -422,8 +422,8 @@ public class ReportRevealManage001Contoller extends BaseController {
 			 }
          }
          else {
-        	 dtoList = JsonUtils.json2List(datas, ReportConfirmManage001Dto.class);
-        	 for (ReportConfirmManage001Dto dto : dtoList) {
+        	 dtoList = JsonUtils.json2List(datas, ReportReview001Dto.class);
+        	 for (ReportReview001Dto dto : dtoList) {
  				if(StringUtil.equals(DictCodeListExt2.披露状态_未披露.getValue(), dto.getRevealStatus())
                 ||StringUtil.equals(DictCodeListExt2.披露状态_生成失败.getValue(), dto.getRevealStatus())) {
  					dto.setRevealDate(null);
