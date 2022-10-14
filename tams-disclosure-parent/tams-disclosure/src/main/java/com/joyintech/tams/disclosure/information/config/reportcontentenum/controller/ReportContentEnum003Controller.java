@@ -193,8 +193,8 @@ public class ReportContentEnum003Controller extends BaseController {
 		String msg = StringUtil.EMPTY;
 		dto.setIndexType(DictCodeListExt2.指标类型_录入型.getValue());
 		String indexDetail = dto.getIndexDetail();
-		if (indexDetail.length()>50000) {
-			return new AjaxResult("适用产品范围说明长度不能超过50000",MessageType.错误消息);
+		if (indexDetail.length()>4000) {
+			return new AjaxResult("适用产品范围说明长度不能超过4000",MessageType.错误消息);
 		}
 		if (StringUtils.isEmpty(dto.getId())) {
 			dto.setId(IDGenerator.generate());
