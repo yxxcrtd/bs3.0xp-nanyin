@@ -117,6 +117,7 @@
             <if test="reviewTimeEnd !=null and reviewTimeEnd !='' ">
                 AND to_char(REVIEW.REVIEW_TIME,'yyyy-mm-dd') <![CDATA[<=]]> #{reviewTimeEnd,jdbcType=VARCHAR}
             </if>
+        order by REVIEW.REVIEW_STATUS asc ,REVIEW.UPDATE_TIME desc
     </select>
 
     <update id="updateReviewStatus">
@@ -139,6 +140,8 @@
         r.REVIEW_STATUS=#{reviewStatus,jdbcType=VARCHAR},
         r.REVIEW_TIME=#{reviewTime,jdbcType=DATE},
         r.REVIEW_USER=#{updateUser,jdbcType=VARCHAR},
+        r.REVIEW_TG_STATUS = null,
+        r.REVIEW_TG_GROUP = null,
         r.UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
         r.UPDATE_TIME=#{reviewTime,jdbcType=DATE}
         WHERE 1=1

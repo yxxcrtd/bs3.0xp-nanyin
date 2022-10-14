@@ -4,14 +4,17 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.service.ReportConfirmManage001Service;
 import com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportreviewtg.service.ReportReviewTg001Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +43,9 @@ public class ReportReviewTg001Controller extends BaseController {
 
     @Autowired
     private ReportReviewTg001Service reportReviewTg001Service;
+
+    @Autowired
+    private ReportConfirmManage001Service reportConfirmManage001Service;
 
     @Override
     public String init(Model model) {
@@ -79,5 +86,29 @@ public class ReportReviewTg001Controller extends BaseController {
             res = reportReviewTg001Service.returnData(idList);
         }
         return res;
+    }
+    @ResponseBody
+    @RequestMapping("getTgUserList")
+    public Page<SelectOptionDto> getTgUserList() {
+        return reportReviewTg001Service.getTgUserList(RequestUtil.getPageParam());
+    }
+
+    @RequestMapping("export")
+    public ResponseEntity<byte[]> export(){
+        return reportReviewTg001Service.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
+    }
+
+    @ResponseBody
+    @RequestMapping("downloadReport")
+    public ResponseEntity<byte[]> downloadReport() throws IOException {
+        String id = RequestUtil.getParam("id");
+        List<String> idList = new ArrayList<String>();
+        if(StringUtil.isNotEmpty(id)){
+            idList = JsonUtils.json2List(id, String.class);
+        }
+        Map<String, Object> paraMap = new HashMap<String, Object>();
+        paraMap.put("idList", idList);
+        return reportConfirmManage001Service.downLoadReportInfo(paraMap);
     }
 }
