@@ -112,7 +112,7 @@ public class RepProdIndexGz002Controller extends BaseController {
         params.setPageId("RepProdIndexGz002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getProdId());
-        params.setBusinessType(DictCodeListExt4.共通业务类型_产品净值信息.getValue());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_产品净值信息_估值.getValue());
         params.setComment(entity -> "子产品代码" + "(" + entity.getProdId() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
