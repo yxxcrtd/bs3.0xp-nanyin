@@ -17,18 +17,33 @@
     </div>
     <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form" id="searchForm">
+            <input type="hidden" id="finprodIds">
 
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable" >产品全称</label>
                     <div class="layui-input-inline input-inline">
                         <select type="text" id="prodId" name="prodId"
-                                class="layui-input form-input input-select" allowClear="true"
+                                class="layui-input form-input input-select" allowClear="true" multiple="multiple"
                                 placeholder="请输入"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
                                 formatoption=true
                                 data-th-data-url="@{/disclosure/information/config/repprodinfo/ProdInfo001/queryPprodIds}">
                         </select>
+                    </div>
+                    <div class="layui-inline">
+                        <button type="button" class="layui-btn layui-btn-sm btn-default"
+                                id="ProdInfo001_btn_add" style="
+										text-align: center;
+    									width: 30px;
+    									height: 24px;
+    									line-height: 24px;
+    									position: absolute;
+    									top: -9px;
+    									right: -35px;
+    									z-index:2;">
+                            <i class="iconfont icon-add"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">

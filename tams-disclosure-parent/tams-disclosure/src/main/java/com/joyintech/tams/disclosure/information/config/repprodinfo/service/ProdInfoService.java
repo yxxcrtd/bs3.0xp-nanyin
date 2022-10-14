@@ -1077,7 +1077,20 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
     public Page<SelectOptionDto> queryPprodIds(Map<String, Object> map) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
-        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+        if(map.containsKey("initValue")){
+            String str=map.get("initValue").toString();
+            List<String> prodIdList=Arrays.asList(str.split(","));
+            map.put("prodIdList",prodIdList);
+        }
+        Integer page=1;
+        if(StringUtil.isNotEmpty(pageParam.get("page"))){
+            page=Integer.parseInt((String) pageParam.get("page"));
+        }
+        Integer length=100;
+        if(StringUtil.isNotEmpty(pageParam.get("length"))){
+            length=Integer.parseInt((String) pageParam.get("length"));
+        }
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(page, length, ()
                 -> prodInfoMapper.queryPprodIds(map));
         return result;
     }
