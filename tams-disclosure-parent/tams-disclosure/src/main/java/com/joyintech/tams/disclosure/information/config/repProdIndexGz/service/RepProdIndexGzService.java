@@ -387,7 +387,7 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
             if (!StringUtil.isNotEmpty(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "日期"));
             } else if (!isDateStr(rowData.get(2))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "日期"));
             } else {
                 dto2.setValueDate(DateUtil.parse(rowData.get(2)));
             }

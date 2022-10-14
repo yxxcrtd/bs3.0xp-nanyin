@@ -274,8 +274,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             }
             if (CollectionUtils.isNotEmpty(message)) {
                 excelValidDtolist.add(new ExcelValidDto(list.get(0)
-                        + GlobalConstant.UNDER_LINE + list.get(1)
-                        + GlobalConstant.UNDER_LINE + list.get(2),
+                        + GlobalConstant.UNDER_LINE + list.get(9)
+                        + GlobalConstant.UNDER_LINE + list.get(10),
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             //数据格式校验都通过后，转成目标bean

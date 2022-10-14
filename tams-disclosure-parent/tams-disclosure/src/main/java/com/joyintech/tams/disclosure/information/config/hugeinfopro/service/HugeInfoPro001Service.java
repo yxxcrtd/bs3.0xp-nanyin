@@ -312,7 +312,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             if (!StringUtil.isNotEmpty(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "巨额赎回日期"));
             } else if (!isDateStr(rowData.get(2))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "巨额赎回日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "巨额赎回日期"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(3))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "触发的情形说明文字"));
@@ -327,7 +327,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             if (!StringUtil.isNotEmpty(rowData.get(5))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
             }else if(!isDateStr(rowData.get(5))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "报告发布日期"));
             }
             if(hugeInfoProMapper.isRelate(rowData.get(0), rowData.get(1)) == 0){
                 message.add( "产品登记编码与产品子代码不存在联系。");
