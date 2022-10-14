@@ -27,7 +27,7 @@
     </style>
     <div class="pro-module">
         <h3 class="pro-module-title">
-            <span class="title-des">其他附件</span>
+            <span class="title-des">模板相关附件（word、pdf、zip）</span>
             <a class="layui-btn layui-btn-sm btn-create" id="multFileBtn2"><i class="iconfont icon-found"></i><span>新增附件</span></a>
             <i class="iconfont icon-arrow-down pro-down-icon"></i>
         </h3>
@@ -35,7 +35,7 @@
             <div class="layui-form-item" style="padding: 10px 10px 0 10px;text-align:center;">
                 <div class="show">
                     <div id="fileUploader2" class="upload" th:disabled="${pageModel} eq ${pageModelReference}" th:data-data='${attachmentFiles}'
-                         data-option="{muiltiple: true, autoUpload: true, type: 'list','fileUploader':'fileUploader2'}">
+                         data-option="{allowFileType: 'xls|xlsx|docx', muiltiple: true, autoUpload: true, type: 'list','fileUploader':'fileUploader2'}">
                     </div>
                 </div>
             </div>
