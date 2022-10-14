@@ -169,12 +169,19 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 */
 	public void insert(ReportContentEnum002Dto dto) {
 		//插入插入报表作业屏蔽产品，作业范围数据
-		doinsertOrUpdate(dto);
+		//doinsertOrUpdate(dto);
+		//dto.setAuditStatus("D");
+		//reportContentEnum002Mapper.updateRepIndexSub(dto);
+		String prods = dto.getIndexDetail();
+		if ( prods!=null && prods.length()>0 ) {
+			int pos = prods.indexOf("产品名称=");
+			if ( pos!=-1 ) {
+				prods = prods.substring(pos+"产品名称=".length(),prods.length()-1)+",";
+			}
+		}
+		dto.setIndexDetail(prods);
 		dto.setAuditStatus("E");
 		repIndexSubMapper.insert(dto);
-		/*restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/insert",
-				dto,Integer.class);**/
-		
 	}
 	
 	/**
@@ -185,7 +192,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 */
 	public void updateByPrimaryKeySelective(ReportContentEnum002Dto dto) {
 		//插入插入报表作业屏蔽产品，作业范围数据
-		doinsertOrUpdate(dto);
+		//doinsertOrUpdate(dto);
 		dto.setAuditStatus("E");
 		repIndexSubMapper.updateByPrimaryKeySelective(dto);
 		/*restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum003/updateByPrimaryKeySelective",
@@ -322,12 +329,8 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 * @return
 	 */
 	public List<ReportContentEnum003Dto> findRulePage(String id) {
-//		return reportContentEnum002Mapper.findRulePage(id);
-		
-		return restTemplate.getForList(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum002/findRulePage?id="+id, ReportContentEnum003Dto.class);
-		
-		
-		
+		//return restTemplate.getForList(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportContentEnum002/findRulePage?id="+id, ReportContentEnum003Dto.class);
+		return reportContentEnum002Mapper.selectRepIndeSubById(id);
 	}
 
 	public void copyindexDetial(ReportContentEnum002Dto dto){
@@ -478,18 +481,37 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 * @param dto
 	 * @return
 	 */
-	public boolean isDuplicatedIndex(ReportContentEnum002Dto dto) {
-		boolean ret = false;
+	public String isDuplicatedIndex(ReportContentEnum002Dto dto) {
+		StringBuffer duplicatedProds = new StringBuffer();
 		//为了防止破坏前端传入的参数，根据需要查询的条件，重建参数dto
 		ReportContentEnum002Dto para = new ReportContentEnum002Dto();
+		para.setId(dto.getId());
 		para.setPriId(dto.getPriId());
 		para.setIndexType(dto.getIndexType()==null?"01":dto.getIndexType());
 		para.setAuditStatus(dto.getAuditStatus()==null?"E":dto.getAuditStatus());
 		para.setIndexYear(dto.getIndexYear());
 		para.setIndexPeriod(dto.getIndexPeriod());
+		
+		//如果有id，不包含本条数据
 		List<ReportContentEnum002Dto>list=reportContentEnum002Mapper.selectRepIndex(para);
-		if ( list!=null && list.size()>0 )
-			ret = true;
-		return ret;
+		
+		String prods = dto.getIndexDetail();
+		if ( prods!=null && prods.length()>0 ) {
+			int pos = prods.indexOf("产品名称=");
+			if ( pos!=-1 ) {
+				prods = prods.substring(pos+"产品名称=".length(),prods.length()-1);
+			}
+		}
+		String[] arrayProd = prods.split(",");
+		if ( arrayProd.length>0 )
+			for ( String s:arrayProd) {
+				for ( ReportContentEnum002Dto d:list ) {
+					if ( d.getIndexDetail()!=null && d.getIndexDetail().contains(s+",") ) {
+						duplicatedProds.append(s+",");
+					}
+				}
+			}
+		
+		return duplicatedProds.toString();
 	}
 }

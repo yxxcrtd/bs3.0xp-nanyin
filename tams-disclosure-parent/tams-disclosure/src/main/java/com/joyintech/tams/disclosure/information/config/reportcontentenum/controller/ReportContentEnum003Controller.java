@@ -110,8 +110,13 @@ public class ReportContentEnum003Controller extends BaseController {
 		} else {
 			model.addAttribute("indexName", getParam("indexName"));
 		}
+		
+		model.addAttribute("indexRule", "FINPROD_NAME");
 		model.addAttribute("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
 		model.addAttribute("entity", dto);
+		
+		
+		
 		return super.init(model);
 	}
 
@@ -128,6 +133,7 @@ public class ReportContentEnum003Controller extends BaseController {
 	public AjaxResult check(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
+
 ////		if(!StringUtil.isNotEmpty(dto.getIndexDate())){
 ////			msg = "生效日期不能为空";
 ////			return new AjaxResult(msg, MessageType.错误消息);
@@ -135,9 +141,10 @@ public class ReportContentEnum003Controller extends BaseController {
 //		if(!StringUtil.isNotEmpty(dto.getIndexYear())){
 //			msg = "请输入年度。";
 //		}
-//		if(!StringUtil.isNotEmpty(dto.getIndexPeriod())){
-//			msg += "\r\n请输入指标类型。";
-//		}
+		if(!StringUtil.isNotEmpty(dto.getIndexPeriod())){
+			msg += "请输入指标类型。";
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
 //
 //		if(!StringUtil.isNotEmpty(dto.getIndexValue())){
 //			msg += "\r\n请输入报表文本值。";
@@ -159,8 +166,9 @@ public class ReportContentEnum003Controller extends BaseController {
 //			return new AjaxResult(msg, MessageType.错误消息);
 //		}
 		
-		if ( reportContentEnum002Service.isDuplicatedIndex(dto)==true ){
-			msg="指标重复，已有相同的指标数据!";
+		String ret = reportContentEnum002Service.isDuplicatedIndex(dto);
+		if ( ret!=null && ret.length()>0 ){
+			msg="指定产品指标重复："+ret;
 			return new AjaxResult(msg, MessageType.错误消息);
 		}
 

@@ -39,7 +39,6 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	/**
 	 * 指标值
 	 */
-	@NotEmpty(fieldName = "指标值")
 	private String indexValue;
 
 	/**
@@ -93,10 +92,8 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	
 	private String updateTimeFmt;
 
-	@NotEmpty(fieldName = "年度")
 	private String indexYear;
 	
-	@NotEmpty(fieldName = "指标类型")
 	private String indexPreriod;
 	
 	public Date getIndexDate() {
@@ -155,6 +152,7 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	 * 
 	 * @return indexValue.
 	 */
+	@NotEmpty(fieldName = "报表文本值")
 	public String getIndexValue() {
 		return indexValue;
 	}
@@ -257,6 +255,7 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 		return serialVersionUID;
 	}
 
+	@NotEmpty(fieldName = "适用产品范围")	
 	public String getIndexDetail() {
 		return indexDetail;
 	}
@@ -284,4 +283,23 @@ public class ReportContentEnum002Dto extends RepIndexSub {
 	public String getIndexPeriodStr () {
 		return SysDataUtil.getNameFromDataDict(DictCodeExt1.指标周期, this.getIndexPeriod());
 	}
+
+	@NotEmpty(fieldName = "年度")
+	public String getIndexYear() {
+		return indexYear;
+	}
+
+	public void setIndexYear(String indexYear) {
+		this.indexYear = indexYear;
+	}
+	
+	public String getIndexPreriod() {
+		return indexPreriod;
+	}
+
+	public void setIndexPreriod(String indexPreriod) {
+		this.indexPreriod = indexPreriod;
+	}
+	
+	
 }

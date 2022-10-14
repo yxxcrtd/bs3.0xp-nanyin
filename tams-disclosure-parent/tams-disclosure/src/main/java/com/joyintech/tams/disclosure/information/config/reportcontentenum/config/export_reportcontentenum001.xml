@@ -2,11 +2,12 @@
 <Workbook filePath="ReportContentEnum001.xlsx" name="报表指标管理">
 	<Worksheet javaBean="com.joyintech.tams.disclosure.interf.common.busicommon.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
 		<Row>
-			<Cell order="1" name="生效日期">indexDateStr</Cell>
-			<Cell order="2" name="指标值">indexValue</Cell>
-			<Cell order="3" name="使用范围说明">indexDetail</Cell>
-			<Cell order="4" name="制作人">createUser</Cell>
-			<Cell order="5" name="修改时间">updateTimeFmt</Cell>					
+			<Cell order="1" name="年度">indexYear</Cell>
+			<Cell order="2" name="指标类型">indexPeriodStr</Cell>
+			<Cell order="3" name="报表文本值">indexValue</Cell>
+			<Cell order="4" name="使用范围说明">indexDetail</Cell>
+			<Cell order="5" name="制作人">createUser</Cell>
+			<Cell order="6" name="修改时间">updateTimeFmt</Cell>					
 		</Row>
 	</Worksheet>
 </Workbook>

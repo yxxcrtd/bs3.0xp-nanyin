@@ -42,6 +42,7 @@
 						   placeholder="请选择年度"
 						   data-th-formatoption="false" 
 						   data-th-data-result="${DIS_INDEX_YEAR}"
+						   data-th-Value="${entity?.indexYear}" 
 						   allowClear="true"> </input>
 				</div>
 			</div>
@@ -57,6 +58,7 @@
 						   placeholder="请选择指标类型"
 						   data-th-formatoption="false" 
 						   data-th-data-result="${DIS_INDEX_PERIOD}"
+						   data-th-Value="${entity?.indexPeriod}" 
 						   allowClear="true"
 						   autosort="false"> </input>
 				</div>
@@ -69,7 +71,9 @@
 					 style="width: 15% !important;">
 					<input type="text" id="ruleType1" name="ruleType1"
 						   class="layui-input form-input input-select" placeholder="请输字段值"
-						   data-th-data-result="${RULE_TYPE1}" allowClear="true" childrenIds="ruleType2,ruleType3"
+						   data-th-data-result="${RULE_TYPE1}" 
+						   data-th-Value="${indexRule}"
+						   allowClear="true" childrenIds="ruleType2,ruleType3"
 					></input>
 				</div>
 				<div class="layui-input-inline input-inline" id="ruleType2Div"
@@ -200,7 +204,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="layui-form-item">
+		<div class="layui-form-item" id="ruletyped">
 			<label class="layui-form-label form-lable" style="width: 180px;">已设规则</label>
 			<div class="layui-inline" style="width: 60%;">
 				<table class="layui-table" id="settedRule" name="settedRule"></table>
@@ -212,7 +216,7 @@
 					<!-- <i class="iconfont must" style="display: inline;">*</i>  --> 适用产品范围说明
 				</label>
 				<div class="layui-input-inline input-inline">
-						<textarea id="indexDetail" name="indexDetail"
+						<textarea id="indexDetail" name="indexDetail" style="width:480px; min-height: 180px!important;;"
 								  data-th-text="${entity?.indexDetail}" class="layui-textarea"
 								  placeholder="请输入内容"
 								  data-th-placeholder="#{SysCommon.placeholder}"></textarea>
