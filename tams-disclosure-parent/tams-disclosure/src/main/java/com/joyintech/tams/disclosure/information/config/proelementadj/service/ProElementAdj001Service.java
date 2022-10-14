@@ -259,7 +259,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             if (!StringUtil.isNotEmpty(rowData.get(9))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效时间"));
             } else if(!isDateStr(rowData.get(9))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效时间"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "生效时间"));
             }
             if (StringUtil.isNotEmpty(rowData.get(10)) && rowData.get(10).length() > 500) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "对此要素调整(原因)"));
@@ -273,7 +273,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             if (!StringUtil.isNotEmpty(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
             }else if(!isDateStr(rowData.get(2))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "报告发布日期"));
             }
             if (map.containsKey(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(5))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));

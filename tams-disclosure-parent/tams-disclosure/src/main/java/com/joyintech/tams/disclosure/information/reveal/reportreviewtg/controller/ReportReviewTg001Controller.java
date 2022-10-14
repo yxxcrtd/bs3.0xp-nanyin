@@ -1,11 +1,27 @@
 package com.joyintech.tams.disclosure.information.reveal.reportreviewtg.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
+import com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto;
+import com.joyintech.tams.disclosure.information.reveal.reportreviewtg.service.ReportReviewTg001Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -20,9 +36,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PageId("ReportReviewTg001")
 @RequestMapping("/disclosure/information/reveal/reportreviewtg/ReportReviewTg001")
 public class ReportReviewTg001Controller extends BaseController {
+
+    @Autowired
+    private ReportReviewTg001Service reportReviewTg001Service;
+
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCodeExt1.托管复核状态,DictCodeExt1.信披报表类别);
         return super.init(model);
+    }
+
+
+    @RequestMapping("findPage")
+    @ResponseBody
+    public Page<ReportReview001Dto> findPage(){
+        Map<String, Object> param= RequestUtil.getPageParam();
+        Page<ReportReview001Dto> page = reportReviewTg001Service.findPage(param);
+        return page;
+    }
+
+    @ResponseBody
+    @RequestMapping("pushReveal")
+    public AjaxResult pushReveal(@RequestBody ReportConfirmManage001Dto dto) throws IOException {
+        AjaxResult res = new AjaxResult();
+        String id =dto.getId();
+        List<String> idList = new ArrayList<String>();
+        if(StringUtil.isNotEmpty(id)){
+            idList = JsonUtils.json2List(id, String.class);
+            res = reportReviewTg001Service.pushReveal(idList);
+        }
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping("returnData")
+    public AjaxResult returnData(@RequestBody ReportConfirmManage001Dto dto) throws IOException {
+        AjaxResult res = new AjaxResult();
+        String id =dto.getId();
+        List<String> idList = new ArrayList<String>();
+        if(StringUtil.isNotEmpty(id)){
+            idList = JsonUtils.json2List(id, String.class);
+            res = reportReviewTg001Service.returnData(idList);
+        }
+        return res;
     }
 }

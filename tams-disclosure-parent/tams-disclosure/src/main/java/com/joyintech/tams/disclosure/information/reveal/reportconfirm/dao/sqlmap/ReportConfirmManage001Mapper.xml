@@ -455,7 +455,7 @@
 	      <!-- SET (CONFIRM_STATUS,IS_CONFIRM,IS_REVEAL,CONFIRM_DATE,CONFIRM_USER,UPDATE_USER,UPDATE_TIME) 
 	      = (select '02','01','01',null,null,#{updateUser,jdbcType=VARCHAR},sysdate from dual) -->
 	      set
-	      CONFIRM_STATUS= '02',
+	      CONFIRM_STATUS= '2',
           IS_CONFIRM='01',
           IS_REVEAL='01',
           CONFIRM_DATE=null,

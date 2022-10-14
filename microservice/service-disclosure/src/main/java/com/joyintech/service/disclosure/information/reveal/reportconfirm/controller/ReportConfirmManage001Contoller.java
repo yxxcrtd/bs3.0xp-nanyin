@@ -13,6 +13,7 @@ package com.joyintech.service.disclosure.information.reveal.reportconfirm.contro
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportReview001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +73,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/queryPageList")
-    public List<ReportConfirmManage001Dto> queryPageList(@RequestBody Map<String, Object> param)
+    public List<ReportReview001Dto> queryPageList(@RequestBody Map<String, Object> param)
     {
         return reportConfirmManage001Service.queryPageList(param);
     }

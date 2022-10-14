@@ -345,10 +345,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 entity.setAfterFeerate(list.get(5));
             }
             if (StringUtil.isNotEmpty(list.get(6)) && isDateStr(list.get(6))) {
-                entity.setStartDate(list.get(6));
+                entity.setStartDateStr(list.get(6));
             }
             if (StringUtil.isNotEmpty(list.get(7)) && isDateStr(list.get(7))) {
-                entity.setEndDate(list.get(7));
+                entity.setEndDateStr(list.get(7));
             }
 
 //            if (StringUtil.isNotEmpty(list.get(8)) && isNumber(list.get(8))) {
@@ -454,7 +454,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             if (StringUtil.isEmpty(rowData.get(9))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
             }else if(!isDateStr(rowData.get(9))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "报告发布日期"));
             }
             if (StringUtil.isNotBlank(rowData.get(2)) && rowData.get(2).length()>500){
                 message.add("此产品优惠调整（补充性）描述文字字符不能超过500");
@@ -535,10 +535,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             feediscountDto.setAfterFeerate( rowData.get(5));
         }
         if (StringUtil.isNotEmpty(rowData.get(6))) {
-            feediscountDto.setStartDate(rowData.get(6));
+            feediscountDto.setStartDate(DateUtil.parse(rowData.get(6).toString()));
         }
         if (StringUtil.isNotEmpty(rowData.get(7))) {
-            feediscountDto.setEndDate(rowData.get(7));
+            feediscountDto.setEndDate(DateUtil.parse(rowData.get(7).toString()));
         }
 //        if (StringUtil.isNotEmpty(rowData.get(8))) {
 //            feediscountDto.setThisPreFeerate(rowData.get(8));

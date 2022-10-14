@@ -77,7 +77,7 @@ public class ProdFeediscountDto extends DisProdFeediscount implements ITableRow,
         if(StringUtils.isNotBlank(this.startDateStr)){
             return this.startDateStr ;
         }else{
-            return this.startDateStr = this.getStartDate()==null?null: this.getStartDate();
+            return this.startDateStr = this.getStartDate()==null?null:  DateUtil.format(this.getStartDate(), "yyyy-MM-dd");
         }
 
     }
@@ -91,7 +91,7 @@ public class ProdFeediscountDto extends DisProdFeediscount implements ITableRow,
         if(StringUtils.isNotBlank(this.endDateStr)){
             return this.endDateStr ;
         }else{
-            return this.endDateStr = this.getEndDate()==null?null: this.getEndDate();
+            return this.endDateStr = this.getEndDate()==null?null: DateUtil.format(this.getEndDate(), "yyyy-MM-dd");
         }
     }
 

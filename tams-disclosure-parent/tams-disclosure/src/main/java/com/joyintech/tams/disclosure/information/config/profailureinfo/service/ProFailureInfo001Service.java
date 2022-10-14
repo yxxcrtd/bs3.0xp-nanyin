@@ -326,7 +326,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             if (!StringUtil.isNotEmpty(rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
             } else if (!isDateStr(rowData.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "报告发布日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "报告发布日期"));
             }
             if (map.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));

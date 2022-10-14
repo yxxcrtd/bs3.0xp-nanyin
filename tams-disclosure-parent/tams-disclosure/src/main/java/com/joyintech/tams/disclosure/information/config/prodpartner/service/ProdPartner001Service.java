@@ -323,8 +323,8 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             }
             if (CollectionUtils.isNotEmpty(message)) {
                 excelValidDtolist.add(new ExcelValidDto(list.get(0)
-                        + GlobalConstant.UNDER_LINE + list.get(1)
-                        + GlobalConstant.UNDER_LINE + list.get(2),
+                        + GlobalConstant.UNDER_LINE + list.get(2)
+                        + GlobalConstant.UNDER_LINE + list.get(3),
                         String.valueOf(i + 1), StringUtil.joinString(message, "<br>")));
             }
         }

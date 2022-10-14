@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportReview001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,8 +74,8 @@ public class ReportRevealManage001Contoller extends BaseController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<ReportConfirmManage001Dto> findPage(@RequestBody Map<String, Object> param,
-                                                    @PathVariable("page") int page, @PathVariable("length") int length)
+    public Page<ReportReview001Dto> findPage(@RequestBody Map<String, Object> param,
+                                             @PathVariable("page") int page, @PathVariable("length") int length)
     {
         return reportRevealManage001Service.findPage(page, length, param);
     }
@@ -88,7 +89,7 @@ public class ReportRevealManage001Contoller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/queryPageList")
-    public List<ReportConfirmManage001Dto> queryPageList(@RequestBody Map<String, Object> param)
+    public List<ReportReview001Dto> queryPageList(@RequestBody Map<String, Object> param)
     {
         return reportRevealManage001Service.queryPageList(param);
     }
@@ -127,7 +128,7 @@ public class ReportRevealManage001Contoller extends BaseController {
     @Transactional
     @DTXTransaction
     @PostMapping(value = "doComplete/{action}")
-    public void doComplete(@RequestBody ReportConfirmManage001Dto dto, @PathVariable("action") String action) {
+    public void doComplete(@RequestBody ReportReview001Dto dto, @PathVariable("action") String action) {
         reportRevealManage001Service.doComplete(dto, OperationType.valueOf(action));
     }
 

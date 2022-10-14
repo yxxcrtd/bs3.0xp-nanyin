@@ -393,12 +393,12 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             if (!StringUtil.isNotEmpty(rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "收益分配基准日"));
             } else if (!isDateStr(rowData.get(2))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "收益分配基准日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "收益分配基准日"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(3))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "现金红利发放日"));
             } else if (!isDateStr(rowData.get(3))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "现金红利发放日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "现金红利发放日"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩报酬"));

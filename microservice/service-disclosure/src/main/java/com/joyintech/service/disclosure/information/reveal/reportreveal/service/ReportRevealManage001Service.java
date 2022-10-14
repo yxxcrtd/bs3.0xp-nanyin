@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportReview001Dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  * @since 1.0
  */
 @Service(value="serviceReportRevealManage001Service")
-public class ReportRevealManage001Service extends CommonExportService<ReportConfirmManage001Dto> implements BaseProcessService<ReportConfirmManage001Dto> {
+public class ReportRevealManage001Service extends CommonExportService<ReportReview001Dto> implements BaseProcessService<ReportReview001Dto> {
 	
 	/**
      *  报表下载临时路径
@@ -74,7 +75,7 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ReportConfirmManage001Dto> findPage(int page, int length, Map<String, Object> params) {
+    public Page<ReportReview001Dto> findPage(int page, int length, Map<String, Object> params) {
         
         //获取获取理财产品类型
         String finprodId = (String)params.get("finprodId");
@@ -104,6 +105,8 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
         params.put("valBalFlagCodeForFlow", (String)params.get("valBalFlagCodeForFlow"));
         // 披露界面的查询
         params.put("confrom", "confrom");
+        params.put("revealPage", "revealPage");
+
         return super.queryForPage(page, length, ()-> mapper.queryPageList(params));
     }
 
@@ -145,7 +148,7 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      * @see
      * @since 1.0
      */
-    public List<ReportConfirmManage001Dto> queryPageList(Map<String, Object> params) {
+    public List<ReportReview001Dto> queryPageList(Map<String, Object> params) {
     	//获取获取理财产品类型
         String finprodId = (String)params.get("finprodId");
         String[] finprodIdArr = null;
@@ -192,7 +195,7 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      * {@inheritDoc}
      */
     @Override
-    public void doComplete(ReportConfirmManage001Dto entity, OperationType type){ 
+    public void doComplete(ReportReview001Dto entity, OperationType type){
         if(entity!=null){
             //估值表余额表状态表 - 确认状态更新
 //            if("QR".equals(entity.getConfirmOrNotice())){
@@ -280,7 +283,6 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
         String data = dto.getData();
         List<ReportConfirmManage001Dto> rDtoList = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
         for (ReportConfirmManage001Dto dto2 : rDtoList) {
-//            dto2.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
             dto2.setConfirmStatus(DictCodeList.确认状态_已退回.getValue());
             dto2.setIsReveal(DictCodeListExt2.披露方式_手动.getValue());
             dto2.setIsConfirm(DictCodeListExt1.确认类型_手动.getValue());

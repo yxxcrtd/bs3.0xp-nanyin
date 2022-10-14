@@ -15,6 +15,7 @@ import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.BokFil
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.BokNetValueCfmFileDto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
+import com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -44,4 +45,8 @@ public interface ReportRevealManageEX001Mapper {
     int updateRevealStatusById(ReportConfirmManage001Dto infoDiscAutoRevealDto);
 
     int updateRevealStatusByIdEX(ReportConfirmManage001Dto dto);
+
+    int backToTgReview(ReportReview001Dto dto);
+
+    int backToReview(ReportReview001Dto dto);
 }

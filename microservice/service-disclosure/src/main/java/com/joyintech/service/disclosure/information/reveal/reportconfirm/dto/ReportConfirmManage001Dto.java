@@ -95,6 +95,15 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
 
     private Date checkTime;
 
+    private String reviewUser;
+    public String getReviewUser() {
+        return reviewUser;
+    }
+
+    public void setReviewUser(String reviewUser) {
+        this.reviewUser = reviewUser;
+    }
+
     public String getSeqno() {
         return this.getId();
     }

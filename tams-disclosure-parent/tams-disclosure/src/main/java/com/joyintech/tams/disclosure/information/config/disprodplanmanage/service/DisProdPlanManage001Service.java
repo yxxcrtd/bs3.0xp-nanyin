@@ -345,9 +345,23 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             if(StringUtils.equals("02",prodInfo.getIssuingWay())){
                 message.add("封闭式产品不允许导入排期计划");
             }else{
-                DisProdPlanManage002Dto dto = disProdPlanManage002Service.selectCfsj(rowData.get(0),rowData.get(4));
-                if (StringUtil.equals(dto.getDataStatus(),"C")){
-                    message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+                DisProdPlanManage002Dto dto=null;
+                if (!StringUtil.isNotEmpty(rowData.get(4))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "运作起始日"));
+                } else if (!isDateStr(rowData.get(4))) {
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "运作起始日"));
+                }else{
+                     dto = disProdPlanManage002Service.selectCfsj(rowData.get(0),rowData.get(4));
+                }
+                if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(1))
+                        && DateUtil.compareDate(rowData.get(4), rowData.get(2)) < 0){
+                    message.add("运作起始日不能小于开放期结束日。");
+                }
+                //DisProdPlanManage002Dto dto = disProdPlanManage002Service.selectCfsj(rowData.get(0),rowData.get(4));
+                if(dto!=null) {
+                    if (StringUtil.equals(dto.getDataStatus(), "C")) {
+                        message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+                    }
                 }
                 if (!StringUtil.isNotEmpty(rowData.get(1))) {
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "开放期起始日"));
@@ -370,15 +384,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 if (StringUtil.isNotEmpty(rowData.get(3)) && !isDateStr(rowData.get(3))) {
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "产品冷静期"));
                 }
-                if (!StringUtil.isNotEmpty(rowData.get(4))) {
-                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "运作起始日"));
-                } else if (!isDateStr(rowData.get(4))) {
-                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "运作起始日"));
-                }
-                if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(1))
-                        && DateUtil.compareDate(rowData.get(4), rowData.get(2)) < 0){
-                    message.add("运作起始日不能小于开放期结束日。");
-                }
+
                 if (StringUtil.isNotEmpty(rowData.get(5)) && !isDateStr(rowData.get(5))) {
                     message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "自动赎回日"));
                 }
