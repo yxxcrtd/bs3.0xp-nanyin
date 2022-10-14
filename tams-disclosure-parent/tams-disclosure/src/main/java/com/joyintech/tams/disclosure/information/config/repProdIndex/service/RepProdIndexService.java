@@ -368,9 +368,19 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             List<String> message = new ArrayList<>();
             RepProdIndexDto dto1 = new RepProdIndexDto();
             RepProdIndexDto dto2 = new RepProdIndexDto();
-            RepProdIndexDto dto = repProdIndexSMapper.selectCfsj(rowData.get(0),rowData.get(2));
-            if (StringUtil.equals(dto.getStatus(),"C")){
-                message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+            RepProdIndexDto dto=null;
+            if (!StringUtil.isNotEmpty(rowData.get(2))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "日期"));
+            } else if (!isDateStr(rowData.get(2))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "日期"));
+            } else {
+                dto = repProdIndexSMapper.selectCfsj(rowData.get(0),rowData.get(2));
+                dto2.setValueDate(DateUtil.parse(rowData.get(2)));
+            }
+            if(dto!=null) {
+                if (StringUtil.equals(dto.getStatus(), "C")) {
+                    message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+                }
             }
             if (!StringUtil.isNotEmpty(rowData.get(0))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
@@ -387,13 +397,6 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                 message.add("产品主代码不是产品子代码的母产品代码。");
             }else{
                 dto2.setpProdId(rowData.get(1));
-            }
-            if (!StringUtil.isNotEmpty(rowData.get(2))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "日期"));
-            } else if (!isDateStr(rowData.get(2))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "日期"));
-            } else {
-                dto2.setValueDate(DateUtil.parse(rowData.get(2)));
             }
             if (!StringUtil.isNotEmpty(rowData.get(3))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品资产净值"));
