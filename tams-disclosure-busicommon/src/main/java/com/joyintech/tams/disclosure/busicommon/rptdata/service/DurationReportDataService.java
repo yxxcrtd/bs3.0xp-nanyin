@@ -127,6 +127,9 @@ public class DurationReportDataService implements IReportDataService {
 					return null;
 				
 				if ( dto!=null ) {
+					if ( "无".equals(dto.getPartner()) ) {
+						dto.setPartner("-");
+					}
 					reportDto = dto; 
 				}
 				

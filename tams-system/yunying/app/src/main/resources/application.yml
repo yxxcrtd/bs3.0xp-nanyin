@@ -349,14 +349,14 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
     reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_TEST_02
-  sqldirpassword: BS30CVR_V306_XP_TEST_02
+  sqldiruserName: BS30CVR_V306_XP_DEV_02
+  sqldirpassword: BS30CVR_V306_XP_DEV_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -378,14 +378,14 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -393,20 +393,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -500,14 +500,14 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
     reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_TEST_02
-  sqldirpassword: BS30CVR_V306_XP_TEST_02
+  sqldiruserName: BS30CVR_V306_XP_DEV_02
+  sqldirpassword: BS30CVR_V306_XP_DEV_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -529,14 +529,14 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -544,20 +544,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -649,14 +649,14 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
     reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_TEST_02
-  sqldirpassword: BS30CVR_V306_XP_TEST_02
+  sqldiruserName: BS30CVR_V306_XP_DEV_02
+  sqldirpassword: BS30CVR_V306_XP_DEV_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -678,14 +678,14 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -693,20 +693,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -781,7 +781,7 @@ url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: BS30CVR_V306_XP_TEST_02_P
+  profiles: BS30CVR_V306_XP_DEV_02_P
   thymeleaf:
     cache: false
   redis:
@@ -803,14 +803,14 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
     reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_TEST_02
-  sqldirpassword: BS30CVR_V306_XP_TEST_02
+  sqldiruserName: BS30CVR_V306_XP_DEV_02
+  sqldirpassword: BS30CVR_V306_XP_DEV_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -832,14 +832,14 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -847,20 +847,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -935,7 +935,7 @@ url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: BS30CVR_V306_XP_TEST_02_P
+  profiles: BS30CVR_V306_XP_DEV_02_P
   thymeleaf:
     cache: false
   cache:
@@ -958,14 +958,14 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
     reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_TEST_02
-  sqldirpassword: BS30CVR_V306_XP_TEST_02
+  sqldiruserName: BS30CVR_V306_XP_DEV_02
+  sqldirpassword: BS30CVR_V306_XP_DEV_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -987,14 +987,14 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -1002,20 +1002,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1089,7 +1089,7 @@ url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: BS30CVR_V306_XP_TEST_02_P
+  profiles: BS30CVR_V306_XP_DEV_02_P
   thymeleaf:
     cache: false
   redis:
@@ -1111,14 +1111,14 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
     reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_TEST_02
-  sqldirpassword: BS30CVR_V306_XP_TEST_02
+  sqldiruserName: BS30CVR_V306_XP_DEV_02
+  sqldirpassword: BS30CVR_V306_XP_DEV_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -1140,14 +1140,14 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -1155,20 +1155,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1259,16 +1259,16 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
     reportSqlldrDatabaseName: 192.168.70.155:1521/orcl
   application:
     dfstype: 3
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_TEST_02
-  sqldirpassword: BS30CVR_V306_XP_TEST_02
+  sqldiruserName: BS30CVR_V306_XP_DEV_02
+  sqldirpassword: BS30CVR_V306_XP_DEV_02
 valinterf:
   hostname: localhost
   port: 28080
@@ -1290,14 +1290,14 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -1305,20 +1305,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.155:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_TEST_02
-    password: BS30CVR_V306_XP_TEST_02
+    username: BS30CVR_V306_XP_DEV_02
+    password: BS30CVR_V306_XP_DEV_02
 log:
   path: /home/tams/logs/tams
   level: debug

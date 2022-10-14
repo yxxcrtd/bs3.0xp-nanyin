@@ -82,6 +82,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             List<ExcelValidDto> checkResult = new ArrayList<>();
             List<ProdAssetInfoDto> entities = new ArrayList<>(dataList.size());
 //            convertToEntity(dataList, entities);
+            StringBuffer msg=new StringBuffer();
+            String s="";
             for (int i = 0; i < dataList.size(); i++) {
                 List<String> list = dataList.get(i);
                 ProdAssetInfoDto prodAssetInfoDto =convertToBean(list,i);
@@ -91,14 +93,19 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                         if (StringUtil.equals(prodAssetInfoDto.getProdId(),prodAssetInfoDto1.getProdId()) &&
                                 DateUtil.compareDate(prodAssetInfoDto.getEffDate(),prodAssetInfoDto1.getEffDate())==0&&
                                 DateUtil.compareDate(prodAssetInfoDto.getEffEndDate(),prodAssetInfoDto1.getEffEndDate())==0){
-                            JoyinMessage ms = new JoyinMessage("导入文件与系统存在重复的数据，是否确认导入",
-                                    MessageType.确认消息);
-                            joyinMessages.add(ms);
+                            msg.append(prodAssetInfoDto.getExcelRowNum()+ GlobalConstant.COMMA);
                             break;
                         }
                     }
                 }
-                break;
+            }
+            if(StringUtil.isNotEmpty(msg)){
+                s=msg.substring(0,msg.length()-1);
+            }
+            if(StringUtil.isNotEmpty(s)){
+                JoyinMessage ms = new JoyinMessage("第"+s+"行数据重复，请确认是否覆盖",
+                        MessageType.确认消息);
+                joyinMessages.add(ms);
             }
 
 //           for (ProdAssetInfoDto prodAssetInfoDto: entities){
@@ -274,8 +281,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             }
             if (CollectionUtils.isNotEmpty(message)) {
                 excelValidDtolist.add(new ExcelValidDto(list.get(0)
-                        + GlobalConstant.UNDER_LINE + list.get(1)
-                        + GlobalConstant.UNDER_LINE + list.get(2),
+                        + GlobalConstant.UNDER_LINE + list.get(9)
+                        + GlobalConstant.UNDER_LINE + list.get(10),
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             //数据格式校验都通过后，转成目标bean

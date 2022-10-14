@@ -65,8 +65,8 @@
             CREATE_DEPT)
         values (#{prodDiscountId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodRegistNo,jdbcType=VARCHAR}, 
             #{isSalesAgency,jdbcType=VARCHAR}, #{prodDisRemark,jdbcType=VARCHAR}, #{feename,jdbcType=VARCHAR}, 
-            #{preFeerate,jdbcType=VARCHAR}, #{afterFeerate,jdbcType=VARCHAR}, #{startDate,jdbcType=VARCHAR},
-            #{endDate,jdbcType=VARCHAR}, #{thisPreFeerate,jdbcType=VARCHAR}, #{thisAfterFeerate,jdbcType=VARCHAR},
+            #{preFeerate,jdbcType=VARCHAR}, #{afterFeerate,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
+            #{endDate,jdbcType=DATE}, #{thisPreFeerate,jdbcType=VARCHAR}, #{thisAfterFeerate,jdbcType=VARCHAR},
             #{thisEndFeerate,jdbcType=VARCHAR}, #{feeDisRemark,jdbcType=VARCHAR}, #{rptIssueDate,jdbcType=DATE},
             #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
@@ -524,20 +524,20 @@
         FROM DIS_PROD_FEEDISCOUNT WHERE
         PROD_ID = #{prodId,jdbcType=VARCHAR}
         and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
-        and to_char(RPT_ISSUE_DATE,'yyyy-MM-dd') = #{rptIssueDateStr,jdbcType=VARCHAR}
+        and to_char(RPT_ISSUE_DATE,'yyyy/MM/dd') = #{rptIssueDateStr,jdbcType=VARCHAR}
         and FEENAME = #{feename,jdbcType=VARCHAR}
         and DATA_STATUS = 'E'
         <choose>
-            <when test="startDate !=null and startDate != ''">
-                AND START_DATE =  #{startDate,jdbcType=VARCHAR}
+            <when test="startDateStr !=null and startDateStr != ''">
+                AND to_char(START_DATE,'yyyy/MM/dd') = #{startDateStr,jdbcType=VARCHAR}
             </when>
             <otherwise>
                 AND START_DATE is null
             </otherwise>
         </choose>
         <choose>
-            <when test="endDate !=null and endDate != ''">
-                AND END_DATE =  #{endDate,jdbcType=VARCHAR}
+            <when test="endDateStr !=null and endDateStr != ''">
+                AND to_char(END_DATE,'yyyy/MM/dd') = #{endDateStr,jdbcType=VARCHAR}
             </when>
             <otherwise>
                 AND END_DATE is null

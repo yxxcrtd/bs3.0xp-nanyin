@@ -165,3 +165,18 @@ delete from sys_page a where a.page_id='ReportReview002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ReportReview002', 'DIS', '/disclosure/information/reveal/reportreview/ReportReview002', 'disclosure/information/reveal/reportreview/ReportReview002', null, null, null, '02', '01', '托管行选择', 'system', null, sysdate, 'system', sysdate);
 -- add by zhengxiaolian 2022-10-14 托管行选择页面 end
+
+-- 产品排期计划主产品搜索树页面 2022-10-14
+delete from SYS_PAGE where PAGE_ID = 'DisProdPlanManage003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DisProdPlanManage003', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage003', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- NYLCXP-1419【产品净值信息（估值）】审批流程中，显示的业务类型为产品净值信息
+delete from SYS_DATADICT_LIST where DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'SVR16';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('COMMON_BUSINESS_TYPE', 'SVR16', '产品净值信息_估值', 1400, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+-- 产品排期计划 数据状态下拉框去除待处理
+delete from SYS_PAGE_DICTLIST where PAGE_ID = 'DisProdPlanManage001' and DICT_ID = 'MAINTAIN_STATUS';
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('DisProdPlanManage001', '999999', 'MAINTAIN_STATUS', 'C', null, null, 'system', null, sysdate, 'system', sysdate, null);
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('DisProdPlanManage001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('DisProdPlanManage001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);

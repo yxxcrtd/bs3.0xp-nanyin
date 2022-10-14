@@ -198,3 +198,7 @@ COMMENT ON COLUMN "REP_REVEAL_REVIEW"."CREATE_DEPT" IS '创建部门';
 
 COMMENT ON TABLE "REP_REVEAL_REVIEW" IS '报表复核状态表';
 -- add by zhengxiaolian 2022-10-14  报表复核状态表 end
+
+--修改指标适用范围的产品列宽度：added by chenxc,2022-10-14,begin
+ALTER TABLE REP_INDEX_SUB  MODIFY (INDEX_DETAIL VARCHAR2(4000) );
+--修改指标适用范围的产品列宽度：added by chenxc,2022-10-14,end

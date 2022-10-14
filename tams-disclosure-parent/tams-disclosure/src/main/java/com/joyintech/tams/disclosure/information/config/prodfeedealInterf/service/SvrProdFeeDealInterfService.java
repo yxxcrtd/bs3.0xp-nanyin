@@ -389,7 +389,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             if (!StringUtil.isNotEmpty(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "支付日"));
             } else if (!isDateStr(rowData.get(4))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "支付日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "支付日"));
             } else if (rowData.get(4).compareTo(DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
                 message.add("支付日只能小于等于平台日。");
             }

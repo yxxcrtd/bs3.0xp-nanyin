@@ -364,7 +364,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             if (!StringUtil.isNotEmpty(rowData.get(8))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效日"));
             } else if (!isDateStr(rowData.get(8).trim())) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "生效日"));
             } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(8)), platDate) < 0) {
                 //message.add("生效日不能小于平台日。");
             }
@@ -372,7 +372,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             if (!StringUtil.isNotEmpty(rowData.get(9))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效截止日期"));
             } else if (!this.isDateStr(rowData.get(9).trim())) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效截止日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "生效截止日期"));
             } else if (DateUtil.compareDate(DateUtil.parse(rowData.get(9)), platDate) < 0) {
                 //message.add("生效截止日期不能小于平台日。");
             }

@@ -608,6 +608,7 @@ $(function() {
 		$('#investTypeSelect').hide();
 		$('#openFreqSelect').hide();
 		$('#repProdTypeSelect').hide();
+		$('#ruletyped').hide();
 		// 规则增加事件
 		$('#ReportContentEnum003_btn_add').click(addrule);
 		// 规则1改变事件

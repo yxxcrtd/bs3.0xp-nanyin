@@ -105,4 +105,8 @@ public interface ReportContentEnum002Mapper {
 	List<ReportContentEnum002Dto> selectExistsData(ReportContentEnum002Dto dto);
 	
 	List<ReportContentEnum002Dto> selectRepIndex(ReportContentEnum002Dto dto);
+	
+	int updateRepIndexSub(ReportContentEnum002Dto dto );
+	
+	 List<ReportContentEnum003Dto> selectRepIndeSubById(String id);
 }

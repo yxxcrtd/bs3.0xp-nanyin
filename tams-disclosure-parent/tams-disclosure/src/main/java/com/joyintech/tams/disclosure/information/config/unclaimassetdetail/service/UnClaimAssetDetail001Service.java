@@ -374,14 +374,14 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             if (!StringUtil.isNotEmpty(rowData.get(7))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效日"));
             }else if(!isDateStr(rowData.get(7))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效日"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "生效日"));
             } else if (rowData.get(7).compareTo(DateUtil.format(DateUtil.platDateFromCache())) < 0){
                 //message.add("生效日要大于等于平台日。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(8))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "生效截止日期"));
             } else if (!isDateStr(rowData.get(8))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "生效截止日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "生效截止日期"));
             } else if (rowData.get(8).compareTo(DateUtil.format(DateUtil.platDateFromCache())) < 0){
                 //message.add("生效截止日期要大于等于平台日。");
             } else if (isDateStr(rowData.get(7)) && rowData.get(8).compareTo(rowData.get(7)) < 0){
