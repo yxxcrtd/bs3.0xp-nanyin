@@ -322,7 +322,7 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "确认日"));
             } else if (!isDateStr(rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "确认日"));
-            } else if (rowData.get(2).compareTo(DateUtil.format(DateUtil.platDateFromCache())) > 0) {
+            } else if (rowData.get(2).compareTo(DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
                 message.add("确认日只能小于等于平台日。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(3))) {
