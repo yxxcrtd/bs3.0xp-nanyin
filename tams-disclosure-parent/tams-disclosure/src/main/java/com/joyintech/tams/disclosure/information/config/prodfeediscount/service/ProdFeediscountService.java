@@ -345,10 +345,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 entity.setAfterFeerate(list.get(5));
             }
             if (StringUtil.isNotEmpty(list.get(6)) && isDateStr(list.get(6))) {
-                entity.setStartDate(list.get(6));
+                entity.setStartDateStr(list.get(6));
             }
             if (StringUtil.isNotEmpty(list.get(7)) && isDateStr(list.get(7))) {
-                entity.setEndDate(list.get(7));
+                entity.setEndDateStr(list.get(7));
             }
 
 //            if (StringUtil.isNotEmpty(list.get(8)) && isNumber(list.get(8))) {
@@ -535,10 +535,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             feediscountDto.setAfterFeerate( rowData.get(5));
         }
         if (StringUtil.isNotEmpty(rowData.get(6))) {
-            feediscountDto.setStartDate(rowData.get(6));
+            feediscountDto.setStartDate(DateUtil.parse(rowData.get(6).toString()));
         }
         if (StringUtil.isNotEmpty(rowData.get(7))) {
-            feediscountDto.setEndDate(rowData.get(7));
+            feediscountDto.setEndDate(DateUtil.parse(rowData.get(7).toString()));
         }
 //        if (StringUtil.isNotEmpty(rowData.get(8))) {
 //            feediscountDto.setThisPreFeerate(rowData.get(8));
