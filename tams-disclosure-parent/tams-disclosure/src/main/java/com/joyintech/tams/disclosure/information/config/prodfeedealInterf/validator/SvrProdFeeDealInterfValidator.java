@@ -68,13 +68,13 @@ public class SvrProdFeeDealInterfValidator implements BeanValidator {
             }
             if(StringUtil.isEmpty(dto.getFeeType())){
                 errorList.add(new ValidMessage("", "费用类型不能为空"));
-            }else if(dto.getFeeType().equals("05")||dto.getFeeType().equals("06")||dto.getFeeType().equals("07")){
+            }else if(dto.getFeeType().equals("07")){
                 if(dto.getPaidFee() == null){
-                    errorList.add(new ValidMessage("", "当费用类型选择“申购费”“赎回费”“客户收益”时费用金额不可为空"));
+                    errorList.add(new ValidMessage("", "当费用类型选择“客户收益”时费用金额不可为空"));
                 }
-            }else if(dto.getFeeType().equals("01")||dto.getFeeType().equals("02")||dto.getFeeType().equals("03")||dto.getFeeType().equals("04")){
+            }else if(dto.getFeeType().equals("01")||dto.getFeeType().equals("02")||dto.getFeeType().equals("03")||dto.getFeeType().equals("04")||dto.getFeeType().equals("05")||dto.getFeeType().equals("06")){
                 if(dto.getAccrual() == null){
-                    errorList.add(new ValidMessage("", "当费用类型选择“托管费”“管理费（固定）”“管理费（超额）”“销售费”时自成立以来发生额（贷方）不可为空"));
+                    errorList.add(new ValidMessage("", "当费用类型选择“托管费”“管理费（固定）”“管理费（超额）”“销售费”“申购费”“赎回费”时自成立以来发生额（贷方）不可为空"));
                 }
             }
             if(dto.getPayDate()== null){
