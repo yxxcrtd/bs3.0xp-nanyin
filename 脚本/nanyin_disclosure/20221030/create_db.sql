@@ -202,3 +202,8 @@ COMMENT ON TABLE "REP_REVEAL_REVIEW" IS '报表复核状态表';
 --修改指标适用范围的产品列宽度：added by chenxc,2022-10-14,begin
 ALTER TABLE REP_INDEX_SUB  MODIFY (INDEX_DETAIL VARCHAR2(4000) );
 --修改指标适用范围的产品列宽度：added by chenxc,2022-10-14,end
+
+-- 非标资产留痕表创建语句 added by sunjie,2022-10-15,begin
+create table DIS_NOSTD_CREDITOR_HIS as select * from DIS_NOSTD_CREDITOR where 1=2;
+alter table DIS_NOSTD_CREDITOR_HIS add WORKFLOW_ID VARCHAR2(32);
+-- 非标资产留痕表创建语句 added by sunjie,2022-10-15,end
