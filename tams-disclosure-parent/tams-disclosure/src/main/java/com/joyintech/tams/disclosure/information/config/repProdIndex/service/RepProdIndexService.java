@@ -304,14 +304,21 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
     }
 
     public static boolean isDateStr(String str) {
+        boolean result=true;
         SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         try {
             format.setLenient(false);
             format.parse(str);
-            return true;
+            result=true;
+
         } catch (Exception var3) {
-            return false;
+            result=false;
         }
+        String yearStr=str.split("/")[0];
+        if(yearStr.startsWith("0")||yearStr.length()!=4){
+            result=false;
+        }
+        return result;
     }
 
     public static boolean isBigDecimal(String str) {

@@ -137,6 +137,16 @@
 		<if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
 			AND to_char(REVEAL.REVEAL_END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
 		</if>
+		<if test="reportDateEnd !=null and reportDateEnd !='' ">
+			AND ((to_char(REVEAL.END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{reportDateStart,jdbcType=VARCHAR} and  REVEAL.START_DATE is null
+			    and to_char(REVEAL.END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{reportDateEnd,jdbcType=VARCHAR}
+			    )
+			    or(
+			 to_char(REVEAL.START_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{reportDateStart,jdbcType=VARCHAR}
+			and to_char(REVEAL.END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{reportDateEnd,jdbcType=VARCHAR}
+					)
+			    )
+		</if>
 		<if test="repTypeArr != null and repTypeArr.length > 0">
 			AND REVEAL.REPORT_CATEGORY IN
 			<foreach item="item" collection="repTypeArr" index="index"

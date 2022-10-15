@@ -125,22 +125,21 @@
 
 			</div>
 			<div class="layui-form-item">
-				<div class="layui-inline layui-col-md4">
-					<label class="layui-form-label form-lable">披露渠道</label>
-					<div class="layui-input-inline input-inline">
-						<select id="revealChanel" name="revealChanel"
-								class="layui-input form-input input-select" placeholder="请选择，可复选"
-								data-th-data-result="${REVEAL_CHANNEL}" allowClear="true"
-								multiple="multiple">
-						</select>
-					</div>
-				</div>
+
 				<div class="layui-inline layui-col-md4">
 					<label class="layui-form-label form-lable">生成日期</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" id="makeDate" name="makeDate"
 							placeholder="请选择时间区间"
 							class="layui-input form-input input-dateRangeSelect" value="">
+					</div>
+				</div>
+				<div class="layui-inline layui-col-md4">
+					<label class="layui-form-label form-lable">报告期</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" id="reportDate" name="reportDate"
+							   placeholder="请选择时间区间"
+							   class="layui-input form-input input-dateRangeSelect" value="">
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md4">

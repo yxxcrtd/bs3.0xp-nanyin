@@ -61,18 +61,34 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">复核状态</label>
+                    <label class="layui-form-label form-lable">托管复核状态</label>
                     <div class="layui-input-inline input-inline">
-                        <input id="reviewTgStatus" name="reviewTgStatus"
+                        <select id="reviewTgStatus" name="reviewTgStatus"
                                class="layui-input form-input input-select" allowClear="true"
                                data-th-data-result="${REVIEW_TG_STATUS}"  multiple
                                data-th-placeholder="#{SysCommon.placeholder}">
+                        </select>
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable" >复核时间</label>
+                    <label class="layui-form-label form-lable" >托管复核人</label>
                     <div class="layui-input-inline input-inline">
-                        <input  id="reviewTime" name="reviewTime" class="layui-input form-input input-dateRangeSelect" placeholder="请选择、支持区间" data-th-placeholder="#{SysCommon.dateInterval}">
+                        <select type="text" id="reviewTgUser" name="reviewTgUser"
+                                class="layui-input form-input input-select" allowClear="true"
+                                placeholder="请选择"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                formatoption=true multiple
+                                data-th-data-url="@{/disclosure/information/reveal/reportreviewtg/ReportReviewTg001/getTgUserList}">
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable" >托管复核时间</label>
+                    <div class="layui-input-inline input-inline">
+                        <input  id="reviewTgTime" name="reviewTgTime" class="layui-input form-input input-dateRangeSelect" placeholder="请选择、支持区间" data-th-placeholder="#{SysCommon.dateInterval}">
                     </div>
                 </div>
             </div>
