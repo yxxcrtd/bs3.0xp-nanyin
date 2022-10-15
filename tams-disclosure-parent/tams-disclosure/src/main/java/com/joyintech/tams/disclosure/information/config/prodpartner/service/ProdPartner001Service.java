@@ -240,8 +240,6 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
         List<List<String>> dataList = excelUtil.readToList(0, 0, 0);
         List<ExcelValidDto> excelValidDtolist=new ArrayList<>();
 
-        // 验证消息
-        List<String> message = new ArrayList<>();
         if(dataList.size()<2){
             excelValidDtolist.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                       "文件内容为空,没有需要导入的数据！"));
@@ -253,6 +251,8 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             return excelValidDtolist;
         }
         for (int i = 1; i < dataList.size(); i++) {
+            // 验证消息
+            List<String> message = new ArrayList<>();
             List<String> list = dataList.get(i);
             //字段非空检查
             if (!StringUtil.isNotEmpty(list.get(0))){
@@ -563,14 +563,21 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
         return equtiyList;
     }
     public static boolean isDateStr(String str) {
+        boolean result=true;
         SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         try {
             format.setLenient(false);
             format.parse(str);
-            return true;
+            result=true;
+
         } catch (Exception var3) {
-            return false;
+            result=false;
         }
+        String yearStr=str.split("/")[0];
+        if(yearStr.startsWith("0")||yearStr.length()!=4){
+            result=false;
+        }
+        return result;
     }
 
 }

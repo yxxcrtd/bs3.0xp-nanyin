@@ -63,7 +63,59 @@
                                         ) F where F.ronum = 1) F2 on REVIEW.REVIEW_USER = F2.USER_NAME
                 left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
         where 1=1
-          and REVEAL.status ='E'
+        and REVEAL.status ='E'
+        <if test="pProdIdArr != null and pProdIdArr.length > 0">
+            AND REVEAL.PRODID IN
+            <foreach item="item" collection="pProdIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="prodIdArr != null and prodIdArr.length > 0">
+            AND REVEAL.PRODID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="reportTypeArr != null and reportTypeArr.length > 0">
+            AND REVEAL.REPORT_CATEGORY IN
+            <foreach item="item" collection="reportTypeArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="reportName != null and reportName!=''">
+            AND REVEAL.REPORT_NAME =#{reportName,jdbcType=VARCHAR}
+        </if>
+        <if test="reportTypeArr != null and reportTypeArr.length > 0">
+            AND REVEAL.REPORT_CATEGORY IN
+            <foreach item="item" collection="reportTypeArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="reviewTgStatusArr != null and reviewTgStatusArr.length > 0">
+            AND REVIEW.REVIEW_TG_STATUS IN
+            <foreach item="item" collection="reviewTgStatusArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="reviewTgUserArr != null and reviewTgUserArr.length > 0">
+            AND REVIEW.REVIEW_TG_USER IN
+            <foreach item="item" collection="reviewTgUserArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="reviewTgTimeStart !=null and reviewTgTimeStart !='' ">
+            AND to_char(REVIEW.REVIEW_TG_TIME,'yyyy-mm-dd') <![CDATA[>=]]> #{reviewTgTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="reviewTgTimeEnd !=null and reviewTgTimeEnd !='' ">
+            AND to_char(REVIEW.REVIEW_TG_TIME,'yyyy-mm-dd') <![CDATA[<=]]> #{reviewTgTimeEnd,jdbcType=VARCHAR}
+        </if>
+        order by REVIEW.REVIEW_TG_STATUS asc ,REVIEW.UPDATE_TIME desc
     </select>
 
 
@@ -96,4 +148,20 @@
             #{item}
         </foreach>
     </update>
+
+    <select id="getTgUserList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        su.USER_NAME id,
+        su.REAL_NAME text
+        FROM
+        REP_REVIEW_GROUP rrg
+        inner join SYS_USER su on rrg.USER_NAME=su.USER_NAME
+        where
+        1=1
+        <if test="search != null and search != ''">
+            and (su.USER_NAME like
+            concat(concat('%',#{search}),'%')
+            or su.REAL_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
 </mapper>

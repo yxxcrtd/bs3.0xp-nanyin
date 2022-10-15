@@ -150,7 +150,7 @@
             }
         }
         if(idList.length !== 0 && idList.length === selArr.length){
-            Joyin.confirm("是否取消确认？", function(){
+            Joyin.confirm("所选数据，审核不通过，现退回？", function(){
                 object.id = JSON.stringify(idList);
                 object.data = JSON.stringify(selArr)
                 console.log(object)

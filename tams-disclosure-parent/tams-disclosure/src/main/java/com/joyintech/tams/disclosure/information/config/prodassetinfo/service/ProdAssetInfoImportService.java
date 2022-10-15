@@ -86,17 +86,21 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             String s="";
             for (int i = 0; i < dataList.size(); i++) {
                 List<String> list = dataList.get(i);
-                ProdAssetInfoDto prodAssetInfoDto =convertToBean(list,i);
-                List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(prodAssetInfoDto.getProdId());
-                if (dtos!=null && dtos.size()!=0){
-                    for (ProdAssetInfoDto prodAssetInfoDto1 : dtos){
-                        if (StringUtil.equals(prodAssetInfoDto.getProdId(),prodAssetInfoDto1.getProdId()) &&
-                                DateUtil.compareDate(prodAssetInfoDto.getEffDate(),prodAssetInfoDto1.getEffDate())==0&&
-                                DateUtil.compareDate(prodAssetInfoDto.getEffEndDate(),prodAssetInfoDto1.getEffEndDate())==0){
-                            msg.append(prodAssetInfoDto.getExcelRowNum()+ GlobalConstant.COMMA);
-                            break;
+                try{
+                    ProdAssetInfoDto prodAssetInfoDto =convertToBean(list,i);
+                    List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(prodAssetInfoDto.getProdId());
+                    if (dtos!=null && dtos.size()!=0){
+                        for (ProdAssetInfoDto prodAssetInfoDto1 : dtos){
+                            if (StringUtil.equals(prodAssetInfoDto.getProdId(),prodAssetInfoDto1.getProdId()) &&
+                                    DateUtil.compareDate(prodAssetInfoDto.getEffDate(),prodAssetInfoDto1.getEffDate())==0&&
+                                    DateUtil.compareDate(prodAssetInfoDto.getEffEndDate(),prodAssetInfoDto1.getEffEndDate())==0){
+                                msg.append(prodAssetInfoDto.getExcelRowNum()+ GlobalConstant.COMMA);
+                                break;
+                            }
                         }
                     }
+                }catch (Exception e){
+                    break;
                 }
             }
             if(StringUtil.isNotEmpty(msg)){
@@ -181,8 +185,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
     private List<ExcelValidDto> convertToEntity(List<List<String>> dataList, List<ProdAssetInfoDto> entities) throws ParseException {
         List<ExcelValidDto> checkContextResult = new ArrayList<>();
         // 验证消息
-        List<String> message = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++) {
+            List<String> message = new ArrayList<>();
             List<String> list = dataList.get(i);
             List<ExcelValidDto> excelValidDtolist = new ArrayList<ExcelValidDto>();
             // 模板中列数应为4
@@ -455,14 +459,21 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
     }
 
     public static boolean isDateStr(String str) {
+        boolean result=true;
         SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         try {
             format.setLenient(false);
             format.parse(str);
-            return true;
+            result=true;
+
         } catch (Exception var3) {
-            return false;
+            result=false;
         }
+        String yearStr=str.split("/")[0];
+        if(yearStr.startsWith("0")||yearStr.length()!=4){
+            result=false;
+        }
+        return result;
     }
 
 }

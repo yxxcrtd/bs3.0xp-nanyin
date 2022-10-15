@@ -7,10 +7,12 @@
         return {
             pProdId: $('#pProdId').val() == null ? null : $('#pProdId').val().join(","),
             prodId: $('#prodId').val() == null ? null : $('#prodId').val().join(","),
+            reportName: $('#reportName').val(),
             reportType: $('#reportType').val() == null ? null : $('#reportType').val().join(","),
-            reviewStatus: $('#reviewStatus').val() == null ? null : $('#reviewStatus').val().join(","),
-            reviewTimeStart: $('#reviewTime').startDate(),
-            reviewTimeEnd: $('#reviewTime').endDate(),
+            reviewTgStatus: $('#reviewTgStatus').val() == null ? null : $('#reviewTgStatus').val().join(","),
+            reviewTgUser: $('#reviewTgUser').val() == null ? null : $('#reviewTgUser').val().join(","),
+            reviewTgTimeStart: $('#reviewTgTime').startDate(),
+            reviewTgTimeEnd: $('#reviewTgTime').endDate(),
         };
     };
     /**
@@ -94,8 +96,36 @@
      * 导出选中的表格数据
      */
     var exportExcel = function () {
-        var paramObj = getSearchParams();//请求参数json格式
-        Joyin.exportExcel('export', paramObj);//导出（共通）
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
+    };
+
+    //下载模板
+    var download = function(){
+        var object =null;
+        var rowArr = table.getAllCheckedRows();// 所有选中行数据
+        var ids = [];
+
+        //// 不点击查询，直接点击导出所有报表文件;点击查询，未勾选，导出所有报表文件；点击查询，已勾选，导出勾选 报表文件 zhangyf 20190109
+        if(rowArr == null || rowArr.length ==0){
+            layer.msg("请勾选一个数据！");
+        }
+        else {
+            for(var i = 0 ; i<rowArr.length ; i++){
+                ids[i] = rowArr[i].id;
+            }
+            Joyin.exportExcel('downloadReport', {id:JSON.stringify(ids),data:JSON.stringify(rowArr)});
+        }
     };
 
     /**
@@ -122,7 +152,7 @@
             }
         }
         if(idList.length !== 0 && idList.length === selArr.length){
-            Joyin.confirm("是否取消确认？", function(){
+            Joyin.confirm("所选数据，审核不通过，现退回？", function(){
                 object.id = JSON.stringify(idList);
                 object.data = JSON.stringify(selArr)
                 console.log(object)
@@ -230,8 +260,12 @@
         $('#ReportReviewTg001_btn_push_reveal').click(function () {
             pushReveal();
         });
+        //导出
         $('#ReportReviewTg001_btn_export').click(function () {
-
+            exportExcel();
+        });
+        $('#ReportReviewTg001_btn_export_file').click(function () {
+            download();
         });
     });
 }());
