@@ -462,14 +462,26 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             if (StringUtil.isNotBlank(rowData.get(3)) && rowData.get(3).length()>500){
                 message.add("优惠的费用字符不能超过500");
             }
+            if (StringUtil.isEmpty(rowData.get(4))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "优惠前费率"));
+            }
             if (StringUtil.isNotBlank(rowData.get(4)) && rowData.get(4).length()>500){
                 message.add("优惠前费率字符不能超过500");
+            }
+            if (StringUtil.isEmpty(rowData.get(5))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "优惠后费率"));
             }
             if (StringUtil.isNotBlank(rowData.get(5)) && rowData.get(5).length()>500){
                 message.add("优惠后费率字符不能超过500");
             }
+            if (StringUtil.isEmpty(rowData.get(6))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "优惠起始时间"));
+            }
             if (StringUtil.isNotBlank(rowData.get(6)) && rowData.get(6).length()>500){
                 message.add("优惠起始时间字符不能超过500");
+            }
+            if (StringUtil.isEmpty(rowData.get(7))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "优惠截止时间"));
             }
             if (StringUtil.isNotBlank(rowData.get(7)) && rowData.get(7).length()>500){
                 message.add("优惠截止时间字符不能超过500");

@@ -200,6 +200,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 优惠前费率
      * @return 优惠前费率
      */
+    @NotEmpty(fieldName = "优惠前费率")
     public String getPreFeerate() {
         return preFeerate;
     }
@@ -216,6 +217,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 优惠后费率
      * @return 优惠后费率
      */
+    @NotEmpty(fieldName = "优惠后费率")
     public String getAfterFeerate() {
         return afterFeerate;
     }
@@ -232,6 +234,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 优化起始时间
      * @return 优化起始时间
      */
+    @NotEmpty(fieldName = "优惠起始时间")
     public Date getStartDate() {
         return startDate;
     }
@@ -248,6 +251,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 取得 优惠截至时间
      * @return 优惠截至时间
      */
+    @NotEmpty(fieldName = "优惠截止时间")
     public Date getEndDate() {
         return endDate;
     }

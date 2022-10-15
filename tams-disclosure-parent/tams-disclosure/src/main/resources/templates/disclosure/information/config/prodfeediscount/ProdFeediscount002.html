@@ -78,7 +78,7 @@
                                     <label class="layui-form-label form-lable mst-lable" >优惠前费率</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="preFeerate" name="preFeerate"
-                                               class="layui-input form-input" placeholder="请输入内容"
+                                               class="layui-input form-input" placeholder="请输入内容" required
                                                data-th-placeholder="#{SysCommon.placeholder}" maxLength="500"
                                                data-th-value="${entity?.preFeerate}">
                                     </div>
@@ -89,7 +89,7 @@
                                     <label class="layui-form-label form-lable mst-lable" >优惠后费率</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="afterFeerate" name="afterFeerate"
-                                               class="layui-input form-input" placeholder="请输入内容"
+                                               class="layui-input form-input" placeholder="请输入内容" required
                                                data-th-placeholder="#{SysCommon.placeholder}" maxLength="500"
                                                data-th-value="${entity?.afterFeerate}">
                                     </div>
@@ -101,7 +101,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input id="startDate" name="startDate"
                                                class="layui-input form-input"
-                                               placeholder="请选择时间"
+                                               placeholder="请选择时间" required
                                                data-th-value="${entity?.startDate}" maxLength="500"
                                                data-th-placeholder="#{SysCommon.placeholder}"/>
                                     </div>
@@ -113,7 +113,7 @@
                                         <div class="layui-input-inline input-inline">
                                             <input id="endDate" name="endDate"
                                                    class="layui-input form-input"
-                                                   placeholder="请选择时间"
+                                                   placeholder="请选择时间" required
                                                    data-th-value="${entity?.endDate}" maxLength="500"
                                                    data-th-placeholder="#{SysCommon.placeholder}"/>
                                         </div>
