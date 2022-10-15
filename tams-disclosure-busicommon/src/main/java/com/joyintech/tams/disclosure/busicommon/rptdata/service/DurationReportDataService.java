@@ -223,7 +223,7 @@ public class DurationReportDataService implements IReportDataService {
 				//找到符合本产品的有效指标
 				String prodId = paraMap.get("prodId").toString();
 				for ( RepIndexSub idx:listRepIndex ) { 
-					if ( isEffIndex(prodId,idx) )
+					//if ( isEffIndex(prodId,idx) )
 						listEffRepIndex.add(idx);
 				}
 				if ( listEffRepIndex!=null && listEffRepIndex.size()>0 ) {  //一般只有一条

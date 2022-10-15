@@ -106,6 +106,10 @@
 		<if test="indexYear!=null">
 			and rindex.index_period=#{indexPeriod,jdbcType=VARCHAR}
 		</if>
+		<if test="prodId!=null">
+			and rindex.INDEX_DETAIL like concat(concat('%',#{prodId,jdbcType=VARCHAR}),',%')
+		</if>
+		
 	</select>
 
 	<select id="selectProdAssetComb" resultType="com.joyintech.tams.common.base.entity.DisProdAsset">
