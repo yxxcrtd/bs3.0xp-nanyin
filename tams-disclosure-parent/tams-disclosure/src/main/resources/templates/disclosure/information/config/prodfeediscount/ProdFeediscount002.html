@@ -102,7 +102,7 @@
                                         <input id="startDate" name="startDate"
                                                class="layui-input form-input"
                                                placeholder="请选择时间" required
-                                               data-th-value="${entity?.startDate}" maxLength="500"
+                                               data-th-value="${#dates.format(entity?.startDate,'yyyy-MM-dd')}" maxLength="500"
                                                data-th-placeholder="#{SysCommon.placeholder}"/>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                                             <input id="endDate" name="endDate"
                                                    class="layui-input form-input"
                                                    placeholder="请选择时间" required
-                                                   data-th-value="${entity?.endDate}" maxLength="500"
+                                                   data-th-value="${#dates.format(entity?.endDate,'yyyy-MM-dd')}" maxLength="500"
                                                    data-th-placeholder="#{SysCommon.placeholder}"/>
                                         </div>
                                     </div>
