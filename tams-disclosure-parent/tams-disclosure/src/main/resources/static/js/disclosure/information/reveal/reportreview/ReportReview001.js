@@ -12,6 +12,8 @@
             reportName: $('#reportName').val(),
             reviewTimeStart: $('#reviewTime').startDate(),
             reviewTimeEnd: $('#reviewTime').endDate(),
+            reportDateStart : $('#reportDate').startDate(),
+            reportDateEnd : $('#reportDate').endDate()
         };
     };
     /**

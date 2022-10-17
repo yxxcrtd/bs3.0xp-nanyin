@@ -17,4 +17,6 @@ public interface ReportReviewTg001Mapper {
 
     List<SelectOptionDto> getTgUserList(Map<String, Object> paramMap);
 
+    List<String>getReviewDataList(Map<String, Object> paraMap);
+
 }

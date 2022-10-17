@@ -13,6 +13,8 @@
             reviewTgUser: $('#reviewTgUser').val() == null ? null : $('#reviewTgUser').val().join(","),
             reviewTgTimeStart: $('#reviewTgTime').startDate(),
             reviewTgTimeEnd: $('#reviewTgTime').endDate(),
+            reportDateStart : $('#reportDate').startDate(),
+            reportDateEnd : $('#reportDate').endDate()
         };
     };
     /**
@@ -190,60 +192,15 @@
             Joyin.confirm("所选数据，您已经审核通过，现直接推送到待披露？", function(){
                 object.id = JSON.stringify(idList);
                 object.data = JSON.stringify(selArr)
-                console.log(object)
-                Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreviewtg/ReportReviewTg001/pushReveal', object, function(result) {
-                    table.reload();
+                Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreviewtg/ReportReviewTg001/pushRevealCheck', object, function(result) {
+                    Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreviewtg/ReportReviewTg001/pushReveal', object, function(result) {
+                        table.reload();
+                    });
                 });
             });
         }
     };
 
-
-    var pushTg = function() {
-        var object ={};
-        var idList = [];
-        if (table != null && table !== '') {
-            var selArr = table.getAllCheckedRows();
-        }
-        if (!selArr || selArr.length === 0) {
-            Joyin.error(JoyinUtil.getMessage("未选择数据！"));
-            return;
-        }
-
-        for(let i = 0 ; i<selArr.length ; i++){
-            if(selArr[i].confirmStatus==='02' || selArr[i].confirmStatus==='03'){
-                Joyin.error("数据已经复核");
-                break;
-            }
-            else {
-                idList[i] = selArr[i].id;
-            }
-        }
-        if(idList.length !== 0 && idList.length === selArr.length){
-            Joyin.confirm('所选数据，您已经审核通过，现直接推送到托管复核？', function(){
-                let objectDate = {};
-                //点击确认之后给出弹框
-                Joyin.dialog(JoyinUtil.getLabel("请选择托管行（只能选择1个）"),
-                    JoyinUtil.getRealPath("/disclosure/information/reveal/reportreview/ReportReview002/init?"),
-                    "30%", "50%", objectDate,
-                    function(data){
-                        if(top.data != null){
-                            console.log(top.data)
-                            objectDate.id = JSON.stringify(idList);
-                            objectDate.reviewTgGroup=top.data.id
-                            Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreview/ReportReview001/pushTg', objectDate, function(result) {
-                                table.reload();
-                            });
-
-                        }
-                    });
-
-            }, function() {
-                console.log('取消');
-            });
-        }
-
-    }
 
     /**
      * 画面加载完成

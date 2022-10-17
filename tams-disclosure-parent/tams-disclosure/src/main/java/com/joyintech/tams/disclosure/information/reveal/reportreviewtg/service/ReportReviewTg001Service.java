@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.reveal.reportreviewtg.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -78,6 +79,40 @@ public class ReportReviewTg001Service extends CommonExportService<ReportReview00
         return  queryForPageForSelectReturn(()->reportReviewTg001Mapper.findPage(param));
     }
 
+    public AjaxResult pushRevealCheck(List<String> idList) {
+        AjaxResult res = new AjaxResult();
+
+        int maxDataCountOneTime = Integer.parseInt(reportInsertCount);
+        int dataCount = idList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            List<String> reviewDataList =getReviewDataList(idList);
+            if(!CollectionUtils.isEmptyList(reviewDataList)){
+                return new AjaxResult("您操作的数据中有数据的托管复核状态已发生变化，请刷新后重试!", MessageType.错误消息);
+            }
+            return res;
+        }
+        List<String> newDataList = new ArrayList<String>();
+        newDataList.addAll(idList);
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        for (int i = 0; i < part; i++) {
+            List<String> reviewDataList =getReviewDataList(newDataList.subList(0, maxDataCountOneTime));
+            if(!CollectionUtils.isEmptyList(reviewDataList)){
+                return new AjaxResult("您操作的数据中有数据的托管复核状态已发生变化，请刷新后重试!", MessageType.错误消息);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (!CollectionUtils.isEmptyList(newDataList)) {
+            List<String> reviewDataList =getReviewDataList(newDataList);
+            if(!CollectionUtils.isEmptyList(reviewDataList)){
+                return new AjaxResult("您操作的数据中有数据的托管复核状态已发生变化，请刷新后重试!", MessageType.错误消息);
+            }
+        }
+
+        return res;
+    }
+
     public AjaxResult pushReveal(List<String> idList) {
         AjaxResult res = new AjaxResult();
 
@@ -113,6 +148,14 @@ public class ReportReviewTg001Service extends CommonExportService<ReportReview00
         paraMap.put("idList", idList);
 
         reportReviewTg001Mapper.updateReviewInfo(paraMap);
+    }
+
+    public List<String> getReviewDataList(List<String> idList){
+        Map<String, Object> paraMap = new HashMap<String, Object>();
+        paraMap.put("reviewTgStatus",DictCodeListExt5.托管复核状态_已推送披露.getValue());
+        paraMap.put("idList", idList);
+
+        return reportReviewTg001Mapper.getReviewDataList(paraMap);
     }
 
     public AjaxResult returnData(List<String> idList) {
