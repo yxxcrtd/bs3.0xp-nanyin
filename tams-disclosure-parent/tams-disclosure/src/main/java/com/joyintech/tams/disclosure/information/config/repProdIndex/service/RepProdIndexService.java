@@ -2,21 +2,26 @@ package com.joyintech.tams.disclosure.information.config.repProdIndex.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportGrahDto;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dao.RepProdIndexSMapper;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
+import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum002Mapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -42,6 +47,11 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
     private RepProdIndexSMapper repProdIndexSMapper;
     @Autowired
     private JoyinDFSTemplate joyinDFSTemplate;
+    @Autowired
+    private ReportContentEnum002Mapper reportContentEnum002Mapper;
+
+    @Autowired
+    private SaleAgency002Mapper saleAgency002Mapper;
     /**
      * 根据产品代码模糊查询联系下拉框
      *
@@ -54,7 +64,20 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
     public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
 //        return repProdIndexSMapper.getProdId(map);
         Map<String, Object> pageParam = RequestUtil.getPageParam();
-        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+        if(map.containsKey("initValue")){
+            String str=map.get("initValue").toString();
+            List<String> prodIdList=Arrays.asList(str.split(","));
+            map.put("prodIdList",prodIdList);
+        }
+        Integer page=1;
+        if(StringUtil.isNotEmpty(pageParam.get("page"))){
+            page=Integer.parseInt((String) pageParam.get("page"));
+        }
+        Integer length=100;
+        if(StringUtil.isNotEmpty(pageParam.get("length"))){
+            length=Integer.parseInt((String) pageParam.get("length"));
+        }
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(page, length, ()
                 -> repProdIndexSMapper.getProdId(map));
         return result;
     }
@@ -686,5 +709,71 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
 
     public RepProdIndexDto checkExistData(RepProdIndexDto dto) {
         return repProdIndexSMapper.checkExistData(dto);
+    }
+
+    /**
+     * 查询产品树结构
+     * @param
+     * @return
+     */
+    public List<TreeNode> getProductTree() {
+        List<TreeNode> result = new ArrayList<TreeNode>();
+        //获取父节点
+        result.addAll(this.getParentNodes());
+        //查询当前所有产品，作为子节点
+        List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectProdInfo2();
+        result.addAll(prodInfoNodes);
+        return result;
+    }
+
+    /**
+     * 组装除产品子节点以外的父节点
+     * @return
+     */
+    public List<TreeNode> getParentNodes(){
+        List<DataDictItem> prodStatusList = new ArrayList<DataDictItem>();//产品状态
+        List<DataDictItem> issueTypeList = new ArrayList<DataDictItem>();//发行方式
+        List<String> prodSeriesList = new ArrayList<String>();//产品系列
+        List<TreeNode> parentNodes = new ArrayList<TreeNode>();
+        prodStatusList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.信披_产品状态.getValue());
+        issueTypeList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.发行方式_信批.getValue());
+        //一级：产品状态
+        if (prodStatusList!=null && prodStatusList.size() > 0) {
+            for (DataDictItem map_1 : prodStatusList) {
+                //查询产品系列的条件
+                Map<String,Object> param=new HashMap<>();
+                TreeNode treeDto = new TreeNode();
+                treeDto.setId(map_1.getItemCode());
+                treeDto.setName(map_1.getItemValue());
+                treeDto.setpId("");
+                treeDto.setOpen(true);
+                parentNodes.add(treeDto);
+                param.put("prodStatus",map_1.getItemCode());
+                //二级：发行方式
+                for (DataDictItem map_2 : issueTypeList) {
+                    TreeNode treeDto_2 = new TreeNode();
+                    treeDto_2.setId(map_1.getItemCode() + map_2.getItemCode());
+                    treeDto_2.setName(map_2.getItemValue());
+                    treeDto_2.setpId(map_1.getItemCode());
+                    treeDto_2.setOpen(true);
+                    parentNodes.add(treeDto_2);
+                    param.put("issueType",map_2.getItemCode());
+                    //三级：产品系列：产品系列为文本框输入，不是字典值，需要从产品基本信息表中查询所有的产品系列
+                    prodSeriesList = saleAgency002Mapper.selectAllProdSeries(param);
+                    if(prodSeriesList!=null && prodSeriesList.size()>0){
+                        for (String map_3 : prodSeriesList) {
+                            TreeNode treeDto_3 = new TreeNode();
+                            treeDto_3.setId(map_1.getItemCode() + map_2.getItemCode() + map_3);
+                            treeDto_3.setName(map_3);
+                            treeDto_3.setpId(map_1.getItemCode() + map_2.getItemCode());
+                            treeDto_3.setOpen(true);
+                            parentNodes.add(treeDto_3);
+                        }
+                    }
+
+                }
+            }
+        }
+        return parentNodes;
     }
 }

@@ -182,6 +182,39 @@
         where status='E' AND PD_STATUS NOT IN ('02','03')
     </select>
 
+    <select id="selectProdInfo2" resultType="com.joyintech.framework.select.TreeNode">
+        SELECT
+        T1.PROD_ID id,
+        nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') name,
+        case T1.PD_STATUS
+        when '01' then
+        (case T1.ISSUING_WAY
+        when '01' then '0101' || T1.PROD_SERIES
+        when '02' then '0102' || T1.PROD_SERIES
+        else '' end
+        )
+        when '02' then
+        (case T1.ISSUING_WAY
+        when '01' then '0201' || T1.PROD_SERIES
+        when '02' then '0202' || T1.PROD_SERIES
+        else '' end
+        )
+        when '03' then
+        (case T1.ISSUING_WAY
+        when '01' then '0301' || T1.PROD_SERIES
+        when '02' then '0301' || T1.PROD_SERIES
+        else '' end
+        )
+        else '' end pid
+        FROM
+        REP_PROD_INFO T1
+        left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
+        left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
+        where T1.P_PROD_ID is not null
+        AND T1.STATUS not in ('D')
+        AND T1.STATUS='E' AND T1.PD_STATUS NOT IN ('02','03')
+    </select>
+
 
     <select id="isOnlyData" resultType="java.lang.Integer">
         select count(1) from REP_INDEX_SUB r1 where r1.PRI_ID = #{priId,jdbcType=VARCHAR} AND
