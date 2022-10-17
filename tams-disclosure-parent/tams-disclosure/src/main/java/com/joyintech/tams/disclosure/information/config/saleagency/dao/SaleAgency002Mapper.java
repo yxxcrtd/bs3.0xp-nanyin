@@ -91,6 +91,8 @@ public interface SaleAgency002Mapper extends DisProdAgencyMapper {
      */
     List<String> selectAllProdSeries(Map<String,Object> param);
 
+    List<String> selectAllProdSeriesSon(Map<String,Object> param);
+
     /**
      * 根据产品代码查询关联的代销机构
      * @param prodId
