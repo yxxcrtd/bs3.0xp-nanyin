@@ -17,10 +17,11 @@ $(function () {
             revealDateEnd : $('#revealDate').endDate(),
             // add by guozhongbao 报表披露管理 20181204 end
             repType: $.trim($('#repType').val()),
-            revealChanel:$.trim($('#revealChanel').val()),
             confromPage : $.trim($('#confromPage').val()),
             revealEndDateBegin : $('#revealEndDate').startDate(),
-            revealEndDateEnd : $('#revealEndDate').endDate()
+            revealEndDateEnd : $('#revealEndDate').endDate(),
+            reportDateStart : $('#reportDate').startDate(),
+            reportDateEnd : $('#reportDate').endDate()
         }
     };
     

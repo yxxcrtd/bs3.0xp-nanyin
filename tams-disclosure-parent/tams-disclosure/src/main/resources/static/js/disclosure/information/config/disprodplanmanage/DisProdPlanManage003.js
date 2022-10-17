@@ -4,13 +4,12 @@
 	 */
 	$('#tree').joyinTree({
 		onTreeLoadSuccess: function () {
-			if(pageModel == PAGE_MODEL_REFERENCE) {
-				var treeObj = $.fn.zTree.getZTreeObj("tree_tree");
-				var nodes = treeObj.getNodes();
-				for(var i=0; i < nodes.length;i++) {
-					var node = nodes[i];
-					DisabledNode(treeObj, node);
-				}
+			var treeObj = $.fn.zTree.getZTreeObj("tree_tree");
+			var nodes = treeObj.getNodes();
+			for (var i = 0; i < nodes.length; i++) {
+				var node = nodes[i];
+				DisabledNode(treeObj, node);
+
 			}
 		}
 	});

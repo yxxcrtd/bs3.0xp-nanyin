@@ -115,6 +115,16 @@
         <if test="reviewTgTimeEnd !=null and reviewTgTimeEnd !='' ">
             AND to_char(REVIEW.REVIEW_TG_TIME,'yyyy-mm-dd') <![CDATA[<=]]> #{reviewTgTimeEnd,jdbcType=VARCHAR}
         </if>
+        <if test="reportDateEnd !=null and reportDateEnd !='' ">
+            AND ((to_char(REVEAL.END_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{reportDateStart,jdbcType=VARCHAR} and  REVEAL.START_DATE is null
+            and to_char(REVEAL.END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{reportDateEnd,jdbcType=VARCHAR}
+            )
+            or(
+            to_char(REVEAL.START_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{reportDateStart,jdbcType=VARCHAR}
+            and to_char(REVEAL.END_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{reportDateEnd,jdbcType=VARCHAR}
+            )
+            )
+        </if>
         order by REVIEW.REVIEW_TG_STATUS asc ,REVIEW.UPDATE_TIME desc
     </select>
 
@@ -163,5 +173,15 @@
             concat(concat('%',#{search}),'%')
             or su.REAL_NAME like concat(concat('%',#{search}),'%'))
         </if>
+    </select>
+
+    <select id="getReviewDataList" resultType="string">
+        select rrr.REVEAL_ID
+            from REP_REVEAL_REVIEW rrr
+        where rrr.REVIEW_TG_STATUS in ('02','03')
+        AND rrr.REVEAL_ID in
+        <foreach collection="idList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 </mapper>

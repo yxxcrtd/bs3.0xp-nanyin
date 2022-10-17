@@ -383,18 +383,9 @@
 
     <update id="updateByPrimaryKey">
            update REP_PROD_INDEX_GZ
-        set P_ASSETS = #{pAssets,jdbcType=DECIMAL},
-            ASSETS_VALUE = #{assetsValue,jdbcType=DECIMAL},
-            CAPITAL = #{capital,jdbcType=DECIMAL},
-            UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
-            UNIT_VALUE_T = #{unitValueT,jdbcType=DECIMAL},
-            W_YIELD = #{wYield,jdbcType=DECIMAL},
-            YIELD_7 = #{yield7,jdbcType=DECIMAL},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            STATUS = #{status,jdbcType=VARCHAR},
-            ERRORMSG = #{errormsg,jdbcType=VARCHAR},
-            OTHER_FEE = #{otherFee,jdbcType=DECIMAL}
+        set
+            STATUS = #{status,jdbcType=VARCHAR}
+
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
           and VALUE_DATE = #{valueDate,jdbcType=DATE}
     </update>

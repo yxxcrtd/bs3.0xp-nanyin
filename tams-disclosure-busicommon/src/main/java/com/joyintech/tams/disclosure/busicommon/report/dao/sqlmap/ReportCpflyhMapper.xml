@@ -92,8 +92,8 @@
 			dpf.PROD_ID,
 			dpf.PRE_FEERATE,
 			dpf.AFTER_FEERATE,
-			to_date(dpf.START_DATE,'yyyy-MM-dd') START_DATE,
-		    to_date(dpf.END_DATE,'yyyy-MM-dd')  END_DATE,
+			dpf.START_DATE START_DATE,
+			dpf.END_DATE  END_DATE,
 			dpf.THIS_PRE_FEERATE,
 			dpf.THIS_AFTER_FEERATE,
 			dpf.THIS_END_FEERATE
