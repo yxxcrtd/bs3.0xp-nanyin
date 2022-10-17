@@ -8,6 +8,7 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -48,6 +49,11 @@ public class GetPrdInfoSelectService extends BaseService {
 	 * @return
 	 */
 	public Page<SelectOptionDto> getAllPrdInfoSelect(Map<String, Object> paraMap){
+		if(paraMap.containsKey("initValue")){
+			String str=paraMap.get("initValue").toString();
+			List<String> prodIdList= Arrays.asList(str.split(","));
+			paraMap.put("prodIdList",prodIdList);
+		}
 		Page<SelectOptionDto> page = this.queryForPage(GetPrdInfoSelectMapper.class, "getAllPrdInfoSelect", paraMap);
 		return page;
 	}

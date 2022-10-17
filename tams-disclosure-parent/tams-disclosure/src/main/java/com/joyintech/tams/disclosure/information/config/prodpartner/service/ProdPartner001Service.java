@@ -92,6 +92,12 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
      */
     public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
         map.put("dataStatus",DictCodeListExt3.信披_数据状态_有效E.getValue());
+        if(map.containsKey("initValue")){
+            String str=map.get("initValue").toString();
+            List<String> prodIdList=Arrays.asList(str.split(","));
+            map.put("prodIdList",prodIdList);
+        }
+
         return prodPartner001Mapper.queryProdIdInfo(map);
     }
 

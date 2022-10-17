@@ -88,6 +88,17 @@ $(function() {
                 }
             }]
     });
+    function addrule() {
+        Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
+            {},function () {
+                var finprodIds = $('#finprodIds').data('finprodIds');
+                if(finprodIds.length ==0){
+                    return;
+                }
+                $('#prodId').textSelect('setValue',finprodIds);
+            });
+        return;
+    };
 
     /**
      * 绑定按钮事件
@@ -95,6 +106,7 @@ $(function() {
     $(function() {
 
         init();
+        $('#RepInvestAccount001_btn_treeAdd').click(addrule);
 
         /**
          * 查询按钮

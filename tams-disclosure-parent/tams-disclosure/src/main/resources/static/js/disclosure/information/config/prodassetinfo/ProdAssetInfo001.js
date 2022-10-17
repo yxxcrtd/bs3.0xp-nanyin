@@ -155,9 +155,22 @@ $(function(){
         var paramObj = getSearchParams();
         Joyin.exportExcel('export', paramObj);
     };
+    function addrule() {
+        Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
+            {},function () {
+                var finprodIds = $('#finprodIds').data('finprodIds');
+                if(finprodIds.length ==0){
+                    return;
+                }
+                $('#prodId').textSelect('setValue',finprodIds);
+            });
+        return;
+    };
+
 
     $(function() {
         // 绑定按钮事件
+        $('#ProdAssetInfo001_btn_treeAdd').click(addrule);
         $('#ProdAssetInfo001_btn_search').click(function() {
             table.load();
             $('#ProdAssetInfo001_btn_delete').show();
