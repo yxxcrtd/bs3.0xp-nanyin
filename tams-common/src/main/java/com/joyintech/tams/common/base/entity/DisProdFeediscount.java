@@ -57,12 +57,12 @@ public class DisProdFeediscount extends BaseEntity {
     /**
      * 优化起始时间
      */
-    private Date startDate;
+    private String startDate;
 
     /**
      * 优惠截至时间
      */
-    private Date endDate;
+    private String endDate;
 
     /**
      * 本次优惠前费率
@@ -235,7 +235,7 @@ public class DisProdFeediscount extends BaseEntity {
      * @return 优化起始时间
      */
     @NotEmpty(fieldName = "优惠起始时间")
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
@@ -243,7 +243,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 优化起始时间
      * @param startDate 优化起始时间
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
@@ -252,7 +252,7 @@ public class DisProdFeediscount extends BaseEntity {
      * @return 优惠截至时间
      */
     @NotEmpty(fieldName = "优惠截止时间")
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -260,7 +260,7 @@ public class DisProdFeediscount extends BaseEntity {
      * 设置 优惠截至时间
      * @param endDate 优惠截至时间
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
