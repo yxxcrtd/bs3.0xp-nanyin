@@ -69,6 +69,13 @@
 		<if test="sonFlag != null and sonFlag != '' and sonFlag == '2'.toString() ">
 			and p_prod_id is not null
 		</if>
+		<if test="prodIdList != null and prodIdList.size() > 0 ">
+			<foreach item="item" collection="prodIdList" index="index"
+					 open="and" separator="OR" close="">
+				(PROD_ID like concat(concat('%',#{item}),'%')
+				or PROD_NAME like concat(concat('%',#{item}),'%'))
+			</foreach>
+		</if>
 	</select>
 
 

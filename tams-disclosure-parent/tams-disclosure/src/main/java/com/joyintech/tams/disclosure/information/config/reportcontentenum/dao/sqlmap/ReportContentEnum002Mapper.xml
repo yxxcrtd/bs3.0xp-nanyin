@@ -153,6 +153,35 @@
         where status='E' AND PD_STATUS NOT IN ('02','03')
     </select>
 
+    <select id="selectProdInfo1" resultType="com.joyintech.framework.select.TreeNode">
+        select
+        PROD_ID id,
+        PROD_NAME name,
+        case PD_STATUS
+        when '01' then
+        (case ISSUING_WAY
+        when '01' then '0101' || PROD_SERIES
+        when '02' then '0102' || PROD_SERIES
+        else '' end
+        )
+        when '02' then
+        (case ISSUING_WAY
+        when '01' then '0201' || PROD_SERIES
+        when '02' then '0202' || PROD_SERIES
+        else '' end
+        )
+        when '03' then
+        (case ISSUING_WAY
+        when '01' then '0301' || PROD_SERIES
+        when '02' then '0301' || PROD_SERIES
+        else '' end
+        )
+        else '' end pid
+        from
+        REP_PROD_INFO
+        where status='E' AND PD_STATUS NOT IN ('02','03')
+    </select>
+
 
     <select id="isOnlyData" resultType="java.lang.Integer">
         select count(1) from REP_INDEX_SUB r1 where r1.PRI_ID = #{priId,jdbcType=VARCHAR} AND
