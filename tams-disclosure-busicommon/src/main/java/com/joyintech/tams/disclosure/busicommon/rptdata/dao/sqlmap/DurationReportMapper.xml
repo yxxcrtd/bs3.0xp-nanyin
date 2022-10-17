@@ -22,7 +22,7 @@
 		,info.REP_PROD_TYPE  /**信披产品类型，母子产品，单产品**/
 		,PINDEX.CAPITAL    /**期末余额**/
 		,trunc(pindex.P_ASSETS/pindex.ASSETS_VALUE,4)*100  leverage  /**杠杆率**/
-		,nvl(PARTNER.PARTNER_NAME,'-') partner /**合作机构**/
+		,PARTNER.PARTNER_NAME partner /**合作机构**/
 		from V_REP_PROD_INFO info
 		left join REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E' and #{reportDate,jdbcType=DATE}=pindex.VALUE_DATE
 		left join DIS_PROD_PARTNER PARTNER ON INFO.PROD_ID=PARTNER.PROD_ID AND #{reportDate,jdbcType=DATE} between partner.EFF_DATE and partner.EFF_END_DATE and partner.DATA_STATUS='E'
