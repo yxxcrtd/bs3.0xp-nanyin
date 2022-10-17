@@ -15,6 +15,13 @@
             concat(concat('%',#{search}),'%')
             or PROD_NAME like concat(concat('%',#{search}),'%'))
         </if>
+        <if test="prodIdList != null and prodIdList.size() > 0 ">
+            <foreach item="item" collection="prodIdList" index="index"
+                     open="and" separator="OR" close="">
+                (PROD_ID like concat(concat('%',#{item}),'%')
+                or PROD_NAME like concat(concat('%',#{item}),'%'))
+            </foreach>
+        </if>
     </select>
     <select id="getProdInsId2" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
