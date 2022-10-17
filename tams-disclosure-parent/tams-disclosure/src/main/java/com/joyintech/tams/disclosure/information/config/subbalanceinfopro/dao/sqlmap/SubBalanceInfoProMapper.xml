@@ -40,6 +40,15 @@
         <if test="balanceDateEnd != null and balanceDateEnd != ''">
             <![CDATA[AND  BALANCE_DATE <= TO_DATE(#{balanceDateEnd},'YYYY-MM-DD')]]>
         </if>
+        and ((bb.SUBJECT_NO in ('6605', '6407', '220701') and
+        bb.tdy_o_d_amt is not null) or
+        (bb.SUBJECT_NO not in ('6605', '6407', '220701') and not exists
+        (select 1 from dual where instr(bb.SUBJECT_NO, '6605') > 0)
+        and not exists
+        (select 1 from dual where instr(bb.SUBJECT_NO, '6407') > 0)
+        and not exists
+        (select 1 from dual where instr(bb.SUBJECT_NO, '220701') > 0)
+        ))
     </where>
     </select>
    <select id="selectByPrimaryKey"
