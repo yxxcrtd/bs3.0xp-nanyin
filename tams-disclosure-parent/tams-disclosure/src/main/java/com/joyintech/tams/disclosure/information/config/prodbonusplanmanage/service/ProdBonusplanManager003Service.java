@@ -116,6 +116,13 @@ public class ProdBonusplanManager003Service extends CommonExportService<DisProdP
                             treeDto_3.setOpen(true);
                             parentNodes.add(treeDto_3);
                         }
+                    }else{
+                        TreeNode treeDto_3 = new TreeNode();
+                        treeDto_3.setId(map_1.getItemCode() + map_2.getItemCode() + "无数据");
+                        treeDto_3.setName("无数据");
+                        treeDto_3.setpId(map_1.getItemCode() + map_2.getItemCode());
+                        treeDto_3.setOpen(true);
+                        parentNodes.add(treeDto_3);
                     }
 
                 }
