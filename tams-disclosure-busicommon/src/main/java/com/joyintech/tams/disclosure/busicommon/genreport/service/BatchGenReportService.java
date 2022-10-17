@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -31,6 +32,7 @@ import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataServic
  * 2022-10-13
  *
  */
+@Service
 public class BatchGenReportService {
 
 	@Autowired
@@ -48,10 +50,14 @@ public class BatchGenReportService {
 	@Autowired
 	private RevealDeadLineService revealDeadLineService;
 	
-	public List<BatchGenResultDto> exec(String repId,List<RepProdInfo>listProd,Date execDate ) {
+	public List<BatchGenResultDto> exec(Map<String,Object> params ) {
 		List<BatchGenResultDto> listResult = new ArrayList<>();
 		//规则表信息
-		RepRuleEntity repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(repId);
+		String ruleId=params.get("ruleId").toString();
+		RepRuleEntity repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(ruleId);
+		List<RepProdInfo> listProd = (List<RepProdInfo>)params.get("listProd");
+		Date execDate = (Date)params.get("execDate");
+		String repId = params.get("repId").toString();
 		if(repRule == null){
 			for ( RepProdInfo prod:listProd ) {
 				BatchGenResultDto result = new BatchGenResultDto();
@@ -77,7 +83,8 @@ public class BatchGenReportService {
 			result.setRepName(repRule.getRepName());
 			
 			//定义报表参数
-			Map<String,Object> params = collateParams(repRule,prod,execDate);
+			Map<String,Object> dateMap = collateParams(repRule,prod,execDate);
+			params.putAll(dateMap);
 			
 			//2.生成报表
 			Map<String, Object> dataMap = null;
@@ -87,9 +94,15 @@ public class BatchGenReportService {
 					dataMap = listReports.get(0);
 					dataMap.put("prodId",params.get("prodId"));
 					//2.2生成报表文件
-					String reportFile = poiReportService.genOssReportFile(null, dataMap, params);
-					result.setResult("S");
-					result.setRemark("生成文件成功!" + reportFile);
+					try {
+						String reportFile = poiReportService.genOssReportFile(null, dataMap, params);
+						result.setResult("S");
+						result.setRemark("生成文件成功!" + reportFile);
+						poiReportService.genReport(params);
+					} catch (Exception e) {
+						result.setResult("F");
+						result.setRemark("生成报表失败!"+e.getMessage());
+					}
 				} else {
 					result.setResult("F");
 					result.setRemark("生成报表失败!没有找到数据。");

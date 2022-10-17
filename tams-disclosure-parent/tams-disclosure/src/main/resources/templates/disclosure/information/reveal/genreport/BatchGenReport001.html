@@ -30,18 +30,27 @@
 	   		<div class="joyin-form-wrap condition-area" id="showSearch" style="height: 50px;">
 		    </div>
 		    <div class="layui-inline layui-col-md-offset9" style="margin-top: 10px">
-                <button class="layui-btn layui-btn-sm " id="RepDetailsShow001_showDetail"><i class="iconfont icon-search"></i>预览</button>
-				<button class="layui-btn layui-btn-sm " id="btnEditReport"><i class="iconfont icon-save"></i>编辑</button>
-				<button class="layui-btn layui-btn-sm " id="btnGenReport" ><i class="iconfont icon-save"></i>生成</button>
-                <a class="layui-btn layui-btn-sm btn-select" id="RepDetailsShow001_export">导出<i class="iconfont icon-down"></i></a>
-	                <ul class="btn-select-wrap" style="display: none;" id="toExport">
-	                    <li><a href="javascript:;" id="btnExportWord">word</a></li>
-	                    <li><a href="javascript:;" id="btnExportPdf">pdf</a></li>
-	                </ul>
+				<button class="layui-btn layui-btn-sm " id="btnGenReport" ><i class="iconfont icon-save"></i>批量生成</button>
            	</div>
+			<div>
+		        <form class="layui-form joyin-form-wrap" id="submitForm">
+                    <input id="nodes" type="hidden">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label form-lable mst-lable">产品名称</label>
+                        <div class="layui-input-block input-inline">
+                            <input type="checkbox" lay-skin="switch" data-th-lay-text="#{SystemActorRole001.expandAll}" id="expandAll" data-ignore=true>
+                            <div class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 219px; overflow-y: scroll;" id='tree'
+                                 data-th-url='|@{/disclosure/information/config/reportcontentenum/ReportContentEnum004/getAllProdIds}'
+                            </div>
+                        </div>
+                    </div>
+		        </form>
+    		</div>
 			<div class="layui-tab layui-tab-card">
 	        	<div id="showtable" style="overflow:auto"></div>
 	    	</div>
+	    	
+	    	
 	    </div>
     </div>
 </div>

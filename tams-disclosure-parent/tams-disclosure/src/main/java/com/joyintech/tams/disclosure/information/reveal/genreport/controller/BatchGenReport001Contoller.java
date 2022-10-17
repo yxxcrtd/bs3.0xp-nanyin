@@ -9,9 +9,9 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.genreport.controller;
 
-import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,29 +22,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
-import com.joyintech.tams.common.base.entity.RepReveal;
-import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
@@ -103,16 +96,85 @@ public class BatchGenReport001Contoller extends BaseController {
 		return batchGenReport001Service.queryProdList(repId, execDate);
 	}
     
+	@ResponseBody
+	@RequestMapping("check")
+	public AjaxResult check(@RequestBody Map<String, Object> param) {
+		return new AjaxResult();
+	}
+	
     /**
 	 * 批量执行生成报表
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("batchExec")
+	@RequestMapping("/batchExec")
 	@ResponseBody
-    public List<BatchGenResultDto> batchExec(String repId,List<RepProdInfo> listProd,Date execDate){
-		return batchGenReport001Service.batchExec(repId, listProd, execDate);
+    public  AjaxResult batchExec(HttpServletRequest request, HttpServletResponse response){
+		Map<String,Object> params = RequestUtil.getPageParam();
+		
+		//前台传入的参数，测试中，赋值取代
+		params.put("uri", "JDBG_ZSX");
+		params.put("repId", "CP_001_002_015");
+		params.put("ruleId","D0000000000000000014");
+		List<RepProdInfo> listProd = new ArrayList<>();
+		RepProdInfo prod = new RepProdInfo();
+		prod.setProdId("ZC108691744436");
+		listProd.add(prod);
+		params.put("listProd", listProd);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date execDate = new Date();
+		try {
+			execDate = sdf.parse("2022-10-15");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		params.put("execDate", execDate);
+		//传入参数结束
+		
+		List<BatchGenResultDto> listResult =  batchGenReport001Service.batchExec(params);
+
+		AjaxResult ret = new AjaxResult();
+		StringBuffer sbRet = new StringBuffer();
+		for ( BatchGenResultDto dto: listResult) {
+			sbRet.append(dto);
+		}
+		if (sbRet.length()>0 ) {
+			ret.setMessage(sbRet.toString(), MessageType.提示消息);
+		}
+		return ret;
     }
 
+    /**
+     * 
+     * 获取查询条件
+     * <功能详细描述>
+     * @param repId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("/getRepsearch")
+    @ResponseBody
+    public RepDetailsShow001Dto getRepsearch(String repId){
+        RepDetailsShow001Dto dto = batchGenReport001Service.getRepScreenList(repId);
+        return dto;
+    }
+    
+	/**
+	 *
+	 * 获取季度枚举值
+	 * <功能详细描述>
+	 * @param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getQuarter")
+	@ResponseBody
+	public List<SelectOptionDto> getQuarter(){
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.季度, null);
+		List<SelectOptionDto> list = selectDto.getOptions();
+		return list;
+	}
 }

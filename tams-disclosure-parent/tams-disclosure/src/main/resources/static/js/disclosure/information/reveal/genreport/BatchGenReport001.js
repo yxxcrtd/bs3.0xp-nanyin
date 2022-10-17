@@ -231,10 +231,10 @@ $(function () {
                              repId = data.repId;
                              repName = data.reportName;
 
-							Joyin.ajax('previewReport', {uri:modelId,repid:repId}, function(result) {
-								$container.html(result);
-
-							});
+//							Joyin.ajax('previewReport', {uri:modelId,repid:repId}, function(result) {
+//								$container.html(result);
+//
+//							});
                              showSearch(data.repScreenList);
 							backParam={}
 							previewFlag=false;
@@ -769,44 +769,44 @@ $(function () {
     }
 
     var submit = function(type){
-		if(!previewFlag){
-			Joyin.alert('生成之前请先预览报表！',2);
-			return;
-		}
-
-		if(!editFlag){
-			Joyin.alert('该单据报表校验不通过，请检查数据或编辑后生成',2);
-			return;
-		}
-
-        displayMenu();
+//		if(!previewFlag){
+//			Joyin.alert('生成之前请先预览报表！',2);
+//			return;
+//		}
+//
+//		if(!editFlag){
+//			Joyin.alert('该单据报表校验不通过，请检查数据或编辑后生成',2);
+//			return;
+//		}
+//
+       displayMenu();
 		var params = getSearchParams();
-		
-		//params['portnum'] = JSON.stringify(params['portnum']);
-
-		if(modelId&&modelUri){
-			if(!params){
-				Joyin.alert('参数不能为空！',2);
-				return;
-			}
-		}else{
-			return;
-		}
-		if(backParam !=null){
-			for ( var key in params) {
-				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请重新点击预览',2);
-					return;
-				}
-			}
-		}
+//		
+//		//params['portnum'] = JSON.stringify(params['portnum']);
+//
+//		if(modelId&&modelUri){
+//			if(!params){
+//				Joyin.alert('参数不能为空！',2);
+//				return;
+//			}
+//		}else{
+//			return;
+//		}
+//		if(backParam !=null){
+//			for ( var key in params) {
+//				if(params[key]!==backParam[key]){
+//					Joyin.alert('页面参数发生变化，请重新点击预览',2);
+//					return;
+//				}
+//			}
+//		}
 
     	var uuid = 'pageid' + randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 		params.rep_id=uuid;
     	//导出会报错所以暂时屏蔽name
     	delete params.portname; 
     	//报表数据结构
-        if(modelId&&modelUri){
+
         	var report_info = {
                     uri:modelId,
                     folderUri:modelUri,
@@ -824,32 +824,15 @@ $(function () {
 	            params['repname'] = repName;
 				params['uri'] = modelId;
 				params['flag']="02";
-				Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
+				Joyin.ajaxJson(basePath + 'disclosure/information/reveal/genreport/BatchGenReport001/check',params, function(result) {
 	            	params['operateType'] = "01";
-	            	Joyin.ajax('genReport',
+	            	Joyin.ajax('batchExec',
 	                		params,
 	            			function(data) {
-	                				//layer.alert(data.message);
+	            				alert(data);
+	                			layer.alert(data.message);
 	                        });
 	            });
-        }else if(modelListId){
-        	if(type=='docx'){
-        		layer.load();
-        		params['filetype'] = type;
-                params['repid'] = modelListId;
-                params['repname'] = repName;
-
-                Joyin.ajax('submitWord',
-                		params,
-            			function(data) {
-                				layer.closeAll('loading');
-                				//layer.alert(data.message);
-                        });
-        	}else{
-        		Joyin.alert('目前仅支持word的集合生成！');
-    			return;
-        	}
-        }
     }
     
     function displayMenu(){
