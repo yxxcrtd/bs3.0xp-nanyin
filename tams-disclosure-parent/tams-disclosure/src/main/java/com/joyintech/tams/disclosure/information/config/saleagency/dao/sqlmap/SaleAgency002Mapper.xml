@@ -109,7 +109,7 @@
 		distinct PROD_SERIES
 		from REP_PROD_INFO
 		<where>
-			STATUS='E'
+			STATUS='E' and PROD_SERIES is not null
 			<if test="prodStatus != null and prodStatus != ''">
 				and PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
 			</if>

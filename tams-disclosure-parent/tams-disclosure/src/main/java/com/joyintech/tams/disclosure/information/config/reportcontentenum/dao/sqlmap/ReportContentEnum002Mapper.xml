@@ -150,7 +150,7 @@
         else '' end pid
         from
         V_REP_PROD_INFO
-        where status='E' AND PD_STATUS NOT IN ('02','03')
+        where status='E' AND PROD_SERIES is not null AND PD_STATUS NOT IN ('02','03')
     </select>
 
     <select id="selectProdInfo1" resultType="com.joyintech.framework.select.TreeNode">
@@ -179,7 +179,7 @@
         else '' end pid
         from
         REP_PROD_INFO
-        where status='E' AND PD_STATUS NOT IN ('02','03')
+        where status='E' AND PROD_SERIES is not null AND PD_STATUS NOT IN ('02','03')
     </select>
 
     <select id="selectProdInfo2" resultType="com.joyintech.framework.select.TreeNode">
@@ -212,7 +212,7 @@
         left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
         where T1.P_PROD_ID is not null
         AND T1.STATUS not in ('D')
-        AND T1.STATUS='E' AND T1.PD_STATUS NOT IN ('02','03')
+        AND T1.STATUS='E' AND T1.PROD_SERIES is not null AND T1.PD_STATUS NOT IN ('02','03')
     </select>
 
 
