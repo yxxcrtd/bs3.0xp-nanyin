@@ -33,48 +33,77 @@ $(function () {
 	var backParam;
 	
 	/**
-     * 获取查询参数
+     *初始化界面
      */
-    var getSearchParams = function() {
-    	var obj = {};
-    	obj['repName'] = $('#repName').val();
-    	if(ids.length>0){
-    		for(var i in ids){
-	    		var getKey = ids[i].key;
-	    		var getVal = $('#'+ids[i].key).val();
-	    		if(getKey !='indexId'){
-	    			if(getVal){
-						if(ids[i].multiFlag==='Y'){
-							obj[getKey]=getVal.join(",");
-						}else{
-							obj[getKey] = getVal;
-						}
+    function clean(){
+    	modelListId = null;
+    	modelId =null;
+		modelUri = null;
+		repId = null;
+		repName = null;
+    	ids = new Array();
+		$("#showtable").html('');
+		showSearch(new Array());
+    }
+	
+	/**
+	 *树单击事件
+	 */
+    var zTreeOnClick = function(event, treeId, treeNode, clickFlag){
+    	clean();
+    	//如果是第一级节点.不查询
+        if(treeNode.level>0){
+        	if(treeNode.level==1&&treeNode.object=='C'){
+        		modelListId = treeNode.id;
+        		listSearch = [{screenType:'03',screenKey:'portnum',screenName:'产品名称'},
+	                  {screenType:'01',screenKey:'startDate',screenName:'开始日期'},
+	                  {screenType:'01',screenKey:'endDate',screenName:'结束日期'}]
+				showSearch(listSearch);
+				$("#showtable").html('<h2>报表集合无法查询,目前仅提供word的生成及导出</h2>');
+        	}else{
+        		var parms = {
+						repId:treeNode.id,
+                		repName:treeNode.name
+                	};
 
-	    			}
-	    		}
+				var $container = $("#showtable");
+                Joyin.ajax('getRepsearch',
+                    parms,
+                    function(data) {
+                        if(data){
+                             modelId = data.templateId;
+                             modelUri = data.templatePath;
+                             repId = data.repId;
+                             repName = data.reportName;
+                             showSearch(data.repScreenList);
+							backParam={}
+                        }else{
+                            $("#showtable").html('<h2>无报表内容</h2>');
+                        }
 
-				if(getKey==='prodid'){
-					obj['prodname']=$('#'+ids[i].key).find("option:selected").text();
-				}
-				if(getKey==='pprodid'){
-					obj['pprodname']=$('#'+ids[i].key).find("option:selected").text();
-				}
-				if(getKey==='feename'){
-					obj['prodFeeName']=$('#'+ids[i].key).find("option:selected").text();
-				}
+                    });
         	}
-    		if(obj.startDate&&obj.endDate){
-    			if(obj.startDate>obj.endDate){
-    				Joyin.alert('开始日不能大于结束日！',2);
-    				return "flag";
-    			}
-    		}
-    	}
-    	return obj;
-    };
+        }
+    }
 
+    /**
+     * 报表树内容设置
+     */
+    $('#typeDatatree').joyinMixTree({
+    	setting:{
+    	    callback: {
+    	    	onClick: zTreeOnClick
+    	    }
+    	},
+    	onTreeLoadSuccess: function() {
+    		$.fn.zTree.getZTreeObj('typeDatatree_tree').expandAll(true);
+    		$.fn.zTree.getZTreeObj('typeDatatree_tree').checkAllNodes(true);
+    	}
+    });
     
-  //展示报表查询条件
+    /**
+     *展示报表查询条件
+     */
 	var showSearch = function(data){
         if(!repId) return;
 		//拼接查询条件
@@ -200,87 +229,52 @@ $(function () {
 			}
 		}
 	}
+  
+	/**
+     * 获取查询参数
+     */
+    var getSearchParams = function() {
+    	var obj = {};
+    	obj['repName'] = $('#repName').val();
+    	if(ids.length>0){
+    		for(var i in ids){
+	    		var getKey = ids[i].key;
+	    		var getVal = $('#'+ids[i].key).val();
+	    		if(getKey !='indexId'){
+	    			if(getVal){
+						if(ids[i].multiFlag==='Y'){
+							obj[getKey]=getVal.join(",");
+						}else{
+							obj[getKey] = getVal;
+						}
 
-  //树单击事件
-    var zTreeOnClick = function(event, treeId, treeNode, clickFlag){
-    	
-    	clean();
-    	//如果是第一级节点.不查询
-        if(treeNode.level>0){
-        	if(treeNode.level==1&&treeNode.object=='C'){
-        		modelListId = treeNode.id;
-        		listSearch = [{screenType:'03',screenKey:'portnum',screenName:'产品名称'},
-	                  {screenType:'01',screenKey:'startDate',screenName:'开始日期'},
-	                  {screenType:'01',screenKey:'endDate',screenName:'结束日期'}]
-				showSearch(listSearch);
-				$("#showtable").html('<h2>报表集合无法查询,目前仅提供word的生成及导出</h2>');
-        	}else{
-        		var parms = {
-						repId:treeNode.id,
-                		repName:treeNode.name
-                	};
-				$("#showtable").append("加载中");
-				var $container = $("#showtable");
-                Joyin.ajax('getRepsearch',
-                    parms,
-                    function(data) {
-						changeFlag=true;
-                        if(data){
-                             modelId = data.templateId;
-                             modelUri = data.templatePath;
-                             repId = data.repId;
-                             repName = data.reportName;
+	    			}
+	    		}
 
-//							Joyin.ajax('previewReport', {uri:modelId,repid:repId}, function(result) {
-//								$container.html(result);
-//
-//							});
-                             showSearch(data.repScreenList);
-							backParam={}
-							previewFlag=false;
-                        }else{
-                            $("#showtable").html('<h2>无报表内容</h2>');
-                        }
-
-                    });
+				if(getKey==='prodid'){
+					obj['prodname']=$('#'+ids[i].key).find("option:selected").text();
+				}
+				if(getKey==='pprodid'){
+					obj['pprodname']=$('#'+ids[i].key).find("option:selected").text();
+				}
+				if(getKey==='feename'){
+					obj['prodFeeName']=$('#'+ids[i].key).find("option:selected").text();
+				}
         	}
-        }
-    }
-    
-    //初始化界面
-    function clean(){
-    	modelListId = null;
-    	modelId =null;
-		modelUri = null;
-		repId = null;
-		repName = null;
-    	ids = new Array();
-		$("#showtable").html('');
-		showSearch(new Array());
-    }
-    
-    //树内容设置
-    $('#typeDatatree').joyinMixTree({
-    	setting:{
-    	    callback: {
-    	    	onClick: zTreeOnClick
-    	    }
-    	},
-    	onTreeLoadSuccess: function() {
-    		$.fn.zTree.getZTreeObj('typeDatatree_tree').expandAll(true);
-    		$.fn.zTree.getZTreeObj('typeDatatree_tree').checkAllNodes(true);
+    		if(obj.startDate&&obj.endDate){
+    			if(obj.startDate>obj.endDate){
+    				Joyin.alert('开始日不能大于结束日！',2);
+    				return "flag";
+    			}
+    		}
     	}
-    });
+    	
+    	return obj;
+    };
     
-	$("#toSubmit").css('min-width','50px'); 
-	$("#toExport").css('min-width','50px'); 
+    //展示报表信息---预览
+    var checkParams = function(params){
 
-	$("#toSubmit").css('right','65px'); 
-	$("#toExport").css('left','140px'); 
-
-
-    //展示报表信息
-    var showDetail = function(params){
         displayMenu();
     	if(modelListId){
     		Joyin.alert('报表集合不能查询!',2);
@@ -542,149 +536,66 @@ $(function () {
 					return;
 				}
 			}
-
-
-
-
-
     	}else{
     		return;
     	}
-    	if(params == "flag") {
+ 
+    	return "success";
+	}
+	  
+	/**
+	 * 批量生成报表
+	 */
+   var submit = function(type){
+
+       displayMenu();
+		var params = getSearchParams();
+
+		if ( checkParams(params)!=="success")
+			return;
+		
+		var listProd = getProds();
+    	if ( listProd && listProd.length>0) {
+    		params['listProd'] = JSON.stringify(listProd);
+    	} else {
     		return;
     	}
     	
-    	if(params.portnum instanceof Array){
-    		Joyin.alert('多选产品编码不能预览界面！',2);
-			return;
-    	}
-
-       $("#showtable").append("加载中");
- 	   var $container = $("#showtable");
- 	    	   
-		var toStr = 'src='+basePath+'image'
-		var changeStr= 'src="image'
-	    if(params&&params.length==0){
-	    	Joyin.ajax('previewReport', {uri:modelId,repid:repId}, function(result) {
-				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
-				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
-				$container.html(result);
-
-	        });
-	    }else{
-	    	params['uri'] = modelId;
-	    	params['repid']=repId;
-
-			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/dataCheck', params, function(result1) {
-				if(result1){
-					if(result1.data){
-						editFlag=false
-					}else{
-						editFlag=true
-					}
-				}
-				Joyin.ajax('previewReport', params, function(result) {
-					$container.html(result);
-					previewFlag=true;
-				});
-			});
-	    }     
-	}
-	  
-    var exportfile = function(type){
-		if(!previewFlag){
-			Joyin.alert('导出之前请先预览报表！',2);
-			return;
-		}
-
-        displayMenu();
-
-		var params = getSearchParams();
-		
-		if((modelId&&modelUri)||modelListId){
-            if(!params){
-                Joyin.alert('参数不能为空！',2);
-                return;
+    	var uuid = 'pageid' + randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+		params.rep_id=uuid;
+    	//导出会报错所以暂时屏蔽name
+    	delete params.portname;
+    	
+    	//报表数据结构
+    	var report_info = {
+                uri:modelId,
+                folderUri:modelUri,
+                downloadName:'report',//希望下载的名字：供exportReport使用
+                formatType:type,//下载的格式:供exportReport使用, 支持的格式有pdf,html,xls,xlsx,rtf,csv,xml,docx,odt,ods,jrprint
+                params:params//运行报表所使用的参数
             }
-        }else{
-    	    return;
-    	}
-		
-		if(params){
-			//导出会报错所以暂时屏蔽name
-			delete params.portname; 
-		}
 
-		if(backParam !=null){
-			for ( var key in params) {
-				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请重新点击预览',2);
-					return;
-				}
-			}
-		}
-    	
-		if(modelId&&modelUri){
-//			params = new Array();
-			//params['data'] = JSON.stringify(getSearchParams());
-			//报表数据结构
-			//alert("单表导出");
-	        var report_info = {
-	            uri:modelId,
-	            folderUri:modelUri,
-	            downloadName:'report',//希望下载的名字：供exportReport使用
-	            formatType:type,//下载的格式:供exportReport使用, 支持的格式有pdf,html,xls,xlsx,rtf,csv,xml,docx,odt,ods,jrprint
-	            params:params//运行报表所使用的参数
-	        }
-
-	        var obj = {};
-	            params['fileType'] = type;
-	            params['modelId'] = modelId;
-	            params['repid'] = repId;
-	            params['repname'] = repName;
-	            params['uri'] = modelId;
-	            //params['portnum'] = 'LEO-001';
-	            //alert(params);
-//	        Joyin.ajax('downFileAndExport',
-//	                		params,
-//	            			function(data) {
-//	                				//layer.alert(data.message);
-//	                        });
-
-//	       	Joyin.exportExcel(basePath + '/disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', params);
-	       	Joyin.exportExcel(basePath + '/disclosure/information/reveal/detailshow/RepDetailsShow001/mergeExport', params);
-//          Joyin.exportExcel(basePath + 'disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', obj);
-        }else if(modelListId){
-            //alert("多表导出")
-        	params = getSearchParams();
-        	if("flag" == params){
-        		return;
-        	}
-        	if(modelListId){
-        		if(!params){
-    				Joyin.alert('参数不能为空！',2);
-        			return;
-        		}
-        	}else{
-        		return;
-        	}
-        	
-        	if(type=='docx'){
-        		params['filetype'] = type;
-                params['repid'] = modelListId;
-                params['repname'] = repName;
-
-                Joyin.exportExcel('mergeExport', params);
-        	}else{
-        		Joyin.alert('目前仅支持word的集合导出！');
-    			return;
-        	}
-        }
-    	
-    	
-        
+            //运行并产生报表到页面
+            params['filetype'] = type;
+            params['modelid'] = modelId;
+            params['repid'] = repId;
+            params['repname'] = repName;
+			params['uri'] = modelId;
+			params['flag']="02";
+			Joyin.ajaxJson(basePath + 'disclosure/information/reveal/genreport/BatchGenReport001/check',params, function(result) {
+            	params['operateType'] = "01";
+            	Joyin.ajax('batchExec',
+            		params,
+        			function(data) {
+            			//layer.alert(data.message);
+            			$("#showtable").html(data.message);
+                    });
+            });
     }
     
+    function displayMenu(){
+    	//$("#btnGenReport").css('display','none'); 
+    }	
     
     /*生成随机字符串  add by kongzhifang*/
     function randomString(length, chars) {
@@ -692,244 +603,97 @@ $(function () {
         for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
         return result;
     }
-    
-    //编辑报表
-    var editReport = function(params){
-		if(!previewFlag){
-			Joyin.alert('编辑之前请先预览报表！',2);
-			return;
-		}
-
-        displayMenu();
-    	if(modelListId){
-    		Joyin.alert('报表集合不能查询!',2);
-			return;
-    	}else if(modelId&&modelUri){
-    		if(!params){
-				Joyin.alert('参数不能为空！',2);
-				return;
-    		}
-    	}else{
-    		return;
-    	}
-    	if(params == "flag") {
-    		return;
-    	}
-
-    	if(params.portnum instanceof Array){
-    		Joyin.alert('多选产品编码不能预览界面！',2);
-			return;
-    	}
-
-		//判断这一次的参数和上一次是否一样，不一样要给出提示
-		if(backParam !=null){
-			for ( var key in params) {
-				if(params[key]!==backParam[key]){
-					Joyin.alert('页面参数发生变化，请重新点击预览',2);
-					return;
+ 
+	$('#tree').joyinTree({
+			onTreeLoadSuccess : function() {
+				if (pageModel == PAGE_MODEL_REFERENCE) {
+					var treeObj = $.fn.zTree.getZTreeObj("tree_tree");
+					var nodes = treeObj.getNodes();
+					for (var i = 0; i < nodes.length; i++) {
+						var node = nodes[i];
+						DisabledNode(treeObj, node);
+					}
 				}
 			}
-		}
-    
-    	params['repid'] = repId;
-    	params['uri'] = modelId;
-		params['flag']="01";
-		//编辑之前需要判断改报表是否已确认或者在流程中
-		var webRoot=document.location.href;
-		webRoot=webRoot.substring(0,webRoot.indexOf('disclosure'));	
-		params['webRoot']=webRoot;
-
-		if(document.cookie.includes('webofficetab')) {
-			Joyin.alert('已打开模板编辑画面，请先关闭！',2);
-		    return;
-		}
-
-		Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
-            var param = [], paramObj = $.extend({dialog:1},params);
-            if (paramObj) {
-                $.each(params, function (key, val) {
-                    param.push(key + '=' + encodeURIComponent(params[key]));
-                });
-            }
-			changeFlag=false;
-            var paraStr = '?' + param.join('&');
-		    window.open(basePath+"disclosure/information/reveal/detailshow/RepEdit001/init" + paraStr, "_blank");
-
-//			Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
-//				JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
-//				"70%","85%",params,function(result){
-//					if(top.getData){
-//						editFlag=true;
-//					}
-//				}
-//			);
 		});
 
+	function expandAll() {
+		$.fn.zTree.getZTreeObj('tree_tree').expandAll(!$('#expandAll').is(':checked'));
+	};
 
-    }
+	function DisabledNode(treeObj, node) {
+		treeObj.setChkDisabled(node, true);
+		if(node.isParent) {
+			var children = node.children;
+			for(var i=0; i < children.length; i++) {
+				DisabledNode(treeObj, children[i]);
+			}
+		}
+	}
 
-    var submit = function(type){
-//		if(!previewFlag){
-//			Joyin.alert('生成之前请先预览报表！',2);
-//			return;
-//		}
-//
-//		if(!editFlag){
-//			Joyin.alert('该单据报表校验不通过，请检查数据或编辑后生成',2);
-//			return;
-//		}
-//
-       displayMenu();
-		var params = getSearchParams();
-//		
-//		//params['portnum'] = JSON.stringify(params['portnum']);
-//
-//		if(modelId&&modelUri){
-//			if(!params){
-//				Joyin.alert('参数不能为空！',2);
-//				return;
-//			}
-//		}else{
-//			return;
-//		}
-//		if(backParam !=null){
-//			for ( var key in params) {
-//				if(params[key]!==backParam[key]){
-//					Joyin.alert('页面参数发生变化，请重新点击预览',2);
-//					return;
-//				}
-//			}
-//		}
+	/**
+	 * 递归获取节点和父节点数据
+	 */
+	function getParam(node, params) {
+		if (node) {
+			if(node.id != null && node.pId !=null && node.pId.length>4 && $.inArray(node.id, params) < 0){
+				if(node.id.startsWith("02") || node.id.startsWith("03")){
+					return false;
+				}
+				params.push(node.id);
+			}
+			getParam(node.getParentNode(), params);
+		}
+	}
 
-    	var uuid = 'pageid' + randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-		params.rep_id=uuid;
-    	//导出会报错所以暂时屏蔽name
-    	delete params.portname; 
-    	//报表数据结构
+	function getProds() {
+		var treeObj = $.fn.zTree.getZTreeObj("tree_tree");
+		var nodes = treeObj.getCheckedNodes();
+		var params = new Array();
+		for (var i = 0; i < nodes.length; i++) {
+			var flag = getParam(nodes[i], params);
+			// if(!flag){
+			// 	Joyin.error("产品中包含“产品状态”为“已到期”或“已销户”的产品,不能提交");
+			// 	return;
+			// }
+		}
+		if(params.length == 0){
+			Joyin.error("请选择产品");
+			return;
+		}
+		return params;
+	}
+	
+	/**
+     * 可能是无效代码
+     */
+	$("#toSubmit").css('min-width','50px'); 
+	$("#toExport").css('min-width','50px'); 
 
-        	var report_info = {
-                    uri:modelId,
-                    folderUri:modelUri,
-                    downloadName:'report',//希望下载的名字：供exportReport使用
-                    formatType:type,//下载的格式:供exportReport使用, 支持的格式有pdf,html,xls,xlsx,rtf,csv,xml,docx,odt,ods,jrprint
-                    params:params//运行报表所使用的参数
-                }
-        		   //运行并产生报表到页面
-//                var url = exportReportPath(report_info);
-                
-//	        	params['url'] = url;
-	            params['filetype'] = type;
-	            params['modelid'] = modelId;
-	            params['repid'] = repId;
-	            params['repname'] = repName;
-				params['uri'] = modelId;
-				params['flag']="02";
-				Joyin.ajaxJson(basePath + 'disclosure/information/reveal/genreport/BatchGenReport001/check',params, function(result) {
-	            	params['operateType'] = "01";
-	            	Joyin.ajax('batchExec',
-	                		params,
-	            			function(data) {
-	            				alert(data);
-	                			layer.alert(data.message);
-	                        });
-	            });
-    }
-    
-    function displayMenu(){
-    	$("#toSubmit").css('display','none'); 
-    	$("#toExport").css('display','none');
-    }
- 
+	$("#toSubmit").css('right','65px'); 
+	$("#toExport").css('left','140px'); 
 	
     /**
      * 画面加载完成
      */
     $(function() {
     	
-    	// 绑定查询按钮事件
-        $('#RepDetailsShow001_showDetail').click(function() {
-			backParam=getSearchParams();
-			previewFlag=false;
-			changeFlag=true;
-        	showDetail(getSearchParams());
-        });
-
-        $('#btnEditReport').click(function() {
-            editReport(getSearchParams());
-        });
-
-        // 绑定查询按钮事件
-        $('#excelExport').click(function() {
-        	
-        	exportfile("xlsx");
-        });
-        
-        $('#btnExportWord').click(function(){
-        	exportfile("docx");
-        });
-        
-        $('#btnExportPdf').click(function(){
-        	exportfile("pdf");
-        });
-        
-        $('#htmlExport').click(function(){mei
-        	exportfile("html");
-        });
-        
-        
-        
-        $('#excelSubimt').click(function(){
-        	submit("xlsx");
-        });
-        
+    	// 绑定按钮事件
         $('#btnGenReport').click(function(){
         	submit("docx");
         });
-        $('#pdfSubimt').click(function(){
-        	submit("pdf");
-        });
-        
-        $('#RepDetailsShow001_subimt').click(function(){
-        	$("#toExport").css('display','none'); 
-//        	$("#toSubmit").css('display','block'); 
-        	
-        	setTimeout(function(){
-    			displayMenu();
-    		},5000);
-        });
-        $('#RepDetailsShow001_export').click(function(){
-        	$("#toSubmit").css('display','none'); 
-//        	$("#toExport").css('display','block'); 
-        	
-        	setTimeout(function(){
-        		displayMenu();
-    		},5000);
-        });
-
-
-
-        
-        
-        //失去焦点事件
-//        $('#toSubmit').blur(function(){
-//        	$("#toSubmit").css('display','none'); 
-//        	$("#toExport").css('display','none'); 
-//        });
-//        
-//        $('#doExport').blur(function(){
-//        	$("#toSubmit").css('display','none'); 
-//        	$("#toExport").css('display','none'); 
-//        });
-    	
+          
     	$('#showtable').width((docW-350)+"px");
     	$('#showtable').height((docH-tabHeadUlH)+"px");
 
     	tree.children('div').eq(1).height((docH-tabHeadUlH)+"px");  
-//    	tree.children('div').eq(1).css("overflow-x", "hidden");
+
+		$('#expandAll').next().on('click',function(){
+			expandAll();
+		});
     	
     });
 });
-
 
 function serachKey(){
 	$('#typeDatatree').reloadTree({
@@ -955,7 +719,6 @@ function elementNameChange(modelId){
 	// 	//$('#pprodid').select2('destroy').textSelect('setValue', 'NYLCSMCP');
 	// }
 }
-
 
 function changeEditFlag(){
 	if(!changeFlag){

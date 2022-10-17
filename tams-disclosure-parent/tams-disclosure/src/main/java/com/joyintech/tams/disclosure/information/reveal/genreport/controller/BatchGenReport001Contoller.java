@@ -9,8 +9,6 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.genreport.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -37,7 +37,6 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
@@ -114,33 +113,50 @@ public class BatchGenReport001Contoller extends BaseController {
 		Map<String,Object> params = RequestUtil.getPageParam();
 		
 		//前台传入的参数，测试中，赋值取代
-		params.put("uri", "JDBG_ZSX");
-		params.put("repId", "CP_001_002_015");
-		params.put("ruleId","D0000000000000000014");
-		List<RepProdInfo> listProd = new ArrayList<>();
-		RepProdInfo prod = new RepProdInfo();
-		prod.setProdId("ZC108691744436");
-		listProd.add(prod);
-		params.put("listProd", listProd);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date execDate = new Date();
-		try {
-			execDate = sdf.parse("2022-10-15");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		params.put("execDate", execDate);
-		//传入参数结束
+//		params.put("uri", "JDBG_ZSX");
+//		params.put("repId", "CP_001_002_015");
+//		params.put("ruleId","D0000000000000000014");
+//		List<RepProdInfo> listProd = new ArrayList<>();
+//		RepProdInfo prod = new RepProdInfo();
+//		prod.setProdId("ZC108691744436");
+//		listProd.add(prod);
+//		params.put("listProd", listProd);
 		
-		List<BatchGenResultDto> listResult =  batchGenReport001Service.batchExec(params);
-
-		AjaxResult ret = new AjaxResult();
-		StringBuffer sbRet = new StringBuffer();
-		for ( BatchGenResultDto dto: listResult) {
-			sbRet.append(dto);
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		Date execDate = new Date();
+//		try {
+//			execDate = sdf.parse("2022-10-15");
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//		params.put("execDate", execDate);
+		
+		//产品列表转换
+		String listProd = params.get("listProd").toString();
+		if ( listProd!=null && listProd.length()> 0 ) {
+			JSONArray jsonProds = JSON.parseArray(listProd);
+			List<String> listProds = new ArrayList<>();
+			for ( Object s:jsonProds  ) {
+				listProds.add(s.toString());
+			}
+			params.put("listProd", listProds);
 		}
-		if (sbRet.length()>0 ) {
-			ret.setMessage(sbRet.toString(), MessageType.提示消息);
+		
+		//传入参数结束
+		List<BatchGenResultDto> listResult = null;
+		AjaxResult ret = new AjaxResult();
+		try {
+			listResult =  batchGenReport001Service.batchExec(params);
+			StringBuffer sbRet = new StringBuffer();
+			for ( BatchGenResultDto dto: listResult) {
+				sbRet.append(dto);
+			}
+			if (sbRet.length()>0 ) {
+				ret.setMessage(sbRet.toString(), MessageType.提示消息);
+			}
+		} catch ( Exception e ) {
+			listResult = new ArrayList<>();
+			ret.setMessage("批量报表异常:"+e.getMessage(), MessageType.提示消息);
 		}
 		return ret;
     }

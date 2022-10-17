@@ -45,7 +45,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
     	return batchGenReportService.queryProdList(repId, execDate);
     }
 	
-	public List<BatchGenResultDto> batchExec(Map<String,Object> params) {
+	public List<BatchGenResultDto> batchExec(Map<String,Object> params) throws Exception {
 		return batchGenReportService.exec(params);
 	}
 

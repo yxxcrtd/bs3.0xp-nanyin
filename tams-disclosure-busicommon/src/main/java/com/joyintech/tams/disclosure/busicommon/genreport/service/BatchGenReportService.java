@@ -22,6 +22,8 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurerea
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.service.InfoDisclosureReadAndGenDetailService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 
@@ -35,6 +37,9 @@ import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataServic
 @Service
 public class BatchGenReportService {
 
+	@Autowired
+	private ReportInfoMapper reportInfoMapper;
+	
 	@Autowired
 	private ReportDataService reportDataService;
 	
@@ -50,29 +55,18 @@ public class BatchGenReportService {
 	@Autowired
 	private RevealDeadLineService revealDeadLineService;
 	
-	public List<BatchGenResultDto> exec(Map<String,Object> params ) {
+	public List<BatchGenResultDto> exec(Map<String,Object> params ) throws Exception {
 		List<BatchGenResultDto> listResult = new ArrayList<>();
-		//规则表信息
-		String ruleId=params.get("ruleId").toString();
-		RepRuleEntity repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(ruleId);
-		List<RepProdInfo> listProd = (List<RepProdInfo>)params.get("listProd");
-		Date execDate = (Date)params.get("execDate");
-		String repId = params.get("repId").toString();
-		if(repRule == null){
-			for ( RepProdInfo prod:listProd ) {
-				BatchGenResultDto result = new BatchGenResultDto();
-				result.setResult("F");
-				result.setRemark("没有找到报表规则");
-				result.setProdId(prod.getProdId());
-				result.setProdName(prod.getProdName());
-				result.setGenDate(execDate);
-				result.setRepId(repId);
-				result.setRepName("");
-				listResult.add(result);
-			}
-			return listResult;
+		
+		//1.查询报表模板
+		String repId = params.get("repId").toString();		
+		ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(repId);
+		if (!StringUtil.isNotEmpty(reportInfo)) {
+			throw new Exception("生成报表失败!没有找到模板。");
 		}
 		
+		Date execDate = (Date)params.get("execDate");
+		List<RepProdInfo> listProd = (List<RepProdInfo>)params.get("listProd");
 		for ( RepProdInfo prod:listProd ) {
 			//定义生成结果
 			BatchGenResultDto result = new BatchGenResultDto();
@@ -80,144 +74,66 @@ public class BatchGenReportService {
 			result.setProdName(prod.getProdName());
 			result.setGenDate(execDate);
 			result.setRepId(repId);
-			result.setRepName(repRule.getRepName());
+			result.setRepName(reportInfo.getReportName());
 			
-			//定义报表参数
-			Map<String,Object> dateMap = collateParams(repRule,prod,execDate);
-			params.putAll(dateMap);
-			
-			//2.生成报表
+			//2.生成报表文件，上传到minio文件服务器
 			Map<String, Object> dataMap = null;
 				//2.1查询报表数据数据
 				List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
-				if ( listReports!=null && listReports.size() > 0) {
-					dataMap = listReports.get(0);
-					dataMap.put("prodId",params.get("prodId"));
-					//2.2生成报表文件
-					try {
-						String reportFile = poiReportService.genOssReportFile(null, dataMap, params);
-						result.setResult("S");
-						result.setRemark("生成文件成功!" + reportFile);
-						poiReportService.genReport(params);
-					} catch (Exception e) {
-						result.setResult("F");
-						result.setRemark("生成报表失败!"+e.getMessage());
-					}
-				} else {
+
+				//生成失败：没有查询到指定的报表数据
+				if ( listReports==null || listReports.size() == 0) {
 					result.setResult("F");
 					result.setRemark("生成报表失败!没有找到数据。");
+					listResult.add(result);
+					continue;
+				}
+				
+				//生成失败：查询到的报表数据，经过校验，有错误
+				dataMap = listReports.get(0);
+				//对查询结果进行校验，符号要求，则生成报表
+				String checkResult = checkReport(dataMap);
+				if ( !"success".equals(checkResult) ) {
+					result.setResult("F");
+					result.setRemark("生成报表失败!"+checkResult);
+					listResult.add(result);
+					continue;
+				}
+					
+				//2.2生成报表文件
+				try {
+					dataMap.put("prodId",params.get("prodId"));
+					String reportFile = poiReportService.genOssReportFile(null, dataMap, params);
+					result.setResult("S");
+					result.setRemark("生成文件成功!" + reportFile);
+					
+					//3.生成报表流程数据，进入待确认队列
+					poiReportService.genReport(params);
+				} catch (Exception e) {
+					result.setResult("F");
+					result.setRemark("生成报表失败!"+e.getMessage());
 				}
 				listResult.add(result);
 		}
 		return listResult;
 	}
 	
-	private Map<String, Object> collateParams(RepRuleEntity repRule, RepProdInfo prodInfo, Date execDate) {
-		Map<String, Object> params = new HashMap<>();
-		Map<String, Date> dateMap = new HashMap<>();
-		try {
-			if (StringUtil.equals(DictCodeListExt2.基准日_平台日.getValue(), repRule.getBasisDateType())) {
-				// 获取开始日结束日方法
-				infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, execDate, dateMap);
-				// 获取披露截止日
-				Date ptDate = revealDeadLineService.getRevDeadlineByMark(execDate, repRule, dateMap);
-				dateMap.put("ptDate", ptDate);
-			} else if (StringUtil.equals(DictCodeListExt2.基准日_开放周期开始日.getValue(), repRule.getBasisDateType())
-					|| StringUtil.equals(DictCodeListExt2.基准日_开放周期结束日.getValue(), repRule.getBasisDateType())
-					|| StringUtil.equals(DictCodeListExt2.基准日_开放周期起息日.getValue(), repRule.getBasisDateType())) {
-				// 基准日
-				Date openDate = revealDeadLineService.isCanGenOpen(repRule, dateMap, execDate, prodInfo.getProdId());
-				if (openDate != null) {
-					// 获取开始日结束日方法
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
-					// 获取披露截止日
-				}
-			} else if (StringUtil.equals(DictCodeListExt2.基准日_费率调整日.getValue(), repRule.getBasisDateType())) {
-				// 基准日
-				Date openDate = revealDeadLineService.isCanGenAdjust(repRule, dateMap, execDate, prodInfo.getProdId());
-				if (openDate != null) {
-					// 获取开始日结束日方法
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
-					// 获取披露截止日
-				}
-			} else if (StringUtil.equals(DictCodeListExt3.基准日_巨额赎回调整日.getValue(), repRule.getBasisDateType())) {
-				// 基准日
-				Date openDate = revealDeadLineService.isCanGenJESH(repRule, dateMap, execDate, prodInfo.getProdId());
-				if (openDate != null) {
-					// 获取开始日结束日方法
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
-				}
-			}
-	
-			else if (StringUtil.equals(DictCodeListExt3.基准日_募集上线调整日.getValue(), repRule.getBasisDateType())) {
-				// 基准日
-				Date openDate = revealDeadLineService.isCanGenMJTZ(repRule, dateMap, execDate, prodInfo.getProdId());
-				if (openDate != null) {
-					// 获取开始日结束日方法
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
-				}
-			}
-	
-			else if (StringUtil.equals(DictCodeListExt3.基准日_当期收益分配基准日.getValue(), repRule.getBasisDateType())) {
-				// 基准日
-				Date openDate = revealDeadLineService.isCanGenDQSYFP(repRule, dateMap, execDate, prodInfo.getProdId());
-				if (openDate != null) {
-					// 获取开始日结束日方法
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
-				}
-			}
-	
-			else if (StringUtil.equals(DictCodeListExt3.基准日_自动赎回日.getValue(), repRule.getBasisDateType())) {
-				// 基准日
-				Date openDate = revealDeadLineService.isCanGenZDSH(repRule, dateMap, execDate, prodInfo.getProdId());
-				if (openDate != null) {
-					// 获取开始日结束日方法
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
-				}
-			} else if (StringUtil.equals(DictCodeListExt2.基准日_成立日.getValue(), repRule.getBasisDateType())) {
-				// 基准日
-				Date openDate = revealDeadLineService.isCanGenCLR(repRule, dateMap, execDate, prodInfo.getProdId());
-				if (openDate != null) {
-					// 获取开始日结束日方法
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
-				}
-			} else if (StringUtil.equals(DictCodeListExt2.基准日_到期日.getValue(), repRule.getBasisDateType())) {
-				// 基准日
-				Date openDate = revealDeadLineService.isCanGenMDATE(repRule, dateMap, execDate, prodInfo.getProdId());
-				if (openDate != null) {
-					// 获取开始日结束日方法
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
-				}
-			} else {
-				//prodInfo = new ProdInfoListEntity();
-				Date revDeadDate = null;//infoDisclosureReadAndGenDetailService.getBasisDate(prodInfoListEntity, repRule);
-				int days = Integer.parseInt(repRule.getMakeValue());
-				// update by leipeng 规则 前后更改
-				if (StringUtil.equals(DictCodeListExt2.时点类型_基准日后.getValue(), repRule.getRevealType())) {
-					days = -1 * days;
-				}
-				boolean isGen = false;
-				if (StringUtil.equals(DictCodeListExt1.日期类型_信批_自然日.getValue(), repRule.getMakeDateType())) {
-					if (DateUtil.getBetweenDayNumber(execDate, revDeadDate) == days) {
-						isGen = true;
-					}
-				} else if (revealDeadLineService.isWorkDay(execDate, repRule.getMarketCode())) {
-					isGen = revealDeadLineService.isCanGen(revDeadDate, repRule, dateMap, execDate);
-				}
-				if (isGen) {
-					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, revDeadDate, dateMap);
-				}
-		}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if ( dateMap!=null && dateMap.size()>0 )
-			params.putAll(dateMap);
-		reportDataService.collateReportDateParams(params);
-		return params;
-	}			
+	/**
+	 * 报表的数据检查
+	 * @param dataMap
+	 * @return
+	 */
+	private String checkReport(Map<String, Object> dataMap ) {
+		return "failure";
+		//return "success";
+	}
 
+	/**
+	 * 根据报表类型，查找所有关联的产品
+	 * @param ruleId
+	 * @param execDate
+	 * @return
+	 */
 	public List<ProdInfoListEntity> queryProdList(String ruleId,Date execDate) {
 		//获取作业范围list
 		List<RepJobRange> repJobRangeList = infoDisclosureReadAndGenMapper.getRepJobRangeList(ruleId);
