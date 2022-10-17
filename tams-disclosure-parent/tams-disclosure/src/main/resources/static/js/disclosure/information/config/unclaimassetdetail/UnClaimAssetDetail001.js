@@ -50,7 +50,7 @@
             ,{field:'effEndDateStr', title: 'UnClaimAssetDetail002.effEndDate', width:150,type:'date', sortField:'effEndDate'}
             ,{field:'updateTime',type: 'datetime', title: 'UnClaimAssetDetail002.updateTime', width:150}
             ,{field:'updateUser', title: 'UnClaimAssetDetail002.updateUser', width:150}
-            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
+            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],width: 150,
                 render: function (data, type, row, meta) {
                     if (row.dataStatus == 'D' || row.dataStatus == 'C')
                         return '';
