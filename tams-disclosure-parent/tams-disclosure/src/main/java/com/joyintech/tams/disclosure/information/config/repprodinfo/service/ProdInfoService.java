@@ -614,7 +614,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             //todo 待复核数据不能导入(已完成 需要模板自测)
             ProdInfoDto dto = prodInfoMapper.selectCfsj(list.get(0));
-            if (StringUtil.equals(dto.getStatus(),"C")){
+            if (dto!=null && StringUtil.equals(dto.getStatus(),"C")){
                 message.add("导入文件中有与待复核数据重复的数据,不允许导入");
             }
             // 子产品代码
