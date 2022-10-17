@@ -18,6 +18,13 @@
             concat(concat('%',#{search}),'%')
             or nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') like concat(concat('%',#{search}),'%'))
         </if>
+        <if test="prodIdList != null and prodIdList.size() > 0 ">
+            <foreach item="item" collection="prodIdList" index="index"
+                     open="and" separator="OR" close="">
+                (T1.PROD_ID like concat(concat('%',#{item}),'%')
+                or T1.PROD_NAME like concat(concat('%',#{item}),'%'))
+            </foreach>
+        </if>
     </select>
     <select id="getProdId2" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
