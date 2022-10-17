@@ -89,15 +89,10 @@ $(function () {
 			}
 			//产品名称下拉框
 			if(data[i].screenType==='01'){
-			    var datas = '{}';
-			    Joyin.ajaxSync('getPProdIdList1', {repId: repId}, function(res) {
-			        datas = JSON.stringify(res);
-			    });
-
-				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select select2-hidden-accessible" placeholder="请选择" data-result=\'' + datas
-					+'\' parentIds="repId,prodid" childrenIds="elementname" allowClear="true"';
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select select2-hidden-accessible" placeholder="请选择" data-url="getPProdIdList"'
+					+'parentIds="repId,prodid" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
-                        SearchHtml+= ' multiple showAll="true" >' +'</select>';
+					SearchHtml+= 'multiple="true" >' +'</select>';
 				}else{
 					SearchHtml+= 'onchange=pprodIdChange()>' +'</select>';
 				}

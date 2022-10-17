@@ -102,10 +102,10 @@ public class Report1Cpnfl001Service implements IReportDataService {
                 feemap.put("afterFeerate", StringUtil.isBlank(x.getAfterFeerate()) ? GlobalConstant.SPLIT : x.getAfterFeerate());
                 // 优惠起始时间
                 feemap.put("startDate", x.getStartDate() == null ? GlobalConstant.SPLIT :
-                        DateUtil.format(x.getStartDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
+                        x.getStartDate());
                 // 优惠结束时间
                 feemap.put("endDate", x.getEndDate() == null ? GlobalConstant.SPLIT :
-                        DateUtil.format(x.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
+                        x.getEndDate());
                 feelist.add(feemap);
             });
         }
