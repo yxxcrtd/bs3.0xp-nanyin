@@ -365,7 +365,7 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
             RepProdIndexGzDto dto1 = new RepProdIndexGzDto();
             RepProdIndexGzDto dto2 = new RepProdIndexGzDto();
             RepProdIndexGzDto dto = repProdIndexGzMapper.selectCfsj(rowData.get(0),rowData.get(2));
-            if (StringUtil.equals(dto.getStatus(),"C")){
+            if (dto!=null && StringUtil.equals(dto.getStatus(),"C")){
                 message.add("导入文件中有与待复核数据重复的数据,不允许导入");
             }
             if (!StringUtil.isNotEmpty(rowData.get(0))){
