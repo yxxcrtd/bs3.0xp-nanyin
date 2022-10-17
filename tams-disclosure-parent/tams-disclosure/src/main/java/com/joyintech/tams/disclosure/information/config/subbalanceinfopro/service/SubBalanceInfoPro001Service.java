@@ -424,6 +424,11 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
     }
 
     public List<SelectOptionDto> getRePord(Map<String, Object> pageParam) {
+        if(pageParam.containsKey("initValue")){
+            String str=pageParam.get("initValue").toString();
+            List<String> prodIdList=Arrays.asList(str.split(","));
+            pageParam.put("prodIdList",prodIdList);
+        }
         return subBalanceInfoProMapper.getRePord(pageParam);
     }
 

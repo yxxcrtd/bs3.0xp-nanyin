@@ -17,6 +17,7 @@
         </div>
         <div class='joyin-form-wrap joyin-filter-form condition-area'>
             <form class="layui-form" id="searchForm">
+                <input type="hidden" id="finprodIds">
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
                         <label class="layui-form-label form-lable" data-th-text="产品名称">产品名称</label>
@@ -25,6 +26,20 @@
                                     class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.booksetId}'
                                     data-th-data-url="@{/disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro001/getRePord}" allowClear="true">
                             </select>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="button" class="layui-btn layui-btn-sm btn-default"
+                                    id="SubBalanceInfoPro001_btn_treeAdd" style="
+										text-align: center;
+    									width: 30px;
+    									height: 24px;
+    									line-height: 24px;
+    									position: absolute;
+    									top: -9px;
+    									right: -35px;
+    									z-index:2;">
+                                <i class="iconfont icon-add"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
