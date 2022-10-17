@@ -34,10 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -72,6 +69,11 @@ public class ProdAssetInfo001Service extends CommonExportService<ProdAssetInfoDt
      */
     public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
         map.put("dataStatus",DictCodeListExt3.信披_数据状态_有效E.getValue());
+        if(map.containsKey("initValue")){
+            String str=map.get("initValue").toString();
+            List<String> prodIdList= Arrays.asList(str.split(","));
+            map.put("prodIdList",prodIdList);
+        }
         return prodAssetInfo001Mapper.queryProdIdInfo(map);
     }
 
