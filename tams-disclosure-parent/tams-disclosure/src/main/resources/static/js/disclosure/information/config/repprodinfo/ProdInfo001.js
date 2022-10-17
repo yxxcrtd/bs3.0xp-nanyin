@@ -184,7 +184,8 @@ $(function() {
         });
 
         // 绑定按钮事件
-        $('#ProdInfo001_btn_add').click(addrule);
+        $('#ProdInfo001_btn_treeAdd').click(addrule);
+        $('#ProdInfo001_btn_treeChildrenAdd').click(addrule);
         $('#ProdInfo001_btn_search').click(function() {
             table.load();
             $('#ProdInfo001_btn_delete').show();
