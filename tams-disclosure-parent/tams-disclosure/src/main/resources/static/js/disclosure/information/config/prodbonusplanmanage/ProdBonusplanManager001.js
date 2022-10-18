@@ -346,8 +346,20 @@
 			 });
 		 return;
 	 };
+	 function addrule1() {
+		 Joyin.dialog("产品选择", basePath + "disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager004/init", "80%", "80%",
+			 {}, function () {
+				 var finprodIds = $('#finprodIds').data('finprodIds');
+				 if (finprodIds.length == 0) {
+					 return;
+				 }
+				 $('#finprodId').textSelect('setValue', finprodIds);
+			 });
+		 return;
+	 };
 	   $(function(){
-		   $('#ProdBonusplanManager001_btn_add').click(addrule);
+		   $('#ProdBonusplanManager001_btn_treeAdd').click(addrule);
+		   $('#ProdBonusplanManager001_btn_treeChildrenAdd').click(addrule1);
 		   //导出
 		   $('#ProdBonusplanManager001_btn_export').click(function () {
 			   exportExcel2();
