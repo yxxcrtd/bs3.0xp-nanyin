@@ -82,10 +82,21 @@ $(function () {
                         }
 
                     });
+                    
+		       	//通过repId获取是子产品还是母产品
+               	$('#tree').reloadTree(parms);
+//				Joyin.ajax('queryProdList',
+//					parms,
+//					function(data) {
+//	                if(data){
+//	                	$('#tree').reloadTree(data)      
+//                    }else{
+//                        $("#showtable").html('<h2>产品树无内容</h2>');
+//                    }
+//
+//                });
         	}
-			
-        	//通过repId获取是子产品还是母产品
-        	
+ 
         }
         
     }

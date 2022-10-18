@@ -2,24 +2,18 @@ package com.joyintech.tams.disclosure.busicommon.genreport.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.dao.InfoDisclosureReadAndGenMapper;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.service.InfoDisclosureReadAndGenDetailService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
@@ -54,6 +48,8 @@ public class BatchGenReportService {
 
 	@Autowired
 	private RevealDeadLineService revealDeadLineService;
+	
+
 
 	public List<BatchGenResultDto> exec(Map<String, Object> params) throws Exception {
 		List<BatchGenResultDto> listResult = new ArrayList<>();
@@ -82,23 +78,31 @@ public class BatchGenReportService {
 			
 			// 2.1查询报表数据数据
 			params.put("prodId", prod.getProdId());
-			List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
-
-			// 生成失败：没有查询到指定的报表数据
-			if (listReports == null || listReports.size() == 0) {
+			
+			try {
+				List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+	
+				// 生成失败：没有查询到指定的报表数据
+				if (listReports == null || listReports.size() == 0) {
+					result.setResult("F");
+					result.setRemark("生成报表失败：没有查询到指定的数据。");
+					listResult.add(result);
+					continue;
+				}
+	
+				// 生成失败：查询到的报表数据，经过校验，有错误
+				dataMap = listReports.get(0);
+				// 对查询结果进行校验，符号要求，则生成报表
+				String checkResult = checkReport(dataMap);
+				if (!"success".equals(checkResult)) {
+					result.setResult("F");
+					result.setRemark("生成报表失败：" + checkResult);
+					listResult.add(result);
+					continue;
+				}
+			} catch ( Exception e ) {
 				result.setResult("F");
-				result.setRemark("生成报表失败!没有找到数据。");
-				listResult.add(result);
-				continue;
-			}
-
-			// 生成失败：查询到的报表数据，经过校验，有错误
-			dataMap = listReports.get(0);
-			// 对查询结果进行校验，符号要求，则生成报表
-			String checkResult = checkReport(dataMap);
-			if (!"success".equals(checkResult)) {
-				result.setResult("F");
-				result.setRemark("生成报表失败!" + checkResult);
+				result.setRemark("生成报表失败：" + "报表数据查询异常。"+e.getMessage() );
 				listResult.add(result);
 				continue;
 			}
@@ -114,7 +118,7 @@ public class BatchGenReportService {
 				poiReportService.genReport(params);
 			} catch (Exception e) {
 				result.setResult("F");
-				result.setRemark("生成报表失败!" + e.getMessage());
+				result.setRemark("生成报表失败：" + "生成报表文件或者流程异常。"+e.getMessage());
 			}
 			listResult.add(result);
 		}
@@ -127,8 +131,12 @@ public class BatchGenReportService {
 	 * @param dataMap
 	 * @return
 	 */
-	private String checkReport(Map<String, Object> dataMap) {
-		return "测试终止";
+	public String checkReport(Map<String, Object> dataMap) {
+		Map<String, Object> result = poiReportService.dataCheck(dataMap);
+		String msg = "success";
+		if ( result.get("resultSb")!=null )
+			msg = result.get("resultSb").toString();
+		return msg;
 		// return "success";
 	}
 
@@ -139,12 +147,12 @@ public class BatchGenReportService {
 	 * @param execDate
 	 * @return
 	 */
-	public List<ProdInfoListEntity> queryProdList(String ruleId, Date execDate) {
+	public List<ProdInfoListEntity> queryProdList(String repId, Date execDate) {
 		// 获取作业范围list
-		List<RepJobRange> repJobRangeList = infoDisclosureReadAndGenMapper.getRepJobRangeList(ruleId);
+		List<RepJobRange> repJobRangeList = infoDisclosureReadAndGenMapper.getRepJobRangeList(repId);
 		// 通过组装的条件，查询产品相关内容
 		List<ProdInfoListEntity> prodList = infoDisclosureReadAndGenDetailService.getRepJobRangeByJobid(repJobRangeList,
-				ruleId, execDate);
+				repId, execDate);
 		return prodList;
 	}
 }

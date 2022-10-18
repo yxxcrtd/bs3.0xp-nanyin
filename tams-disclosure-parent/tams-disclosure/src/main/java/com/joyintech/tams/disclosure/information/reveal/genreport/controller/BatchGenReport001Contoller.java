@@ -9,7 +9,6 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.genreport.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,9 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -46,9 +42,9 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
 import com.joyintech.tams.disclosure.information.reveal.genreport.service.BatchGenReport001Service;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 
@@ -96,15 +92,55 @@ public class BatchGenReport001Contoller extends BaseController {
     	return super.init(model);
     }
 
-	@RequestMapping("queryProdList")
+	@RequestMapping("/queryProdList")
 	@ResponseBody
-	public List<ProdInfoListEntity> queryProdList(){
+	public List<TreeNode> queryProdList() {
 		Map<String, Object> param=RequestUtil.getPageParam();
-		String repId = param.get("repId").toString();
-		Date execDate = (Date)param.get("execDate");
-		return batchGenReport001Service.queryProdList(repId, execDate);
+
+		//报表编号
+		String repId = "";
+		String repProdType = "P";
+		if ( param.get("repId")!=null ) { 
+			repId = param.get("repId").toString();
+			repProdType = getRepProdType(repId);
+		}
+		//根据报表的类型，确定是针对母产品进行报表还是子产品进行报表
+		return batchGenReport001Service.buildProdTree(repProdType,repId);
 	}
     
+	private String getRepProdType(String repId) {
+		//针对母产品的报表
+		String parentProds =" CP_001_002_015"
+			+"CP_001_002_016"
+			+"CP_001_002_017"
+			+"CP_001_002_018"
+			+"CP_001_002_019"
+			+"CP_001_002_020"
+			+"CP_001_002_021"
+			+"CP_001_004_001"
+			+"CP_001_004_002"
+			+"CP_001_004_003"
+			+"CP_001_004_004"
+			+"CP_001_004_005"
+			+"CP_001_004_006"
+			+"CP_001_004_007"
+			+"CP_001_004_008"
+			+"CP_001_004_009"
+			+"CP_001_004_010"
+			+"CP_001_004_011"
+			+"CP_001_004_012"
+			+"CP_001_004_013"
+			+"CP_001_004_014"
+			+"CP_001_004_015"
+			+"CP_001_004_016"
+			+"CP_001_004_017";
+		if ( parentProds.contains(repId)) {
+			return "P";
+		} else {
+			return "C";
+		}
+	}
+	
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody Map<String, Object> param) {
@@ -121,6 +157,7 @@ public class BatchGenReport001Contoller extends BaseController {
 	@ResponseBody
     public  AjaxResult batchExec(HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> params = RequestUtil.getPageParam();
+		
 		
 		//前台传入的参数处理
 		//产品列表转换
