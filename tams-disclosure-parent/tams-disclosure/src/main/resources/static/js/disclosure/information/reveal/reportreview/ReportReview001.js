@@ -178,7 +178,7 @@
         }
 
         for(let i = 0 ; i<selArr.length ; i++){
-            if(selArr[i].confirmStatus==='02' || selArr[i].confirmStatus==='03'){
+            if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
                 Joyin.error("数据已经复核");
                 break;
             }
@@ -211,7 +211,7 @@
         }
 
         for(let i = 0 ; i<selArr.length ; i++){
-            if(selArr[i].confirmStatus==='02' || selArr[i].confirmStatus==='03'){
+            if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
                 Joyin.error("数据已经复核");
                 break;
             }
