@@ -9,6 +9,7 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.genreport.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,21 +29,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.information.reveal.genreport.service.BatchGenReport001Service;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 
 /**
  * 
@@ -61,7 +69,9 @@ public class BatchGenReport001Contoller extends BaseController {
     @Autowired
     private BatchGenReport001Service batchGenReport001Service;
     
-
+    @Autowired
+    private CommonPlatformDateService commonPlatformDateService;
+    
     /**
      * 日志
      */
@@ -112,35 +122,24 @@ public class BatchGenReport001Contoller extends BaseController {
     public  AjaxResult batchExec(HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> params = RequestUtil.getPageParam();
 		
-		//前台传入的参数，测试中，赋值取代
-//		params.put("uri", "JDBG_ZSX");
-//		params.put("repId", "CP_001_002_015");
-//		params.put("ruleId","D0000000000000000014");
-//		List<RepProdInfo> listProd = new ArrayList<>();
-//		RepProdInfo prod = new RepProdInfo();
-//		prod.setProdId("ZC108691744436");
-//		listProd.add(prod);
-//		params.put("listProd", listProd);
-		
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//		Date execDate = new Date();
-//		try {
-//			execDate = sdf.parse("2022-10-15");
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
-//		params.put("execDate", execDate);
-		
+		//前台传入的参数处理
 		//产品列表转换
 		String listProd = params.get("listProd").toString();
 		if ( listProd!=null && listProd.length()> 0 ) {
 			JSONArray jsonProds = JSON.parseArray(listProd);
-			List<String> listProds = new ArrayList<>();
+			List<RepProdInfo> listProds = new ArrayList<>();
 			for ( Object s:jsonProds  ) {
-				listProds.add(s.toString());
+				JSONObject jo = (JSONObject)JSON.parse(s.toString());
+				RepProdInfo prod = new RepProdInfo();
+				prod.setProdId(jo.get("id").toString());
+				prod.setProdName(jo.get("name").toString());
+				listProds.add(prod);
 			}
 			params.put("listProd", listProds);
 		}
+
+		//增加平台时间
+		params.put("platformDate", commonPlatformDateService.getSysDate());
 		
 		//传入参数结束
 		List<BatchGenResultDto> listResult = null;
