@@ -255,7 +255,7 @@ $(function () {
 
 					Joyin.dialog(JoyinUtil.getLabel("请选择审批人（只能选择1人）"),
 						JoyinUtil.getRealPath("/disclosure/information/reveal/reportconfirm/ReportConfirmManage005/init?"),
-						"30%", "50%", objectDate,
+						'600px', "400px", objectDate,
 						function(data){
 							if(top.data != null){
 								console.log(top.data)
