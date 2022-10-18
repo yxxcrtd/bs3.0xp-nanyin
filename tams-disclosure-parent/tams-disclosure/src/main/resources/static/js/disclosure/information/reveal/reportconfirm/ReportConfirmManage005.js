@@ -22,7 +22,7 @@
         checkbox: true,
         page:false,
         searchOnInit:true, //初始化立即加载数据
-        height:230,
+        height:280,
         cols: [
             { field: 'userId', title: 'userId', visible: false },
             { field: 'userName', title: '用户名', width: 90,sort: true},
