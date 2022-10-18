@@ -58,6 +58,8 @@ $(function () {
                     }
                 },
                 {field:'revealStatus', title: '状态',sort: true,visible:false},
+				{field:'confirmUser', title: '确认人',width:100, sort: true,sortField:"confirmUser"},
+				{field:'reviewUser', title: '复核人',width:100, sort: true,sortField:"reviewUser"},
                 {field:'prodid', title: '产品代码',width:100, sort: true},
                 {field:'prodName', title: '产品名称',width:150, sort: true},
                 {field:'reportName', title: '报表名称',width:200, sort: true},
@@ -92,7 +94,7 @@ $(function () {
                 },
 //                {field:'perUploadId', title: '人工上传id',sort: true,visible:false},
                 {field:'createTimeStr', title: '生成日期',width:100, sort: true},
-		 	    {field:'confirmUser', title: '确认人',width:100, sort: true,sortField:"confirmUser"},
+
                 {field:'confirmDateStr', title: '确认时间',width:100, sort: true},
                 {field:'detail', title: '上传说明',width:100, sort: true},
                 {field:'uploadTime', title: '上传时间',width:100, sort: true},

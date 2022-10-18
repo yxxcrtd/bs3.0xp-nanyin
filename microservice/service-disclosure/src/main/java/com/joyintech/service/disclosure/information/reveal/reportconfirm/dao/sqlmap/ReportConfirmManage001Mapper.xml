@@ -45,10 +45,13 @@
 		,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F1.REAL_NAME,'系统自动确认'),null) confirmUser
 		,decode(REVEAL.CONFIRM_STATUS,'1',nvl(F2.REAL_NAME,'系统自动确认'),null) checkUser
 		,decode(REVEAL.CONFIRM_STATUS,'1',nvl(REVEAL.CHECK_TIME,REVEAL.CONFIRM_DATE),null) checkTime
+		<if test="confirmPage!=null">
+			,sys_user.REAL_NAME  reviewUser
+		</if>
 		<if test="revealPage!=null">
-			,review.REVIEW_USER reviewUser,
+			,ss1.REAL_NAME reviewUser,
 			review.REVIEW_TIME reviewTime,
-			review.REVIEW_TG_USER reviewTgUser,
+			ss2.REAL_NAME reviewTgUser,
 			review.REVIEW_TG_TIME reviewTgTime,
 			review.REVIEW_TG_GROUP reviewTgGroup
 		</if>
@@ -57,6 +60,12 @@
 		left join REP_PROD_INFO R2 on R1.P_PROD_ID = R2.PROD_ID
 		<if test="revealPage!=null">
 			inner join REP_REVEAL_REVIEW review on review.REVEAL_ID=REVEAL.id and (review.REVIEW_STATUS='02' or review.REVIEW_TG_STATUS='02')
+		    left join sys_user ss1 on ss1.USER_NAME=review.REVIEW_USER
+			left join sys_user ss2 on ss2.USER_NAME=review.REVIEW_TG_USER
+		</if>
+		<if test="confirmPage!=null">
+			left join REP_REVEAL_REVIEW rrr on rrr.REVEAL_ID=REVEAL.id
+			left join sys_user on sys_user.USER_NAME=rrr.REVIEW_USER
 		</if>
 		left join (SELECT * FROM(
 		SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
