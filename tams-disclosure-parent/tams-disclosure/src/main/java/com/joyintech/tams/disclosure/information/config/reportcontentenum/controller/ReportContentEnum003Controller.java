@@ -166,12 +166,6 @@ public class ReportContentEnum003Controller extends BaseController {
 //			return new AjaxResult(msg, MessageType.错误消息);
 //		}
 		
-		String ret = reportContentEnum002Service.isDuplicatedIndex(dto);
-		if ( ret!=null && ret.length()>0 ){
-			msg="指定产品指标重复："+ret;
-			return new AjaxResult(msg, MessageType.错误消息);
-		}
-
 //		if (!reportContentEnum002Service.isOnlyData(dto)){
 //			msg="生效区间重叠！";
 //			return new AjaxResult(msg, MessageType.错误消息);
@@ -190,7 +184,14 @@ public class ReportContentEnum003Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
 	public AjaxResult save(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult) {
+		
 		String msg = StringUtil.EMPTY;
+		String ret = reportContentEnum002Service.isDuplicatedIndex(dto);
+		if ( ret!=null && ret.length()>0 ){
+			msg="指定产品指标重复："+ret;
+			return new AjaxResult(msg, MessageType.错误消息);
+		}
+
 		dto.setIndexType(DictCodeListExt2.指标类型_录入型.getValue());
 		String indexDetail = dto.getIndexDetail();
 		if (indexDetail.length()>4000) {
