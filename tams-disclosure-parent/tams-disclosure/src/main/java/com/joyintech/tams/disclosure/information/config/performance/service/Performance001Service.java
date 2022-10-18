@@ -248,6 +248,11 @@ public class Performance001Service extends CommonExportService<Performance001Dto
 //    }
 
     public List getProdIdlist(Map map) {
+        if(map.containsKey("initValue")){
+            String str=map.get("initValue").toString();
+            List<String> prodIdList=Arrays.asList(str.split(","));
+            map.put("prodIdList",prodIdList);
+        }
         return performance001Mapper.getProdIdlist(map);
     }
     public List<Performance001Dto> selectByPrimaryKey(Map map) {

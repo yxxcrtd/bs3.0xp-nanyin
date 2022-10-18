@@ -300,14 +300,21 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
     }
 
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
+        boolean result=true;
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         try {
             format.setLenient(false);
             format.parse(str);
-            return true;
+            result=true;
+
         } catch (Exception var3) {
-            return false;
+            result=false;
         }
+        String yearStr=str.split("/")[0];
+        if(yearStr.startsWith("0")||yearStr.length()!=4){
+            result=false;
+        }
+        return result;
     }
 
     public static boolean isBigDecimal(String str) {
@@ -365,8 +372,12 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
             RepProdIndexGzDto dto1 = new RepProdIndexGzDto();
             RepProdIndexGzDto dto2 = new RepProdIndexGzDto();
             RepProdIndexGzDto dto = repProdIndexGzMapper.selectCfsj(rowData.get(0),rowData.get(2));
-            if (StringUtil.equals(dto.getStatus(),"C")){
-                message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+            try{
+                if (StringUtil.equals(dto.getStatus(),"C")){
+                    message.add("导入文件中有与待复核数据重复的数据,不允许导入");
+                }
+            }catch (Exception e){
+
             }
             if (!StringUtil.isNotEmpty(rowData.get(0))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));

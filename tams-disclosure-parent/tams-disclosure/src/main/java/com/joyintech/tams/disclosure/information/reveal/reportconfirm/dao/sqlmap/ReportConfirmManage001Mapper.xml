@@ -641,6 +641,13 @@
 		<if test="condition != null and condition != ''">
 			<![CDATA[ ${condition}  ]]>
 		</if>
+		<if test="prodIdList != null and prodIdList.size() > 0 ">
+			<foreach item="item" collection="prodIdList" index="index"
+					 open="and" separator="OR" close="">
+				(T1.PROD_ID like concat(concat('%',#{item}),'%')
+				or T1.PROD_NAME like concat(concat('%',#{item}),'%'))
+			</foreach>
+		</if>
 	</select>
 
 	<update id="backUpdate" parameterType="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">

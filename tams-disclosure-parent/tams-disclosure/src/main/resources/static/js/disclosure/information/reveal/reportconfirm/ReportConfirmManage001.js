@@ -621,6 +621,18 @@ $(function () {
 		 }
 	 } 	 
 	 window.redirectUrl3 = redirectUrl3;
+
+	function addrule() {
+		Joyin.dialog("产品选择",basePath+"disclosure/information/reveal/reportconfirm/ReportConfirmManage006/init","80%","80%",
+			{},function () {
+				var finprodIds = $('#finprodIds').data('finprodIds');
+				if(finprodIds.length ==0){
+					return;
+				}
+				$('#finprodId').textSelect('setValue',finprodIds);
+			});
+		return;
+	};
 	 
 	/**
 	 * 
@@ -630,6 +642,7 @@ $(function () {
     	var searchDateStart = $('#searchDateStart').val();
     	var searchDateEnd = $('#searchDateEnd').val();
 		editFlag=$('#editFlag').val();
+		$('#ReportConfirmManage001_btn_treeAdd').click(addrule);
     	if($('#confromPage').val() == '01'){
     		if(searchDateEnd && searchDateStart) {
     			$('#revealEndDate').val(searchDateStart + ' - ' + searchDateEnd);

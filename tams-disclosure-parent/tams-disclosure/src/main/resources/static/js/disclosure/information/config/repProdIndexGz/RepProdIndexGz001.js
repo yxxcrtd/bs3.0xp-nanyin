@@ -31,7 +31,7 @@ $(function() {
          * 双击查看
          */
         dblclick: function (table, data) {
-            Joyin.dialog(JoyinUtil.getLabel("产品净值信息维护查看"),
+            Joyin.dialog(JoyinUtil.getLabel("产品净值信息(估值)查看"),
                 basePath + "disclosure/information/config/repProdIndexGz/RepProdIndexGz002/init",
                 "99%", "99%", {
                     pageModel: PAGE_MODEL_REFERENCE,
@@ -171,7 +171,7 @@ $(function() {
         //新建点击事件
         $('#RepProdIndex001_btn_add').click(function() {
             var data={operateType:"add", pageModel:PAGE_MODEL_NEW};
-            Joyin.dialog('产品净值信息维护新建',basePath+'disclosure/information/config/repProdIndexGz/RepProdIndexGz002/init', '90%', '80%',data,function(){table.reload();});
+            Joyin.dialog('产品净值信息(估值)新建',basePath+'disclosure/information/config/repProdIndexGz/RepProdIndexGz002/init', '90%', '80%',data,function(){table.reload();});
         });
 
         // 行内删除按钮点击事件
@@ -220,7 +220,7 @@ $(function() {
                 status: data.status,
                 valueDate: data.valueDateStr,
                 operateType: PAGE_MODEL_EDIT};//请求参数
-            Joyin.dialog(JoyinUtil.getLabel("产品净值信息维护编辑"),
+            Joyin.dialog(JoyinUtil.getLabel("产品净值信息(估值)编辑"),
                 JoyinUtil.getRealPath("disclosure/information/config/repProdIndexGz/RepProdIndexGz002/init"),
                 "90%", "80%", object,
                 function(data){
