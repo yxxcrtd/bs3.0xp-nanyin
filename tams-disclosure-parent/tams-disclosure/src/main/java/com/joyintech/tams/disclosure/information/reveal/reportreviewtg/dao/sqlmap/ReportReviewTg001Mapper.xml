@@ -6,7 +6,7 @@
             REVEAL.ID id,
             REVIEW.REVIEW_TG_STATUS reviewTgStatus,
             REVIEW.REVIEW_TG_TIME reviewTgTime,
-            REVIEW.REVIEW_TG_USER reviewTgUser,
+            F3.REAL_NAME reviewTgUser,
             REVIEW.REVIEW_STATUS reviewStatus,
             REVIEW.REVIEW_TIME reviewTime,
             F2.REAL_NAME reviewUser,
@@ -61,6 +61,10 @@
                                             SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
                                             FROM SYS_USER su
                                         ) F where F.ronum = 1) F2 on REVIEW.REVIEW_USER = F2.USER_NAME
+                left join (SELECT * FROM(
+                SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
+                FROM SYS_USER su
+                ) F where F.ronum = 1) F3 on REVIEW.REVIEW_TG_USER = F3.USER_NAME
                 left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
         where 1=1
         and REVEAL.status ='E'
@@ -178,10 +182,8 @@
     <select id="getReviewDataList" resultType="string">
         select rrr.REVEAL_ID
             from REP_REVEAL_REVIEW rrr
-        where rrr.REVIEW_TG_STATUS in ('02','03')
-        AND rrr.REVEAL_ID in
-        <foreach collection="idList" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+        where 1=1
+        and rrr.REVEAL_ID=#{id,jdbcType=VARCHAR}
+        and rrr.REVIEW_TG_STATUS !=#{reviewTgStatus,jdbcType=VARCHAR}
     </select>
 </mapper>

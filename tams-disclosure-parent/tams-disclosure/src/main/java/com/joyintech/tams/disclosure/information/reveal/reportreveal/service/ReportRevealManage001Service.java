@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.information.reveal.reportreveal.dao.ReportRevealManageEX001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto;
@@ -53,6 +54,7 @@ public class ReportRevealManage001Service extends CommonExportService<ReportRevi
 
     @Autowired
     private ReportRevealManageEX001Mapper reportRevealManageEX001Mapper;
+
 
     /**
      * 日志
@@ -144,6 +146,10 @@ public class ReportRevealManage001Service extends CommonExportService<ReportRevi
                 tmp.setReviewStatus(DictCodeListExt5.复核状态_被披露退回.getValue());
                 reportRevealManageEX001Mapper.backToReview(tmp);
             }
+            tmp.setRevealStatus(DictCodeListExt2.披露状态_未披露.getValue());
+            tmp.setRevealDate(null);
+            tmp.setRevealUser(null);
+            reportRevealManageEX001Mapper.updateRevealStatusById(tmp);
         }
     }
 }

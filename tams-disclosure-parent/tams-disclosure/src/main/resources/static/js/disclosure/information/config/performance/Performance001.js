@@ -121,10 +121,23 @@
         Joyin.exportExcel('export', paramObj);//导出（共通）
     };
 
+    function addrule1() {
+        Joyin.dialog("产品选择", basePath + "disclosure/information/config/disprodplanmanage/DisProdPlanManage004/init", "80%", "80%",
+            {}, function () {
+                var finprodIds = $('#finprodIds').data('finprodIds');
+                if (finprodIds.length == 0) {
+                    return;
+                }
+                $('#prodId').textSelect('setValue', finprodIds);
+            });
+        return;
+    };
+
     /**
      * 画面加载完成
      */
     $(function () {
+        $('#Performance001_btn_treeChildrenAdd').click(addrule1);
         //导出
         $('#Performance001_btn_export').click(function () {
             exportExcel();

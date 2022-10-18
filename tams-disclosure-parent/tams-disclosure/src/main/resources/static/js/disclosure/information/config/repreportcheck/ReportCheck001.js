@@ -73,10 +73,23 @@
         Joyin.exportExcel('export', paramObj);//导出（共通）
     };
 
+    function addrule() {
+        Joyin.dialog("产品选择", basePath + "disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager003/init", "80%", "80%",
+            {}, function () {
+                var finprodIds = $('#finprodIds').data('finprodIds');
+                if (finprodIds.length == 0) {
+                    return;
+                }
+                $('#prodId').textSelect('setValue', finprodIds);
+            });
+        return;
+    };
+
     /**
      * 画面加载完成
      */
     $(function () {
+        $('#ReportCheck001_btn_treeAdd').click(addrule);
         //导出
         $('#ReportCheck001_btn_export').click(function () {
             exportExcel();

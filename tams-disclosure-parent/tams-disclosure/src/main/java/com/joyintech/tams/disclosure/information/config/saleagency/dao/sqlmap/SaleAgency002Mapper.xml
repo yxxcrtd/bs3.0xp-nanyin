@@ -159,6 +159,26 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="selectAllProdSeriesHugeSon" resultType="java.lang.String">
+		SELECT
+		distinct r.PROD_NAME
+		FROM
+		DIS_LARGE_REDEMPTION d left join rep_prod_info r
+		on d.PROD_ID = r.PROD_ID
+		<where>
+			r.STATUS='E' and r.PROD_SERIES is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and r.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and r.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+			<if test="prodSeries != null and prodSeries != ''">
+				and r.PROD_SERIES=#{prodSeries,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 	<select id="selectAgencyByProdId"
 			resultType="com.joyintech.tams.disclosure.information.config.saleagency.dto.ProdSaleAgencyDto">
 		select

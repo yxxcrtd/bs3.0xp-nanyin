@@ -178,7 +178,7 @@
         }
 
         for(let i = 0 ; i<selArr.length ; i++){
-            if(selArr[i].confirmStatus==='02' || selArr[i].confirmStatus==='03'){
+            if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
                 Joyin.error("数据已经复核");
                 break;
             }
@@ -211,7 +211,7 @@
         }
 
         for(let i = 0 ; i<selArr.length ; i++){
-            if(selArr[i].confirmStatus==='02' || selArr[i].confirmStatus==='03'){
+            if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
                 Joyin.error("数据已经复核");
                 break;
             }
@@ -244,11 +244,23 @@
         }
 
     }
+    function addrule() {
+        Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
+            {},function () {
+                var finprodIds = $('#finprodIds').data('finprodIds');
+                if(finprodIds.length ==0){
+                    return;
+                }
+                $('#pProdId').textSelect('setValue',finprodIds);
+            });
+        return;
+    };
 
     /**
      * 画面加载完成
      */
     $(function () {
+        $('#ReportReview001_btn_treeAdd').click(addrule);
         //导出
         $('#ReportReview001_btn_export').click(function () {
             exportExcel();
