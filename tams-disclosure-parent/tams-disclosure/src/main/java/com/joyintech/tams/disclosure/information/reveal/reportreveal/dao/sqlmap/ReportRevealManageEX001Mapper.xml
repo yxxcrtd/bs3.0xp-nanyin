@@ -8,7 +8,7 @@
 	      REVEAL_DATE = #{revealDate,jdbcType=TIMESTAMP},
 	      REVEAL_USER = #{revealUser,jdbcType=VARCHAR},
 	      UPDATE_TIME = sysdate,
-	      UPDATE_USER = #{revealUser,jdbcType=VARCHAR}
+	      UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 	      where id = #{id,jdbcType=VARCHAR}
 	</update>
 
