@@ -104,6 +104,8 @@ public interface ReportContentEnum002Mapper {
 
 	List<TreeNode> selectProdInfo2();
 
+	List<TreeNode> selectProdInfo3();
+
 	List<TreeNode> selectProdInfoSon();
 
 	List<TreeNode> selectProdBonusInfo();
