@@ -122,8 +122,30 @@
 
 	<select id="selectAllProdSeriesSon" resultType="java.lang.String">
 		select
+		distinct case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+		else prod.PROD_NAME end
+		from
+		REP_PROD_INFO prod
+		left join V_REP_PROD_INFO pprod
+		on prod.p_prod_id = pprod.prod_id
+		<where>
+			prod.rep_prod_type in ('02','03') and prod.STATUS='E' and prod.PROD_SERIES is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and prod.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and prod.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+			<if test="prodSeries != null and prodSeries != ''">
+				and prod.PROD_SERIES=#{prodSeries,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectAllProdSeriesBonusSon" resultType="java.lang.String">
+		select
 		distinct PROD_NAME
-		from V_REP_PROD_INFO
+		from REP_PROD_INFO
 		<where>
 			STATUS='E' and PROD_SERIES is not null
 			<if test="prodStatus != null and prodStatus != ''">
@@ -134,6 +156,26 @@
 			</if>
 			<if test="prodSeries != null and prodSeries != ''">
 				and PROD_SERIES=#{prodSeries,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectAllProdSeriesHugeSon" resultType="java.lang.String">
+		SELECT
+		distinct r.PROD_NAME
+		FROM
+		DIS_LARGE_REDEMPTION d left join rep_prod_info r
+		on d.PROD_ID = r.PROD_ID
+		<where>
+			r.STATUS='E' and r.PROD_SERIES is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and r.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and r.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+			<if test="prodSeries != null and prodSeries != ''">
+				and r.PROD_SERIES=#{prodSeries,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

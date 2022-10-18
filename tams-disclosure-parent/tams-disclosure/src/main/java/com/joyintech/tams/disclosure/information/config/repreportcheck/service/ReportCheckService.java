@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -133,9 +134,22 @@ public class ReportCheckService extends CommonExportService<ReportCheckDto> impl
     }
 
     public Page<SelectOptionDto>getProdIdList(Map<String, Object> param){
-        Page<SelectOptionDto> page = queryForPageForSelectReturn(Integer.parseInt((String) param.get("page")), Integer.parseInt((String) param.get("length")), ()
+        if(param.containsKey("initValue")){
+            String str=param.get("initValue").toString();
+            List<String> prodIdList= Arrays.asList(str.split(","));
+            param.put("prodIdList",prodIdList);
+        }
+        Integer page=1;
+        if(StringUtil.isNotEmpty(param.get("page"))){
+            page=Integer.parseInt((String) param.get("page"));
+        }
+        Integer length=100;
+        if(StringUtil.isNotEmpty(param.get("length"))){
+            length=Integer.parseInt((String) param.get("length"));
+        }
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(page, length, ()
                 -> reportCheckMapper.getProdIdList(param));
-        return page;
+        return result;
     }
 
     public Page<SelectOptionDto>getReportNameList(Map<String, Object> param){

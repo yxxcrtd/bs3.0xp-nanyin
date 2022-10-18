@@ -3,6 +3,7 @@
  */
 package com.joyintech.tams.disclosure.busicommon.genreport.dto;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -59,6 +60,19 @@ public class BatchGenResultDto {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	
+	@Override
+	public String toString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		StringBuffer sb = new StringBuffer();
+		sb.append(repName+"生成：");
+		sb.append("【产品："+prodName+"("+prodId+")】，");
+		sb.append("S".equals(result)?"生成成功，":"生成失败，");
+		sb.append(remark+"，");
+		sb.append(sdf.format(genDate)+"；");
+		sb.append("<br>");
+		return sb.toString();
 	}
 	
 }

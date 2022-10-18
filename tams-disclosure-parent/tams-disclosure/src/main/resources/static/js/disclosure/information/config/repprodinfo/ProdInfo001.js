@@ -140,7 +140,7 @@ $(function() {
                 if(finprodIds.length ==0){
                     return;
                 }
-                $('#prodId').textSelect('setValue',finprodIds);
+                $('#prodName').textSelect('setValue',finprodIds);
             });
         return;
     };

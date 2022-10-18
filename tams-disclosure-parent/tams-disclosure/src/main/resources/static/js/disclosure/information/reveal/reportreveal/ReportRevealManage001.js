@@ -534,6 +534,17 @@ $(function () {
                 function(){
                 });
     }
+    function addrule() {
+        Joyin.dialog("产品选择",basePath+"disclosure/information/reveal/reportconfirm/ReportConfirmManage006/init","80%","80%",
+            {},function () {
+                var finprodIds = $('#finprodIds').data('finprodIds');
+                if(finprodIds.length ==0){
+                    return;
+                }
+                $('#finprodId').textSelect('setValue',finprodIds);
+            });
+        return;
+    };
     
 	/**
      * 画面加载完成
@@ -542,6 +553,7 @@ $(function () {
     	var searchDate = $('#searchDate').val();
     	var searchDateStart = $('#searchDateStart').val();
     	var searchDateEnd = $('#searchDateEnd').val();
+        $('#ReportRevealManage001_btn_treeAdd').click(addrule);
     	if($('#confromPage').val() == '01'){
     		var pageFrom = $("#pageFrom").val();
     		if(searchDateStart && searchDateEnd) {
