@@ -283,6 +283,36 @@
         where status='E' AND PROD_SERIES is not null
     </select>
 
+    <select id="selectProdHugeInfo" resultType="com.joyintech.framework.select.TreeNode">
+        select
+        d.PROD_ID id,
+        d.PROD_ID || r.PROD_NAME name,
+        case r.PD_STATUS
+        when '01' then
+        (case r.ISSUING_WAY
+        when '01' then '0101' || r.PROD_SERIES || to_char(r.PROD_NAME)
+        when '02' then '0102' || r.PROD_SERIES || to_char(r.PROD_NAME)
+        else '' end
+        )
+        when '02' then
+        (case r.ISSUING_WAY
+        when '01' then '0201' || r.PROD_SERIES || to_char(r.PROD_NAME)
+        when '02' then '0202' || r.PROD_SERIES || to_char(r.PROD_NAME)
+        else '' end
+        )
+        when '03' then
+        (case r.ISSUING_WAY
+        when '01' then '0301' || r.PROD_SERIES || to_char(r.PROD_NAME)
+        when '02' then '0301' || r.PROD_SERIES || to_char(r.PROD_NAME)
+        else '' end
+        )
+        else '' end pid
+        FROM
+        DIS_LARGE_REDEMPTION d left join rep_prod_info r
+        on d.PROD_ID = r.PROD_ID
+        where status='E' AND PROD_SERIES is not null
+    </select>
+
 
     <select id="isOnlyData" resultType="java.lang.Integer">
         select count(1) from REP_INDEX_SUB r1 where r1.PRI_ID = #{priId,jdbcType=VARCHAR} AND

@@ -108,6 +108,8 @@ public interface ReportContentEnum002Mapper {
 
 	List<TreeNode> selectProdBonusInfo();
 
+	List<TreeNode> selectProdHugeInfo();
+
 	int isOnlyData(ReportContentEnum002Dto dto);
 
 	List<ReportContentEnum002Dto> selectExistsData(ReportContentEnum002Dto dto);
