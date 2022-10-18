@@ -24,7 +24,8 @@
         <button type="button" class="btn-submit" id="ReportRevealManage001_btn_todoSubmit" style="display:none"></button>
     </div>
     <div class="joyin-form-wrap joyin-filter-form condition-area">
-      <form class="layui-form" id="searchForm"> 
+      <form class="layui-form" id="searchForm">
+          <input type="hidden" id="finprodIds">
           <input type="hidden" name="confromPage" id="confromPage" data-th-value="${confromPage}">
           <input type="hidden" name="searchDate" id="searchDate" data-th-value="${searchDate}">
           <input type="hidden" name="pageFrom" id="pageFrom" data-th-value="${pageFrom}">
@@ -32,16 +33,31 @@
           <input type="hidden" name="searchDateEnd" id="searchDateEnd" data-th-value="${searchDateEnd}">
           <input type="hidden" name="selectedSeqNo" id="selectedSeqNo" data-th-value="${selectedSeqNo}">
           <div class="layui-form-item">
-              
+
               <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">产品名称</label>
-                        <div class="layui-input-inline input-inline">
-                            <select id="finprodId" name="finprodId" class="layui-input form-input input-select"
-                                placeholder="请选择，可复选" data-url='getPrdInfoSelect' allowClear="true" data-th-initValue='${finprodId}'
-                                multiple="multiple">
-                            </select>
-                        </div>
-                </div>
+                  <label class="layui-form-label form-lable">产品名称</label>
+                  <div class="layui-input-inline input-inline">
+                      <select id="finprodId" name="finprodId" class="layui-input form-input input-select"
+                              placeholder="请选择，可复选" data-url='getPrdInfoSelect' allowClear="true"
+                              data-th-initValue='${finprodId}'
+                              multiple="multiple">
+                      </select>
+                  </div>
+                  <div class="layui-inline">
+                      <button type="button" class="layui-btn layui-btn-sm btn-default"
+                              id="ReportRevealManage001_btn_treeAdd" style="
+										text-align: center;
+    									width: 30px;
+    									height: 24px;
+    									line-height: 24px;
+    									position: absolute;
+    									top: -9px;
+    									right: -35px;
+    									z-index:2;">
+                          <i class="iconfont icon-add"></i>
+                      </button>
+                  </div>
+              </div>
                 
               <div class="layui-inline layui-col-md4">
                   <label class="layui-form-label form-lable">报表名称</label>
