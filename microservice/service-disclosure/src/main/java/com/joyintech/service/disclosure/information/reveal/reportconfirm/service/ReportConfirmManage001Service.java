@@ -137,6 +137,8 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         	confirmTypeArr = confirmType.split(",");
         }
         params.put("confirmTypeArr", confirmTypeArr);
+
+		params.put("confirmPage", "confirmPage");
         return super.queryForPage(page, length, ()-> reportConfirmManage001Mapper.queryPageList(params));
     }
 

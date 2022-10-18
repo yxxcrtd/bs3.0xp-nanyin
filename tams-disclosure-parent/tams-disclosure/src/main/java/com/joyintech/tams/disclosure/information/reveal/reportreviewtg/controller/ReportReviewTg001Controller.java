@@ -66,11 +66,12 @@ public class ReportReviewTg001Controller extends BaseController {
     @RequestMapping("pushRevealCheck")
     public AjaxResult pushRevealCheck(@RequestBody ReportConfirmManage001Dto dto) throws IOException {
         AjaxResult res = new AjaxResult();
-        String id =dto.getId();
-        List<String> idList = new ArrayList<String>();
-        if(StringUtil.isNotEmpty(id)){
-            idList = JsonUtils.json2List(id, String.class);
-            res = reportReviewTg001Service.pushRevealCheck(idList);
+        String data=dto.getData();
+
+        List<ReportReview001Dto> dataList = new ArrayList<ReportReview001Dto>();
+        if(StringUtil.isNotEmpty(data)){
+            dataList = JsonUtils.json2List(data, ReportReview001Dto.class);
+            res = reportReviewTg001Service.pushRevealCheck(dataList);
         }
         return res;
     }
