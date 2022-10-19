@@ -221,8 +221,8 @@ public class DisProdPlanManage002Controller extends BaseController {
 		}
 		//开放结束日＜运作起始日 NYLCXP-874 add by kongzhifang 2022-08-19
 		if(dto.getOperationStartDate()!=null && dto.getOpenEndDate()!=null){
-			if(DateUtil.compareDate(dto.getOperationStartDate(),dto.getOpenEndDate()) <= 0 ){
-				return new AjaxResult("运作起始日必须大于开放结束日！", MessageType.错误消息);
+			if(DateUtil.compareDate(dto.getOperationStartDate(),dto.getOpenEndDate()) < 0 ){
+				return new AjaxResult("运作起始日不能小于开放期结束日！", MessageType.错误消息);
 			}
 		}
 
