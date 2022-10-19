@@ -189,7 +189,7 @@
         FROM
         rep_prod_info
         <where>
-            STATUS='E' AND  REP_PROD_TYPE in ('02','03')
+            STATUS in('E','C') AND  REP_PROD_TYPE in ('02','03')
             <if test="prodRegistNo != null and !prodRegistNo.equals('')">
                 AND PROD_RE=#{prodRegistNo}
             </if>

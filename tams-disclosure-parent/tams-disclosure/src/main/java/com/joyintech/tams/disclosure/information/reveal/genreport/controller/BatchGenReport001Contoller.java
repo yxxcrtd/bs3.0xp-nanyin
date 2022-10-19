@@ -206,6 +206,7 @@ public class BatchGenReport001Contoller extends BaseController {
 			}
 			sbRet.append("★★"+repName+idx+"：");
 			sbRet.append(dto);
+			sbRet.append("<br>");
 		}
 
 		if (sbRet.length()>0 ) {

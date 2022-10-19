@@ -43,7 +43,7 @@
                         return '';
                     }
                 }},
-            { field: 'reviewTimeStr', title: '复核时间', width: 150, sort: true },
+            { field: 'reviewTimeStr', title: '复核时间', width: 150, sort: true ,sortField: "reviewTime"},
             { field: 'reviewUser', title: '复核人', width: 100, sort: true },
             { field: 'prodid', title: '产品代码', width: 150, sort: true },
             { field: 'prodName', title: '产品名称', width: 350, sort: true },
@@ -58,7 +58,7 @@
                     return '<a href="' + JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?' + 'sysFilepath=' + row.confirmFilePath + '&prodId=' + row.prodid + '&reportDate=' + row.reportDate + '&reportName=' + row.reportName) + '">' + data + '</a>';
                 }
             },
-            { field: 'createTimeStr', title: '生成时间', width: 150, sort: true },
+            { field: 'createTimeStr', title: '生成时间', width: 150, sort: true , sortField: "createTime"},
             { field: 'confirmDateStr', title: '确认时间', width: 150, sort: true },
             { field: 'isConfirmName', title: '确认方式', width: 100, sort: true, sortField: "isConfirm" },
 
@@ -141,16 +141,28 @@
             Joyin.error(JoyinUtil.getMessage("未选择数据"));
             return;
         }
-
-        for(let i = 0 ; i<selArr.length ; i++){
-            if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
-                Joyin.error("数据已经复核，不能执行退回操作！");
-                break;
+        if(selArr.length === 1){
+            for(let i = 0 ; i<selArr.length ; i++){
+                if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
+                    Joyin.error("数据已经复核，不能执行退回操作！");
+                    break;
+                }
+                else {
+                    idList[i] = selArr[i].id;
+                }
             }
-            else {
-                idList[i] = selArr[i].id;
+        }else{
+            for(let i = 0 ; i<selArr.length ; i++){
+                if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
+                    Joyin.error("您所勾选的数据包含已复核的数据，不能执行退回操作!");
+                    break;
+                }
+                else {
+                    idList[i] = selArr[i].id;
+                }
             }
         }
+
         if(idList.length !== 0 && idList.length === selArr.length){
             Joyin.confirm("所选数据，审核不通过，现退回？", function(){
                 object.id = JSON.stringify(idList);
@@ -176,16 +188,29 @@
             Joyin.error(JoyinUtil.getMessage("未选择数据！"));
             return;
         }
-
-        for(let i = 0 ; i<selArr.length ; i++){
-            if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
-                Joyin.error("数据已经复核");
-                break;
+        if(selArr.length === 1){
+            for(let i = 0 ; i<selArr.length ; i++){
+                if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
+                    Joyin.error("数据已经复核");
+                    break;
+                }
+                else {
+                    idList[i] = selArr[i].id;
+                }
             }
-            else {
-                idList[i] = selArr[i].id;
+        }else{
+            for(let i = 0 ; i<selArr.length ; i++){
+                if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
+                    Joyin.error("您所勾选的数据包含已复核的数据，不能执行复核并推送待披露操作");
+                    break;
+                }
+                else {
+                    idList[i] = selArr[i].id;
+                }
             }
         }
+
+
         if(idList.length !== 0 && idList.length === selArr.length){
             Joyin.confirm("所选数据，您已经审核通过，现直接推送到待披露？", function(){
                 object.id = JSON.stringify(idList);
@@ -210,15 +235,29 @@
             return;
         }
 
-        for(let i = 0 ; i<selArr.length ; i++){
-            if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
-                Joyin.error("数据已经复核");
-                break;
+        if(selArr.length === 1){
+            for(let i = 0 ; i<selArr.length ; i++){
+                if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
+                    Joyin.error("数据已经复核");
+                    break;
+                }
+                else {
+                    idList[i] = selArr[i].id;
+                }
             }
-            else {
-                idList[i] = selArr[i].id;
+        }else{
+            for(let i = 0 ; i<selArr.length ; i++){
+                if(selArr[i].reviewStatus==='02' || selArr[i].reviewStatus==='03'){
+                    Joyin.error("您所勾选的数据包含已复核的数据，不能执行复核并推送托管复核操作");
+                    break;
+                }
+                else {
+                    idList[i] = selArr[i].id;
+                }
             }
         }
+
+
         if(idList.length !== 0 && idList.length === selArr.length){
             Joyin.confirm('所选数据，您已经审核通过，现直接推送到托管复核？', function(){
                 let objectDate = {};
@@ -255,12 +294,24 @@
             });
         return;
     };
+    function addrule1() {
+        Joyin.dialog("产品选择", basePath + "disclosure/information/config/disprodplanmanage/DisProdPlanManage004/init", "80%", "80%",
+            {}, function () {
+                var finprodIds = $('#finprodIds').data('finprodIds');
+                if (finprodIds.length == 0) {
+                    return;
+                }
+                $('#prodId').textSelect('setValue', finprodIds);
+            });
+        return;
+    };
 
     /**
      * 画面加载完成
      */
     $(function () {
         $('#ReportReview001_btn_treeAdd').click(addrule);
+        $('#ReportReview001_btn_treeChildrenAdd').click(addrule1);
         //导出
         $('#ReportReview001_btn_export').click(function () {
             exportExcel();

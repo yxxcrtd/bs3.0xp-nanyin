@@ -344,10 +344,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             if (StringUtil.isNotEmpty(list.get(5))) {
                 entity.setAfterFeerate(list.get(5));
             }
-            if (StringUtil.isNotEmpty(list.get(6)) && isDateStr(list.get(6))) {
+            if (StringUtil.isNotEmpty(list.get(6))) {
                 entity.setStartDate(list.get(6));
             }
-            if (StringUtil.isNotEmpty(list.get(7)) && isDateStr(list.get(7))) {
+            if (StringUtil.isNotEmpty(list.get(7))) {
                 entity.setEndDate(list.get(7));
             }
 
@@ -611,6 +611,12 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
     }
 
     public List<ProdFeediscountDto> getProdFeeDiscount(ProdFeediscountDto record){
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
+        try{
+            record.setRptIssueDate(format.parse(record.getRptIssueDateStr()));
+            record.setRptIssueDateStr(null);
+            record.setRptIssueDateStr(record.getRptIssueDateStr());
+        }catch (Exception e){}
         return prodFeediscountMapper.getProdFeeDiscount(record);
     }
 }

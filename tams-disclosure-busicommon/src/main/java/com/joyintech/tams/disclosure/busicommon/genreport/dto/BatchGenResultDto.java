@@ -73,7 +73,7 @@ public class BatchGenResultDto {
 		sb.append(sdf.format(genDate)+"；");
 		sb.append("<br>");
 		if ( remark!=null && remark.length()>0 )
-			sb.append(remark+"，");
+			sb.append(remark);
 		return sb.toString();
 	}
 	
