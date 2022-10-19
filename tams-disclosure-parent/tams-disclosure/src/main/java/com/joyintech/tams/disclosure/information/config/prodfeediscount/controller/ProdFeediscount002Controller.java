@@ -175,6 +175,7 @@ public class ProdFeediscount002Controller extends BaseController {
 	public AjaxResult check(@RequestBody @Valid ProdFeediscountDto dto, BindingResult bindingResult) {
 
 		  String operateType = dto.getOperateType();
+		  dto.setRptIssueDateStr(dto.getRptIssueDateStr());
 		if (StringUtil.equals(operateType,"new")) {
 			AjaxResult result = new AjaxResult();
 			if(CollectionUtils.isNotEmpty(prodFeediscountService.getProdFeeDiscount(dto))) {

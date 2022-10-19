@@ -524,7 +524,7 @@
         FROM DIS_PROD_FEEDISCOUNT WHERE
         PROD_ID = #{prodId,jdbcType=VARCHAR}
         and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
-        and to_char(RPT_ISSUE_DATE,'yyyy/MM/dd') = #{rptIssueDateStr,jdbcType=VARCHAR}
+        and to_char(RPT_ISSUE_DATE,'yyyy-MM-dd') = #{rptIssueDateStr,jdbcType=VARCHAR}
         and FEENAME = #{feename,jdbcType=VARCHAR}
         and DATA_STATUS = 'E'
         <choose>
