@@ -251,14 +251,23 @@
 			 return;
 		 }
 		 var selArrUseful =[];
+		 var selArrDFH = [];
 		 selArr.forEach(v => {
 			 if(v.dataStatus == 'E'){
 				 //selArr.remove();
 				 selArrUseful.push(v);
 			 }
+			 if(v.dataStatus == 'C'){
+				 //selArr.remove();
+				 selArrDFH.push(v);
+			 }
 		 })
-		 if (!selArrUseful || selArrUseful.length == 0) {
+		 if ((!selArrUseful || selArrUseful.length == 0) && (!selArrDFH || selArrDFH.length == 0)){
 			 Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
+			 return;
+		 }
+		 if ( selArrDFH.length > 0) {
+			 Joyin.error(JoyinUtil.getMessage("数据在流程中，不允许删除"));
 			 return;
 		 }
 		 var object = {selectedItem: selArrUseful, operateType: "delete"};//请求参数

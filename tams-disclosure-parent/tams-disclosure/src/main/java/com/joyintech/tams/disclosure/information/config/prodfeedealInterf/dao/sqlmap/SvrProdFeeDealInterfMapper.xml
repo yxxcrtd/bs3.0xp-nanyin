@@ -242,10 +242,10 @@
         select
         A.PROD_ID,
         A.FEE_TYPE,
-        to_char(A.PAY_DATE,'yyyy-mm-dd') payDateStr
+        to_char(A.PAY_DATE,'yyyy/mm/dd') payDateStr
         from REP_FEE_TRD A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_ID,A.FEE_TYPE,to_char(A.PAY_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
+            <foreach collection="list" item="item" open="(A.PROD_ID,A.FEE_TYPE,to_char(A.PAY_DATE,'yyyy/mm/dd')) IN (" separator="," close=")">
                 (#{item.prodId},#{item.feeType},#{item.payDateStr})
             </foreach>
         </where>

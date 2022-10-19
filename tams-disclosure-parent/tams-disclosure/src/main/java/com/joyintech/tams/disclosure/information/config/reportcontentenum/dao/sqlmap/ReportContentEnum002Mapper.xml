@@ -382,9 +382,9 @@
 		<if test="indexPeriod != null">
 			and INDEX_PERIOD = #{indexPeriod,jdbcType=VARCHAR}
 		</if>
-		<if test="id != null">
+		<if test="id != null and id!=''">
 			and id != #{id,jdbcType=VARCHAR}
-		</if>		
+		</if>
 	</select>
 
 	<update id="updateRepIndexSub"

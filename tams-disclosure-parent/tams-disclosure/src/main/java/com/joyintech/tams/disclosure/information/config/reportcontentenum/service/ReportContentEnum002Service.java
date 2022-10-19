@@ -496,12 +496,12 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		List<ReportContentEnum002Dto>list=reportContentEnum002Mapper.selectRepIndex(para);
 		
 		String prods = dto.getIndexDetail();
-		if ( prods!=null && prods.length()>0 ) {
-			int pos = prods.indexOf("产品名称=");
-			if ( pos!=-1 ) {
-				prods = prods.substring(pos+"产品名称=".length(),prods.length()-1);
-			}
-		}
+//		if ( prods!=null && prods.length()>0 ) {
+//			int pos = prods.indexOf("产品名称=");
+//			if ( pos!=-1 ) {
+//				prods = prods.substring(pos+"产品名称=".length(),prods.length()-1);
+//			}
+//		}
 		String[] arrayProd = prods.split(",");
 		if ( arrayProd.length>0 )
 			for ( String s:arrayProd) {
