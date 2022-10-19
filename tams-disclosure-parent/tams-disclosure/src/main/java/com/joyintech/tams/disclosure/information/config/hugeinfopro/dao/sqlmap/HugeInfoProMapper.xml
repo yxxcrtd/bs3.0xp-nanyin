@@ -261,10 +261,10 @@
         select
         A.PROD_REGIST_NO,
         A.PROD_ID,
-        to_char(A.DEAL_DATE,'yyyy-mm-dd') dealDateStr
+        to_char(A.DEAL_DATE,'yyyy/mm/dd') dealDateStr
         from DIS_LARGE_REDEMPTION A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_REGIST_NO,A.PROD_ID,to_char(A.DEAL_DATE,'yyyy-mm-dd'),A.DATA_STATUS) IN (" separator="," close=")">
+            <foreach collection="list" item="item" open="(A.PROD_REGIST_NO,A.PROD_ID,to_char(A.DEAL_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
                 (#{item.prodRegistNo},#{item.prodId},#{item.dealDateStr},'E')
             </foreach>
         </where>
