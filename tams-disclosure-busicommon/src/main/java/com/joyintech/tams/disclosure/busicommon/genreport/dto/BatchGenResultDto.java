@@ -66,12 +66,14 @@ public class BatchGenResultDto {
 	public String toString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		StringBuffer sb = new StringBuffer();
-		sb.append(repName+"生成：");
+//		sb.append("★★");
+//		sb.append(repName+"生成：");
 		sb.append("【产品："+prodName+"("+prodId+")】，");
 		sb.append("S".equals(result)?"生成成功，":"生成失败，");
-		sb.append(remark+"，");
 		sb.append(sdf.format(genDate)+"；");
 		sb.append("<br>");
+		if ( remark!=null && remark.length()>0 )
+			sb.append(remark+"，");
 		return sb.toString();
 	}
 	

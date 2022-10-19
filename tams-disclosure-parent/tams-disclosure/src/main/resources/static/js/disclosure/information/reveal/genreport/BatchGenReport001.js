@@ -518,9 +518,9 @@ $(function () {
             	params['operateType'] = "01";
             	Joyin.ajax('batchExec',
             		params,
-        			function(data) {
+        			function(ret) {
             			//layer.alert(data.message);
-            			$("#showtable").html(data.message);
+            			$("#showtable").html(ret.data);
                     });
             });
     }

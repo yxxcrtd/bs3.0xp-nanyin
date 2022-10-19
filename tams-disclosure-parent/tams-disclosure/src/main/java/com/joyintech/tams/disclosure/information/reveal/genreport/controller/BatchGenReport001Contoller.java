@@ -39,9 +39,12 @@ import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
@@ -68,6 +71,9 @@ public class BatchGenReport001Contoller extends BaseController {
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
     
+	@Autowired
+	private ReportInfoMapper reportInfoMapper;
+	
     /**
      * 日志
      */
@@ -157,14 +163,18 @@ public class BatchGenReport001Contoller extends BaseController {
 	@ResponseBody
     public  AjaxResult batchExec(HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> params = RequestUtil.getPageParam();
-		
-		
+
 		//前台传入的参数处理
+		//增加平台时间
+		params.put("platformDate", commonPlatformDateService.getSysDate());
+		params.put("repid", params.get("repId"));		
+		
 		//产品列表转换
+		List<RepProdInfo> listProds = new ArrayList<>();
 		String listProd = params.get("listProd").toString();
 		if ( listProd!=null && listProd.length()> 0 ) {
 			JSONArray jsonProds = JSON.parseArray(listProd);
-			List<RepProdInfo> listProds = new ArrayList<>();
+
 			for ( Object s:jsonProds  ) {
 				JSONObject jo = (JSONObject)JSON.parse(s.toString());
 				RepProdInfo prod = new RepProdInfo();
@@ -172,28 +182,37 @@ public class BatchGenReport001Contoller extends BaseController {
 				prod.setProdName(jo.get("name").toString());
 				listProds.add(prod);
 			}
-			params.put("listProd", listProds);
+		}
+		
+		//输出结果
+		AjaxResult ret = new AjaxResult();
+		
+		StringBuffer sbRet = new StringBuffer();
+		int idx = 1;
+		String repName =  params.get("repName").toString();
+		for (RepProdInfo prod : listProds) {
+			BatchGenResultDto dto = null;
+			try {
+				dto =  batchGenReport001Service.exec(prod,params);
+			} catch ( Exception e ) {
+				dto = new BatchGenResultDto();
+				dto.setRepId(params.get("repId").toString());
+				dto.setRepName(params.get("repName").toString());
+				dto.setProdId(prod.getProdId());
+				dto.setProdName(prod.getProdName());
+				dto.setGenDate((Date)params.get("platformDate"));
+				dto.setResult("F");
+				dto.setRemark("生成报表失败："+e.getMessage());
+			}
+			sbRet.append("★★"+repName+idx+"：");
+			sbRet.append(dto);
 		}
 
-		//增加平台时间
-		params.put("platformDate", commonPlatformDateService.getSysDate());
-		
-		//传入参数结束
-		List<BatchGenResultDto> listResult = null;
-		AjaxResult ret = new AjaxResult();
-		try {
-			listResult =  batchGenReport001Service.batchExec(params);
-			StringBuffer sbRet = new StringBuffer();
-			for ( BatchGenResultDto dto: listResult) {
-				sbRet.append(dto);
-			}
-			if (sbRet.length()>0 ) {
-				ret.setMessage(sbRet.toString(), MessageType.提示消息);
-			}
-		} catch ( Exception e ) {
-			listResult = new ArrayList<>();
-			ret.setMessage("批量报表异常:"+e.getMessage(), MessageType.提示消息);
+		if (sbRet.length()>0 ) {
+			ret.setData(sbRet.toString());
 		}
+		ret.setMessage("报表生成完成，详见明细信息。", MessageType.提示消息);
+
 		return ret;
     }
 

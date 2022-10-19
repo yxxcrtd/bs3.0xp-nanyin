@@ -16,21 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepScreen;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
-import com.joyintech.tams.disclosure.busicommon.genreport.service.BatchGenReportService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.dao.InfoDisclosureReadAndGenMapper;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.service.InfoDisclosureReadAndGenDetailService;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportCheckService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum002Mapper;
 import com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper;
@@ -54,15 +50,14 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
     @Autowired
     private RepDetailsShow001Service repDetailsShow001Service;
     
-    
-	@Autowired
-	private ReportInfoMapper reportInfoMapper;
-
 	@Autowired
 	private ReportDataService reportDataService;
 
 	@Autowired
 	private PoiReportService poiReportService;
+	
+	@Autowired
+	private ReportCheckService reportCheckService;
 
 	@Autowired
 	private InfoDisclosureReadAndGenMapper infoDisclosureReadAndGenMapper;
@@ -70,42 +65,20 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 	@Autowired
 	private InfoDisclosureReadAndGenDetailService infoDisclosureReadAndGenDetailService;
 
-	@Autowired
-	private RevealDeadLineService revealDeadLineService;
-	
     /**
      * 日志
      */
     private Logger logger = LoggerFactory.getLogger(BatchGenReport001Service.class);
 	
-	public List<BatchGenResultDto> batchExec(Map<String,Object> params) {
+	public BatchGenResultDto exec(RepProdInfo prod,Map<String,Object> params) throws Exception {
 		
-		List<BatchGenResultDto> listResult = new ArrayList<>();
-
-		// 1.查询报表模板
-		String repId = params.get("repId").toString();
-		ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(repId);
-		if (!StringUtil.isNotEmpty(reportInfo)) {
-			BatchGenResultDto result = new BatchGenResultDto();
-			result.setRepId(repId);
-			result.setRepName(reportInfo.getReportName());
-			result.setResult("F");
-			result.setRemark("生成报表失败：没有找到指定的模板。");
-			listResult.add(result);
-			return listResult;
-		}
-
-		Date execDate = (Date) params.get("platformDate");
-		List<RepProdInfo> listProd = (List<RepProdInfo>) params.get("listProd");
-		for (RepProdInfo prod : listProd) {
-			
 			// 定义生成结果
 			BatchGenResultDto result = new BatchGenResultDto();
 			result.setProdId(prod.getProdId());
 			result.setProdName(prod.getProdName());
-			result.setGenDate(execDate);
-			result.setRepId(repId);
-			result.setRepName(reportInfo.getReportName());
+			result.setGenDate((Date)params.get("platformDate"));
+			result.setRepId(params.get("repId").toString());
+			result.setRepName(params.get("repName").toString());
 
 			// 2.生成报表文件，上传到minio文件服务器
 			Map<String, Object> dataMap = null;
@@ -122,48 +95,52 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 				// 生成失败：没有查询到指定的报表数据
 				if (listReports == null || listReports.size() == 0) {
 					result.setResult("F");
-					result.setRemark("生成报表失败：没有查询到指定的数据。");
-					listResult.add(result);
-					continue;
+					logger.error("没有查询到指定的数据。");
+					result.setRemark("没有查询到指定的数据。");
+					return result;
 				}
-	
-				// 生成失败：查询到的报表数据，经过校验，有错误
 				dataMap = listReports.get(0);
-				// 对查询结果进行校验，符号要求，则生成报表
-				dataMap.put("repid", repId);
-				String checkResult = checkReport(dataMap);
+
+				//对查询结果进行一些参数补充
+				dataMap.put("repid", params.get("repId").toString());
+				dataMap.put("repId", params.get("repId").toString());
+				dataMap.put("prodId", params.get("prodId"));
+			} catch (Exception e) {
+				result.setResult("F");
+				result.setRemark("报表数据查询异常，"+e.getMessage() );
+				logger.error("生成报表失败：" + "报表数据查询异常。",e);
+				return result;				
+			}
+
+			// 对查询结果进行校验，符合要求，则生成报表
+			try {
+				String checkResult = checkReport(params,dataMap);
 				if (!"success".equals(checkResult)) {
 					result.setResult("F");
-					result.setRemark("生成报表失败：" + checkResult);
-					listResult.add(result);
-					continue;
+					logger.error("生成报表失败：" + "报表数据查询异常。"+ checkResult);
+					result.setRemark("报表数据检查异常：<br>" + checkResult);
+					return result;
 				}
 			} catch ( Exception e ) {
-				result.setResult("F");
-				result.setRemark("生成报表失败：" + "报表数据查询异常。"+e.getMessage() );
-				listResult.add(result);
+//				result.setResult("F");
+//				result.setRemark("生成报表失败：" + "报表数据检查异常，"+e.getMessage() );
 				logger.error("生成报表失败：" + "报表数据查询异常。",e);
-				continue;
+				throw new Exception("报表数据检查异常，"+e.getMessage());
 			}
 
 			// 2.2生成报表文件
 			try {
-				dataMap.put("prodId", params.get("prodId"));
 				String reportFile = poiReportService.genOssReportFile(null, dataMap, params);
-				result.setResult("S");
-				result.setRemark("生成文件成功!" + reportFile);
-
 				// 3.生成报表流程数据，进入待确认队列
 				poiReportService.genReport(params);
+				result.setResult("S");
 			} catch (Exception e) {
-				result.setResult("F");
-				result.setRemark("生成报表失败：" + "生成报表文件或者流程异常。"+e.getMessage());
+//				result.setResult("F");
+//				result.setRemark("生成报表失败：" + "生成报表文件或者流程异常。"+e.getMessage());
 				logger.error("生成报表失败：" + "报表数据查询异常。",e);
+				throw new Exception("生成报表文件或者流程异常，"+e.getMessage());
 			}
-			listResult.add(result);
-		}
-		return listResult;
-		
+				return result;
 	}
 
     public RepDetailsShow001Dto getRepScreenList(String repId){
@@ -289,8 +266,8 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 	 * @param dataMap
 	 * @return
 	 */
-	public String checkReport(Map<String, Object> dataMap) {
-		Map<String, Object> result = poiReportService.dataCheck(dataMap);
+	public String checkReport(Map<String, Object> params,Map<String, Object> dataMap) {
+		Map<String, Object> result = reportCheckService.dataCheck(params,dataMap);
 		String msg = "success";
 		if ( result.get("resultSb")!=null )
 			msg = result.get("resultSb").toString();
