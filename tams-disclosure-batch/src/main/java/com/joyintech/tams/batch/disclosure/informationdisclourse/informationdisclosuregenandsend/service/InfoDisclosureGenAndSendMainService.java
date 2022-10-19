@@ -23,6 +23,7 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.dao.RepInstallFileMapper;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.executor.ExecutorException;
 import org.slf4j.Logger;
@@ -212,7 +213,7 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 		for (InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity : repFileList) {
 			//在这里加上具体每个作业的工作日判断 add by zhengxiaolian
 			boolean isWork = false;
-			if(StringUtil.equals(holidayIsWork, DictCodeList.是否_是.getValue())){
+			if(StringUtil.equals(holidayIsWork, DictCodeListExt1.是或否_是.getValue())){
 				isWork = true;
 			}
 			else{
