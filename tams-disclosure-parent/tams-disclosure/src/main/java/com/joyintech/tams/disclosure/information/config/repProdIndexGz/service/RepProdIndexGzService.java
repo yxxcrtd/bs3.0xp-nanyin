@@ -314,6 +314,7 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
         if(yearStr.startsWith("0")||yearStr.length()!=4){
             result=false;
         }
+
         return result;
     }
 
@@ -371,8 +372,8 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
             List<String> message = new ArrayList<>();
             RepProdIndexGzDto dto1 = new RepProdIndexGzDto();
             RepProdIndexGzDto dto2 = new RepProdIndexGzDto();
-            RepProdIndexGzDto dto = repProdIndexGzMapper.selectCfsj(rowData.get(0),rowData.get(2));
             try{
+                RepProdIndexGzDto dto = repProdIndexGzMapper.selectCfsj(rowData.get(0),rowData.get(2));
                 if (StringUtil.equals(dto.getStatus(),"C")){
                     message.add("导入文件中有与待复核数据重复的数据,不允许导入");
                 }
