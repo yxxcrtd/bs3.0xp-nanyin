@@ -360,8 +360,8 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 }else{
                      dto = disProdPlanManage002Service.selectCfsj(rowData.get(0),rowData.get(4));
                 }
-                if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(1))
-                        && DateUtil.compareDate(rowData.get(4), rowData.get(2)) < 0){
+                if(isDateStr(rowData.get(4)) && isDateStr(rowData.get(2))
+                        && DateUtil.compareDate(rowData.get(4), rowData.get(2)) <0){
                     message.add("运作起始日不能小于开放期结束日。");
                 }
                 //DisProdPlanManage002Dto dto = disProdPlanManage002Service.selectCfsj(rowData.get(0),rowData.get(4));
