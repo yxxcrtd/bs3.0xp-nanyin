@@ -256,11 +256,11 @@
 		select
 		distinct
 		A.PROD_ID prodId,
-		to_char(A.EFF_DATE,'yyyy-mm-dd') effDateStr,
-		to_char(A.EXP_DATE,'yyyy-mm-dd') expDateStr
+		to_char(A.EFF_DATE,'yyyy/mm/dd') effDateStr,
+		to_char(A.EXP_DATE,'yyyy/mm/dd') expDateStr
 		from REP_PROD_BASIC_CHANGE A
 		<where>
-			<foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFF_DATE,'yyyy-mm-dd'),to_char(A.EXP_DATE,'yyyy-mm-dd'),A.STATUS) IN (" separator="," close=")">
+			<foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFF_DATE,'yyyy/mm/dd'),to_char(A.EXP_DATE,'yyyy/mm/dd'),A.STATUS) IN (" separator="," close=")">
 				(#{item.prodId},#{item.effDateStr},#{item.expDateStr},'E')
 			</foreach>
 		</where>

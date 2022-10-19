@@ -210,7 +210,7 @@ $(function () {
 			{field:'indexFile', width:260, title: '文件名称',visible:false},
 			{field:'indexYear', width:100, title: '年度',sort: true,sortField:"indexYear"},
 			{field:'indexPeriodStr', width:100, title: '指标类型',sort: true,sortField:"indexPeriod"},
-			{field:'indexValue', width:260, title: '报表文本值'
+			{field:'indexValue', width:260, title: '报表文本值',sortable:false
 				,render: function (data, type, row, meta) {
 					if(row.indexType=='02'){
 						return '<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.indexFile)+ '">' + data + '</a>';

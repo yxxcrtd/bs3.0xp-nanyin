@@ -16,6 +16,7 @@ import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao.SvrProdFeeDealInterfMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -44,6 +45,9 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private JoyinDFSTemplate joyinDFSTemplate;
+
+    @Autowired
+    private IPlatformDate iPlatformDate;
 
     /**
      * 根据产品代码模糊查询联系下拉框
@@ -410,7 +414,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "支付日"));
             } else if (!isDateStr(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "支付日"));
-            } else if (rowData.get(4).compareTo(DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
+            } else if (rowData.get(4).compareTo(DateUtil.format(iPlatformDate.getSysDate(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
                 message.add("支付日只能小于等于平台日。");
             }
             if(StringUtil.isNotEmpty(rowData.get(3)) && !isBigDecimal(rowData.get(3))){

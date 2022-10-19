@@ -524,11 +524,11 @@
         FROM DIS_PROD_FEEDISCOUNT WHERE
         PROD_ID = #{prodId,jdbcType=VARCHAR}
         and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
-        and to_char(RPT_ISSUE_DATE,'yyyy/MM/dd') = #{rptIssueDateStr,jdbcType=VARCHAR}
+        and to_char(RPT_ISSUE_DATE,'yyyy-MM-dd') = #{rptIssueDateStr,jdbcType=VARCHAR}
         and FEENAME = #{feename,jdbcType=VARCHAR}
         and DATA_STATUS = 'E'
         <choose>
-            <when test="startDateStr !=null and startDateStr != ''">
+            <when test="startDate !=null and startDate != ''">
                 AND START_DATE =  #{startDate,jdbcType=VARCHAR}
             </when>
             <otherwise>
@@ -536,7 +536,7 @@
             </otherwise>
         </choose>
         <choose>
-            <when test="endDateStr !=null and endDateStr != ''">
+            <when test="endDate !=null and endDate != ''">
                 AND END_DATE =  #{endDate,jdbcType=VARCHAR}
             </when>
             <otherwise>
