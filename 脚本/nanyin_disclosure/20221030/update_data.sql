@@ -197,3 +197,21 @@ values ('RepRelDeal001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system',
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('RepRelDeal001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-10-18 关联交易情况维护 数据状态下拉框去除待复核 end
+
+-- 产品分红计算 脚本 add by sunjie 2022/10/19 start
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_024';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_024', 'SVR', null, 'REPORT_006_004', 'BonusCalist001', 12, '02', '产品分红计算清单', 'system', null, sysdate, 'system',sysdate);
+
+delete from SYS_PAGE where PAGE_ID like '%BonusCalist00%';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('BonusCalist001', 'SVR', '/disclosure/information/config/bonuscalist/BonusCalist001', 'disclosure/information/config/bonuscalist/BonusCalist001', 'REPORT_006_004_024', null, null, '02', '01', '产品分红计算清单', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('BonusCalist002', 'SVR', '/disclosure/information/config/bonuscalist/BonusCalist002', 'disclosure/information/config/bonuscalist/BonusCalist002', null, null, null, '02', '01', '产品分红计算清单新建', 'system', null, SYSDATE, 'system', SYSDATE);
+
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'BonusCalist002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('BonusCalist002', 'BonusCalist002_btn_submit', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('BonusCalist002', 'BonusCalist002_btn_save', 'oneApproval', 'system', '0001',sysdate, 'system',sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('BonusCalist002', 'BonusCalist001_btn_delete', 'noneApproval', 'system', '0001',sysdate, 'shan', sysdate, 'ALL', '02');
+
+-- 业务类型数据字典增加 产品分红计算清单维护
+delete from SYS_DATADICT_LIST where DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'DISB';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('COMMON_BUSINESS_TYPE', 'DISB', '产品分红计算清单维护', 366, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+-- 产品分红计算 脚本 add by sunjie 2022/10/19 end

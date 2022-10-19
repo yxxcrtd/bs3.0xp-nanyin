@@ -230,3 +230,66 @@ update REP_INDEX_SUB set INDEX_VALUE1=INDEX_VALUE;
 ALTER TABLE REP_INDEX_SUB DROP COLUMN INDEX_VALUE;
 ALTER TABLE REP_INDEX_SUB RENAME COLUMN INDEX_VALUE1 TO INDEX_VALUE;
 --修改指标值的产品列宽度：added by chenxc,2022-10-19,end
+
+-- 产品分红计算 建表语句 add by sunjie 2022-10-19 start
+create table DIS_BONUS_LIST
+(
+    BONUS_LIST_ID         VARCHAR2(60) not null
+        constraint DIS_BONUS_LIST_PK
+            primary key,
+    PROD_ID              VARCHAR2(60) not null,
+    PROD_REGIST_NO       VARCHAR2(50),
+    PROD_ASSETS          NUMBER(17,2),
+    PROD_END_BALANCE     NUMBER(17,2),
+    UNIT_NUM             NUMBER(10,4),
+    LAST_PROFIT_BASE_DATE      DATE,
+    PROFIT_BASE_DATE      DATE,
+    RUN_DAYS             NUMBER(4),
+    AVAI_PROFIT          NUMBER(17,2),
+    PER_BASE             NUMBER(17,2),
+    PER_BASE_PROFIT      NUMBER(17,2),
+    EXCEED               NUMBER(17,2),
+    PER_FEE              NUMBER(17,2),
+    DIS_BONUS_MONEY      NUMBER(17),
+    UNIT_BONUS           NUMBER(17,4),
+    YIELD                NUMBER(17,4),
+    MSG                  VARCHAR2(512),
+    DATA_STATUS          VARCHAR2(10),
+    DATA_SOURCE          VARCHAR2(10),
+    CREATE_USER          VARCHAR2(20),
+    CREATE_TIME          TIMESTAMP(6),
+    UPDATE_USER          VARCHAR2(20),
+    UPDATE_TIME          TIMESTAMP(6),
+    CREATE_DEPT          VARCHAR2(32)
+);
+
+comment on table DIS_BONUS_LIST is '分红计算清单维护表';
+
+comment on column DIS_BONUS_LIST.BONUS_LIST_ID is '分红计算清单编号';
+comment on column DIS_BONUS_LIST.PROD_ID is '产品ID';
+comment on column DIS_BONUS_LIST.PROD_REGIST_NO is '产品登记编码';
+comment on column DIS_BONUS_LIST.PROD_ASSETS is '产品资产净值';
+comment on column DIS_BONUS_LIST.PROD_END_BALANCE is '产品期末余额(份额)';
+comment on column DIS_BONUS_LIST.UNIT_NUM is '单位净值';
+comment on column DIS_BONUS_LIST.LAST_PROFIT_BASE_DATE is '上一收益分配基准日';
+comment on column DIS_BONUS_LIST.PROFIT_BASE_DATE is '本期收益分配基准日';
+comment on column DIS_BONUS_LIST.RUN_DAYS is '运行天数';
+comment on column DIS_BONUS_LIST.AVAI_PROFIT is '可供分配利润';
+comment on column DIS_BONUS_LIST.PER_BASE is '业绩比较基准';
+comment on column DIS_BONUS_LIST.PER_BASE_PROFIT is '业绩比较基准收益';
+comment on column DIS_BONUS_LIST.EXCEED is '超出部分';
+comment on column DIS_BONUS_LIST.PER_FEE is '业绩报酬';
+comment on column DIS_BONUS_LIST.DIS_BONUS_MONEY is '应分配分红金额';
+comment on column DIS_BONUS_LIST.UNIT_BONUS is '单位分红';
+comment on column DIS_BONUS_LIST.YIELD is '收益率';
+comment on column DIS_BONUS_LIST.MSG is '错误信息';
+comment on column DIS_BONUS_LIST.DATA_STATUS is '数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除';
+comment on column DIS_BONUS_LIST.DATA_SOURCE is '数据来源:数据字典syscode：DIS,code:DATA_SOURCE,';
+comment on column DIS_BONUS_LIST.CREATE_USER is '创建人';
+comment on column DIS_BONUS_LIST.CREATE_TIME is '创建时间';
+comment on column DIS_BONUS_LIST.UPDATE_USER is '更新人';
+comment on column DIS_BONUS_LIST.UPDATE_TIME is '更新时间';
+comment on column DIS_BONUS_LIST.CREATE_DEPT is '创建部门';
+-- 产品分红计算 建表语句 add by sunjie 2022-10-19 end
+
+
