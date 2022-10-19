@@ -611,6 +611,13 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
     }
 
     public List<ProdFeediscountDto> getProdFeeDiscount(ProdFeediscountDto record){
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
+        try{
+            record.setRptIssueDate(format.parse(record.getRptIssueDateStr()));
+            record.setRptIssueDateStr(null);
+            record.setRptIssueDateStr(record.getRptIssueDateStr());
+        }catch (Exception e){}
+        record.setRptIssueDateStr(record.getRptIssueDateStr());
         return prodFeediscountMapper.getProdFeeDiscount(record);
     }
 }

@@ -5,7 +5,7 @@
         <id column="ID" property="id" jdbcType="VARCHAR" />
         <result column="PRI_ID" property="priId" jdbcType="VARCHAR" />
         <result column="INDEX_NAME" property="indexName" jdbcType="VARCHAR" />
-        <result column="INDEX_VALUE" property="indexValue" jdbcType="VARCHAR" />
+        <result column="INDEX_VALUE" property="indexValue" jdbcType="CLOB" />
         <result column="INDEX_TYPE" property="indexType" jdbcType="VARCHAR" />
         <result column="INDEX_DATE" property="indexDate" jdbcType="DATE" />
         <result column="INDEX_FILE" property="indexFile" jdbcType="VARCHAR" />
@@ -52,7 +52,7 @@
             UPDATE_TIME, AUDIT_STATUS,END_DATE,
             INDEX_YEAR,INDEX_PERIOD)
         values (#{id,jdbcType=VARCHAR}, #{priId,jdbcType=VARCHAR}, #{indexName,jdbcType=VARCHAR}, 
-            #{indexValue,jdbcType=VARCHAR}, #{indexType,jdbcType=VARCHAR}, #{indexDate,jdbcType=DATE}, 
+            #{indexValue,jdbcType=CLOB}, #{indexType,jdbcType=VARCHAR}, #{indexDate,jdbcType=DATE}, 
             #{indexFile,jdbcType=VARCHAR}, #{indexDetail,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{auditStatus,jdbcType=VARCHAR},#{endDate,jdbcType=DATE},
@@ -115,7 +115,7 @@
                 #{indexName,jdbcType=VARCHAR},
             </if>
             <if test="indexValue != null" >
-                #{indexValue,jdbcType=VARCHAR},
+                #{indexValue,jdbcType=CLOB},
             </if>
             <if test="indexType != null" >
                 #{indexType,jdbcType=VARCHAR},
@@ -169,7 +169,7 @@
                 INDEX_NAME = #{indexName,jdbcType=VARCHAR},
             </if>
             <if test="indexValue != null" >
-                INDEX_VALUE = #{indexValue,jdbcType=VARCHAR},
+                INDEX_VALUE = #{indexValue,jdbcType=CLOB},
             </if>
             <if test="indexType != null" >
                 INDEX_TYPE = #{indexType,jdbcType=VARCHAR},
@@ -208,7 +208,7 @@
         update REP_INDEX_SUB
         set PRI_ID = #{priId,jdbcType=VARCHAR},
             INDEX_NAME = #{indexName,jdbcType=VARCHAR},
-            INDEX_VALUE = #{indexValue,jdbcType=VARCHAR},
+            INDEX_VALUE = #{indexValue,jdbcType=CLOB},
             INDEX_TYPE = #{indexType,jdbcType=VARCHAR},
             INDEX_DATE = #{indexDate,jdbcType=DATE},
             INDEX_FILE = #{indexFile,jdbcType=VARCHAR},

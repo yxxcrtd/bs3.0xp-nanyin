@@ -40,7 +40,7 @@
       values(#{id,jdbcType=VARCHAR},
             #{priId,jdbcType=VARCHAR},
             #{indexName,jdbcType=VARCHAR},
-            #{indexValue,jdbcType=VARCHAR},
+            #{indexValue,jdbcType=CLOB},
             to_date(#{indexDate}, 'yyyy-MM-dd'),
             #{indexType,jdbcType=VARCHAR},
           	#{indexFile,jdbcType=VARCHAR},
@@ -69,7 +69,7 @@
                 INDEX_DATE = to_date(#{indexDate}, 'yyyy-MM-dd'),
             </if>
             <if test="indexValue != null" >
-                INDEX_VALUE = #{indexValue,jdbcType=VARCHAR},
+                INDEX_VALUE = #{indexValue,jdbcType=CLOB},
             </if>
             <if test="indexFile != null" >
                 INDEX_FILE = #{indexFile,jdbcType=VARCHAR},
