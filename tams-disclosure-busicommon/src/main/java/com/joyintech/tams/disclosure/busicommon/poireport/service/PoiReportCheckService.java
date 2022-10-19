@@ -44,7 +44,7 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ReportCheckService {
+public class PoiReportCheckService {
 
 	@Autowired
 	private ReportInfoMapper reportInfoMapper;
