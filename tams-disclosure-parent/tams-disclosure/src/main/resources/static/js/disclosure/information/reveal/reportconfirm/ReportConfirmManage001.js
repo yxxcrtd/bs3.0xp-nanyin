@@ -633,6 +633,17 @@ $(function () {
 			});
 		return;
 	};
+	function addrule1() {
+		Joyin.dialog("产品选择", basePath + "disclosure/information/config/disprodplanmanage/DisProdPlanManage004/init", "80%", "80%",
+			{}, function () {
+				var finprodIds = $('#finprodIds').data('finprodIds');
+				if (finprodIds.length == 0) {
+					return;
+				}
+				$('#prodId').textSelect('setValue', finprodIds);
+			});
+		return;
+	};
 	 
 	/**
 	 * 
@@ -643,6 +654,7 @@ $(function () {
     	var searchDateEnd = $('#searchDateEnd').val();
 		editFlag=$('#editFlag').val();
 		$('#ReportConfirmManage001_btn_treeAdd').click(addrule);
+		$('#ReportConfirmManage001_btn_treeChildrenAdd').click(addrule1);
     	if($('#confromPage').val() == '01'){
     		if(searchDateEnd && searchDateStart) {
     			$('#revealEndDate').val(searchDateStart + ' - ' + searchDateEnd);
