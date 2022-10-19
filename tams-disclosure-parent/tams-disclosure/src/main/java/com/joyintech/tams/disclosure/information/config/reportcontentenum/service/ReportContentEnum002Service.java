@@ -503,15 +503,25 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 //			}
 //		}
 		String[] arrayProd = prods.split(",");
-		if ( arrayProd.length>0 )
+		if ( arrayProd.length>0 ) {
 			for ( String s:arrayProd) {
 				for ( ReportContentEnum002Dto d:list ) {
-					if ( d.getIndexDetail()!=null && d.getIndexDetail().contains(s+",") ) {
-						duplicatedProds.append(s+",");
+					String indexDetail = d.getIndexDetail();
+					if ( indexDetail!=null ) {
+						indexDetail = indexDetail+",";//末尾增加一个逗号，防止判断错误
+						if( indexDetail.contains(s+",") ) {  //重复
+							duplicatedProds.append(s+",");
+							break;
+						}
 					}
 				}
 			}
-		
-		return duplicatedProds.toString();
+		}
+		String ret = duplicatedProds.toString();
+		if ( ret!=null ) {
+			if ( ret.endsWith(",")) 
+				ret = ret.substring(0,ret.length()-1);
+		}
+		return ret;
 	}
 }

@@ -93,32 +93,11 @@
 						<textarea id="indexDetail" name="indexDetail" style="width:480px; min-height: 180px!important;;"
 								  data-th-text="${entity?.indexDetail}" class="layui-textarea"
 								  placeholder="请输入内容"
-								  data-th-placeholder="#{SysCommon.placeholder}"></textarea>
+								  data-th-placeholder="#{SysCommon.placeholder}"
+								  readonly=true></textarea>
 				</div>
 			</div>
 		</div>
-		<!-- <div class="layui-form-item">
-            <div class="layui-inline layui-col-md8">
-                <label class="layui-form-label form-lable" style="width: 180px;">
-                    <i class="iconfont must" style="display: inline;">*</i> 指标类型
-                </label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="indexType" name="indexType"
-                        placeholder="请输入内容" class="layui-input form-input input-checkbox"
-                        data-result="[{&quot;id&quot;:&quot;01&quot;,&quot;text&quot;:&quot;录入型&quot;,&quot;col&quot;:&quot;&quot;},
-                                                 {&quot;id&quot;:&quot;02&quot;,&quot;text&quot;:&quot;附件型&quot;,&quot;col&quot;:&quot;&quot;}]"
-                        data-th-initValue='${type}'>
-                </div>
-            </div>
-        </div> -->
-		<!-- <div class="layui-form-item">
-            <div class="layui-inline layui-col-md8">
-                <label class="layui-form-label form-lable "> </label>
-                <div class="layui-input-inline input-inline">
-                    <a id="uploadFile" href="#" style="margin-left: 350px;"></a>
-                </div>
-            </div>
-        </div> -->
 
 		<div class="layui-form-item">
 			<div class="layui-inline layui-col-md8" style="width: 100%;">
@@ -131,11 +110,6 @@
 								  placeholder="请输入内容"
 								  data-th-placeholder="#{SysCommon.placeholder}"></textarea>
 				</div>
-				<!-- <div class="upload"
-                    th:disabled="${pageModel} eq ${pageModelReference}" id="test1"
-                    style="display: none;"
-                    data-option="{allowFileType: 'xls|xlsx', type: 'drag', callback: 'FileCommon.onUploaded'}">
-                </div> -->
 			</div>
 		</div>
 		<div class="layui-col-md11" style="margin: 50px;">
