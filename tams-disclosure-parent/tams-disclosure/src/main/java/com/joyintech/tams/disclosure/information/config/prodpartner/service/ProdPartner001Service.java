@@ -176,6 +176,8 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
         joyinDFSTemplate.fetch(suf);
         AjaxResult wr = new AjaxResult();
         List<JoyinMessage> joyinMessages = new ArrayList<>();
+        List<ProdPartnerDto> data;
+        List<ProdPartnerDto> entities=null;
         //获取系统参数：单次导入的最大条数 todo:添加系统参数
         int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
         //todo:数据量较大时，操作耗时时间过长
@@ -188,9 +190,12 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                     MessageType.确认消息);
             joyinMessages.add(ms);
         }
-
-        List<ProdPartnerDto> entities = this.converToDto(dataList);
-        List<ProdPartnerDto> data = this.selectProdPartnerByKey(entities);
+        try {
+            entities = this.converToDto(dataList);
+            data = this.selectProdPartnerByKey(entities);
+        }catch (Exception e){
+            data=null;
+        }
         if (data != null && data.size() > 0) {
             Map<String, List<ProdPartnerDto>> map = entities.stream().collect(
                     JoyinCollectors.groupingBy(x ->
