@@ -147,14 +147,11 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable" data-th-text="业绩比较基准">业绩比较基准</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" id="perBase" name="perBase" onkeyup="if(this.value < 0){
-                                                          this.value= 0;
-                                                         }else if (value >= 1000000000000000){
-                                                             this.value= '';
-                                                         }else{
-                                                    this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.perBase}'
-                           class="layui-input form-input text-number" data-textrange='2'  maxlength=18
-                           placeholder="请输入内容">
+                    <input type="text" name="perBase" id="perBase"
+                           required
+                           data-th-value="${entity?.perBase}"
+                           class="layui-input form-input" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}">
                 </div>
             </div>
             <div class="form-inline-wrap">

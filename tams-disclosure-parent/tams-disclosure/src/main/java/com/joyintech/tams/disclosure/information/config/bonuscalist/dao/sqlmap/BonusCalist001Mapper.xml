@@ -56,7 +56,7 @@
         values (#{bonusListId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodRegistNo,jdbcType=VARCHAR},
             #{prodAssets,jdbcType=NUMERIC}, #{prodEndBalance,jdbcType=NUMERIC}, #{unitNum,jdbcType=NUMERIC},
             #{lastProfitBaseDate,jdbcType=TIMESTAMP}, #{profitBaseDate,jdbcType=TIMESTAMP},
-            #{runDays,jdbcType=NUMERIC}, #{avaiProfit,jdbcType=NUMERIC}, #{perBase,jdbcType=NUMERIC},
+            #{runDays,jdbcType=NUMERIC}, #{avaiProfit,jdbcType=NUMERIC}, #{perBase,jdbcType=VARCHAR},
             #{perBaseProfit,jdbcType=NUMERIC}, #{exceed,jdbcType=NUMERIC}, #{perFee,jdbcType=NUMERIC},
             #{disBonusMoney,jdbcType=NUMERIC}, #{unitBonus,jdbcType=NUMERIC}, #{yield,jdbcType=NUMERIC},
             #{msg,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
@@ -118,7 +118,7 @@
                 AVAI_PROFIT = #{avaiProfit,jdbcType=NUMERIC},
             </if>
             <if test="perBase != null" >
-                PER_BASE = #{perBase,jdbcType=NUMERIC},
+                PER_BASE = #{perBase,jdbcType=VARCHAR},
             </if>
             <if test="perBaseProfit != null" >
                 PER_BASE_PROFIT = #{perBaseProfit,jdbcType=NUMERIC},
@@ -170,7 +170,7 @@
             PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=TIMESTAMP},
             RUN_DAYS = #{runDays,jdbcType=NUMERIC},
             AVAI_PROFIT = #{avaiProfit,jdbcType=NUMERIC},
-            PER_BASE = #{perBase,jdbcType=NUMERIC},
+            PER_BASE = #{perBase,jdbcType=VARCHAR},
             PER_BASE_PROFIT = #{perBaseProfit,jdbcType=NUMERIC},
             EXCEED = #{exceed,jdbcType=NUMERIC},
             PER_FEE = #{perFee,jdbcType=NUMERIC},

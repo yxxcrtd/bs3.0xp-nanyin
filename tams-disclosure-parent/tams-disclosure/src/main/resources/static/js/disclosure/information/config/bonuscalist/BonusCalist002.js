@@ -56,6 +56,7 @@ $(function() {
             var prodName = $('#prodId').select2("data")[0].text;
             $('#prodRegistNo').textSelect('setValue',data);
             // $('#prodName').textSelect('setValue',prodName);
+            $('#prodName').val(prodName).trigger('change');
         });
         $('#prodRegistNo').prop("disabled",true);
         if (pageModel == PAGE_MODEL_EDIT){

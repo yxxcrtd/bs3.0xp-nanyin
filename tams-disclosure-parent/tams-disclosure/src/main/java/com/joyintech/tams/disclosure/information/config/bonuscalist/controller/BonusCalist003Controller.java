@@ -8,6 +8,8 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dao.BonusReportMapper;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dto.BonusReportDto;
 import com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto;
 import com.joyintech.tams.disclosure.information.config.bonuscalist.service.BonusCalist001Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @PageId("BonusCalist003")
@@ -29,6 +32,9 @@ public class BonusCalist003Controller extends BaseController {
     @Autowired
     private BonusCalist001Service bonusCalist001Service;
 
+    @Autowired
+    private BonusReportMapper bonusReportMapper;
+
     @Override
     public String init(Model model){
         return super.init(model);
@@ -37,8 +43,7 @@ public class BonusCalist003Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Validated({
-            ValidateGroupEdit.class}) BonusCalist001Dto dto, BindingResult result) {
+    public AjaxResult check(@RequestBody BonusCalist001Dto dto, BindingResult result) {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -47,11 +52,24 @@ public class BonusCalist003Controller extends BaseController {
         List<BonusCalist001Dto> list = bonusCalist001Service.selectBonusInfoByKey(paramList);
         if (list!=null && list.size()>0) {
             AjaxResult ajax=new AjaxResult();
-            ajax.setStatuCode(500);
             ajax.setMessage("计算数据已存在，是否覆盖！", MessageType.确认消息);
             return ajax;
         }
-        return commonCheck(result, dto.getOperateType());
+        HashMap map = new HashMap();
+        map.put("prodId",dto.getProdId());
+        map.put("reportDate",dto.getProfitBaseDate());
+        List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(map);
+        for (BonusReportDto report : listReport) {
+            if (report.getLastSettDate()==null|| report.getAssetsValue()==null||report.getCapital()==null||
+                report.getSettDate()==null|| report.getAchievementBasisProp()==null||report.getDistributableProfit()==null||
+                report.getExcessAchievementProp()==null || report.getAchievementBasis()==null){
+                AjaxResult ajax=new AjaxResult();
+                ajax.setStatuCode(500);
+                ajax.setMessage("相关数据缺失!",MessageType.错误消息);
+                return ajax;
+            }
+        }
+            return commonCheck(result, dto.getOperateType());
     }
 
     @ResponseBody

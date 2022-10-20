@@ -67,7 +67,7 @@ public class DisBonusList extends BaseEntity {
      * 业绩比较基准
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal perBase;
+    private String perBase;
 
     /**
      * 业绩比较基准收益
@@ -285,7 +285,7 @@ public class DisBonusList extends BaseEntity {
      * 取得 业绩比较基准
      * @return 业绩比较基准
      */
-    public BigDecimal getPerBase() {
+    public String getPerBase() {
         return perBase;
     }
 
@@ -293,7 +293,7 @@ public class DisBonusList extends BaseEntity {
      * 设置 业绩比较基准
      * @param perBase 业绩比较基准
      */
-    public void setPerBase(BigDecimal perBase) {
+    public void setPerBase(String perBase) {
         this.perBase = perBase;
     }
 
