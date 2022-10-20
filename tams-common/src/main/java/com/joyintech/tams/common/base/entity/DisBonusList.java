@@ -66,7 +66,6 @@ public class DisBonusList extends BaseEntity {
     /**
      * 业绩比较基准
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
     private String perBase;
 
     /**

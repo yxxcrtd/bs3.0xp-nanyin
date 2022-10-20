@@ -10,7 +10,6 @@ $(function() {
      * @returns
      */
     function saveOrSubmit(operateType) {
-        debugger;
         var object = $.serializeToObject('#submitForm');
         object.operateType = operateType;
         object.pageModel = pageModel;
