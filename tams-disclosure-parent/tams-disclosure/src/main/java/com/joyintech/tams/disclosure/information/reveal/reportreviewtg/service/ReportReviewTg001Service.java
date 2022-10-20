@@ -62,11 +62,11 @@ public class ReportReviewTg001Service extends CommonExportService<ReportReview00
             param.put("reportTypeArr",reportTypeArr);
         }
 
-        String reviewStatus=(String) param.get("reviewStatus");
-        String[] reviewStatusArr = null;
-        if(StringUtil.isNotEmpty(reviewStatus)){
-            reviewStatusArr = reviewStatus.split(",");
-            param.put("reviewStatusArr",reviewStatusArr);
+        String reviewTgStatus=(String) param.get("reviewTgStatus");
+        String[] reviewTgStatusArr = null;
+        if(StringUtil.isNotEmpty(reviewTgStatus)){
+            reviewTgStatusArr = reviewTgStatus.split(",");
+            param.put("reviewTgStatusArr",reviewTgStatusArr);
         }
 
         String reviewTgUser=(String) param.get("reviewTgUser");
