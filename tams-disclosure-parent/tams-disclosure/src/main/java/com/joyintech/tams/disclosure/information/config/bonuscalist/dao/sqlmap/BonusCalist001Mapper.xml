@@ -42,6 +42,7 @@
     </delete>
 
 
+
     <insert id="insert">
          insert into DIS_BONUS_LIST (BONUS_LIST_ID, PROD_ID, PROD_REGIST_NO,
             PROD_ASSETS, PROD_END_BALANCE, UNIT_NUM,
@@ -218,4 +219,11 @@
            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
         where BONUS_LIST_ID = #{bonusListId,jdbcType=VARCHAR}
     </update>
+
+    <delete id="deleteByBusKey">
+        delete * from DIS_BONUS_LIST
+        where
+        PROD_ID =  #{prodId,jdbcType=VARCHAR} and
+        PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}
+    </delete>
 </mapper>

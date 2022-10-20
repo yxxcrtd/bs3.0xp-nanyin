@@ -10,10 +10,14 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dao.BonusReportMapper;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dto.BonusReportDto;
+import com.joyintech.tams.disclosure.busicommon.rptdata.service.BonusReportDataService;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.bonuscalist.dao.BonusCalist001Mapper;
 import com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto;
@@ -25,6 +29,8 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +49,14 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
     private ProElementAdjMapper proElementAdjMapper;
 
     @Autowired
+    private BonusReportMapper bonusReportMapper;
+
+    @Autowired
     private JoyinDFSTemplate joyinDFSTemplate;
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(BonusReportDataService.class);
 
     public Page<BonusCalist001Dto> selectForPage(Map<String, Object> param) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
@@ -410,5 +423,79 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
 
     public int updateStatus(BonusCalist001Dto bonusCalist001Dto) {
          return bonusCalist001Mapper.updateStatus(bonusCalist001Dto);
+    }
+
+    public int calculateData(BonusCalist001Dto dto) {
+        HashMap map = new HashMap();
+        map.put("prodId",dto.getProdId());
+        map.put("reportDate",dto.getProfitBaseDate());
+        //结果数据
+//        List<Map<String, Object>> listResult = new ArrayList<>();
+        List<BonusCalist001Dto> listResult = new ArrayList<>();
+        //入库集合元素
+        BonusCalist001Dto bonusCalist001Dto = new BonusCalist001Dto();
+        List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(map);
+        for (BonusReportDto report : listReport) {  //指定产品后，只有一条数据
+            // 上一分配基准日
+            if ("01".equals(report.getIssuingWay())) { // 开放式
+                DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(map);
+                if (plan == null) { // 第一个计划
+                    bonusCalist001Dto.setLastProfitBaseDate(report.geteDate());
+                } else {
+                    bonusCalist001Dto.setLastProfitBaseDate(plan.getSettDate());
+                }
+            } else {
+                bonusCalist001Dto.setLastProfitBaseDate(report.geteDate());
+            }
+
+            // 运行天数
+            if (report.getLastSettDate().compareTo(report.geteDate()) == 0) {
+                bonusCalist001Dto.setRunDays((short)(com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate() ) + 1));
+            } else {
+                bonusCalist001Dto.setRunDays((short)com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate() ));
+            }
+            //数据状态
+            bonusCalist001Dto.setDataStatus("A");
+            try {
+                // 可供分配利润
+                bonusCalist001Dto.setAvaiProfit(report.getAssetsValue().subtract(report.getCapital()) );
+
+                // 业绩比较基准收益
+                BigDecimal abProfit =
+                        report.getCapital().multiply(report.getAchievementBasisProp())
+                                .multiply(new BigDecimal(365))
+                                .divide(new BigDecimal(report.getRunDays()),20,BigDecimal.ROUND_DOWN);
+                bonusCalist001Dto.setPerBaseProfit(
+                        report.getCapital().multiply(report.getAchievementBasisProp())
+                                .multiply(new BigDecimal(365))
+                                .divide(new BigDecimal(report.getRunDays()),2,BigDecimal.ROUND_DOWN) );
+
+                // 超出收益
+                BigDecimal esProfit = report.getDistributableProfit().subtract(abProfit);
+                bonusCalist001Dto.setExceed(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
+
+                // 业绩报酬
+                BigDecimal floatFee = esProfit.multiply(report.getExcessAchievementProp());
+                bonusCalist001Dto.setPerFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
+
+                // 应分配利润
+                bonusCalist001Dto.setDisBonusMoney(report.getDistributableProfit().subtract(report.getFloatFee()));
+
+                // 单位分红
+                bonusCalist001Dto.setUnitBonus(
+                        report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
+
+                // 年化收益率
+                BigDecimal ddProfit = report.getDistributableProfit().subtract(floatFee);
+                bonusCalist001Dto.setYield(
+                        ddProfit.multiply(new BigDecimal(365))
+                                .divide(  new BigDecimal(report.getRunDays()).multiply(report.getCapital()), 4, BigDecimal.ROUND_DOWN));
+            } catch(Exception e) {
+                logger.error("获取分红计算清单异常。",e);
+            }
+//            listResult.add(com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils.bean2Map(report));
+        }
+              bonusCalist001Mapper.deleteByBusKey(bonusCalist001Dto);
+              return bonusCalist001Mapper.insert(bonusCalist001Dto);
     }
 }

@@ -29,4 +29,6 @@ public interface BonusCalist001Mapper {
     List<SelectOptionDto> getProdId(Map<String, Object> map);
 
     int updateStatus(BonusCalist001Dto bonusCalist001Dto);
+
+    int deleteByBusKey(BonusCalist001Dto bonusCalist001Dto);
 }
