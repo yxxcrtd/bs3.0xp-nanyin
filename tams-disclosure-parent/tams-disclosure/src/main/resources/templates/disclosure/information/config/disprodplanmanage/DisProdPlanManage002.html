@@ -13,7 +13,9 @@
 		<div class="layui-form-item" style="display: none;">
 <!--			<input id="operateType" name="operateType" class="layui-input form-input" placeholder="请输入"  data-th-value="${entity?.operateType}"> -->
 			<input id="prodPlanId" name="prodPlanId" class="layui-input form-input" placeholder="主键id"  data-th-value="${entity?.prodPlanId}">
-			<input id="dataStatus" name="dataStatus" class="layui-input form-input"  data-th-value="${entity?.dataStatus}">
+			<input type="hidden" id="dataStatus" name="dataStatus" class="layui-input form-input"  data-th-value="${entity?.dataStatus}">
+<!--			<input type="hidden" id="operationStartDateO" name="operationStartDateO" data-th-value="${entity?.operationStartDateO}">-->
+			<input type="text" id="operationStartDateO" name="operationStartDateO"  data-th-value='${#dates.format(entity?.operationStartDateO,"yyyy-MM-dd")}' style = "display: none">
 
 <!--			<input id="priId"  name="priId" class="layui-input form-input" data-th-value="${priId}" placeholder="主键id">-->
 		</div>

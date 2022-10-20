@@ -92,7 +92,7 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 	/**
 	 * 选中的数据
 	 */
-	private transient List<DisProdPlanManage002Dto> selectedItem;
+	private  List<DisProdPlanManage002Dto> selectedItem;
 	/**
 	 * 元素ID
 	 */
@@ -288,5 +288,16 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 
 	public void setExcelNum(String excelNum) {
 		this.excelNum = excelNum;
+	}
+
+	//修改前 运作起始日
+	private Date operationStartDateO;
+
+	public Date getOperationStartDateO() {
+		return operationStartDateO;
+	}
+
+	public void setOperationStartDateO(Date operationStartDateO) {
+		this.operationStartDateO = operationStartDateO;
 	}
 }
