@@ -290,6 +290,9 @@ comment on column DIS_BONUS_LIST.CREATE_TIME is '创建时间';
 comment on column DIS_BONUS_LIST.UPDATE_USER is '更新人';
 comment on column DIS_BONUS_LIST.UPDATE_TIME is '更新时间';
 comment on column DIS_BONUS_LIST.CREATE_DEPT is '创建部门';
+
+--修改产品分红计算表字段 ‘业绩比较基准’ 的数据类型
+alter table DIS_BONUS_LIST modify PER_BASE VARCHAR2(128);
 -- 产品分红计算 建表语句 add by sunjie 2022-10-19 end
 
 
