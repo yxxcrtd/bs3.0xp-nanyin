@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.bonuscalist.dao.BonusCalist001Mapper">
+
+    <sql id="Base_Column_List" >
+        BONUS_LIST_ID BONUS_LIST_ID, PROD_ID prodId, PROD_REGIST_NO PROD_REGIST_NO, PROD_ASSETS PROD_ASSETS,
+        PROD_END_BALANCE PROD_END_BALANCE, UNIT_NUM UNIT_NUM, LAST_PROFIT_BASE_DATE LAST_PROFIT_BASE_DATE,
+        PROFIT_BASE_DATE PROFIT_BASE_DATE, RUN_DAYS RUN_DAYS, AVAI_PROFIT AVAI_PROFIT, PER_BASE PER_BASE,
+        PER_BASE_PROFIT PER_BASE_PROFIT, EXCEED EXCEED, PER_FEE PER_FEE, DIS_BONUS_MONEY DIS_BONUS_MONEY,
+        UNIT_BONUS UNIT_BONUS, YIELD YIELD, MSG MSG, DATA_STATUS dataStatus, DATA_SOURCE DATA_SOURCE,
+        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
+        CREATE_DEPT CREATE_DEPT
+    </sql>
+
+    <select id="select"
+            resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
+             select
+                  <include refid="com.joyintech.tams.common.base.dao.DisBonusListMapper.Base_Column_List" />,
+                  TO_CHAR(UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+             from DIS_BONUS_LIST
+             <where>
+                 <if test="prodIdList != null and prodIdList.size() > 0">
+                     AND PROD_ID in
+                     <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
+                         #{item}
+                     </foreach>
+                 </if>
+                 <if test="dataStatus != null and !dataStatus.equals('')">
+                     AND DATA_STATUS=#{dataStatus}
+                 </if>
+                 <if test="profitBaseDate != null and profitBaseDate != ''">
+                     AND PROFIT_BASE_DATE = to_date(#{profitBaseDate,jdbcType=DATE},'yyyy-MM-dd')
+                 </if>
+             </where>
+
+    </select>
+
+
+    <delete id="deleteByKey">
+        update DIS_BONUS_LIST set DATA_STATUS = 'D'
+        where BONUS_LIST_ID = #{bonusListId,jdbcType=VARCHAR}
+    </delete>
+
+
+    <insert id="insert">
+         insert into DIS_BONUS_LIST (BONUS_LIST_ID, PROD_ID, PROD_REGIST_NO,
+            PROD_ASSETS, PROD_END_BALANCE, UNIT_NUM,
+            LAST_PROFIT_BASE_DATE, PROFIT_BASE_DATE,
+            RUN_DAYS, AVAI_PROFIT, PER_BASE,
+            PER_BASE_PROFIT, EXCEED, PER_FEE,
+            DIS_BONUS_MONEY, UNIT_BONUS, YIELD,
+            MSG, DATA_STATUS, DATA_SOURCE,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, CREATE_DEPT)
+        values (#{bonusListId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodRegistNo,jdbcType=VARCHAR},
+            #{prodAssets,jdbcType=NUMERIC}, #{prodEndBalance,jdbcType=NUMERIC}, #{unitNum,jdbcType=NUMERIC},
+            #{lastProfitBaseDate,jdbcType=TIMESTAMP}, #{profitBaseDate,jdbcType=TIMESTAMP},
+            #{runDays,jdbcType=NUMERIC}, #{avaiProfit,jdbcType=NUMERIC}, #{perBase,jdbcType=NUMERIC},
+            #{perBaseProfit,jdbcType=NUMERIC}, #{exceed,jdbcType=NUMERIC}, #{perFee,jdbcType=NUMERIC},
+            #{disBonusMoney,jdbcType=NUMERIC}, #{unitBonus,jdbcType=NUMERIC}, #{yield,jdbcType=NUMERIC},
+            #{msg,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+    </insert>
+
+
+    <select id="selectBonusCaList"
+            resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
+        select
+        A.PROD_ID,
+        to_char(A.PROFIT_BASE_DATE,'yyyy/mm/dd') profitBaseDateStr
+        from DIS_BONUS_LIST A
+        <where>
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.PROFIT_BASE_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
+                (#{item.prodId},#{item.profitBaseDateStr},'E')
+            </foreach>
+        </where>
+    </select>
+    <select id="selectByBusPK"
+            resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
+         select
+           <include refid="com.joyintech.tams.common.base.dao.DisBonusListMapper.Base_Column_List" />
+         from DIS_BONUS_LIST
+         where
+               PROD_ID =  #{prodId,jdbcType=VARCHAR} and
+               PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}
+    </select>
+
+    <update id="updateByBusKey">
+        update DIS_BONUS_LIST
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistNo != null" >
+                PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR},
+            </if>
+            <if test="prodAssets != null" >
+                PROD_ASSETS = #{prodAssets,jdbcType=NUMERIC},
+            </if>
+            <if test="prodEndBalance != null" >
+                PROD_END_BALANCE = #{prodEndBalance,jdbcType=NUMERIC},
+            </if>
+            <if test="unitNum != null" >
+                UNIT_NUM = #{unitNum,jdbcType=NUMERIC},
+            </if>
+            <if test="lastProfitBaseDate != null" >
+                LAST_PROFIT_BASE_DATE = #{lastProfitBaseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="profitBaseDate != null" >
+                PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="runDays != null" >
+                RUN_DAYS = #{runDays,jdbcType=NUMERIC},
+            </if>
+            <if test="avaiProfit != null" >
+                AVAI_PROFIT = #{avaiProfit,jdbcType=NUMERIC},
+            </if>
+            <if test="perBase != null" >
+                PER_BASE = #{perBase,jdbcType=NUMERIC},
+            </if>
+            <if test="perBaseProfit != null" >
+                PER_BASE_PROFIT = #{perBaseProfit,jdbcType=NUMERIC},
+            </if>
+            <if test="exceed != null" >
+                EXCEED = #{exceed,jdbcType=NUMERIC},
+            </if>
+            <if test="perFee != null" >
+                PER_FEE = #{perFee,jdbcType=NUMERIC},
+            </if>
+            <if test="disBonusMoney != null" >
+                DIS_BONUS_MONEY = #{disBonusMoney,jdbcType=NUMERIC},
+            </if>
+            <if test="unitBonus != null" >
+                UNIT_BONUS = #{unitBonus,jdbcType=NUMERIC},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=NUMERIC},
+            </if>
+            <if test="msg != null" >
+                MSG = #{msg,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where
+        PROD_ID =  #{prodId,jdbcType=VARCHAR} and
+        PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}
+    </update>
+
+    <update id="updateByKey">
+        update DIS_BONUS_LIST
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR},
+            PROD_ASSETS = #{prodAssets,jdbcType=NUMERIC},
+            PROD_END_BALANCE = #{prodEndBalance,jdbcType=NUMERIC},
+            UNIT_NUM = #{unitNum,jdbcType=NUMERIC},
+            LAST_PROFIT_BASE_DATE = #{lastProfitBaseDate,jdbcType=TIMESTAMP},
+            PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=TIMESTAMP},
+            RUN_DAYS = #{runDays,jdbcType=NUMERIC},
+            AVAI_PROFIT = #{avaiProfit,jdbcType=NUMERIC},
+            PER_BASE = #{perBase,jdbcType=NUMERIC},
+            PER_BASE_PROFIT = #{perBaseProfit,jdbcType=NUMERIC},
+            EXCEED = #{exceed,jdbcType=NUMERIC},
+            PER_FEE = #{perFee,jdbcType=NUMERIC},
+            DIS_BONUS_MONEY = #{disBonusMoney,jdbcType=NUMERIC},
+            UNIT_BONUS = #{unitBonus,jdbcType=NUMERIC},
+            YIELD = #{yield,jdbcType=NUMERIC},
+            MSG = #{msg,jdbcType=VARCHAR},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BONUS_LIST_ID = #{bonusListId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByPrimaryKey"
+            resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.DisBonusListMapper.Base_Column_List" />
+        from DIS_BONUS_LIST
+        where BONUS_LIST_ID = #{bonusListId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_RE object
+        FROM
+        rep_prod_info
+        <where>
+            REP_PROD_TYPE in ('02','03')
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+    </select>
+
+    <update id="updateStatus">
+        update
+            DIS_BONUS_LIST
+        set
+           DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+        where BONUS_LIST_ID = #{bonusListId,jdbcType=VARCHAR}
+    </update>
+</mapper>

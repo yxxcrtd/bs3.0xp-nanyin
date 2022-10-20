@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="BonusCalist001.xlsx" name="分红计算清单">
+    <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
+        <Row>
+            <Cell order="1" name="数据状态">dataStatusStr</Cell>
+            <Cell order="2" name="子产品代码">prodId</Cell>
+            <Cell order="3" name="产品登记编码">prodRegistNo</Cell>
+            <Cell order="4" name="产品名称">prodName</Cell>
+            <Cell order="5" name="产品资产净值">prodAssets</Cell>
+            <Cell order="6" name="产品期末余额(份额)">prodEndBalance</Cell>
+            <Cell order="7" name="单位净值">unitNum</Cell>
+            <Cell order="8" name="上一收益分配基准日">lastProfitBaseDate</Cell>
+            <Cell order="9" name="本期收益分配基准日">profitBaseDate</Cell>
+            <Cell order="10" name="运行天数">runDays</Cell>
+            <Cell order="11" name="可供分配利润">avaiProfit</Cell>
+            <Cell order="12" name="业绩比较基准">perBase</Cell>
+            <Cell order="13" name="业绩比较基准收益">perBaseProfit</Cell>
+            <Cell order="14" name="超出部分">exceed</Cell>
+            <Cell order="15" name="业绩报酬">perFee</Cell>
+            <Cell order="16" name="应分配分红金额">disBonusMoney</Cell>
+            <Cell order="17" name="单位分红">unitBonus</Cell>
+            <Cell order="18" name="收益率">yield</Cell>
+            <Cell order="19" name="错误信息">msg</Cell>
+            <Cell order="20" name="更新时间">updateTimeStr</Cell>
+            <Cell order="21" name="更新人">updateUser</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

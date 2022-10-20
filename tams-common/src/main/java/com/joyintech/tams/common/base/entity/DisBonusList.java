@@ -90,7 +90,7 @@ public class DisBonusList extends BaseEntity {
     /**
      * 应分配分红金额
      */
-    private Long disBonusMoney;
+    private BigDecimal disBonusMoney;
 
     /**
      * 单位分红
@@ -349,7 +349,7 @@ public class DisBonusList extends BaseEntity {
      * 取得 应分配分红金额
      * @return 应分配分红金额
      */
-    public Long getDisBonusMoney() {
+    public BigDecimal getDisBonusMoney() {
         return disBonusMoney;
     }
 
@@ -357,7 +357,7 @@ public class DisBonusList extends BaseEntity {
      * 设置 应分配分红金额
      * @param disBonusMoney 应分配分红金额
      */
-    public void setDisBonusMoney(Long disBonusMoney) {
+    public void setDisBonusMoney(BigDecimal disBonusMoney) {
         this.disBonusMoney = disBonusMoney;
     }
 

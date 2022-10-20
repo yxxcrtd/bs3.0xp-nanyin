@@ -1980,6 +1980,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_产品资产组合情况维护(DictCode.共通业务类型,"DIS06","产品资产组合情况维护"),
     共通业务类型_科目余额信息维护(DictCode.共通业务类型,"DISK","科目余额信息维护"),
     共通业务类型_产品业绩比较基准维护(DictCode.共通业务类型,"DISC","产品业绩比较基准维护"),
+    共通业务类型_产品分红计算清单维护(DictCode.共通业务类型,"DISB","产品分红计算清单维护"),
 
     信披_数据来源_系统新建(DictCode.信披_数据来源,"01","系统新建"),
     信披_数据来源_EXCEL导入(DictCode.信披_数据来源,"02","EXCEL导入"),

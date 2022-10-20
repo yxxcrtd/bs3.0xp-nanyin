@@ -579,56 +579,8 @@
     <update id="update">
         update DIS_NOSTD_CREDITOR
         <set >
-            <if test="prodId != null" >
-                PROD_ID = #{prodId,jdbcType=VARCHAR},
-            </if>
-            <if test="effDate != null" >
-                EFF_DATE = #{effDate,jdbcType=DATE},
-            </if>
-            <if test="effEndDate != null" >
-                EFF_END_DATE = #{effEndDate,jdbcType=DATE},
-            </if>
-            <if test="financier != null" >
-                FINANCIER = #{financier,jdbcType=VARCHAR},
-            </if>
-            <if test="projectNo != null" >
-                PROJECT_NO = #{projectNo,jdbcType=VARCHAR},
-            </if>
-            <if test="projectName != null" >
-                PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
-            </if>
-            <if test="remFinancingPeriod != null" >
-                REM_FINANCING_PERIOD = #{remFinancingPeriod,jdbcType=VARCHAR},
-            </if>
-            <if test="incomeDistribute != null" >
-                INCOME_DISTRIBUTE = #{incomeDistribute,jdbcType=VARCHAR},
-            </if>
-            <if test="trdConstruct != null" >
-                TRD_CONSTRUCT = #{trdConstruct,jdbcType=VARCHAR},
-            </if>
-            <if test="riskInfo != null" >
-                RISK_INFO = #{riskInfo,jdbcType=VARCHAR},
-            </if>
             <if test="dataStatus != null" >
                 DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
-            </if>
-            <if test="dataSource != null" >
-                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
-            </if>
-            <if test="createUser != null" >
-                CREATE_USER = #{createUser,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null" >
-                CREATE_TIME = #{createTime,jdbcType=VARCHAR},
-            </if>
-            <if test="updateUser != null" >
-                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
-            </if>
-            <if test="createDept != null" >
-                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
             </if>
         </set>
         where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
