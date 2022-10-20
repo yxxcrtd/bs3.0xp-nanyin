@@ -169,10 +169,12 @@
             Joyin.confirm("所选数据，审核不通过，现退回？", function(){
                 object.id = JSON.stringify(idList);
                 object.data = JSON.stringify(selArr)
-                console.log(object)
-                Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreviewtg/ReportReviewTg001/returnData', object, function(result) {
-                    table.reload();
+                Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreviewtg/ReportReviewTg001/pushRevealCheck', object, function(result) {
+                    Joyin.ajaxJson(basePath + 'disclosure/information/reveal/reportreviewtg/ReportReviewTg001/returnData', object, function(result) {
+                        table.reload();
+                    });
                 });
+
             });
         }
     };

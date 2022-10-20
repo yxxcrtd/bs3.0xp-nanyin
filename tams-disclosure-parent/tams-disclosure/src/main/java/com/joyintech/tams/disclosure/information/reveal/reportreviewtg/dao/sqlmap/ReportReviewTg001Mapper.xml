@@ -184,6 +184,6 @@
             from REP_REVEAL_REVIEW rrr
         where 1=1
         and rrr.REVEAL_ID=#{id,jdbcType=VARCHAR}
-        and rrr.REVIEW_TG_STATUS !=#{reviewTgStatus,jdbcType=VARCHAR}
+        and ((rrr.REVIEW_TG_STATUS !=#{reviewTgStatus,jdbcType=VARCHAR} and rrr.REVIEW_STATUS='03') or (rrr.REVIEW_STATUS='04'))
     </select>
 </mapper>
