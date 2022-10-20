@@ -26,7 +26,7 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurerea
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.service.InfoDisclosureReadAndGenDetailService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
-import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportCheckService;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportCheckService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum002Mapper;
 import com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper;
@@ -57,7 +57,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 	private PoiReportService poiReportService;
 	
 	@Autowired
-	private ReportCheckService reportCheckService;
+	private PoiReportCheckService reportCheckService;
 
 	@Autowired
 	private InfoDisclosureReadAndGenMapper infoDisclosureReadAndGenMapper;
