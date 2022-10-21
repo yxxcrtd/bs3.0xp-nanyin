@@ -162,15 +162,23 @@ public class MatureReportDataService implements IReportDataService {
 				report.setYearYield(ddProfit.multiply(new BigDecimal(365))
 						.divide( new BigDecimal(report.getRunDays()).multiply(report.getCapital()), 4, BigDecimal.ROUND_DOWN));
 
-	        	accuValue = accuValue.add(report.getUnitProfit());
-	        	custProfit = custProfit.add(report.getDistributedProfit());
+//	        	accuValue = accuValue.add(report.getUnitProfit());
+				//分红计算清单 单位分红累加
+	        	accuValue = accuValue.add(matureReportMapper.getUnitBonus(report.getProdId(),report.getSettDate()));
+
+//	        	custProfit = custProfit.add(report.getDistributedProfit());
+	        	custProfit = custProfit.add(matureReportMapper.getDisBonusMoney(report.getProdId(),report.getSettDate()));
 	        	if ( report.getSettDate().compareTo(settDate)>0 ) { //取最近的分红计划的年化收益率
 	        		settDate = report.getSettDate();
-	        		yearYield = report.getYearYield(); 
+	        		yearYield = report.getYearYield();
+					BigDecimal yield=matureReportMapper.getYield(report.getProdId(),settDate);
+					matureReportDto.setRefYearYield(yield.setScale(2,BigDecimal.ROUND_DOWN).toPlainString() );
 	        	}
 			}
 			matureReportDto.setSumValueAmt(accuValue);
-			matureReportDto.setRefYearYield(yearYield.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN).toPlainString() );
+
+//			matureReportDto.setRefYearYield(yearYield.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN).toPlainString() );
+
 			matureReportDto.setCustProfit(custProfit);
 			
 			//查询所有相关费用，通过主产品查找，如果是子产品id，还要找到主产品id

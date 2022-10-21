@@ -52,5 +52,17 @@
 			and PAY_DATE=#{reportDate,jdbcType=DATE}
 		</if>
     </select>
-    
+    <select id="getYield" resultType="java.math.BigDecimal">
+		select YIELD from DIS_BONUS_LIST where
+		PROD_ID =#{prodId,jdbcType=VARCHAR} AND PROFIT_BASE_DATE = #{setDate,jdbcType=DATE}
+	</select>
+	<select id="getDisBonusMoney" resultType="java.math.BigDecimal">
+		select DIS_BONUS_MONEY from DIS_BONUS_LIST where
+		PROD_ID =#{prodId,jdbcType=VARCHAR} AND PROFIT_BASE_DATE = #{setDate,jdbcType=DATE}
+	</select>
+	<select id="getUnitBonus" resultType="java.math.BigDecimal">
+		select UNIT_BONUS from DIS_BONUS_LIST where
+		PROD_ID =#{prodId,jdbcType=VARCHAR} AND PROFIT_BASE_DATE = #{setDate,jdbcType=DATE}
+	</select>
+
 </mapper>
