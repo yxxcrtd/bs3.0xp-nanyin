@@ -585,7 +585,9 @@ $(function () {
 		var nodes = treeObj.getCheckedNodes();
 		var params = new Array();
 		for (var i = 0; i < nodes.length; i++) {
-			var flag = getParam(nodes[i], params);
+			if ( nodes[i].isParent==null || nodes[i].isParent==false ) //取叶子节点
+			params.push(nodes[i]);
+			//var flag = getParam(nodes[i], params);
 		}
 		if(params.length == 0){
 			Joyin.alert('请选择产品！',2);

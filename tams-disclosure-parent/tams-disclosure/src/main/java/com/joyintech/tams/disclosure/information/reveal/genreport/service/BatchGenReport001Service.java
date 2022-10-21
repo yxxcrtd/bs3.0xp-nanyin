@@ -184,7 +184,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 		});
 		
 		//对prodInfoNodes进行过滤
-		prodInfoNodes = prodInfoNodes.stream().filter(e -> prodsStr.contains(e.getId())).collect(Collectors.toList());
+		//prodInfoNodes = prodInfoNodes.stream().filter(e -> prodsStr.contains(e.getId())).collect(Collectors.toList());
 		
 		List<TreeNode> listParent2 = new ArrayList<>();
 		
@@ -216,7 +216,6 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
                 treeDto.setName(map_1.getItemValue());
                 treeDto.setpId("");
                 treeDto.setOpen(true);
-                treeDto.setParent(true);
                 parentNodes.add(treeDto);
                 param.put("prodStatus",map_1.getItemCode());
                 //二级：发行方式
