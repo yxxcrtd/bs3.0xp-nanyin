@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-<div id="FileCommon_DIV" class="pro-module-wrap">
+<div id="FileCommon_DIV" class="pro-module-wrap" data-ignore="true">
     <style>
         .mult-file-btn {
             display: none;
@@ -28,20 +28,27 @@
     <div class="pro-module">
         <h3 class="pro-module-title">
             <span class="title-des">报表/模板附件（word、pdf、zip）<i class="iconfont must" style="display: inline;">*</i></span>
-            <a class="layui-btn layui-btn-sm btn-create" id="multFileBtn"><i class="iconfont icon-found"></i><span>新增附件</span></a>
+            <a class="layui-btn layui-btn-sm btn-create" data-ignore="true" id="multFileBtn"><i class="iconfont icon-found"></i><span>新增附件</span></a>
             <i class="iconfont icon-arrow-down pro-down-icon"></i>
         </h3>
-        <div class="pro-module-item">
+        <div class="pro-module-item" data-ignore="true">
             <div class="layui-form-item" style="padding: 10px 10px 0 10px;text-align:center;">
                 <div class="show">
-                    <div id="fileUploader" class="upload" th:disabled="${pageModel} eq ${pageModelReference}" th:data-data='${attachmentFiles}'
+                    <div id="fileUploader"  data-ignore="true" class="upload" th:data-data='${attachmentFiles}'
                          data-option="{muiltiple: true, autoUpload: true, type: 'list','fileUploader':'fileUploader'}">
                     </div>
+                    <input type="hidden" id="businessId" name="businessId" data-th-value="${businessId}">
+                    <input type="hidden" id="fileType" name="fileType" data-th-value="${fileType}">
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script data-th-inline="javascript" type="text/javascript">
+    var loginUser = /*[[${loginUser}]]*/'';
+</script>
+<script data-th-src="@{/js/disclosure/infoCompliance/layui-special.js}" type="text/javascript">
+</script>
 <script type="text/javascript">
     var FileCommon = function() {
         return {
@@ -61,7 +68,9 @@
 
     $(function() {
         $('#multFileBtn').click(function() {
-            if(FileCommon.getUploadFileInfo().length >=5){
+            var files = FileCommon.getUploadFileInfo();
+            loginUser = loginUser || '';
+            if(files.filter(f => f.createUser===loginUser || !f.createUser).length >=5){
                 Joyin.error("最大上传5个附件。");
                 return;
             } else {

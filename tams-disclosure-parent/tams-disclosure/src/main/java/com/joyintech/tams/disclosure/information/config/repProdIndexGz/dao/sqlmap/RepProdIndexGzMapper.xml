@@ -156,6 +156,7 @@
         <!-- 业务主键匹配 -->
         ON(RIA.PROD_ID = TEMP.PROD_ID
         and RIA.VALUE_DATE = TEMP.VALUE_DATE
+        and RIA.STATUS=TEMP.STATUS
         )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN UPDATE
@@ -170,8 +171,7 @@
         RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
         RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
         RIA.CREATE_USER = TEMP.CREATE_USER,
-        RIA.UPDATE_USER = TEMP.UPDATE_USER,
-        RIA.STATUS = TEMP.STATUS
+        RIA.UPDATE_USER = TEMP.UPDATE_USER
         <!-- 未匹配到则插入 -->
         WHEN NOT MATCHED THEN INSERT(PROD_ID,VALUE_DATE,ASSETS_VALUE,
                                      CAPITAL,UNIT_VALUE,UNIT_VALUE_T,
@@ -210,6 +210,7 @@
         <!-- 业务主键匹配 -->
         ON(RIA.PROD_ID = TEMP.PROD_ID
         and RIA.VALUE_DATE = TEMP.VALUE_DATE
+        and RIA.STATUS=TEMP.STATUS
         )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN UPDATE
@@ -225,8 +226,7 @@
         RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
         RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
         RIA.CREATE_USER = TEMP.CREATE_USER,
-        RIA.UPDATE_USER = TEMP.UPDATE_USER,
-        RIA.STATUS = TEMP.STATUS
+        RIA.UPDATE_USER = TEMP.UPDATE_USER
         <!-- 未匹配到则插入 -->
         WHEN NOT MATCHED THEN INSERT(PROD_ID,VALUE_DATE,ASSETS_VALUE,
                                      CAPITAL,UNIT_VALUE,UNIT_VALUE_T,
@@ -273,11 +273,11 @@
         from REP_PROD_INDEX_GZ T1
         where T1.PROD_ID = #{pProdId,jdbcType=VARCHAR}
         and T1.VALUE_DATE = #{valueDate,jdbcType=DATE}
-        and T1.P_ASSETS = #{pAssets,jdbcType=DECIMAL}
+        <!-- and T1.P_ASSETS = #{pAssets,jdbcType=DECIMAL}
         and T1.ASSETS_VALUE = #{pAssetsValue,jdbcType=DECIMAL}
         and T1.CAPITAL = #{pCapital,jdbcType=DECIMAL}
         and T1.UNIT_VALUE = #{pUnitValue,jdbcType=DECIMAL}
-        and T1.UNIT_VALUE_T = #{pUnitValueT,jdbcType=DECIMAL}
+        and T1.UNIT_VALUE_T = #{pUnitValueT,jdbcType=DECIMAL} -->
         <if test="pWYield != null and ! pWYield.equals('')">
             and T1.W_YIELD = #{pWYield,jdbcType=DECIMAL}
         </if>
