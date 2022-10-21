@@ -75,7 +75,7 @@ public class BonusCalist002Controller extends BaseController {
             if (list!=null && list.size()>0) {
                 AjaxResult ajax=new AjaxResult();
                 ajax.setStatuCode(500);
-                ajax.setMessage("新建数据已存在！", MessageType.警告消息);
+                ajax.setMessage("（子产品代码+收益分配基准日）作为联合主键不可以重复！", MessageType.警告消息);
                 return ajax;
             }
         }
