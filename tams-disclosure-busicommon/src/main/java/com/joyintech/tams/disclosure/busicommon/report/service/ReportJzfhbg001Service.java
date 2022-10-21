@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportKfqzjfhgg001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,9 @@ public class ReportJzfhbg001Service implements IReportDataService {
 
     @Autowired
     private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
+
+    @Autowired
+    private ReportKfqzjfhgg001Mapper reportKfqzjfhgg001Mapper;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -161,7 +165,8 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             //应分配分红金额 = 可供分配利润-业绩报酬
                             BigDecimal mustDistributedProfit = distributableProfit.subtract(floatFee);
                             //单位分红 = 应分配分红金额/产品期末余额（份额），结果截位法保留四位小数
-                            BigDecimal unitValue = mustDistributedProfit.divide(capital, 10, BigDecimal.ROUND_DOWN);
+//                            BigDecimal unitValue = mustDistributedProfit.divide(capital, 10, BigDecimal.ROUND_DOWN);
+                            BigDecimal unitValue = reportKfqzjfhgg001Mapper.getUnitValue(searchParam);
                             //收益分配基准日份额净值（元） = 【单位分红结果截位法保留四位小数】 + 1
                             String unitValueStr = unitValue.setScale(4, BigDecimal.ROUND_DOWN).toString();
                             unitValueStr = "1" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
