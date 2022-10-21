@@ -183,8 +183,8 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             } else {
                 entity.setProdId(" ");
             }
-            if (StringUtil.isNotEmpty(list.get(7))) {
-                entity.setProfitBaseDateStr(list.get(7));
+            if (StringUtil.isNotEmpty(list.get(5))) {
+                entity.setProfitBaseDateStr(list.get(5));
             } else {
                 entity.setProfitBaseDateStr("");
             }
