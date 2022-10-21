@@ -156,6 +156,7 @@
         <!-- 业务主键匹配 -->
         ON(RIA.PROD_ID = TEMP.PROD_ID
         and RIA.VALUE_DATE = TEMP.VALUE_DATE
+        and RIA.STATUS=TEMP.STATUS
         )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN UPDATE
@@ -170,8 +171,7 @@
         RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
         RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
         RIA.CREATE_USER = TEMP.CREATE_USER,
-        RIA.UPDATE_USER = TEMP.UPDATE_USER,
-        RIA.STATUS = TEMP.STATUS
+        RIA.UPDATE_USER = TEMP.UPDATE_USER
         <!-- 未匹配到则插入 -->
         WHEN NOT MATCHED THEN INSERT(PROD_ID,VALUE_DATE,ASSETS_VALUE,
                                      CAPITAL,UNIT_VALUE,UNIT_VALUE_T,
@@ -210,6 +210,7 @@
         <!-- 业务主键匹配 -->
         ON(RIA.PROD_ID = TEMP.PROD_ID
         and RIA.VALUE_DATE = TEMP.VALUE_DATE
+        and RIA.STATUS=TEMP.STATUS
         )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN UPDATE
@@ -225,8 +226,7 @@
         RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
         RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
         RIA.CREATE_USER = TEMP.CREATE_USER,
-        RIA.UPDATE_USER = TEMP.UPDATE_USER,
-        RIA.STATUS = TEMP.STATUS
+        RIA.UPDATE_USER = TEMP.UPDATE_USER
         <!-- 未匹配到则插入 -->
         WHEN NOT MATCHED THEN INSERT(PROD_ID,VALUE_DATE,ASSETS_VALUE,
                                      CAPITAL,UNIT_VALUE,UNIT_VALUE_T,
