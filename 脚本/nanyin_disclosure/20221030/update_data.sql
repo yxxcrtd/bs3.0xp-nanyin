@@ -239,3 +239,29 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('SubBalanceInfoPro001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('SubBalanceInfoPro001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+-- 产品分红到期计划主产品搜索树页面
+delete from SYS_PAGE where PAGE_ID = 'ProdBonusplanManager003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('ProdBonusplanManager003', 'DIS', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager003', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 产品基本信息子产品名称搜索树页面
+delete from SYS_PAGE where PAGE_ID = 'DisProdPlanManage004';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DisProdPlanManage004', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage004', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage004', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 产品分红到期计划子产品名称搜索树页面
+delete from SYS_PAGE where PAGE_ID = 'ProdBonusplanManager004';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('ProdBonusplanManager004', 'DIS', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager004', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager004', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 巨额赎回信息维护子产品名称搜索树页面
+delete from SYS_PAGE where PAGE_ID = 'HugeInfoPro003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('HugeInfoPro003', 'DIS', '/disclosure/information/config/hugeinfopro/HugeInfoPro003', '/disclosure/information/config/hugeinfopro/HugeInfoPro003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 报表确认管理主代码搜索树页面
+delete from SYS_PAGE where PAGE_ID = 'ReportConfirmManage006';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('ReportConfirmManage006', 'DIS', '/disclosure/information/reveal/reportconfirm/ReportConfirmManage006', '/disclosure/information/reveal/reportconfirm/ReportConfirmManage006', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
