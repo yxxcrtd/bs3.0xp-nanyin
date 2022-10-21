@@ -268,3 +268,7 @@ VALUES ('ReportConfirmManage006', 'DIS', '/disclosure/information/reveal/reportc
 --修改产品净值（估值）信息维护主键
 ALTER TABLE REP_PROD_INDEX_GZ DROP CONSTRAINT REP_PROD_INDEX_GZ_PK;
 alter table REP_PROD_INDEX_GZ ADD CONSTRAINT REP_PROD_INDEX_GZ_PK UNIQUE (PROD_ID, VALUE_DATE，STATUS);
+
+--增加手工批量生成报表的菜单:chenxc
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('BatchGenReport001', 'DIS', '/disclosure/information/reveal/genreport/BatchGenReport001', '/disclosure/information/reveal/genreport/BatchGenReport001', 'REPORT_006_002_106', '02', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
+INSERT INTO SYS_MENU(MENU_ID, SYSTEM_CODE, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6', '02', '报表批量生成', 'system', sysdate, 'system', sysdate)

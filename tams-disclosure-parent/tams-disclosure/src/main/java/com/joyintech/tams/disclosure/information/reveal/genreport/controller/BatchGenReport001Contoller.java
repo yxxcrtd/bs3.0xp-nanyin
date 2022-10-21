@@ -233,7 +233,12 @@ public class BatchGenReport001Contoller extends BaseController {
 				dto.setResult("F");
 				dto.setRemark("生成报表失败："+e.getMessage());
 			}
-			sbRet.append("★★"+repName+idx++ +"：");
+			if ( "F".equals(dto.getResult())) {
+				sbRet.append("☆☆");
+			} else {
+				sbRet.append("★★");	
+			}
+			sbRet.append(repName+idx++ +"：");
 			sbRet.append(dto);
 			sbRet.append("<br>");
 			progressPercent = 0.05+idx*0.9/listProds.size();
