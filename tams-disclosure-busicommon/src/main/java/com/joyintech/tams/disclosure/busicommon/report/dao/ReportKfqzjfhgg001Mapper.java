@@ -8,7 +8,6 @@ import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqHisBonusDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +31,4 @@ public interface ReportKfqzjfhgg001Mapper {
     ReportKfqHisBonusDto getLastBonusInfo(Map<String, Object> searchParam);
 
     DisProdBonusplan checkGenerateFlag(Map<String, Object> searchParam);
-
-    BigDecimal getUnitValue(Map<String, Object> searchParam);
 }

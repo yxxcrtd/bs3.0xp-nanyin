@@ -216,23 +216,17 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                     List<SvrProdFeeDealInterfDto> listTemp = map.get(dto.getProdId()
                             + GlobalConstant.UNDER_LINE + dto.getFeeType()
                             + GlobalConstant.UNDER_LINE + dto.getPayDateStr());
-                    if(!StringUtil.equals("D",dto.getStatus())){
-                        excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
-                    }
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
                 }
                 // 将list进行排序，并转化为string
                 Collections.sort(excelNumIntList);
                 for (Integer rowNo : excelNumIntList) {
                     excelNumList.add(String.valueOf(rowNo));
                 }
-                if(excelNumList.size()!=0) {
-                    webResult.setMessage(
-                            this.getMessage("REPORT_COMMON_FILE_C_0001",
-                                    StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                            MessageType.确认消息);
-                }else{
-                    webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);
             } else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
@@ -363,7 +357,6 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                     map.put("prodId", item.getProdId());
                     map.put("feeType", item.getFeeType());
                     map.put("payDate", item.getPayDate());
-                    map.put("status",item.getStatus());
                     item.setUpdateUser(CommonUtil.getUserName());
                     if (null != this.selectData(map)){
                         this.doComplete(item, OperationType.MODIFY);

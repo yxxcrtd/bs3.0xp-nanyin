@@ -295,13 +295,4 @@ comment on column DIS_BONUS_LIST.CREATE_DEPT is '创建部门';
 alter table DIS_BONUS_LIST modify PER_BASE VARCHAR2(128);
 -- 产品分红计算 建表语句 add by sunjie 2022-10-19 end
 
--- add by zhengxiaolian 2022-10-20  报表类别增加首页类型 start
-alter table REP_INFO add HOME_PAGE_TYPE VARCHAR2(2);
--- add by zhengxiaolian 2022-10-20  报表类别增加首页类型 end
 
--- add by zhengxiaolian 2022-10-21  关联交易情况字段调整 start
-alter table REP_REL_DEAL modify (ASSET_AMT NUMBER(30,4)) ;
-alter table REP_REL_DEAL modify (TRUST_FEE NUMBER(30,4)) ;
-alter table REP_REL_DEAL modify (SELL_FEE NUMBER(30,4)) ;
-alter table REP_REL_DEAL modify (OTHER_FEE NUMBER(30,4)) ;
--- add by zhengxiaolian 2022-10-21  关联交易情况字段调整 start

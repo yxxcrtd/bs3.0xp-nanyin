@@ -59,7 +59,6 @@
         ON(RIA.PROD_ID = TEMP.PROD_ID
         and RIA.PAY_DATE = TEMP.PAY_DATE
         and RIA.FEE_TYPE = TEMP.FEE_TYPE
-        and RIA.STATUS = TEMP.STATUS
         )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN UPDATE
@@ -70,7 +69,8 @@
         RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
         RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
         RIA.CREATE_USER = TEMP.CREATE_USER,
-        RIA.UPDATE_USER = TEMP.UPDATE_USER
+        RIA.UPDATE_USER = TEMP.UPDATE_USER,
+        RIA.STATUS = TEMP.STATUS
         <!-- 未匹配到则插入 -->
         WHEN NOT MATCHED THEN INSERT (PROD_ID,PAY_DATE,FEE_TYPE,
         PAID_FEE,ACCRUAL,STATUS,
@@ -116,7 +116,6 @@
         where PROD_ID = #{prodId,jdbcType=CHAR}
           and PAY_DATE = #{payDate,jdbcType=DATE}
           and FEE_TYPE = #{feeType,jdbcType=CHAR}
-          and STATUS=#{status,jdbcType=VARCHAR}
     </update>
 
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto"  >
@@ -200,7 +199,6 @@
         where rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
                 and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
                 and rft.PAY_DATE = #{payDate,jdbcType=DATE}
-                and rft.STATUS = #{status,jdbcType=VARCHAR}
 
     </select>
 
@@ -244,8 +242,7 @@
         select
         A.PROD_ID,
         A.FEE_TYPE,
-        to_char(A.PAY_DATE,'yyyy/mm/dd') payDateStr,
-        A.STATUS
+        to_char(A.PAY_DATE,'yyyy/mm/dd') payDateStr
         from REP_FEE_TRD A
         <where>
             <foreach collection="list" item="item" open="(A.PROD_ID,A.FEE_TYPE,to_char(A.PAY_DATE,'yyyy/mm/dd')) IN (" separator="," close=")">

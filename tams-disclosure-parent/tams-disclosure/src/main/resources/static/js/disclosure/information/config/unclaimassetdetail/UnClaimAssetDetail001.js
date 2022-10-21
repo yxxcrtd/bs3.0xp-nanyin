@@ -197,7 +197,7 @@
 
         $('#UnClaimAssetDetail001_btn_import').click(function() {
             Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function () {
-                Joyin.uploadFile({pageId:'UnClaimAssetDetail001'},function(fileName) {
+                Joyin.uploadFile(function(fileName) {
                     Joyin.ajax('checkImportData', {fileName: fileName}, function() {
                         Joyin.ajax('importFile', {fileName: fileName});
                         /*if (checkResult) {

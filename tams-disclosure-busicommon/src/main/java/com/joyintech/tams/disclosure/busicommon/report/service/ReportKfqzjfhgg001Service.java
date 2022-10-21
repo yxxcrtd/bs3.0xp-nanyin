@@ -173,15 +173,12 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             //应分配分红金额 = 可供分配利润-业绩报酬
                             BigDecimal mustDistributedProfit = distributableProfit.subtract(floatFee);
                             //单位分红 = 应分配分红金额/产品期末余额（份额），结果截位法保留四位小数
-//                            BigDecimal unitValue = mustDistributedProfit.divide(reportKfqHisBonusDto.getCapital(), 10, BigDecimal.ROUND_DOWN);
-                            //单位分红 从 产品分红计算清单表获取
-                            BigDecimal unitValue = reportKfqzjfhgg001Mapper.getUnitValue(searchParam);
+                            BigDecimal unitValue = mustDistributedProfit.divide(reportKfqHisBonusDto.getCapital(), 10, BigDecimal.ROUND_DOWN);
                             //收益分配基准日份额净值（元） = 【单位分红结果截位法保留四位小数】 + 1
                             String unitValueStr = unitValue.setScale(4, BigDecimal.ROUND_DOWN).toString();
                             unitValueStr = "1" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
                             //本次分红方案（元/1份份额）
-//                            String unitProfitStr = "0" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
-                            String unitProfitStr = unitValue.setScale(4, BigDecimal.ROUND_DOWN).toString();;
+                            String unitProfitStr = "0" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
                             //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)； 若产品不是第一次分红，则本字段值=子产品上一个收益分配基准日的产品累计单位净值+本次分红方案（结果保留四位小数）
                             if (lastBonus != null && lastBonus.getLastUnitValueT() != null) {
                                 bonusDto.setMunitValueT(lastBonus.getLastUnitValueT().add(new BigDecimal(unitProfitStr)).toString());

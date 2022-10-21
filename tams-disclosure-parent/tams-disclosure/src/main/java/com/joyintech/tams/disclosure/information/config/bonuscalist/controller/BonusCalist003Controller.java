@@ -6,7 +6,6 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dao.BonusReportMapper;
@@ -48,17 +47,14 @@ public class BonusCalist003Controller extends BaseController {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }
-        AjaxResult ajaxResult = new AjaxResult();
-        List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         List<BonusCalist001Dto> paramList =new ArrayList<>(1);
         paramList.add(dto);
         List<BonusCalist001Dto> list = bonusCalist001Service.selectBonusInfoByKey(paramList);
         if (list!=null && list.size()>0) {
-//            AjaxResult ajax=new AjaxResult();
-//            ajax.setMessage("计算数据已存在，是否覆盖！", MessageType.确认消息);
-            ajaxResult.setData("计算数据已存在，是否覆盖？");
+            AjaxResult ajax=new AjaxResult();
+            ajax.setMessage("计算数据已存在，是否覆盖！", MessageType.确认消息);
+            return ajax;
         }
-
         HashMap map = new HashMap();
         map.put("prodId",dto.getProdId());
         map.put("reportDate",dto.getProfitBaseDate());
@@ -67,15 +63,13 @@ public class BonusCalist003Controller extends BaseController {
             if (report.getLastSettDate()==null|| report.getAssetsValue()==null||report.getCapital()==null||
                 report.getSettDate()==null|| report.getAchievementBasisProp()==null||report.getDistributableProfit()==null||
                 report.getExcessAchievementProp()==null || report.getAchievementBasis()==null){
-//                AjaxResult ajax=new AjaxResult();
-//                ajax.setStatuCode(500);
-//                ajax.setMessage("相关数据缺失!",MessageType.错误消息);
-//                return ajax;
-                errorList.add(new ValidMessage("相关数据缺失!"));
+                AjaxResult ajax=new AjaxResult();
+                ajax.setStatuCode(500);
+                ajax.setMessage("相关数据缺失!",MessageType.错误消息);
+                return ajax;
             }
         }
-        ajaxResult.setErrorList(errorList);
-        return ajaxResult;
+            return commonCheck(result, dto.getOperateType());
     }
 
     @ResponseBody
