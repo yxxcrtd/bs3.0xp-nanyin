@@ -305,3 +305,8 @@ alter table REP_REL_DEAL modify (TRUST_FEE NUMBER(30,4)) ;
 alter table REP_REL_DEAL modify (SELL_FEE NUMBER(30,4)) ;
 alter table REP_REL_DEAL modify (OTHER_FEE NUMBER(30,4)) ;
 -- add by zhengxiaolian 2022-10-21  关联交易情况字段调整 start
+
+-- add by zhengxiaolian 2022-10-21  报表披露字段调整 start
+ALTER TABLE REP_REVEAL MODIFY SYS_FILENAME VARCHAR2(1000);
+-- add by zhengxiaolian 2022-10-21  报表披露字段调整 end
+
