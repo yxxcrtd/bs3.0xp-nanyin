@@ -25,14 +25,15 @@ import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.dao.InfoDisclosureReadAndGenMapper;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.service.InfoDisclosureReadAndGenDetailService;
-import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportCheckService;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum002Mapper;
 import com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
+import com.joyintech.tams.disclosure.information.reveal.genreport.dao.BatchGenReport001Mapper;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -64,6 +65,9 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 
 	@Autowired
 	private InfoDisclosureReadAndGenDetailService infoDisclosureReadAndGenDetailService;
+	
+	@Autowired
+	private BatchGenReport001Mapper batchGenReport001Mapper;
 
     /**
      * 日志
@@ -160,7 +164,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
     public List<TreeNode> buildProdTree(String repProdType,String repId) {
 		List<TreeNode> result = new ArrayList<TreeNode>();
 		//获取父节点
-		result.addAll(this.getParentNodes(repProdType));
+		List<TreeNode> listParent = this.getParentNodes(repProdType);
 		
 		//查询当前所有产品，作为子节点
 		List<TreeNode> prodInfoNodes = new ArrayList<>();
@@ -169,9 +173,9 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 		List<ProdInfoListEntity> listProds = queryProdList(repId, null);
 		
 		if ( "C".equals(repProdType)) {
-			prodInfoNodes=reportContentEnum002Mapper.selectProdInfoSon();
+			prodInfoNodes=batchGenReport001Mapper.selectProdInfoSon();
 		} else {
-			prodInfoNodes=reportContentEnum002Mapper.selectProdInfo();
+			prodInfoNodes=batchGenReport001Mapper.selectProdInfo();
 		}
 		
 		List<String> prodsStr = new ArrayList<>();
@@ -182,6 +186,9 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 		//对prodInfoNodes进行过滤
 		prodInfoNodes = prodInfoNodes.stream().filter(e -> prodsStr.contains(e.getId())).collect(Collectors.toList());
 		
+		List<TreeNode> listParent2 = new ArrayList<>();
+		
+		result.addAll(listParent);
 		result.addAll(prodInfoNodes);
 		return result;
     }
@@ -190,7 +197,8 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
      * 组装除产品子节点以外的父节点
      * @return
      */
-    public List<TreeNode> getParentNodes(String repProdType){
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<TreeNode> getParentNodes(String repProdType){
         List<DataDictItem> prodStatusList = new ArrayList<DataDictItem>();//产品状态
         List<DataDictItem> issueTypeList = new ArrayList<DataDictItem>();//发行方式
         List<String> prodSeriesList = new ArrayList<String>();//产品系列
@@ -208,6 +216,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
                 treeDto.setName(map_1.getItemValue());
                 treeDto.setpId("");
                 treeDto.setOpen(true);
+                treeDto.setParent(true);
                 parentNodes.add(treeDto);
                 param.put("prodStatus",map_1.getItemCode());
                 //二级：发行方式
@@ -220,7 +229,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
                     parentNodes.add(treeDto_2);
                     param.put("issueType", map_2.getItemCode());
                     //三级：产品系列：产品系列为文本框输入，不是字典值，需要从产品基本信息表中查询所有的产品系列
-                    prodSeriesList = saleAgency002Mapper.selectAllProdSeries(param);
+                    prodSeriesList = batchGenReport001Mapper.selectAllProdSeries(param);
                     if (prodSeriesList != null && prodSeriesList.size() > 0) {
                         for (String map_3 : prodSeriesList) {
                             TreeNode treeDto_3 = new TreeNode();
@@ -232,7 +241,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
                             
                             if ( "C".equals(repProdType) ) {  //如果是子产品，需要多一层
 	                            param.put("prodSeries",map_3);
-	                            prodSeriesListSon=saleAgency002Mapper.selectAllProdSeriesSon(param);
+	                            prodSeriesListSon=batchGenReport001Mapper.selectAllProdSeriesSon(param);
 	                            for (String map_4 : prodSeriesListSon) {
 	                                TreeNode treeDto_4 = new TreeNode();
 	                                treeDto_4.setId(map_1.getItemCode() + map_2.getItemCode() + map_3+map_4);

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.reveal.genreport.dao.BatchGenReport001Mapper">
+	<select id="selectAllProdSeries" resultType="java.lang.String">
+		select
+		distinct PROD_SERIES
+		from REP_PROD_INFO
+		<where>
+			STATUS='E' and PROD_SERIES is not null
+			and REP_PROD_TYPE in ('01','02') 
+			<if test="prodStatus != null and prodStatus != ''">
+				and PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by PROD_SERIES
+	</select>
+
+	<select id="selectAllProdSeriesSon" resultType="java.lang.String">
+		select
+		distinct 
+		case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
+		else prod.PROD_NAME end
+		from
+		REP_PROD_INFO prod
+		left join V_REP_PROD_INFO pprod
+		on prod.p_prod_id = pprod.prod_id
+		<where>
+			prod.rep_prod_type in ('02','03') and prod.STATUS='E' and prod.PROD_SERIES is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and prod.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and prod.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+			<if test="prodSeries != null and prodSeries != ''">
+				and prod.PROD_SERIES=#{prodSeries,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+   <select id="selectProdInfo" resultType="com.joyintech.framework.select.TreeNode">
+        select
+        PROD_ID id,
+        PROD_NAME name,
+        PD_STATUS||ISSUING_WAY||PROD_SERIES pid
+        from
+        V_REP_PROD_INFO
+        where status='E' AND PROD_SERIES is not null
+    </select>
+    
+    <select id="selectProdInfoSon" resultType="com.joyintech.framework.select.TreeNode">
+        select
+        prod.PROD_ID id,
+        prod.PROD_ID || prod.PROD_NAME name,
+        (prod.PD_STATUS||prod.ISSUING_WAY|| prod.PROD_SERIES ||
+		case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
+        else prod.PROD_NAME end) pid
+        from
+        REP_PROD_INFO prod
+        left join V_REP_PROD_INFO pprod
+        on prod.p_prod_id = pprod.prod_id
+        where  prod.rep_prod_type in ('02','03')
+        AND prod.status='E' AND prod.PROD_SERIES is not null
+    </select>
+    
+</mapper>

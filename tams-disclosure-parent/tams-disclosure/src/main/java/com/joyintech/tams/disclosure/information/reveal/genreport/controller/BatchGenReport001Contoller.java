@@ -111,38 +111,46 @@ public class BatchGenReport001Contoller extends BaseController {
 			repProdType = getRepProdType(repId);
 		}
 		//根据报表的类型，确定是针对母产品进行报表还是子产品进行报表
-		return batchGenReport001Service.buildProdTree(repProdType,repId);
+		if ( !"N".equals(repProdType))
+			return batchGenReport001Service.buildProdTree(repProdType,repId);
+		return null;
 	}
     
 	private String getRepProdType(String repId) {
 		//针对母产品的报表
-		String parentProds =" CP_001_002_015"
-			+"CP_001_002_016"
-			+"CP_001_002_017"
+		String parentProds ="CP_001_001_001"  //发行公告
+			+"CP_001_002_015"  //季报
+			+"CP_001_002_016"  
+			+"CP_001_002_017"  //半年报
 			+"CP_001_002_018"
-			+"CP_001_002_019"
+			+"CP_001_002_019"  //年报
 			+"CP_001_002_020"
-			+"CP_001_002_021"
-			+"CP_001_004_001"
-			+"CP_001_004_002"
+			+"CP_001_002_021"  //调整投资非标准化债权类资产公告
+			+"CP_001_004_001"   //增加产品销售机构公告
+			+"CP_001_004_002"  //产品不成立公告（公募）
 			+"CP_001_004_003"
-			+"CP_001_004_004"
+			+"CP_001_004_004"   //单产品多费率模板1（公募）
 			+"CP_001_004_005"
 			+"CP_001_004_006"
 			+"CP_001_004_007"
-			+"CP_001_004_008"
-			+"CP_001_004_009"
-			+"CP_001_004_010"
-			+"CP_001_004_011"
-			+"CP_001_004_012"
+
+			+"CP_001_004_012"  //单产品多要素调整模板
 			+"CP_001_004_013"
-			+"CP_001_004_014"
+			+"CP_001_004_014"   //单要素多产品调整模板
 			+"CP_001_004_015"
-			+"CP_001_004_016"
+			+"CP_001_004_016"   //巨额赎回公告
 			+"CP_001_004_017";
+		String noPords = "CP_001_004_008"   //单费率多产品模板1（公募）
+				+"CP_001_004_009"
+				+"CP_001_004_010"
+				+"CP_001_004_011";
+		
 		if ( parentProds.contains(repId)) {
 			return "P";
-		} else {
+		} else if ( noPords.contains(repId))  {
+			return "N";
+		}
+		else {
 			return "C";
 		}
 	}

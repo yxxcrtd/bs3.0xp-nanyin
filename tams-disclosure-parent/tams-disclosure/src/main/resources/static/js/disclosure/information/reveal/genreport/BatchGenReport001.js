@@ -76,6 +76,8 @@ $(function () {
                              repId = data.repId;
                              repName = data.reportName;
                              showSearch(data.repScreenList);
+                             parms['uri'] = modelId;
+               				 $('#tree').reloadTree(parms);
 							backParam={}
                         }else{
                             $("#showtable").html('<h2>无报表内容</h2>');
@@ -84,7 +86,7 @@ $(function () {
                     });
                     
 		       	//通过repId获取是子产品还是母产品
-               	$('#tree').reloadTree(parms);
+
 //				Joyin.ajax('queryProdList',
 //					parms,
 //					function(data) {
