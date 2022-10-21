@@ -265,3 +265,6 @@ delete from SYS_PAGE where PAGE_ID = 'ReportConfirmManage006';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('ReportConfirmManage006', 'DIS', '/disclosure/information/reveal/reportconfirm/ReportConfirmManage006', '/disclosure/information/reveal/reportconfirm/ReportConfirmManage006', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
 
+--修改产品净值（估值）信息维护主键
+ALTER TABLE REP_PROD_INDEX_GZ DROP CONSTRAINT REP_PROD_INDEX_GZ_PK;
+alter table REP_PROD_INDEX_GZ ADD CONSTRAINT REP_PROD_INDEX_GZ_PK UNIQUE (PROD_ID, VALUE_DATE，STATUS);
