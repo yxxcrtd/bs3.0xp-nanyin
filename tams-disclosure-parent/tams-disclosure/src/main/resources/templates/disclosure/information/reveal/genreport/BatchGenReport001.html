@@ -32,22 +32,24 @@
 			</div>
 
 			<div class="layui-col-md4" style="width: 35%">
-				<form class="layui-form joyin-form-wrap" id="submitForm">
-					<input id="nodes" type="hidden">
-					<div class="layui-form-item">
-						<lable>产品名称</lable>
-						<div>
-							<input type="checkbox" lay-skin="switch"
-								data-th-lay-text="#{SystemActorRole001.expandAll}"
-								id="expandAll" data-ignore=true>
-							<div class="layui-input"
-								style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 760px; overflow-y: scroll;"
-								id='tree'
-								data-th-url='|@{/disclosure/information/reveal/genreport/BatchGenReport001/queryProdList}'>
-							</div>								
+				<div class="joyin-form-wrap">
+					<form class="layui-form" id="submitForm">
+						<input id="nodes" type="hidden">
+						<div class="layui-form-item">
+							<lable>产品名称</lable>
+							<div>
+								<input type="checkbox" lay-skin="switch"
+									data-th-lay-text="#{SystemActorRole001.expandAll}"
+									id="expandAll" data-ignore=true>
+							</div>
 						</div>
-					</div>
-				</form>
+					</form>
+				</div>
+				<div class="layui-input"
+					style="border: 1px solid #dbdbdb; height:640px;scroll-y: auto; scroll-x: hidden; overflow-y: scroll;"
+					id='tree' 
+					data-th-url='|@{/disclosure/information/reveal/genreport/BatchGenReport001/queryProdList}'>
+				</div>	
 			</div>
 				
 			<div class="layui-col-md9" style="width: 45%">

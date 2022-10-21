@@ -34,8 +34,8 @@ $(function() {
             });
     }
 
-    function addrule() {
-        Joyin.dialog("产品选择",basePath+"disclosure/information/config/repProdIndex/RepProdIndex003/init","80%","80%",
+    function addrule1() {
+        Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage004/init","80%","80%",
             {},function () {
                 var finprodIds = $('#finprodIds').data('finprodIds');
                 if(finprodIds.length ==0){
@@ -56,6 +56,7 @@ $(function() {
             var prodName = $('#prodId').select2("data")[0].text;
             $('#prodRegistNo').textSelect('setValue',data);
             // $('#prodName').textSelect('setValue',prodName);
+            $('#prodName').val(prodName).trigger('change');
         });
         $('#prodRegistNo').prop("disabled",true);
         if (pageModel == PAGE_MODEL_EDIT){
@@ -70,7 +71,7 @@ $(function() {
     $(function() {
         init();
 
-        $('#RepProdIndex001_btn_treeAdd').click(addrule);
+        $('#RepProdIndex001_btn_treeAdd').click(addrule1);
         // 绑定按钮事件
         $('#BonusCalist002_btn_save').click(function() {
             saveOrSubmit('save');

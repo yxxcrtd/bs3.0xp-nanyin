@@ -394,7 +394,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             BonusCalist001Dto.setAvaiProfit(new BigDecimal(rowData.get(7).toString()));
         }
         if (StringUtil.isNotEmpty(rowData.get(8))) {
-            BonusCalist001Dto.setPerBase(new BigDecimal(rowData.get(8).toString()));
+            BonusCalist001Dto.setPerBase(rowData.get(8).toString());
         }
         if (StringUtil.isNotEmpty(rowData.get(9))) {
             BonusCalist001Dto.setPerBaseProfit(new BigDecimal(rowData.get(9).toString()));
@@ -456,6 +456,8 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             }
             //数据状态
             bonusCalist001Dto.setDataStatus("A");
+            //业绩比较基准
+            bonusCalist001Dto.setPerBase(report.getAchievementBasis());
             try {
                 // 可供分配利润
                 bonusCalist001Dto.setAvaiProfit(report.getAssetsValue().subtract(report.getCapital()) );

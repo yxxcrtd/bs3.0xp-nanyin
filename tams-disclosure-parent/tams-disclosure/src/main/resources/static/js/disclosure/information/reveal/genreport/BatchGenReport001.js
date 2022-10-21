@@ -76,6 +76,8 @@ $(function () {
                              repId = data.repId;
                              repName = data.reportName;
                              showSearch(data.repScreenList);
+                             parms['uri'] = modelId;
+               				 $('#tree').reloadTree(parms);
 							backParam={}
                         }else{
                             $("#showtable").html('<h2>无报表内容</h2>');
@@ -84,7 +86,7 @@ $(function () {
                     });
                     
 		       	//通过repId获取是子产品还是母产品
-               	$('#tree').reloadTree(parms);
+
 //				Joyin.ajax('queryProdList',
 //					parms,
 //					function(data) {
@@ -475,11 +477,21 @@ $(function () {
     	return "success";
 	}
 	  
+	var showProegress = function() {
+		layer.msg("报表生成中，请稍候... ...",{
+			icon: 16,
+			shade: 0.2,
+			time: false
+		});
+		return true;
+	}
+	
 	/**
 	 * 批量生成报表
 	 */
    var submit = function(type){
-
+       //showProegress();  //等待窗口
+   		JoyinProgress.showInDialog('batchGenProgressBar');  //进度条
        displayMenu();
 		var params = getSearchParams();
 
@@ -583,7 +595,9 @@ $(function () {
 		var nodes = treeObj.getCheckedNodes();
 		var params = new Array();
 		for (var i = 0; i < nodes.length; i++) {
-			var flag = getParam(nodes[i], params);
+			if ( nodes[i].isParent==null || nodes[i].isParent==false ) //取叶子节点
+			params.push(nodes[i]);
+			//var flag = getParam(nodes[i], params);
 		}
 		if(params.length == 0){
 			Joyin.alert('请选择产品！',2);

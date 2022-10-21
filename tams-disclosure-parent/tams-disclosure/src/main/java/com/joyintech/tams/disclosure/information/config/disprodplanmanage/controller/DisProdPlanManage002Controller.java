@@ -104,11 +104,13 @@ public class DisProdPlanManage002Controller extends BaseController {
 			if (prodInfoDto != null){
 				dto.setProdName(prodInfoDto.getProdName());
 				dto.setOpenEndDateO(dto.getOpenEndDate());
+				dto.setOperationStartDateO(dto.getOperationStartDate());
 			}else{
 				//普通产品
 				ProdInfoDto prodInfoDtoPT = prodInfoService.selectByPProdId(dto.getProdId());
 				dto.setProdName(prodInfoDtoPT.getProdName());
 				dto.setOpenEndDateO(dto.getOpenEndDate());
+				dto.setOperationStartDateO(dto.getOperationStartDate());
 			}
 
 			// 根据主键获取业务实体
