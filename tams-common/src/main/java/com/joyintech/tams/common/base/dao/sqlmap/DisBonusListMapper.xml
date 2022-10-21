@@ -29,13 +29,13 @@
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        BONUS_LIST_ID BONUS_LIST_ID, PROD_ID prodId, PROD_REGIST_NO prodRegistNo, PROD_ASSETS prodAssets,
-        PROD_END_BALANCE prodEndBalance, UNIT_NUM unitNum, LAST_PROFIT_BASE_DATE lastProfitBaseDate,
-        PROFIT_BASE_DATE profitBaseDate, RUN_DAYS runDays, AVAI_PROFIT avaiProfit, PER_BASE perBase,
-        PER_BASE_PROFIT perBaseProfit, EXCEED exceed, PER_FEE perFee, DIS_BONUS_MONEY disBonusMoney,
-        UNIT_BONUS unitBonus, YIELD yield, MSG msg, DATA_STATUS dataStatus, DATA_SOURCE DATA_SOURCE,
-        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER updateUser, UPDATE_TIME updateTime,
-        CREATE_DEPT CREATE_DEPT
+        dbl.BONUS_LIST_ID BONUS_LIST_ID, dbl.PROD_ID prodId, dbl.PROD_REGIST_NO prodRegistNo, dbl.PROD_ASSETS prodAssets,
+        dbl.PROD_END_BALANCE prodEndBalance, dbl.UNIT_NUM unitNum, dbl.LAST_PROFIT_BASE_DATE lastProfitBaseDate,
+        dbl.PROFIT_BASE_DATE profitBaseDate, dbl.RUN_DAYS runDays, dbl.AVAI_PROFIT avaiProfit, dbl.PER_BASE perBase,
+        dbl.PER_BASE_PROFIT perBaseProfit, dbl.EXCEED exceed, dbl.PER_FEE perFee, dbl.DIS_BONUS_MONEY disBonusMoney,
+        dbl.UNIT_BONUS unitBonus, dbl.YIELD yield, MSG msg, dbl.DATA_STATUS dataStatus, dbl.DATA_SOURCE DATA_SOURCE,
+        dbl.CREATE_USER CREATE_USER, dbl.CREATE_TIME CREATE_TIME, dbl.UPDATE_USER updateUser, dbl.UPDATE_TIME updateTime,
+        dbl.CREATE_DEPT CREATE_DEPT
     </sql>
     <sql id="Sql_All_Data" >
         select 
