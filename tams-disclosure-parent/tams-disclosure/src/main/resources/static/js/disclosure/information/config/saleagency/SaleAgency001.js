@@ -24,13 +24,13 @@ $(function(){
         /*
          * 双击查看数据
          */
-        dblclick:function(table, data) {
+        /*dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("代销机构查看"),
                 JoyinUtil.getRealPath("disclosure/information/config/saleagency/SaleAgency002/init"),
                 "80%", "90%", data,
                 function(){table.reload();});
-        },
+        },*/
         cols:[
             {field:'sequenceNo', visible: false}
             ,{field:'agencyName', width:'10%', sortField:'AGENCY_NAME', title: '代销机构'}

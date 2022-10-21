@@ -213,13 +213,20 @@ $(function() {
                 return;
             }
             var selArrUseful =[];
+            var selArrUsefulC=[];
             selArr.forEach(v => {
                 if(v.status == 'D'){
                     selArrUseful.push(v);
                 }
-            })
+                if(v.status == 'C'){
+                  selArrUsefulC.push(v);}
+            });
             if (!selArrUseful || selArrUseful.length > 0) {
                 Joyin.error(JoyinUtil.getMessage("删除状态的数据不支持删除！"));
+                return;
+            }
+            if (!selArrUsefulC || selArrUsefulC.length > 0) {
+                Joyin.error(JoyinUtil.getMessage("待复核的数据不支持删除！"));
                 return;
             }
 
