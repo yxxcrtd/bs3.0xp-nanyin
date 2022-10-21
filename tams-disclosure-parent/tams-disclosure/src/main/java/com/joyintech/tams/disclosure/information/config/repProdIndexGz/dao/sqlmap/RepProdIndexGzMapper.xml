@@ -273,11 +273,11 @@
         from REP_PROD_INDEX_GZ T1
         where T1.PROD_ID = #{pProdId,jdbcType=VARCHAR}
         and T1.VALUE_DATE = #{valueDate,jdbcType=DATE}
-        and T1.P_ASSETS = #{pAssets,jdbcType=DECIMAL}
+        <!-- and T1.P_ASSETS = #{pAssets,jdbcType=DECIMAL}
         and T1.ASSETS_VALUE = #{pAssetsValue,jdbcType=DECIMAL}
         and T1.CAPITAL = #{pCapital,jdbcType=DECIMAL}
         and T1.UNIT_VALUE = #{pUnitValue,jdbcType=DECIMAL}
-        and T1.UNIT_VALUE_T = #{pUnitValueT,jdbcType=DECIMAL}
+        and T1.UNIT_VALUE_T = #{pUnitValueT,jdbcType=DECIMAL} -->
         <if test="pWYield != null and ! pWYield.equals('')">
             and T1.W_YIELD = #{pWYield,jdbcType=DECIMAL}
         </if>
