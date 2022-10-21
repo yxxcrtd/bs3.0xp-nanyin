@@ -33,6 +33,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.progressbar.ProgressBarService;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
@@ -74,6 +75,17 @@ public class BatchGenReport001Contoller extends BaseController {
 	@Autowired
 	private ReportInfoMapper reportInfoMapper;
 	
+    /**
+     * 进度条ID
+     */
+    private static final String PROCESS_KEY = "batchGenProgressBar";
+    
+    /**
+     * 进度条接口
+     */
+    @Autowired
+    private ProgressBarService progressBarService;
+    
     /**
      * 日志
      */
@@ -170,6 +182,14 @@ public class BatchGenReport001Contoller extends BaseController {
 	@RequestMapping("/batchExec")
 	@ResponseBody
     public  AjaxResult batchExec(HttpServletRequest request, HttpServletResponse response){
+		String pageId= "BatchGenReport001";
+        if (progressBarService.isProcessing(pageId, PROCESS_KEY)) {
+            return new AjaxResult("当前画面正在执行报表批量生产，请耐心等待！");
+        }
+        double progressPercent = 0d;
+        
+        progressBarService.updatePercent(pageId, PROCESS_KEY, progressPercent, false);
+        
 		Map<String,Object> params = RequestUtil.getPageParam();
 
 		//前台传入的参数处理
@@ -191,7 +211,8 @@ public class BatchGenReport001Contoller extends BaseController {
 				listProds.add(prod);
 			}
 		}
-		
+		progressPercent=0.05d;
+		progressBarService.updatePercent(pageId, PROCESS_KEY, progressPercent, false);
 		//输出结果
 		AjaxResult ret = new AjaxResult();
 		
@@ -215,13 +236,17 @@ public class BatchGenReport001Contoller extends BaseController {
 			sbRet.append("★★"+repName+idx++ +"：");
 			sbRet.append(dto);
 			sbRet.append("<br>");
+			progressPercent = 0.05+idx*0.9/listProds.size();
+			progressBarService.updatePercent(pageId, PROCESS_KEY,progressPercent , false);
 		}
 
 		if (sbRet.length()>0 ) {
 			ret.setData(sbRet.toString());
 		}
+		progressPercent = 1d;
+		progressBarService.updatePercent(pageId, PROCESS_KEY, progressPercent, false);
 		ret.setMessage("报表生成完成，详见明细信息。", MessageType.提示消息);
-
+		progressBarService.removePercent(pageId, PROCESS_KEY);
 		return ret;
     }
 

@@ -477,11 +477,21 @@ $(function () {
     	return "success";
 	}
 	  
+	var showProegress = function() {
+		layer.msg("报表生成中，请稍候... ...",{
+			icon: 16,
+			shade: 0.2,
+			time: false
+		});
+		return true;
+	}
+	
 	/**
 	 * 批量生成报表
 	 */
    var submit = function(type){
-
+       //showProegress();  //等待窗口
+   		JoyinProgress.showInDialog('batchGenProgressBar');  //进度条
        displayMenu();
 		var params = getSearchParams();
 
