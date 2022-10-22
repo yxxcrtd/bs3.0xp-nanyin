@@ -134,6 +134,12 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      */
     public Page<ProdInfoDto> findByPage(Map<String, Object> params) {
         String status = (String) params.get("status");
+        String[] prodIdArr = null;
+        String prodId = (String) params.get("prodId");
+        if (StringUtil.isNotEmpty(prodId)) {
+            prodIdArr = prodId.split(",");
+        }
+        params.put("prodIdArr", prodIdArr);
         if (StringUtil.isNotEmpty(status)) {
             params.put("dataStatusArr", StringUtil.splitToList(GlobalConstant.COMMA, status));
         }
@@ -181,6 +187,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     public ProdInfoDto selectByProdId(String prodId) {
         // return  prodInfoMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效.getValue());
         return prodInfoMapper.selectByPrimaryKey(prodId);
+    }
+    public ProdInfoDto selectData(Map<String, Object> param) {
+        // return  prodInfoMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效.getValue());
+        return prodInfoMapper.selectData(param);
     }
 
 
@@ -302,7 +312,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
         //重新插入已删除的数据
         ProdInfoDto prodInfoDto=prodInfoMapper.selectByPrimaryKey(dto.getProdId());
-        if(prodInfoDto !=null && prodInfoDto.getStatus().equals("D")){
+        if(prodInfoDto !=null && !prodInfoDto.getStatus().equals("D")){
             dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             prodInfoMapper.updateByPrimaryKeySelective(dto);
         }else {
@@ -550,7 +560,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
-                    ProdInfoDto prodInfo = this.selectByProdId(item.getProdId());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("prodId", item.getProdId());
+                    ProdInfoDto prodInfo = this.selectData(map);
                     if (null != prodInfo) {
                         this.update(item);
                     } else {

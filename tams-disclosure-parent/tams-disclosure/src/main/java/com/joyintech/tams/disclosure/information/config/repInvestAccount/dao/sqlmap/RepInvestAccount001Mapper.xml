@@ -89,6 +89,7 @@
         ) TEMP
         <!-- 业务主键匹配 -->
         ON(RIA.PROD_ID = TEMP.PROD_ID
+        and RIA.STATUS = TEMP.STATUS
         )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN UPDATE
@@ -101,8 +102,7 @@
         RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
         RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
         RIA.CREATE_USER = TEMP.CREATE_USER,
-        RIA.UPDATE_USER = TEMP.UPDATE_USER,
-        RIA.STATUS = TEMP.STATUS
+        RIA.UPDATE_USER = TEMP.UPDATE_USER
         <!-- 未匹配到则插入 -->
         WHEN NOT MATCHED THEN INSERT (PROD_ID,ACCOUNT_TYPE,ACCOUNT_NUM,
         ACCOUNT_NAME,ACCOUNT_OPENER,STATUS,
@@ -154,6 +154,7 @@
         from REP_INVEST_ACCOUNT ric
         left join V_REP_PROD_INFO rpi on rpi.PROD_ID = ric.PROD_ID
         where ric.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and ric.STATUS!='D'
     </select>
 
     <select id="selectProdName" resultType="java.util.Map">

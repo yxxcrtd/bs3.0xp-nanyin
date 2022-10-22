@@ -21,6 +21,8 @@ public interface DisProdBaseInfoMapper  {
     int insertBasicByBasicInfo(ProdInfoDto record);
 
     ProdInfoDto selectByPrimaryKey(String prodId);
+
+    ProdInfoDto selectData(Map<String, Object> param);
     ProdInfoDto selectByPrimaryKeyPT(String prodId);
 
     int updateByPrimaryKeySelective(ProdInfoDto record);

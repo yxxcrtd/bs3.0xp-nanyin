@@ -7,7 +7,7 @@ $(function() {
      */
     var getSearchParams = function() {
         return {
-            prodId:$('#prodId').val(),
+            prodId:$('#prodId').val()== null ? null : $('#prodId').val().join(","),
             prodName:$('#prodName').val() == null ? null : $('#prodName').val().join(","),
             raiseStrdateStart: $.trim($('#raiseStrdate').startDate()),
             raiseStrdateEnd: $.trim($('#raiseStrdate').endDate()),
