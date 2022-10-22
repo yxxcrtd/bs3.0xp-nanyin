@@ -4,6 +4,7 @@ import com.joyintech.framework.annotation.PageId;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -27,6 +28,13 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
      * 序列
      */
     private static final long serialVersionUID = -2744914232496735261L;
+
+    /**
+     * excle行
+     */
+    private String excelNum;
+
+    private String rptIssueDateStr;
 
     /**
      * 操作类型
@@ -129,11 +137,25 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
     }
 
     public String getRptIssueDateStr(){
-        return DateUtil.format(super.getRptIssueDate());
+        if (StringUtil.isNotEmpty(this.rptIssueDateStr)) {
+            return this.rptIssueDateStr;
+        } else {
+        return DateUtil.format(super.getRptIssueDate());}
+    }
+
+    public  void  setRptIssueDateStr(String rptIssueDateStr){
+        this.rptIssueDateStr = rptIssueDateStr;
     }
 
     public String getUpdateTimeStr() {
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd HH:mm:ss");
+    }
+    public String getExcelNum() {
+        return excelNum;
+    }
+
+    public void setExcelNum(String excelNum) {
+        this.excelNum = excelNum;
     }
 
 }

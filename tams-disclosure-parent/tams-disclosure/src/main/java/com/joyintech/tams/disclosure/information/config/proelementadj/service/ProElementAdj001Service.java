@@ -20,6 +20,7 @@ import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProEle
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -158,8 +159,35 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
-            // 防止在进行导入前check时进行了两次的弹框
-            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            List<ProElementAdj001Dto> entities = this.convertToBean(dataList);
+            List<ProElementAdj001Dto> data = this.selectProElementAdjByKey(entities);
+            if (data != null && data.size() > 0) {
+                Map<String, List<ProElementAdj001Dto>> map = entities.stream().collect(
+                        JoyinCollectors.groupingBy(x ->
+                                x.getProdId()
+                                        + GlobalConstant.UNDER_LINE + x.getRptIssueDateStr()
+                        ));
+                // 将序号放入list中
+                List<String> excelNumList = new ArrayList<>();
+                List<Integer> excelNumIntList = new ArrayList<>();
+                for (ProElementAdj001Dto dto : data) {
+                    List<ProElementAdj001Dto> listTemp = map.get(dto.getProdId()
+                            + GlobalConstant.UNDER_LINE + dto.getRptIssueDateStr());
+                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+                }
+                // 将list进行排序，并转化为string
+                Collections.sort(excelNumIntList);
+                for (Integer rowNo : excelNumIntList) {
+                    excelNumList.add(String.valueOf(rowNo));
+                }
+                webResult.setMessage(
+                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                                StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                        MessageType.确认消息);}
+                else{
+                    // 防止在进行导入前check时进行了两次的弹框
+                    webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+                }
         } else {
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
@@ -200,7 +228,15 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
                     item.setProdAdjustId(IDGenerator.generate(36));
-                    this.doComplete(item, OperationType.NEW);
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("prodId", item.getProdId());
+                    map.put("rptIssueDate", item.getRptIssueDate());
+                    if (null != this.selectData(map)){
+                        this.doComplete(item, OperationType.MODIFY);
+                    } else {
+                        item.setCreateUser(CommonUtil.getUserName());
+                        this.doComplete(item, OperationType.NEW);
+                    }
                 });
             }
             return checkResult;
@@ -340,5 +376,32 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             proElementAdj001Dto.setRptIssueDate(DateUtil.parse(rowData.get(2)));
         }
         return proElementAdj001Dto;
+    }
+    private List<ProElementAdj001Dto> convertToBean(List<List<String>> dataList) {
+        List<ProElementAdj001Dto> entities = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list =  dataList.get(i);
+            ProElementAdj001Dto entity = new ProElementAdj001Dto();
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setProdId(list.get(1));
+            } else {
+                entity.setProdId(" ");
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                entity.setRptIssueDateStr(list.get(2));
+            } else {
+                entity.setRptIssueDateStr(null);
+            }
+
+            entity.setExcelNum(String.valueOf(i+2));
+            entities.add(entity);
+        }
+        return entities;
+    }
+    private List<ProElementAdj001Dto> selectProElementAdjByKey(List<ProElementAdj001Dto> dataList) {
+        return proElementAdjMapper.selectProElementAdjByKey(dataList);
+    }
+    public ProElementAdj001Dto selectData(Map<String, Object> param) {
+        return proElementAdjMapper.selectData(param);
     }
 }

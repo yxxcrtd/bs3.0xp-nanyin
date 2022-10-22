@@ -2,8 +2,10 @@ package com.joyintech.tams.disclosure.information.config.proelementadj.dao;
 
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -31,4 +33,8 @@ public interface ProElementAdjMapper {
     List<SelectOptionDto> getProdIdlist(Map<String, String> map);
 
     List<SelectOptionDto> getAdjF(Map<String, Object> map);
+
+    List<ProElementAdj001Dto> selectProElementAdjByKey(@Param("list") List<ProElementAdj001Dto> list);
+
+    ProElementAdj001Dto selectData(Map<String, Object> param);
 }
