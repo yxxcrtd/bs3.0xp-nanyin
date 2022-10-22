@@ -134,6 +134,12 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      */
     public Page<ProdInfoDto> findByPage(Map<String, Object> params) {
         String status = (String) params.get("status");
+        String[] prodIdArr = null;
+        String prodId = (String) params.get("prodId");
+        if (StringUtil.isNotEmpty(prodId)) {
+            prodIdArr = prodId.split(",");
+        }
+        params.put("prodIdArr", prodIdArr);
         if (StringUtil.isNotEmpty(status)) {
             params.put("dataStatusArr", StringUtil.splitToList(GlobalConstant.COMMA, status));
         }
