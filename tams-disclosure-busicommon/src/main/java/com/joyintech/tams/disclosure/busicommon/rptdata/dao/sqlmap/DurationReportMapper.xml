@@ -80,6 +80,7 @@
 		on info.P_PROD_ID=bal.BOOKSET_ID		
 		where 1=1
 		and info.STATUS='E'
+		and info.ISSUE_STATUS='01'
 		and info.REP_PROD_TYPE in ('02','03')  /**单产品或者子产品**/
 		<if test="pprodid!=null">
 			and info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
