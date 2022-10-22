@@ -63,6 +63,7 @@
         <!-- 业务主键匹配 -->
         ON(RFF.PROD_ID = TEMP.PROD_ID
         and RFF.AFFIRM_DATE = TEMP.AFFIRM_DATE
+        and RFF.STATUS = TEMP.STATUS
         )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN UPDATE
@@ -76,8 +77,7 @@
         RFF.UPDATE_TIME = TEMP.UPDATE_TIME,
         RFF.CREATE_DEPT = TEMP.CREATE_DEPT,
         RFF.CREATE_USER = TEMP.CREATE_USER,
-        RFF.UPDATE_USER = TEMP.UPDATE_USER,
-        RFF.STATUS = TEMP.STATUS
+        RFF.UPDATE_USER = TEMP.UPDATE_USER
         <!-- 未匹配到则插入 -->
         WHEN NOT MATCHED THEN INSERT (PROD_ID,P_PROD_ID,AFFIRM_DATE,
                                       BUSINESS_CODE,AFFIRM_NUM,AFFIRM_AMT,
@@ -163,6 +163,7 @@
         left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
         where T.PROD_ID = #{prodId,jdbcType=VARCHAR}
         and T.AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+        and  T.STATUS!='D'
     </select>
 
     <select id="selectProdName" resultType="java.util.Map">
