@@ -74,7 +74,7 @@
         from DIS_BONUS_LIST A
         <where>
             <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.PROFIT_BASE_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
-                (#{item.prodId},#{item.profitBaseDateStr},'E')
+                (#{item.prodId,jdbcType=VARCHAR},#{item.profitBaseDateStr,jdbcType=VARCHAR},'E')
             </foreach>
         </where>
     </select>
