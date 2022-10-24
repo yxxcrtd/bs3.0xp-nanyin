@@ -293,3 +293,45 @@ alter table REP_FLOAT_FEE ADD CONSTRAINT PK_REP_FLOAT_FEE_ID_01 PRIMARY KEY (PRO
 --修改投资账户信息维护主键
 ALTER TABLE REP_INVEST_ACCOUNT DROP CONSTRAINT PK_REP_INVEST_ACCOUNT_ID_01;
 alter table REP_INVEST_ACCOUNT ADD CONSTRAINT PK_REP_INVEST_ACCOUNT_ID_01 PRIMARY KEY (PROD_ID, STATUS);
+
+-- add by zhengxiaolian 2022-10-24 产品树形选择页面 start
+delete from SYS_PAGE where PAGE_ID = 'ReportContentEnum004';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportContentEnum004', 'DIS', '/disclosure/information/config/reportcontentenum/ReportContentEnum004', 'disclosure/information/config/reportcontentenum/ReportContentEnum004', null, null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'RepProdIndex003';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RepProdIndex003', 'DIS', '/disclosure/information/config/repProdIndex/RepProdIndex003', 'disclosure/information/config/repProdIndex/RepProdIndex003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'DisProdPlanManage004';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('DisProdPlanManage004', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage004', 'disclosure/information/config/disprodplanmanage/DisProdPlanManage004', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'ProdBonusplanManager003';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ProdBonusplanManager003', 'DIS', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager003', 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager003', null, null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'DisProdPlanManage003';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('DisProdPlanManage003', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage003', 'disclosure/information/config/disprodplanmanage/DisProdPlanManage003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'ProdBonusplanManager004';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ProdBonusplanManager004', 'DIS', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager004', 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager004', null, null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'HugeInfoPro003';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('HugeInfoPro003', 'DIS', '/disclosure/information/config/hugeinfopro/HugeInfoPro003', 'disclosure/information/config/hugeinfopro/HugeInfoPro003', null, null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'ReportConfirmManage006';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ReportConfirmManage006', 'DIS', '/disclosure/information/reveal/reportconfirm/ReportConfirmManage006', 'disclosure/information/reveal/reportconfirm/ReportConfirmManage006', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+-- add by zhengxiaolian 2022-10-24 产品树形选择页面 end
