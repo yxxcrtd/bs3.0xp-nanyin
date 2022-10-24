@@ -275,15 +275,22 @@
     
     <select id="selectNostdCreditor" resultType="com.joyintech.tams.common.base.entity.DisNostdCreditor">
     	select 
-    		rownum personalField
+    		case PROJECT_NAME when '无' then '-'
+            else to_char(rownum) end personalField
     		,NOSTD_ASSET_ID
-			,FINANCIER
+			,case FINANCIER when '无' then '-'
+            else FINANCIER end FINANCIER
 			,PROJECT_NO
-			,PROJECT_NAME
-			,REM_FINANCING_PERIOD
-			,INCOME_DISTRIBUTE
-			,TRD_CONSTRUCT
-			,RISK_INFO
+			,case PROJECT_NAME when '无' then '-'
+            else PROJECT_NAME end PROJECT_NAME
+			,case REM_FINANCING_PERIOD  when '无' then '-'
+            else REM_FINANCING_PERIOD end REM_FINANCING_PERIOD
+			,case INCOME_DISTRIBUTE  when '无' then '-'
+            else INCOME_DISTRIBUTE end INCOME_DISTRIBUTE
+			,case TRD_CONSTRUCT  when '无' then '-'
+            else TRD_CONSTRUCT end TRD_CONSTRUCT
+			,case RISK_INFO  when '无' then '-'
+            else RISK_INFO end RISK_INFO
 		from DIS_NOSTD_CREDITOR 
 		where 
 	    	DATA_STATUS='E'
