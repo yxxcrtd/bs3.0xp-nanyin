@@ -551,7 +551,7 @@
     </select>
 
     <update id="deleteByNostdAssetId" parameterType="java.util.List">
-        update DIS_NOSTD_CREDITOR DNDC set DATA_STATUS = 'D'
+        update DIS_NOSTD_CREDITOR DNDC set DATA_STATUS = 'D',UPDATE_USER=#{updateUser},UPDATE_TIME=sysdate
         <where>
             <foreach collection="list" item="dto" open="DNDC.NOSTD_ASSET_ID in (" close=")" separator=",">
                 #{dto.id}
