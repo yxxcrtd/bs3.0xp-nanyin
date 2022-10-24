@@ -16,6 +16,7 @@
         var object = $.serializeToObject('#submitForm');
         object.pageModel = pageModel;
         object.operateType = operateType;
+        object.editFlag = editFlag;
         object.unclaimList = unclaimTable.getAllRows();
         Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/check', object, function(result) {
             Joyin.confirm(result.data, function() {

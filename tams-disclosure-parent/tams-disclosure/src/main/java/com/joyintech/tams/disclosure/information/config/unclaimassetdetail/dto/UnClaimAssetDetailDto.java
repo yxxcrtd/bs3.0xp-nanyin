@@ -63,6 +63,8 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
 
     public String id;
 
+    private String editFlag;
+
 //    public String getUpdateTimeStr() {
 //        return updateTimeStr;
 //    }
@@ -108,7 +110,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
         if (StringUtil.isNotEmpty(this.effDateStr)) {
             return this.effDateStr;
         } else {
-            return DateUtil.format(super.getEffDate());
+            return DateUtil.format(super.getEffDate(),"yyyy/MM/dd");
         }
     }
 
@@ -145,7 +147,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
         if (StringUtil.isNotEmpty(this.effEndDateStr)) {
             return this.effEndDateStr;
         } else {
-            return DateUtil.format(super.getEffEndDate());
+            return DateUtil.format(super.getEffEndDate(),"yyyy/MM/dd");
         }
     }
 
@@ -229,5 +231,13 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEditFlag() {
+        return editFlag;
+    }
+
+    public void setEditFlag(String editFlag) {
+        this.editFlag = editFlag;
     }
 }

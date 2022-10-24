@@ -17,7 +17,7 @@
     };
     // 新建
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('UnClaimAssetDetail002'), basePath +'/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init', '98%', '95%', {pageModel:PAGE_MODEL_NEW},function(){
+        Joyin.dialog(JoyinUtil.getLabel('UnClaimAssetDetail002'), basePath +'/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init', '98%', '95%', {pageModel:PAGE_MODEL_NEW,editFlag:'01'},function(){
             table.reload();
         });
 
@@ -75,6 +75,7 @@
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
         var object = {selectedItem: [data]};
+        object.editFlag='02'
         Joyin.ajaxJson(basePath + '/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("非标债权类资产明细编辑"),
                 basePath + "disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init",
@@ -143,6 +144,7 @@
             Joyin.ajaxJson(basePath + '/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getLabel("请确认是否进行批量审批？"), function(){
                     WorkFlow.doSubmitList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/submit', object, "UnClaimAssetDetail001_btn_submit", "UnClaimAssetDetail002",function(){
+                        table.reload();
                     });
                 });
             });
@@ -199,81 +201,7 @@
             Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function () {
                 Joyin.uploadFile(function(fileName) {
                     Joyin.ajax('checkImportData', {fileName: fileName}, function() {
-                        Joyin.ajax('importFile', {fileName: fileName});
-                        /*if (checkResult) {
-                            setTimeout( function () {
-                                    if(checkResult.data.errorMsg){
-                                        Joyin.error(checkResult.data.errorMsg);
-                                        return;
-                                    }
-                                    if (checkResult.data.confirmMsg) {
-                                        Joyin.confirm(checkResult.data.confirmMsg, function () {
-                                            if (checkResult.data.confirmMsg2) {
-                                                Joyin.confirm(checkResult.data.confirmMsg2, function () {
-                                                    var data = {
-                                                        tempList: checkResult.data.correctData
-                                                    }
-                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/importFile', data,
-                                                        function (resultObj) {
-                                                            if (resultObj.statuCode.toString() === '200') {
-                                                                table.reload();
-                                                                return;
-                                                            }
-                                                        });
-                                                },{}, function () {
-                                                    layui.layer.closeAll()
-                                                    table.reload();
-                                                });
-                                            }else{
-                                                var data = {
-                                                    tempList: checkResult.data.correctData
-                                                }
-                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/importFile', data,
-                                                    function (resultObj) {
-                                                        if (resultObj.statuCode.toString() === '200') {
-                                                            table.reload();
-                                                            return;
-                                                        }
-                                                    });
-                                            }
-
-                                        },{}, function () {
-                                            layui.layer.closeAll()
-                                            table.reload();
-                                        });
-                                    }else {
-                                        if (checkResult.data.confirmMsg2) {
-                                            Joyin.confirm(checkResult.data.confirmMsg2, function () {
-                                                var data = {
-                                                    tempList: checkResult.data.correctData
-                                                }
-                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/importFile', data,
-                                                    function (resultObj) {
-                                                        if (resultObj.statuCode.toString() === '200') {
-                                                            table.reload();
-                                                            return;
-                                                        }
-                                                    });
-                                            },{}, function () {
-                                                layui.layer.closeAll()
-                                                table.reload();
-                                            });
-                                        }else{
-                                            var data = {
-                                                tempList: checkResult.data.correctData
-                                            }
-                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/importFile', data,
-                                                function (resultObj) {
-                                                    if (resultObj.statuCode.toString() === '200') {
-                                                        table.reload();
-                                                        return;
-                                                    }
-                                                });
-                                        }
-                                    }
-                                }
-                                ,1000);
-                        }*/
+                        Joyin.ajax('importFile', {fileName: fileName},function(){table.reload();});
                     },function() {
                         $('iframe').contents().find("#loading").hide();
                     });

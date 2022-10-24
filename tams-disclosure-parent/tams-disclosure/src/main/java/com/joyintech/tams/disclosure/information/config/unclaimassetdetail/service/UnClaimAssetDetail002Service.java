@@ -6,6 +6,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
@@ -14,6 +15,7 @@ import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.U
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,7 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
         }
         else {
             //编辑后更新  全删全插，覆盖掉 删除按照prodId,effDate,effEndDate
+            dto.setDataStatus("C");
             unClaimAssetDetailMapper.deleteOnReal(dto);
 
             Map<String, Object> map = new HashMap<>();
@@ -119,24 +122,89 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
 
     @Override
     public void doInsert(UnClaimAssetDetailDto dto, OperationType type) {
-            // 数据存入留痕表备份 流程作废方便恢复
-            unClaimAssetDetailMapper.saveHisData(dto);
+        if(OperationType.MODIFY.equals(type)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId", dto.getProdId());
+            map.put("effDate", dto.getEffDateStr());
+            map.put("effEndDate", dto.getEffEndDateStr());
+            map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
 
-            //进入流程，数据状态改为 待复核
-            UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
-            BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto,dto);
-            unClaimAssetDetailDto.setDataStatus("C");
-            unClaimAssetDetailMapper.update(unClaimAssetDetailDto);
+            List<UnClaimAssetDetailDto> unclaimList = dto.getUnclaimList();
 
+            List<UnClaimAssetDetailDto> existList = selectDetailList(map);
+
+            //对于已经存在的数据需要入历史表
+            existList.forEach(item -> {
+                item.setId(item.getNostdAssetId());
+                item.setWorkflowId(dto.getWorkflowId());
+                // 数据存入留痕表备份 流程作废方便恢复
+                unClaimAssetDetailMapper.saveHisData(item);
+//                //进入流程，数据状态改为 待复核
+//                UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
+//                BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto, item);
+//                unClaimAssetDetailDto.setDataStatus("C");
+//                unClaimAssetDetailMapper.update(unClaimAssetDetailDto);
+            });
+            dto.setDataStatus("E");
+            unClaimAssetDetailMapper.deleteOnReal(dto);
+            int num=0;
+            for (UnClaimAssetDetailDto unclaimDto:unclaimList){
+                String code = IDGenerator.generate(36);
+                if (unclaimDto.getProdId()==null){
+                    unclaimDto.setProdId(dto.getProdId());
+                }
+                num+=1;
+                unclaimDto.setDataStatus("C");
+                unclaimDto.setNostdAssetId(code);
+                unclaimDto.setEffDate(dto.getEffDate());
+                unclaimDto.setEffEndDate(dto.getEffEndDate());
+                unclaimDto.setProjectNo(String.valueOf(num));
+                unClaimAssetDetailMapper.insert(unclaimDto);
+            }
+        }else if(OperationType.DELETE.equals(type)){
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId", dto.getProdId());
+            map.put("effDate", dto.getEffDateStr());
+            map.put("effEndDate", dto.getEffEndDateStr());
+            map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
+
+            List<UnClaimAssetDetailDto> existList = selectDetailList(map);
+
+            existList.forEach(item -> {
+                item.setId(item.getNostdAssetId());
+                item.setWorkflowId(dto.getWorkflowId());
+                // 数据存入留痕表备份 流程作废方便恢复
+                unClaimAssetDetailMapper.saveHisData(item);
+                //进入流程，数据状态改为 待复核
+                UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
+                BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto, item);
+                unClaimAssetDetailDto.setDataStatus("C");
+                unClaimAssetDetailMapper.update(unClaimAssetDetailDto);
+            });
+        }
     }
 
     @Override
     public void doDelete(String workflowId) {
         //查留痕表对应workflowId的数据，并还原数据状态
-        UnClaimAssetDetailDto dto = unClaimAssetDetailMapper.selectHisData(workflowId);
-        UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
-        BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto,dto);
-        unClaimAssetDetailMapper.updateByPrimaryKey(dto);
+        List<UnClaimAssetDetailDto> dataList = unClaimAssetDetailMapper.selectHisData(workflowId);
+        if(CollectionUtils.isNotEmpty(dataList)){
+            UnClaimAssetDetailDto newDto = new UnClaimAssetDetailDto();
+            BeanUtil.copyPropertiesIgnoreNull(newDto, dataList.get(0));
+            newDto.setDataStatus("C");
+            newDto.setEffDateO(newDto.getEffDate());
+            newDto.setEffEndDateO(newDto.getEffEndDateO());
+            unClaimAssetDetailMapper.deleteOnReal(newDto);
+
+            for (UnClaimAssetDetailDto tmp:dataList){
+                tmp.setEffDateO(tmp.getEffDate());
+                tmp.setEffEndDateO(tmp.getEffEndDateO());
+                UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
+                BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto, tmp);
+                unClaimAssetDetailMapper.insert(unClaimAssetDetailDto);
+            }
+        }
+
     }
     /**
      * 查询产品所有的非标资产信息
