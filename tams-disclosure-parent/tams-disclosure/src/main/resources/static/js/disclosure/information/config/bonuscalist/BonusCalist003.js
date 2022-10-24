@@ -6,6 +6,8 @@ $(function() {
             object, function(result) {
             Joyin.ajaxJson(basePath + 'disclosure/information/config/bonuscalist/BonusCalist003/calculateData',
                        object, function(result) {
+                               var index = parent.layer.getFrameIndex(window.name);
+                               parent.layer.close(index);
                                table.reload();
             });
         });
