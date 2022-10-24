@@ -213,6 +213,7 @@
         </where>
     </select>
 
+
     <update id="updateStatus">
         update
             DIS_BONUS_LIST
@@ -227,4 +228,8 @@
         PROD_ID =  #{prodId,jdbcType=VARCHAR} and
         PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}
     </delete>
+
+    <select id="findRe" resultType="java.lang.String">
+        select PROD_RE from REP_PROD_INFO where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
 </mapper>
