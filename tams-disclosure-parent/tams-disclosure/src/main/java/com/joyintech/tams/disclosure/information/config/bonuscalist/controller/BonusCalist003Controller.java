@@ -60,8 +60,8 @@ public class BonusCalist003Controller extends BaseController {
         map.put("reportDate",dto.getProfitBaseDate());
         List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(map);
         for (BonusReportDto report : listReport) {
-            if (report.getLastSettDate()==null|| report.getAssetsValue()==null||report.getCapital()==null||
-                report.getSettDate()==null|| report.getAchievementBasisProp()==null||report.getDistributableProfit()==null||
+            if ((report.geteDate()==null)|| report.getAssetsValue()==null||report.getCapital()==null||
+                report.getSettDate()==null|| report.getAchievementBasisProp()==null||
                 report.getExcessAchievementProp()==null || report.getAchievementBasis()==null){
                 AjaxResult ajax=new AjaxResult();
                 ajax.setStatuCode(500);

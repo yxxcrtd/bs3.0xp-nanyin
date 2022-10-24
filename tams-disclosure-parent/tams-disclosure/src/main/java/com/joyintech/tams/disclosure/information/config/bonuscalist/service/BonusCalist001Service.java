@@ -451,12 +451,21 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             } else {
                 bonusCalist001Dto.setLastProfitBaseDate(report.geteDate());
             }
-
+            //uuid
+            bonusCalist001Dto.setBonusListId(IDGenerator.generate(36));
+            //产品代码
+            bonusCalist001Dto.setProdId(dto.getProdId());
+            //本次收益分配日
+            bonusCalist001Dto.setProfitBaseDate(dto.getProfitBaseDate());
+            // 产品名称
+            bonusCalist001Dto.setProdName(report.getProdName());
+            //期末余额
+            bonusCalist001Dto.setProdEndBalance(report.getCapital());
             // 运行天数
-            if (report.getLastSettDate().compareTo(report.geteDate()) == 0) {
-                bonusCalist001Dto.setRunDays((short)(com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate() ) + 1));
+            if (bonusCalist001Dto.getLastProfitBaseDate().compareTo(report.geteDate()) == 0) {
+                bonusCalist001Dto.setRunDays((short)(com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil.getBetweenDayNumber(bonusCalist001Dto.getLastProfitBaseDate(),report.getSettDate() ) + 1));
             } else {
-                bonusCalist001Dto.setRunDays((short)com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil.getBetweenDayNumber(report.getLastSettDate(),report.getSettDate() ));
+                bonusCalist001Dto.setRunDays((short)com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil.getBetweenDayNumber(bonusCalist001Dto.getLastProfitBaseDate(),report.getSettDate() ));
             }
             //数据状态
             bonusCalist001Dto.setDataStatus("A");
@@ -476,23 +485,23 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                                 .multiply(new BigDecimal(365))
                                 .divide(new BigDecimal(report.getRunDays()),2,BigDecimal.ROUND_DOWN) );
 
-                // 超出收益
+                // 超出部分
                 BigDecimal esProfit = report.getDistributableProfit().subtract(abProfit);
-                bonusCalist001Dto.setExceed(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
+                bonusCalist001Dto.setExceed(bonusCalist001Dto.getAvaiProfit().subtract(bonusCalist001Dto.getPerBaseProfit()));
 
                 // 业绩报酬
                 BigDecimal floatFee = esProfit.multiply(report.getExcessAchievementProp());
                 bonusCalist001Dto.setPerFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
 
                 // 应分配利润
-                bonusCalist001Dto.setDisBonusMoney(report.getDistributableProfit().subtract(report.getFloatFee()));
+                bonusCalist001Dto.setDisBonusMoney(bonusCalist001Dto.getAvaiProfit().subtract(bonusCalist001Dto.getPerFee()));
 
                 // 单位分红
                 bonusCalist001Dto.setUnitBonus(
                         report.getDistributedProfit().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
 
                 // 年化收益率
-                BigDecimal ddProfit = report.getDistributableProfit().subtract(floatFee);
+                BigDecimal ddProfit = bonusCalist001Dto.getDisBonusMoney().subtract(bonusCalist001Dto.getProdEndBalance());
                 bonusCalist001Dto.setYield(
                         ddProfit.multiply(new BigDecimal(365))
                                 .divide(  new BigDecimal(report.getRunDays()).multiply(report.getCapital()), 4, BigDecimal.ROUND_DOWN));
