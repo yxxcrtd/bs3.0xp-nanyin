@@ -125,7 +125,7 @@ public interface UnClaimAssetDetailMapper  {
 
     List<ProcessMark> getWorklowData(UnClaimAssetDetailDto detailDto);
 
-    int deleteByNostdAssetId(@Param("list") List<UnClaimAssetDetailDto> list);
+    int deleteByNostdAssetId(@Param("updateUser") String updateUser,@Param("list") List<UnClaimAssetDetailDto> list);
 
     int saveHisData(UnClaimAssetDetailDto dto);
 

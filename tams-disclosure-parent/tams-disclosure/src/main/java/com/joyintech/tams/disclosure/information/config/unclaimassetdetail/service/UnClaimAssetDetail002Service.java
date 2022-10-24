@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.serv
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -68,7 +69,7 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
 //                 unClaimAssetDetailMapper.deleteOnStatus(map);
 
             List<UnClaimAssetDetailDto> dtoList = dto.getUnclaimList();
-            unClaimAssetDetailMapper.deleteByNostdAssetId(dtoList);
+            unClaimAssetDetailMapper.deleteByNostdAssetId(LoginUserUtil.getUserName(),dtoList);
         }
         else if (OperationType.NEW.equals(type)) {//新建
 //            for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()
