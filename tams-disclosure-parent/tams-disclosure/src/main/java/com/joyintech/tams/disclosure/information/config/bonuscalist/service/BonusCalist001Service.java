@@ -322,7 +322,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
 //            if (!StringUtil.isNotEmpty(rowData.get(4))){
 //                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "上一收益分配基准日"));
 //            } else
-            if (!isDateStr(rowData.get(4))) {
+            if (StringUtil.isNotEmpty(rowData.get(4))&&!isDateStr(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "上一收益分配基准日"));
             }
 
