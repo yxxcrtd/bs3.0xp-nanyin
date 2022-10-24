@@ -9,9 +9,9 @@
             <Cell order="5" name="产品资产净值">prodAssets</Cell>
             <Cell order="6" name="产品期末余额(份额)">prodEndBalance</Cell>
             <Cell order="7" name="单位净值">unitNum</Cell>
-            <Cell order="8" name="上一收益分配基准日">lastProfitBaseDate</Cell>
-            <Cell order="9" name="本期收益分配基准日">profitBaseDate</Cell>
-            <Cell order="10" name="运行天数">runDays</Cell>
+            <Cell order="8" name="上一收益分配基准日">lastProfitBaseDateStr</Cell>
+            <Cell order="9" name="本期收益分配基准日">profitBaseDateStr</Cell>
+            <Cell order="10" name="运行天数">runDaysStr</Cell>
             <Cell order="11" name="可供分配利润">avaiProfit</Cell>
             <Cell order="12" name="业绩比较基准">perBase</Cell>
             <Cell order="13" name="业绩比较基准收益">perBaseProfit</Cell>
