@@ -121,10 +121,11 @@ public class BatchGenReport001Contoller extends BaseController {
 		if ( param.get("repId")!=null ) { 
 			repId = param.get("repId").toString();
 			repProdType = getRepProdType(repId);
+		
+			//根据报表的类型，确定是针对母产品进行报表还是子产品进行报表
+			if ( !"N".equals(repProdType))
+				return batchGenReport001Service.buildProdTree(repProdType,repId);
 		}
-		//根据报表的类型，确定是针对母产品进行报表还是子产品进行报表
-		if ( !"N".equals(repProdType))
-			return batchGenReport001Service.buildProdTree(repProdType,repId);
 		return null;
 	}
     
