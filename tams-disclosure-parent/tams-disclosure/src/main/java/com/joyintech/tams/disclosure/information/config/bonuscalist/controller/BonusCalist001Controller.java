@@ -81,7 +81,7 @@ public class BonusCalist001Controller extends BaseController {
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity -> "子产品代码"+ "(" + entity.getProdId()+ ")"
-                        +  "-" + "业绩比较基准日"+ "(" + entity.getProfitBaseDateStr() + ")");
+                        +  "-" + "收益分配基准日"+ "(" + entity.getProfitBaseDateStr() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = bonusCalist001Service.start(processParameter,
                 dto.getSelectedItem().toArray(new BonusCalist001Dto[dto.getSelectedItem().size()]));
