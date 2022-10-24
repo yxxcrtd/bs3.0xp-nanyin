@@ -288,4 +288,21 @@ public class BatchGenReport001Contoller extends BaseController {
 		List<SelectOptionDto> list = selectDto.getOptions();
 		return list;
 	}
+	
+	/**
+	 *
+	 * 获取系统枚举参数
+	 * <功能详细描述>
+	 * @param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getHalfYear")
+	@ResponseBody
+	public List<SelectOptionDto> getHalfYear(){
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.半年, null);
+		List<SelectOptionDto> list = selectDto.getOptions();
+		return list;
+	}
 }
