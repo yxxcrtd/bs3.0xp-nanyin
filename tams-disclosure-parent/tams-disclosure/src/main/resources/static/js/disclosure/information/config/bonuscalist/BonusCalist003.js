@@ -2,6 +2,14 @@ $(function() {
 
     function saveOrSubmit() {
         var object = $.serializeToObject('#submitForm');
+        if (!object.prodId){
+            Joyin.error("子产品代码不能为空！");
+            return;
+        }
+        if (!object.profitBaseDate){
+            Joyin.error("本期收益分配基准日不能为空！");
+            return;
+        }
         Joyin.ajaxJson(basePath + 'disclosure/information/config/bonuscalist/BonusCalist003/check',
             object, function(result) {
             Joyin.ajaxJson(basePath + 'disclosure/information/config/bonuscalist/BonusCalist003/calculateData',
