@@ -1,6 +1,8 @@
 package com.joyintech.tams.disclosure.information.reveal.genreport.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -198,21 +200,46 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 			listChildrenId.add(item.getpId());
 		});
 		
+		//需要对parent节点进行过滤：没有子节点的节点，都不需要进行展示
+		//过滤的时候，需要从子节点开始进行过滤，因此按照treenode的object属性进行倒序排列
+		List<TreeNode> listParent2 = new ArrayList<TreeNode>();
+		Collections.sort(listParent, new Comparator<TreeNode>() {
+			@Override
+			public int compare(TreeNode o1, TreeNode o2) {
+				return o2.getObject().toString().compareTo(o1.getObject().toString());
+			}
+		});
+		for ( TreeNode t:listParent ) {
+			boolean remainFlag = false;
+			for ( TreeNode t1:listParent2 ) {  //子是父节点
+				if ( t.getId().equals(t1.getpId())) {
+					listParent2.add(t);
+					remainFlag = true;
+					break;
+				}
+			}
+			if ( remainFlag == false ) {
+				if (listChildrenId.contains(t.getId()) ) {  //子是产品
+					listParent2.add(t);
+				}
+			}
+		}
+		
 		//对于没有子的parent树节点，进行过滤
 //		listParent = listParent.stream().filter(item->( item.getObject()==null 
 //				|| !"ParentProd".equals(item.getObject().toString()) 
 //				||  ("ParentProd".equals(item.getObject().toString()) && listChildrenId.contains(item.getId())))  ).collect(Collectors.toList());
 		
-		List<TreeNode> listParent2 = new ArrayList<TreeNode>();
-		for ( TreeNode t:listParent ) {
-			if ( t.getObject()==null ) {
-				listParent2.add(t);
-			}else if ( !"ParentProd".equals(t.getObject().toString())) {
-				listParent2.add(t);
-			} else if ( "ParentProd".equals(t.getObject().toString()) && listChildrenId.contains(t.getId()) ) {
-				listParent2.add(t);
-			}
-		}
+
+//		for ( TreeNode t:listParent ) {
+//			if ( t.getObject()==null ) {
+//				listParent2.add(t);
+//			}else if ( !"ParentProd".equals(t.getObject().toString())) {
+//				listParent2.add(t);
+//			} else if ( "ParentProd".equals(t.getObject().toString()) && listChildrenId.contains(t.getId()) ) {
+//				listParent2.add(t);
+//			}
+//		}
 		
 		result.addAll(listParent2);
 		result.addAll(listChildren);
@@ -224,80 +251,81 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
      * @return
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<TreeNode> getParentNodes(String repProdType){
-        List<DataDictItem> prodStatusList = new ArrayList<DataDictItem>();//产品状态
-        List<DataDictItem> issueTypeList = new ArrayList<DataDictItem>();//发行方式
-        List<String> prodSeriesList = new ArrayList<String>();//产品系列
-        List<String> prodSeriesListSon = new ArrayList<String>();
-        List<TreeNode> parentNodes = new ArrayList<TreeNode>();
-        prodStatusList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.信披_产品状态.getValue());
-        issueTypeList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.发行方式_信批.getValue());
-        //一级：产品状态
-        if (prodStatusList!=null && prodStatusList.size() > 0) {
-            for (DataDictItem map_1 : prodStatusList) {
-                //查询产品系列的条件
-                Map<String,Object> param=new HashMap<>();
-                TreeNode treeDto = new TreeNode();
-                treeDto.setId(map_1.getItemCode());
-                treeDto.setName(map_1.getItemValue());
-                treeDto.setpId("");
-                treeDto.setOpen(true);
-                treeDto.setObject("RunWay");
-                parentNodes.add(treeDto);
-                param.put("prodStatus",map_1.getItemCode());
-                //二级：发行方式
-                for (DataDictItem map_2 : issueTypeList) {
-                    TreeNode treeDto_2 = new TreeNode();
-                    treeDto_2.setId(map_1.getItemCode() + map_2.getItemCode());
-                    treeDto_2.setName(map_2.getItemValue());
-                    treeDto_2.setpId(map_1.getItemCode());
-                    treeDto_2.setOpen(true);
-                    treeDto_2.setObject("IssuingWay");
-                    parentNodes.add(treeDto_2);
-                    param.put("issueType", map_2.getItemCode());
-                    //三级：产品系列：产品系列为文本框输入，不是字典值，需要从产品基本信息表中查询所有的产品系列
-                    prodSeriesList = batchGenReport001Mapper.selectAllProdSeries(param);
-                    if (prodSeriesList != null && prodSeriesList.size() > 0) {
-                        for (String map_3 : prodSeriesList) {
-                            TreeNode treeDto_3 = new TreeNode();
-                            treeDto_3.setId(map_1.getItemCode() + map_2.getItemCode() + map_3);
-                            treeDto_3.setName(map_3);
-                            treeDto_3.setpId(map_1.getItemCode() + map_2.getItemCode());
-                            treeDto_3.setOpen(true);
-                            treeDto_3.setObject("ProdSeries");
-                            parentNodes.add(treeDto_3);
-                            
-                            if ( "C".equals(repProdType) ) {  //如果是子产品，需要多一层
-	                            param.put("prodSeries",map_3);
-	                            //母产品名称
-	                            prodSeriesListSon=batchGenReport001Mapper.selectAllProdSeriesSon(param);
-	                            for (String map_4 : prodSeriesListSon) {
-	                                TreeNode treeDto_4 = new TreeNode();
-	                                treeDto_4.setId(map_1.getItemCode() + map_2.getItemCode() + map_3+map_4);
-	                                treeDto_4.setName(map_4);
-	                                treeDto_4.setpId(map_1.getItemCode() + map_2.getItemCode()+ map_3);
-	                                treeDto_4.setOpen(true);
-	                                treeDto_4.setObject("ParentProd");
-	                                parentNodes.add(treeDto_4);
-	                            }
-                            }
-                        }
-                    } else {
-                        TreeNode treeDto_3 = new TreeNode();
-                        treeDto_3.setId(map_1.getItemCode() + map_2.getItemCode() + "无数据");
-                        treeDto_3.setName("无数据");
-                        treeDto_3.setpId(map_1.getItemCode() + map_2.getItemCode());
-                        treeDto_3.setOpen(true);
-                        parentNodes.add(treeDto_3);
-                    }
+	public List<TreeNode> getParentNodes(String repProdType) {
+		List<DataDictItem> prodStatusList = new ArrayList<DataDictItem>();// 产品状态
+		List<DataDictItem> issueTypeList = new ArrayList<DataDictItem>();// 发行方式
+		List<String> prodSeriesList = new ArrayList<String>();// 产品系列
+		List<String> prodSeriesListSon = new ArrayList<String>();
+		List<TreeNode> parentNodes = new ArrayList<TreeNode>();
+		prodStatusList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.信披_产品状态.getValue());
+		issueTypeList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.发行方式_信批.getValue());
+		// 一级：产品状态
+		if (prodStatusList != null && prodStatusList.size() > 0) {
+			for (DataDictItem map_1 : prodStatusList) {
+				// 查询产品系列的条件
+				Map<String, Object> param = new HashMap<>();
+				TreeNode treeDto = new TreeNode();
+				treeDto.setId(map_1.getItemCode());
+				treeDto.setName(map_1.getItemValue());
+				treeDto.setpId("");
+				treeDto.setOpen(true);
+				treeDto.setObject("1");
+				parentNodes.add(treeDto);
+				param.put("prodStatus", map_1.getItemCode());
+				// 二级：发行方式
+				for (DataDictItem map_2 : issueTypeList) {
+					TreeNode treeDto_2 = new TreeNode();
+					treeDto_2.setId(map_1.getItemCode() + map_2.getItemCode());
+					treeDto_2.setName(map_2.getItemValue());
+					treeDto_2.setpId(map_1.getItemCode());
+					treeDto_2.setOpen(true);
+					treeDto_2.setObject("2");
+					parentNodes.add(treeDto_2);
+					param.put("issueType", map_2.getItemCode());
+					// 三级：产品系列：产品系列为文本框输入，不是字典值，需要从产品基本信息表中查询所有的产品系列
+					prodSeriesList = batchGenReport001Mapper.selectAllProdSeries(param);
+					if (prodSeriesList != null && prodSeriesList.size() > 0) {
+						for (String map_3 : prodSeriesList) {
+							TreeNode treeDto_3 = new TreeNode();
+							treeDto_3.setId(map_1.getItemCode() + map_2.getItemCode() + map_3);
+							treeDto_3.setName(map_3);
+							treeDto_3.setpId(map_1.getItemCode() + map_2.getItemCode());
+							treeDto_3.setOpen(true);
+							treeDto_3.setObject("3");
+							parentNodes.add(treeDto_3);
 
-                    }
+							if ("C".equals(repProdType)) { // 如果是子产品，需要多一层
+								param.put("prodSeries", map_3);
+								// 母产品名称
+								prodSeriesListSon = batchGenReport001Mapper.selectAllProdSeriesSon(param);
+								for (String map_4 : prodSeriesListSon) {
+									TreeNode treeDto_4 = new TreeNode();
+									treeDto_4.setId(map_1.getItemCode() + map_2.getItemCode() + map_3 + map_4);
+									treeDto_4.setName(map_4);
+									treeDto_4.setpId(map_1.getItemCode() + map_2.getItemCode() + map_3);
+									treeDto_4.setOpen(true);
+									treeDto_4.setObject("4");
+									parentNodes.add(treeDto_4);
+								}
+							}
+						}
+					}
+//					else {
+//						TreeNode treeDto_3 = new TreeNode();
+//						treeDto_3.setId(map_1.getItemCode() + map_2.getItemCode() + "无数据");
+//						treeDto_3.setName("无数据");
+//						treeDto_3.setpId(map_1.getItemCode() + map_2.getItemCode());
+//						treeDto_3.setOpen(true);
+//						parentNodes.add(treeDto_3);
+//					}
 
-                }
-            }
+				}
 
-        return parentNodes;
-    }
+			}
+		}
+
+		return parentNodes;
+	}
     
 	/**
 	 * 报表的数据检查

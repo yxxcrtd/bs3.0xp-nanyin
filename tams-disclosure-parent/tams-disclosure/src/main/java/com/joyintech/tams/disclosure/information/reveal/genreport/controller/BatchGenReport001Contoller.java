@@ -121,10 +121,11 @@ public class BatchGenReport001Contoller extends BaseController {
 		if ( param.get("repId")!=null ) { 
 			repId = param.get("repId").toString();
 			repProdType = getRepProdType(repId);
+		
+			//根据报表的类型，确定是针对母产品进行报表还是子产品进行报表
+			if ( !"N".equals(repProdType))
+				return batchGenReport001Service.buildProdTree(repProdType,repId);
 		}
-		//根据报表的类型，确定是针对母产品进行报表还是子产品进行报表
-		if ( !"N".equals(repProdType))
-			return batchGenReport001Service.buildProdTree(repProdType,repId);
 		return null;
 	}
     
@@ -284,6 +285,23 @@ public class BatchGenReport001Contoller extends BaseController {
 	@ResponseBody
 	public List<SelectOptionDto> getQuarter(){
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.季度, null);
+		List<SelectOptionDto> list = selectDto.getOptions();
+		return list;
+	}
+	
+	/**
+	 *
+	 * 获取系统枚举参数
+	 * <功能详细描述>
+	 * @param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getHalfYear")
+	@ResponseBody
+	public List<SelectOptionDto> getHalfYear(){
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.半年, null);
 		List<SelectOptionDto> list = selectDto.getOptions();
 		return list;
 	}
