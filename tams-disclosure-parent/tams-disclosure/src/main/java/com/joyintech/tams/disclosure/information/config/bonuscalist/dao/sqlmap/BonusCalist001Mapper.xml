@@ -222,7 +222,7 @@
     </update>
 
     <delete id="deleteByBusKey">
-        delete * from DIS_BONUS_LIST
+        delete  from DIS_BONUS_LIST
         where
         PROD_ID =  #{prodId,jdbcType=VARCHAR} and
         PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}

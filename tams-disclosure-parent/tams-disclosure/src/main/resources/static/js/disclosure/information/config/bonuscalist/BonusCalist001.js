@@ -219,6 +219,7 @@
             Joyin.dialog(JoyinUtil.getLabel("产品分红计算条件"),
                 basePath + "disclosure/information/config/bonuscalist/BonusCalist003/init","80%", "80%", {},
                 function() {
+
                     table.reload();
                 });
         });
