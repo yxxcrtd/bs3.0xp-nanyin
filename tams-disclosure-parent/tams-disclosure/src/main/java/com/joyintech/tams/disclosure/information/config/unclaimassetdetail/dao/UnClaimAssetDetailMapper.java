@@ -131,7 +131,7 @@ public interface UnClaimAssetDetailMapper  {
 
     int update(UnClaimAssetDetailDto unClaimAssetDetailDto);
 
-    UnClaimAssetDetailDto selectHisData(String workflowId);
+    List<UnClaimAssetDetailDto> selectHisData(String workflowId);
 
     int updateByPrimaryKey(UnClaimAssetDetailDto dto);
 }

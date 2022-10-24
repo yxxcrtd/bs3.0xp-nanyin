@@ -53,11 +53,13 @@ public class UnClaimAssetDetail002Controller extends BaseController {
         String effDate = getParam("effDateStr");
         String effEndDate = getParam("effEndDateStr");
         String dataStatus = getParam("dataStatus");
+        String editFlag = getParam("editFlag");
         Map<String,Object> params = new HashMap<>();
         params.put("prodId",prodId);
         params.put("effDate",effDate);
         params.put("effEndDate",effEndDate);
         params.put("dataStatus",dataStatus);
+        model.addAttribute("editFlag", editFlag);
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(prodId)
                 && StringUtil.isNotEmpty(effDate) && StringUtil.isNotEmpty(effEndDate)) {
@@ -95,8 +97,13 @@ public class UnClaimAssetDetail002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) UnClaimAssetDetailDto dto, BindingResult result) {
+        if(StringUtil.equals(dto.getEditFlag(),"01")){
+            if(unClaimAssetDetail001Service.checkExistData(dto)){
+                return new AjaxResult("系统已存在相同产品主代码+生效日+生效截止日的数据，不允许新建！", MessageType.错误消息);
+            }
+        }
         if(unClaimAssetDetail001Service.isInWorkflow(dto)){
-            return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+            return new AjaxResult("系统已存在相同产品主代码+生效日+生效截止日的流程中的数据！", MessageType.错误消息);
         }
         if (result.hasErrors()) {
             return new AjaxResult(result);

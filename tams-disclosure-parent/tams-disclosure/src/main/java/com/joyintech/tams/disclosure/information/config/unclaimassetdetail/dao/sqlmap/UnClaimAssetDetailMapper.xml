@@ -519,13 +519,14 @@
     <select id="selectUnClaimAssetList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
         select
             A.PROD_ID,
-            to_char(A.EFF_DATE,'yyyy-mm-dd') effDateStr,
-            to_char(A.EFF_END_DATE,'yyyy-mm-dd') effEndDateStr
+            to_char(A.EFF_DATE,'yyyy/mm/dd') effDateStr,
+            to_char(A.EFF_END_DATE,'yyyy/mm/dd') effEndDateStr
         from DIS_NOSTD_CREDITOR A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFF_DATE,'yyyy-mm-dd'),to_char(A.EFF_END_DATE,'yyyy-mm-dd')) IN (" separator="," close=")">
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFF_DATE,'yyyy/mm/dd'),to_char(A.EFF_END_DATE,'yyyy/mm/dd')) IN (" separator="," close=")">
                 (#{item.prodId},#{item.effDateStr},#{item.effEndDateStr})
             </foreach>
+            AND A.DATA_STATUS!='D'
         </where>
     </select>
     <select id="getWorklowData" resultType="com.joyintech.framework.base.entity.ProcessMark">
@@ -588,10 +589,12 @@
 
     <select id="selectHisData"
             resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
-        select distinct
-            NOSTD_ASSET_ID,
-            DATA_STATUS,
-            PROD_ID
+        select NOSTD_ASSET_ID,PROD_ID,EFF_DATE,EFF_END_DATE,FINANCIER,
+               PROJECT_NO,
+               PROJECT_NAME,REM_FINANCING_PERIOD,INCOME_DISTRIBUTE,
+               TRD_CONSTRUCT,RISK_INFO ,DATA_STATUS,
+               DATA_SOURCE,CREATE_USER ,CREATE_TIME,UPDATE_USER,
+               UPDATE_TIME
       from DIS_NOSTD_CREDITOR_HIS where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
     </select>
 
