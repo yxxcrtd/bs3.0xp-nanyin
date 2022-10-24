@@ -287,13 +287,18 @@
 			 return;
 		 }
 		 var selArrUseful =[];
+		 var selArrDelete =[];
 		 selArr.forEach(v => {
 			 if(v.dataStatus == 'E'){
 				 //selArr.remove();
 				 selArrUseful.push(v);
 			 }
+			 if(v.dataStatus == 'D'){
+				 //selArr.remove();
+				 selArrDelete.push(v);
+			 }
 		 })
-		 if (!selArrUseful || selArrUseful.length == 0) {
+		 if ((!selArrUseful || selArrUseful.length == 0)||selArrDelete&&selArrDelete.length!=0) {
 			 Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
 			 return;
 		 }

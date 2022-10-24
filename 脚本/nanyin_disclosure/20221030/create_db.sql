@@ -295,18 +295,7 @@ comment on column DIS_BONUS_LIST.CREATE_DEPT is '创建部门';
 alter table DIS_BONUS_LIST modify PER_BASE VARCHAR2(128);
 -- 产品分红计算 建表语句 add by sunjie 2022-10-19 end
 
--- add by zhengxiaolian 2022-10-20  报表类别增加首页类型 start
-alter table REP_INFO add HOME_PAGE_TYPE VARCHAR2(2);
--- add by zhengxiaolian 2022-10-20  报表类别增加首页类型 end
-
--- add by zhengxiaolian 2022-10-21  关联交易情况字段调整 start
-alter table REP_REL_DEAL modify (ASSET_AMT NUMBER(30,4)) ;
-alter table REP_REL_DEAL modify (TRUST_FEE NUMBER(30,4)) ;
-alter table REP_REL_DEAL modify (SELL_FEE NUMBER(30,4)) ;
-alter table REP_REL_DEAL modify (OTHER_FEE NUMBER(30,4)) ;
--- add by zhengxiaolian 2022-10-21  关联交易情况字段调整 start
-
--- add by zhengxiaolian 2022-10-21  报表披露字段调整 start
-ALTER TABLE REP_REVEAL MODIFY SYS_FILENAME VARCHAR2(1000);
--- add by zhengxiaolian 2022-10-21  报表披露字段调整 end
+-- 增加手工批量生成报表 chenxc，2022-10-21
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('BatchGenReport001', 'DIS', '/disclosure/information/reveal/genreport/BatchGenReport001', '/disclosure/information/reveal/genreport/BatchGenReport001', 'REPORT_006_002_106', '02', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
+INSERT INTO SYS_MENU(MENU_ID, SYSTEM_CODE, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
 

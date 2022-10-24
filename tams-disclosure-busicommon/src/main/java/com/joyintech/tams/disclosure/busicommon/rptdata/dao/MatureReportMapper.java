@@ -10,12 +10,9 @@
 
 package com.joyintech.tams.disclosure.busicommon.rptdata.dao;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.RepFeeTrd;
@@ -33,11 +30,4 @@ public interface MatureReportMapper {
 	List<BonusReportDto> selectBonusPlan(Map<String,Object>paras) ;
 	
 	List<RepFeeTrd> selectFees(Map<String,Object>paras);
-
-
-	BigDecimal getDisBonusMoney(@Param("prodId") String prodId,@Param("setDate") Date settDate);
-
-	BigDecimal getUnitBonus(@Param("prodId") String prodId,@Param("setDate") Date settDate);
-
-	BigDecimal getYield(@Param("prodId") String prodId,@Param("setDate") Date settDate);
 }

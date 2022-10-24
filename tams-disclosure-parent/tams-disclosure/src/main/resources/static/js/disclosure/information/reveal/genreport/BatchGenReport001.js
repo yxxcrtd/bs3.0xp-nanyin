@@ -130,7 +130,7 @@ $(function () {
 		for (var i = 0; i < data.length; i++) {
 			if(data[i].screenKey != 'indexId') {
 				SearchHtml +='<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">'
-					+'<label class="layui-form-label form-lable" style="width: 100px">'+data[i].screenName+'</label>'
+					+'<label class="layui-form-label form-lable">'+data[i].screenName+'</label>'
 					+'<div class="layui-input-inline input-inline" data-th-formatoption="false" style="width: 60%!important;">';
 			}
 			//产品名称下拉框
@@ -315,18 +315,19 @@ $(function () {
 				}
 			}
 			if(modelId==="MZJZGG" || modelId==='MZJJBG') {
-				var checkflg = false;
-				var msg;
-				Joyin.ajaxSync('dateCheck', params, function (result) {
-					if(result){
-						msg = result;
-						checkflg = true;
-					}
-				});
-				if (checkflg) {
-					Joyin.alert(msg,2);
-					return;
-				}
+//				var checkflg = false;
+//				var msg;
+//				Joyin.ajaxSync('dateCheck', params, function (result) {
+//					if(result){
+//						msg = result;
+//						checkflg = true;
+//					}
+//				});
+//				if (checkflg) {
+//					Joyin.alert(msg,2);
+//					return;
+//				}
+				return;
 			}
 			if(modelId==="ZQXCPKFGG_GMCP"||modelId==='ZQXCPKFGG_GMCPDSH'){
 				if (params['enddate']===null||params['enddate']===undefined) {
@@ -595,7 +596,7 @@ $(function () {
 		var nodes = treeObj.getCheckedNodes();
 		var params = new Array();
 		for (var i = 0; i < nodes.length; i++) {
-			if ( nodes[i].isParent==null || nodes[i].isParent==false ) //取叶子节点
+			if ( nodes[i].level>=3 && (nodes[i].isParent==null || nodes[i].isParent==false) ) //取叶子节点
 			params.push(nodes[i]);
 			//var flag = getParam(nodes[i], params);
 		}

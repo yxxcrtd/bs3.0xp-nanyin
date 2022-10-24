@@ -7,7 +7,7 @@ $(function() {
      */
     var getSearchParams = function() {
         return {
-            prodId:$('#prodId').val(),
+            prodId:$('#prodId').val()== null ? null : $('#prodId').val().join(","),
             prodName:$('#prodName').val() == null ? null : $('#prodName').val().join(","),
             raiseStrdateStart: $.trim($('#raiseStrdate').startDate()),
             raiseStrdateEnd: $.trim($('#raiseStrdate').endDate()),
@@ -213,20 +213,13 @@ $(function() {
                 return;
             }
             var selArrUseful =[];
-            var selArrUsefulC=[];
             selArr.forEach(v => {
                 if(v.status == 'D'){
                     selArrUseful.push(v);
                 }
-                if(v.status == 'C'){
-                  selArrUsefulC.push(v);}
-            });
+            })
             if (!selArrUseful || selArrUseful.length > 0) {
                 Joyin.error(JoyinUtil.getMessage("删除状态的数据不支持删除！"));
-                return;
-            }
-            if (!selArrUsefulC || selArrUsefulC.length > 0) {
-                Joyin.error(JoyinUtil.getMessage("待复核的数据不支持删除！"));
                 return;
             }
 

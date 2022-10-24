@@ -161,6 +161,15 @@
         from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
+
+    <select id="selectData" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include
+                refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper.Base_Column_List"/>
+        from REP_PROD_INFO
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and STATUS !='D'
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete
         from REP_PROD_INFO
@@ -587,8 +596,16 @@
         ) temp
         where 1=1
 
-        <if test="prodId != null and prodId.length > 0">
+        <!--<if test="prodId != null and prodId.length > 0">
             AND  temp.P_PROD_ID LIKE concat('%',concat(#{prodId,jdbcType=VARCHAR},'%'))
+        </if>-->
+
+        <if test="prodIdArr != null and prodIdArr.length > 0">
+            AND temp.P_PROD_ID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
 
         <if test="prodNameArr != null and prodNameArr.size > 0">

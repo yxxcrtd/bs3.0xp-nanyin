@@ -16,8 +16,9 @@
             resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
              select
                   <include refid="com.joyintech.tams.common.base.dao.DisBonusListMapper.Base_Column_List" />,
-                  TO_CHAR(UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
-             from DIS_BONUS_LIST
+                  rpi.PROD_NAME prodName,
+                  TO_CHAR(dbl.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+             from DIS_BONUS_LIST dbl left join REP_PROD_INFO rpi on dbl.PROD_ID =rpi.PROD_ID
              <where>
                  <if test="prodIdList != null and prodIdList.size() > 0">
                      AND PROD_ID in
@@ -73,7 +74,7 @@
         from DIS_BONUS_LIST A
         <where>
             <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.PROFIT_BASE_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
-                (#{item.prodId},#{item.profitBaseDateStr},'E')
+                (#{item.prodId,jdbcType=VARCHAR},#{item.profitBaseDateStr,jdbcType=VARCHAR},'E')
             </foreach>
         </where>
     </select>
