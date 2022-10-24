@@ -18,7 +18,7 @@
                             placeholder="请输入"
                             data-th-placeholder="#{SysCommon.selectplaceholder}"
                             formatoption=true required  data-th-initValue="${entity?.prodId}"
-                            data-th-data-url="@{/disclosure/information/config/bonuscalist/BonusCalist002/getProdId}">
+                            data-th-data-url="@{/disclosure/information/config/repprodinfo/ProdInfo001/queryPprodName}">
                     </select>
                 </div>
                 <div class="layui-inline">
@@ -71,15 +71,15 @@
                 </div>
             </div>
             <div class="form-inline-wrap">
-                <label class="layui-form-label form-lable" data-th-text="产品期末余额">产品期末余额(份额)</label>
+                <label class="layui-form-label form-lable" data-th-text="#{Bonus002.qmye}">产品期末余额(份额)</label>
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="prodEndBalance" name="prodEndBalance" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000000000000000){
+                                                         }else if (value >= Math.pow(10,17)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}"  data-th-value='${entity?.prodEndBalance}'
-                           class="layui-input form-input text-number" data-textrange='2' maxlength=18
+                           class="layui-input form-input text-number" data-textrange='2' maxlength=20
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -88,11 +88,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="unitNum" name="unitNum" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000000000000000){
+                                                         }else if (value >= Math.pow(10,10)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}"  data-th-value='${entity?.unitNum}'
-                           class="layui-input form-input text-number" data-textrange='2' maxlength=18
+                           class="layui-input form-input text-number" data-textrange='2' maxlength=15
                            placeholder="请输入内容" required>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                     <input type="text" id="runDays" name="runDays" placeholder=""
                            class="layui-input form-input "  lay-verify="integer"
                            onkeyup="value=value.replace(/[^\d]/g,'')"
-                           maxlength="5"
+                           maxlength="10"
                            data-th-Value="${entity?.runDays}" >
 
                 </div>
@@ -158,11 +158,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="perBaseProfit" name="perBaseProfit" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000000000000000){
+                                                         }else if (value >= Math.pow(10,17)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.perBaseProfit}'
-                           class="layui-input form-input text-number" data-textrange='2'  maxlength=18
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=20
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -173,11 +173,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="exceed" name="exceed" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000000000000000){
+                                                         }else if (value >= Math.pow(10,17)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.exceed}'
-                           class="layui-input form-input text-number" data-textrange='2'  maxlength=18
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=20
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -186,11 +186,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="perFee" name="perFee" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000000){
+                                                         }else if (value >= Math.pow(10,17)){
                                                              this.value= '';
                                                          }else{
-                                                    this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/)}" data-th-value='${entity?.perFee}'
-                           class="layui-input form-input text-number" data-textrange='4'  maxlength=11
+                                                    this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.perFee}'
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=20
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -199,11 +199,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="disBonusMoney" name="disBonusMoney" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000000){
+                                                         }else if (value >= Math.pow(10,17)){
                                                              this.value= '';
                                                          }else{
-                                                    this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/)}" data-th-value='${entity?.disBonusMoney}'
-                           class="layui-input form-input text-number" data-textrange='4'  maxlength=11
+                                                    this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.disBonusMoney}'
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=20
                            placeholder="请输入内容" required>
                 </div>
             </div>
@@ -214,11 +214,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="unitBonus" name="unitBonus" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000){
+                                                         }else if (value >=  Math.pow(10,17)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/)}" data-th-value='${entity?.unitBonus}'
-                           class="layui-input form-input text-number" data-textrange='4'  maxlength=8 required
+                           class="layui-input form-input text-number" data-textrange='4'  maxlength=22 required
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -227,7 +227,7 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="yield" name="yield" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000){
+                                                         }else if (value >= Math.pow(10,17)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/)}" data-th-value='${entity?.yield}'

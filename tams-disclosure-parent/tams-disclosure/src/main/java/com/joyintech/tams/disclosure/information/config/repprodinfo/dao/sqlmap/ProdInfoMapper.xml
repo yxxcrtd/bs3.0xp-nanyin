@@ -787,7 +787,8 @@
         select distinct
         prod.PROD_ID id,
         case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
-        else prod.PROD_NAME end text
+        else prod.PROD_NAME end text,
+        prod.PROD_RE object
         from
         REP_PROD_INFO prod
         left join V_REP_PROD_INFO pprod
