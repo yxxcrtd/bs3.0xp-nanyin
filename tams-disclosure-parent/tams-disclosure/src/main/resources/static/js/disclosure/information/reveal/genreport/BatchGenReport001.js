@@ -129,7 +129,7 @@ $(function () {
 			+'<div class="layui-form-item">';
 		for (var i = 0; i < data.length; i++) {
 			if(data[i].screenKey != 'indexId') {
-				SearchHtml +='<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">'
+				SearchHtml +='<div class="layui-inline layui-col-md6">'
 					+'<label class="layui-form-label form-lable">'+data[i].screenName+'</label>'
 					+'<div class="layui-input-inline input-inline" data-th-formatoption="false" style="width: 60%!important;">';
 			}
