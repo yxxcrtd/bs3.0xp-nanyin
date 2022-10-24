@@ -259,12 +259,15 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
+                    //根据 子产品代码 查找 产品登记编码
+                    String re = bonusCalist001Mapper.findRe(item.getProdId());
                     Map<String, Object> map = new HashMap<>();
                     map.put("prodId", item.getProdId());
                     map.put("profitBaseDate", item.getProfitBaseDate());
                     item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
+                    item.setProdRegistNo(re);
                     BonusCalist001Dto dto = this.selectByBusPK(map);
                     if (dto != null) {
                         bonusCalist001Mapper.updateByBusKey(item);
@@ -300,7 +303,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             // 验证消息
             List<String> message = new ArrayList<>();
             if (!StringUtil.isNotEmpty(rowData.get(0))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品代码"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else if (!prodList.contains(rowData.get(0).trim())){
                 message.add("产品代码未在产品基本信息表中维护。");
             }

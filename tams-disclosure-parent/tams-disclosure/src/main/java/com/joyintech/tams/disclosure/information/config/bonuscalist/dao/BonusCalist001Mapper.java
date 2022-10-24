@@ -31,4 +31,6 @@ public interface BonusCalist001Mapper {
     int updateStatus(BonusCalist001Dto bonusCalist001Dto);
 
     int deleteByBusKey(BonusCalist001Dto bonusCalist001Dto);
+
+    String findRe(String prodId);
 }

@@ -111,6 +111,19 @@ public class BonusCalist001Dto extends DisBonusList implements ITableRow, Proces
         }
     }
 
+    private String lastProfitBaseDateStr;
+
+    public void setLastProfitBaseDateStr(String lastProfitBaseDateStr) {
+        this.lastProfitBaseDateStr = lastProfitBaseDateStr;
+    }
+
+    public String getLastProfitBaseDateStr(){
+        if (StringUtil.isNotEmpty(this.lastProfitBaseDateStr)) {
+            return this.lastProfitBaseDateStr;
+        } else {
+            return super.getLastProfitBaseDate() == null ? null : DateUtil.format(super.getLastProfitBaseDate(), "yyyy/MM/dd");
+        }
+    }
     @Override
     @PrimaryKey(value = PrimaryKey.Field.PK_1)
     public String getBonusListId() {
@@ -151,5 +164,9 @@ public class BonusCalist001Dto extends DisBonusList implements ITableRow, Proces
     @NotEmpty(fieldName = "单位分红", groups = {ValidateGroupEdit.class})
     public BigDecimal getUnitBonus() {
         return super.getUnitBonus();
+    }
+
+    public String getRunDaysStr(){
+        return String.valueOf(super.getRunDays());
     }
 }

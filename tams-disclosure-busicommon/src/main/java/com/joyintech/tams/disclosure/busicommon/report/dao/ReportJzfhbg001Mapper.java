@@ -1,15 +1,16 @@
 
 package com.joyintech.tams.disclosure.busicommon.report.dao;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.joyintech.tams.common.base.entity.DisBonusList;
 import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportJzfhbg001Dto;
-import com.joyintech.tams.disclosure.busicommon.report.dto.ReportMzjz001Dto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -59,4 +60,9 @@ public interface ReportJzfhbg001Mapper {
     List<ReportOpenPlanDto> getOpenPlanList(Map<String, Object> searchParam);
 
     DisProdBonusplan checkGenerateFlag(Map<String, Object> searchParam);
+    
+    /**
+     * 查询分红计算清单
+     */
+    List<DisBonusList> selectBonusList(Map<String,Object> searchParam);
 }
