@@ -21,16 +21,16 @@
              from DIS_BONUS_LIST dbl left join REP_PROD_INFO rpi on dbl.PROD_ID =rpi.PROD_ID
              <where>
                  <if test="prodIdList != null and prodIdList.size() > 0">
-                     AND PROD_ID in
+                     AND dbl.PROD_ID in
                      <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
                          #{item}
                      </foreach>
                  </if>
                  <if test="dataStatus != null and !dataStatus.equals('')">
-                     AND DATA_STATUS=#{dataStatus}
+                     AND dbl.DATA_STATUS=#{dataStatus}
                  </if>
                  <if test="profitBaseDate != null and profitBaseDate != ''">
-                     AND PROFIT_BASE_DATE = to_date(#{profitBaseDate,jdbcType=DATE},'yyyy-MM-dd')
+                     AND dbl.PROFIT_BASE_DATE = to_date(#{profitBaseDate,jdbcType=DATE},'yyyy-MM-dd')
                  </if>
              </where>
 
