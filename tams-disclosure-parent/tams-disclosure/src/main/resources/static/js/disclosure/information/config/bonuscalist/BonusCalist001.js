@@ -209,8 +209,10 @@
                 }
             }
             var object = {selectedItem: selArr};
+            Joyin.confirm(JoyinUtil.getLabel("请确认是否进行批量审批？"), function(){
             Joyin.ajaxJson(basePath + 'disclosure/information/config/bonuscalist/BonusCalist001/changeStatus', object.selectedItem, function (result) {
                 table.reload();
+            });
             });
         });
 
