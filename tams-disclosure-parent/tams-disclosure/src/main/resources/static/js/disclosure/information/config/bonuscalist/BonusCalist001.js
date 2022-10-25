@@ -62,7 +62,7 @@
             ,{field:'perFee',  title: '业绩报酬',sortField:"perFee",type:'number',width: 100}
             ,{field:'disBonusMoney',  title: '应分配分红金额',sortField:"disBonusMoney",type:'number',width: 100}
             ,{field:'unitBonus',  title: '单位分红',sortField:"unitBonus",type:'number',width: 100, digit: 4}
-            ,{field:'yield',  title: '收益率',sortField:"yield",type:'number',width: 100}
+            ,{field:'yield',  title: '收益率',sortField:"yield",type:'number',width: 100, digit: 4}
             ,{field:'msg',  title: '错误信息',sortField:"msg",width: 100}
             ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime',width: 100} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser",width: 100}//更新人
