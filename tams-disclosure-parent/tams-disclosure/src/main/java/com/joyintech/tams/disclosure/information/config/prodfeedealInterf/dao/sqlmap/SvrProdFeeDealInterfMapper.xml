@@ -142,8 +142,11 @@
         from REP_FEE_TRD rft
         left join V_REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
         <where>
-            <if test='prodId != null and !prodId.equals("")'>
-                and rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
+            <if test="prodIdList != null and prodIdList.size() > 0">
+                AND rft.PROD_ID in
+                <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
             </if>
             <if test='feeType != null and !feeType.equals("")'>
                 and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}

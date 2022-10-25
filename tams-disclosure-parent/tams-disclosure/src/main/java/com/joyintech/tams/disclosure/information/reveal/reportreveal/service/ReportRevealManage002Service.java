@@ -124,9 +124,9 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
         String date = DateUtil.getCurrentDate();
         param.put("date", date);
         //查询要处理的信披单据，没有关联代销机构的产品对应的单据，不进行披露
-        List<ReportConfirmManage001Dto> list = mapper.getRepRevealList(param);
+         List<ReportConfirmManage001Dto> list = mapper.getRepRevealList(param);
         if (list != null && list.size() > 0) {
-            list=list.stream().filter(dto->prodIds.contains(dto.getProdid())).collect(Collectors.toList());
+            //list=list.stream().filter(dto->prodIds.contains(dto.getProdid())).collect(Collectors.toList());
             Map<String, List<ReportConfirmManage001Dto>> map = list.stream().collect(Collectors.groupingBy(ReportConfirmManage001Dto::getAgencyName));
             for (String agencyName : map.keySet()) {
                 List<ReportConfirmManage001Dto> reportConfirmManage001DtoList = map.get(agencyName);

@@ -119,6 +119,10 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
      */
     public Page<SvrProdFeeDealInterfDto> selectInfo(Map<String, Object> param) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
+        String prodId = (String)param.get("prodId");
+        if(StringUtil.isNotEmpty(prodId)){
+            param.put("prodIdList", StringUtil.splitToList(GlobalConstant.COMMA,prodId));
+        }
         Page<SvrProdFeeDealInterfDto> result = queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
                 -> svrProdFeeDealInterfMapper.selectInfo(param));
         return result;
