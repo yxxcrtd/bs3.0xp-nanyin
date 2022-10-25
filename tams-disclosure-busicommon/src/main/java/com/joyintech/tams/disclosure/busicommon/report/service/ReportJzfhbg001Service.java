@@ -170,46 +170,55 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             //本次分红方案（元/1份份额）
                             String unitProfitStr = "0" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
                             reportJzfhbg001Dto.setcUnitProfit(unitProfitStr);
+                            
+                            //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            Date profitBaseDate = sdf.parse(searchParam.get("settDate").toString());
+                            searchParam.put("profitBaseDate", profitBaseDate);
+                            List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
+                            String unitProfitStr1 = "";
+                            if ( listBonus.size()>0 ) { 
+                            	BigDecimal unitValue1 = listBonus.get(0).getUnitBonus();
+                                String unitValueStr1 = unitValue1.setScale(4, BigDecimal.ROUND_DOWN).toString();
+                                unitValueStr1 = "1" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
+                                reportJzfhbg001Dto.setcUnitValue(unitValueStr1);
+                                //本次分红方案（元/1份份额）
+                                unitProfitStr1 = "0" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
+                                reportJzfhbg001Dto.setcUnitProfit(unitProfitStr1);
+                            	BigDecimal yield1 = listBonus.get(0).getYield();
+                            	if ( yield1!=null )  {
+                            		yield1 = yield1.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
+                            		reportJzfhbg001Dto.setYield(yield1.toString()+"%");
+                            	} else {
+                            		reportJzfhbg001Dto.setYield("0.00%");
+                            	}
+                            }
+                            //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
+                            
                             /**
                              * 当期净值模块
                              */
                             if (lastBonus == null) {
                                 //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)；
-                                reportJzfhbg001Dto.setUnitValueT(BigDecimal.ONE.add(new BigDecimal(unitProfitStr)).toString());
+                                reportJzfhbg001Dto.setUnitValueT(BigDecimal.ONE.add(new BigDecimal(unitProfitStr1)).toString());
                             } else {
                                 // 若产品不是第一次分红，每份额累计净值（元）=（子）产品上一个收益分配基准日的产品累计单位净值+本次分红方案（结果保留四位小数）
                                 searchParam.put("settDate", DateUtil.format(lastBonus.getSettDate()));
                                 RepProdIndex lastRepProdIndex = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
                                 if (lastRepProdIndex != null) {
-                                        reportJzfhbg001Dto.setUnitValueT(lastRepProdIndex.getUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
+                                        reportJzfhbg001Dto.setUnitValueT(lastRepProdIndex.getUnitValueT().add(new BigDecimal(unitProfitStr1)).toString());
                                 }else {
-                                    reportJzfhbg001Dto.setUnitValueT(new BigDecimal(unitProfitStr).toString());
+                                    reportJzfhbg001Dto.setUnitValueT(new BigDecimal(unitProfitStr1).toString());
 
                                 }
                             }
                             //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
-                            BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 10, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
+                           // BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 10, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
                             //年化收益率
-                            reportJzfhbg001Dto.setYield(yield.toString()+"%");
+                            //reportJzfhbg001Dto.setYield(yield.toString()+"%");
                         }
                     }
-                    //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date profitBaseDate = sdf.parse(searchParam.get("settDate").toString());
-                    searchParam.put("profitBaseDate", profitBaseDate);
-                    List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
-                    if ( listBonus.size()>0 ) { 
-                    	BigDecimal unitValue = listBonus.get(0).getUnitBonus();
-                        String unitValueStr = unitValue.setScale(4, BigDecimal.ROUND_DOWN).toString();
-                        unitValueStr = "1" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
-                        reportJzfhbg001Dto.setcUnitValue(unitValueStr);
-                        //本次分红方案（元/1份份额）
-                        String unitProfitStr = "0" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
-                        reportJzfhbg001Dto.setcUnitProfit(unitProfitStr);
-                    	BigDecimal yield = listBonus.get(0).getYield().multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
-                    	reportJzfhbg001Dto.setYield(yield.toString()+"%");
-                    }
-                    //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
+
                     
                     //设置公告日 = 收益分配基准日+1工作日
                     searchParam.put("busi_date", DateUtil.parse(settDateStr));

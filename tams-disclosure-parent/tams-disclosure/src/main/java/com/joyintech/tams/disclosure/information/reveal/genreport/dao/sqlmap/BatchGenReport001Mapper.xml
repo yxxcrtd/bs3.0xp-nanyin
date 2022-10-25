@@ -79,4 +79,70 @@
         AND prod.status='E' AND prod.PROD_SERIES is not null        
     </select>
     
+    <select id="selectProdList" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity">
+		SELECT
+    	PROD_ID prodId,
+    	PROD_RE prodRe,
+    	PROD_NAME prodName,
+    	PROD_ABBR prodAbbr,
+    	0 raiseMin,
+    	0 raiseMax,
+    	RAISE_STRDATE raiseStrdate,
+    	RAISE_ENDDATE raiseEnddate,
+    	null raiseCcy,
+    	SET_DATE setDate,
+		null vdate,
+		null firstOpenDay,
+    	MDATE mdate,
+    	MDATE actMdate,
+		null term,
+		null windupDate,
+		null issueMode,
+    	PROFIT_TYPE profitType,
+    	PROD_TYPE prodType,
+    	ISSUE_STATUS issueStatus,
+    	RAISE_TYPE raiseType,
+		null riskLevel,
+		null revealChannel
+		FROM REP_PROD_INFO 
+    	where 1=1 ${sqlVal}
+    		AND STATUS = 'E'
+    		and ISSUE_STATUS ='01'
+    		and REP_PROD_TYPE in ('02','03')
+    		AND NOT EXISTS(select  1 FROM REP_JOB_EXCLUDE_PRO pro
+    		WHERE pro.PROD_ID=REP_PROD_INFO.PROD_ID and pro.JOB_ID=#{jobId, jdbcType=VARCHAR})
+		union all
+		SELECT
+			PROD_ID prodId,
+			PROD_RE prodRe,
+			PROD_NAME prodName,
+			PROD_ABBR prodAbbr,
+			0 raiseMin,
+			0 raiseMax,
+			RAISE_STRDATE raiseStrdate,
+			RAISE_ENDDATE raiseEnddate,
+			null raiseCcy,
+			SET_DATE setDate,
+			null vdate,
+			null firstOpenDay,
+			MDATE mdate,
+			MDATE actMdate,
+			null term,
+			null windupDate,
+			null issueMode,
+			PROFIT_TYPE profitType,
+			PROD_TYPE prodType,
+			ISSUE_STATUS issueStatus,
+			RAISE_TYPE raiseType,
+			null riskLevel,
+			null revealChannel
+		FROM V_REP_PROD_INFO v
+		where 1=1 ${sqlVal}
+    		AND STATUS = 'E'
+    		and ISSUE_STATUS ='01'
+    		and REP_PROD_TYPE in('01')
+    		AND NOT EXISTS(select  1 FROM REP_JOB_EXCLUDE_PRO pro
+    		WHERE pro.PROD_ID=v.PROD_ID and pro.JOB_ID=#{jobId, jdbcType=VARCHAR})
+	</select>
+	
 </mapper>

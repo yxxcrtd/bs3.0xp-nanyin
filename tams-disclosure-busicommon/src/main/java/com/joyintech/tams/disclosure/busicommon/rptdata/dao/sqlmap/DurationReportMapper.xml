@@ -108,7 +108,7 @@
 			and rindex.index_period=#{indexPeriod,jdbcType=VARCHAR}
 		</if>
 		<if test="prodId!=null">
-			and rindex.INDEX_DETAIL like concat(concat('%',#{prodId,jdbcType=VARCHAR}),',%')
+			and rindex.INDEX_DETAIL||',' like concat(concat('%',#{prodId,jdbcType=VARCHAR}),',%')
 		</if>
 		
 	</select>

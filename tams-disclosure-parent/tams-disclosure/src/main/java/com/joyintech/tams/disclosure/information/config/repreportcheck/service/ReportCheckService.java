@@ -71,8 +71,12 @@ public class ReportCheckService extends CommonExportService<ReportCheckDto> impl
      */
     public Page<ReportCheckDto> findByPage(Map<String, Object> params) {
         String prodId = (String) params.get("prodId");
+        String finprodId=(String) params.get("finprodId");
         if (StringUtil.isNotEmpty(prodId)) {
             params.put("prodIdArr", StringUtil.splitToList(GlobalConstant.COMMA, prodId));
+        }
+        if (StringUtil.isNotEmpty(finprodId)) {
+            params.put("finprodIdArr", StringUtil.splitToList(GlobalConstant.COMMA, finprodId));
         }
         String reportType = (String) params.get("reportType");
         if (StringUtil.isNotEmpty(reportType)) {
