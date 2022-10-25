@@ -210,8 +210,8 @@
         <if test="prodIdList != null and prodIdList.size() > 0 ">
             <foreach item="item" collection="prodIdList" index="index"
                      open="and" separator="OR" close="">
-                (T1.PROD_ID like concat(concat('%',#{item}),'%')
-                or T1.PROD_NAME like concat(concat('%',#{item}),'%'))
+                (d.PROD_ID like concat(concat('%',#{item}),'%')
+                or r.PROD_NAME like concat(concat('%',#{item}),'%'))
             </foreach>
         </if>
     </select>
