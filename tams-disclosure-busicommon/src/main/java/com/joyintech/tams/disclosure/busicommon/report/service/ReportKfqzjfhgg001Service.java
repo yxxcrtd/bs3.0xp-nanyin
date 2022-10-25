@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,8 +22,10 @@ import org.springframework.stereotype.Service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.DisBonusList;
 import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportJzfhbg001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportKfqzjfhgg001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportCommonProdDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqHisBonusDto;
@@ -56,6 +59,10 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
 
     @Autowired
     private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
+    
+    @Autowired
+    private ReportJzfhbg001Mapper reportJzfhbg001Mapper;
+    
     /**
      * 1.适用于“募集方式”为“公募”&&“发行方式”为“开放式”&&“产品类型”为“净值型产品”&&“是否是客户周期型产品”为“否”的产品；
      * 2.公告生成时点：收益分配基准日日终
@@ -193,6 +200,27 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             bonusDto.setMunitValue("1.0000");
                             bonusDto.setRedValue("1.0000");
                             bonusDto.setSubValue("1.0000");
+                            
+                            //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
+                            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            //Date profitBaseDate = ()searchParam.get("baseDate");
+                            searchParam.put("profitBaseDate", searchParam.get("baseDate"));
+                            List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
+                            if ( listBonus.size()>0 ) { 
+	                        	BigDecimal yield1 = listBonus.get(0).getYield();
+	                        	if ( yield1!=null ) {
+	                        		yield1 = yield1.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
+	                        		bonusDto.setYield(yield1.toString()+"%");
+	                        	} else {
+	                        		bonusDto.setYield(null);
+	                        	}
+	                        	
+                            } else {
+                            	bonusDto.setYield(null);
+                            }
+                        	
+                            //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
+                            
                             if(i == 0){
                                 //开放起始日
                                 reportKfqzjfhgg001Dto.setSubDateT(DateUtil.format(reportKfqHisBonusDto.getOpenStartDate(),DateUtil.ABB_DATE_FORMAT_CN));
@@ -201,6 +229,20 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                                 reportKfqzjfhgg001Dto.setBaseDate(DateUtil.format(reportKfqHisBonusDto.getSettDate()));
                                 reportKfqzjfhgg001Dto.setUnitValue(unitValueStr);
                                 reportKfqzjfhgg001Dto.setUnitProfit(unitProfitStr);
+                                
+                                //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
+                                if ( listBonus.size()>0 ) { 
+                                	BigDecimal unitValue1 = listBonus.get(0).getUnitBonus();
+                                    String unitValueStr1 = unitValue1==null?"0":unitValue1.setScale(4, BigDecimal.ROUND_DOWN).toString();
+                                    unitValueStr1 = "1" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
+                                    reportKfqzjfhgg001Dto.setUnitValue(unitValueStr1);
+                                    //本次分红方案（元/1份份额）
+                                    String unitProfitStr1 = "0" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
+                                    reportKfqzjfhgg001Dto.setUnitProfit(unitProfitStr1);
+                                }
+                                //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
+                                
+                                
                                 //现金红利发放日
                                 reportKfqzjfhgg001Dto.setPayDate(DateUtil.format(reportKfqHisBonusDto.getPaymentDate()));
                             }

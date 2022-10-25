@@ -168,7 +168,7 @@ public class BonusCalist001Dto extends DisBonusList implements ITableRow, Proces
 
     public String getRunDaysStr(){
         if (super.getRunDays()==null){
-            return "-";
+            return "";
         }else
         return String.valueOf(super.getRunDays());
     }
