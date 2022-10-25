@@ -44,6 +44,7 @@
 				</if>
 				WHERE
 				 	INFO.STATUS = 'E'
+				  	and DPP.DATA_STATUS = 'E'
 				AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
 		    ORDER BY DPP.OPERATION_START_DATE
 		) WHERE ROWNUM &lt;= 6
@@ -72,6 +73,7 @@
 			LEFT JOIN REP_FLOAT_FEE RFF ON RFF.status = 'E' AND RFF.PROD_ID = INFO.PROD_ID AND DPP.AUTO_REDEEM_DATE = RFF.AFFIRM_DATE
 		where
 		   INFO.STATUS = 'E'
+			and DPP.DATA_STATUS = 'E'
 		   AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
 		order by DPP.OPERATION_START_DATE desc
  	</select>
@@ -95,6 +97,7 @@
 			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
 		where
 			INFO.STATUS = 'E'
+			and DPP.DATA_STATUS = 'E'
 		  AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
 		<if test="rptType != NULL and rptType.equals('ZQXCPKFGG_GMCPDSH')">
 			AND  DPP.AUTO_REDEEM_DATE = TO_DATE(#{announceDate},'yyyy-MM-dd')
