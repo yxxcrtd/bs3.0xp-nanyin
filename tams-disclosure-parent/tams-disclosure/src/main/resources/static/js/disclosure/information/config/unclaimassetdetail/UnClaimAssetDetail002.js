@@ -110,6 +110,8 @@
     function　init(){
         if(pageModel != PAGE_MODEL_NEW){
             $("#prodId").attr("disabled",true);
+            $("#effDate").attr("disabled",true);
+            $("#effEndDate").attr("disabled",true);
         }
         //修改时，如果生效日小于平台日，生效日不能修改
         //若生效日≤平台日＜生效截止日期，则生效日不能修改，生效截止日期可以修改
