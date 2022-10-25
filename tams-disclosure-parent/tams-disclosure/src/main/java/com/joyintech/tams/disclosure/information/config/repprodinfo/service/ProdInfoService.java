@@ -1140,6 +1140,28 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         return result;
     }
 
+
+
+
+    public Page<SelectOptionDto> queryPprodName1(Map<String, Object> paraMap){
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        if(paraMap.containsKey("initValue")){
+            String str=paraMap.get("initValue").toString();
+            List<String> prodIdList=Arrays.asList(str.split(","));
+            paraMap.put("prodIdList",prodIdList);
+        }
+        Integer page=1;
+        if(StringUtil.isNotEmpty(pageParam.get("page"))){
+            page=Integer.parseInt((String) pageParam.get("page"));
+        }
+        Integer length=100;
+        if(StringUtil.isNotEmpty(pageParam.get("length"))){
+            length=Integer.parseInt((String) pageParam.get("length"));
+        }
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(page, length, ()
+                -> prodInfoMapper.queryPprodName1(paraMap));
+        return result;
+    }
     /**
      * 根据产品主代码查询产品基本信息
      * @param prodId
