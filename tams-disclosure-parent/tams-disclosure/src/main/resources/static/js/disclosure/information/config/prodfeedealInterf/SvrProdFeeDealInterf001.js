@@ -24,7 +24,7 @@ $(function() {
         }
     };
     /**
-     * 定义数据表格
+     * 定义数据表格11
      */
     var table = $("#dataTable").joyintable({
         ajax : {
