@@ -87,13 +87,26 @@
 			=  #{revealStatus,jdbcType=VARCHAR}
 		</if>
 		<if test="finprodIdArr != null and finprodIdArr.length > 0">
+		AND (REVEAL.PRODID IN
+		<foreach item="item" collection="finprodIdArr" index="index"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		OR R1.P_PROD_ID IN
+		<foreach item="item" collection="finprodIdArr" index="index"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		)
+	</if>
+		<if test="prodIdArr != null and prodIdArr.length > 0">
 			AND (REVEAL.PRODID IN
-			<foreach item="item" collection="finprodIdArr" index="index"
+			<foreach item="item" collection="prodIdArr" index="index"
 					 open="(" separator="," close=")">
 				#{item}
 			</foreach>
 			OR R1.P_PROD_ID IN
-			<foreach item="item" collection="finprodIdArr" index="index"
+			<foreach item="item" collection="prodIdArr" index="index"
 					 open="(" separator="," close=")">
 				#{item}
 			</foreach>
