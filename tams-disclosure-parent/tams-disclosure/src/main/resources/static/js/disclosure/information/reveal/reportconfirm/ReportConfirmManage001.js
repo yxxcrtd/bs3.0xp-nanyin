@@ -8,7 +8,8 @@ $(function () {
     	
     	
         return {
-            finprodId: $.trim($('#finprodId').val()), 
+            finprodId: $.trim($('#finprodId').val()),
+			prodId: $.trim($('#prodId').val()),
             reportName: $.trim($('#reportName').val()), 
             valDateBegin: $('#makeDate').startDate(),
             valDateEnd: $('#makeDate').endDate(),
@@ -673,6 +674,7 @@ $(function () {
         $('#ValNetValueConfirm001_btn_reset').click(function(){
         	$('#revealEndDateHidden').val(null);
         	$('#finprodId').val(null);
+			$('#prodId').val(null);
         	$('#repType').val(null);
         	$('#reportName').val(null);
         	$('#confirmDate').val(null);

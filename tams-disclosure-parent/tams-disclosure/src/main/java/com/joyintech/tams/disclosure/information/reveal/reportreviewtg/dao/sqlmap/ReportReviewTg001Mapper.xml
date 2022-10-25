@@ -82,6 +82,13 @@
                 #{item}
             </foreach>
         </if>
+        <if test="prodNameArr != null and prodNameArr.length > 0">
+            AND REVEAL.PRODID IN
+            <foreach item="item" collection="prodNameArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="reportTypeArr != null and reportTypeArr.length > 0">
             AND REVEAL.REPORT_CATEGORY IN
             <foreach item="item" collection="reportTypeArr" index="index"

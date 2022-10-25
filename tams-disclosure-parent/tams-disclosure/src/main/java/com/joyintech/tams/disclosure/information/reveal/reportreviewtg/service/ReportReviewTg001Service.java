@@ -55,6 +55,13 @@ public class ReportReviewTg001Service extends CommonExportService<ReportReview00
             param.put("prodIdArr",prodIdArr);
         }
 
+        String prodName=(String) param.get("prodName");
+        String[] prodNameArr = null;
+        if(StringUtil.isNotEmpty(prodName)){
+            prodNameArr = prodName.split(",");
+            param.put("prodNameArr",prodNameArr);
+        }
+
         String reportType=(String) param.get("reportType");
         String[] reportTypeArr = null;
         if(StringUtil.isNotEmpty(reportType)){

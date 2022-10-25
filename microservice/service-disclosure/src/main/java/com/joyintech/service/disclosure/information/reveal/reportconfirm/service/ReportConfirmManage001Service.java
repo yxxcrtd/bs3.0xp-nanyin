@@ -112,6 +112,13 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
             finprodIdArr = finprodId.split(",");
         }
         params.put("finprodIdArr", finprodIdArr);
+
+		String prodId = (String)params.get("prodId");
+		String[] prodIdArr = null;
+		if(StringUtil.isNotEmpty(prodId)){
+			prodIdArr = prodId.split(",");
+		}
+		params.put("prodIdArr", prodIdArr);
         
         //用于流程-我的待办-点击查看
         params.put("finprodIdForFlow", (String)params.get("finprodIdForFlow"));

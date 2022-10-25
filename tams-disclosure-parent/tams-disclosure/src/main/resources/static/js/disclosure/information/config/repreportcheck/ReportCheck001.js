@@ -11,6 +11,7 @@
          return {
              checkDateStart:$('#checkDate').startDate(),
              checkDateEnd:$('#checkDate').endDate(),
+             finprodId:$('#finprodId').val() == null ? null : $('#finprodId').val().join(","),
              prodId:$('#prodId').val() == null ? null : $('#prodId').val().join(","),
              reportType:$('#reportType').val() == null ? null : $('#reportType').val().join(","),
              reportName:$('#reportName').val() == null ? null : $('#reportName').val().join(",")

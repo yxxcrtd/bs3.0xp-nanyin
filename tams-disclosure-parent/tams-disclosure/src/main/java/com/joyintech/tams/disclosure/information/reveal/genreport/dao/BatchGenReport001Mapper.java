@@ -13,10 +13,12 @@ package com.joyintech.tams.disclosure.information.reveal.genreport.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.tams.common.base.dao.DisProdAgencyMapper;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -53,4 +55,11 @@ public interface BatchGenReport001Mapper extends DisProdAgencyMapper {
 	 * @return 节点名称：子产品代码+子产品名称
 	 */
 	List<TreeNode> selectProdInfoSon();
+	
+	/**
+	 * 通过拼接的条件查询茶品基本信息
+	 * @param sqlVal 拼接处的条件
+	 * @return 返回列表
+	 */
+	List<ProdInfoListEntity> selectProdList(@Param("sqlVal")String sqlVal, @Param("jobId")String jobId);
 }
