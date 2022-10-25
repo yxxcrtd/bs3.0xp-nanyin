@@ -2,7 +2,6 @@
 package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,10 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.RepProdInfo;
-import com.joyintech.tams.common.base.entity.RepReveal;
-import com.joyintech.tams.disclosure.busicommon.report.dao.ReportMzjz001Mapper;
-import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +18,13 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.DisBonusList;
-import com.joyintech.tams.common.base.entity.DisProdBonusplan;
+import com.joyintech.tams.common.base.entity.RepProdIndex;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportJzfhbg001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportKfqzjfhgg001Mapper;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportCommonProdDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqHisBonusDto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqzjfhgg001Dto;
@@ -202,7 +200,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             bonusDto.setSubValue("1.0000");
                             
                             //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
-                            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             //Date profitBaseDate = ()searchParam.get("baseDate");
                             searchParam.put("profitBaseDate", searchParam.get("baseDate"));
                             List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
@@ -214,7 +212,18 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
 	                        	} else {
 	                        		bonusDto.setYield(null);
 	                        	}
-	                        	
+	                        	BigDecimal unitBonus = listBonus.get(0).getUnitBonus();
+	                        	unitBonus = unitBonus==null?BigDecimal.ZERO:unitBonus.setScale(4,BigDecimal.ROUND_DOWN);
+	                            if (lastBonus != null && lastBonus.getLastUnitValueT() != null) {
+	                            	searchParam.put("settDate", sdf.format(listBonus.get(0).getLastProfitBaseDate()));
+	                            	RepProdIndex prodIndexGz = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
+	                            	if ( prodIndexGz!=null )
+	                            		bonusDto.setMunitValueT(prodIndexGz.getUnitValueT().add(unitBonus).toString());
+	                            	else
+	                            		bonusDto.setMunitValueT((unitBonus).toString());
+	                            }else{
+	                                bonusDto.setMunitValueT(BigDecimal.ONE.add(unitBonus).toString());
+	                            }
                             } else {
                             	bonusDto.setYield(null);
                             }
@@ -233,11 +242,11 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                                 //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
                                 if ( listBonus.size()>0 ) { 
                                 	BigDecimal unitValue1 = listBonus.get(0).getUnitBonus();
-                                    String unitValueStr1 = unitValue1==null?"0":unitValue1.setScale(4, BigDecimal.ROUND_DOWN).toString();
-                                    unitValueStr1 = "1" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
+                                    String unitValueStr1 = unitValue1==null?"0":unitValue1.add(BigDecimal.ONE).setScale(4, BigDecimal.ROUND_DOWN).toString();
+                                    //unitValueStr1 = "1" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
                                     reportKfqzjfhgg001Dto.setUnitValue(unitValueStr1);
                                     //本次分红方案（元/1份份额）
-                                    String unitProfitStr1 = "0" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
+                                    String unitProfitStr1 =  unitValue1==null?"0":unitValue1.setScale(4, BigDecimal.ROUND_DOWN).toString();
                                     reportKfqzjfhgg001Dto.setUnitProfit(unitProfitStr1);
                                 }
                                 //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
