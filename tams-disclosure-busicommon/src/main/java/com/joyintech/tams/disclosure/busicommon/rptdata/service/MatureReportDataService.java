@@ -253,26 +253,26 @@ public class MatureReportDataService implements IReportDataService {
 			logger.error("到期报表数据错误", e);
 		}
 		if (listResult!=null && listResult.size()>0 ) {
-//			listResult.get(0).put("endDate_xx","");
-//			listResult.get(0).put("floatFee_xx","");
-//			listResult.get(0).put("disDate_xx","");
-//			listResult.get(0).put("signDate_xx","");
-//			listResult.get(0).put("trustFee_xx","");
-//			listResult.get(0).put("issuingWay_xx","");
-//			listResult.get(0).put("reportDate_xx","");
-//			listResult.get(0).put("repProdType_xx","");
+			listResult.get(0).put("endDate_xx","");
+			//listResult.get(0).put("floatFee_xx","");
+			listResult.get(0).put("disDate_xx","");
+			listResult.get(0).put("signDate_xx","");
+			//listResult.get(0).put("trustFee_xx","");
+			listResult.get(0).put("issuingWay_xx","");
+			listResult.get(0).put("reportDate_xx","");
+			listResult.get(0).put("repProdType_xx","");
 //			listResult.get(0).put("prodName_xx","");
 //			listResult.get(0).put("runDays_xx","");
 //			listResult.get(0).put("mDate_xx","");
 //			listResult.get(0).put("eDate_xx","");
 //			listResult.get(0).put("reportTitle_xx","");
-//			listResult.get(0).put("saleFee_xx","");
-//			listResult.get(0).put("mgrFee_xx","");
-//			listResult.get(0).put("prodTruster_xx","");
-//			listResult.get(0).put("prodManager_xx","");
+			//listResult.get(0).put("saleFee_xx","");
+			//listResult.get(0).put("mgrFee_xx","");
+			listResult.get(0).put("prodTruster_xx","");
+			listResult.get(0).put("prodManager_xx","");
 //			listResult.get(0).put("prodRe_xx","");
 //			listResult.get(0).put("genDate_xx","");
-//			listResult.get(0).put("startDate_xx","");
+			listResult.get(0).put("startDate_xx","");
 		}
 		return listResult;
 	}
@@ -288,6 +288,12 @@ public class MatureReportDataService implements IReportDataService {
 			BonusReportDto dto = listBonusReport.get(0);
 			//eDate =holidayService.getNextWorkDate(dto.getSettDate());
 			eDate =dto.getSettDate();
+		}
+		Map<String, Object> param = new HashMap<>();
+		param.put("prodId", repReveal.getProdid());
+		RepProdInfo info=reportRkcpjz001Mapper.getProdId(param);
+		if(StringUtil.isNotEmpty(info)){
+			repReveal.setProdid(info.getpProdId());
 		}
 		repReveal.setEndDate(eDate);
 		return repReveal;
