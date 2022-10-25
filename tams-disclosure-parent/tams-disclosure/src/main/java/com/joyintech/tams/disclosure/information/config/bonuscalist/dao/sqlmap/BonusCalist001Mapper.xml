@@ -16,7 +16,7 @@
             resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
         select
         <include refid="com.joyintech.tams.common.base.dao.DisBonusListMapper.Base_Column_List" />,
-        case when rpi.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||rpi.PROD_NAME||')'
+        case when rpi.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else rpi.PROD_NAME end prodName,
         TO_CHAR(dbl.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
         from DIS_BONUS_LIST dbl left join REP_PROD_INFO rpi on dbl.PROD_ID =rpi.PROD_ID

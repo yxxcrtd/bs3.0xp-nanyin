@@ -114,6 +114,14 @@ public class ProdInfo001Controller extends BaseController {
         Map<String, Object> param= RequestUtil.getPageParam();
         return  prodInfoService.queryPprodName(param);
     }
+
+   //产品分红计算下拉框使用
+    @RequestMapping("queryPprodName1")
+    @ResponseBody
+    public Page<SelectOptionDto> queryPprodName1() {
+        Map<String, Object> param= RequestUtil.getPageParam();
+        return  prodInfoService.queryPprodName1(param);
+    }
     /**
      * 删除
      *
