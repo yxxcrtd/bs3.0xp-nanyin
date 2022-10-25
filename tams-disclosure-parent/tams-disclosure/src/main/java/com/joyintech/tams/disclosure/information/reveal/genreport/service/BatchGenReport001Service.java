@@ -20,11 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepScreen;
 import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
 import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.dao.InfoDisclosureReadAndGenMapper;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
@@ -36,23 +39,24 @@ import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetail
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
 import com.joyintech.tams.disclosure.information.reveal.genreport.dao.BatchGenReport001Mapper;
+import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class BatchGenReport001Service extends CommonExportService<RepDetailsShow001Dto>{
-	
+public class BatchGenReport001Service extends CommonExportService<RepDetailsShow001Dto> {
+
 	@Autowired
 	private RepDetailsShow001Mapper repDetailsShow001Mapper;
-	
-    @Autowired
-    private RepDetailsShow001Service repDetailsShow001Service;
-    
+
+	@Autowired
+	private RepDetailsShow001Service repDetailsShow001Service;
+
 	@Autowired
 	private ReportDataService reportDataService;
 
 	@Autowired
 	private PoiReportService poiReportService;
-	
+
 	@Autowired
 	private PoiReportCheckService reportCheckService;
 
@@ -61,149 +65,147 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 
 	@Autowired
 	private InfoDisclosureReadAndGenDetailService infoDisclosureReadAndGenDetailService;
-	
+
 	@Autowired
 	private BatchGenReport001Mapper batchGenReport001Mapper;
 
-    /**
-     * 日志
-     */
-    private Logger logger = LoggerFactory.getLogger(BatchGenReport001Service.class);
-	
-	public BatchGenResultDto exec(RepProdInfo prod,Map<String,Object> params) throws Exception {
-		
-			// 定义生成结果
-			BatchGenResultDto result = new BatchGenResultDto();
-			result.setProdId(prod.getProdId());
-			result.setProdName(prod.getProdName());
-			result.setGenDate((Date)params.get("platformDate"));
-			result.setRepId(params.get("repId").toString());
-			result.setRepName(params.get("repName").toString());
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(BatchGenReport001Service.class);
 
-			//定义报表变量的数据集合
-			Map<String, Object> dataMap = null;
-			
-			params.put("prodId", prod.getProdId());
-			params.put("prodid", prod.getProdId());
-			params.put("prodName", prod.getProdName());
-			params.put("prodname", prod.getProdName());
-			//为了能顺利调用历史的方法，对不规范的参数进行补充
-			repDetailsShow001Service.collateParams(params);
-			
-			//1.查询报表数据数据
-			try {
-				params.put("opttype", "batch");
-				List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
-	
-				// 生成失败：没有查询到指定的报表数据
-				if (listReports == null || listReports.size() == 0) {
-					result.setResult("F");
-					logger.error("没有查询到指定的数据。");
-					result.setRemark("没有查询到指定的数据，"+"或者生成日期与产品到期日小于等于90天，不需要生成报表。");
-					return result;
-				}
-				dataMap = listReports.get(0);
+	public BatchGenResultDto exec(RepProdInfo prod, Map<String, Object> params) throws Exception {
 
-				//对查询结果进行一些参数补充
-				dataMap.put("repid", params.get("repId").toString());
-				dataMap.put("repId", params.get("repId").toString());
-				dataMap.put("prodId", params.get("prodId"));
-			} catch (Exception e) {
+		// 定义生成结果
+		BatchGenResultDto result = new BatchGenResultDto();
+		result.setProdId(prod.getProdId());
+		result.setProdName(prod.getProdName());
+		result.setGenDate((Date) params.get("platformDate"));
+		result.setRepId(params.get("repId").toString());
+		result.setRepName(params.get("repName").toString());
+
+		// 定义报表变量的数据集合
+		Map<String, Object> dataMap = null;
+
+		params.put("prodId", prod.getProdId());
+		params.put("prodid", prod.getProdId());
+		params.put("prodName", prod.getProdName());
+		params.put("prodname", prod.getProdName());
+		// 为了能顺利调用历史的方法，对不规范的参数进行补充
+		repDetailsShow001Service.collateParams(params);
+
+		// 1.查询报表数据数据
+		try {
+			params.put("opttype", "batch");
+			List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+
+			// 生成失败：没有查询到指定的报表数据
+			if (listReports == null || listReports.size() == 0) {
 				result.setResult("F");
-				result.setRemark("报表数据查询异常，"+e.getMessage() );
-				logger.error("生成报表失败：" + "报表数据查询异常。",e);
-				return result;				
+				logger.error("没有查询到指定的数据。");
+				result.setRemark("没有查询到指定的数据，" + "或者生成日期与产品到期日小于等于90天，不需要生成报表。");
+				return result;
 			}
+			dataMap = listReports.get(0);
 
-			//2.对查询结果进行校验，符合要求，则生成报表
-			try {
-				String checkResult = checkReport(params,dataMap);
-				if (!"success".equals(checkResult)) {
-					result.setResult("F");
-					logger.error("生成报表失败：" + "报表数据查询异常。"+ checkResult);
-					result.setRemark("报表数据检查异常：<br>" + checkResult);
-					return result;
-				}
-			} catch ( Exception e ) {
+			// 对查询结果进行一些参数补充
+			dataMap.put("repid", params.get("repId").toString());
+			dataMap.put("repId", params.get("repId").toString());
+			dataMap.put("prodId", params.get("prodId"));
+		} catch (Exception e) {
+			result.setResult("F");
+			result.setRemark("报表数据查询异常，" + e.getMessage());
+			logger.error("生成报表失败：" + "报表数据查询异常。", e);
+			return result;
+		}
+
+		// 2.对查询结果进行校验，符合要求，则生成报表
+		try {
+			String checkResult = checkReport(params, dataMap);
+			if (!"success".equals(checkResult)) {
+				result.setResult("F");
+				logger.error("生成报表失败：" + "报表数据查询异常。" + checkResult);
+				result.setRemark("报表数据检查异常：<br>" + checkResult);
+				return result;
+			}
+		} catch (Exception e) {
 //				result.setResult("F");
 //				result.setRemark("生成报表失败：" + "报表数据检查异常，"+e.getMessage() );
-				logger.error("生成报表失败：" + "报表数据检查异常。",e);
-				throw new Exception("报表数据检查异常，"+e.getMessage());
-			}
+			logger.error("生成报表失败：" + "报表数据检查异常。", e);
+			throw new Exception("报表数据检查异常，" + e.getMessage());
+		}
 
-			try {
-				//3.生成报表文件，上传到文件服务器，相当于报表生成模块的预览功能
-				String reportFile = poiReportService.genOssReportFile(null, dataMap, params);
-				
-				//4.生成报表流程数据，进入待确认队列
-				reportFile = poiReportService.genReport(params);
-				result.setResult("S");
-				logger.info("手工批量生成报表完成：" +reportFile);
-			} catch (Exception e) {
+		try {
+			// 3.生成报表文件，上传到文件服务器，相当于报表生成模块的预览功能
+			String reportFile = poiReportService.genOssReportFile(null, dataMap, params);
+
+			// 4.生成报表流程数据，进入待确认队列
+			reportFile = poiReportService.genReport(params);
+			result.setResult("S");
+			logger.info("手工批量生成报表完成：" + reportFile);
+		} catch (Exception e) {
 //				result.setResult("F");
 //				result.setRemark("生成报表失败：" + "生成报表文件或者流程异常。"+e.getMessage());
-				logger.error("生成报表失败：" + "生成报表文件或者流程异常。",e);
-				throw new Exception("生成报表文件或者流程异常，"+e.getMessage());
-			}
-			return result;
+			logger.error("生成报表失败：" + "生成报表文件或者流程异常。", e);
+			throw new Exception("生成报表文件或者流程异常，" + e.getMessage());
+		}
+		return result;
 	}
 
-    public RepDetailsShow001Dto getRepScreenList(String repId){
-        
-        RepDetailsShow001Dto info = repDetailsShow001Mapper.getInfoByRepId(repId);  //查询报表的种类及模板配置等信息
-        if(null!=info){
-        	List<RepScreen> listScreen  = repDetailsShow001Mapper.getRepScreenList(repId).stream()
-            .filter(e -> (!"01".equals(e.getScreenType()) && !"02".equals(e.getScreenType()) ) )
-            .collect(Collectors.toList());
-        	
-            info.setRepScreenList(listScreen); //查询每个报表前台配置的查询参数信息
-            
-        }
-        return info;
-    }
-    
-    /**
-     * 总体上分两步：
-              1.通过getParentNode()方法，构建父节点；
-              2.通过查询产品，构建叶子节点；
-              通过设置叶子节点的pid，与父节点建立关联；
-     * @param repProdType
-     * @param repId
-     * @return
-     */
-    @SuppressWarnings("rawtypes")
-	public List<TreeNode> buildProdTree(String repProdType,String repId) {
-		List<TreeNode> result = new ArrayList<TreeNode>();
-		//获取父节点
-		List<TreeNode> listParent = this.getParentNodes(repProdType);
-		
-		//查询当前所有产品，作为叶子节点
-		List<TreeNode> listChildren = new ArrayList<>();
-		
-		//根据报表类型，依据报表规则，查询符合条件的产品集合
-		List<ProdInfoListEntity> listProd = queryProdList(repId, null);
-		
-		if ( "C".equals(repProdType)) {
-			listChildren=batchGenReport001Mapper.selectProdInfoSon();
-		} else {
-			listChildren=batchGenReport001Mapper.selectProdInfo();
+	public RepDetailsShow001Dto getRepScreenList(String repId) {
+
+		RepDetailsShow001Dto info = repDetailsShow001Mapper.getInfoByRepId(repId); // 查询报表的种类及模板配置等信息
+		if (null != info) {
+			List<RepScreen> listScreen = repDetailsShow001Mapper.getRepScreenList(repId).stream()
+					.filter(e -> (!"01".equals(e.getScreenType()) && !"02".equals(e.getScreenType())))
+					.collect(Collectors.toList());
+
+			info.setRepScreenList(listScreen); // 查询每个报表前台配置的查询参数信息
+
 		}
-		
+		return info;
+	}
+
+	/**
+	 * 总体上分两步： 1.通过getParentNode()方法，构建父节点； 2.通过查询产品，构建叶子节点； 通过设置叶子节点的pid，与父节点建立关联；
+	 * 
+	 * @param repProdType
+	 * @param repId
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public List<TreeNode> buildProdTree(String repProdType, String repId) {
+		List<TreeNode> result = new ArrayList<TreeNode>();
+		// 获取父节点
+		List<TreeNode> listParent = this.getParentNodes(repProdType);
+
+		// 查询当前所有产品，作为叶子节点
+		List<TreeNode> listChildren = new ArrayList<>();
+
+		// 根据报表类型，依据报表规则，查询符合条件的产品集合
+		List<ProdInfoListEntity> listProd = queryProdList(repId, null);
+
+		if ("C".equals(repProdType)) {
+			listChildren = batchGenReport001Mapper.selectProdInfoSon();
+		} else {
+			listChildren = batchGenReport001Mapper.selectProdInfo();
+		}
+
 		List<String> listProdId = new ArrayList<>();
-		listProd.forEach(item ->{
+		listProd.forEach(item -> {
 			listProdId.add(item.getProdId());
 		});
-		
-		//对叶子节点listChildren进行过滤，剔除掉不合报表限制范围规则的产品
+
+		// 对叶子节点listChildren进行过滤，剔除掉不合报表限制范围规则的产品
 		listChildren = listChildren.stream().filter(e -> listProdId.contains(e.getId())).collect(Collectors.toList());
-		
+
 		Set<String> listChildrenId = new HashSet<>();
-		listChildren.forEach(item->{
+		listChildren.forEach(item -> {
 			listChildrenId.add(item.getpId());
 		});
-		
-		//需要对parent节点进行过滤：没有子节点的节点，都不需要进行展示
-		//过滤的时候，需要从子节点开始进行过滤，因此按照treenode的object属性进行倒序排列
+
+		// 需要对parent节点进行过滤：没有子节点的节点，都不需要进行展示
+		// 过滤的时候，需要从子节点开始进行过滤，因此按照treenode的object属性进行倒序排列
 		List<TreeNode> listParent2 = new ArrayList<TreeNode>();
 		Collections.sort(listParent, new Comparator<TreeNode>() {
 			@Override
@@ -211,27 +213,26 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 				return o2.getObject().toString().compareTo(o1.getObject().toString());
 			}
 		});
-		for ( TreeNode t:listParent ) {
+		for (TreeNode t : listParent) {
 			boolean remainFlag = false;
-			for ( TreeNode t1:listParent2 ) {  //子是父节点
-				if ( t.getId().equals(t1.getpId())) {
+			for (TreeNode t1 : listParent2) { // 子是父节点
+				if (t.getId().equals(t1.getpId())) {
 					listParent2.add(t);
 					remainFlag = true;
 					break;
 				}
 			}
-			if ( remainFlag == false ) {
-				if (listChildrenId.contains(t.getId()) ) {  //子是产品
+			if (remainFlag == false) {
+				if (listChildrenId.contains(t.getId())) { // 子是产品
 					listParent2.add(t);
 				}
 			}
 		}
-		
-		//对于没有子的parent树节点，进行过滤
+
+		// 对于没有子的parent树节点，进行过滤
 //		listParent = listParent.stream().filter(item->( item.getObject()==null 
 //				|| !"ParentProd".equals(item.getObject().toString()) 
 //				||  ("ParentProd".equals(item.getObject().toString()) && listChildrenId.contains(item.getId())))  ).collect(Collectors.toList());
-		
 
 //		for ( TreeNode t:listParent ) {
 //			if ( t.getObject()==null ) {
@@ -242,17 +243,18 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 //				listParent2.add(t);
 //			}
 //		}
-		
+
 		result.addAll(listParent2);
 		result.addAll(listChildren);
 		return result;
-    }
-    
-    /**
-     * 组装除产品子节点以外的父节点
-     * @return
-     */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+	}
+
+	/**
+	 * 组装除产品子节点以外的父节点
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<TreeNode> getParentNodes(String repProdType) {
 		List<DataDictItem> prodStatusList = new ArrayList<DataDictItem>();// 产品状态
 		List<DataDictItem> issueTypeList = new ArrayList<DataDictItem>();// 发行方式
@@ -328,17 +330,17 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 
 		return parentNodes;
 	}
-    
+
 	/**
 	 * 报表的数据检查
 	 * 
 	 * @param dataMap
 	 * @return
 	 */
-	public String checkReport(Map<String, Object> params,Map<String, Object> dataMap) {
-		Map<String, Object> result = reportCheckService.dataCheck(params,dataMap);
+	public String checkReport(Map<String, Object> params, Map<String, Object> dataMap) {
+		Map<String, Object> result = reportCheckService.dataCheck(params, dataMap);
 		String msg = "success";
-		if ( result.get("resultSb")!=null )
+		if (result.get("resultSb") != null)
 			msg = result.get("resultSb").toString();
 		return msg;
 		// return "success";
@@ -354,9 +356,44 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 	public List<ProdInfoListEntity> queryProdList(String repId, Date execDate) {
 		// 获取作业范围list
 		List<RepJobRange> repJobRangeList = infoDisclosureReadAndGenMapper.getRepJobRangeList(repId);
+		if (repJobRangeList == null || repJobRangeList.size() == 0) {
+			return null;
+		}
+
+		StringBuffer sqlVal = new StringBuffer();
+
+		// 通过规则id组装并查询产品信息方法
+		for (RepJobRange dto : repJobRangeList) {
+			if (StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_募集方式.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_发行方式.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_发行状态.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_开放模式.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否独立开户.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_产品类型.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_理财类型.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_产品期限类型.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_开放频率.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_信批产品类别.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())) {
+				sqlVal.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
+						.append(dto.getRuleType4()).append("'");
+			} else if (StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_起息日.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_到期日.getValue())
+					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_清盘日.getValue())) {
+				String sysDate = DateUtil.getCurrentDate();
+				if (dto.getRuleType4() == null || StringUtil.isEmpty(dto.getRuleType4())) {
+					sqlVal.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')")
+							.append(dto.getRuleType2()).append("'").append(sysDate).append("'");
+				} else {
+					sqlVal.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')")
+							.append(dto.getRuleType2()).append("'").append(dto.getRuleType4()).append("'");
+				}
+			}
+		}
 		// 通过组装的条件，查询产品相关内容
-		List<ProdInfoListEntity> prodList = infoDisclosureReadAndGenDetailService.getRepJobRangeByJobid(repJobRangeList,
-				repId, execDate);
+		List<ProdInfoListEntity> prodList = batchGenReport001Mapper.selectProdList(sqlVal.toString(), repId);
 		return prodList;
 	}
 }
