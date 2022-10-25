@@ -58,7 +58,7 @@
                 rpi.prod_name ,
                 dndc.data_status ,
                 dndc.eff_date ,
-                dndc.eff_end_date )tmp
+                dndc.eff_end_date )tmp order by tmp.updatetime desc
 </select>
     <select id="selectDetail" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
         SELECT
