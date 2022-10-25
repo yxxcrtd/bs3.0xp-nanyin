@@ -53,10 +53,19 @@ $(function() {
         $('#prodId').change(function () {
             var prodId = $('#prodId').val();
             var data = $('#prodId').select2("data")[0].object;
-            var prodName = $('#prodId').select2("data")[0].text;
+            // var prodName = $('#prodId').select2("data")[0].text;
             $('#prodRegistNo').textSelect('setValue',data);
             // $('#prodName').textSelect('setValue',prodName);
-            $('#prodName').val(prodName).trigger('change');
+            // $('#prodName').val(prodName).trigger('change');
+            if('' != prodId && null != prodId){
+                Joyin.ajaxJson(basePath+'disclosure/information/config/repProdIndexGz/RepProdIndexGz002/selectProdInfo?prodId='+prodId,{},function (result){
+                    if(result){
+                        $('#prodName').val(result.prodName);
+                    }
+                })
+            }else{
+                $('#prodName').val('');
+            }
         });
         $('#prodRegistNo').prop("disabled",true);
         if (pageModel == PAGE_MODEL_EDIT){

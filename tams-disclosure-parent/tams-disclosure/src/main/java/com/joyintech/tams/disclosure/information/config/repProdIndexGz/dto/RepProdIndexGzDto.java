@@ -16,6 +16,7 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @PageId("RepProdIndexGz002")
@@ -135,6 +136,11 @@ public class RepProdIndexGzDto extends RepProdIndex implements ITableRow, Proces
         return super.getProdId();
     }
 
+    @Override
+    @PrimaryKey(PrimaryKey.Field.PK_2)
+    public Date getValueDate() {
+        return super.getValueDate();
+    }
 
     public BigDecimal getpAssetsValue() {
         return pAssetsValue;

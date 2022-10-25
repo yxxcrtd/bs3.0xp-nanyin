@@ -79,12 +79,19 @@ public class ReportRevealManage001Service extends CommonExportService<ReportRevi
         
         //获取获取理财产品类型
         String finprodId = (String)params.get("finprodId");
+        String prodId = (String)params.get("prodId");
         String[] finprodIdArr = null;
+        String[] prodIdArr = null;
         String[] revealChanelArr = null;
         if(StringUtil.isNotEmpty(finprodId)){
             finprodIdArr = finprodId.split(",");
         }
         params.put("finprodIdArr", finprodIdArr);
+
+        if(StringUtil.isNotEmpty(prodId)){
+            prodIdArr = prodId.split(",");
+        }
+        params.put("prodIdArr", prodIdArr);
         
         String repType = (String)params.get("repType");
         String[] repTypeArr = null;
