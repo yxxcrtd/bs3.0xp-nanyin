@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.DisBonusList;
 import com.joyintech.tams.common.base.entity.RepFeeTrd;
+import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
@@ -114,20 +116,26 @@ public class MatureReportDataService implements IReportDataService {
         	Date settDate = DateUtil.parse("2000-01-01");
 
             //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
-            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             //Date profitBaseDate = ()searchParam.get("baseDate");
         	Map<String,Object> searchParam = new HashMap<>();
             searchParam.put("prodId", paraMap.get("prodId"));
+            searchParam.put("profitBaseDate",matureReportDto.getmDate());
             List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
+            
             if ( listBonus.size()>0 ) { 
-            	for ( DisBonusList bonus:listBonus ) {
-            		accuValue = accuValue.add(bonus.getUnitBonus());
-            		custProfit = custProfit.add(bonus.getDisBonusMoney());
-    	        	if ( bonus.getProfitBaseDate().compareTo(settDate)>0 ) { //取最近的分红计划的年化收益率
-    	        		settDate = bonus.getProfitBaseDate();
-    	        		yearYield = bonus.getYield(); 
-    	        	}
-            	}
+	        	searchParam.put("settDate", sdf.format(listBonus.get(0).getLastProfitBaseDate()));
+	        	RepProdIndex prodIndexGz = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
+//            	for ( DisBonusList bonus:listBonus ) {
+//            		accuValue = accuValue.add(bonus.getUnitBonus());
+//            		custProfit = custProfit.add(bonus.getDisBonusMoney());
+//    	        	if ( bonus.getProfitBaseDate().compareTo(settDate)>0 ) { //取最近的分红计划的年化收益率
+//    	        		settDate = bonus.getProfitBaseDate();
+//    	        		yearYield = bonus.getYield(); 
+//    	        	}
+//            	}
+            	accuValue = prodIndexGz.getUnitValueT().add( listBonus.get(0).getUnitBonus());
+            	yearYield = listBonus.get(0).getYield();
             }
 //			for ( BonusReportDto report:listBonusReport ) {  //计算每次分红的累计值
 //	        	//上一分配基准日
