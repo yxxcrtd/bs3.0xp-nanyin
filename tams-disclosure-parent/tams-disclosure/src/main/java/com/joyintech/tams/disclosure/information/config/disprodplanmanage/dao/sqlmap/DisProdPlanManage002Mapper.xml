@@ -20,16 +20,16 @@
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
     </resultMap>
 
-	<select id="getDataSource"  resultType="java.lang.String">
+    <select id="getDataSource"  resultType="java.lang.String">
 	    SELECT DISTINCT DATASOURCE FROM DIS_PROD_PLAN
 	</select>
-	<select id="getCreateWay"  resultType="java.lang.String">
+    <select id="getCreateWay"  resultType="java.lang.String">
 	    SELECT DISTINCT GENERATOR FROM DIS_PROD_PLAN
 	</select>
-	<select id="getReportWarehouse"  resultType="java.lang.String">
+    <select id="getReportWarehouse"  resultType="java.lang.String">
 	    SELECT DISTINCT REPOSITORY FROM DIS_PROD_PLAN
 	</select>
-	<select id="findParamPage"  resultType="java.lang.String">
+    <select id="findParamPage"  resultType="java.lang.String">
 	    SELECT REPORTPARAMS FROM DIS_PROD_PLAN where Id=#{repId,jdbcType=VARCHAR}
 	</select>
 
@@ -47,10 +47,10 @@
                from DIS_PROD_PLAN dpp where PROD_PLAN_ID = #{prodPlanId,jdbcType=VARCHAR}
     </select>
 
-	<select id="selectRepIdAndUri" resultType="java.lang.Integer">
+    <select id="selectRepIdAndUri" resultType="java.lang.Integer">
 		select count(*) from DIS_PROD_PLAN where URI=#{fileName,jdbcType=VARCHAR}
 	</select>
-	<select id="setId" resultType="java.lang.String">
+    <select id="setId" resultType="java.lang.String">
 		select max(PROD_PLAN_ID)+1 from DIS_PROD_PLAN
 	</select>
 
@@ -78,19 +78,19 @@
                 PROD_ID = #{prodId,jdbcType=VARCHAR},
             </if>
             <if test="openStartDate != null" >
-                OPEN_START_DATE = TO_CHAR(#{openStartDateStr},'YYYY-MM-DD'),
+                OPEN_START_DATE = #{openStartDate,jdbcType=DATE},
             </if>
             <if test="openEndDate != null" >
-                OPEN_END_DATE = TO_CHAR(#{openEndDateStr},'YYYY-MM-DD'),
+                OPEN_END_DATE = #{openEndDate,jdbcType=DATE},
             </if>
             <if test="collingoffPeriod != null" >
                 COLLINGOFF_PERIOD = #{collingoffPeriod,jdbcType=DATE},
             </if>
             <if test="operationStartDate != null" >
-                OPERATION_START_DATE = TO_CHAR(#{operationStartDateStr},'YYYY-MM-DD'),
+                OPERATION_START_DATE = #{operationStartDate,jdbcType=DATE},
             </if>
             <if test="autoRedeemDate != null" >
-                AUTO_REDEEM_DATE = TO_CHAR(#{autoRedeemDateStr},'YYYY-MM-DD'),
+                AUTO_REDEEM_DATE = #{autoRedeemDate,jdbcType=DATE},
             </if>
             <if test="holdDays != null" >
                 HOLD_DAYS = #{holdDays,jdbcType=DECIMAL},
@@ -104,9 +104,12 @@
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
-
+            <if test="updateTime != null" >
+                UPDATE_TIME = sysdate,
+            </if>
         </set>
-        where PROD_ID = #{prodId} and OPERATION_START_DATE = TO_DATE(#{operationStartDate},'YYYY-MM-DD')
+        where PROD_ID = #{prodId} and  OPERATION_START_DATE = #{operationStartDate,jdbcType=DATE}
+        and OPERATION_START_DATE != #{operationStartDateO,jdbcType=DATE}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto" >
         update DIS_PROD_PLAN
@@ -138,15 +141,15 @@
         FROM
         V_REP_PROD_INFO
         where
-            STATUS = 'E' AND REP_PROD_TYPE != '03' AND ISSUING_WAY = '01'
-            <if test="search != null and search != ''">
-                and (PROD_ID like concat(concat('%',#{search}),'%')
-                or PROD_NAME like concat(concat('%',#{search}),'%'))
-            </if>
-            <if test="initValue != null and initValue != ''">
-                and (PROD_ID like concat(concat('%',#{initValue}),'%')
-                or PROD_NAME like concat(concat('%',#{initValue}),'%'))
-            </if>
+        STATUS = 'E' AND REP_PROD_TYPE != '03' AND ISSUING_WAY = '01'
+        <if test="search != null and search != ''">
+            and (PROD_ID like concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+        <if test="initValue != null and initValue != ''">
+            and (PROD_ID like concat(concat('%',#{initValue}),'%')
+            or PROD_NAME like concat(concat('%',#{initValue}),'%'))
+        </if>
 
     </select>
 
@@ -167,7 +170,7 @@
         <if test="prodIdList != null and prodIdList.size() > 0 ">
             <foreach item="item" collection="prodIdList" index="index"
                      open="and" separator="OR" close="">
-                 (PROD_ID like concat(concat('%',#{item}),'%')
+                (PROD_ID like concat(concat('%',#{item}),'%')
                 or PROD_NAME like concat(concat('%',#{item}),'%'))
             </foreach>
         </if>
@@ -198,9 +201,9 @@
     </select>
     <select id="hasRepeatedData" resultType="java.lang.Integer">
         select count(1) from DIS_PROD_PLAN
-       <where>
-           PROD_ID=#{prodId} and OPERATION_START_DATE =#{operationStartDate,jdbcType=DATE}
-       </where>
+        <where>
+            PROD_ID=#{prodId} and OPERATION_START_DATE =#{operationStartDate,jdbcType=DATE} and OPERATION_START_DATE != #{operationStartDateO,jdbcType=DATE}
+        </where>
     </select>
 
 

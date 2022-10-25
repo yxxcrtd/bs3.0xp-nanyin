@@ -7,10 +7,16 @@ $(function() {
      * 获取查询参数
      */
     var getSearchParams = function() {
+        var prodId = $('#prodId').val()
+        if(prodId && prodId != ''){
+            prodId = prodId.join(',');
+        }else {
+            prodId = null;
+        }
         var startDate=$('#payDate').startDate();
         var endDate=$('#payDate').endDate();
         return {
-            prodId : $('#prodId').val(),
+            prodId : prodId,
             feeType : $('#feeType').val(),
             status : $('#status').val(),
             startDate : startDate,
