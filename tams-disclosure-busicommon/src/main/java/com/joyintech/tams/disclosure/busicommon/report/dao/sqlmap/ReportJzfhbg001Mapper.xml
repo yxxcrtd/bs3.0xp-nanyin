@@ -35,7 +35,7 @@
 	</select>
 
 	<select id="getIndexBySettDate" resultType="com.joyintech.tams.common.base.entity.RepProdIndex" >
-		SELECT * FROM REP_PROD_INDEX WHERE STATUS = 'E' AND PROD_ID = #{prodId} AND VALUE_DATE = TO_DATE(#{settDate},'yyyy-MM-dd')
+		SELECT * FROM REP_PROD_INDEX_GZ WHERE STATUS = 'E' AND PROD_ID = #{prodId} AND VALUE_DATE = TO_DATE(#{settDate},'yyyy-MM-dd')
 	</select>
 
 	<select id="getLastBonusInfo" resultType="com.joyintech.tams.common.base.entity.DisProdBonusplan">
