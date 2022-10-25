@@ -193,7 +193,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
                     excelNumList.add(String.valueOf(rowNo));
                 }
                 webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                        this.getMessage("REPORT_COMMON_FILE_C_1111",
                                 StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
                         MessageType.确认消息);
             } else {

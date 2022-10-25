@@ -234,7 +234,7 @@ $(function(){
             for(var i=0,row;i<selArr.length;i++){
                 var row=selArr[i];
                 if(row.dataStatus!='E'){
-                    Joyin.error("请选择有效的数据进行删除!");
+                    Joyin.error("只能删除有效数据，请重新选择!");
                     return;
                 }
             }

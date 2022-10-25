@@ -219,7 +219,7 @@ $(function() {
                 }
             })
             if (!selArrUseful || selArrUseful.length > 0) {
-                Joyin.error(JoyinUtil.getMessage("删除状态的数据不支持删除！"));
+                Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
                 return;
             }
 

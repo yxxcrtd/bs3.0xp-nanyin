@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -482,7 +483,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             bonusCalist001Dto.setPerBase(report.getAchievementBasis());
             try {
                 // 可供分配利润
-                bonusCalist001Dto.setAvaiProfit(report.getAssetsValue().subtract(report.getCapital()) );
+                bonusCalist001Dto.setAvaiProfit(report.getAssetsValue().subtract(report.getCapital()).setScale(2,BigDecimal.ROUND_HALF_UP) );
 
                 // 业绩比较基准收益
                 BigDecimal abProfit =
@@ -500,6 +501,9 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
 
                 // 业绩报酬
 //                BigDecimal floatFee = esProfit.multiply(report.getExcessAchievementProp());
+                if (report.getFloatFee()!=null && StringUtil.equals(report.getFloatFee().toString(),"无")){
+                    bonusCalist001Dto.setPerFee(new BigDecimal("0.00"));
+                }else
                 bonusCalist001Dto.setPerFee(bonusCalist001Dto.getExceed().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
 
                 // 应分配利润
@@ -510,10 +514,11 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                         bonusCalist001Dto.getDisBonusMoney().divide(report.getCapital(), 4, BigDecimal.ROUND_DOWN));
 
                 // 年化收益率
-                BigDecimal ddProfit = bonusCalist001Dto.getDisBonusMoney().subtract(bonusCalist001Dto.getProdEndBalance());
+//                BigDecimal ddProfit = bonusCalist001Dto.getDisBonusMoney().divide(bonusCalist001Dto.getProdEndBalance()).setScale(4,BigDecimal.ROUND_DOWN);
+                BigDecimal ddProfit = ArithmeticUtil.divide(bonusCalist001Dto.getDisBonusMoney(),bonusCalist001Dto.getProdEndBalance(),2);
                 bonusCalist001Dto.setYield(
                         ddProfit.multiply(new BigDecimal(365))
-                                .divide(  new BigDecimal(bonusCalist001Dto.getRunDays()).multiply(report.getCapital()), 4, BigDecimal.ROUND_DOWN));
+                                .divide(new BigDecimal(bonusCalist001Dto.getRunDays()), 4, BigDecimal.ROUND_DOWN));
             } catch(Exception e) {
                 logger.error("获取分红计算清单异常。",e);
             }

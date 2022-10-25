@@ -136,11 +136,7 @@ public class RepProdIndexGzDto extends RepProdIndex implements ITableRow, Proces
         return super.getProdId();
     }
 
-    @Override
-    @PrimaryKey(PrimaryKey.Field.PK_2)
-    public Date getValueDate() {
-        return super.getValueDate();
-    }
+
 
     public BigDecimal getpAssetsValue() {
         return pAssetsValue;
@@ -224,6 +220,7 @@ public class RepProdIndexGzDto extends RepProdIndex implements ITableRow, Proces
         this.valueDateStr = valueDateStr;
     }
 
+    @PrimaryKey(PrimaryKey.Field.PK_2)
     public String getValueDateStr() {
         if (StringUtil.isNotEmpty(this.valueDateStr)) {
             return this.valueDateStr;

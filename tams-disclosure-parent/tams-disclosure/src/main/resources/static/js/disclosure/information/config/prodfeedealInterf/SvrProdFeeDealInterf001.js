@@ -7,10 +7,16 @@ $(function() {
      * 获取查询参数
      */
     var getSearchParams = function() {
+        var prodId = $('#prodId').val()
+        if(prodId && prodId != ''){
+            prodId = prodId.join(',');
+        }else {
+            prodId = null;
+        }
         var startDate=$('#payDate').startDate();
         var endDate=$('#payDate').endDate();
         return {
-            prodId : $('#prodId').val(),
+            prodId : prodId,
             feeType : $('#feeType').val(),
             status : $('#status').val(),
             startDate : startDate,
@@ -154,7 +160,7 @@ $(function() {
             }
             for(var i=0;i<selArr.length;i++){
                 if(selArr[i].status =="D"){
-                    return Joyin.error("不能删除已删除的数据，请重新选择");
+                    return Joyin.error("只能删除有效数据，请重新选择!");
                 }
                 // selArr[i].operateType =  "delete";
             }
