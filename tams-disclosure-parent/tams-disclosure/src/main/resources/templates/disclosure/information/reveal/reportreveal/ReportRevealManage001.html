@@ -58,36 +58,52 @@
                       </button>
                   </div>
               </div>
-                
+
+
+              <div class="layui-inline layui-col-md4">
+                  <label class="layui-form-label form-lable" >子产品名称</label>
+                  <div class="layui-input-inline input-inline">
+                      <select id="prodId" name="prodId"
+                              class="layui-input form-input input-select" placeholder="请选择"
+                              data-th-data-url='@{/disclosure/information/config/repprodinfo/ProdInfo001/queryPprodName}'
+                              allowClear="true"  multiple="multiple" >
+                      </select>
+                  </div>
+                  <div class="layui-inline">
+                      <button type="button" class="layui-btn layui-btn-sm btn-default"
+                              id="ReportRevealManage001_btn_treeChildrenAdd" style="
+										text-align: center;
+    									width: 30px;
+    									height: 24px;
+    									line-height: 24px;
+    									position: absolute;
+    									top: -9px;
+    									right: -35px;
+    									z-index:2;">
+                          <i class="iconfont icon-add"></i>
+                      </button>
+                  </div>
+              </div>
               <div class="layui-inline layui-col-md4">
                   <label class="layui-form-label form-lable">报表名称</label>
                   <div class="layui-input-inline input-inline">
-                      <input type="text" id="reportName" name="reportName" class="layui-input form-input" 
-                             placeholder="请选择" data-th-data-result="${REPORT_ID}" 
-                             allowClear="true" multiple="multiple" 
+                      <input type="text" id="reportName" name="reportName" class="layui-input form-input"
+                             placeholder="请选择" data-th-data-result="${REPORT_ID}"
+                             allowClear="true" multiple="multiple"
                              data-th-placeholder="#{SysCommon.placeholder}">
                   </div>
               </div>
-			  <div class="layui-inline layui-col-md4">
-                <label class="layui-form-label form-lable">报表类别</label>
-                <div class="layui-input-inline input-inline">
-                    <select id="repType" name="repType" class="layui-input form-input input-select"
-                        placeholder="请选择，可复选" data-th-data-result="${REPORT_STYLE}" allowClear="true"
-                        multiple="multiple" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue='${repType}'>
-                    </select>
-                </div>
-              </div>
           </div>
           <div class="layui-form-item">
-                <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">披露状态</label>
-                    <div class="layui-input-inline input-inline">
-                        <input id="revealStatus" name="revealStatus" class="layui-input form-input input-checkbox"
-                            data-th-data-result="${DISCLOSURE_STATUS}" 
-                            data-th-placeholder="#{SysCommon.placeholder}" 
-                            allowClear="true" data-th-initValue="${revealStatus}">
-                    </div>
-                </div>
+              <div class="layui-inline layui-col-md4">
+                  <label class="layui-form-label form-lable">报表类别</label>
+                  <div class="layui-input-inline input-inline">
+                      <select id="repType" name="repType" class="layui-input form-input input-select"
+                              placeholder="请选择，可复选" data-th-data-result="${REPORT_STYLE}" allowClear="true"
+                              multiple="multiple" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue='${repType}'>
+                      </select>
+                  </div>
+              </div>
               <!-- add by guozhongbao 报表披露管理 20181204 start -->
               <div class="layui-inline layui-col-md4">
                 <label class="layui-form-label form-lable">披露截止日</label>
@@ -104,6 +120,15 @@
               <!-- add by guozhongbao 报表披露管理 20181204 end -->
           </div>
           <div class="layui-form-item">
+              <div class="layui-inline layui-col-md4">
+                  <label class="layui-form-label form-lable">披露状态</label>
+                  <div class="layui-input-inline input-inline">
+                      <input id="revealStatus" name="revealStatus" class="layui-input form-input input-checkbox"
+                             data-th-data-result="${DISCLOSURE_STATUS}"
+                             data-th-placeholder="#{SysCommon.placeholder}"
+                             allowClear="true" data-th-initValue="${revealStatus}">
+                  </div>
+              </div>
             <div class="layui-inline layui-col-md4">
                   <label class="layui-form-label form-lable">生成日期</label>
                   <div class="layui-input-inline input-inline">
@@ -116,6 +141,7 @@
                     <input type="text" id="confirmDate" name="confirmDate" placeholder="请选择时间区间" class="layui-input form-input input-dateRangeSelect" value="">
                   </div>
             </div>
+          </div>
 <!--            <div class="layui-inline layui-col-md4">-->
 <!--                  <label class="layui-form-label form-lable">披露渠道</label>-->
 <!--                  <div class="layui-input-inline input-inline">-->
@@ -125,15 +151,16 @@
 <!--                    </select>-->
 <!--                  </div>-->
 <!--            </div>-->
-              <div class="layui-inline layui-col-md4">
-                  <label class="layui-form-label form-lable">报告期</label>
-                  <div class="layui-input-inline input-inline">
-                      <input type="text" id="reportDate" name="reportDate"
-                             placeholder="请选择时间区间"
-                             class="layui-input form-input input-dateRangeSelect" value="">
-                  </div>
+          <div class="layui-form-item">
+          <div class="layui-inline layui-col-md4">
+              <label class="layui-form-label form-lable">报告期</label>
+              <div class="layui-input-inline input-inline">
+                  <input type="text" id="reportDate" name="reportDate"
+                         placeholder="请选择时间区间"
+                         class="layui-input form-input input-dateRangeSelect" value="">
               </div>
           </div>
+      </div>
       </form>
               <input type="text" id="workflowId" name="workflowId" data-th-value="${workflowId}" disabled="disabled" style = "display:none;">
     </div>
