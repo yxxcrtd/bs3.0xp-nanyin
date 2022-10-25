@@ -263,7 +263,7 @@
 			 }
 		 })
 		 if ((!selArrUseful || selArrUseful.length == 0) && (!selArrDFH || selArrDFH.length == 0)){
-			 Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
+			 Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
 			 return;
 		 }
 		 if ( selArrDFH.length > 0) {
