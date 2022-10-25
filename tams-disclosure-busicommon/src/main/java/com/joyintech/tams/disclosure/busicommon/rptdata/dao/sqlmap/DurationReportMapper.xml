@@ -43,9 +43,11 @@
 		,INFO.ISSUING_WAY
 		,INFO.PROFIT_TYPE   /**运作方式**/
 		,INFO.SET_DATE    /**成立日**/
+		,info.ISSUE_STATUS  /**发行状态**/
 		from REP_PROD_INFO info
 		where REP_PROD_TYPE in ('02','03')  /**母产品或者单产品**/
 		AND info.STATUS='E'
+		and info.ISSUE_STATUS='01'
 		and info.SET_DATE<![CDATA[<=]]>#{reportDate,jdbcType=DATE}
 		<if test="pprodid!=null">
 			AND info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
@@ -108,7 +110,7 @@
 			and rindex.index_period=#{indexPeriod,jdbcType=VARCHAR}
 		</if>
 		<if test="prodId!=null">
-			and rindex.INDEX_DETAIL like concat(concat('%',#{prodId,jdbcType=VARCHAR}),',%')
+			and rindex.INDEX_DETAIL||',' like concat(concat('%',#{prodId,jdbcType=VARCHAR}),',%')
 		</if>
 		
 	</select>

@@ -55,13 +55,13 @@
             ,{field:'lastProfitBaseDate',  title: '上一收益分配基准日',sortField:"lastProfitBaseDate",type:'date',width: 100}
             ,{field:'profitBaseDate',  title: '本期收益分配基准日',sortField:"profitBaseDate",type:'date',width: 100}
             ,{field:'runDays',  title: '运行天数',sortField:"runDays",width: 100}
-            ,{field:'avaiProfit',  title: '可供分配利润',sortField:"avaiProfit",width: 100}
+            ,{field:'avaiProfit',  title: '可供分配利润',sortField:"avaiProfit",width: 100, digit: 2,type:'number'}
             ,{field:'perBase',  title: '业绩比较基准',sortField:"perBase",width: 100}
             ,{field:'perBaseProfit',  title: '业绩比较基准收益',sortField:"perBaseProfit",type:'number',width: 100}
             ,{field:'exceed',  title: '超出部分',sortField:"exceed",type:'number',width: 100}
             ,{field:'perFee',  title: '业绩报酬',sortField:"perFee",type:'number',width: 100}
             ,{field:'disBonusMoney',  title: '应分配分红金额',sortField:"disBonusMoney",type:'number',width: 100}
-            ,{field:'unitBonus',  title: '单位分红',sortField:"unitBonus",type:'number',width: 100}
+            ,{field:'unitBonus',  title: '单位分红',sortField:"unitBonus",type:'number',width: 100, digit: 4}
             ,{field:'yield',  title: '收益率',sortField:"yield",type:'number',width: 100}
             ,{field:'msg',  title: '错误信息',sortField:"msg",width: 100}
             ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime',width: 100} //更新时间
@@ -205,7 +205,7 @@
             }
             for(var i=0;i<selArr.length;i++){
                 if(!(selArr[i].dataStatus == "A")){
-                    return Joyin.error("只能选择待处理数据，请重新选择");
+                    return Joyin.error("只能对数据状态是待处理的数据进行批量审批");
                 }
             }
             var object = {selectedItem: selArr};
