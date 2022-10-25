@@ -144,13 +144,13 @@
         when '03' then
         (case ISSUING_WAY
         when '01' then '0301' || PROD_SERIES
-        when '02' then '0301' || PROD_SERIES
+        when '02' then '0302' || PROD_SERIES
         else '' end
         )
         else '' end pid
         from
         V_REP_PROD_INFO
-        where status='E' AND PROD_SERIES is not null
+        where PROD_SERIES is not null
     </select>
 
     <select id="selectProdInfo1" resultType="com.joyintech.framework.select.TreeNode">
@@ -173,13 +173,13 @@
         when '03' then
         (case ISSUING_WAY
         when '01' then '0301' || PROD_SERIES
-        when '02' then '0301' || PROD_SERIES
+        when '02' then '0302' || PROD_SERIES
         else '' end
         )
         else '' end pid
         from
         REP_PROD_INFO
-        where status='E' AND PROD_SERIES is not null
+        where PROD_SERIES is not null
     </select>
 
     <select id="selectProdInfo2" resultType="com.joyintech.framework.select.TreeNode">
@@ -202,7 +202,7 @@
         when '03' then
         (case T1.ISSUING_WAY
         when '01' then '0301' || T1.PROD_SERIES
-        when '02' then '0301' || T1.PROD_SERIES
+        when '02' then '0302' || T1.PROD_SERIES
         else '' end
         )
         else '' end pid
@@ -212,7 +212,7 @@
         left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
         where T1.P_PROD_ID is not null
         AND T1.STATUS not in ('D')
-        AND T1.STATUS='E' AND T1.PROD_SERIES is not null
+        AND T1.PROD_SERIES is not null
     </select>
 
     <select id="selectProdInfo3" resultType="com.joyintech.framework.select.TreeNode">
@@ -235,7 +235,7 @@
         when '03' then
         (case T1.ISSUING_WAY
         when '01' then '0301' || T1.PROD_SERIES
-        when '02' then '0301' || T1.PROD_SERIES
+        when '02' then '0302' || T1.PROD_SERIES
         else '' end
         )
         else '' end pid
@@ -244,7 +244,7 @@
         LEFT JOIN fin_product
         ON fin_product.FINPROD_MARKET_ID = T1.PROD_ID
         and fin_product.P_FINPROD_ID is null
-        where T1.STATUS='E' AND T1.PROD_SERIES is not null
+        where T1.PROD_SERIES is not null
     </select>
 
     <select id="selectProdInfoSon" resultType="com.joyintech.framework.select.TreeNode">
@@ -273,7 +273,7 @@
         (case prod.ISSUING_WAY
         when '01' then '0301' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
         else prod.PROD_NAME end)
-        when '02' then '0301' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        when '02' then '0302' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
         else prod.PROD_NAME end)
         else '' end
         )
@@ -283,7 +283,7 @@
         left join V_REP_PROD_INFO pprod
         on prod.p_prod_id = pprod.prod_id
         where  prod.rep_prod_type in ('02','03')
-        AND prod.status='E' AND prod.PROD_SERIES is not null
+        AND prod.PROD_SERIES is not null
     </select>
 
     <select id="selectProdBonusInfo" resultType="com.joyintech.framework.select.TreeNode">
@@ -306,13 +306,13 @@
         when '03' then
         (case ISSUING_WAY
         when '01' then '0301' || PROD_SERIES || to_char(PROD_NAME)
-        when '02' then '0301' || PROD_SERIES || to_char(PROD_NAME)
+        when '02' then '0302' || PROD_SERIES || to_char(PROD_NAME)
         else '' end
         )
         else '' end pid
         from
         REP_PROD_INFO
-        where status='E' AND PROD_SERIES is not null
+        where  PROD_SERIES is not null
     </select>
 
     <select id="selectProdHugeInfo" resultType="com.joyintech.framework.select.TreeNode">
@@ -335,14 +335,14 @@
         when '03' then
         (case r.ISSUING_WAY
         when '01' then '0301' || r.PROD_SERIES || to_char(r.PROD_NAME)
-        when '02' then '0301' || r.PROD_SERIES || to_char(r.PROD_NAME)
+        when '02' then '0302' || r.PROD_SERIES || to_char(r.PROD_NAME)
         else '' end
         )
         else '' end pid
         FROM
         DIS_LARGE_REDEMPTION d left join rep_prod_info r
         on d.PROD_ID = r.PROD_ID
-        where status='E' AND PROD_SERIES is not null
+        where PROD_SERIES is not null
     </select>
 
 

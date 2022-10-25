@@ -233,8 +233,9 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                     excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
                 }
                 // 将list进行排序，并转化为string
-                Collections.sort(excelNumIntList);
-                for (Integer rowNo : excelNumIntList) {
+                List<Integer> newExcelNumIntList=excelNumIntList.stream().distinct().collect(Collectors.toList());
+                Collections.sort(newExcelNumIntList);
+                for (Integer rowNo : newExcelNumIntList) {
                     excelNumList.add(String.valueOf(rowNo));
                 }
                 webResult.setMessage(

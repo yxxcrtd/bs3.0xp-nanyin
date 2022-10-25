@@ -130,9 +130,18 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
             map.put("effEndDate", dto.getEffEndDateStr());
             map.put("dataStatus", DictCodeListExt1.维护数据状态_有效.getValue());
 
-            List<UnClaimAssetDetailDto> unclaimList = dto.getUnclaimList();
+            List<UnClaimAssetDetailDto> existList=new ArrayList<>();
 
-            List<UnClaimAssetDetailDto> existList = selectDetailList(map);
+            List<UnClaimAssetDetailDto> existEList = selectDetailList(map);
+            if(CollectionUtils.isNotEmpty(existEList)){
+                existList.addAll(existEList);
+            }
+            map.put("dataStatus", DictCodeListExt1.维护数据状态_待处理.getValue());
+            List<UnClaimAssetDetailDto> existAList = selectDetailList(map);
+            if(CollectionUtils.isNotEmpty(existAList)){
+                existList.addAll(existAList);
+            }
+            List<UnClaimAssetDetailDto> unclaimList = dto.getUnclaimList();
 
             //对于已经存在的数据需要入历史表
             existList.forEach(item -> {
@@ -147,6 +156,8 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
 //                unClaimAssetDetailMapper.update(unClaimAssetDetailDto);
             });
             dto.setDataStatus("E");
+            unClaimAssetDetailMapper.deleteOnReal(dto);
+            dto.setDataStatus("A");
             unClaimAssetDetailMapper.deleteOnReal(dto);
             int num=0;
             for (UnClaimAssetDetailDto unclaimDto:unclaimList){
