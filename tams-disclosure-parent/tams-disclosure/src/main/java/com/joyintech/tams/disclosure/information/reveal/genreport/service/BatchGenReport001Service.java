@@ -85,6 +85,8 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 			
 			params.put("prodId", prod.getProdId());
 			params.put("prodid", prod.getProdId());
+			params.put("prodName", prod.getProdName());
+			params.put("prodname", prod.getProdName());
 			//为了能顺利调用历史的方法，对不规范的参数进行补充
 			repDetailsShow001Service.collateParams(params);
 			
