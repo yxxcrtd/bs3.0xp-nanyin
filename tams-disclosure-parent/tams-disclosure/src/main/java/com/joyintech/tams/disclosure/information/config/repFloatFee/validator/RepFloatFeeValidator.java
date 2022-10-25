@@ -54,8 +54,8 @@ public class RepFloatFeeValidator implements BeanValidator {
 
             if(dto.getAboveAmt()== null){
                 errorList.add(new ValidMessage("", "超额报酬不能为空!"));
-            }else if(dto.getAboveAmt().compareTo(new BigDecimal(0))<=0){
-                errorList.add(new ValidMessage("", "超额报酬只能填写大于0的数值!"));
+            }else if(dto.getAboveAmt().compareTo(new BigDecimal(0))<0){
+                errorList.add(new ValidMessage("", "超额报酬只能填写大于等于0的数值!"));
             }
 
             if(StringUtil.isNotEmpty(dto.getProdId()) && dto.getAffirmDate() != null ){

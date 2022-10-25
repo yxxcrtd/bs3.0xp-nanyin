@@ -368,8 +368,8 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "超额报酬"));
             } else if (!isBigDecimal(rowData.get(6))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "超额报酬"));
-            } else if (new BigDecimal(rowData.get(6)).compareTo(BigDecimal.ZERO) <= 0) {
-                message.add("超额报酬需要大于0。");
+            } else if (new BigDecimal(rowData.get(6)).compareTo(BigDecimal.ZERO) < 0) {
+                message.add("超额报酬需要大于等于0。");
             }
             if (map.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));

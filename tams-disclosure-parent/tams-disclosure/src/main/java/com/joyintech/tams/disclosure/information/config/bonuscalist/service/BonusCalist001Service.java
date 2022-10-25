@@ -515,7 +515,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
 
                 // 年化收益率
 //                BigDecimal ddProfit = bonusCalist001Dto.getDisBonusMoney().divide(bonusCalist001Dto.getProdEndBalance()).setScale(4,BigDecimal.ROUND_DOWN);
-                BigDecimal ddProfit = ArithmeticUtil.divide(bonusCalist001Dto.getDisBonusMoney(),bonusCalist001Dto.getProdEndBalance(),4);
+                BigDecimal ddProfit = ArithmeticUtil.divide(bonusCalist001Dto.getDisBonusMoney(),bonusCalist001Dto.getProdEndBalance(),2);
                 bonusCalist001Dto.setYield(
                         ddProfit.multiply(new BigDecimal(365))
                                 .divide(new BigDecimal(bonusCalist001Dto.getRunDays()), 4, BigDecimal.ROUND_DOWN));
