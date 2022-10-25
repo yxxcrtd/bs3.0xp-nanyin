@@ -278,6 +278,19 @@
                 #{item}
             </foreach>)
         </if>
+        <if test="finprodIdArr != null and finprodIdArr.size > 0">
+            AND (rri.PROD_ID IN
+            <foreach item="item" collection="finprodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            or
+            rri.P_PROD_ID IN
+            <foreach item="item" collection="finprodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>)
+        </if>
         <if test="reportTypeArr != null and reportTypeArr.size > 0">
             AND rrc.REPORT_TYPE IN
             <foreach item="item" collection="reportTypeArr" index="index"
@@ -323,6 +336,13 @@
                 #{item}
             </foreach>)
         </if>
+        <if test="finprodIdArr != null and finprodIdArr.size > 0">
+            AND (t.PROD_ID IN
+            <foreach item="item" collection="finprodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>)
+        </if>
         <if test="reportTypeArr != null and reportTypeArr.size > 0">
             AND rrc.REPORT_TYPE IN
             <foreach item="item" collection="reportTypeArr" index="index"
@@ -363,6 +383,13 @@
         <if test="prodIdArr != null and prodIdArr.size > 0">
             AND (rri.PROD_ID IN
             <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>)
+        </if>
+        <if test="finprodIdArr != null and finprodIdArr.size > 0">
+            AND (rri.PROD_ID IN
+            <foreach item="item" collection="finprodIdArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>)

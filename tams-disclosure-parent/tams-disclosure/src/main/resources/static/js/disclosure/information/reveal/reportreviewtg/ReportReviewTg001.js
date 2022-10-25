@@ -7,6 +7,7 @@
         return {
             pProdId: $('#pProdId').val() == null ? null : $('#pProdId').val().join(","),
             prodId: $('#prodId').val() == null ? null : $('#prodId').val().join(","),
+            prodName: $('#prodName').val() == null ? null : $('#prodName').val().join(","),
             reportName: $('#reportName').val(),
             reportType: $('#reportType').val() == null ? null : $('#reportType').val().join(","),
             reviewTgStatus: $('#reviewTgStatus').val() == null ? null : $('#reviewTgStatus').val().join(","),
