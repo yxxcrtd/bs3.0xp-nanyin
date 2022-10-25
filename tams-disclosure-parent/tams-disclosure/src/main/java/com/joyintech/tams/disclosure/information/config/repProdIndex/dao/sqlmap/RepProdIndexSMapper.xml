@@ -29,7 +29,8 @@
     <select id="getProdId2" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         T1.PROD_ID id,
-        T1.PROD_NAME text
+        T1.PROD_NAME text,
+        T1.PROD_RE object
         FROM
         REP_PROD_INFO T1
         left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
