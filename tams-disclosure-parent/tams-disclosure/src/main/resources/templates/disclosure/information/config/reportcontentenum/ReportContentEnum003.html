@@ -38,12 +38,13 @@
 				</label>
 				<div class="layui-input-inline input-inline">
 					<input id="indexYear" name="indexYear"
-						   class="layui-input form-input input-select" 
+						   class="layui-input form-input input-dateSelect"
+						   data-option="{type:'year',format:'yyyy'}"
 						   placeholder="请选择年度"
-						   data-th-formatoption="false" 
+						   data-th-formatoption="false"
 						   data-th-data-result="${DIS_INDEX_YEAR}"
-						   data-th-Value="${entity?.indexYear}" 
-						   allowClear="true"> </input>
+						   data-th-Value="${entity?.indexYear}"
+						   allowClear="true">
 				</div>
 			</div>
 		</div>
