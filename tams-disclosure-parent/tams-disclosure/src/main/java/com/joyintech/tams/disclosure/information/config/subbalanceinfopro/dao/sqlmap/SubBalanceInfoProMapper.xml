@@ -261,8 +261,8 @@
         A.SUBJECT_NO
         from BOK_BALANCE A
         <where>
-            <foreach collection="list" item="item" open="(A.BOOKSET_ID,to_char(A.BALANCE_DATE,'yyyy/mm/dd'),A.SUBJECT_NO) IN (" separator="," close=")">
-                (#{item.booksetId},#{item.balanceDateStr},#{item.subjectNo})
+            <foreach collection="list" item="item" open="(A.BOOKSET_ID,to_char(A.BALANCE_DATE,'yyyy/mm/dd'),A.SUBJECT_NO,A.STATUS) IN (" separator="," close=")">
+                (#{item.booksetId},#{item.balanceDateStr},#{item.subjectNo},'E')
             </foreach>
         </where>
     </select>
