@@ -154,12 +154,15 @@
         from REP_PROD_INFO
         where STATUS = 'E'
     </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
         select
         <include
                 refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper.Base_Column_List"/>
         from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        <if test="status != null and status != ''">
+            and STATUS=#{status,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <select id="selectData" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -566,12 +569,14 @@
             </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and status !='D'
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         update REP_PROD_INFO
         set
             STATUS              = #{status,jdbcType=VARCHAR}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and status !='D'
     </update>
 
     <update id="updateStatus" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
@@ -680,23 +685,25 @@
 
     <!-- 查询普通产品信息 -->
     <select id="selectByCommonProdId"
-            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto"
-            parameterType="java.lang.String">
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
         select
         <include refid="Common_PROD_Base_Column_List"/>
         from REP_PROD_INFO rpi
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and to_char(update_time,'yyyy-MM-dd hh:mi:ss')  = #{updateDateStr}
+        and status= #{status,jdbcType=VARCHAR}
     </select>
 
     <!-- 查询子产品明细信息 -->
     <select id="selectBySonProdId"
-            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto"
-            parameterType="java.lang.String">
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
         select
         <include refid="Son_PROD_Base_Column_List"/>
         from REP_PROD_INFO rpi
         left join rep_prod_info prpi on prpi.prod_id = rpi.p_prod_id
         where rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and to_char(update_time,'yyyy-MM-dd hh:mi:ss')  = #{updateDateStr}
+        and status= #{status,jdbcType=VARCHAR}
     </select>
 
     <!-- 查询正常状态的产品信息 -->
@@ -928,6 +935,7 @@
         from
         REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and status='C'
     </select>
 
 

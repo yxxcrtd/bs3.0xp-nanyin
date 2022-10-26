@@ -257,7 +257,7 @@ public class MatureReportDataService implements IReportDataService {
 			}
 		} catch (Exception e) {
 			logger.error("到期报表数据错误", e);
-			listResult.get(0).put("queryErrorMsg","到期报表数据错误："+e.getStackTrace());
+			listResult.get(0).put("queryErrorMsg","到期报表数据错误：缺少估值信息或者分红计算清单信息。"+e.getStackTrace());
 		}
 		if (listResult!=null && listResult.size()>0 ) {
 			listResult.get(0).put("endDate_xx","");

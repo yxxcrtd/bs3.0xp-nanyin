@@ -185,10 +185,20 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             //本次分红方案（元/1份份额）
                             String unitProfitStr = "0" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
                             //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)； 若产品不是第一次分红，则本字段值=子产品上一个收益分配基准日的产品累计单位净值+本次分红方案（结果保留四位小数）
+                            
+                            //CHENXC:从分红计算清单中取值，找到本次的分红计算清单
+                            searchParam.put("profitBaseDate", searchParam.get("baseDate"));
+                            List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);   
+                            //本次单位分红
+                            BigDecimal thisUnitBonus = BigDecimal.ZERO;
+                            if ( listBonus!=null && listBonus.size()>0 ) {
+                            	thisUnitBonus = listBonus.get(0).getUnitBonus();
+                            }
+                            
                             if (lastBonus != null && lastBonus.getLastUnitValueT() != null) {
-                                bonusDto.setMunitValueT(lastBonus.getLastUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
+                                bonusDto.setMunitValueT(lastBonus.getLastUnitValueT().add(thisUnitBonus).toString());
                             }else{
-                                bonusDto.setMunitValueT((new BigDecimal("1").add(new BigDecimal(unitProfitStr)).toString()));
+                                bonusDto.setMunitValueT((new BigDecimal("1").add(thisUnitBonus).toString()));
                             }
                             //设置历史净值当前封闭期
                             bonusDto.setCurRange(curRange);
@@ -200,10 +210,10 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             bonusDto.setSubValue("1.0000");
                             
                             //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            //Date profitBaseDate = ()searchParam.get("baseDate");
-                            searchParam.put("profitBaseDate", searchParam.get("baseDate"));
-                            List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
+//                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//                            //Date profitBaseDate = ()searchParam.get("baseDate");
+//                            searchParam.put("profitBaseDate", searchParam.get("baseDate"));
+//                            List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
                             if ( listBonus.size()>0 ) { 
 	                        	BigDecimal yield1 = listBonus.get(0).getYield();
 	                        	if ( yield1!=null ) {
@@ -212,18 +222,18 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
 	                        	} else {
 	                        		bonusDto.setYield(null);
 	                        	}
-	                        	BigDecimal unitBonus = listBonus.get(0).getUnitBonus();
-	                        	unitBonus = unitBonus==null?BigDecimal.ZERO:unitBonus.setScale(4,BigDecimal.ROUND_DOWN);
-	                            if (lastBonus != null && lastBonus.getLastUnitValueT() != null) {
-	                            	searchParam.put("settDate", sdf.format(listBonus.get(0).getLastProfitBaseDate()));
-	                            	RepProdIndex prodIndexGz = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
-	                            	if ( prodIndexGz!=null )
-	                            		bonusDto.setMunitValueT(prodIndexGz.getUnitValueT().add(unitBonus).toString());
-	                            	else
-	                            		bonusDto.setMunitValueT((unitBonus).toString());
-	                            }else{
-	                                bonusDto.setMunitValueT(BigDecimal.ONE.add(unitBonus).toString());
-	                            }
+//	                        	BigDecimal unitBonus = listBonus.get(0).getUnitBonus();
+//	                        	unitBonus = unitBonus==null?BigDecimal.ZERO:unitBonus.setScale(4,BigDecimal.ROUND_DOWN);
+//	                            if (lastBonus != null && lastBonus.getLastUnitValueT() != null) {
+//	                            	searchParam.put("settDate", sdf.format(listBonus.get(0).getLastProfitBaseDate()));
+//	                            	RepProdIndex prodIndexGz = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
+//	                            	if ( prodIndexGz!=null )
+//	                            		bonusDto.setMunitValueT(prodIndexGz.getUnitValueT().add(unitBonus).toString());
+//	                            	else
+//	                            		bonusDto.setMunitValueT((unitBonus).toString());
+//	                            }else{
+//	                                bonusDto.setMunitValueT(BigDecimal.ONE.add(unitBonus).toString());
+//	                            }
                             } else {
                             	bonusDto.setYield(null);
                             }
