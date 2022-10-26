@@ -100,7 +100,7 @@ public class DisProdPlanManage002Controller extends BaseController {
 		// 不来自于代办
 		if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(id)) {
 			DisProdPlanManage002Dto dto = disProdPlanManage002Service.getDisProdPlanManage002Dto(id);
-			ProdInfoDto prodInfoDto = prodInfoService.selectByProdId(dto.getProdId());
+			ProdInfoDto prodInfoDto = prodInfoService.selectByProdId(dto.getProdId(),"E");
 			if (prodInfoDto != null){
 				dto.setProdName(prodInfoDto.getProdName());
 				dto.setOpenEndDateO(dto.getOpenEndDate());

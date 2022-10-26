@@ -114,6 +114,8 @@ public class ProdInfo002Controller extends BaseController {
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String id = this.getParam("prodId");
         String repProdType = this.getParam("repProdType");
+        String updateDateStr = this.getParam("updateDateStr");
+        String status = this.getParam("status");
 
 
         // 不来自于代办
@@ -121,11 +123,11 @@ public class ProdInfo002Controller extends BaseController {
             // 根据主键获取业务实体
             ProdInfoDto dto = new ProdInfoDto();
             if (StringUtils.equals(DictCodeListExt5.信批产品类别_普通产品.getValue(), repProdType)) {
-                dto = prodInfoService.selectByCommonProdId(id);
+                dto = prodInfoService.selectByCommonProdId(id,updateDateStr,status);
             } else if (StringUtils.equals(DictCodeListExt5.信批产品类别_子产品.getValue(), repProdType)) {
-                dto = prodInfoService.selectBySonProdId(id);
+                dto = prodInfoService.selectBySonProdId(id,updateDateStr,status);
             } else {
-                dto = prodInfoService.selectByProdId(id);
+                dto = prodInfoService.selectByProdId(id,status);
             }
             //业绩基准变更 modify by kongzhifang 分层产品查母产品的业绩基准，普通产品查自身的业绩基准 NYLCXP-895
 //            dto.setBasicChangeList(prodBasicChangeService.selectListByProdId(StringUtils.equals(DictCodeListExt5.信批产品类别_普通产品.getValue(), repProdType)?dto.getProdId():dto.getpProdId()));

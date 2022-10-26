@@ -451,7 +451,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 }
             }
             if (StringUtil.isNotBlank(rowData.get(0)) && StringUtil.isNotBlank(rowData.get(1))) {
-                ProdInfoDto prodInfoDto = prodInfoService.selectByProdId(rowData.get(1));
+                ProdInfoDto prodInfoDto = prodInfoService.selectByProdId(rowData.get(1),"E");
                 if (prodInfoDto!=null && !StringUtil.equals(prodInfoDto.getProdRe(),rowData.get(0))) {
                     message.add("子产品代码和产品登记编码不匹配。");
                 }

@@ -213,15 +213,35 @@ $(function() {
                 return;
             }
             var selArrUseful =[];
+            var selArrDFH = [];
+            var selArrDelete = [];
             selArr.forEach(v => {
-                if(v.status == 'D'){
+                if(v.status == 'E'){
+                    //selArr.remove();
                     selArrUseful.push(v);
                 }
+                if(v.status == 'C'){
+                    //selArr.remove();
+                    selArrDFH.push(v);
+                }
+                if(v.status == 'D'){
+                    //selArr.remove();
+                    selArrDelete.push(v);
+                }
             })
-            if (!selArrUseful || selArrUseful.length > 0) {
+            if ( selArrDFH.length > 0) {
+                Joyin.error(JoyinUtil.getMessage("数据在流程中，不允许删除"));
+                return;
+            }
+            if ( selArrDelete.length > 0) {
                 Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
                 return;
             }
+            if ((!selArrUseful || selArrUseful.length == 0)){
+                Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
+                return;
+            }
+
 
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
