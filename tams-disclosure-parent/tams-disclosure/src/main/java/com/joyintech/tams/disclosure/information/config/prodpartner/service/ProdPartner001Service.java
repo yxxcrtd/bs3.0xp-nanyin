@@ -306,7 +306,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
 //                        excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
 //                                "生效截止日期要大于等于平台日期！"));
                     }
-                    if(DateUtil.isDateStr(list.get(2).trim())){
+                    if(isDateStr(list.get(2).trim())){
                         Date effDate=DateUtil.parse(list.get(2).trim());
                         if (DateUtil.compareDate(effDate,effEndDate)>0) {
                             message.add("生效截止日期要大于等于生效日！");
@@ -318,13 +318,11 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                                 if(DateUtil.compareDate(effDate,dto.getEffDate())==0&&DateUtil.compareDate(effEndDate,dto.getEffEndDate())==0){
                                     break;
                                 }
-                                if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
-                                        || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
-                                    excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+1),
-                                            "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
-                                                    +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
-                                    message.add("生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
-                                            +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd"));
+                                if (!((DateUtil.compareDate(effDate, dto.getEffDate()) < 0 && DateUtil.compareDate(effEndDate, dto.getEffDate()) < 0)
+                                        || (DateUtil.compareDate(effDate, dto.getEffEndDate()) > 0 && DateUtil.compareDate(effEndDate, dto.getEffEndDate()) > 0))) {
+                                    message.add(
+                                            "生效区间重叠！<br/> 系统中已存在的生效区间:" + DateUtil.format(dto.getEffDate(), "yyyyMMdd")
+                                                    + "-" + DateUtil.format(dto.getEffEndDate(), "yyyyMMdd"));
                                     break;
                                 }
                             }

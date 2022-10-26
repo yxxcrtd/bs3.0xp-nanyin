@@ -24,6 +24,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.base.entity.RepScreen;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -32,6 +33,7 @@ import com.joyintech.tams.disclosure.busicommon.genreport.dto.BatchGenResultDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.dao.InfoDisclosureReadAndGenMapper;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.service.InfoDisclosureReadAndGenDetailService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportCheckService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
@@ -64,11 +66,10 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 	private InfoDisclosureReadAndGenMapper infoDisclosureReadAndGenMapper;
 
 	@Autowired
-	private InfoDisclosureReadAndGenDetailService infoDisclosureReadAndGenDetailService;
-
-	@Autowired
 	private BatchGenReport001Mapper batchGenReport001Mapper;
 
+    @Autowired
+    private ReportDealService reportDealService;    
 	/**
 	 * 日志
 	 */
@@ -140,6 +141,15 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 			String reportFile = poiReportService.genOssReportFile(null, dataMap, params);
 
 			// 4.生成报表流程数据，进入待确认队列
+        	boolean confirmFlag = true;
+        	RepReveal repReveal = reportDataService.getRepReveal(params);
+			confirmFlag = reportDealService.selectConfirmStatus(repReveal);  
+    		if(confirmFlag == false) {  //检查不通过：存在相同的已确认的报告
+				result.setResult("F");
+				logger.error("生成报表失败：" + "指定的报表已确认。");
+				result.setRemark("指定的报表已确认<br>");
+				return result;
+    		}
 			reportFile = poiReportService.genReport(params);
 			result.setResult("S");
 			logger.info("手工批量生成报表完成：" + reportFile);
