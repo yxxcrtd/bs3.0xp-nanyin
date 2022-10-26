@@ -184,12 +184,12 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
                             String unitProfitStr1 = "";
                             if ( listBonus.size()>0 ) { 
-                            	BigDecimal unitValue1 = listBonus.get(0).getUnitBonus();
-                                String unitValueStr1 = unitValue1.setScale(4, BigDecimal.ROUND_DOWN).toString();
-                                unitValueStr1 = "1" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
+                            	BigDecimal unitValue1 = listBonus.get(0).getUnitBonus().setScale(4, BigDecimal.ROUND_DOWN);
+                                String unitValueStr1 = BigDecimal.ONE.add(unitValue1).toString();
+                                //unitValueStr1 = "1" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
                                 reportJzfhbg001Dto.setcUnitValue(unitValueStr1);
                                 //本次分红方案（元/1份份额）
-                                unitProfitStr1 = "0" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
+                                unitProfitStr1 = unitValue1.toString();
                                 reportJzfhbg001Dto.setcUnitProfit(unitProfitStr1);
                             	BigDecimal yield1 = listBonus.get(0).getYield();
                             	if ( yield1!=null )  {

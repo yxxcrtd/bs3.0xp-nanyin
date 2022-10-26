@@ -58,6 +58,7 @@
             <![CDATA[AND  RPT_ISSUE_DATE <= TO_DATE(#{rptIssueDateEnd},'YYYY-MM-DD')]]>
         </if>
     </where>
+        ORDER BY NVL(UPDATE_TIME,CREATE_TIME) DESC
     </select>
    <select id="selectByPrimaryKey"
            resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
@@ -253,9 +254,9 @@
         </where>
     </select>
 
-    <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto" >
-        select PROD_ID prodId,
-               to_char(RPT_ISSUE_DATE,'yyyy/mm/dd') rptIssueDateStr
+    <select id="selectData" resultType="java.lang.String" >
+        select
+        distinct PROD_ADJUST_ID prodAdjustId
         from DIS_PROD_ADJUST
         where DATA_STATUS!='D' and PROD_ID = #{prodId,jdbcType=VARCHAR}
             and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
