@@ -113,7 +113,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 			dataMap = listReports.get(0);
 			if ( dataMap.get("queryErrorMsg")!=null && dataMap.get("queryErrorMsg").toString().length()>0 ) {
 				logger.error(dataMap.get("queryErrorMsg").toString());
-				throw new Exception(dataMap.get("queryErrorMsg").toString());
+				//throw new Exception(dataMap.get("queryErrorMsg").toString());
 			}
 			// 对查询结果进行一些参数补充
 			dataMap.put("repid", params.get("repId").toString());
@@ -359,7 +359,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 		if (result.get("resultSb") != null)
 			msg = result.get("resultSb").toString();
 		return msg;
-		// return "success";
+		 //return "success";
 	}
 
 	/**
