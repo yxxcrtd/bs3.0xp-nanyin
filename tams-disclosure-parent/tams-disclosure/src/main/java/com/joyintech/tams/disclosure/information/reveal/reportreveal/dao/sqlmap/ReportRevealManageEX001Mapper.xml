@@ -69,7 +69,6 @@
 		  and to_char(reveal.REVEAL_DATE, 'yyyy-MM-dd') = #{date,jdbcType=VARCHAR}
 		  and reveal.REVEAL_STATUS = '01'
 		  and info.rep_prod_type in ('03')
-
 		union all
 		SELECT distinct reveal.ID                id,
 						reveal.REP_ID            repId,
@@ -108,9 +107,47 @@
 		  and dsa.AGENCY_NAME is not null
 		  and to_char(reveal.REVEAL_DATE, 'yyyy-MM-dd') = #{date,jdbcType=VARCHAR}
 		  and reveal.REVEAL_STATUS = '01'
-		  and info.rep_prod_type in ('01','02')
-
-    </select>
+		  and info.rep_prod_type in ('01')
+		union all
+		SELECT distinct reveal.ID                id,
+						reveal.REP_ID            repId,
+						reveal.REPORT_NAME       reportName,
+						reveal.REPORT_CATEGORY   reportCategory,
+						info.PROD_NAME           prodName,
+						reveal.PRODID            prodid,
+						reveal.END_DATE          endDate,
+						reveal.START_DATE        startDate,
+						reveal.SYS_FILENAME      sysFilename,
+						reveal.SYS_FILEPATH      sysFilepath,
+						reveal.SYS_FILENAME_DATE sysFilenameDate,
+						reveal.FILEPATH          filepath,
+						reveal.TIME              time,
+						reveal.FILENAME          filename,
+						reveal.CONFIRM_STATUS    confirmStatus,
+						reveal.CONFIRM_USER      confirmUser,
+						reveal.CONFIRM_DATE      confirmDate,
+						reveal.REVEAL_STATUS     revealStatus,
+						reveal.REVEAL_DATE       revealDate,
+						reveal.REVEAL_USER       revealUser,
+						reveal.IS_REVEAL         isReveal,
+						reveal.IS_CONFIRM        isConfirm,
+						reveal.DETAIL            detail,
+						reveal.REVEAL_CHANNEL    revealChannel,
+						reveal.REVEAL_END_DATE   revealEndDate,
+						dsa.AGENCY_NAME          agencyName
+		FROM REP_REVEAL reveal
+				 inner join REP_PROD_INFO info
+							on reveal.PRODID = info.P_PROD_ID
+				 LEFT JOIN DIS_PROD_AGENCY dpa
+						   on dpa.PROD_ID = info.P_PROD_ID
+				 LEFT JOIN DIS_SALE_AGENCY dsa
+						   on dsa.SEQUENCE_NO = dpa.AGENCY_ID
+		WHERE 1 = 1
+		  and dsa.AGENCY_NAME is not null
+		  and to_char(reveal.REVEAL_DATE, 'yyyy-MM-dd') = #{date,jdbcType=VARCHAR}
+		  and reveal.REVEAL_STATUS = '01'
+		  and info.rep_prod_type in ('02')
+	</select>
 
 	<update id="backToTgReview" parameterType="com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto">
 		update REP_REVEAL_REVIEW review
