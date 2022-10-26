@@ -51,7 +51,7 @@
             ,{field:'prodName',  title: '产品名称',sortField:"prodRegistNo",width: 100}//产品名称
             ,{field:'prodAssets',  title: '产品资产净值',sortField:"prodAssets",type : 'number',width: 100} //产品资产净值
             ,{field:'prodEndBalance',  title: '产品期末余额(份额)',sortField:"prodEndBalance",type:'number',width: 100}
-            ,{field:'unitNum',  title: '单位净值',sortField:"unitNum",type:'number',width: 100}
+            ,{field:'unitNum',  title: '单位净值',sortField:"unitNum",type:'number',width: 100,digit: 4}
             ,{field:'lastProfitBaseDate',  title: '上一收益分配基准日',sortField:"lastProfitBaseDate",type:'date',width: 100}
             ,{field:'profitBaseDate',  title: '本期收益分配基准日',sortField:"profitBaseDate",type:'date',width: 100}
             ,{field:'runDays',  title: '运行天数',sortField:"runDays",width: 100}
