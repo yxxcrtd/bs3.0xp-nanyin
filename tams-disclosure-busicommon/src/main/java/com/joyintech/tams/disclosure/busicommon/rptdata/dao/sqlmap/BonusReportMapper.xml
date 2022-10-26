@@ -55,6 +55,7 @@
 	        WHERE 1=1
 	            AND SETT_DATE<![CDATA[<]]>#{reportDate,jdbcType=DATE}
 	            AND PROD_ID=#{prodId,jdbcType=VARCHAR}
+	            and DATA_STATUS = 'E'
 	        ) T
 			WHERE RN=1
     </select>
