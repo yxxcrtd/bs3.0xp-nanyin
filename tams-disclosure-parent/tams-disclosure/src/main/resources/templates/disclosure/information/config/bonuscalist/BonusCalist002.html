@@ -62,7 +62,7 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="prodAssets" name="prodAssets" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000000000000000){
+                                                         }else if (value >= Math.pow(10,15)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.prodAssets}'
@@ -75,11 +75,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="prodEndBalance" name="prodEndBalance" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= Math.pow(10,17)){
+                                                         }else if (value >= Math.pow(10,15)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}"  data-th-value='${entity?.prodEndBalance}'
-                           class="layui-input form-input text-number" data-textrange='2' maxlength=20
+                           class="layui-input form-input text-number" data-textrange='2' maxlength=18
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -88,11 +88,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="unitNum" name="unitNum" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= Math.pow(10,10)){
+                                                         }else if (value >= Math.pow(10,6)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/)}"  data-th-value='${entity?.unitNum}'
-                           class="layui-input form-input text-number" data-textrange='4' maxlength=15
+                           class="layui-input form-input text-number" data-textrange='4' maxlength=11
                            placeholder="请输入内容" required>
                 </div>
             </div>
@@ -136,11 +136,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="avaiProfit" name="avaiProfit" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= 1000){
+                                                         }else if (value >= Math.pow(10,15)){
                                                              this.value= '';
                                                          }else{
-                                                    this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/)}" data-th-value='${entity?.avaiProfit}'
-                           class="layui-input form-input text-number" data-textrange='2'  maxlength=8 required
+                                                    this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.avaiProfit}'
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=18 required
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -158,11 +158,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="perBaseProfit" name="perBaseProfit" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= Math.pow(10,17)){
+                                                         }else if (value >= Math.pow(10,15)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.perBaseProfit}'
-                           class="layui-input form-input text-number" data-textrange='2'  maxlength=20
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=18
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -173,11 +173,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="exceed" name="exceed" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= Math.pow(10,17)){
+                                                         }else if (value >= Math.pow(10,15)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.exceed}'
-                           class="layui-input form-input text-number" data-textrange='2'  maxlength=20
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=18
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -186,11 +186,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="perFee" name="perFee" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= Math.pow(10,17)){
+                                                         }else if (value >= Math.pow(10,15)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.perFee}'
-                           class="layui-input form-input text-number" data-textrange='2'  maxlength=20
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=18
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -199,11 +199,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="disBonusMoney" name="disBonusMoney" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= Math.pow(10,17)){
+                                                         }else if (value >= Math.pow(10,15)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}" data-th-value='${entity?.disBonusMoney}'
-                           class="layui-input form-input text-number" data-textrange='2'  maxlength=20
+                           class="layui-input form-input text-number" data-textrange='2'  maxlength=18
                            placeholder="请输入内容" required>
                 </div>
             </div>
@@ -214,11 +214,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="unitBonus" name="unitBonus" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >=  Math.pow(10,17)){
+                                                         }else if (value >=  Math.pow(10,13)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/)}" data-th-value='${entity?.unitBonus}'
-                           class="layui-input form-input text-number" data-textrange='4'  maxlength=22 required
+                           class="layui-input form-input text-number" data-textrange='4'  maxlength=18 required
                            placeholder="请输入内容">
                 </div>
             </div>
@@ -227,11 +227,11 @@
                 <div class="layui-input-inline input-inline">
                     <input type="text" id="yield" name="yield" onkeyup="if(this.value < 0){
                                                           this.value= 0;
-                                                         }else if (value >= Math.pow(10,17)){
+                                                         }else if (value >= Math.pow(10,13)){
                                                              this.value= '';
                                                          }else{
                                                     this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/)}" data-th-value='${entity?.yield}'
-                           class="layui-input form-input text-number" data-textrange='4'  maxlength=22
+                           class="layui-input form-input text-number" data-textrange='4'  maxlength=18
                            placeholder="请输入内容">
                 </div>
             </div>
