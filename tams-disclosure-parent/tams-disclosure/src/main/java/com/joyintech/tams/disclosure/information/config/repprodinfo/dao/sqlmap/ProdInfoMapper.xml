@@ -702,8 +702,8 @@
         from REP_PROD_INFO rpi
         left join rep_prod_info prpi on prpi.prod_id = rpi.p_prod_id
         where rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
-        and to_char(update_time,'yyyy-MM-dd hh:mi:ss')  = #{updateDateStr}
-        and status= #{status,jdbcType=VARCHAR}
+        and to_char(rpi.update_time,'yyyy-MM-dd hh:mi:ss')  = #{updateDateStr}
+        and rpi.status= #{status,jdbcType=VARCHAR}
     </select>
 
     <!-- 查询正常状态的产品信息 -->
