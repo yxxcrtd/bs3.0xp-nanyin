@@ -507,7 +507,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                 bonusCalist001Dto.setPerFee(bonusCalist001Dto.getExceed().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
 
                 // 应分配利润
-                bonusCalist001Dto.setDisBonusMoney(bonusCalist001Dto.getAvaiProfit().subtract(bonusCalist001Dto.getPerFee()));
+                bonusCalist001Dto.setDisBonusMoney(bonusCalist001Dto.getAvaiProfit().subtract(bonusCalist001Dto.getPerFee()).setScale(2,BigDecimal.ROUND_DOWN));
 
                 // 单位分红
                 bonusCalist001Dto.setUnitBonus(
@@ -515,7 +515,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
 
                 // 年化收益率
 //                BigDecimal ddProfit = bonusCalist001Dto.getDisBonusMoney().divide(bonusCalist001Dto.getProdEndBalance()).setScale(4,BigDecimal.ROUND_DOWN);
-                BigDecimal ddProfit = ArithmeticUtil.divide(bonusCalist001Dto.getDisBonusMoney(),bonusCalist001Dto.getProdEndBalance(),2);
+                BigDecimal ddProfit = ArithmeticUtil.divide(bonusCalist001Dto.getDisBonusMoney(),bonusCalist001Dto.getProdEndBalance(),8);
                 bonusCalist001Dto.setYield(
                         ddProfit.multiply(new BigDecimal(365))
                                 .divide(new BigDecimal(bonusCalist001Dto.getRunDays()), 4, BigDecimal.ROUND_DOWN));
