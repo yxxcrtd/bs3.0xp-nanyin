@@ -427,7 +427,7 @@
         dpb.CREATE_USER, dpb.CREATE_TIME, dpb.UPDATE_USER,
         dpb.UPDATE_TIME, dpb.CREATE_DEPT
         from DIS_PROD_BONUSPLAN dpb
-        where 1=1
+        where DATA_STATUS !='D'
         <if test="prodId != null">
            and  dpb.PROD_ID = #{prodId,jdbcType=VARCHAR}
         </if>

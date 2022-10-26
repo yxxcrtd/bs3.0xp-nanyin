@@ -140,7 +140,13 @@ public class ReportJzfhbg001Service implements IReportDataService {
                                 //上一收益分配基准日+1工作日至当前收益分配基准日
                                 runday = new BigDecimal(DateUtil.getBetweenDayNumber(lastBonus.getSettDate(), bonusplan.getSettDate()));
                                 //设置封闭期
-                                reportJzfhbg001Dto.setRange(DateUtil.format(lastBonus.getSettDate()) + "至" + DateUtil.format(bonusplan.getSettDate()));
+                                Map<String,Object> paras = new HashMap<>();
+                                paras.put("busi_date", lastBonus.getSettDate());
+                                paras.put("is_holiday", "0");
+                                paras.put("market_code", "04");
+                                Date beginDate = holidayService.getNextWorkDay(paras);
+                                reportJzfhbg001Dto.setRange(DateUtil.format( beginDate)
+                                		+ "至" + DateUtil.format(bonusplan.getSettDate()));
                             }
 
                             //实收资本
