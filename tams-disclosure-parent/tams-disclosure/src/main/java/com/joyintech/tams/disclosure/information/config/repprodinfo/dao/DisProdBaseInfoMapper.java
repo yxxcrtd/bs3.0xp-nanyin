@@ -5,6 +5,7 @@ import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfo
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public interface DisProdBaseInfoMapper  {
 
     int insertBasicByBasicInfo(ProdInfoDto record);
 
-    ProdInfoDto selectByPrimaryKey(String prodId);
+    ProdInfoDto selectByPrimaryKey(@Param("prodId") String prodId, @Param("status") String status);
 
     ProdInfoDto selectData(Map<String, Object> param);
     ProdInfoDto selectByPrimaryKeyPT(String prodId);
@@ -32,10 +33,10 @@ public interface DisProdBaseInfoMapper  {
 
     List<ProdInfoDto> searchProdList(Map<String, Object> params);
 
-    ProdInfoDto selectBySonProdId(String prodId);
+    ProdInfoDto selectBySonProdId(@Param("prodId") String prodId, @Param("updateDateStr") String updateDateStr, @Param("status") String status);
 
 
-    ProdInfoDto selectByCommonProdId(String prodId);
+    ProdInfoDto selectByCommonProdId(@Param("prodId") String prodId, @Param("updateDateStr") String updateDateStr, @Param("status") String status);
 
 
     ProdInfoDto selectByProdStatus(@Param("prodId") String prodId,@Param("status") String status);
