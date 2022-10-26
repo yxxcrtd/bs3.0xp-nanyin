@@ -95,10 +95,6 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 		// 定义报表变量的数据集合
 		Map<String, Object> dataMap = null;
 
-		params.put("prodId", prod.getProdId());
-		params.put("prodid", prod.getProdId());
-		params.put("prodName", prod.getProdName());
-		params.put("prodname", prod.getProdName());
 		// 为了能顺利调用历史的方法，对不规范的参数进行补充
 		repDetailsShow001Service.collateParams(params);
 
@@ -116,6 +112,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 			}
 			dataMap = listReports.get(0);
 			if ( dataMap.get("queryErrorMsg")!=null && dataMap.get("queryErrorMsg").toString().length()>0 ) {
+				logger.error(dataMap.get("queryErrorMsg").toString());
 				throw new Exception(dataMap.get("queryErrorMsg").toString());
 			}
 			// 对查询结果进行一些参数补充
