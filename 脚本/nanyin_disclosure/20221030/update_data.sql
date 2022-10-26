@@ -322,3 +322,9 @@ VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6',
 
 --删除半年报：枚举值中没有下半年的问题
 delete from sys_datadict_list where dict_code='HALF_YEAR' and item_code='02';
+
+-- 到期规则修改 add by zhengxiaolian 2022-10-26 start
+delete from REP_RULE where  ID in('D0000000000000000020','D0000000000000000021');
+insert into REP_RULE values ('D0000000000000000020','到期公告（公募）_规则','到期公告（公募）','CP_001_003_001','A02','','14','02','0','01','','02','1','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','01','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
+insert into REP_RULE values ('D0000000000000000021','到期报告（私募）_规则','到期报告（私募）','CP_001_003_002','A02','','14','02','0','01','','02','1','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','01','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
+-- 到期规则修改 add by zhengxiaolian 2022-10-26 end
