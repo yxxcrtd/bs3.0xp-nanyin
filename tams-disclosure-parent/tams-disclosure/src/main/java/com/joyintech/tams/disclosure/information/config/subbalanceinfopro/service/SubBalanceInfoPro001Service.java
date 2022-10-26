@@ -317,7 +317,8 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
                     map.put("booksetId",item.getBooksetId());
                     map.put("balanceDate",item.getBalanceDateStr());
                     map.put("subjectNo",item.getSubjectNo());
-                    if (null != this.selectByPrimaryKey(map)){
+                    SubBalanceInfoPro001Dto dto = this.selectByPrimaryKey(map);
+                    if (null !=dto && !StringUtil.equals(dto.getStatus(),"D")){
                         this.doComplete(item, OperationType.MODIFY);
                     } else {
                         this.doComplete(item,OperationType.NEW);

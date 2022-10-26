@@ -381,7 +381,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
      * @since 1.0
      */
     public void dealAfterCheck(List<ProdAssetInfoDto> equityList) {
-        equityList.forEach(item->{prodAssetInfo001Mapper.deleteDisProdAsset(item.getProdId(),item.getEffDateStr(),item.getEffEndDateStr());});
+//        equityList.forEach(item->{prodAssetInfo001Mapper.deleteDisProdAsset(item.getProdId(),item.getEffDateStr(),item.getEffEndDateStr());});
         this.insertBtachEquityInfoByPart(equityList);
         /*List<ProdAssetInfoDto> listN = new ArrayList<ProdAssetInfoDto>();
         ProdAssetInfoDto prodAssetInfoDto=new ProdAssetInfoDto();
