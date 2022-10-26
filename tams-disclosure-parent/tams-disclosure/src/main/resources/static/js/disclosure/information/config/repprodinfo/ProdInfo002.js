@@ -161,10 +161,19 @@
             }
             //普通产品不提示
             if (isGrade==='01'&&!((num==1&&(changedFiled[0]=='prodName'||changedFiled[0]=='setDate')) ||(num==2 && (changedFiled[0]=='prodName' && changedFiled[1]=='setDate') ))) {
-                Joyin.confirm("是否将维护的母产品信息同步至其他子产品数据中？", function () {
-                    object.synchFlag = true;
-                    doSaveOrSubmit(object,operateType);
-                });
+                // Joyin.confirm("是否将维护的母产品信息同步至其他子产品数据中？", function () {
+                //     object.synchFlag = true;
+                //     doSaveOrSubmit(object,operateType);
+                // });
+                layer.confirm("是否将维护的母产品信息同步至其他子产品数据中？",
+                    {
+                        icon: 3,
+                        btn: ['是', '否']
+                    }, function () {
+                        object.synchFlag = true;
+                        doSaveOrSubmit(object, operateType);
+                    }, function () {
+                    });
             }else{
                 doSaveOrSubmit(object,operateType);
             }
