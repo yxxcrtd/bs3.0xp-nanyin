@@ -184,9 +184,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @param prodId
      * @return
      */
-    public ProdInfoDto selectByProdId(String prodId) {
+    public ProdInfoDto selectByProdId(String prodId,String status) {
         // return  prodInfoMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效.getValue());
-        return prodInfoMapper.selectByPrimaryKey(prodId);
+        return prodInfoMapper.selectByPrimaryKey(prodId,status);
     }
     public ProdInfoDto selectData(Map<String, Object> param) {
         // return  prodInfoMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效.getValue());
@@ -204,8 +204,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @param prodId
      * @return
      */
-    public ProdInfoDto selectByCommonProdId(String prodId) {
-        return prodInfoMapper.selectByCommonProdId(prodId);
+    public ProdInfoDto selectByCommonProdId(String prodId,String updateDateStr,String status ) {
+        return prodInfoMapper.selectByCommonProdId(prodId,updateDateStr,status);
     }
 
     /**
@@ -214,8 +214,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @param prodId
      * @return
      */
-    public ProdInfoDto selectBySonProdId(String prodId) {
-        return prodInfoMapper.selectBySonProdId(prodId);
+    public ProdInfoDto selectBySonProdId(String prodId,String updateDateStr,String status) {
+        return prodInfoMapper.selectBySonProdId(prodId,updateDateStr,status);
     }
 
     /**
@@ -275,7 +275,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         dto.setOpenFreq(StringUtil.isEmpty(dto.getOpenFreq()) ? " ":dto.getOpenFreq());
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
             //保存母产品信息，判断母产品是否已存在
-            ProdInfoDto existppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
+            ProdInfoDto existppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId(),null);
             if (existppDto == null) {
                 ProdInfoDto ppDto = new ProdInfoDto();
                 BeanUtils.copyProperties(dto, ppDto);
@@ -311,14 +311,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         }
 
         //重新插入已删除的数据
-        ProdInfoDto prodInfoDto=prodInfoMapper.selectByPrimaryKey(dto.getProdId());
-        if(prodInfoDto !=null && !prodInfoDto.getStatus().equals("D")){
-            dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            prodInfoMapper.updateByPrimaryKeySelective(dto);
-        }else {
-            prodInfoMapper.insert(dto);
-        }
-
+//        ProdInfoDto prodInfoDto=prodInfoMapper.selectByPrimaryKey(dto.getProdId());
+//        if(prodInfoDto !=null && !prodInfoDto.getStatus().equals("D")){
+//            dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+//            prodInfoMapper.updateByPrimaryKeySelective(dto);
+//        }else {
+//            prodInfoMapper.insert(dto);
+//        }
+        prodInfoMapper.insert(dto);
 
     }
 
@@ -400,7 +400,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     }
 
     public ProdInfoDto getPrdInfo(String prodId) {
-        ProdInfoDto prodInfo = prodInfoMapper.selectByPrimaryKey(prodId);
+        ProdInfoDto prodInfo = prodInfoMapper.selectByPrimaryKey(prodId,"E");
         return prodInfo;
     }
 
@@ -626,7 +626,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             //todo 待复核数据不能导入(已完成 需要模板自测)
             ProdInfoDto dto = prodInfoMapper.selectCfsj(list.get(0));
-            if (dto!=null && StringUtil.equals(dto.getStatus(),"C")){
+            if (dto!=null ){
                 message.add("导入文件中有与待复核数据重复的数据,不允许导入");
             }
             // 子产品代码
@@ -1043,7 +1043,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             // 更新行情代码信息
             prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(), entity.getpProdId(), entity.getIsIndex(),null);
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {
-            ProdInfoDto prodInfoDto = prodInfoMapper.selectByPrimaryKey(entity.getProdId());
+            ProdInfoDto prodInfoDto = prodInfoMapper.selectByPrimaryKey(entity.getProdId(),"C");
             this.update(entity);
             // 更新行情代码信息
             prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(), entity.getpProdId(), entity.getIsIndex(),prodInfoDto.getIsIndex());
@@ -1055,7 +1055,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     @Override
     public void doInsert(ProdInfoDto dto, OperationType type) {
         //如果是提交按钮,则数据状态设置为待复核
-        if("submit".equals(dto.getOperateType())){
+        if(OperationType.MODIFY.equals(type)||OperationType.DELETE.equals(type)) {
             // 数据存入留痕表备份 流程作废方便恢复
             dto.setStatus(dto.getDataStatus());
             prodInfoMapper.saveHisData(dto);
@@ -1081,7 +1081,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         //如果子产品发布状态为发布成功，则更新母产品的发布状态为:发布成功
         if (StringUtils.equals(DictCodeListExt5.信批产品类别_子产品.getValue(), dto.getRepProdType())
                 && StringUtils.equals(DictCodeListExt1.发行状态_发行成功.getValue(), dto.getIssuingStatusNew())) {
-            ProdInfoDto ppdto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
+            ProdInfoDto ppdto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId(),"E");
             if (!StringUtils.equals(DictCodeListExt1.发行状态_发行成功.getValue(), ppdto.getIssueStatus())) {
                 ppdto.setIssueStatus(DictCodeListExt1.发行状态_发行成功.getValue());
                 prodInfoMapper.updateByPrimaryKey(ppdto);
