@@ -87,6 +87,7 @@
 			and bonus.PROFIT_BASE_DATE =#{profitBaseDate,jdbcType=DATE}
 		</if>
 		and bonus.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		order by PROFIT_BASE_DATE desc
 	</select>
 
 </mapper>
