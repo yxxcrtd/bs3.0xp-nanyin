@@ -218,6 +218,8 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
         this.valueDateStr = valueDateStr;
     }
 
+
+    @PrimaryKey(PrimaryKey.Field.PK_2)
     public String getValueDateStr() {
         if (StringUtil.isNotEmpty(this.valueDateStr)) {
             return this.valueDateStr;
