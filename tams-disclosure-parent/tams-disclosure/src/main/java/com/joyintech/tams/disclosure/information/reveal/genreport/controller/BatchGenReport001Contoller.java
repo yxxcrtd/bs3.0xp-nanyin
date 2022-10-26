@@ -229,13 +229,13 @@ public class BatchGenReport001Contoller extends BaseController {
 				params.put("prodName", prod.getProdName());
 				params.put("prodname", prod.getProdName());
 				
-				//如果是母产品，传过来的参数prodid应该是母产品的id
-				if ( "P".equals(this.getRepProdType(repId)) ) {
-					params.put("pprodId", prod.getProdId());
-					params.put("pprodid", prod.getProdId());
-					params.put("pprodName", prod.getProdName());
-					params.put("pprodname", prod.getProdName());
-				}
+//				//如果是母产品，传过来的参数prodid应该是母产品的id
+//				if ( "P".equals(this.getRepProdType(repId)) ) {
+//					params.put("pprodId", prod.getProdId());
+//					params.put("pprodid", prod.getProdId());
+//					params.put("pprodName", prod.getProdName());
+//					params.put("pprodname", prod.getProdName());
+//				}
 				dto =  batchGenReport001Service.exec(prod,params);
 			} catch ( Exception e ) {
 				dto = new BatchGenResultDto();

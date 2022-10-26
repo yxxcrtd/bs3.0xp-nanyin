@@ -71,13 +71,15 @@ public class MatureReportDataService implements IReportDataService {
 			//判断是普通产品还是子产品
 			if (StringUtil.equals("batch", paraMap.get("opttype"))) {
 				RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(paraMap);
-				if(StringUtil.isNotEmpty(info)){
+				if(info!=null ){
 					paraMap.put("pprodId",info.getpProdId());
 					paraMap.put("prodId",info.getProdId());
 				}else {
 					RepProdInfo info2=reportRkcpjz001Mapper.getPProdId(paraMap);
-					paraMap.put("pprodid",info2.getpProdId());
-					paraMap.put("prodId",info2.getProdId());
+					if ( info2!=null ) {
+						paraMap.put("pprodid",info2.getpProdId());
+						paraMap.put("prodId",info2.getProdId());
+					}
 				}
 			}
 
