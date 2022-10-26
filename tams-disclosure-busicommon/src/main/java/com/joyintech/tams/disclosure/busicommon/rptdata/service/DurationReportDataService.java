@@ -79,6 +79,11 @@ public class DurationReportDataService implements IReportDataService {
 			Date currDate = new Date();
 			Date reportDate = new Date();
 			String rptType = paraMap.get("uri").toString();
+			
+			//定期报表传的prodId也是pprodId
+			paraMap.put("pprodid",paraMap.get("prodId"));
+			paraMap.put("pprodId",paraMap.get("prodId"));
+			
 			String indexPeriod = DictCodeListExt5.指标周期_一季度.getValue();
 			try {
 
