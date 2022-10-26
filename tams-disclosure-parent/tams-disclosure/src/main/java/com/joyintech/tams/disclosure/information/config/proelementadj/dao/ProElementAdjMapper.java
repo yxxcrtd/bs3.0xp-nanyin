@@ -36,5 +36,5 @@ public interface ProElementAdjMapper {
 
     List<ProElementAdj001Dto> selectProElementAdjByKey(@Param("list") List<ProElementAdj001Dto> list);
 
-    ProElementAdj001Dto selectData(Map<String, Object> param);
+    String selectData(Map<String, Object> param);
 }
