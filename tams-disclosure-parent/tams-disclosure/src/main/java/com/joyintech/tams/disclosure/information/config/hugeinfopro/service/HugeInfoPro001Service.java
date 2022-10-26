@@ -286,7 +286,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
                     HugeInfoPro001Dto dto = this.selectByBusPK(map);
-                    if (dto != null) {
+                    if (dto != null && !StringUtil.equals(dto.getDataStatus(),"D")) {
                         hugeInfoProMapper.updateByBusKey(item);
                     } else {
                         item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
