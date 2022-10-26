@@ -106,7 +106,7 @@ public class MatureReportDataService implements IReportDataService {
 			}
 
 			//累计净值：分红计算清单：历史累计分红
-			BigDecimal accuValue = BigDecimal.ONE;
+			BigDecimal accuValue = BigDecimal.ZERO;
 			//参考年化收益率：分红计算清单：本期清单年化收益率
 			BigDecimal yearYield = BigDecimal.ZERO;
 			//客户收益：分红计算清单：历史累计应分配金额
@@ -118,22 +118,30 @@ public class MatureReportDataService implements IReportDataService {
             //Date profitBaseDate = ()searchParam.get("baseDate");
         	Map<String,Object> searchParam = new HashMap<>();
             searchParam.put("prodId", paraMap.get("prodId"));
-            searchParam.put("profitBaseDate",matureReportDto.getmDate());
+            //searchParam.put("profitBaseDate",matureReportDto.getmDate());
             List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
             
             if ( listBonus.size()>0 ) { 
-	        	searchParam.put("settDate", sdf.format(listBonus.get(0).getLastProfitBaseDate()));
-	        	RepProdIndex prodIndexGz = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
-//            	for ( DisBonusList bonus:listBonus ) {
-//            		accuValue = accuValue.add(bonus.getUnitBonus());
-//            		custProfit = custProfit.add(bonus.getDisBonusMoney());
-//    	        	if ( bonus.getProfitBaseDate().compareTo(settDate)>0 ) { //取最近的分红计划的年化收益率
-//    	        		settDate = bonus.getProfitBaseDate();
-//    	        		yearYield = bonus.getYield(); 
-//    	        	}
-//            	}
-            	accuValue = prodIndexGz.getUnitValueT().add( listBonus.get(0).getUnitBonus());
-            	yearYield = listBonus.get(0).getYield();
+            	BigDecimal thisUnitBonus = BigDecimal.ZERO;
+            	for ( DisBonusList bonus:listBonus ) {
+            		custProfit = custProfit.add(bonus.getDisBonusMoney());
+    	        	if ( bonus.getProfitBaseDate().compareTo(settDate)>0 ) { //取最近的分红计划的年化收益率
+    	        		settDate = bonus.getProfitBaseDate();
+    	        		yearYield = bonus.getYield(); 
+    	        		thisUnitBonus = bonus.getUnitBonus();
+    	        	}
+            	}
+            	if ( listBonus.size()==0 ) {//首次分红
+            		accuValue = BigDecimal.ONE.add( thisUnitBonus);
+            	} else {
+	        		searchParam.put("settDate", sdf.format(settDate));
+		        	RepProdIndex prodIndexGz = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
+		        	if ( prodIndexGz!=null && prodIndexGz.getUnitValueT()!=null )
+		        		accuValue = prodIndexGz.getUnitValueT().add( thisUnitBonus);
+		        	else
+		        		accuValue = thisUnitBonus;
+            	}
+
             }
 //			for ( BonusReportDto report:listBonusReport ) {  //计算每次分红的累计值
 //	        	//上一分配基准日
@@ -225,38 +233,42 @@ public class MatureReportDataService implements IReportDataService {
 			listResult.add(CollectionUtils.bean2Map(matureReportDto));
 			
 			//费用为null或者等于0 ，用“-”代替
-			if ( matureReportDto.getTrustFee()==null || matureReportDto.getTrustFee().equals(BigDecimal.ZERO) ) {
+			if ( matureReportDto.getTrustFee()==null || matureReportDto.getTrustFee().compareTo(BigDecimal.ZERO)==0 ) {
 				listResult.get(0).put("trustFeeStr", "-");
 			} else {
 				listResult.get(0).put("trustFeeStr", matureReportDto.getTrustFee().toPlainString());
 			}
-			if ( matureReportDto.getMgrFee()==null || matureReportDto.getMgrFee().equals(BigDecimal.ZERO) ) {
+			if ( matureReportDto.getMgrFee()==null || matureReportDto.getMgrFee().compareTo(BigDecimal.ZERO)==0 ) {
 				listResult.get(0).put("mgrFeeStr", "-");
 			} else {
 				listResult.get(0).put("mgrFeeStr", matureReportDto.getMgrFee().toPlainString());
 			}
-			if ( matureReportDto.getFloatFee()==null || matureReportDto.getFloatFee().equals(BigDecimal.ZERO) ) {
+			if ( matureReportDto.getFloatFee()==null || matureReportDto.getFloatFee().compareTo(BigDecimal.ZERO)==0 ) {
 				listResult.get(0).put("floatFeeStr", "-");
 			} else {
 				listResult.get(0).put("floatFeeStr", matureReportDto.getFloatFee().toPlainString());
 			}			
-			if ( matureReportDto.getSaleFee()==null || matureReportDto.getSaleFee().equals(BigDecimal.ZERO) ) {
+			if ( matureReportDto.getSaleFee()==null || matureReportDto.getSaleFee().compareTo(BigDecimal.ZERO)==0 ) {
 				listResult.get(0).put("saleFeeStr", "-");
 			} else {
 				listResult.get(0).put("saleFeeStr", matureReportDto.getSaleFee().toPlainString());
 			}
-			if ( matureReportDto.getPurFee()==null || matureReportDto.getPurFee().equals(BigDecimal.ZERO) ) {
+			if ( matureReportDto.getPurFee()==null || matureReportDto.getPurFee().compareTo(BigDecimal.ZERO)==0 ) {
 				listResult.get(0).put("purFeeStr", "-");
 			} else {
 				listResult.get(0).put("purFeeStr", matureReportDto.getPurFee().toPlainString());
 			}
-			if ( matureReportDto.getRedemFee()==null || matureReportDto.getRedemFee().equals(BigDecimal.ZERO) ) {
+			if ( matureReportDto.getRedemFee()==null || matureReportDto.getRedemFee().compareTo(BigDecimal.ZERO)==0 ) {
 				listResult.get(0).put("redemFeeStr", "-");
 			} else {
 				listResult.get(0).put("redemFeeStr", matureReportDto.getRedemFee().toPlainString());
 			}
 		} catch (Exception e) {
 			logger.error("到期报表数据错误", e);
+			if ( listResult.size()==0 ) {
+				Map<String, Object> map = new HashMap<>();
+				listResult.add(map);
+			}
 			listResult.get(0).put("queryErrorMsg","到期报表数据错误：缺少估值信息或者分红计算清单信息。"+e.getStackTrace());
 		}
 		if (listResult!=null && listResult.size()>0 ) {
