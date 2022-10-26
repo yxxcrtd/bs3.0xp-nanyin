@@ -370,7 +370,7 @@
         rrc.REPORT_TYPE reportType,
         rrc.REPORT_NAME reportName ,
         rri.PROD_ID pprodId,
-        '' prodId,
+        null prodId,
         rri.PROD_NAME prodName,
         rrc.CHECK_DATE checkDate,
         rrc.ERRORMSG errormsg,
@@ -393,6 +393,49 @@
                      open="(" separator="," close=")">
                 #{item}
             </foreach>)
+        </if>
+        <if test="reportTypeArr != null and reportTypeArr.size > 0">
+            AND rrc.REPORT_TYPE IN
+            <foreach item="item" collection="reportTypeArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="reportNameList != null and reportNameList.size > 0">
+            AND rrc.REPORT_NAME IN
+            <foreach item="item" collection="reportNameList" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="checkDateStart != null and checkDateStart != ''">
+            <![CDATA[AND  rrc.CHECK_DATE >= TO_DATE(#{checkDateStart},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="checkDateEnd != null and checkDateEnd != ''">
+            <![CDATA[AND  rrc.CHECK_DATE <= TO_DATE(#{checkDateEnd},'YYYY-MM-DD')]]>
+        </if>
+        union all
+        SELECT
+        rrc.REPORT_CHECK_ID reportCheckId,
+        rrc.REP_ID repId,
+        rrc.REPORT_TYPE reportType,
+        rrc.REPORT_NAME reportName ,
+        null pprodId,
+        null prodId,
+        null prodName,
+        rrc.CHECK_DATE checkDate,
+        rrc.ERRORMSG errormsg,
+        rrc.FILE_NO  fileNo,
+        rrc.UPDATE_TIME updateTime,
+        rrc.CREATE_TIME createTime
+        FROM REP_REPORT_CHECK rrc
+        where rrc.DATA_STATUS ='E'
+          and rrc.prod_id is null
+        <if test="prodIdArr != null and prodIdArr.size > 0">
+            and 1=2
+        </if>
+        <if test="finprodIdArr != null and finprodIdArr.size > 0">
+            and 1=2
         </if>
         <if test="reportTypeArr != null and reportTypeArr.size > 0">
             AND rrc.REPORT_TYPE IN
