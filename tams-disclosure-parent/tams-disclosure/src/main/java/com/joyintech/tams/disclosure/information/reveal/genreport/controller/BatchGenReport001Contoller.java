@@ -305,4 +305,11 @@ public class BatchGenReport001Contoller extends BaseController {
 		List<SelectOptionDto> list = selectDto.getOptions();
 		return list;
 	}
+	
+	@ResponseBody
+	@RequestMapping("dateCheck")
+	public String dateCheck() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return batchGenReport001Service.dateCheck(param);
+	}
 }
