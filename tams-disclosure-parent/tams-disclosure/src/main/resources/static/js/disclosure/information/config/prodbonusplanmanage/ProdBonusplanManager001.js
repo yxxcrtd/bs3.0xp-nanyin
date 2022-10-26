@@ -344,7 +344,7 @@
 		 Joyin.dialog("产品选择", basePath + "disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager003/init", "80%", "80%",
 			 {}, function () {
 				 var finprodIds = $('#finprodIds').data('finprodIds');
-				 if (finprodIds.length == 0) {
+				 if (!finprodIds||finprodIds.length == 0) {
 					 return;
 				 }
 				 $('#finprodId1').textSelect('setValue', finprodIds);
@@ -355,7 +355,7 @@
 		 Joyin.dialog("产品选择", basePath + "disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager004/init", "80%", "80%",
 			 {}, function () {
 				 var finprodIds = $('#finprodIds').data('finprodIds');
-				 if (finprodIds.length == 0) {
+				 if (!finprodIds||finprodIds.length == 0) {
 					 return;
 				 }
 				 $('#finprodId').textSelect('setValue', finprodIds);
