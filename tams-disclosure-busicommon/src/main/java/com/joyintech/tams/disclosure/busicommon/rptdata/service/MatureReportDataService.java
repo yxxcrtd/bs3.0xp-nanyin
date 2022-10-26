@@ -83,8 +83,6 @@ public class MatureReportDataService implements IReportDataService {
 
 			List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
 
-
-
 			if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
 				BonusReportDto dto = listBonusReport.get(0);
 				matureReportDto.setReportTitle(dto.getReportTitle());
@@ -259,6 +257,7 @@ public class MatureReportDataService implements IReportDataService {
 			}
 		} catch (Exception e) {
 			logger.error("到期报表数据错误", e);
+			listResult.get(0).put("queryErrorMsg","到期报表数据错误："+e.getStackTrace());
 		}
 		if (listResult!=null && listResult.size()>0 ) {
 			listResult.get(0).put("endDate_xx","");

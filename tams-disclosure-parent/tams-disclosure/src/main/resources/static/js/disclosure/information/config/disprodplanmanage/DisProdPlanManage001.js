@@ -252,6 +252,7 @@
 		 }
 		 var selArrUseful =[];
 		 var selArrDFH = [];
+		 var selArrDelete = [];
 		 selArr.forEach(v => {
 			 if(v.dataStatus == 'E'){
 				 //selArr.remove();
@@ -261,15 +262,24 @@
 				 //selArr.remove();
 				 selArrDFH.push(v);
 			 }
+			 if(v.dataStatus == 'D'){
+				 //selArr.remove();
+				 selArrDelete.push(v);
+			 }
 		 })
-		 if ((!selArrUseful || selArrUseful.length == 0) && (!selArrDFH || selArrDFH.length == 0)){
-			 Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
-			 return;
-		 }
 		 if ( selArrDFH.length > 0) {
 			 Joyin.error(JoyinUtil.getMessage("数据在流程中，不允许删除"));
 			 return;
 		 }
+		 if ( selArrDelete.length > 0) {
+			 Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
+			 return;
+		 }
+		 if ((!selArrUseful || selArrUseful.length == 0)){
+			 Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
+			 return;
+		 }
+
 		 var object = {selectedItem: selArrUseful, operateType: "delete"};//请求参数
 		 Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/check', object, function (result) {
 		 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
