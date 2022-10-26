@@ -33,4 +33,6 @@ public interface BonusCalist001Mapper {
     int deleteByBusKey(BonusCalist001Dto bonusCalist001Dto);
 
     String findRe(String prodId);
+
+    BonusCalist001Dto isRepeated(BonusCalist001Dto bonusCalist001Dto);
 }
