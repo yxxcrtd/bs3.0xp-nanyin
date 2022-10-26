@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.reveal.genreport.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.TreeNode;
@@ -37,6 +39,7 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.servic
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportCheckService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
+import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
@@ -70,6 +73,10 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 
     @Autowired
     private ReportDealService reportDealService;    
+    
+    @Autowired
+    private HolidayService holidayService;
+    
 	/**
 	 * 日志
 	 */
@@ -406,4 +413,28 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 		List<ProdInfoListEntity> prodList = batchGenReport001Mapper.selectProdList(sqlVal.toString(), repId);
 		return prodList;
 	}
+	
+    public String dateCheck(Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        String enddate = (String)param.get("enddate");
+        if (StringUtil.isEmpty(enddate)) {
+            return "净值日为空";
+        }
+        Calendar cal = Calendar.getInstance();
+        Date date = DateUtil.parse(enddate);
+        cal.setTime(date);
+        int w = cal.get(Calendar.DAY_OF_WEEK);
+        int days = 0;
+        // 将日期变为下个周一并与当前日期比较，不等则为最后一个工作日
+        Map<String, Object> serparam = new HashMap<>();
+        serparam.put("busi_date", DateUtil.addDay(date, 8 - w));
+        serparam.put("is_holiday", "0");
+        serparam.put("market_code", "04");
+        Date lastdate = holidayService.getLastWorkDay(serparam);
+        if (!date.equals(lastdate)) {
+            return "只能选取最后一个工作日:" + DateUtil.format(lastdate);
+        }
+        return null;
+    }
+
 }
