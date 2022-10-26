@@ -232,6 +232,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     map.put("prodId", item.getProdId());
                     map.put("rptIssueDate", item.getRptIssueDate());
                     if (null != this.selectData(map)){
+                        item.setProdAdjustId(this.selectData(map));
                         this.doComplete(item, OperationType.MODIFY);
                     } else {
                         item.setCreateUser(CommonUtil.getUserName());
@@ -401,7 +402,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
     private List<ProElementAdj001Dto> selectProElementAdjByKey(List<ProElementAdj001Dto> dataList) {
         return proElementAdjMapper.selectProElementAdjByKey(dataList);
     }
-    public ProElementAdj001Dto selectData(Map<String, Object> param) {
+    public String selectData(Map<String, Object> param) {
         return proElementAdjMapper.selectData(param);
     }
 }
