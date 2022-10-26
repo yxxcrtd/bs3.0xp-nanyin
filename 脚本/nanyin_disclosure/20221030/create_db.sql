@@ -336,3 +336,91 @@ ALTER TABLE REP_PROD_INFO DROP CONSTRAINT P_REP_RULE_ID_01;
 
 --修改表字段长度
 ALTER TABLE SYS_WFL_BUSINESS_LIST MODIFY  TITLE VARCHAR2(4000);
+
+/**修改母产品视图  add by zhengxiaolian 2022-10-26 start **/
+CREATE OR REPLACE VIEW V_REP_PROD_INFO AS
+SELECT nvl(P_PROD_ID,PROD_ID) AS PROD_ID,
+       PROD_NAME,
+       SET_DATE,
+       RAISE_AMT,
+       PROD_ABBR,
+       PROD_RE,
+       RAISE_STRDATE,
+       RAISE_ENDDATE,
+       MDATE,
+       RAISE_TYPE,
+       PERFORM_COMPARE,
+       IS_PERIOD,
+       IS_GRADE,
+       IS_INDEX,
+       OPEN_FREQ,
+       NATURE_INVEST,
+       PROD_TYPE,
+       ISSUING_WAY,
+       ACCT_CHNNAME,
+       PROFIT_TYPE,
+       PD_STATUS,
+       PROD_SERIES,
+       HOLDDAY,
+       TRUSTPART,
+       ISSUE_STATUS,
+       REP_PROD_TYPE,
+       ERRORMSG,
+       CREATE_USER,
+       CREATE_DEPT,
+       CREATE_TIME,
+       UPDATE_USER,
+       UPDATE_TIME,
+       case REP_PROD_TYPE
+           when '01' then
+               (case
+                    when (select 1
+                          from REP_PROD_INFO a
+                          where a.p_prod_id = info.prod_id
+                            and a.status = 'C') > 0 then
+                        'C'
+                    else
+                        info.status
+                   end )
+           else info.status
+           end as STATUS,
+       ISSUE_STATUS_REMARK,
+       RAISE_MIN,
+       RAISE_MAX,
+       RAISE_CCY,
+       VDATE,
+       FIRST_OPEN_DAY,
+       ACT_MDATE,
+       TERM,
+       WINDUP_DATE,
+       ISSUE_MODE,
+       RISK_LEVEL,
+       OPEN_MODE,
+       INVEST_PROF_DATE,
+       INVEST_PRIN_DATE,
+       IS_INDEPE_ACC,
+       PROD_INVEST_TYPE,
+       REVEAL_CHANNEL,
+       DEAL_CAL,
+       FINA_TYPE,
+       TRU_ACCOUNT,
+       TRU_FEE_RAGE,
+       TRU_ACCOUNT_NUM,
+       TRU_ACCOUNT_NAME,
+       PROD_TERM_TYPE,
+       BASIS,
+       TARGET_SALE,
+       IS_LAYER,
+       PRO_MANAGER,
+       PRO_CUSTODIAN,
+       HUGE_REDEEM_THRESHOLD,
+       SALE_AMT_STR,
+       OPERATE_MODE,
+       F_PROD_ID,
+       PRODPROFITFLAG,
+       SALETARGET_DECLARE,
+       BONUS_MODE,
+       LOWEST_AMT
+FROM REP_PROD_INFO info
+WHERE REP_PROD_TYPE IN ('01','02');
+/**修改母产品视图   add by zhengxiaolian 2022-10-26 end **/
