@@ -182,8 +182,9 @@ $(function ($) {
                         var file = initFiles[i];
                         var _disabled = !!disabled;
                         var actionHtml = '';
-                        if(fileUploader === 'fileUploader3' && !_disabled) {
-                            _disabled = file.createUser != loginUser;
+                        if(fileUploader === 'fileUploader'||fileUploader === 'fileUploader2'||fileUploader === 'fileUploader3' && !_disabled) {
+                            /*_disabled = file.createUser != loginUser;*/
+                            _disabled = file.createUser != file.updateUser;
                             actionHtml = '<td></td>';
                         }
                         rownum ++;
