@@ -133,7 +133,7 @@ public class MatureReportDataService implements IReportDataService {
     	        		thisUnitBonus = bonus.getUnitBonus();
     	        	}
             	}
-            	if ( listBonus.size()==0 ) {//首次分红
+            	if ( listBonus.size()==1 ) {//首次分红
             		accuValue = BigDecimal.ONE.add( thisUnitBonus);
             	} else {
 	        		searchParam.put("settDate", sdf.format(settDate));
