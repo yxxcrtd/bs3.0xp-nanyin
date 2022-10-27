@@ -111,7 +111,7 @@
 		REP_PROD_INFO prod
 		left join V_REP_PROD_INFO pprod
 		on prod.p_prod_id = pprod.prod_id
-		where  prod.rep_prod_type in ('02','03')
+		where  prod.rep_prod_type in ('02','03') and prod.STATUS = 'E'
 		<if test="search != null and search != ''">
 			and (prod.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
 			or pprod.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%'

@@ -101,7 +101,7 @@
 		select PROD_ID id,
 		nvl(PROD_NAME,PROD_ABBR) text
 		from V_REP_PROD_INFO
-		where  1=1
+		where  STATUS = 'E'
 		<if test="dataStatus != null and dataStatus != ''">
 			and STATUS=#{dataStatus,jdbcType=VARCHAR}
 		</if>

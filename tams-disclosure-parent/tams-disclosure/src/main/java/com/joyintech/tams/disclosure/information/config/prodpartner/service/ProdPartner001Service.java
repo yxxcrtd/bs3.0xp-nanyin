@@ -261,9 +261,9 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                     "导入文件模板不正确，表头应该为4列！"));
             return excelValidDtolist;
         }
+        // 验证消息
+        List<String> message = new ArrayList<>();
         for (int i = 1; i < dataList.size(); i++) {
-            // 验证消息
-            List<String> message = new ArrayList<>();
             List<String> list = dataList.get(i);
             //字段非空检查
             if (!StringUtil.isNotEmpty(list.get(0))){
@@ -286,8 +286,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 }else{
                     //验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(platDate,DateUtil.parse(list.get(2).trim()))>0){
-//                        excelValidDtolist.add(new ExcelValidDto(list.get(2), String.valueOf(i+1),
-//                                "生效日要大于等于平台日期！"));
+                       message.add("生效日要大于等于平台日期！");
                     }
                 }
             }
@@ -303,8 +302,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                     Date effEndDate=DateUtil.parse(list.get(3).trim());
                     //生效截止日期是否大于等于平台日期
                     if (DateUtil.compareDate(platDate,effEndDate)>0){
-//                        excelValidDtolist.add(new ExcelValidDto(list.get(3), String.valueOf(i+1),
-//                                "生效截止日期要大于等于平台日期！"));
+                        message.add("生效截止日期要大于等于平台日期！");
                     }
                     if(isDateStr(list.get(2).trim())){
                         Date effDate=DateUtil.parse(list.get(2).trim());
