@@ -837,11 +837,12 @@
 
     <!-- 更新产品状态 -->
     <update id="updateIssuingStatus">
-        update REP_PROD_INFO set ISSUE_STATUS = #{issuingStatusNew}
+        update REP_PROD_INFO set ISSUE_STATUS = #{issuingStatusNew,jdbcType=VARCHAR}
         <if test="issueStatusRemark != null and issueStatusRemark != ''">
-            ,ISSUE_STATUS_REMARK = #{issueStatusRemark}
+            ,ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR}
         </if>
-        where PROD_ID = #{prodId}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and status!='D'
     </update>
 
     <!-- 查询母产品下所有的子产品信息 -->
