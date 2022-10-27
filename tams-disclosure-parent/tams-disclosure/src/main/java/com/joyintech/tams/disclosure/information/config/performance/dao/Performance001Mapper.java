@@ -46,4 +46,8 @@ public interface Performance001Mapper {
 
 
     List<Performance001Dto>  seletformanceInfoList();
+
+    List<Performance001Dto> isRepeated(Performance001Dto dto);
+
+    List<Performance001Dto> isRepeated(Map map);
 }

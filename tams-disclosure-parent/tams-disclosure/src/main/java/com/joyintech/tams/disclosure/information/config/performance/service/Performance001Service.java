@@ -543,6 +543,15 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             } else if (StringUtil.isNotEmpty(rowData.get(6).trim())&&isValidData(Double.parseDouble(rowData.get(6).trim()))){
                 message.add("沪深300指数收益率【系数】不能大于100，且不能小于0！");
             }
+
+            Map map1 = new HashMap();
+            map1.put("prodId",rowData.get(0).trim());
+            map1.put("effDate",DateUtil.parse(rowData.get(1).trim()));
+            map1.put("expDate",DateUtil.parse(rowData.get(2).trim()));
+            List<Performance001Dto> performance001Dtos = performance001Mapper.isRepeated(map1);
+            if (performance001Dtos!=null || performance001Dtos.size()>0){
+                  message.add("数据与系统中待处理数据重复，请检查文件");
+            }
 //            if (StringUtil.isNotEmpty(rowData.get(3).trim())&& !isTwo(rowData.get(3).trim())){
 //                message.add("中债新综合全价指数收益率【系数】需要保留两位小数！");
 //            }
@@ -795,4 +804,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
         return str.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
     }
 
+    public List<Performance001Dto> isRepeated(Performance001Dto dto) {
+        return performance001Mapper.isRepeated(dto);
+    }
 }

@@ -254,7 +254,7 @@ public class BatchGenReport001Contoller extends BaseController {
 			}
 			sbRet.append(repName+idx++ +"：");
 			sbRet.append(dto);
-			sbRet.append("<br>");
+			sbRet.append("<br><br>");
 			progressPercent = 0.05+idx*0.9/listProds.size();
 			progressBarService.updatePercent(pageId, PROCESS_KEY,progressPercent , false);
 		}
