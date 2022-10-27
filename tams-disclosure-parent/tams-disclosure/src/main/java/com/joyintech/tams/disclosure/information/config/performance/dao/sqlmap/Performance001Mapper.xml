@@ -47,7 +47,6 @@
 		select
 		rownum personalField
 		,bc.status status,bc.prod_id prodId,bc.eff_date effDate,bc.exp_date expDate,bc1.proportion zzqj,bc3.proportion zzcf,bc4.proportion zz500,bc2.proportion hs300,
-		-- 		to_char(bc.UPDATE_TIME,'yyyy-mm-dd hh24:mi') updateTime,
 		bc.a updateTime,
 		bc.UPDATE_USER updateUser
 		from (select distinct status,prod_id,eff_date,exp_date ,to_char(UPDATE_TIME,'yyyy-mm-dd hh:mm:ss') a ,UPDATE_USER from rep_prod_basic_change) bc
@@ -325,6 +324,14 @@
 		from REP_PROD_BASIC_CHANGE
 		where
 		 STATUS ='E'
+	</select>
+	<select id="isRepeated"
+			resultType="com.joyintech.tams.disclosure.information.config.performance.dto.Performance001Dto">
+		select * from REP_PROD_BASIC_CHANGE
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		and EFF_DATE = #{effDate,jdbcType=DATE}
+		and EXP_DATE = #{expDate,jdbcType=DATE}
+		and STATUS = 'A'
 	</select>
 
 
