@@ -246,4 +246,11 @@
             PROD_ID = #{prodId,jdbcType=VARCHAR} and OPERATION_START_DATE =TO_DATE(#{operationStartDate},'YYYY-MM-DD')
 
     </select>
+    <select id="isRepeated"
+            resultType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto">
+             select * from DIS_PROD_PLAN
+             where PROD_ID = #{prodId,jdbcType=VARCHAR} and OPERATION_START_DATE =#{operationStartDate,jdbcType=VARCHAR}
+             and DATA_STATUS in ('E','A')
+
+    </select>
 </mapper>

@@ -47,7 +47,6 @@ $(function() {
 				return;
 			}
 		}
-		debugger;
 		var object = $.serializeToObject('#submitForm');
 		if (upFileName) {
 			object.indexValue = upFileName;
