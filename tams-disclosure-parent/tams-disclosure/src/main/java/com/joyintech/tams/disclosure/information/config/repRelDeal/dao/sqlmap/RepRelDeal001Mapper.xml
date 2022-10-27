@@ -194,7 +194,7 @@
     </select>
 
     <select id="selectPProdId" resultType="java.lang.String">
-        SELECT PROD_ID FROM V_REP_PROD_INFO WHERE PROD_ID = #{prodId}
+        SELECT distinct PROD_ID FROM V_REP_PROD_INFO WHERE PROD_ID = #{prodId}
     </select>
 
     <select id="selectExistInfo" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
