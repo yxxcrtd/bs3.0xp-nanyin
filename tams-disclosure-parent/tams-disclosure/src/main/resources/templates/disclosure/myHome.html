@@ -1,98 +1,386 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="~{layout/default}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
 <head>
     <style type="text/css" rel="stylesheet" link=""></style>
 </head>
-    <body>
-        <div layout:fragment="content">
-            <div id="pageContent">
-                <ul class="debt-home-ul">
-                    <!-- 待披露  -->
-                    <li class="debt-home-item">
-                        <p class="clearfix debt-home-title">
-                            <i class="iconfont icon-horn" style="float:left;line-height: 20px;color:#ff0000"></i>
-                            <span class="menu-title" style="float: left;padding-right: 10px;color:#ff0000">待披露</span>
-                            <span class="input-append date" style="padding-top: 3px;position: relative;">
-                                <label class="layui-form-label form-lable" style="width: 6%;font-size:14px">披露截止日</label>
-                                <div class="layui-inline layui-col-md2">
-            	                  <input type="text" id="searchDate" name="timeControl" placeholder="请选择日期" 
-                                        class="layui-input form-input input-dateRangeSelect">
-            	                </div>
-                            </span>
-                        </p>
-                        <br><br>
-                        <div class="layui-inline">
-                            <table id="dataTable1"  class="layui-table"></table>
-                        </div>
-                    </li>
+<body>
+<div layout:fragment="content">
+    <div class='layui-fluid'>
+        <ul class="debt-home-ul">
+            <li class="debt-home-item">
+                <div class="clearfix debt-home-title" style="height: 40px;align-items: center;line-height: 40px;">
+                    <span class="menu-title" style="float: left;padding-right: 10px;color:#333">当日信息披露统计</span>
+                    <a class="layui-btn layui-btn-sm btn-default" style="float: right;height: 30px;line-height: 30px;width: 60px;font-size: 16px;" id="refresh"><span>刷新</span></a>
+                </div>
+
+                <table id="subInfoTable" class="layui-table menu-table">
+                    <thead>
+                    <tr>
+                        <td>报表类型</td>
+                        <td style="width:12%;">预计披露</td>
+                        <td style="width:12%;">已披露</td>
+                        <td style="width:12%;">生成失败</td>
+                        <td style="width:12%;">待确认</td>
+                        <td style="width:12%;">待复核</td>
+                        <td style="width:12%;">待托管复核</td>
+                        <td style="width:12%;">待披露</td>
+                    </tr>
+                    </thead>
+                    <tbody class="menu-body">
+                    <tr id="01" style = "display : none" class="menu-equityInfo">
+                        <td>日报</td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="1" data-th-data-num="1" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="2" data-th-data-num="1" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="3" data-th-data-num="1" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="4" data-th-data-num="1" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="5" data-th-data-num="1" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="6" data-th-data-num="1" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="7" data-th-data-num="1" href="javascript:;"></span></td>
+                    </tr>
+                    <tr id="02" style = "display : none" class="menu-holdInfo" hide="true">
+                        <td>周报</td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="1" data-th-data-num="2" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="2" data-th-data-num="2" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="3" data-th-data-num="2" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="4" data-th-data-num="2" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="5" data-th-data-num="2" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="6" data-th-data-num="2" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="7" data-th-data-num="2" href="javascript:;"></span></td>
+                    </tr>
+                    <tr id="03" style = "display : none" class="menu-holdInfo">
+                        <td>发行公告</td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="1" data-th-data-num="3" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="2" data-th-data-num="3" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="3" data-th-data-num="3" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="4" data-th-data-num="3" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="5" data-th-data-num="3" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="6" data-th-data-num="3" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="7" data-th-data-num="3" href="javascript:;"></span></td>
+                    </tr>
+                    <tr id="04" style = "display : none" class="menu-prodeclare">
+                        <td>到期公告</td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="1" data-th-data-num="4" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="2" data-th-data-num="4" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="3" data-th-data-num="4" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="4" data-th-data-num="4" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="5" data-th-data-num="5" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="6" data-th-data-num="4" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="7" data-th-data-num="4" href="javascript:;"></span></td>
+                    </tr>
+                    <tr id="05" style = "display : none" class="menu-prodpersonissue">
+                        <td>周期型报告</td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="1" data-th-data-num="5" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="2" data-th-data-num="5" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="3" data-th-data-num="5" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="4" data-th-data-num="5" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="5" data-th-data-num="5" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="6" data-th-data-num="5" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="7" data-th-data-num="5" href="javascript:;"></span></td>
+                    </tr>
+
+                    <tr id="06" style = "display : none" class="menu-raisetotal">
+                        <td>季度报告</td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="1" data-th-data-num="6" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="2" data-th-data-num="6" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="3" data-th-data-num="6" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="4" data-th-data-num="6" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="5" data-th-data-num="6" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="6" data-th-data-num="6" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="7" data-th-data-num="6" href="javascript:;"></span></td>
+                    </tr>
+
+                    <tr id="07" style = "display : none" class="menu-prodduration">
+                        <td>（半）年度报告</td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="1" data-th-data-num="7" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="2" data-th-data-num="7" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="3" data-th-data-num="7" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="4" data-th-data-num="7" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="5" data-th-data-num="7" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="6" data-th-data-num="7" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link"  data-th-data-subtype="7" data-th-data-num="7" href="javascript:;"></span></td>
+                    </tr>
                     
-                    <!-- 今日已披露  -->
-                    <li class="debt-home-item" >
-                        <p class="clearfix debt-home-title" style="height: 22px;">
-                            <i class="iconfont icon-template" style="float:left;line-height: 20px;color:#00AA00"></i>
-                            <span class="menu-title" style="float: left;padding-right: 10px;color:#00AA00">今日状态</span>
-                        </p>
-                        <div class="layui-inline">
-                            <table id="dataTable2" class="layui-table"></table>
-                        </div>
-                    </li>
-                    
-                    <!-- 预计披露  -->
-                    <li class="debt-home-item" >
-                        <p class="debt-home-title" style="height: 22px;">
-                            <i class="iconfont icon-clock" style="float:left;line-height: 20px;color:#ff8000"></i>
-                            <span class="menu-title" style="color:#ff8000">预计披露</span>
-                        </p>
-                        <div class="layui-inline">
-                            <table id="dataTable3" class="layui-table"></table>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- javascript代码部分 -->
-        <div layout:fragment="script">
-            <script data-th-src="@{/js/disclosure/myHome.js}" type="text/javascript"></script>
-           <style>
-                /*表格表头样式*/
-                th span{ 
-                    font-weight:bold;
-                    font-size:13px;
-                }
-                /*表格内容字体（表头和第一列除外）*/
-                .datacell{ 
-                    font-weight:bold;
-                    font-size:16px; 
-                }
-               /*By zhengyan*/
-               /*首页样式*/
-               .debt-home-ul {
-                   padding-left: 0;
-               }
-               .debt-home-item {
-                   margin: 5px 0;
-               }
-               .debt-home-title i {
-                   font-size: 22px;
-                   color: #aaaaaa;
-                   vertical-align: sub;
-               }
-               .menu-title-wrap {
-                   margin: 25px 0 10px 0;
-                   border-left: 5px solid #1d8ce7;
-               }
-               .menu-title {
-                   color: #666666;
-                   font-size: 16px;
-                   padding-left: 10px;
-               }
-               .menu-list-wrap {
-                   display: inline-block;
-                   width: 15%;
-               }
-           </style>
-        </div>
-    </body>
+                    <tr id="08" style = "display : none" class="menu-assetinfo">
+                        <td>开放分红公告</td>
+                        <td><span class="debt-info-link" data-th-data-subtype="1" data-th-data-num="9" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="2" data-th-data-num="9" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="3" data-th-data-num="9" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="4" data-th-data-num="8" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="5" data-th-data-num="8" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="6" data-th-data-num="9" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="7" data-th-data-num="9" href="javascript:;"></span></td>
+                    </tr>
+
+                    <tr id="99" style = "display : none" class="menu-investtrade">
+                        <td>合计</td>
+                        <td><span class="debt-info-link" data-th-data-subtype="1" data-th-data-num="10" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="2" data-th-data-num="10" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="3" data-th-data-num="10" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="4" data-th-data-num="10" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="5" data-th-data-num="10" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="6" data-th-data-num="10" href="javascript:;"></span></td>
+                        <td><span class="debt-info-link" data-th-data-subtype="7" data-th-data-num="10" href="javascript:;"></span></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </li>
+        </ul>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script data-th-inline="javascript" type="text/javascript">
+        var isFromMain="${isFromMain}";
+    </script>
+    <script data-th-src="@{/js/disclosure/myHome.js}" type="text/javascript"></script>
+    <style>
+        /*By zhengyan*/
+        /*首页样式*/
+        .menu-todo a {
+            color: #337ab7 !important;
+        }#FFB973
+
+        .tab-home-link a{
+            padding: 10px 15px;
+            line-height: 42px;
+        }
+
+        .debt-info-link {
+            color: #007fff;
+            font-size: 22px;
+        }
+
+        .debt-info-link:hover {
+            /*color: #007fff;*/
+        }
+
+        .debt-home-ul {
+            padding-left: 0;
+        }
+
+        .debt-home-item {
+            margin: 5px 0;
+        }
+
+        .debt-home-title i {
+            font-size: 22px;
+            color: #aaaaaa;
+            vertical-align: bottom;
+        }
+
+        .debt-home-down.open > a {
+            background-color: #8acaf5 !important;
+        }
+
+        .debt-check-wrap img{
+            float: left;
+            vertical-align: middle;
+        }
+
+        .debt-info-wrap img{
+            float: left;
+            vertical-align: middle;
+        }
+
+        .fast-wrap:hover .fast-text{
+            display: inline;
+        }
+
+        .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+            background-color: #fff;
+        }
+
+
+        .debt-home-li dl dd a {
+            line-height: 25px;
+        }
+
+        .debt-home-admin.open > a {
+            background-color: #57b3f0 !important;
+        }
+
+        .debt-home-admin-wrap li a{
+            padding: 5px 0 5px 20px!important;
+        }
+        .debt-home-admin-wrap li a:hover{
+            background: #cce6ff;
+        }
+
+        .menu-title {
+            color: #666666;
+            font-size: 16px;
+            padding-left: 10px;
+        }
+
+        .menu-num img {
+            height: 33px;
+        }
+
+        .menu-table {
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .menu-table td {
+            border-left: 1px solid #dddddd;
+            /* width: 6.2%;*/
+        }
+
+        .menu-table tbody td {
+            /*padding: 4px 0 !important;*/
+        }
+
+        .menu-table thead td {
+            padding: 6px 2px !important;
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            /* font-family: "微软雅黑";*/
+        }
+
+        .menu-table > thead {
+            background: #E3F1ff !important;
+        }
+        .debt-home-title {
+            margin-bottom: 5px;
+        }
+
+        .menu-delay td {
+            font-size: 16px !important;
+            color: #ff4d4d !important;
+        }
+
+        .menu-delay td a {
+            font-weight: bold;
+            color: #ff4d4d;
+            font-size: 24px;
+        }
+
+        .menu-delaying td {
+            font-size: 16px !important;
+            color: #ff7f00 !important;
+        }
+
+        .menu-delaying td a {
+            font-weight: bold;
+            color: #ff7f00;
+            font-size: 24px;
+        }
+
+        .menu-send td {
+            font-size: 16px !important;
+            color: #59b200 !important;
+        }
+
+        .menu-send td a {
+            font-weight: bold;
+            color: #59b200;
+            font-size: 24px;
+        }
+
+        .menu-total td {
+            font-size: 24px !important;
+        }
+
+        .menu-body tr td a:hover {
+            text-decoration: underline !important;
+        }
+        /*版本样式*/
+        .home-edition li a{
+            padding: 10px 0;
+        }
+
+        .edition-item-wrap ul{
+            padding-left: 0;
+        }
+        .edition-item-wrap li{
+            float: left;
+        }
+
+        .pro-classify-list ul {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .pro-classify-list ul li {
+            color: #666666;
+            padding: 10px 0 0 0;
+        }
+
+        .month-table tr td {
+            border-left: 1px solid #dddddd;
+        }
+
+        .month-table-tr td {
+            text-align: right;
+        }
+
+        .month-table-tr td a {
+            color: #007fff;
+        }
+
+        .month-table-tr td a:hover {
+            color: #007fff;
+            text-decoration: underline !important;
+        }
+
+        .table-kinds-head td {
+            vertical-align: middle !important;
+        }
+
+        .delay-des-wrap ul li {
+            float: left;
+        }
+        /*日历样式*/
+        .fc-today .fc-day-cnDate{
+            color: #fff;
+        }
+        .fc-other-month.fc-today .fc-day-cnDate{
+            color: #999;
+        }
+
+        .debt-ul-bottom>li.active>a{
+            background: #57b3f0 !important;
+            color: #fff;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-radius: 5px;
+        }
+        .excel-ul-wrap li{
+            float: none;
+        }
+        .excel-ul-wrap .active a .excel-des{
+            color: #0f87ff;
+        }
+        .excel-ul-wrap .active a{
+            border-bottom: none!important;
+        }
+
+        .excel-ul-wrap li a:hover{
+            border-color: #ccc #eee;
+        }
+        .excel-ul-wrap li a{
+            border-bottom: 1px solid #cccccc;
+            padding: 5px 15px;
+        }
+
+        .excel-input input{
+            border-radius: 0;
+        }
+
+        .excel-input-container input{
+            width: 100%;
+        }
+
+        .excel-input-wrapper input{
+            width: 100%;
+        }
+
+    </style>
+</div>
+</body>
+
 </html>
