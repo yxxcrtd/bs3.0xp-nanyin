@@ -867,6 +867,7 @@
 
     <select id="queryPprodIds" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
+        distinct
         PROD_ID id,
         PROD_NAME text,
         PROD_ID object

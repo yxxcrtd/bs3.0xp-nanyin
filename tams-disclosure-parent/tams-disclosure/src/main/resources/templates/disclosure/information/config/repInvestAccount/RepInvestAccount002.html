@@ -44,7 +44,7 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">账号</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" id="accountNum" name="accountNum"
+                    <input type="text" id="accountNum" name="accountNum" onkeyup="this.value=value.match(/^.{1,20}/)"
                            class="layui-input form-input" placeholder="请选择"
                            data-th-value="${entity?.accountNum}" required>
                 </div>
@@ -54,7 +54,7 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">账户名称</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" id="accountName" name="accountName"
+                    <input type="text" id="accountName" name="accountName" onkeyup="this.value=value.match(/^.{1,200}/)"
                            class="layui-input form-input" placeholder="请选择"
                            data-th-value="${entity?.accountName}" required>
                 </div>
@@ -62,7 +62,7 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">开户单位</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" id="accountOpener" name="accountOpener"
+                    <input type="text" id="accountOpener" name="accountOpener" onkeyup="this.value=value.match(/^.{1,200}/)"
                            class="layui-input form-input" placeholder="请选择"
                            data-th-value="${entity?.accountOpener}" required>
                 </div>

@@ -129,7 +129,7 @@
         Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage004/init","80%","80%",
             {},function () {
                 var finprodIds = $('#finprodIds').data('finprodIds');
-                if(finprodIds.length ==0){
+                if(!finprodIds || finprodIds.length ==0){
                     return;
                 }
                 $('#prodId').textSelect('setValue',finprodIds);
@@ -179,7 +179,7 @@
             }
             for(var i=0;i<selArr.length;i++){
                 if(selArr[i].dataStatus =="D"){
-                    return Joyin.error("只能删除有效数据，请重新选择");
+                    return Joyin.error("只能删除有效数据，请重新选择!");
                 }
             }
             var object = {selectedItem: selArr, operateType: "delete"};

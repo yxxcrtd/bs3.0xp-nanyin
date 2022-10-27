@@ -150,7 +150,8 @@
         	info1.prod_id,info1.prod_name,info1.rep_prod_type,info1.p_prod_id,info2.prod_name
         from REP_PROD_INFO info1
         left join REP_PROD_INFO info2 on info1.p_prod_id=info2.prod_id
-        where info1.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where info1.status='E' 
+        and info1.PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
     
 </mapper>
