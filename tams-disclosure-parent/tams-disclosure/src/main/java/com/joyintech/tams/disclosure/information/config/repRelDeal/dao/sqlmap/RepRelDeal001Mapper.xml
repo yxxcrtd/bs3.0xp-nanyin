@@ -22,7 +22,9 @@
         </if>
     </select>
     <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
-        select T1.PROD_ID prodId,
+        select
+        distinct
+        T1.PROD_ID prodId,
         T1.UUID uuid,
         T2.PROD_NAME prodName,
         T1.PUB_DATE pubDate,
