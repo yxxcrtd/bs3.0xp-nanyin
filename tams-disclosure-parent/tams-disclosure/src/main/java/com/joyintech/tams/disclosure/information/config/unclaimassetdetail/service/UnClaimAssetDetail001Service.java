@@ -239,7 +239,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                     excelNumList.add(String.valueOf(rowNo));
                 }
                 webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                        this.getMessage("REPORT_COMMON_FILE_C_0003",
                                 StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
                         MessageType.错误消息);
             } else {
