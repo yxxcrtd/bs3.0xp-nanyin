@@ -111,6 +111,7 @@
         <include refid="com.joyintech.tams.common.base.dao.RepProdInfoMapper.Base_Column_List" />
         from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and STATUS='E'
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from REP_PROD_INFO
