@@ -167,7 +167,9 @@
     </select>
 
     <select id="selectProdName" resultType="java.util.Map">
-        SELECT nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') PROD_NAME
+        SELECT
+        distinct
+        nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') PROD_NAME
         FROM REP_PROD_INFO T1
         left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
         left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
