@@ -306,6 +306,7 @@
     </select>
     <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.repProdIndexGz.dto.RepProdIndexGzDto" >
         select
+        distinct
         T.PROD_ID prodId,
         rpi.PROD_NAME prodName,
         T.VALUE_DATE valueDate,

@@ -39,16 +39,18 @@
         </if>
     </select>
     <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto" >
-        select ric.PROD_ID prodId,
-               rpi.PROD_NAME prodName,
-               ric.ACCOUNT_TYPE accountType,
-               ric.ACCOUNT_NUM accountNum,
-               ric.ACCOUNT_NAME accountName,
-               ric.ACCOUNT_OPENER accountOpener,
-               ric.STATUS status,
-               ric.UPDATE_USER updateUser,
-               ric.UPDATE_TIME updateTime,
-               ric.ERRORMSG errormsg
+        select
+        distinct
+        ric.PROD_ID prodId,
+        rpi.PROD_NAME prodName,
+        ric.ACCOUNT_TYPE accountType,
+        ric.ACCOUNT_NUM accountNum,
+        ric.ACCOUNT_NAME accountName,
+        ric.ACCOUNT_OPENER accountOpener,
+        ric.STATUS status,
+        ric.UPDATE_USER updateUser,
+        ric.UPDATE_TIME updateTime,
+        ric.ERRORMSG errormsg
         from REP_INVEST_ACCOUNT ric
         left join V_REP_PROD_INFO rpi on rpi.PROD_ID = ric.PROD_ID
         <where>

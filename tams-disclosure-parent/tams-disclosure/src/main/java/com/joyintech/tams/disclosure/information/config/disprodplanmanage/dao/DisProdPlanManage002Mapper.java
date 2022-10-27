@@ -105,4 +105,5 @@ public interface DisProdPlanManage002Mapper {
 
     DisProdPlanManage002Dto selectCfsj(@Param("prodId") String prodId, @Param("operationStartDate") String operationStartDate);
 
+	DisProdPlanManage002Dto isRepeated(DisProdPlanManage002Dto dto);
 }

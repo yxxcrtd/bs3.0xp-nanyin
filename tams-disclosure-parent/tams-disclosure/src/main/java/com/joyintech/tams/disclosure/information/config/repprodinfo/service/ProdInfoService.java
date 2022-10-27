@@ -1103,8 +1103,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 && StringUtils.equals(DictCodeListExt1.发行状态_发行成功.getValue(), dto.getIssuingStatusNew())) {
             ProdInfoDto ppdto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId(),"E");
             if (!StringUtils.equals(DictCodeListExt1.发行状态_发行成功.getValue(), ppdto.getIssueStatus())) {
-                ppdto.setIssueStatus(DictCodeListExt1.发行状态_发行成功.getValue());
-                prodInfoMapper.updateByPrimaryKey(ppdto);
+                ppdto.setIssuingStatusNew(DictCodeListExt1.发行状态_发行成功.getValue());
+                prodInfoMapper.updateIssuingStatus(ppdto);
             }
         }
         prodInfoMapper.updateIssuingStatus(dto);
