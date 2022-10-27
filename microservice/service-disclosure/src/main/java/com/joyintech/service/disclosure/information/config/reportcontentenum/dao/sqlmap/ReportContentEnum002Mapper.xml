@@ -113,7 +113,7 @@
     		and is_quote = '01' /*被引用*/
 			union all
 			select sub.ID id,
-				sub.index_value indexName
+			to_char(sub.index_value) indexName
 	      	from REP_INDEX_SUB sub
 			left join REP_INDEX_PRIMARY pri on sub.pri_id = pri.id
 			where 1=1
