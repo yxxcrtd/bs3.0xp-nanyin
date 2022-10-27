@@ -225,7 +225,13 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @return
      */
     public ProdInfoDto selectByProdStatus(String prodId) {
-        return prodInfoMapper.selectByProdStatus(prodId, "E");
+        //return prodInfoMapper.selectByProdStatus(prodId, "E");
+        ProdInfoDto prodInfoDto=prodInfoMapper.selectByProdStatus(prodId, "E");
+        if(prodInfoDto!=null){
+            return prodInfoDto;
+        }else {
+            return prodInfoMapper.selectByProdStatus(prodId, "A");
+        }
     }
 
 
