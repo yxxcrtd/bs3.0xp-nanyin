@@ -132,7 +132,7 @@ public class RepFloatFee002Controller extends BaseController {
         if(repFloatFeeDto == null){
             return false;
         }else{
-            return true;
+            return false;
         }
     }
 }
