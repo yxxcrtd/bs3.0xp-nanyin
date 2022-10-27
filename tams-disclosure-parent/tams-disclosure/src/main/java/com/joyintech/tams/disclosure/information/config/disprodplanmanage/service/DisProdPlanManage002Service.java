@@ -199,4 +199,8 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
     public DisProdPlanManage002Dto selectCfsj(String prodId, String operationStartDate) {
         return disProdPlanManage002Mapper.selectCfsj(prodId,operationStartDate);
     }
+
+    public DisProdPlanManage002Dto isRepeated(DisProdPlanManage002Dto dto) {
+        return disProdPlanManage002Mapper.isRepeated(dto);
+    }
 }

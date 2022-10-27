@@ -206,8 +206,12 @@ public class DisProdPlanManage002Controller extends BaseController {
 			if(dto.getHoldDays() == null){
 				return new AjaxResult("客户周期型产品,客户实际持有天数必填！", MessageType.错误消息);
 			}
-		}
 
+		}
+		DisProdPlanManage002Dto dto1 = disProdPlanManage002Service.isRepeated(dto);
+		if (dto1!=null){
+			return new AjaxResult("子产品代码与运作起始日与系统数据重复，请重新输入！", MessageType.错误消息);
+		}
 		if(StringUtils.isNotBlank(dto.getRaiseType() )
 				&& StringUtils.equals(DictCodeListExt5.信披募集方式_私募.getValue(), dto.getRaiseType())){
 			if(StringUtils.isBlank(dto.getCollingoffPeriodStr())){

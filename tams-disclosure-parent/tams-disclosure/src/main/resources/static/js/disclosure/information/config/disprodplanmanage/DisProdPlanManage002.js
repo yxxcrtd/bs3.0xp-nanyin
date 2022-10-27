@@ -47,7 +47,6 @@ $(function() {
 				return;
 			}
 		}
-		debugger;
 		var object = $.serializeToObject('#submitForm');
 		if (upFileName) {
 			object.indexValue = upFileName;
@@ -419,6 +418,7 @@ $(function() {
 			finprodIdChange();
 		}
 		if(pageModel == PAGE_MODEL_EDIT){
+			$('#operationStartDate').prop('disabled',true);
 			if($('#openStartDate').val() != '' && $('#openStartDate').val() != null
 				&& $('#openEndDate').val() != '' && $('#openEndDate').val() != null
 				&& $('#operationStartDate').val() != '' && $('#operationStartDate').val() != null){
