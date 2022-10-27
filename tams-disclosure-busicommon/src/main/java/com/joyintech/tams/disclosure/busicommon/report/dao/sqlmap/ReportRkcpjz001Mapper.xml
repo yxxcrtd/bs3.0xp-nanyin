@@ -128,6 +128,7 @@
 		from REP_PROD_INFO v
 		where v.PROD_ID = #{prodId}
 		  and v.rep_prod_type='02'
+		  and v.status='E'
 	</select>
 
 	<select id="getPProdId" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
@@ -137,6 +138,7 @@
 		from REP_PROD_INFO v
 		where v.PROD_ID = #{prodId}
 		  and v.rep_prod_type='03'
+		  and v.status='E'
 	</select>
 
 </mapper>

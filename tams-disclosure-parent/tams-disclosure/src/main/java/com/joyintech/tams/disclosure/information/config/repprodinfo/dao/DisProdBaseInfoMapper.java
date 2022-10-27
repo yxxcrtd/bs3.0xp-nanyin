@@ -28,6 +28,8 @@ public interface DisProdBaseInfoMapper  {
 
     int updateByPrimaryKeySelective(ProdInfoDto record);
 
+    int updateByPrimaryKeySelective2(ProdInfoDto record);
+
     int updateByPrimaryKey(ProdInfoDto record);
     int updateStatus(ProdInfoDto record);
 
