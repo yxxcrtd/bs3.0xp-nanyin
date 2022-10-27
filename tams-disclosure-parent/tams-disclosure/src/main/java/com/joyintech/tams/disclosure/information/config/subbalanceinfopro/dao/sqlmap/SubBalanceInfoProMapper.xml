@@ -197,7 +197,7 @@
         FROM
         V_REP_PROD_INFO
         where
-        REP_PROD_TYPE in ('02','01')
+        REP_PROD_TYPE in ('02','01') and STATUS = 'E'
         <if test="search != null and search != ''">
             and (PROD_ID like
             concat(concat('%',#{search}),'%')

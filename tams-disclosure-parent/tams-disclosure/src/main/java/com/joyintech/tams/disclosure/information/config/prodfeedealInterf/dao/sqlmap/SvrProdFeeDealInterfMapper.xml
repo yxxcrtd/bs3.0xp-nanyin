@@ -31,7 +31,7 @@
         FROM
         V_REP_PROD_INFO
         where
-        1=1
+        STATUS = 'E'
         <if test="search != null and search != ''">
             and (PROD_ID like
             concat(concat('%',#{search}),'%')

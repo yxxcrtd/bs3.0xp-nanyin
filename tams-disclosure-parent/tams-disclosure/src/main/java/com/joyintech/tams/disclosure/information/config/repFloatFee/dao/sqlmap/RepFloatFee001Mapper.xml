@@ -34,7 +34,7 @@
         left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
         left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
         where T1.P_PROD_ID is not null
-        and T1.STATUS not in ('D')
+        and T1.STATUS = 'E'
         <!--         REP_PROD_TYPE = '03'-->
         <if test="search != null and search != ''">
             and (T1.PROD_ID like
