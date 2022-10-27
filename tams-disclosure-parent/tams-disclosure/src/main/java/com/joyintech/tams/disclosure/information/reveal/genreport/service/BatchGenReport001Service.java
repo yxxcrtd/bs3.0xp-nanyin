@@ -436,4 +436,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
         return null;
     }
 
+    public RepProdInfo queryProdInfoByProdId(String prodId) {
+    	return batchGenReport001Mapper.selectProdInfoByProdId(prodId);
+    }
 }

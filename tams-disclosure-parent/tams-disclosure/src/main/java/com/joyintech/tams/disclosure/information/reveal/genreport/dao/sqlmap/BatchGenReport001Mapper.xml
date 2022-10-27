@@ -145,4 +145,12 @@
     		WHERE pro.PROD_ID=v.PROD_ID and pro.JOB_ID=#{jobId, jdbcType=VARCHAR})
 	</select>
 	
+	<select id="selectProdInfoByProdId" resultType="com.joyintech.tams.common.base.entity.RepProdInfo" parameterType="java.lang.String" >
+        select 
+        	info1.prod_id,info1.prod_name,info1.rep_prod_type,info1.p_prod_id,info2.prod_name
+        from REP_PROD_INFO info1
+        left join REP_PROD_INFO info2 on info1.p_prod_id=info2.prod_id
+        where info1.PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+    
 </mapper>

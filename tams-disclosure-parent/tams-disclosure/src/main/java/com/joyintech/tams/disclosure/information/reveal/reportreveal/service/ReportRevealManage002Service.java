@@ -24,6 +24,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto;
@@ -35,6 +36,7 @@ import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.Report
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageParamDto;
 import com.joyintech.tams.disclosure.information.reveal.reportreveal.dao.ReportRevealManageEX001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.reportreveal.util.SendFileUtil;
+import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -75,6 +77,9 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
      */
     @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(ReportRevealManage002Service.class);
+
+    @Autowired
+    private JoyinDFSTemplate joyinDFSTemplate;
 
     @Autowired
     private ReportRevealManageEX001Mapper mapper;
@@ -151,6 +156,11 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                     //有上传压缩包失败的，默认全部披露失败，直接结束
                     return false;
                 }
+                String file=exportFilePath+ File.separator+zipFileName;
+                SysUploadFileInfo uploadFile=new SysUploadFileInfo();
+                uploadFile.setPath(file);
+                joyinDFSTemplate.upload(uploadFile);
+
             }
         }
         return true;
