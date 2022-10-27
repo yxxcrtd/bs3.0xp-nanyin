@@ -128,7 +128,7 @@ public class MatureReportDataService implements IReportDataService {
             	for ( DisBonusList bonus:listBonus ) {
             		custProfit = custProfit.add(bonus.getDisBonusMoney());
     	        	if ( bonus.getProfitBaseDate().compareTo(settDate)>0 ) { //取最近的分红计划的年化收益率
-    	        		settDate = bonus.getProfitBaseDate();
+    	        		settDate = bonus.getLastProfitBaseDate();
     	        		yearYield = bonus.getYield(); 
     	        		thisUnitBonus = bonus.getUnitBonus();
     	        	}
@@ -139,9 +139,9 @@ public class MatureReportDataService implements IReportDataService {
 	        		searchParam.put("settDate", sdf.format(settDate));
 		        	RepProdIndex prodIndexGz = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
 		        	if ( prodIndexGz!=null && prodIndexGz.getUnitValueT()!=null )
-		        		accuValue = prodIndexGz.getUnitValueT().add( thisUnitBonus);
+		        		accuValue = prodIndexGz.getUnitValueT().add( thisUnitBonus).setScale(4,BigDecimal.ROUND_DOWN);
 		        	else
-		        		accuValue = thisUnitBonus;
+		        		accuValue = thisUnitBonus.setScale(4,BigDecimal.ROUND_DOWN);
             	}
 
             }
@@ -211,7 +211,7 @@ public class MatureReportDataService implements IReportDataService {
         	
 			matureReportDto.setSumValueAmt(accuValue);
 			matureReportDto.setRefYearYield(yearYield.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN).toPlainString() );
-			matureReportDto.setCustProfit(custProfit);
+			matureReportDto.setCustProfit(custProfit.setScale(2,BigDecimal.ROUND_DOWN));
 			
 			//查询所有相关费用，通过主产品查找，如果是子产品id，还要找到主产品id
 			List<RepFeeTrd> listFee = matureReportMapper.selectFees(paraMap);
