@@ -294,6 +294,26 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     }
                 }
                 prodInfoMapper.insert(ppDto);
+            }else{
+                if(StringUtils.equals("D",existppDto.getStatus())){
+                    ProdInfoDto ppDto = new ProdInfoDto();
+                    BeanUtils.copyProperties(dto, ppDto);
+                    ppDto.setRepProdType(DictCodeListExt5.信批产品类别_母产品.getValue());
+                    ppDto.setProdId(dto.getpProdId());
+                    ppDto.setProdName(dto.getpProdName());
+                    ppDto.setSetDate(dto.getpSetDate());
+                    ppDto.setpProdId(null);
+                    ppDto.setpProdName(null);
+                    ppDto.setpSetDate(null);
+                    //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
+                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), ppDto.getIsIndex()) && StringUtils.isNotEmpty(ppDto.getPerformCompare())) {
+                        if (prodBasicChangeService.insertProdBasicChangeFromExcel(ppDto.getPerformCompare(), ppDto.getProdId())) {
+                            //成功之后清空产品业绩比较基准
+                            ppDto.setPerformCompare(null);
+                        }
+                    }
+                    prodInfoMapper.updateByPrimaryKeySelective2(ppDto);
+                }
             }
             //保存子产品信息
             dto.setRepProdType(DictCodeListExt5.信批产品类别_子产品.getValue());
@@ -357,7 +377,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 prodInfoMapper.updateRaiseAmtByPprodId(dto);
             }
             // 更新母产品信息
-            prodInfoMapper.updateByPrimaryKeySelective(ppDto);
+            prodInfoMapper.updateByPrimaryKeySelective2(ppDto);
         } else {
             //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex()) && StringUtils.isNotEmpty(dto.getPerformCompare())) {

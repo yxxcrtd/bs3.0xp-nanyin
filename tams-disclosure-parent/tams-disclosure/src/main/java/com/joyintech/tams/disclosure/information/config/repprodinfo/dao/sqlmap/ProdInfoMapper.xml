@@ -571,6 +571,105 @@
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
         and status !='D'
     </update>
+    <update id="updateByPrimaryKeySelective2" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
+        update REP_PROD_INFO
+        <set>
+            <if test="prodName != null">
+                PROD_NAME = #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="setDate != null">
+                SET_DATE = #{setDate,jdbcType=DATE},
+            </if>
+            <if test="raiseAmt != null">
+                RAISE_AMT = #{raiseAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="prodAbbr != null">
+                PROD_ABBR = #{prodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRe != null">
+                PROD_RE = #{prodRe,jdbcType=VARCHAR},
+            </if>
+            <if test="pProdId != null">
+                P_PROD_ID = #{pProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseStrdate != null">
+                RAISE_STRDATE = #{raiseStrdate,jdbcType=DATE},
+            </if>
+            <if test="raiseEnddate != null">
+                RAISE_ENDDATE = #{raiseEnddate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null">
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="raiseType != null">
+                RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+            </if>
+            <if test="performCompare != null">
+                PERFORM_COMPARE = #{performCompare,jdbcType=VARCHAR},
+            </if>
+            <if test="isPeriod != null">
+                IS_PERIOD = #{isPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="isGrade != null">
+                IS_GRADE = #{isGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="isIndex != null">
+                IS_INDEX = #{isIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="openFreq != null">
+                OPEN_FREQ = #{openFreq,jdbcType=VARCHAR},
+            </if>
+            <if test="natureInvest != null">
+                NATURE_INVEST = #{natureInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="prodType != null">
+                PROD_TYPE = #{prodType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuingWay != null">
+                ISSUING_WAY = #{issuingWay,jdbcType=VARCHAR},
+            </if>
+            <if test="acctChnname != null">
+                ACCT_CHNNAME = #{acctChnname,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null">
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="pdStatus != null">
+                PD_STATUS = #{pdStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="prodSeries != null">
+                PROD_SERIES = #{prodSeries,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="issueStatus != null">
+                ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repProdType != null">
+                REP_PROD_TYPE = #{repProdType,jdbcType=VARCHAR},
+            </if>
+            <!--支持导入固定持有天数为空-->
+            HOLDDAY = #{holdday,jdbcType=DECIMAL},
+
+            <if test="trustpart != null">
+                TRUSTPART = #{trustpart,jdbcType=VARCHAR},
+            </if>
+            <if test="errormsg != null">
+                ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            </if>
+            <if test="issueStatusRemark != null">
+                ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         update REP_PROD_INFO
         set
