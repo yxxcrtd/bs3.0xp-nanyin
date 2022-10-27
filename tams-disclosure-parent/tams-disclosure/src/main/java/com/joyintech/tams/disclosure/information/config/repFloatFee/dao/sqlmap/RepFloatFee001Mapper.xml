@@ -114,6 +114,7 @@
                 ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
     where PROD_ID = #{prodId,jdbcType=VARCHAR}
     and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+    and STATUS!='D'
     </update>
 
     <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
