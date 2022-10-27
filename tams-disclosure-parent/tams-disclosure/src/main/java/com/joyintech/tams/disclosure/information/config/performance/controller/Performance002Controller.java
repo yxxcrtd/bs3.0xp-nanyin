@@ -157,10 +157,10 @@ public class Performance002Controller extends BaseController {
             return new AjaxResult(result);
         }
         List<Performance001Dto> performance001Dto = performance001Service.isRepeated(dto);
-        if (performance001Dto!=null||performance001Dto.size()>0){
+        if (performance001Dto.size()>0){
             AjaxResult ajax=new AjaxResult();
             ajax.setStatuCode(500);
-            ajax.setMessage("数据已重复，请重新输入!", MessageType.错误消息);
+            ajax.setMessage("子产品代码+业绩比较基准生效日+业绩比较基准生效截止日数据已重复，请重新输入!", MessageType.错误消息);
             return ajax;
         }
         return commonCheck(result, dto.getOperateType());

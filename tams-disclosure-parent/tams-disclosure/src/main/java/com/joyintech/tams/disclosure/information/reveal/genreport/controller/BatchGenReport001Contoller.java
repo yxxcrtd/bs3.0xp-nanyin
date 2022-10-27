@@ -224,18 +224,38 @@ public class BatchGenReport001Contoller extends BaseController {
 		for (RepProdInfo prod : listProds) {
 			BatchGenResultDto dto = null;
 			try {
-				params.put("prodId", prod.getProdId());
-				params.put("prodid", prod.getProdId());
-				params.put("prodName", prod.getProdName());
-				params.put("prodname", prod.getProdName());
+				//产品树上选择的产品id，均为REP_PROD_INFO表里面的prod_id
+				RepProdInfo prodInfo = batchGenReport001Service.queryProdInfoByProdId(prod.getProdId());
+				params.put("pprodId", null);  
+				params.put("pprodid", null);	
+				params.put("pprodName", null);
+				params.put("pprodname", null);
+				params.put("prodId", null);
+				params.put("prodid", null);
+				params.put("prodName", null);
+				params.put("prodname", null);
 				
-//				//如果是母产品，传过来的参数prodid应该是母产品的id
-//				if ( "P".equals(this.getRepProdType(repId)) ) {
-//					params.put("pprodId", prod.getProdId());
-//					params.put("pprodid", prod.getProdId());
-//					params.put("pprodName", prod.getProdName());
-//					params.put("pprodname", prod.getProdName());
-//				}
+				if ( "P".equals(getRepProdType(repId)) ) { //母产品报表或者单产品报表，要传pprodid参数
+					if ( "01".equals(prodInfo.getRepProdType())) { //母产品
+						params.put("pprodId", prodInfo.getProdId());  
+						params.put("pprodid", prodInfo.getProdId());	
+						params.put("pprodName", prodInfo.getProdName());
+						params.put("pprodname", prodInfo.getProdName());					
+					} else if ("02".equals(prodInfo.getRepProdType()) ) {  //单产品
+						params.put("pprodId", prodInfo.getpProdId());  
+						params.put("pprodid", prodInfo.getpProdId());	
+					}
+				} else {  //针对子产品的报表+单产品报表
+					params.put("pprodId", prodInfo.getpProdId());  
+					params.put("pprodid", prodInfo.getpProdId());
+					
+					params.put("prodId", prodInfo.getProdId());
+					params.put("prodid", prodInfo.getProdId());
+					params.put("prodName", prodInfo.getProdName());
+					params.put("prodname", prodInfo.getProdName());
+					
+				}
+
 				dto =  batchGenReport001Service.exec(prod,params);
 			} catch ( Exception e ) {
 				dto = new BatchGenResultDto();
@@ -245,7 +265,8 @@ public class BatchGenReport001Contoller extends BaseController {
 				dto.setProdName(prod.getProdName());
 				dto.setGenDate((Date)params.get("platformDate"));
 				dto.setResult("F");
-				dto.setRemark("生成报表失败："+e.getMessage());
+				dto.setRemark("生成报表失败："+e.getStackTrace());
+				logger.error("生成报表失败",e);
 			}
 			if ( "F".equals(dto.getResult())) {
 				sbRet.append("☆☆");

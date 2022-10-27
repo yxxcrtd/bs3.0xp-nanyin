@@ -642,7 +642,7 @@ $(function() {
 		return result;
 	}
 
-	$('#prodDatatree').joyinTree({
+	$('#prodDatatree').joyinMixTree({
 				onTreeLoadSuccess : function() {
 					if (pageModel == PAGE_MODEL_REFERENCE) {
 						var treeObj = $.fn.zTree.getZTreeObj("prodDatatree_tree");
@@ -723,8 +723,9 @@ $(function() {
 						});
 
 //				$('#showtable').width((docW - 350) + "px");
-				tree.children('div').eq(1).height((docH - 100) + "px");
-				$('#prodDatatree').height((docH - 85) + "px");
+				tree.children('div').eq(1).height((docH - 95) + "px");
+				//$('#prodDatatree').height((docH - 85) + "px");
+				$('#prodDatatree').children('div').eq(1).height((docH - 125) + "px");
 				$('#showtable').height((docH - 130) + "px");
 
 				$('#expandAll').next().on('click', function() {

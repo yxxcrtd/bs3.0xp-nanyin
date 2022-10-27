@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.tams.common.base.dao.DisProdAgencyMapper;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 
 /**
@@ -62,4 +63,6 @@ public interface BatchGenReport001Mapper extends DisProdAgencyMapper {
 	 * @return 返回列表
 	 */
 	List<ProdInfoListEntity> selectProdList(@Param("sqlVal")String sqlVal, @Param("jobId")String jobId);
+	
+	RepProdInfo selectProdInfoByProdId(String prodId);
 }

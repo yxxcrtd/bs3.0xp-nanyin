@@ -94,7 +94,7 @@
         UPDATE_USER, UPDATE_TIME, CREATE_DEPT
         from DIS_PROD_PLAN
         <where>
-            PROD_ID = #{prodId} and OPEN_END_DATE = TO_DATE(#{openEndDateStr},'YYYY-MM-DD')
+            PROD_ID = #{prodId} and OPERATION_START_DATE = TO_DATE(#{operationStartDateStr},'YYYY-MM-DD')
             and DATA_STATUS!='D'
         </where>
     </select>

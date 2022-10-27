@@ -549,8 +549,8 @@ public class Performance001Service extends CommonExportService<Performance001Dto
             map1.put("effDate",DateUtil.parse(rowData.get(1).trim()));
             map1.put("expDate",DateUtil.parse(rowData.get(2).trim()));
             List<Performance001Dto> performance001Dtos = performance001Mapper.isRepeated(map1);
-            if (performance001Dtos!=null || performance001Dtos.size()>0){
-                  message.add("数据与系统中待处理数据重复，请检查文件");
+            if (performance001Dtos.size()>0){
+                  message.add("子产品代码+业绩比较基准生效日+业绩比较基准生效截止日数据已重复，请重新输入!");
             }
 //            if (StringUtil.isNotEmpty(rowData.get(3).trim())&& !isTwo(rowData.get(3).trim())){
 //                message.add("中债新综合全价指数收益率【系数】需要保留两位小数！");
