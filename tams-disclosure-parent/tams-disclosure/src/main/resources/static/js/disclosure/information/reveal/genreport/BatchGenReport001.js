@@ -5,7 +5,6 @@ $(function() {
 	var tree = $("#typeDatatree");
 	var docW = $(document).width();
 	var docH = $(document).height();
-	var tabHeadUlH = 100;
 	var defaultDateStyle = 'yyyy-MM-dd';
 	var ids = new Array();
 
@@ -96,26 +95,11 @@ $(function() {
 								repName = data.reportName;
 								showSearch(data.repScreenList);
 								parms['uri'] = modelId;
-								$('#tree').reloadTree(parms);
+								$('#prodDatatree').reloadTree(parms);
 								backParam = {}
-							} else {
-								$("#showtable").html('<h2>无报表内容</h2>');
-							}
+							} 
 
 						});
-
-				// 通过repId获取是子产品还是母产品
-
-				// Joyin.ajax('queryProdList',
-				// parms,
-				// function(data) {
-				// if(data){
-				// $('#tree').reloadTree(data)
-				// }else{
-				// $("#showtable").html('<h2>产品树无内容</h2>');
-				// }
-				//
-				// });
 			}
 
 		}
@@ -658,10 +642,10 @@ $(function() {
 		return result;
 	}
 
-	$('#tree').joyinTree({
+	$('#prodDatatree').joyinTree({
 				onTreeLoadSuccess : function() {
 					if (pageModel == PAGE_MODEL_REFERENCE) {
-						var treeObj = $.fn.zTree.getZTreeObj("tree_tree");
+						var treeObj = $.fn.zTree.getZTreeObj("prodDatatree_tree");
 						var nodes = treeObj.getNodes();
 						for (var i = 0; i < nodes.length; i++) {
 							var node = nodes[i];
@@ -672,7 +656,7 @@ $(function() {
 			});
 
 	function expandAll() {
-		$.fn.zTree.getZTreeObj('tree_tree').expandAll(!$('#expandAll')
+		$.fn.zTree.getZTreeObj('prodDatatree_tree').expandAll(!$('#expandAll')
 				.is(':checked'));
 	};
 
@@ -703,7 +687,7 @@ $(function() {
 	}
 
 	function getProds() {
-		var treeObj = $.fn.zTree.getZTreeObj("tree_tree");
+		var treeObj = $.fn.zTree.getZTreeObj("prodDatatree_tree");
 		var nodes = treeObj.getCheckedNodes();
 		var params = new Array();
 		for (var i = 0; i < nodes.length; i++) {
@@ -738,10 +722,10 @@ $(function() {
 							submit("docx");
 						});
 
-				$('#showtable').width((docW - 350) + "px");
-				$('#showtable').height((docH - tabHeadUlH) + "px");
-
-				tree.children('div').eq(1).height((docH - tabHeadUlH) + "px");
+//				$('#showtable').width((docW - 350) + "px");
+				tree.children('div').eq(1).height((docH - 100) + "px");
+				$('#prodDatatree').height((docH - 85) + "px");
+				$('#showtable').height((docH - 130) + "px");
 
 				$('#expandAll').next().on('click', function() {
 							expandAll();

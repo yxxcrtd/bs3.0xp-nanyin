@@ -71,13 +71,15 @@ public class MatureReportDataService implements IReportDataService {
 			//判断是普通产品还是子产品
 			if (StringUtil.equals("batch", paraMap.get("opttype"))) {
 				RepProdInfo info=reportRkcpjz001Mapper.getPProdInfo(paraMap);
-				if(StringUtil.isNotEmpty(info)){
+				if(info!=null ){
 					paraMap.put("pprodId",info.getpProdId());
 					paraMap.put("prodId",info.getProdId());
 				}else {
 					RepProdInfo info2=reportRkcpjz001Mapper.getPProdId(paraMap);
-					paraMap.put("pprodid",info2.getpProdId());
-					paraMap.put("prodId",info2.getProdId());
+					if ( info2!=null ) {
+						paraMap.put("pprodid",info2.getpProdId());
+						paraMap.put("prodId",info2.getProdId());
+					}
 				}
 			}
 
@@ -126,20 +128,20 @@ public class MatureReportDataService implements IReportDataService {
             	for ( DisBonusList bonus:listBonus ) {
             		custProfit = custProfit.add(bonus.getDisBonusMoney());
     	        	if ( bonus.getProfitBaseDate().compareTo(settDate)>0 ) { //取最近的分红计划的年化收益率
-    	        		settDate = bonus.getProfitBaseDate();
+    	        		settDate = bonus.getLastProfitBaseDate();
     	        		yearYield = bonus.getYield(); 
     	        		thisUnitBonus = bonus.getUnitBonus();
     	        	}
             	}
-            	if ( listBonus.size()==0 ) {//首次分红
+            	if ( listBonus.size()==1 ) {//首次分红
             		accuValue = BigDecimal.ONE.add( thisUnitBonus);
             	} else {
 	        		searchParam.put("settDate", sdf.format(settDate));
 		        	RepProdIndex prodIndexGz = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
 		        	if ( prodIndexGz!=null && prodIndexGz.getUnitValueT()!=null )
-		        		accuValue = prodIndexGz.getUnitValueT().add( thisUnitBonus);
+		        		accuValue = prodIndexGz.getUnitValueT().add( thisUnitBonus).setScale(4,BigDecimal.ROUND_DOWN);
 		        	else
-		        		accuValue = thisUnitBonus;
+		        		accuValue = thisUnitBonus.setScale(4,BigDecimal.ROUND_DOWN);
             	}
 
             }
@@ -209,7 +211,7 @@ public class MatureReportDataService implements IReportDataService {
         	
 			matureReportDto.setSumValueAmt(accuValue);
 			matureReportDto.setRefYearYield(yearYield.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN).toPlainString() );
-			matureReportDto.setCustProfit(custProfit);
+			matureReportDto.setCustProfit(custProfit.setScale(2,BigDecimal.ROUND_DOWN));
 			
 			//查询所有相关费用，通过主产品查找，如果是子产品id，还要找到主产品id
 			List<RepFeeTrd> listFee = matureReportMapper.selectFees(paraMap);
