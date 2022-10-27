@@ -375,6 +375,7 @@ public class PoiReportService {
 		//查找之前生成未确认得数据，记录手工上传得数据
 		RepReveal unConfirmRepReveal = reportDealService.getUnConfirmRepReveal(repReveal);
 
+		//repReveal.setProdid(params.get("prodId").toString());
 		reportDealService.updateDataStatus(repReveal);  //逻辑删除已生成未确认的
 
 		// 将待组装数据成日志信息
@@ -396,7 +397,11 @@ public class PoiReportService {
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_012")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_013")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_014")
-				||StringUtil.equals(repReveal.getRepId(),"CP_001_007_001"))){
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_007_001")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_003_001")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_003_002")
+			)){
+			
 			if (StringUtil.isNotEmpty(params.get("prodId"))) {
 				repReveal.setProdid(params.get("prodId").toString());
 			} else {

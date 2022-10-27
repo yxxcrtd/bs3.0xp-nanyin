@@ -286,11 +286,11 @@
     <select id="selectRelDealList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto">
         select
         A.PROD_ID,
-        to_char(A.EFFDATE,'yyyy-mm-dd') effdateStr,
-        to_char(A.EFFDELIDATE,'yyyy-mm-dd') effdelidateStr
+        to_char(A.EFFDATE,'yyyy/mm/dd') effdateStr,
+        to_char(A.EFFDELIDATE,'yyyy/mm/dd') effdelidateStr
         from REP_REL_DEAL A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFFDATE,'yyyy-mm-dd'),to_char(A.EFFDELIDATE,'yyyy-mm-dd')) IN (" separator="," close=") and A.STATUS='E'">
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.EFFDATE,'yyyy/mm/dd'),to_char(A.EFFDELIDATE,'yyyy/mm/dd')) IN (" separator="," close=") and A.STATUS='E'">
                 (#{item.prodId},#{item.effdateStr},#{item.effdelidateStr})
             </foreach>
         </where>

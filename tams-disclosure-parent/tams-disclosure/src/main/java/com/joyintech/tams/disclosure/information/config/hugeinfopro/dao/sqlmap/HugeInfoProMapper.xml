@@ -218,6 +218,7 @@
     <select id="selectByBusPK"
             resultType="com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto">
         select
+        distinct
            REDEMPTION_ID REDEMPTION_ID, PROD_ID PROD_ID, PROD_REGIST_NO PROD_REGIST_NO, IS_SALES_AGENCY IS_SALES_AGENCY,
            DEAL_DATE DEAL_DATE, TRIGGER_REMARK TRIGGER_REMARK, REJECT_REMARK REJECT_REMARK,
            RPT_ISSUE_DATE RPT_ISSUE_DATE, DATA_STATUS DATA_STATUS, DATA_SOURCE DATA_SOURCE,
@@ -227,6 +228,7 @@
            where PROD_ID = #{prodId,jdbcType=VARCHAR} and
             PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
             and DEAL_DATE = #{dealDate,jdbcType=DATE}
+            and DATA_STATUS = 'E'
 
     </select>
 
