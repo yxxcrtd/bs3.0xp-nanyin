@@ -877,7 +877,7 @@ public class PoiReportService {
             return uploadFile;
         } catch (Exception e) {
             logger.error("生成报表文件异常", e);
-            throw new RuntimeException("生成报表文件异常"+e);
+            throw new RuntimeException("生成报表文件异常",e);
         } finally {
             if (bos != null) {
                 try {

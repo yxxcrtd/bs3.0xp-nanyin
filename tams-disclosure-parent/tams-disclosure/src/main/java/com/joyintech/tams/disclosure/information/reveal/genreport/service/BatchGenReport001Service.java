@@ -121,7 +121,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 			dataMap.put("prodId", params.get("prodId"));
 		} catch (Exception e) {
 			result.setResult("F");
-			result.setRemark("报表数据查询异常，" + e);
+			result.setRemark("报表数据查询异常，详情联系管理员。");
 			logger.error("生成报表失败：" + "报表数据查询异常。", e);
 			return result;
 		}
@@ -139,7 +139,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 //				result.setResult("F");
 //				result.setRemark("生成报表失败：" + "报表数据检查异常，"+e.getMessage() );
 			logger.error("生成报表失败：" + "报表数据检查异常。", e);
-			throw new Exception("报表数据检查异常，" + e);
+			throw new Exception("报表数据检查异常，" , e);
 		}
 
 		try {
@@ -163,7 +163,7 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 //				result.setResult("F");
 //				result.setRemark("生成报表失败：" + "生成报表文件或者流程异常。"+e.getMessage());
 			logger.error("生成报表失败：" + "生成报表文件或者流程异常。", e);
-			throw new Exception("生成报表文件或者流程异常，" + e);
+			throw new Exception("生成报表文件或者流程异常，" , e);
 		}
 		return result;
 	}
