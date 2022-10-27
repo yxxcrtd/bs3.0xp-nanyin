@@ -109,7 +109,6 @@
             </if>
         </set>
         where PROD_ID = #{prodId} and  OPERATION_START_DATE = #{operationStartDate,jdbcType=DATE}
-        and OPERATION_START_DATE != #{operationStartDateO,jdbcType=DATE}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto" >
         update DIS_PROD_PLAN
