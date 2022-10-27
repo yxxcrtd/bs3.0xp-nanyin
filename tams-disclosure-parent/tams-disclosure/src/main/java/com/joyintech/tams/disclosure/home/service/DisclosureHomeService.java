@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.disclosure.home.dto.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +35,6 @@ import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 //import com.joyintech.tams.disclosure.common.util.DateCalcUtil;
 //import com.joyintech.tams.disclosure.common.util.ReportGlobalConstant;
 //import com.joyintech.tams.disclosure.common.util.ServiceApplication;
-import com.joyintech.tams.disclosure.home.dto.InfoAreaDto;
-import com.joyintech.tams.disclosure.home.dto.RepFtpPathDto;
-import com.joyintech.tams.disclosure.home.dto.RevalInfo;
-import com.joyintech.tams.disclosure.home.dto.SubmitInformationRegistrationDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
 /**
@@ -525,5 +522,25 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
                     break;
             }
         }
+    }
+
+    public Map<String, RepRevealInfo> searchRevealList(List<String> menulist) {
+        Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
+
+        List<RepRevealInfo> dtoList = new ArrayList<RepRevealInfo>();
+
+        for (String menuId : menulist) {
+            RepRevealInfo repRevealInfo=new RepRevealInfo();
+            repRevealInfo.setExpectRevealNum("111");
+            repRevealInfo.setRevealNum("1111");
+            repRevealInfo.setGenFailNum("222");
+            repRevealInfo.setToBeReviewedNum("333");
+            repRevealInfo.setToBeConfirmedNum("444");
+            repRevealInfo.setToBeTgReviewedNum("555");
+            repRevealInfo.setToBeRevealedNum("666");
+            resultMap.put(menuId,repRevealInfo);
+        }
+
+        return resultMap;
     }
 }

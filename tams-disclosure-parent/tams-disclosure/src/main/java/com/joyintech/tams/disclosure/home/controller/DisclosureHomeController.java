@@ -10,12 +10,10 @@
 
 package com.joyintech.tams.disclosure.home.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.home.dto.RepRevealInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -213,4 +211,11 @@ public class DisclosureHomeController extends BaseController {
        result.setData(dataMap);
        return result;
    }
+
+    @RequestMapping("/searchRevealList")
+    @ResponseBody
+    public Map<String, RepRevealInfo> searchRevealList() {
+        List<String> menulist= Arrays.asList("01", "02","03", "04","05", "06","07","08","99");
+        return reportHomeService.searchRevealList(menulist);
+    }
 }
