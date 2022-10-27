@@ -151,7 +151,7 @@
         from REP_PROD_INFO info1
         left join REP_PROD_INFO info2 on info1.p_prod_id=info2.prod_id
         where info1.status='E' 
-        info1.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and info1.PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
     
 </mapper>
