@@ -265,7 +265,7 @@ public class BatchGenReport001Contoller extends BaseController {
 				dto.setProdName(prod.getProdName());
 				dto.setGenDate((Date)params.get("platformDate"));
 				dto.setResult("F");
-				dto.setRemark("生成报表失败："+e);
+				dto.setRemark("生成报表失败，请联系管理员。");
 				logger.error("生成报表失败",e);
 			}
 			if ( "F".equals(dto.getResult())) {
