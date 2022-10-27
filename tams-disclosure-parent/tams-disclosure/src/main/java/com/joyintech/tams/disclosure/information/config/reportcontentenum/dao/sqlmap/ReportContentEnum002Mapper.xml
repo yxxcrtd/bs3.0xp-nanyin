@@ -126,6 +126,7 @@
 
     <select id="selectProdInfo" resultType="com.joyintech.framework.select.TreeNode">
         select
+        distinct
         PROD_ID id,
         PROD_NAME name,
         case PD_STATUS
