@@ -49,11 +49,11 @@
 		,bc.status status,bc.prod_id prodId,bc.eff_date effDate,bc.exp_date expDate,bc1.proportion zzqj,bc3.proportion zzcf,bc4.proportion zz500,bc2.proportion hs300,
 		bc.a updateTime,
 		bc.UPDATE_USER updateUser
-		from (select distinct status,prod_id,eff_date,exp_date ,to_char(UPDATE_TIME,'yyyy-mm-dd hh:mm:ss') a ,UPDATE_USER from rep_prod_basic_change) bc
-		left join rep_prod_basic_change bc1 on bc.prod_id=bc1.prod_id and bc.eff_date=bc1.eff_date and bc.exp_date=bc1.exp_date and bc1.data_type='01' and bc.status = bc1.status
-		left join rep_prod_basic_change bc2 on bc.prod_id=bc2.prod_id and bc.eff_date=bc2.eff_date and bc.exp_date=bc2.exp_date and bc2.data_type='02' and bc.status = bc2.status
-		left join rep_prod_basic_change bc3 on bc.prod_id=bc3.prod_id and bc.eff_date=bc3.eff_date and bc.exp_date=bc3.exp_date and bc3.data_type='03' and bc.status = bc3.status
-		left join rep_prod_basic_change bc4 on bc.prod_id=bc4.prod_id and bc.eff_date=bc4.eff_date and bc.exp_date=bc4.exp_date and bc4.data_type='04' and bc.status = bc4.status
+		from (select distinct status,prod_id,eff_date,exp_date ,to_char(UPDATE_TIME,'yyyy-mm-dd hh:mm:ss') a ,group_id,UPDATE_USER from rep_prod_basic_change) bc
+		left join rep_prod_basic_change bc1 on bc.prod_id=bc1.prod_id and bc.eff_date=bc1.eff_date and bc.exp_date=bc1.exp_date and bc1.data_type='01' and bc.status = bc1.status and bc.group_id=bc1.group_id
+		left join rep_prod_basic_change bc2 on bc.prod_id=bc2.prod_id and bc.eff_date=bc2.eff_date and bc.exp_date=bc2.exp_date and bc2.data_type='02' and bc.status = bc2.status and bc.group_id=bc2.group_id
+		left join rep_prod_basic_change bc3 on bc.prod_id=bc3.prod_id and bc.eff_date=bc3.eff_date and bc.exp_date=bc3.exp_date and bc3.data_type='03' and bc.status = bc3.status and bc.group_id=bc3.group_id
+		left join rep_prod_basic_change bc4 on bc.prod_id=bc4.prod_id and bc.eff_date=bc4.eff_date and bc.exp_date=bc4.exp_date and bc4.data_type='04' and bc.status = bc4.status and bc.group_id=bc4.group_id
 		<where>
 			<if test="prodIdList != null and prodIdList.size()>0">
 				AND	bc.PROD_ID in
