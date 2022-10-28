@@ -101,10 +101,10 @@
                MAX(mark.HIS_NO) his_no,
                  mark.WORKFLOW_ID
           FROM SYS_DATA_PROCESS_MARK mark
-WHERE mark.BUSINESS_DATA_PK2 = #{businessDataPk1} GROUP BY mark.WORKFLOW_ID) maxmark
+WHERE mark.BUSINESS_DATA_PK2 = #{prodId} and mark.WORKFLOW_ID != #{workflowId,jdbcType=VARCHAR} GROUP BY mark.WORKFLOW_ID) maxmark
 WHERE maxmark.his_no=mark.his_no
 AND maxmark.workflow_id =mark.workflow_id AND mark.status IN('A','U','P')
-AND mark.business_data_pk2=#{businessDataPk1}
+AND mark.business_data_pk2=#{prodId}
 	</select>
 
     <update id="deleteProdAssetByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
