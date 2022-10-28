@@ -135,4 +135,15 @@ public class RepFloatFee002Controller extends BaseController {
             return false;
         }
     }
+
+    @ResponseBody
+    @RequestMapping("checkExistCEData")
+    public Boolean checkExistCEData(@RequestBody RepFloatFeeDto dto){
+        RepFloatFeeDto repFloatFeeDto = repFloatFeeService.checkExistCEData(dto);
+        if(repFloatFeeDto == null){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

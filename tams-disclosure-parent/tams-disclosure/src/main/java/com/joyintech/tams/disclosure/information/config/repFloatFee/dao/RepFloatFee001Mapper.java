@@ -32,5 +32,7 @@ public interface RepFloatFee001Mapper {
 
     RepFloatFeeDto checkExistData(RepFloatFeeDto record);
 
+    RepFloatFeeDto checkExistCEData(RepFloatFeeDto record);
+
     List<RepFloatFeeDto> selectFloatFeeList(@Param("list") List<RepFloatFeeDto> list);
 }
