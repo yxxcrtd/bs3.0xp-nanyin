@@ -133,7 +133,7 @@ public class GetPrdInfoSelectService extends BaseService {
 			    //产品要素调整
 				paraMap.put("flag","02");
 			}else if (StringUtil.equals(repId, "CP_001_004_016")
-					||StringUtil.equals(repId, "CP_001_004_016")) {
+					||StringUtil.equals(repId, "CP_001_004_017")) {
 				//巨额赎回
 				paraMap.put("flag","03");
 			}
