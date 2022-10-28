@@ -330,12 +330,9 @@
 		select * from REP_PROD_BASIC_CHANGE
 		where PROD_ID = #{prodId,jdbcType=VARCHAR}
 		and (
-			(EXP_DATE <![CDATA[>=]]> #{effDate,jdbcType=DATE} 
-				and EFF_DATE <![CDATA[<=]]> #{expDate,jdbcType=DATE} )
-			or
-			(EFF_DATE <![CDATA[>=]]> #{effDate,jdbcType=DATE} 
-				and EFF_DATE <![CDATA[<=]]> #{expDate,jdbcType=DATE} )
-		)		
+			EXP_DATE <![CDATA[>=]]> #{effDate,jdbcType=DATE} 
+				and EFF_DATE <![CDATA[<=]]> #{expDate,jdbcType=DATE} 
+		)
 		and STATUS in( 'E','A')
 	</select>
 
