@@ -85,11 +85,12 @@
     <select id="selectByBusPK"
             resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
          select
-           <include refid="com.joyintech.tams.common.base.dao.DisBonusListMapper.Base_Column_List" />
+           dbl.PROD_ID     prodId,
+           dbl.PROFIT_BASE_DATE      profitBaseDate
          from DIS_BONUS_LIST dbl
          where
                PROD_ID =  #{prodId,jdbcType=VARCHAR} and
-               PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}
+               PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE} and DATA_STATUS = 'D'
     </select>
 
     <update id="updateByBusKey">
@@ -242,8 +243,9 @@
     </select>
     <select id="isRepeated"
             resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
-
-            select DATA_STATUS
+            select
+            distinct
+            DATA_STATUS
                from
             DIS_BONUS_LIST
             where

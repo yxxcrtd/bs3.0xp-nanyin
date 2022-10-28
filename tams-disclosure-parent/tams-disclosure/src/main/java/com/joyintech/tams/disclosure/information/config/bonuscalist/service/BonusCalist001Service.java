@@ -270,7 +270,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                     item.setUpdateUser(CommonUtil.getUserName());
                     item.setProdRegistNo(re);
                     BonusCalist001Dto dto = this.selectByBusPK(map);
-                    if (dto != null && !StringUtil.equals(dto.getDataStatus(),"D")) {
+                    if (dto != null ) {
                         bonusCalist001Mapper.updateByBusKey(item);
                     } else {
                         item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
