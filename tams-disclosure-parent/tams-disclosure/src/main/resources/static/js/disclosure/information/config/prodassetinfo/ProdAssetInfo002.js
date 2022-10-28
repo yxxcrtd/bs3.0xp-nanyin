@@ -17,6 +17,7 @@
         var object = $.serializeToObject('#submitForm');
         object.pageModel = pageModel;
         object.operateType = operateType;
+        object.workflowId=workflowId;
         Joyin.ajaxJson(basePath + 'disclosure/information/config/prodassetinfo/ProdAssetInfo002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 if(operateType === 'save') {

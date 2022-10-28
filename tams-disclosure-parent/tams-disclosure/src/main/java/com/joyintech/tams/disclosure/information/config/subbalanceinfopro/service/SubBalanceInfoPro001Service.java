@@ -70,7 +70,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
             map.put("balanceDate",dto.getBalanceDateStr());
             map.put("subjectNo",dto.getSubjectNo());
             SubBalanceInfoPro001Dto dto1 = subBalanceInfoProMapper.selectByPrimaryKey(map);
-            if (dto1!=null){
+            if (dto1!=null && !StringUtil.equals(dto1.getStatus(),"D")){
                 dto.setStatus("E");
                 dto.setErrormsg("");
                 dto.setUpdateUser(CommonUtil.getUserName());

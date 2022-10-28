@@ -202,7 +202,7 @@
         from REP_FLOAT_FEE T
         where T.PROD_ID = #{prodId,jdbcType=VARCHAR}
         and T.AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
-        and T.STATUS in ('E','A')
+        and T.STATUS ='A'
     </select>
 
     <select id="selectFloatFeeList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto">

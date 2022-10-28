@@ -188,7 +188,9 @@
     </select>
 
     <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
-        select rft.PROD_ID prodId,
+        select
+        distinct
+        rft.PROD_ID prodId,
                rpi.PROD_NAME prodName,
                rft.PAY_DATE payDate,
                rft.FEE_TYPE feeType,
