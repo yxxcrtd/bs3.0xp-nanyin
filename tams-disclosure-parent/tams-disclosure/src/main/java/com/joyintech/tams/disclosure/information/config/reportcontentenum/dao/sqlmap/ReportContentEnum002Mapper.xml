@@ -156,6 +156,7 @@
 
     <select id="selectProdInfo1" resultType="com.joyintech.framework.select.TreeNode">
         select
+        distinct
         PROD_ID id,
         PROD_NAME name,
         case PD_STATUS
@@ -185,6 +186,7 @@
 
     <select id="selectProdInfo2" resultType="com.joyintech.framework.select.TreeNode">
         SELECT
+        distinct
         T1.PROD_ID id,
         nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') name,
         case T1.PD_STATUS
@@ -290,6 +292,7 @@
 
     <select id="selectProdBonusInfo" resultType="com.joyintech.framework.select.TreeNode">
         select
+        distinct
         PROD_ID id,
         PROD_ID || PROD_NAME name,
         case PD_STATUS
@@ -319,6 +322,7 @@
 
     <select id="selectProdHugeInfo" resultType="com.joyintech.framework.select.TreeNode">
         select
+        distinct
         d.PROD_ID id,
         d.PROD_ID || r.PROD_NAME name,
         case r.PD_STATUS
