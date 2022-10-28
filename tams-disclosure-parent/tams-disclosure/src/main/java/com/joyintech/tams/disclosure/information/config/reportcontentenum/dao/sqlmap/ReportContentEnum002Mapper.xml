@@ -250,6 +250,7 @@
 
     <select id="selectProdInfoSon" resultType="com.joyintech.framework.select.TreeNode">
         select
+        distinct
         prod.PROD_ID id,
         prod.PROD_ID || case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
         else prod.PROD_NAME end name,
