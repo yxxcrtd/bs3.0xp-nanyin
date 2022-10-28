@@ -108,6 +108,10 @@ public class UnClaimAssetDetail002Controller extends BaseController {
             }
         }
 
+        if (unClaimAssetDetail001Service.checkOverlappingData(dto)){
+            return new AjaxResult("生效区间重叠!", MessageType.错误消息);
+		}
+
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }

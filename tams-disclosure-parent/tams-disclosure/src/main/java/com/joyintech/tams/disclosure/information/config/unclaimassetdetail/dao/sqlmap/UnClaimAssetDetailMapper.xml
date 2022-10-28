@@ -604,4 +604,20 @@
             DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
             where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
     </update>
+
+    <select id="checkOverlappingData" resultType="int">
+        select count(1) from DIS_NOSTD_CREDITOR r1
+            where 1=1
+            and r1.PROD_ID=#{prodId,jdbcType=VARCHAR}
+            AND ((r1.EFF_DATE &lt;= #{effDate,jdbcType=DATE} and r1.EFF_END_DATE &gt;= #{effDate,jdbcType=DATE}) or
+                   (r1.EFF_DATE &lt;= #{effEndDate,jdbcType=DATE} and r1.EFF_END_DATE &gt;= #{effEndDate,jdbcType=DATE})
+                or (#{effDate,jdbcType=DATE} &lt;= r1.EFF_DATE and  #{effEndDate,jdbcType=DATE} &gt;=r1.EFF_END_DATE)
+                )
+            <if test="nostdAssetIdList != null and nostdAssetIdList.size() > 0 ">
+                <foreach collection="nostdAssetIdList" item="item" open=" AND r1.NOSTD_ASSET_ID NOT in (" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            and DATA_STATUS !='D'
+    </select>
 </mapper>

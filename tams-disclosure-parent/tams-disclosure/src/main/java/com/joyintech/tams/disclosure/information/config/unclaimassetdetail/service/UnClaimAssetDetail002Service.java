@@ -14,6 +14,7 @@ import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.Di
 import com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -85,6 +86,20 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
 //            }
 //            画面dto的列表中的非标资产逐一插入
             for (UnClaimAssetDetailDto unclaimDto:dto.getUnclaimList()){
+                if(!StringUtil.isNotEmpty(unclaimDto.getNostdAssetId())){
+                    unclaimDto.setNostdAssetId(IDGenerator.generate(36));
+
+                }
+                unclaimDto.setCreateTime(dto.getCreateTime());
+                unclaimDto.setUpdateTime(dto.getUpdateTime());
+                unclaimDto.setCreateUser(CommonUtil.getUserName());
+                unclaimDto.setUpdateUser(CommonUtil.getUserName());
+                unclaimDto.setProdId(dto.getProdId());
+                unclaimDto.setEffDate(dto.getEffDate());
+                unclaimDto.setEffEndDate(dto.getEffEndDate());
+                unclaimDto.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                //数据来源
+                unclaimDto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
                 unClaimAssetDetailMapper.insert(unclaimDto);
             }
 //            dto.setSort(unClaimAssetDetailMapper.selectNostdCount()+1);

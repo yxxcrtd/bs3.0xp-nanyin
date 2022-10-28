@@ -483,7 +483,21 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             else {
-                entities.add(this.convertToEntity(rowData));
+                UnClaimAssetDetailDto dto= this.convertToEntity(rowData);
+                Map<String, Object> param = new HashMap<>();
+                param.put("prodId", dto.getProdId());
+                param.put("effDate",dto.getEffDate());
+                param.put("effEndDate", dto.getEffEndDate());
+                param.put("effEndDate", dto.getEffEndDate());
+                if(unClaimAssetDetailMapper.checkOverlappingData(param)>0){
+                    message.add("生效区间重叠!");
+                    checkResult.add(new ExcelValidDto(rowData.get(0)
+                            + GlobalConstant.UNDER_LINE + rowData.get(7)
+                            + GlobalConstant.UNDER_LINE + rowData.get(8),
+                            String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+                }else {
+                    entities.add(this.convertToEntity(rowData));
+                }
             }
         }
         return checkResult;
@@ -555,5 +569,19 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             return true;
         }
         return false;
+    }
+
+    //检查是否存在区间重叠
+    //存在 返回 true
+    public boolean checkOverlappingData(UnClaimAssetDetailDto dto){
+        Map<String, Object> map = new HashMap<>();
+        map.put("prodId", dto.getProdId());
+        map.put("effDate",dto.getEffDate());
+        map.put("effEndDate", dto.getEffEndDate());
+
+        List<String>nostdAssetIdList=dto.getUnclaimList().stream().filter(s -> s.getNostdAssetId()!=null).map(UnClaimAssetDetailDto::getNostdAssetId).collect(Collectors.toList());
+        map.put("nostdAssetIdList", nostdAssetIdList);
+
+        return unClaimAssetDetailMapper.checkOverlappingData(map)>0;
     }
 }
