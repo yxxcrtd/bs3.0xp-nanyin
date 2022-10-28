@@ -1,6 +1,24 @@
 package com.joyintech.tams.disclosure.information.config.prodfeedealInterf.service;
 
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -9,7 +27,10 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
@@ -22,17 +43,6 @@ import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeDealInterfDto> implements BaseProcessService<SvrProdFeeDealInterfDto> {
@@ -206,6 +216,16 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             }
             List<SvrProdFeeDealInterfDto> entities = this.convertToBean(dataList);
             List<SvrProdFeeDealInterfDto> data = this.selectFeeDealByKey(entities);
+            
+            //判断是否是有效产品，检查产品已删除的数据，过滤掉
+//            entities = entities.stream().filter( item->
+//            	svrProdFeeDealInterfMapper.selectEffProdId(item.getProdId())!=null
+//            ).collect(Collectors.toList());
+//            if ( entities.size()==0 ) {
+//                webResult.setMessage("无有效的数据：数据格式错误或者是无效产品的费用数据。", MessageType.错误消息);
+//                return webResult;
+//            }
+            
             if (data != null && data.size() > 0) {
                 Map<String, List<SvrProdFeeDealInterfDto>> map = entities.stream().collect(
                         JoyinCollectors.groupingBy(x ->
@@ -310,22 +330,21 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         return equtiyList;
     }
 
-    public static boolean isDateStr(String str) {
+    public static String isDateStr(String str) {
         boolean result=true;
+        String dateStr =null;
         SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         try {
             format.setLenient(false);
-            format.parse(str);
+            Date d = format.parse(str);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            dateStr = sdf.format(d);
             result=true;
 
         } catch (Exception var3) {
             result=false;
         }
-        String yearStr=str.split("/")[0];
-        if(yearStr.startsWith("0")||yearStr.length()!=4){
-            result=false;
-        }
-        return result;
+        return dateStr;
     }
     public static boolean isBigDecimal(String str) {
         Pattern NUMERIC_PATTERN = Pattern.compile("^(\\-|\\+)?\\d+(\\.\\d+)?$");
@@ -361,7 +380,9 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                     map.put("prodId", item.getProdId());
                     map.put("feeType", item.getFeeType());
                     map.put("payDate", item.getPayDate());
+                    map.put("status","E");
                     item.setUpdateUser(CommonUtil.getUserName());
+
                     if (null != this.selectData(map)){
                         this.doComplete(item, OperationType.MODIFY);
                     } else {
@@ -416,9 +437,14 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             }
             if (!StringUtil.isNotEmpty(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "支付日"));
-            } else if (!isDateStr(rowData.get(4))) {
+            }
+            String payDateStr = isDateStr(rowData.get(4));
+            if ( payDateStr==null || isDateStr(payDateStr).length()==0 ) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "支付日"));
-            } else if (rowData.get(4).compareTo(DateUtil.format(iPlatformDate.getSysDate(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
+            } else {
+            	rowData.set(4,payDateStr);
+            }
+            if (rowData.get(4).compareTo(DateUtil.format(iPlatformDate.getSysDate(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
                 message.add("支付日只能小于等于平台日。");
             }
             if(StringUtil.isNotEmpty(rowData.get(3)) && !isBigDecimal(rowData.get(3))){
