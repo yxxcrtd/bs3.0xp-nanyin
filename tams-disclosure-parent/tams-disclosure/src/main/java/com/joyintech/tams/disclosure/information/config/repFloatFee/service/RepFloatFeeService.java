@@ -417,4 +417,7 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
     public RepFloatFeeDto checkExistData(RepFloatFeeDto dto) {
         return repFloatFee001Mapper.checkExistData(dto);
     }
+    public RepFloatFeeDto checkExistCEData(RepFloatFeeDto dto) {
+        return repFloatFee001Mapper.checkExistCEData(dto);
+    }
 }

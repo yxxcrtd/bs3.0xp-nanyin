@@ -20,7 +20,12 @@ var RepFloatFee002 = function() {
             param.aboveAmt = $("#aboveAmt").val();
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/check',param,function(result){
                 if(result){
-                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistData', param, function(checkResult) {
+                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistData', param, function(checkResult){
+                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistCEData', param, function(checkCEResult) {
+                        if (checkCEResult) {
+                            Joyin.error("数据已存在，不允许新增！");
+                        }
+                    else{
                         if(checkResult){
                             Joyin.confirm("有已删除的数据，是否覆盖", function () {
                                 if(operateType === 'save') {
@@ -39,6 +44,8 @@ var RepFloatFee002 = function() {
                                 WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/save', param, "RepFloatFee002_btn_submit");
                             }
                         }
+                    }
+                    })
                     })
 
                 }

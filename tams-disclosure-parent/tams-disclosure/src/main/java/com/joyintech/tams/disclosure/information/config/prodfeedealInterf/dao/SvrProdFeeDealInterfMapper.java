@@ -38,4 +38,6 @@ public interface SvrProdFeeDealInterfMapper {
     SvrProdFeeDealInterfDto checkExistData(SvrProdFeeDealInterfDto record);
 
     List<SvrProdFeeDealInterfDto> selectFeeDealList(@Param("list") List<SvrProdFeeDealInterfDto> list);
+    
+    String selectEffProdId(@Param("prodId") String prodId);
 }
