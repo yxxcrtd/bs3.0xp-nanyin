@@ -120,7 +120,7 @@ public class RepInvestAccount002Controller extends BaseController {
         if(repInvestAccountDto == null){
             return false;
         }else{
-            return true;
+            return false;
         }
     }
 
