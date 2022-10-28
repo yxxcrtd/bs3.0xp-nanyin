@@ -266,8 +266,8 @@ INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 VALUES ('ReportConfirmManage006', 'DIS', '/disclosure/information/reveal/reportconfirm/ReportConfirmManage006', '/disclosure/information/reveal/reportconfirm/ReportConfirmManage006', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
 
 --增加手工批量生成报表的菜单:chenxc
-INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('BatchGenReport001', 'DIS', '/disclosure/information/reveal/genreport/BatchGenReport001', '/disclosure/information/reveal/genreport/BatchGenReport001', 'REPORT_006_002_106', '02', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
-INSERT INTO SYS_MENU(MENU_ID, SYSTEM_CODE, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
+--INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('BatchGenReport001', 'DIS', '/disclosure/information/reveal/genreport/BatchGenReport001', '/disclosure/information/reveal/genreport/BatchGenReport001', 'REPORT_006_002_106', '02', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
+--INSERT INTO SYS_MENU(MENU_ID, SYSTEM_CODE, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
 
 -- add by zhengxiaolian 2022-10-24 产品树形选择页面 start
 delete from SYS_PAGE where PAGE_ID = 'ReportContentEnum004';

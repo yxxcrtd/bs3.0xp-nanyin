@@ -48,5 +48,5 @@ public interface ProdAssetInfo002Mapper extends DisProdAssetMapper {
 
     int insertProdAssetInfo(ProdAssetInfoDto dto);
 
-    List<ProcessMark> getWorklowData(String prodId);
+    List<ProcessMark> getWorklowData(ProdAssetInfoDto dto);
 }

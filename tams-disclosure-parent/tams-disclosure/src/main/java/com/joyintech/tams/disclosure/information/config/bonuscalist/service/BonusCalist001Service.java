@@ -270,7 +270,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                     item.setUpdateUser(CommonUtil.getUserName());
                     item.setProdRegistNo(re);
                     BonusCalist001Dto dto = this.selectByBusPK(map);
-                    if (dto != null && !StringUtil.equals(dto.getDataStatus(),"D")) {
+                    if (dto != null ) {
                         bonusCalist001Mapper.updateByBusKey(item);
                     } else {
                         item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
@@ -531,9 +531,11 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             BonusCalist001Dto dto1 = bonusCalist001Mapper.isRepeated(bonusCalist001Dto);
             if (dto1!=null){
                  bonusCalist001Mapper.insert(bonusCalist001Dto);
-            }else
+            }else{
                 bonusCalist001Mapper.deleteByBusKey(bonusCalist001Dto);
                 bonusCalist001Mapper.insert(bonusCalist001Dto);
+            }
+
         }
          return 1;
         }

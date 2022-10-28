@@ -105,7 +105,7 @@ public class ProdAssetInfoValidator implements BeanValidator {
                 param.put("excludeId",dto.getProdAssetId());
             }
             List<ProdAssetInfoDto> prodAssetInfoDtos=prodAssetInfo002Service.selectProdAssetInfoByProdId(param);
-            List<ProdAssetInfoDto> worklowList=prodAssetInfo002Service.getWorklowData(dto.getProdId());
+            List<ProdAssetInfoDto> worklowList=prodAssetInfo002Service.getWorklowData(dto);
             if(prodAssetInfoDtos.size()>0){
                 for (ProdAssetInfoDto prodAssetInfoDto : prodAssetInfoDtos) {
                     if(!((DateUtil.compareDate(dto.getEffDate(),prodAssetInfoDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),prodAssetInfoDto.getEffDate())<0)

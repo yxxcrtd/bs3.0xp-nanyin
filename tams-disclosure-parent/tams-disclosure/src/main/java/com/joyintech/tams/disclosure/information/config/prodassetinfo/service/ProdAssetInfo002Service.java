@@ -102,8 +102,8 @@ public class ProdAssetInfo002Service extends CommonExportService<ProdAssetInfoDt
         return prodAssetInfo002Mapper.selectProdAssetInfoByProdId(param);
     }
 
-    public List<ProdAssetInfoDto> getWorklowData(String prodId) {
-        List<ProcessMark> processMarkList = prodAssetInfo002Mapper.getWorklowData(prodId);
+    public List<ProdAssetInfoDto> getWorklowData(ProdAssetInfoDto dto) {
+        List<ProcessMark> processMarkList = prodAssetInfo002Mapper.getWorklowData(dto);
         List<ProdAssetInfoDto> list = new ArrayList<>();
         if (processMarkList != null && processMarkList.size() > 0){
             for (ProcessMark processMark : processMarkList){

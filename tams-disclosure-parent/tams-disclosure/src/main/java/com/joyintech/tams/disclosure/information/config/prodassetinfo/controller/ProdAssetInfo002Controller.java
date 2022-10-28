@@ -71,11 +71,13 @@ public class ProdAssetInfo002Controller extends BaseController{
     public String init(Model model) {
         // 流程
         String workflowId = this.getParam("workflowId");
+        model.addAttribute("workflowId",workflowId);
         String prodAssetId=getParam("prodAssetId");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             ProdAssetInfoDto dto = prodAssetInfo002Service.getBussinessEntityByWorkflowId(
                     workflowId);
             model.addAttribute(GlobalConstant.ENTITY, dto);
+            model.addAttribute("workflowId", workflowId);
         }
         else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(prodAssetId)) {
             //通过主键查询数据
