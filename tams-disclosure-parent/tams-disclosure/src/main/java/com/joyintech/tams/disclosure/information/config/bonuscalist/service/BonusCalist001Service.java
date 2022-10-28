@@ -531,9 +531,11 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             BonusCalist001Dto dto1 = bonusCalist001Mapper.isRepeated(bonusCalist001Dto);
             if (dto1!=null){
                  bonusCalist001Mapper.insert(bonusCalist001Dto);
-            }else
+            }else{
                 bonusCalist001Mapper.deleteByBusKey(bonusCalist001Dto);
                 bonusCalist001Mapper.insert(bonusCalist001Dto);
+            }
+
         }
          return 1;
         }
