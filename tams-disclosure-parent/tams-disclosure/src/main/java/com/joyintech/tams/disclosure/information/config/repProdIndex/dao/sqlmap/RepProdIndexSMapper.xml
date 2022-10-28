@@ -348,7 +348,7 @@
         and T.STATUS != 'D'
     </select>
     <select id="selectProdId" resultType="java.lang.String">
-        SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
+        SELECT distinct PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
     </select>
 
     <select id="selectpProdId" resultType="java.lang.String">

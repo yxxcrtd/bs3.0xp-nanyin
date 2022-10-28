@@ -606,7 +606,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             if (StringUtil.isNotEmpty(dto1.getIsGrade()) && dto1.getIsGrade().equals("01")) {
                 RepProdIndexDto repProdIndexDto2 = this.selectPProdInfo(dto2);
                 RepProdIndexDto repProdIndexDto3 = this.selectPProd(dto2);
-                if (repProdIndexDto2 == null && repProdIndexDto3 != null) {
+                if (repProdIndexDto2 != null && repProdIndexDto3 != null) {
                     message.add("产品类型是净值型，对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等。");
                 }
             }
