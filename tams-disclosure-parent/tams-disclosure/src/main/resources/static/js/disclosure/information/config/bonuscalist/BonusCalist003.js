@@ -2,6 +2,8 @@ $(function() {
 
     function saveOrSubmit() {
         var object = $.serializeToObject('#submitForm');
+        var prodId = $('#prodId').val().join(",");
+        object.prodId = prodId;
         if (!object.prodId){
             Joyin.error("子产品代码不能为空！");
             return;
