@@ -3,6 +3,7 @@
 <mapper namespace="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao.SvrProdFeeDealInterfMapper">
     <select id="getProdInsId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
+        distinct
         PROD_ID id,
         PROD_NAME text,
         PROD_NAME object
