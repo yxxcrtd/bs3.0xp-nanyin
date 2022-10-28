@@ -23,7 +23,7 @@ var RepFloatFee002 = function() {
                     Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistData', param, function(checkResult){
                     Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistCEData', param, function(checkCEResult) {
                         if (checkCEResult) {
-                            Joyin.error("数据已存在，不允许新增！");
+                            Joyin.error("“子产品代码+确认日”不能同时与已有数据重复");
                         }
                     else{
                         if(checkResult){
