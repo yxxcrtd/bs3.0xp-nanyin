@@ -282,7 +282,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                 entity.setFeeType(" ");
             }
             if (StringUtil.isNotEmpty(list.get(4))) {
-                entity.setPayDateStr(list.get(4));
+                entity.setPayDateStr(this.isDateStr(list.get(4)));
             } else {
                 entity.setPayDateStr(" ");
             }
@@ -330,14 +330,14 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         return equtiyList;
     }
 
-    public static String isDateStr(String str) {
+    public String isDateStr(String str) {
         boolean result=true;
         String dateStr =null;
         SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
         try {
             format.setLenient(false);
             Date d = format.parse(str);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
             dateStr = sdf.format(d);
             result=true;
 
@@ -439,7 +439,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "支付日"));
             }
             String payDateStr = isDateStr(rowData.get(4));
-            if ( payDateStr==null || isDateStr(payDateStr).length()==0 ) {
+            if ( payDateStr==null || payDateStr.length()==0 ) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "支付日"));
             } else {
             	rowData.set(4,payDateStr);

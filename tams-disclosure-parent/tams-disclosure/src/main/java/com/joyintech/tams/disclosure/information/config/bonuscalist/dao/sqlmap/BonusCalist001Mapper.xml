@@ -248,6 +248,6 @@
             DIS_BONUS_LIST
             where
         PROD_ID =  #{prodId,jdbcType=VARCHAR} and
-        PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}
+        PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE} and DATA_STATUS = 'D'
     </select>
 </mapper>
