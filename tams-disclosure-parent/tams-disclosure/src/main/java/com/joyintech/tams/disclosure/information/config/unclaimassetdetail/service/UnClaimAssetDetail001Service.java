@@ -584,4 +584,23 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
 
         return unClaimAssetDetailMapper.checkOverlappingData(map)>0;
     }
+
+    public boolean checkOverlappingDataNew(UnClaimAssetDetailDto dto){
+        Map<String, Object> map = new HashMap<>();
+        map.put("prodId", dto.getProdId());
+        map.put("effDate",dto.getEffDate());
+        map.put("effEndDate", dto.getEffEndDate());
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("prodId", dto.getProdId());
+        params.put("effDate", dto.getEffDateStr());
+        params.put("effEndDate", dto.getEffEndDateStr());
+        params.put("dataStatus", dto.getDataStatus());
+        List<UnClaimAssetDetailDto> unclaimList = unClaimAssetDetail002Service.selectDetailList(params);
+        List<String>nostdAssetIdList=unclaimList.stream().filter(s -> s.getNostdAssetId()!=null).map(UnClaimAssetDetailDto::getNostdAssetId).collect(Collectors.toList());
+
+        map.put("nostdAssetIdList", nostdAssetIdList);
+
+        return unClaimAssetDetailMapper.checkOverlappingData(map)>0;
+    }
 }
