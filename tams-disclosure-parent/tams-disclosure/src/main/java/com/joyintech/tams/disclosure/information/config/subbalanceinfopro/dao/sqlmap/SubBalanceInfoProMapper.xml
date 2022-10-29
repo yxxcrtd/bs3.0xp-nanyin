@@ -75,7 +75,7 @@
    </select>
 
     <delete id="deleteByKey">
-        update BOK_BALANCE set STATUS = 'D'
+        update BOK_BALANCE set STATUS = 'D',UPDATE_USER=#{updateUser,jdbcType=VARCHAR},UPDATE_TIME=#{updateTime,jdbcType=TIMESTAMP}
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
         and BALANCE_DATE = #{balanceDate,jdbcType=DATE}
         and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
