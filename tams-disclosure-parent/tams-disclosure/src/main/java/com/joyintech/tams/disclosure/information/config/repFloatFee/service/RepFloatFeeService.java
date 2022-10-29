@@ -333,7 +333,7 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
             if (!StringUtil.isNotEmpty(rowData.get(0))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else if (!this.getProdId(rowData.get(0))) {
-                message.add("子产品代码未在系统中维护。");
+                message.add("产品代码未在产品基本信息表中维护。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(1))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品名称"));
