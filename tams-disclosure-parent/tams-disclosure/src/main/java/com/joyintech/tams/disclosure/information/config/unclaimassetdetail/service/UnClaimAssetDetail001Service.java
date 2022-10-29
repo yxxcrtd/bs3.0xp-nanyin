@@ -435,7 +435,7 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                 message.add("产品主代码在产品基本信息表中没有维护。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(1))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "融资顾客"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "融资客户"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "项目名称"));
