@@ -235,7 +235,7 @@ $(function () {
             if(index!=''){
                 msg='进行报表披露?';
                 Joyin.confirm(msg, function(){
-                	
+                    layui.layer.open({type:3});
             		var object = {}; 
             		object.data = JSON.stringify(rows);
             		object.operateType = 'submit';
@@ -246,6 +246,7 @@ $(function () {
                         object,
                         function(result) {
                             table.reload();
+                            layui.layer.closeAll();
                         }
                     );
                     /*//启动流程操作
@@ -303,7 +304,6 @@ $(function () {
             //无错误情况，可进行【撤销确认】操作
             else{
                 Joyin.confirm('是否撤销确认', function(){
-                	
                 	var object = {}; 
                 	object.data = JSON.stringify(arr);
             		object.operateType = 'submit';
@@ -342,7 +342,7 @@ $(function () {
             if(index!=''){
                 msg='是否撤销报表披露?';
                 Joyin.confirm(msg, function(){
-                    
+                    layui.layer.open({type:3});
                     var object = {}; 
                     object.data = JSON.stringify(rows);
                     object.operateType = 'submit';
@@ -351,6 +351,7 @@ $(function () {
                     Joyin.ajax(basePath + 'disclosure/information/reveal/reportreveal/ReportRevealManage001/revoke', 
                             object, 
                             function(result) {
+                                layui.layer.closeAll();
                                 table.reload();
                             }
                     );
