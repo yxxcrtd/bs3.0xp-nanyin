@@ -229,6 +229,7 @@
         FROM
         V_REP_PROD_INFO
         <where>
+        status='E'
             <if test="prodRegistNo != null and !prodRegistNo.equals('')">
                 AND PROD_RE=#{prodRegistNo}
             </if>
@@ -245,6 +246,7 @@
         FROM
         REP_PROD_INFO
         <where>
+            status='E'
             <if test="prodRegistNo != null and !prodRegistNo.equals('')">
                 AND PROD_RE=#{prodRegistNo}
             </if>
