@@ -7,6 +7,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
@@ -100,6 +101,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
             entity.setStatus("E");
             repInvestAccountMapper.update(entity);
         } else if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
+            entity.setUpdateUser(LoginUserUtil.getUserName());
             repInvestAccountMapper.delete(entity);
         }
     }
