@@ -68,7 +68,9 @@ public class UploadFile001Controller extends BaseController {
     @Override
     public String init(Model model) {
         String businessId = getParam("businessId");
+        model.addAttribute("businessId",businessId);
         String fileType = getParam("fileType");
+        model.addAttribute("fileType", fileType);
         //modify by yanya on 20210824 增加是否复制的判定
         String COPY_FLAG = getParam("COPY_FLAG");
 
@@ -90,7 +92,6 @@ public class UploadFile001Controller extends BaseController {
             }
             model.addAttribute("attachmentFiles", JsonUtils.object2Json(files));
         }
-        model.addAttribute("businessId",businessId);
         return super.init(model);
     }
 
@@ -192,7 +193,11 @@ public class UploadFile001Controller extends BaseController {
                     UploadFileDto sysFile = new UploadFileDto();
                     sysFile.setBusinessId(businessId);
                     sysFile.setSeqNo(fileInfo.getFileNo());
-                    sysFile.setFileType(StringUtils.defaultString(request.getParameter("fileType"), "03"));
+                    if (StringUtils.isEmpty(request.getParameter("fileType2"))) {
+                        sysFile.setFileType(StringUtils.defaultString(request.getParameter("fileType"), "03")); // 字符串为null时返回给定的默认值，目前返回的是：""
+                    } else {
+                        sysFile.setFileType(request.getParameter("fileType2"));
+                    }
                     infoComplianceMapper.updateUplodFile(sysFile);
                 }
                 fileInfo.setFileName(fileInfo.getSrcName());

@@ -111,7 +111,8 @@ $(function ($) {
             options = options || {};
             var businessId = $(this).next('#businessId').val() || '';
             var fileType = $('#fileType').val() || '';
-            var url = (options.url || JoyinUtil.getRealPath('disclosure/infoCompliance/uploadFile001/uploadFile')) + '?businessId='+businessId+'&fileType='+fileType;
+            var fileType2 = $('#fileType2').val() || '';
+            var url = (options.url || JoyinUtil.getRealPath('disclosure/infoCompliance/uploadFile001/uploadFile')) + '?businessId='+businessId+'&fileType='+fileType+'&fileType2='+fileType2;
             var allowfiletype = options.allowFileType || ''/* || 'doc/docx/xls/xlsx/ppt'*/; // 允许任何类型的文件
             var showdelete = options.showDelete;
             var inline = options.inline;
