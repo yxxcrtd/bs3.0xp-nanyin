@@ -8,6 +8,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
@@ -62,6 +63,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         dto.setOperateType(operationType.toString());
         String type = dto.getOperateType();
         if (StringUtil.equals(type, "DELETE")) {
+            dto.setUpdateUser(LoginUserUtil.getUserName());
             subBalanceInfoProMapper.deleteByKey(dto);
         }
         else if (StringUtil.equals(type, "NEW")) {

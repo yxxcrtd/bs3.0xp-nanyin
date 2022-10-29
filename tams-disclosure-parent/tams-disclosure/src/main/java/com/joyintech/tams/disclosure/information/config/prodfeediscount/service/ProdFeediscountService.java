@@ -447,7 +447,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else {
                 if (!this.getProdId(rowData.get(1))) {
-                    message.add("子产品代码不存在。");
+                    message.add("产品代码未在产品基本信息表中维护。");
                 }
             }
             if (StringUtil.isNotBlank(rowData.get(0)) && StringUtil.isNotBlank(rowData.get(1))) {

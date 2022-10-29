@@ -186,7 +186,7 @@
     </select>
 
     <select id="selectByProdId" resultType="java.lang.String">
-        SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
+        SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId} and status='E'
     </select>
 
     <select id="checkExistData" resultType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >

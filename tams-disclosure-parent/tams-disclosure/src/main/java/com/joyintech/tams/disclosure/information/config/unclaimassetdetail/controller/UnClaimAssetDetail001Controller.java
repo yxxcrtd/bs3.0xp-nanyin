@@ -202,6 +202,14 @@ public class UnClaimAssetDetail001Controller extends BaseController {
                         + SpringContextUtil.getTextValue("生效截止日期") + "("+DateUtil.format(tmp.getEffEndDate())+")"));
                 //return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
             }
+            if(!StringUtil.equals("delete",dto.getOperateType())){
+                if(unClaimAssetDetail001Service.checkOverlappingDataNew(tmp)){
+                    errorList.add(new ValidMessage("生效区间重叠！"+SpringContextUtil.getTextValue("产品主代码") + "(" + tmp.getProdId() + ")" + "-"
+                            + SpringContextUtil.getTextValue("生效日") + "("+DateUtil.format(tmp.getEffDate())+")" + "-"
+                            + SpringContextUtil.getTextValue("生效截止日期") + "("+DateUtil.format(tmp.getEffEndDate())+")"));
+                }
+            }
+
         }
         if(CollectionUtils.isNotEmpty(errorList)){
             result.setErrorList(errorList);

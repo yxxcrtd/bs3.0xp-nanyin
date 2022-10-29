@@ -335,7 +335,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             if (!StringUtil.isNotEmpty(rowData.get(0).trim())) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
             } else if (!this.selectPProdId(rowData.get(0).trim())) {
-                message.add("产品主代码未在系统中维护。");
+                message.add("产品代码未在产品基本信息表中维护。");
             }
 
             if (!StringUtil.isNotEmpty(rowData.get(1))) {

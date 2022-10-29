@@ -251,6 +251,9 @@
              select * from DIS_PROD_PLAN
              where PROD_ID = #{prodId,jdbcType=VARCHAR} and OPERATION_START_DATE =#{operationStartDate,jdbcType=VARCHAR}
              and DATA_STATUS in ('E','A')
+            <if test="prodPlanId !=null and prodPlanId !='' ">
+                and PROD_PLAN_ID != #{prodPlanId,jdbcType=VARCHAR}
+            </if>
 
     </select>
 </mapper>
