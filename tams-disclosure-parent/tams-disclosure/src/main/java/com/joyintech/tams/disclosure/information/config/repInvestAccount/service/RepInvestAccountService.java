@@ -304,6 +304,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
                                                  List<RepInvestAccountDto> entities) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
+
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
             if (null == rowData || rowData.size() != 4) {
@@ -316,7 +317,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
             if (!StringUtil.isNotEmpty(rowData.get(0))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
             } else if (!this.getProdId(rowData.get(0))) {
-                message.add("产品主代码未在系统中维护。");
+                message.add("产品代码未在产品基本信息表中维护。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(1))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "账号"));
