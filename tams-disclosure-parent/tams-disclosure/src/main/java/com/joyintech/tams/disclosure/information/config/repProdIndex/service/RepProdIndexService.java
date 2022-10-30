@@ -367,7 +367,8 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                     Map<String, Object> map = new HashMap<>();
                     map.put("prodId", item.getProdId());
                     map.put("valueDate", item.getValueDate());
-                    if (StringUtil.isNotEmpty(this.selectData(map))) {
+                    RepProdIndexDto repProdIndexDto = this.selectData(map);
+                    if (StringUtil.isNotEmpty(repProdIndexDto) && !StringUtil.equals(repProdIndexDto.getStatus(),"D")) {
                         this.doComplete(item, OperationType.MODIFY);
                     } else {
                         this.doComplete(item, OperationType.NEW);
