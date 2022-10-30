@@ -70,10 +70,10 @@ $(function() {
 		var settDate = $('#settDate').val();
 		var paymentDate = $('#paymentDate').val();
 		if (settDate < platDate && pageModel == PAGE_MODEL_EDIT){
-			Joyin.error('到期日小于平台日，无法修改到期日！', function () {
-				// table.renderRow(data.LAY_TABLE_INDEX);
-				return;
-			});
+			// Joyin.error('到期日小于平台日，无法修改到期日！', function () {
+			// 	// table.renderRow(data.LAY_TABLE_INDEX);
+			// 	return;
+			// });
 		}
 
 		if (paymentDate && settDate){
@@ -90,11 +90,11 @@ $(function() {
 		var settDate = $('#settDate').val();
 		var paymentDate = $('#paymentDate').val();
 		if (settDate < platDate){
-			Joyin.error('收益分配基准日必须大于平台日', function () {
-				// table.renderRow(data.LAY_TABLE_INDEX);
-				$('#settDate').val('');
-				return;
-			});
+			// Joyin.error('收益分配基准日必须大于平台日', function () {
+			// 	// table.renderRow(data.LAY_TABLE_INDEX);
+			// 	$('#settDate').val('');
+			// 	return;
+			// });
 		}
 		if (paymentDate && settDate){
 			var days = (Date.ofDate(paymentDate) - Date.ofDate(settDate))/(24*60*60*1000);
@@ -132,9 +132,9 @@ $(function() {
 
 		$('#settDate').change(function () {
 			if ($('#settDate').val()<platDate){
-                Joyin.error("收益分配基准日需要大于等于平台日!");
-				$('#settDate').val('');
-				return;
+                // Joyin.error("收益分配基准日需要大于等于平台日!");
+				// $('#settDate').val('');
+				// return;
 			}
 		});
 

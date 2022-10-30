@@ -134,4 +134,6 @@ public interface UnClaimAssetDetailMapper  {
     List<UnClaimAssetDetailDto> selectHisData(String workflowId);
 
     int updateByPrimaryKey(UnClaimAssetDetailDto dto);
+
+    int checkOverlappingData(Map<String, Object> map);
 }

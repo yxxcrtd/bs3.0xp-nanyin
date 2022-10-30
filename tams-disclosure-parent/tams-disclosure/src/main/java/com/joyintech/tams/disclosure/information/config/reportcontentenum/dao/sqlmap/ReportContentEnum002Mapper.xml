@@ -216,7 +216,7 @@
         where T1.P_PROD_ID is not null
         AND T1.STATUS not in ('D')
         AND T1.PROD_SERIES is not null
-        AND status='E'
+        AND T1.status='E'
     </select>
 
     <select id="selectProdInfo3" resultType="com.joyintech.framework.select.TreeNode">

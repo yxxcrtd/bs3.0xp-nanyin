@@ -349,7 +349,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     prodInfo = disProdPlanManage002Service.getPrdInfo(rowData.get(0), DictCodeListExt1.维护数据状态_有效.getValue());
                 }
             }
-            if(StringUtils.equals("02",prodInfo.getIssuingWay())){
+            if(prodInfo != null&&StringUtils.equals("02",prodInfo.getIssuingWay())){
                 message.add("封闭式产品不允许导入排期计划");
             }else{
                 DisProdPlanManage002Dto dto=null;

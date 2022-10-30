@@ -264,6 +264,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
         // 验证消息
         List<String> message = new ArrayList<>();
         for (int i = 1; i < dataList.size(); i++) {
+            message = new ArrayList<>();
             List<String> list = dataList.get(i);
             //字段非空检查
             if (!StringUtil.isNotEmpty(list.get(0))){

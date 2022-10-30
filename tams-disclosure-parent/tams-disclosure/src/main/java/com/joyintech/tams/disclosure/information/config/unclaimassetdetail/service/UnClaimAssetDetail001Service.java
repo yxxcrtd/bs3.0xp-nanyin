@@ -432,10 +432,10 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             if (!StringUtil.isNotEmpty(rowData.get(0))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
             } else if (!findList.contains(rowData.get(0))){
-                message.add("产品主代码在产品基本信息表中没有维护。");
+                message.add("产品代码未在产品基本信息表中维护。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(1))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "融资顾客"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "融资客户"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "项目名称"));
@@ -483,7 +483,21 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             else {
-                entities.add(this.convertToEntity(rowData));
+                UnClaimAssetDetailDto dto= this.convertToEntity(rowData);
+                Map<String, Object> param = new HashMap<>();
+                param.put("prodId", dto.getProdId());
+                param.put("effDate",dto.getEffDate());
+                param.put("effEndDate", dto.getEffEndDate());
+                param.put("effEndDate", dto.getEffEndDate());
+                if(unClaimAssetDetailMapper.checkOverlappingData(param)>0){
+                    message.add("生效区间重叠!");
+                    checkResult.add(new ExcelValidDto(rowData.get(0)
+                            + GlobalConstant.UNDER_LINE + rowData.get(7)
+                            + GlobalConstant.UNDER_LINE + rowData.get(8),
+                            String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+                }else {
+                    entities.add(this.convertToEntity(rowData));
+                }
             }
         }
         return checkResult;
@@ -555,5 +569,38 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
             return true;
         }
         return false;
+    }
+
+    //检查是否存在区间重叠
+    //存在 返回 true
+    public boolean checkOverlappingData(UnClaimAssetDetailDto dto){
+        Map<String, Object> map = new HashMap<>();
+        map.put("prodId", dto.getProdId());
+        map.put("effDate",dto.getEffDate());
+        map.put("effEndDate", dto.getEffEndDate());
+
+        List<String>nostdAssetIdList=dto.getUnclaimList().stream().filter(s -> s.getNostdAssetId()!=null).map(UnClaimAssetDetailDto::getNostdAssetId).collect(Collectors.toList());
+        map.put("nostdAssetIdList", nostdAssetIdList);
+
+        return unClaimAssetDetailMapper.checkOverlappingData(map)>0;
+    }
+
+    public boolean checkOverlappingDataNew(UnClaimAssetDetailDto dto){
+        Map<String, Object> map = new HashMap<>();
+        map.put("prodId", dto.getProdId());
+        map.put("effDate",dto.getEffDate());
+        map.put("effEndDate", dto.getEffEndDate());
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("prodId", dto.getProdId());
+        params.put("effDate", dto.getEffDateStr());
+        params.put("effEndDate", dto.getEffEndDateStr());
+        params.put("dataStatus", dto.getDataStatus());
+        List<UnClaimAssetDetailDto> unclaimList = unClaimAssetDetail002Service.selectDetailList(params);
+        List<String>nostdAssetIdList=unclaimList.stream().filter(s -> s.getNostdAssetId()!=null).map(UnClaimAssetDetailDto::getNostdAssetId).collect(Collectors.toList());
+
+        map.put("nostdAssetIdList", nostdAssetIdList);
+
+        return unClaimAssetDetailMapper.checkOverlappingData(map)>0;
     }
 }

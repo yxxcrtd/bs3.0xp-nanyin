@@ -33,7 +33,9 @@ public class UploadFile002Controller extends BaseController {
     @Override
     public String init(Model model) {
         String businessId = getParam("businessId");
+        model.addAttribute("businessId",businessId);
         String fileType = getParam("fileType");
+        model.addAttribute("fileType2", fileType);
         //modify by yanya on 20210824 增加是否复制的判定
         String COPY_FLAG = getParam("COPY_FLAG");
 

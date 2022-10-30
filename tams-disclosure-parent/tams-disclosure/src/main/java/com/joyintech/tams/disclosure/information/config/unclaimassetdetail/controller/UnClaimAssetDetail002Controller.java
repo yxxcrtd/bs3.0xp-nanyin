@@ -106,7 +106,11 @@ public class UnClaimAssetDetail002Controller extends BaseController {
             if(unClaimAssetDetail001Service.isInWorkflow(dto)){
                 return new AjaxResult("系统已存在相同产品主代码+生效日+生效截止日的流程中的数据！", MessageType.错误消息);
             }
+            if (unClaimAssetDetail001Service.checkOverlappingData(dto)){
+                return new AjaxResult("生效区间重叠!", MessageType.错误消息);
+            }
         }
+
 
         if (result.hasErrors()) {
             return new AjaxResult(result);
