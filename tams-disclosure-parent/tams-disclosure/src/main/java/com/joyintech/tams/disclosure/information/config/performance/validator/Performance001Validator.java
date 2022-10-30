@@ -53,7 +53,7 @@ public class Performance001Validator implements BeanValidator {
                 for (Performance001Dto Performance001Dto : performance001Dtos) {
                     if (!((DateUtil.compareDate(dto.getEffDate(), Performance001Dto.getEffDate()) < 0 && DateUtil.compareDate(dto.getExpDate(), Performance001Dto.getEffDate()) < 0)
                             || (DateUtil.compareDate(dto.getEffDate(), Performance001Dto.getExpDate()) > 0 && DateUtil.compareDate(dto.getExpDate(), Performance001Dto.getExpDate()) > 0))) {
-                        resultList.add(new ValidMessage("子产品业绩比较基准区间生效时间不能重叠！" + "{" + DateUtil.format(Performance001Dto.getEffDate(), "yyyyMMdd")
+                        resultList.add(new ValidMessage("子产品代码+业绩比较基准生效日+业绩比较基准生效截止日数据已重复，请重新输入！" + "{" + DateUtil.format(Performance001Dto.getEffDate(), "yyyyMMdd")
                                 + "-" + DateUtil.format(Performance001Dto.getExpDate(), "yyyyMMdd") + "}"));
                         break;
                     }
