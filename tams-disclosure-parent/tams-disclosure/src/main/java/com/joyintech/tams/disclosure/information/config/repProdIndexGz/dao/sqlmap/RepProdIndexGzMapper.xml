@@ -347,7 +347,7 @@
     </select>
 
     <select id="selectpProdId" resultType="java.lang.String">
-        SELECT P_PROD_ID FROM REP_PROD_INFO WHERE P_PROD_ID = #{pProdId}
+        SELECT P_PROD_ID FROM REP_PROD_INFO WHERE P_PROD_ID = #{pProdId} and STATUS !='D'
     </select>
 
     <select id="checkExistData" resultType="com.joyintech.tams.disclosure.information.config.repProdIndexGz.dto.RepProdIndexGzDto" >
