@@ -495,8 +495,8 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                                     .divide(new BigDecimal(bonusCalist001Dto.getRunDays()),20,BigDecimal.ROUND_DOWN);
                     bonusCalist001Dto.setPerBaseProfit(
                             report.getCapital().multiply(report.getAchievementBasisProp())
-                                    .multiply(new BigDecimal(365))
-                                    .divide(new BigDecimal(bonusCalist001Dto.getRunDays()),2,BigDecimal.ROUND_DOWN) );
+                                    .multiply(new BigDecimal(bonusCalist001Dto.getRunDays()))
+                                    .divide(new BigDecimal(365),2,BigDecimal.ROUND_DOWN) );
 
                     // 超出部分
 //                BigDecimal esProfit = report.getDistributableProfit().subtract(abProfit);
