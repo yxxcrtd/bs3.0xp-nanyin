@@ -319,7 +319,7 @@
         else '' end pid
         from
         REP_PROD_INFO
-        where  PROD_SERIES is not null
+        where  status='E' and PROD_SERIES is not null and p_prod_id is not null
     </select>
 
     <select id="selectProdHugeInfo" resultType="com.joyintech.framework.select.TreeNode">
