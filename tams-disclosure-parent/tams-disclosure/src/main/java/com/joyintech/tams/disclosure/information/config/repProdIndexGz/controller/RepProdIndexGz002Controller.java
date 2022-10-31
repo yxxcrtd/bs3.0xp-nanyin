@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.repProdIndexGz.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -17,6 +18,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -91,6 +93,14 @@ public class RepProdIndexGz002Controller extends BaseController {
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) RepProdIndexGzDto dto,
                             BindingResult result) {
+        if (CollectionUtils.isEmpty(result.getAllErrors())) {
+            AjaxResult ajax=new AjaxResult();
+            if(repProdIndexGzService.checkExistsData(dto)){
+                ajax.setMessage("已存在母产品的净值信息，是否覆盖？", MessageType.确认消息);
+                return ajax;
+            }
+
+        }
         return commonCheck(result, dto.getOperateType());
     }
 

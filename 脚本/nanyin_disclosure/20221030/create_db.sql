@@ -432,3 +432,51 @@ ALTER TABLE BOK_BALANCE DROP CONSTRAINT PK_BOK_BALANCE_ID_01;
 ALTER TABLE DIS_PROD_ADJUST MODIFY  ADJ_REASON VARCHAR2(1500);
 ALTER TABLE DIS_PROD_ADJUST MODIFY  FIELD_ADJ_REMARK VARCHAR2(1500);
 ALTER TABLE DIS_PROD_ADJUST MODIFY  FIELD_ADJ_REMARK VARCHAR2(1500);
+
+drop table BOK_BALANCE_FSE;
+create table BOK_BALANCE_FSE
+(
+    bookset_id   VARCHAR2(50) not null,
+    date_start DATE not null,
+    date_end DATE not null,
+    subject_no   VARCHAR2(300) not null,
+    o_ccy        VARCHAR2(50),
+    tdy_o_d_amt  NUMBER(30,2),
+    errormsg     VARCHAR2(200),
+    create_user  VARCHAR2(20),
+    create_dept  VARCHAR2(32),
+    create_time  TIMESTAMP(6),
+    update_user  VARCHAR2(20),
+    update_time  TIMESTAMP(6),
+    status       VARCHAR2(20)
+);
+comment on table BOK_BALANCE_FSE
+    is '科目余额（发生额）表';
+-- Add comments to the columns
+comment on column BOK_BALANCE_FSE.bookset_id
+    is '产品主代码';
+comment on column BOK_BALANCE_FSE.date_start
+    is '开始日期';
+comment on column BOK_BALANCE_FSE.date_end
+    is '开始日期';
+comment on column BOK_BALANCE_FSE.subject_no
+    is '科目号';
+comment on column BOK_BALANCE_FSE.o_ccy
+    is '原币币种：AED阿联酋迪拉姆(AED),AUD澳大利亚元（AUD）,CAD加拿大元（CAD）,CHF瑞士法郎（CHF）,CNY人民币（CNY）,DKK丹麦克朗（DKK）,EUR欧元（EUR）,GBP英镑（GBP）,HKD港元（HKD）,HUF匈牙利福林(HUF),JPY日元（JPY）,KHR柬埔寨瑞尔(KHR),KRW韩元(KRW),KZT哈萨克斯坦坚戈(KZT),MNT蒙古图格里克 (MNT),MOP澳门元（MOP）,MXN墨西哥元(MXN),MYR马来西亚林吉特(MYR),NOK挪威克朗(NOK),NZD新西兰元(NZD),PLN波兰兹罗提(PLN),RUB俄罗斯卢布（RUB）,SAR沙特里亚尔(SAR),SEK瑞典克朗（SEK）,SGD新加坡元（SGD）,THB泰铢(THB),TRY新土耳其里拉(TRY),TWD新台币（TWD）,USD美元（USD）,ZAR南非兰特(ZAR)';
+comment on column BOK_BALANCE_FSE.tdy_o_d_amt
+    is '发生额（借方）';
+comment on column BOK_BALANCE_FSE.errormsg
+    is '错误信息';
+comment on column BOK_BALANCE_FSE.create_user
+    is '创建人';
+comment on column BOK_BALANCE_FSE.create_dept
+    is '创建部门';
+comment on column BOK_BALANCE_FSE.create_time
+    is '创建时间';
+comment on column BOK_BALANCE_FSE.update_user
+    is '更新人';
+comment on column BOK_BALANCE_FSE.update_time
+    is '更新时间';
+comment on column BOK_BALANCE_FSE.status
+    is '数据状态';
+alter table BOK_BALANCE_FSE add constraint PK_BOK_BALANCE_FSE_ID_01 primary key (bookset_id,date_start,date_end,subject_no);
