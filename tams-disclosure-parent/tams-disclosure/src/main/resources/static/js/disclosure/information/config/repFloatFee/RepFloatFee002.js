@@ -16,23 +16,6 @@ var RepFloatFee002 = function() {
             param.affirmDate = $('#affirmDate').val();
             param.businessCode = $("#businessCode").val();
             param.affirmNum = $("#affirmNum").val();
-            var affirmNum=param.affirmNum
-            if(!/^\d{1,15}(\.\d{1,2})?$/.test(affirmNum)){
-                Joyin.error('确认份额需要为n(17,2)格式');
-                return ;
-            }
-            param.affirmAmt = $("#affirmAmt").val();
-            var affirmAmt=param.affirmAmt
-            if(!/^\d{1,15}(\.\d{1,2})?$/.test(affirmAmt)){
-                Joyin.error('确认金额需要为n(17,2)格式');
-                return ;
-            }
-            param.aboveAmt = $("#aboveAmt").val();
-            var aboveAmt=param.aboveAmt
-            if(!/^\d{1,15}(\.\d{1,2})?$/.test(aboveAmt)){
-                Joyin.error('超额报酬需要为n(17,2)格式');
-                return ;
-            }
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/check',param,function(result){
                 if(result){
                     Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistData', param, function(checkResult){
