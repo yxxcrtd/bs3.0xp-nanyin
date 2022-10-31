@@ -403,7 +403,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             if (!StringUtil.isNotEmpty(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "日期"));
             } else if (!isDateStr(rowData.get(2))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "日期"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", ""));
             } else {
                 dto = repProdIndexSMapper.selectCfsj(rowData.get(0),rowData.get(2));
                 dto2.setValueDate(DateUtil.parse(rowData.get(2)));
