@@ -50,6 +50,7 @@ public interface RepProdIndexSMapper {
     int updateStatus(RepProdIndexDto repProdIndexDto);
 
     int updateByPrimaryKey(RepProdIndexDto repProdIndexDto);
+    int updateByPrimaryKey1(RepProdIndexDto repProdIndexDto);
 
     RepProdIndexDto selectCfsj(@Param("prodId") String prodId, @Param("valueDate") String valueDate);
 }

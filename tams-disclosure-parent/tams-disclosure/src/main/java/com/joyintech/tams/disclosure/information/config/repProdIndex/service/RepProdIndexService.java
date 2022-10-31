@@ -137,6 +137,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         BeanUtil.copyPropertiesIgnoreNull(repProdIndexDto,dto);
         repProdIndexDto.setStatus("C");
         repProdIndexSMapper.updateByPrimaryKey(repProdIndexDto);
+        repProdIndexSMapper.updateByPrimaryKey1(repProdIndexDto);
 
     }
 
@@ -365,6 +366,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
                     Map<String, Object> map = new HashMap<>();
+                    map.put("status","");
                     map.put("prodId", item.getProdId());
                     map.put("valueDate", item.getValueDate());
                     RepProdIndexDto repProdIndexDto = this.selectData(map);

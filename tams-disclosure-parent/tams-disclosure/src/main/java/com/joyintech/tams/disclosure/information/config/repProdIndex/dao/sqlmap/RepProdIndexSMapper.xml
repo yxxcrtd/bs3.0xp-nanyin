@@ -336,7 +336,11 @@
         left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
         left join V_REP_PROD_INFO rpi2 on rpi2.PROD_ID = rpi.P_PROD_ID
         left join REP_PROD_INDEX T2 on rpi.P_PROD_ID = T2.PROD_ID and T.VALUE_DATE = T2.VALUE_DATE
-        where T.STATUS = #{status,jdbcType=VARCHAR} and T.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where 1=1
+        <if test="status!=null and ! status.equals('') ">
+           and  T.STATUS = #{status,jdbcType=VARCHAR}
+        </if>
+        and T.PROD_ID = #{prodId,jdbcType=VARCHAR}
                 and T.VALUE_DATE = #{valueDate,jdbcType=DATE}
     </select>
     <select id="selectExits" resultType="java.lang.Integer">
@@ -409,6 +413,14 @@
         set
             STATUS = #{status,jdbcType=VARCHAR}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </update>
+
+    <update id="updateByPrimaryKey1">
+        update REP_PROD_INDEX
+        set
+            STATUS = #{status,jdbcType=VARCHAR}
+        where PROD_ID = #{pProdId,jdbcType=VARCHAR}
           and VALUE_DATE = #{valueDate,jdbcType=DATE}
     </update>
 
