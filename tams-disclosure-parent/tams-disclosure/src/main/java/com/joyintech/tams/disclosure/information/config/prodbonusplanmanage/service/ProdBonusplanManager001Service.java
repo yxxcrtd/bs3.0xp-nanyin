@@ -208,7 +208,6 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                 Map<String, List<ProdBonusplanDto>> map = entities.stream().collect(
                         JoyinCollectors.groupingBy(x ->
                                 x.getProdId()
-                                        + GlobalConstant.UNDER_LINE + x.getBonusMode()
                                         + GlobalConstant.UNDER_LINE + x.getSettDateStr()
                         ));
                 // 将序号放入list中
@@ -216,7 +215,6 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                 List<Integer> excelNumIntList = new ArrayList<>();
                 for (ProdBonusplanDto dto : data) {
                     List<ProdBonusplanDto> listTemp = map.get(dto.getProdId()
-                            + GlobalConstant.UNDER_LINE + dto.getBonusMode()
                             + GlobalConstant.UNDER_LINE + dto.getSettDateStr());
                     excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
                 }

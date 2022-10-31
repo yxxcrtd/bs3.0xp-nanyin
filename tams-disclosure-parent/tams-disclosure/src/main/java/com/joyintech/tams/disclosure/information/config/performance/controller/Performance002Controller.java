@@ -137,6 +137,8 @@ public class Performance002Controller extends BaseController {
 //            entity.setZz500(entityList.get(1).getProportion());
 //            entity.setZzcf(entityList.get(2).getProportion());
 //            entity.setZzqj(entityList.get(3).getProportion());
+            model.addAttribute("effDateO", entity.getEffDateO());
+            model.addAttribute("expDateO", entity.getExpDateO());
             model.addAttribute("entity", entity);
         }
         else if (StringUtil.isNotEmpty(workflowId)) {
