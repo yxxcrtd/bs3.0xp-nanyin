@@ -145,6 +145,15 @@
 
         if(typeof JoyinWorkFlow != 'undefined') {
             JoyinWorkFlow.doCheckOnSubmit = function() {
+                if(FileCommon.getUploadFileInfo().length >5){
+                    Joyin.error("报表/模板附件超过5个");
+                    return;
+                }
+
+                if(FileCommon2.getUploadFileInfo().length >5){
+                    Joyin.error("其他附件超过5个");
+                    return;
+                }
                 var comment = $('#comment').val();
                 if(!comment) {
                     Joyin.error('请填写修订意见!');
@@ -155,6 +164,15 @@
             };
 
             JoyinWorkFlow.doCheckOnBack = function() {
+                if(FileCommon.getUploadFileInfo().length >5){
+                    Joyin.error("报表/模板附件超过5个");
+                    return;
+                }
+
+                if(FileCommon2.getUploadFileInfo().length >5){
+                    Joyin.error("其他附件超过5个");
+                    return;
+                }
                 var comment = $('#comment').val();
                 if(!comment) {
                     Joyin.error('请填写修订意见!');
