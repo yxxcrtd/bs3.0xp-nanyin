@@ -333,6 +333,7 @@
 			EXP_DATE <![CDATA[>=]]> #{effDate,jdbcType=DATE} 
 				and EFF_DATE <![CDATA[<=]]> #{expDate,jdbcType=DATE} 
 		)
+		and EFF_DATE != #{effDateO,jdbcType=DATE}
 		and STATUS in( 'E','A')
 	</select>
 

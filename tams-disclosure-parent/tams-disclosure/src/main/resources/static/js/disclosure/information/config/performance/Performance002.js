@@ -14,6 +14,8 @@ $(function() {
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.workflowId=workflowId;
+        object.effDateO=effDateO;
+        object.expDateO=expDateO;
         // if (pageModel == PAGE_MODEL_NEW) {
         // 	object.operateType = 'new';
         // } else if (pageModel == PAGE_MODEL_EDIT) {
@@ -43,6 +45,8 @@ $(function() {
     var init = function() {
         if (pageModel == PAGE_MODEL_EDIT){
             $("#prodId").attr("disabled",true)
+            $("#effDate").attr("disabled",true)
+            $("#expDate").attr("disabled",true)
         }
     };
     /**
