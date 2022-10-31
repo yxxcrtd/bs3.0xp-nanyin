@@ -216,7 +216,7 @@ $(function() {
             var selArrDFH = [];
             var selArrDelete = [];
             selArr.forEach(v => {
-                if(v.status == 'E'){
+                if(v.status == 'E'||v.status == 'A'){
                     //selArr.remove();
                     selArrUseful.push(v);
                 }
