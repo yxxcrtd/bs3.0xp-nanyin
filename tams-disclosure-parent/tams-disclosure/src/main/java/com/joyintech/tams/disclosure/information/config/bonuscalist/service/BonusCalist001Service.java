@@ -292,6 +292,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                                                  List<BonusCalist001Dto> entities) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
+        List<String> message = new ArrayList<>();
         List<String> registNoList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         List<String> prodList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         for (int i = 0; i < dataList.size(); i++ ) {
@@ -302,7 +303,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                 break;
             }
             // 验证消息
-            List<String> message = new ArrayList<>();
+
             if (!StringUtil.isNotEmpty(rowData.get(0))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
             } else if (!prodList.contains(rowData.get(0).trim())){
