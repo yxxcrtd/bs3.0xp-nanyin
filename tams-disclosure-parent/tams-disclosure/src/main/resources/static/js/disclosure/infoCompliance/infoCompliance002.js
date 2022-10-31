@@ -192,5 +192,10 @@
                 $("#commentDiv").show();
             }
         }
+        if(pageModel!=='0'){
+            //只有新建的时候允许修改报表/模板名称，编辑和保存到代办之后不允许修改
+            $('#infoType').attr('disabled',true);
+            $('#infoName').attr('disabled',true);
+        }
     });
 }());
