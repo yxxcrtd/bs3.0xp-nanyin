@@ -36,11 +36,6 @@ var RepFloatFee002 = function() {
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/check',param,function(result){
                 if(result){
                     Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistData', param, function(checkResult){
-                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistCEData', param, function(checkCEResult) {
-                        if (checkCEResult) {
-                            Joyin.error("“子产品代码+确认日”不能同时与已有数据重复");
-                        }
-                    else{
                         if(checkResult){
                             Joyin.confirm("有已删除的数据，是否覆盖", function () {
                                 if(operateType === 'save') {
@@ -59,8 +54,6 @@ var RepFloatFee002 = function() {
                                 WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/save', param, "RepFloatFee002_btn_submit");
                             }
                         }
-                    }
-                    })
                     })
 
                 }

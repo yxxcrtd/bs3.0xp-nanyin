@@ -182,7 +182,7 @@
         from REP_FLOAT_FEE T
         where T.PROD_ID = #{prodId,jdbcType=VARCHAR}
                 and T.AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
-                and T.STATUS = 'E'
+                and T.STATUS in('E','A')
     </select>
 
     <select id="selectByProdId" resultType="java.lang.String">
