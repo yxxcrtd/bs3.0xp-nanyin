@@ -528,8 +528,9 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
 //            listResult.add(com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils.bean2Map(report));
             }
             //计算出的数据 业务主键和已有删除数据业务主键重复则新增一条待处理数据，否则更新
-            BonusCalist001Dto dto1 = bonusCalist001Mapper.isRepeated(bonusCalist001Dto);
-            if (dto1!=null){
+//            BonusCalist001Dto dto1 = bonusCalist001Mapper.isRepeated(bonusCalist001Dto);
+            List<String> statuses = bonusCalist001Mapper.isRepeated(bonusCalist001Dto);
+            if (statuses.contains("D")){
                  bonusCalist001Mapper.insert(bonusCalist001Dto);
             }else{
                 bonusCalist001Mapper.deleteByBusKey(bonusCalist001Dto);

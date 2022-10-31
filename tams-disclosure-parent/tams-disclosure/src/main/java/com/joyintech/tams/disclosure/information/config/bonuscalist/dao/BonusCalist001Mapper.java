@@ -34,5 +34,5 @@ public interface BonusCalist001Mapper {
 
     String findRe(String prodId);
 
-    BonusCalist001Dto isRepeated(BonusCalist001Dto bonusCalist001Dto);
+    List<String> isRepeated(BonusCalist001Dto bonusCalist001Dto);
 }
