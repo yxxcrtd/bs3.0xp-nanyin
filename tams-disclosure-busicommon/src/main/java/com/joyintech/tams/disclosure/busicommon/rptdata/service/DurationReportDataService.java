@@ -169,6 +169,8 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//财务指标：子产品维度
 			try {
+				paraMap.put("startDate",reportDto.getDurStartDate());
+				paraMap.put("endDate",reportDto.getDurEndDate());
 				List<RepProdIndex> listDto = durationReportMapper.selectFinIndex(paraMap);
 				List<Map<String,Object>> listFinIndex = new ArrayList<>();
 				listDto.forEach(item->{
