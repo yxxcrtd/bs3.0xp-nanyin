@@ -30,6 +30,8 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
      * excle行
      */
     private String excelNum;
+
+    private String editFlag;
     /**
      *  业绩基准变更表
      */
@@ -529,5 +531,13 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
 
     public void setDataStatus(String dataStatus) {
         this.dataStatus = dataStatus;
+    }
+
+    public String getEditFlag() {
+        return editFlag;
+    }
+
+    public void setEditFlag(String editFlag) {
+        this.editFlag = editFlag;
     }
 }

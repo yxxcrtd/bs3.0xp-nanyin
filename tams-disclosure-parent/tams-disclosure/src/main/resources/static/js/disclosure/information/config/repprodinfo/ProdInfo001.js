@@ -88,6 +88,7 @@ $(function() {
     table.bind('click', '.edit', function(data, index) {
         data.operateType='edit'
         data.pageModel=PAGE_MODEL_EDIT;
+        data.editFlag='01'
         if(data.pdStatus !=null && data.pdStatus =='01'){
             Joyin.confirm("请确认是否修改?", function(){
                 Joyin.dialog(JoyinUtil.getLabel("产品基本信息编辑"),
@@ -152,7 +153,7 @@ $(function() {
         $('#ProdInfo001_btn_design').click(function() {
             Joyin.dialog(JoyinUtil.getLabel(' 产品基本信息新建'),
                 basePath + "disclosure/information/config/repprodinfo/ProdInfo002/init",
-                "95%", "90%", {pageModel:PAGE_MODEL_NEW});
+                "95%", "90%", {pageModel:PAGE_MODEL_NEW,editFlag:'01'});
         });
         $('#ProdInfo001_btn_issueStatusMan').click(function() {
             if(table!=null && table!=''){

@@ -116,8 +116,8 @@ public class ProdInfo002Controller extends BaseController {
         String repProdType = this.getParam("repProdType");
         String updateDateStr = this.getParam("updateDateStr");
         String status = this.getParam("status");
-
-
+        String editFlag = getParam("editFlag");
+        model.addAttribute("editFlag", editFlag);
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(id)) {
             // 根据主键获取业务实体
@@ -349,9 +349,12 @@ public class ProdInfo002Controller extends BaseController {
         /* NYLCXP-965 子产品的募集起始日、募集结束日要与母产品一致 add by zhouqiang 2022-08-23 end */
 
         //产品修改需要校验工作流中的数据
-        if(prodInfoService.isInWorkflow(dto.getProdId())){
-            return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+        if(StringUtil.isNotEmpty(dto.getEditFlag())){
+            if(prodInfoService.isInWorkflow(dto.getProdId())){
+                return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+            }
         }
+
         /* NYLCXP-80 除“子产品代码”“子产品名称”“子产品成立日期”外，其余字段的值不和已有数据相同 add by kongzhifang 2022-08-14 start */
         //该check与放大镜功能为二阶段内容，暂不处理
         // if(StringUtil.isNotEmpty(dto.getpProdId())&&StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade()){
