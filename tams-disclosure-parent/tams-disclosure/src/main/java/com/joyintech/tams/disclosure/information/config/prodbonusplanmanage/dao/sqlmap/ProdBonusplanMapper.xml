@@ -413,7 +413,7 @@
         <if test="dataStatus !=null and dataStatus !='' ">
             AND dpb.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
         </if>
---         and rownum <![CDATA[<=]]> 1
+        and rownum <![CDATA[<=]]> 1
     </select>
 
 
@@ -430,9 +430,6 @@
         where DATA_STATUS !='D'
         <if test="prodId != null">
            and  dpb.PROD_ID = #{prodId,jdbcType=VARCHAR}
-        </if>
-        <if test="bonusPlanId != null">
-            and dpb.BONUS_MODE = #{bonusPlanId,jdbcType=VARCHAR}
         </if>
         <if test="settDateStr != null">
             and to_char(dpb.SETT_DATE,'yyyy-mm-dd') <![CDATA[=]]> #{settDateStr,jdbcType=VARCHAR}

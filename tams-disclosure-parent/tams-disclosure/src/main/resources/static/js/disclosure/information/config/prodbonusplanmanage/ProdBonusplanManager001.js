@@ -173,7 +173,7 @@
 	    	data.operateType = "edit";
 	    	Joyin.dialog(JoyinUtil.getLabel("产品分红到期计划编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init"),
-	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId},
+	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId,editFlag:"02"},
 	                function(data){
 	                	dataTable.reload();
 	                	dataTable2.reload();
@@ -248,14 +248,16 @@
 	     * 编辑页面
 	     */
 	   dataTable2.bind('click', '.edit', function(data, index) {
-	    	data.operateType = "edit";
+		   var object = {selectedItem: [data], operateType: "edit"};
+		   Joyin.ajaxJson(basePath + '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/check', object, function (result) {
 	    	Joyin.dialog(JoyinUtil.getLabel("产品分红到期计划编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init"),
-	                "50%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId},
+	                "50%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId,editFlag:"02"},
 	                function(data){
 	                	dataTable.reload();
 	                	dataTable2.reload();
 	                });
+		   });
 	    });
 
 
@@ -267,14 +269,16 @@
 			   Joyin.alert("数据已删除",7,null,null)
 			   return;
 		   }
-			Joyin.confirm("确认删除吗？", function(){
-				var object = {selectedItem: [data], operateType: "delete"};//请求参数
-				var deleteUrl = basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/delete';
-				WorkFlow.doDeleteList(deleteUrl, object, "ProdBonusplanManager001_btn_delete", "ProdBonusplanManager002",function(){
-					dataTable.reload();
-					dataTable2.reload();
-				});
-	        });
+		   var object = {selectedItem: [data], operateType: "delete"};//请求参数
+		   Joyin.ajaxJson(basePath + '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/check', object, function (result) {
+			   Joyin.confirm("确认删除吗？", function(){
+				   var deleteUrl = basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/delete';
+				   WorkFlow.doDeleteList(deleteUrl, object, "ProdBonusplanManager001_btn_delete", "ProdBonusplanManager002",function(){
+					   dataTable.reload();
+					   dataTable2.reload();
+				   });
+			   });
+		   });
 	    });
 
 	 //删除
@@ -303,18 +307,20 @@
 			 return;
 		 }
 		 var object = {selectedItem: selArrUseful, operateType: "delete"};//请求参数
-		 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
-			 WorkFlow.doDeleteList(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/delete', object,
-				 "ProdBonusplanManager001_btn_delete", "ProdBonusplanManager002",function(result) {
-				 dataTable.reload();
-				 dataTable2.reload();
-			 })
+		 Joyin.ajaxJson(basePath + '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/check', object, function (result) {
+			 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
+				 WorkFlow.doDeleteList(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/delete', object,
+					 "ProdBonusplanManager001_btn_delete", "ProdBonusplanManager002", function (result) {
+						 dataTable.reload();
+						 dataTable2.reload();
+					 })
+			 });
 		 });
 	 });
 
 	   // 配置页面[新建]
 	    var addNew = function(){    	
-	    	Joyin.dialog(JoyinUtil.getLabel('产品分红到期计划新建'), '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init', "50%", "90%",null,
+	    	Joyin.dialog(JoyinUtil.getLabel('产品分红到期计划新建'), '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init', "50%", "90%", {editFlag:"01"},
 	    			function(result) {
 	    			dataTable.reload();
 	    			dataTable2.reload();

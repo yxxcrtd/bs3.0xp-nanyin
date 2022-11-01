@@ -125,6 +125,7 @@
         var object = $.serializeToObject('#submitForm');
         object.operateType = operateType;
         object.pageModel = pageModel;
+        object.editFlag=editFlag
         object.basicChangeList = mockTradeTable.getAllRows();
         object.performaceList = mockTradeTable.getAllRows();
         if(object.holdday){

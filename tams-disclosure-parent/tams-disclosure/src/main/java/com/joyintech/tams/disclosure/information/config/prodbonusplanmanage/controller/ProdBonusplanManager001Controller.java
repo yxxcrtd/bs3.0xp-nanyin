@@ -10,11 +10,17 @@
 
 package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
@@ -23,9 +29,11 @@ import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
+import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,6 +157,25 @@ public class ProdBonusplanManager001Controller extends BaseController {
 	public Page<ProdBonusplanDto> findIndexId() {
 		Page<ProdBonusplanDto> page = prodBonusplanManager001Service.findByPage(RequestUtil.getPageParam());
 		return page;
+	}
+
+	@ResponseBody
+	@RequestMapping("check")
+	public AjaxResult check(@RequestBody @Validated({
+			ValidateGroupDelete.class}) ProdBonusplanDto dto, BindingResult br)  {
+		AjaxResult result = new AjaxResult();
+		List<ValidMessage> errorList = new ArrayList<>();
+		List<ProdBonusplanDto> dtoList = dto.getSelectedItem();
+		for(ProdBonusplanDto tmp:dtoList) {
+			if(prodBonusplanManager001Service.isInWorkflow(tmp.getProdId(), DateUtil.format(tmp.getSettDate(),"yyyy/MM/dd"))){
+				errorList.add(new ValidMessage("所选对象中存在流程中的数据-产品代码:"+tmp.getProdId()+" 收益分配基准日:"+DateUtil.format(tmp.getSettDate(),"yyyy/MM/dd")));
+			}
+		}
+		if(CollectionUtils.isNotEmpty(errorList)){
+			result.setErrorList(errorList);
+			return result;
+		}
+		return commonCheck(br, dto.getOperateType());
 	}
 
 	@ResponseBody

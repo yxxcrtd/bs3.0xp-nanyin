@@ -28,6 +28,7 @@ $(function() {
 		var object = $.serializeToObject('#submitForm');
 		object.operateType = operateType;
 		object.pageModel = pageModel;
+		object.editFlag=editFlag
 		// if (pageModel == PAGE_MODEL_NEW) {
 		// 	object.operateType = 'new';
 		// } else if (pageModel == PAGE_MODEL_EDIT) {

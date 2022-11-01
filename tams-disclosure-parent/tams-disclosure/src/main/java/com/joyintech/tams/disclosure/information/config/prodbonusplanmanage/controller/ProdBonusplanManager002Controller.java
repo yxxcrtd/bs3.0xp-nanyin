@@ -17,6 +17,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -94,6 +95,8 @@ public class ProdBonusplanManager002Controller extends BaseController {
 
         String id = this.getParam("bonusPlanId");
 
+        String editFlag = getParam("editFlag");
+        model.addAttribute("editFlag", editFlag);
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(id)) {
             // 根据主键获取业务实体
@@ -205,9 +208,15 @@ public class ProdBonusplanManager002Controller extends BaseController {
             dto.setBonusPlanId(dto.getBonusMode());
             ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto);
             if(existDto2 != null){
-                return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
+                return new AjaxResult("“子产品代码+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
             }
-
+        }
+        if(StringUtil.isNotEmpty(dto.getEditFlag())){
+            if(prodBonusplanManager001Service.isInWorkflow(dto.getProdId(), DateUtil.format(dto.getSettDate(),"yyyy/MM/dd"))){
+                return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+            }
+        }else {
+            dto.setSettDateStr(DateUtil.format(dto.getSettDate(),"yyyy/MM/dd"));
         }
         return commonCheck(bindingResult, operateType);
     }
@@ -264,6 +273,7 @@ public class ProdBonusplanManager002Controller extends BaseController {
             return new AjaxResult(br);
         }
         // 新建留痕表参数和工作流参数
+        dto.setSettDateStr(DateUtil.format(dto.getSettDate(),"yyyy/MM/dd"));
         ProcessParameter<ProdBonusplanDto> processParameter = new ProcessParameter<ProdBonusplanDto>();
         WorkFlowParameter<ProdBonusplanDto> params = new WorkFlowParameter<ProdBonusplanDto>();
         params.setPageId("ProdBonusplanManager002");

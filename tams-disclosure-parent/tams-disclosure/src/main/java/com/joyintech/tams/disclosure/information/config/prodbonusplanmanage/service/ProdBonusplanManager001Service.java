@@ -12,12 +12,14 @@ package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.ser
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -31,6 +33,7 @@ import com.joyintech.tams.disclosure.information.config.repprodinfo.service.Prod
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import com.joyintech.workflow.engine.WorkflowContext;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -419,10 +422,13 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             }
             if (StringUtil.isNotEmpty(rowData.get(0))) {
                 int num = prodBonusplanManager001Service.selectByProdId2(rowData.get(0));
-                if (StringUtils.equals("2-到期兑付", rowData.get(1))
+                if (StringUtils.equals("到期兑付", rowData.get(1))
                         && num > 0) {
                     message.add("当分红方式选择到期兑付时，一个子产品代码只能有一条数据。");
                 }
+            }
+            if(prodBonusplanManager001Service.isInWorkflow(rowData.get(0), rowData.get(2))){
+                message.add("所选对象中存在流程中的数据-产品代码:"+rowData.get(0)+" 收益分配基准日:"+rowData.get(2));
             }
             if (map.containsKey(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(1)
@@ -482,5 +488,23 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             prodBonusplanDto.setAchievementBasisProp(new BigDecimal(rowData.get(7)));
         }
         return prodBonusplanDto;
+    }
+
+    public boolean isInWorkflow(String prodId,String settDateStr){
+        try {
+            ProcessMark processMark = new ProcessMark();
+            processMark.setPageId("ProdBonusplanManager002");
+            processMark.setBusinessDataPk1(prodId);
+            processMark.setBusinessDataPk2(settDateStr);
+            List<String> resultList = WorkflowContext.getProcessMarkService().getBusinessDataInFlow(
+                    processMark);
+            if (!StringUtil.isEmptyList(resultList)) {
+                return true;
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException("处理失败", e);
+        }
+        return false;
     }
 }

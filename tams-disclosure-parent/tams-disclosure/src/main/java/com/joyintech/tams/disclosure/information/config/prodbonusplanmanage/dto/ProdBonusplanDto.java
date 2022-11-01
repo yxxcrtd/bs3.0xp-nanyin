@@ -74,6 +74,8 @@ public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, Pro
 
     private String paymentDateEnd;
 
+    private String editFlag;
+
     public String getSettDateBegin() {
         return settDateBegin;
     }
@@ -146,6 +148,14 @@ public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, Pro
         this.prodIdArr = prodIdArr;
     }
 
+
+    @Override
+
+    public String getProdId() {
+        return super.getProdId();
+    }
+
+    @PrimaryKey(PrimaryKey.Field.PK_2)
     public String getSettDateStr() {
         if(StringUtils.isNotBlank(this.settDateStr)){
             return this.settDateStr ;
@@ -201,7 +211,7 @@ public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, Pro
     public void setUpdateDateStr(String updateDateStr) {
         this.updateDateStr = updateDateStr;
     }
-
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getProdName() {
         return prodName;
     }
@@ -220,7 +230,6 @@ public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, Pro
 
 
     @Override
-    @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getBonusPlanId() {
         return super.getBonusPlanId();
     }
@@ -231,5 +240,13 @@ public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, Pro
 
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
+    }
+
+    public String getEditFlag() {
+        return editFlag;
+    }
+
+    public void setEditFlag(String editFlag) {
+        this.editFlag = editFlag;
     }
 }
