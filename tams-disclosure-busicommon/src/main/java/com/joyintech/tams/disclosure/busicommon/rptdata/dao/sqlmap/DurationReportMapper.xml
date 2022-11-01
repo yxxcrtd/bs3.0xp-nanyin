@@ -71,7 +71,6 @@
 		) otherFee
 		from REP_PROD_INFO info
 		left join REP_PROD_INDEX rindex on info.PROD_ID=rindex.PROD_ID and rindex.status='E' and rindex.VALUE_DATE=#{reportDate,jdbcType=DATE}
-		on info.P_PROD_ID=bal.BOOKSET_ID
 		where 1=1
 		and info.STATUS='E'
 		and info.ISSUE_STATUS='01'
