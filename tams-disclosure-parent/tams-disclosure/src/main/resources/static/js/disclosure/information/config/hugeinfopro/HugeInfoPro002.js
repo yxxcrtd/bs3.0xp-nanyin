@@ -66,5 +66,8 @@ $(function() {
 		$('#HugeInfoPro002_btn_submit').click(function() {
 			saveOrSubmit('submit');
 		});
+		if (pageModel !== PAGE_MODEL_NEW) {
+			$('#rptIssueDate').prop("disabled",true);
+		}
 	});
 }());
