@@ -6,6 +6,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -78,13 +79,14 @@ public class HugeInfoPro002Controller extends BaseController {
             return new AjaxResult(result);
         }
         if (StringUtil.equals(dto.getOperateType(),"new")) {
+            dto.setRptIssueDateStr(DateUtil.format(dto.getRptIssueDate(),"yyyy/MM/dd"));
             List<HugeInfoPro001Dto> paramList =new ArrayList<>(1);
             paramList.add(dto);
             List<HugeInfoPro001Dto> list = hugeInfoPro001Service.selectHugeInfoByKey(paramList);
             if (list.size()>0) {
                  AjaxResult ajax=new AjaxResult();
                  ajax.setStatuCode(500);
-                 ajax.setMessage("新建数据已存在！", MessageType.警告消息);
+                 ajax.setMessage("系统已存在相同子产品代码+报告发布日期的数据！", MessageType.错误消息);
                 return ajax;
             }
         }

@@ -62,24 +62,16 @@
 		,rindex.ASSETS_VALUE
 		,rindex.UNIT_VALUE
 		,rindex.UNIT_VALUE_T
-		,nvl(bal.OTHER_FEE,0) otherFee
+		,(
+		select nvl(sum(TDY_O_D_AMT),0) from BOK_BALANCE_FSE B
+		where B.BOOKSET_ID=#{pprodid,jdbcType=VARCHAR}
+		and DATE_START=#{startDate,jdbcType=DATE}
+		and DATE_END=#{endDate,jdbcType=DATE}
+		and status='E'
+		) otherFee
 		from REP_PROD_INFO info
 		left join REP_PROD_INDEX rindex on info.PROD_ID=rindex.PROD_ID and rindex.status='E' and rindex.VALUE_DATE=#{reportDate,jdbcType=DATE}
-		left join (
-			SELECT 
-			    bb.BOOKSET_ID
-			    ,bb.BALANCE_DATE
-			    ,nvl(sum(TDY_O_D_AMT),0) OTHER_FEE
-			from BOK_BALANCE bb
-			WHERE 1=1
-			    AND bb.STATUS='E'
-			    and bb.SUBJECT_NO in ( '6407','6605' )
-				<if test="reportDate!=null">
-					and bb.BALANCE_DATE=#{reportDate,jdbcType=DATE}
-				</if>
-			group by bb.BOOKSET_ID,bb.BALANCE_DATE
-		) bal
-		on info.P_PROD_ID=bal.BOOKSET_ID		
+		on info.P_PROD_ID=bal.BOOKSET_ID
 		where 1=1
 		and info.STATUS='E'
 		and info.ISSUE_STATUS='01'

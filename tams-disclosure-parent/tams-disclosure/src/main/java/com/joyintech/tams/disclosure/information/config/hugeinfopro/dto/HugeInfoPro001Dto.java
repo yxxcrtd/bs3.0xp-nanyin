@@ -139,7 +139,12 @@ public String dealDateStr;
     }
 
     public String getRptIssueDateStr() {
-        return super.getRptIssueDate()==null?null: DateUtil.format(super.getRptIssueDate(), "yyyy-MM-dd");
+        if (StringUtil.isNotEmpty(this.rptIssueDateStr)) {
+            return this.rptIssueDateStr;
+        } else {
+            return super.getRptIssueDate() == null ? null : DateUtil.format(super.getRptIssueDate(), "yyyy-MM-dd");
+        }
+
     }
 
     public String getUpdateTimeStr() {
