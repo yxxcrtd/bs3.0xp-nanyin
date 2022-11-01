@@ -869,7 +869,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(21))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "是否是分级产品"));
             }else{
-                if(StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), list.get(21))){
+                if(StringUtils.equals(DictCodeListExt1.是或否_否.getCodeName(), list.get(21))){
                     //查詢是否存在相同的产品主代码信息，若存在則給出提示
                     ProdInfoDto prodInfoDto = getParentProdInfo(list.get(8));
                     if(prodInfoDto != null){
