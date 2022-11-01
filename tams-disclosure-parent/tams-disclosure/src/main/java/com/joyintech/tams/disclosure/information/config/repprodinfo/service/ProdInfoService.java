@@ -865,6 +865,20 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             if (StringUtil.isEmpty(list.get(21))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "是否是分级产品"));
+            }else{
+                if(StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), list.get(21))){
+                    //查詢是否存在相同的产品主代码信息，若存在則給出提示
+                    ProdInfoDto prodInfoDto = getParentProdInfo(list.get(8));
+                    if(prodInfoDto != null){
+                        message.add("已存在相同产品主代码！");
+                    }
+                }else{
+                    //查询是否存在普通、相同的产品主代码信息，若存在則給出提示
+                    List<ProdInfoDto> prodInfoDtoList = getPtParentProdInfo(list.get(8));
+                    if(prodInfoDtoList!=null && prodInfoDtoList.size()>0){
+                        message.add("已存在相同产品主代码！");
+                    }
+                }
             }
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(21))
                     && StringUtils.equals(list.get(0), list.get(8))) {
@@ -875,6 +889,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     message.add("非分级产品，子产品成立日期和产品成立日期需要一致。");
                 }
             }
+
 
             if (StringUtil.isEmpty(list.get(22))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "是否是指数型产品"));
