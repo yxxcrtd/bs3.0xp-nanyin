@@ -2,34 +2,40 @@ package com.joyintech.tams.disclosure.home.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import com.joyintech.tams.disclosure.home.dto.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepFtpPath;
+import com.joyintech.tams.common.base.entity.RepJobRange;
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.common.common.util.DateCalcUtil;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
+import com.joyintech.tams.disclosure.home.dao.DisclosureHomeMapper;
+import com.joyintech.tams.disclosure.home.dto.HomePageStatsDto;
+import com.joyintech.tams.disclosure.home.dto.InfoAreaDto;
+import com.joyintech.tams.disclosure.home.dto.RepFtpPathDto;
+import com.joyintech.tams.disclosure.home.dto.RepRevealInfo;
+import com.joyintech.tams.disclosure.home.dto.RevalInfo;
+import com.joyintech.tams.disclosure.home.dto.SubmitInformationRegistrationDto;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 //import com.joyintech.tams.disclosure.common.base.entity.RepFtpPath;
 //import com.joyintech.tams.disclosure.common.constant.DisclosureDictCodeList;
 //import com.joyintech.tams.disclosure.common.util.DateCalcUtil;
@@ -50,8 +56,15 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     /**
      * 业务dao
      */
-//    @Autowired
-//    private DisclosureHomeMapper reportHomeMapper;
+    @Autowired
+    private DisclosureHomeMapper disclosureHomeMapper;
+    
+    @Autowired
+    private HomeExpectRevealService homeExpectRevealService;
+    
+    @Autowired
+    private CommonPlatformDateService commonPlatformDateService;
+
     /**
      * 日志
      */
@@ -527,20 +540,80 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     public Map<String, RepRevealInfo> searchRevealList(List<String> menulist) {
         Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
 
-        List<RepRevealInfo> dtoList = new ArrayList<RepRevealInfo>();
+        //List<RepRevealInfo> dtoList = new ArrayList<RepRevealInfo>();
+		Date statDate = commonPlatformDateService.getSysDate();//平台时间
+		
+        List<HomePageStatsDto> listStats = disclosureHomeMapper.selectHomePageStat(statDate);
+        
+    	for ( HomePageStatsDto dto:listStats ) {
+    		if ( dto.getHomePageType()==null || dto.getHomePageType().length()<1 )
+    			continue;
+    		RepRevealInfo info = resultMap.get(dto.getHomePageType());
+    		if ( info==null ) {
+    			info = new  RepRevealInfo();
+    			resultMap.put(dto.getHomePageType(),info);
+    		}
+    		
+    		//生成成功
+    		info.setGenFailCounts(info.getGenFailCounts()+dto.getCounts());
 
-        for (String menuId : menulist) {
-            RepRevealInfo repRevealInfo=new RepRevealInfo();
-            repRevealInfo.setExpectRevealNum("111");
-            repRevealInfo.setRevealNum("1111");
-            repRevealInfo.setGenFailNum("222");
-            repRevealInfo.setToBeReviewedNum("333");
-            repRevealInfo.setToBeConfirmedNum("444");
-            repRevealInfo.setToBeTgReviewedNum("555");
-            repRevealInfo.setToBeRevealedNum("666");
-            resultMap.put(menuId,repRevealInfo);
-        }
+    		if ( "01".equals(dto.getRevealStatus()) ) {  //已披露：披露状态='01'
+    			info.setRevealCounts(info.getRevealCounts()+dto.getCounts());
+    		} else {  //待披露
+    			info.setToBeRevealedCounts(info.getToBeRevealedCounts()+dto.getCounts());
+    		}
+    		
+    		if ( !"1".equals(dto.getConfirmStatus() ))  {  //待确认：确认状态：0,2
+    			info.setToBeConfirmedCounts(info.getToBeConfirmedCounts()+dto.getCounts());
+    		}
+    		
+    		if ( "01".equals(dto.getReviewStatus()) ) {
+    			info.setToBeReviewedCounts(info.getToBeReviewedCounts()+dto.getCounts());
+    		}
+    		if ( "01".equals(dto.getReviewTgStatus()) ) {
+    			info.setToBeTgReviewedCounts(info.getToBeTgReviewedCounts()+dto.getCounts());
+    		}
+    	}
 
+    	RepRevealInfo sumInfo = new  RepRevealInfo();
+    	
+    	for (  Entry<String, RepRevealInfo>entry:resultMap.entrySet() ) {
+    		String homePageType = entry.getKey();
+    		
+    		int expectCounts = homeExpectRevealService.queryCountsByHomeType(homePageType, statDate);
+
+    		//取出第一行
+    		RepRevealInfo repRevealInfo = entry.getValue();
+    		repRevealInfo.setExpectRevealCounts(expectCounts);
+    		
+    		sumInfo.setExpectRevealCounts(sumInfo.getExpectRevealCounts()+repRevealInfo.getExpectRevealCounts());
+    		sumInfo.setRevealCounts(sumInfo.getRevealCounts()+repRevealInfo.getRevealCounts());
+    		sumInfo.setGenFailCounts(sumInfo.getGenFailCounts()+repRevealInfo.getGenFailCounts());
+    		sumInfo.setToBeReviewedCounts(sumInfo.getToBeReviewedCounts()+repRevealInfo.getToBeReviewedCounts());
+    		sumInfo.setToBeConfirmedCounts(sumInfo.getToBeConfirmedCounts()+repRevealInfo.getToBeConfirmedCounts());
+    		sumInfo.setToBeTgReviewedCounts(sumInfo.getToBeTgReviewedCounts()+repRevealInfo.getToBeTgReviewedCounts());
+    		sumInfo.setToBeRevealedCounts(sumInfo.getToBeRevealedCounts()+repRevealInfo.getToBeRevealedCounts());
+    		
+    		repRevealInfo.setExpectRevealNum(repRevealInfo.getExpectRevealCounts()+"");
+    		repRevealInfo.setRevealNum(repRevealInfo.getRevealCounts()+"");
+    		repRevealInfo.setGenFailNum(repRevealInfo.getGenFailCounts()+"");
+    		repRevealInfo.setToBeReviewedNum(repRevealInfo.getToBeReviewedCounts()+"");
+    		repRevealInfo.setToBeConfirmedNum(repRevealInfo.getToBeConfirmedCounts()+"");
+    		repRevealInfo.setToBeTgReviewedNum(repRevealInfo.getToBeTgReviewedCounts()+"");
+    		repRevealInfo.setToBeRevealedNum(repRevealInfo.getToBeRevealedCounts()+"");
+    	}
+    	
+    	sumInfo.setExpectRevealNum(sumInfo.getExpectRevealCounts()+"");
+    	sumInfo.setRevealNum(sumInfo.getRevealCounts()+"");
+    	sumInfo.setGenFailNum(sumInfo.getGenFailCounts()+"");
+    	sumInfo.setToBeReviewedNum(sumInfo.getToBeReviewedCounts()+"");
+    	sumInfo.setToBeConfirmedNum(sumInfo.getToBeConfirmedCounts()+"");
+    	sumInfo.setToBeTgReviewedNum(sumInfo.getToBeTgReviewedCounts()+"");
+    	sumInfo.setToBeRevealedNum(sumInfo.getToBeRevealedCounts()+"");
+    	
+		resultMap.put("99",sumInfo);
+		
         return resultMap;
     }
+    
 }
