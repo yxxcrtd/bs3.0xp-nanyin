@@ -51,6 +51,7 @@ public class BonusCalist003Controller extends BaseController {
         List<BonusCalist001Dto> paramList =new ArrayList<>();
         List<String> prodIds = StringUtil.splitToList(GlobalConstant.COMMA, dto.getProdId());
 //        paramList.add(dto);
+        //根据页面选择的多个子产品代码循环
         for (String prodId : prodIds){
             dto.setProdId(prodId);
             paramList.add(dto);
