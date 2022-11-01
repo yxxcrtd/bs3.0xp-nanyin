@@ -323,7 +323,7 @@
         TO_CHAR(NVL(dpb.Update_Time,dpb.Create_Time),'yyyy-mm-dd hh24:mi:ss') updateDateStr,
         rpi.prod_name prodName
         FROM DIS_PROD_BONUSPLAN dpb
-        LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpb.PROD_ID WHERE 1=1
+        LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpb.PROD_ID and rpi.STATUS = 'E' WHERE 1=1
         <if test="dataStatusArr != null and dataStatusArr.length > 0">
             AND dpb.DATA_STATUS IN
             <foreach item="item" collection="dataStatusArr" index="index"
