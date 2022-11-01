@@ -1330,7 +1330,7 @@ public class PoiReportService {
 						||StringUtil.equals(rptType,DisReportType.JDBG_FZSX)){
 					if(!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
 							||!StringUtil.isNotEmpty(dataMap.get("ldxfxfx"))){
-						resultSb.append((index++)+"："+"报表指标信息缺失<br>");
+						resultSb.append((index++)+"："+"报表文本描述缺失<br>");
 					}
 				}else{
 					if(!StringUtil.isNotEmpty(dataMap.get("tzclhyzfx"))
@@ -1338,7 +1338,7 @@ public class PoiReportService {
 							||!StringUtil.isNotEmpty(dataMap.get("tgrbg1"))
 							||!StringUtil.isNotEmpty(dataMap.get("tgrbg2"))
 							||!StringUtil.isNotEmpty(dataMap.get("tgrbg3"))){
-						resultSb.append((index++)+"："+"报表指标信息缺失<br>");
+						resultSb.append((index++)+"："+"报表文本描述缺失<br>");
 					}
 				}
 
