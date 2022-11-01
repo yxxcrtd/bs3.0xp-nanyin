@@ -371,7 +371,7 @@ var getSystemNowUrl = basePath + "system/reportHome/getSystemNow";
                 }
                 newTab.tabUrl+=temp;
                 addTab(newTab);
-            },
+            }
 
         };
     }();
@@ -379,6 +379,11 @@ var getSystemNowUrl = basePath + "system/reportHome/getSystemNow";
     $(function() {
         homepage.init(); //todo url确定后，需要放开
 
+		// 绑定按钮事件
+		$('#refresh').click(function() {
+			homepage.searchReportInfo();
+		});
+						
         $("#searchDate").change(function() {
             homepage.searchReportInfo();
         });

@@ -197,28 +197,42 @@ public class ProdInfo001Controller extends BaseController {
      */
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws IOException {
-        // Map<String, Object> paraMap = RequestUtil.getPageParam();
-        String datas = this.getParam("datas");
-        List<ProdInfoDto> listdto = null;
-        if (datas == null) {
-            listdto = prodInfoService.findAll(RequestUtil.getPageParam());
-        } else {
-            listdto = JsonUtils.json2List(datas, ProdInfoDto.class);
-        }
-        File outFile = commonExportService.makeFile(
-                "/com/joyintech/tams/disclosure/information/config/repprodinfo/export_prodinfo001.xml",
-                listdto);
-        String exportFileName = this.getPageId();
-        com.joyintech.framework.base.intf.Page page = CacheUtil.getPage(this.getPageId());
-        if (null != page) {
-            exportFileName = page.getName()
-                    + SystemGlobalConstant.OPEN_PARENTHESIS + DateUtil.getCurrentDate()
-                    + SystemGlobalConstant.CLOSE_PARENTHESIS + SystemGlobalConstant.POINT
-                    + FileNameUtil.getFileExtName(outFile);
-        }
-        return ExportUtil.export(exportFileName, outFile, true);
+//    @RequestMapping(ACTION_EXPORT)
+//    public ResponseEntity<byte[]> export() throws IOException {
+//        // Map<String, Object> paraMap = RequestUtil.getPageParam();
+//        String datas = this.getParam("datas");
+//        List<ProdInfoDto> listdto = null;
+//        if (datas == null) {
+//            listdto = prodInfoService.findAll(RequestUtil.getPageParam());
+//        } else {
+//            listdto = JsonUtils.json2List(datas, ProdInfoDto.class);
+//        }
+//        File outFile = commonExportService.makeFile(
+//                "/com/joyintech/tams/disclosure/information/config/repprodinfo/export_prodinfo001.xml",
+//                listdto);
+//        String exportFileName = this.getPageId();
+//        com.joyintech.framework.base.intf.Page page = CacheUtil.getPage(this.getPageId());
+//        if (null != page) {
+//            exportFileName = page.getName()
+//                    + SystemGlobalConstant.OPEN_PARENTHESIS + DateUtil.getCurrentDate()
+//                    + SystemGlobalConstant.CLOSE_PARENTHESIS + SystemGlobalConstant.POINT
+//                    + FileNameUtil.getFileExtName(outFile);
+//        }
+//        return ExportUtil.export(exportFileName, outFile, true);
+//    }
+
+
+    /**
+     * 导出
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("export")
+    public ResponseEntity<byte[]> export(){
+        return prodInfoService.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
     }
 
     /**

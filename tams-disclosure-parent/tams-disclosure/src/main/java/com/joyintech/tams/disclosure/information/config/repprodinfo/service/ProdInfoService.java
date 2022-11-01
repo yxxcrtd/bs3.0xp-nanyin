@@ -15,7 +15,9 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -34,6 +36,7 @@ import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.Di
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -171,8 +174,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         }
         /* NYLCXP-411 产品名称字段改为多选下拉框 add by kongzhifang 2022-08-12 start */
 
-        Page<ProdInfoDto> pages = super.queryForPageForSelectReturn(Integer.parseInt((String) params.get("page")),
-                Integer.parseInt((String) params.get("length")),
+        Page<ProdInfoDto> pages = super.queryForPageForSelectReturn(Integer.parseInt(params.get("page").toString()),
+                Integer.parseInt(params.get("length").toString()),
                 () -> prodInfoMapper.searchProdList(params));
         return pages;
     }
@@ -866,7 +869,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             if (StringUtil.isEmpty(list.get(21))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "是否是分级产品"));
             }else{
-                if(StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), list.get(21))){
+                if(StringUtils.equals(DictCodeListExt1.是或否_否.getCodeName(), list.get(21))){
                     //查詢是否存在相同的产品主代码信息，若存在則給出提示
                     ProdInfoDto prodInfoDto = getParentProdInfo(list.get(8));
                     if(prodInfoDto != null){
@@ -1242,4 +1245,21 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     public int hasReapetData(ProdInfoDto dto) {
         return prodInfoMapper.hasReapetData(dto);
     }
+
+
+    /**
+     * 导出
+     */
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config(
+                "/com/joyintech/tams/disclosure/information/config/repprodinfo/export_prodinfo001.xml").dataSource(
+                DataSourceType.MASERT);
+    }
+
+    @Override
+    public Page<ProdInfoDto> selectPageData(Map<String, Object> selectParam) {
+        return this.findByPage(selectParam);
+    }
+
 }

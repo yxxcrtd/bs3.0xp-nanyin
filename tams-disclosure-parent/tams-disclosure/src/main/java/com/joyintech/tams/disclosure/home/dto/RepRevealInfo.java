@@ -32,6 +32,14 @@ public class RepRevealInfo {
      */
     private String toBeTgReviewedNum;
 
+    private int expectRevealCounts;  //预计披露
+    private int revealCounts;  //已披露
+    private int toBeRevealedCounts; //待披露
+    private int genFailCounts;  //生成成功
+    private int toBeConfirmedCounts;  //待确认
+    private int toBeReviewedCounts;  //待复核
+    private int toBeTgReviewedCounts;  //待托管复核
+    
     /**
      * 待披露
      */
@@ -92,4 +100,61 @@ public class RepRevealInfo {
     public void setToBeRevealedNum(String toBeRevealedNum) {
         this.toBeRevealedNum = toBeRevealedNum;
     }
+
+	public int getExpectRevealCounts() {
+		return expectRevealCounts;
+	}
+
+	public void setExpectRevealCounts(int expectRevealCounts) {
+		this.expectRevealCounts = expectRevealCounts;
+	}
+
+	public int getRevealCounts() {
+		return revealCounts;
+	}
+
+	public void setRevealCounts(int revealCounts) {
+		this.revealCounts = revealCounts;
+	}
+
+	public int getToBeRevealedCounts() {
+		return toBeRevealedCounts;
+	}
+
+	public void setToBeRevealedCounts(int toBeRevealedCounts) {
+		this.toBeRevealedCounts = toBeRevealedCounts;
+	}
+
+	public int getGenFailCounts() {
+		return genFailCounts;
+	}
+
+	public void setGenFailCounts(int genFailCounts) {
+		this.genFailCounts = genFailCounts;
+	}
+
+	public int getToBeConfirmedCounts() {
+		return toBeConfirmedCounts;
+	}
+
+	public void setToBeConfirmedCounts(int toBeConfirmedCounts) {
+		this.toBeConfirmedCounts = toBeConfirmedCounts;
+	}
+
+	public int getToBeReviewedCounts() {
+		return toBeReviewedCounts;
+	}
+
+	public void setToBeReviewedCounts(int toBeReviewedCounts) {
+		this.toBeReviewedCounts = toBeReviewedCounts;
+	}
+
+	public int getToBeTgReviewedCounts() {
+		return toBeTgReviewedCounts;
+	}
+
+	public void setToBeTgReviewedCounts(int toBeTgReviewedCounts) {
+		this.toBeTgReviewedCounts = toBeTgReviewedCounts;
+	}
+    
 }

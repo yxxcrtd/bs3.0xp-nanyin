@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.home.dao.HomeExpectRevealMapper">
+
+	<select id="selectCountsByCondition" resultType="java.lang.Integer">
+		select
+		count(1)
+		from
+		REP_PROD_INFO info
+		where 1=1
+		and STATUS='E'
+		<if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+	</select>
+	
+	<select id="selectRepInfoByHomePageType" resultType="com.joyintech.tams.common.base.entity.RepInfo">
+		select REP_ID,TEMPLATE_ID,TEMPLATE_NAME,REPORT_NAME
+		from REP_INFO
+		where HOME_PAGE_TYPE=#{homePageType,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insert" parameterType="com.joyintech.tams.disclosure.home.dto.DisHomePageStat" >
+		merge into DIS_HOMEPAGE_STAT stat
+		using (
+			select
+				#{statId,jdbcType=VARCHAR} STAT_ID
+				,#{repId,jdbcType=VARCHAR} REP_ID
+				,#{statDate,jdbcType=DATE} STAT_DATE
+				,#{expectCounts,jdbcType=DECIMAL} EXPECT_COUNTS
+				,#{remark,jdbcType=VARCHAR} REMARK
+			from dual
+		) temp
+		<!-- 业务主键匹配 -->
+		ON(
+			stat.REP_ID = temp.REP_ID
+			and stat.STAT_DATE = temp.STAT_DATE
+		)
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN 
+		UPDATE SET
+			stat.EXPECT_COUNTS = temp.EXPECT_COUNTS,
+			stat.REMARK = temp.REMARK
+		<!-- 未匹配到则插入 -->
+		WHEN NOT MATCHED THEN 
+			INSERT (STAT_ID
+			,REP_ID
+			,STAT_DATE
+			,EXPECT_COUNTS
+			,REMARK)
+		VALUES(temp.STAT_ID,temp.REP_ID,temp.STAT_DATE,temp.EXPECT_COUNTS,temp.REMARK)            
+    </insert>
+    
+    <select id="select" resultType="com.joyintech.tams.disclosure.home.dto.DisHomePageStat">
+		select *
+		from DIS_HOMEPAGE_STAT
+		where REP_ID=#{repId,jdbcType=VARCHAR}
+		and STAT_DATE = #{statDate,jdbcType=DATE}
+	</select>
+    
+</mapper>
