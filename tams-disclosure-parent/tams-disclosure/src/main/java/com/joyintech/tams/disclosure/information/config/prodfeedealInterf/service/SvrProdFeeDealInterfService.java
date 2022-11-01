@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.validation.ValidMessage;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -444,9 +445,9 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             } else {
             	rowData.set(4,payDateStr);
             }
-            if (rowData.get(4).compareTo(DateUtil.format(iPlatformDate.getSysDate(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
-                message.add("支付日只能小于等于平台日。");
-            }
+//            if (rowData.get(4).compareTo(DateUtil.format(iPlatformDate.getSysDate(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
+//                message.add("支付日只能小于等于平台日。");
+//            }
             if(StringUtil.isNotEmpty(rowData.get(3)) && !isBigDecimal(rowData.get(3))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "自成立以来发生额（贷方）"));
             }
