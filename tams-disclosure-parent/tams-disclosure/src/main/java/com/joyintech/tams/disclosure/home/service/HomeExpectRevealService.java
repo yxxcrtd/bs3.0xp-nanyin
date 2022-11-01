@@ -1,0 +1,335 @@
+/**
+ * 
+ */
+package com.joyintech.tams.disclosure.home.service;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepInfo;
+import com.joyintech.tams.common.base.entity.RepJobRange;
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
+import com.joyintech.tams.disclosure.common.common.service.HolidayService;
+import com.joyintech.tams.disclosure.home.dao.HomeExpectRevealMapper;
+import com.joyintech.tams.disclosure.home.dto.DisHomePageStat;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper;
+import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
+
+/**
+ * @author chenxc
+ *
+ */
+
+@Service
+public class HomeExpectRevealService {
+	
+	@Autowired
+	private HomeExpectRevealMapper homeExpectRevealMapper;
+	
+	@Autowired
+	private RepDetailsShow001Mapper repDetailsShow001Mapper;
+	
+	@Autowired
+	private HolidayService holidayService;
+	
+	private int queryCounts(String repId,Date statDate) {
+		Map<String,Object> params = new HashMap<String,Object>();
+		Map<String,Object> expectConditions = getExpectRevealCondition(repId,statDate);
+		if ( expectConditions!=null && expectConditions.size()>0 )
+			params.putAll(expectConditions);
+		
+		String sql = getRandgeRule(repId,params);
+		int counts = homeExpectRevealMapper.selectCountsByCondition(sql);
+		return counts;
+	}
+	
+	public int queryCountsByHomeType(String homePageType,Date statDate) {
+		int ret = 0;
+		List<RepInfo> listRepInfo = homeExpectRevealMapper.selectRepInfoByHomePageType(homePageType);
+		for ( RepInfo rep:listRepInfo ) {
+			int counts = 0;
+			String repId = rep.getRepId();
+			if (repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016") ) {  //季报
+	    		//找到本季度的第一天
+	    		Date qDate = DurationUtil.getQuarterStart(statDate.getYear()+1900,statDate.getMonth()/3+1);
+	    		Map<String,Object> p = new HashMap<>();
+	    		p.put("busi_date", qDate);
+	    		p.put("is_holiday", "0");
+	    		p.put("market_code", "04");
+	    		p.put("days", 3);
+	    		Date sDate = holidayService.getAferNWorkDay(p);
+	    		p.put("days", 15);
+	    		Date eDate = holidayService.getAferNWorkDay(p);
+	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
+	    			counts = genStat(repId,statDate);
+	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
+	    			counts = queryStat(repId,sDate);
+	    			if ( counts==-1 )  //首次生成
+	    				counts = genStat(repId,statDate);
+	    		} else {
+	    			counts = 0;
+	    		}
+			}
+			else if( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018") ) {  //半年报
+	    		//找到本周期的第一天
+	    		Date qDate = DurationUtil.getHalfYearStart(statDate.getYear()+1900,statDate.getMonth()/6+1);
+	    		Map<String,Object> p = new HashMap<>();
+	    		p.put("busi_date", qDate);
+	    		p.put("is_holiday", "0");
+	    		p.put("market_code", "04");
+	    		p.put("days", 3);
+	    		Date sDate = holidayService.getAferNWorkDay(p);
+	    		p.put("days", 90);
+	    		Date eDate = holidayService.getAferNWorkDay(p);
+	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
+	    			counts = genStat(repId,statDate);
+	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
+	    			counts = queryStat(repId,sDate);
+	    			if ( counts==-1 )  //首次生成
+	    				counts = genStat(repId,statDate);	    			
+	    		} else {
+	    			counts = 0;
+	    		}
+			}
+			else if (repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020") ){  //年报
+	    		//找到本周期的第一天
+	    		Date qDate = DurationUtil.getYearStart(statDate.getYear()+1900);
+	    		Map<String,Object> p = new HashMap<>();
+	    		p.put("busi_date", qDate);
+	    		p.put("is_holiday", "0");
+	    		p.put("market_code", "04");
+	    		p.put("days", 3);
+	    		Date sDate = holidayService.getAferNWorkDay(p);
+	    		p.put("days", 60);
+	    		Date eDate = holidayService.getAferNWorkDay(p);
+	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
+	    			counts = genStat(repId,statDate);
+	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
+	    			counts = queryStat(repId,sDate);
+	    			if ( counts==-1 )  //首次生成
+	    				counts = genStat(repId,statDate);	    			
+	    		} else {
+	    			counts = 0;
+	    		}
+			} else {
+				counts = queryCounts( rep.getRepId(),statDate);
+			}
+			ret += counts;
+		}
+		return ret;
+	}
+	
+    private String getRandgeRule(String repId,Map<String, Object> params){
+
+    	//根据报表编码查询规则数据
+        List<RepJobRange> ruleList = repDetailsShow001Mapper.getRepJobRangeInfo(repId);
+
+        //根据规则数据设置查询条件
+        StringBuffer sb = new StringBuffer();
+        if(!StringUtil.isEmptyList(ruleList)){
+            for(RepJobRange dto:ruleList){
+                if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_募集方式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_发行方式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_发行状态.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放模式.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否独立开户.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_理财类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品期限类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_信批产品类别.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())){
+                    sb.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
+                            .append(dto.getRuleType4()).append("'");
+                }else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_到期日.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_清盘日.getValue())){
+                    String sysDate=DateUtil.getCurrentDate();
+                    if(dto.getRuleType4()==null||StringUtil.isEmpty(dto.getRuleType4())){
+                        sb.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')").append(dto.getRuleType2()).append("'")
+                        .append(sysDate).append("'");
+                    }
+                    else{
+                        sb.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')").append(dto.getRuleType2()).append("'")
+                        .append(dto.getRuleType4()).append("'");
+                    }
+                }
+            }
+        }
+        
+        for ( Entry<String, Object> entry:params.entrySet() ) {	
+        	if ( entry.getValue()!=null && entry.getValue().toString().length()>0 ) {
+        		String str = " and " + entry.getValue();
+        		sb.append(str);
+        	}
+        }
+        
+        return sb.toString();
+    }
+
+    private Map<String,Object> getExpectRevealCondition(String repId,Date statDate) {
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	String condition = "";
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	String queryDate = sdf.format(statDate);
+    	
+    	if ( repId.equals("CP_001_001_001") ) {//发行公告：成立日=当天
+    		condition = "SET_DATE=to_date('"+queryDate + "','yyyy-mm-dd')";
+    	}
+    	else if ( repId.equals("CP_001_002_003") || repId.equals("CP_001_002_004") ) { //日开产品净值公告，未到期的产品
+    		condition = "info.MDATE>=to_date('"+queryDate+"','yyyy-mm-dd')";
+    	}
+    	else if ( repId.equals("CP_001_002_007") ) {//周期型产品开放公告（公募产品）：并且运作起始日=当天
+    		condition = " exists ( select 1 from" + 
+    				" DIS_PROD_PLAN plan" + 
+    				" where" + 
+    				" plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
+    				" and info.PROD_ID = plan.PROD_ID)";
+    	}
+    	else if ( repId.equals("CP_001_002_008") ) {//周期型产品开放公告（公募产品-单赎回）：并且自动赎回日=当天
+    		condition = " exists ( select 1 from" + 
+    				" DIS_PROD_PLAN plan" + 
+    				" where" + 
+    				" plan.AUTO_REDEEM_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
+    				" and info.PROD_ID = plan.PROD_ID)";
+    	}    	
+    	else if ( repId.equals("CP_001_002_009")|| repId.equals("CP_001_002_010")
+    			|| repId.equals("CP_001_002_013")|| repId.equals("CP_001_002_014")
+    			|| repId.equals("CP_001_003_001")|| repId.equals("CP_001_003_002")
+    			) { //开放、净值及分红公告：并且当期收益分配基准日=当天 
+    		        //净值及分红报告；
+    				//到期公告；
+    		condition = " exists ( select 1 from" + 
+    				" DIS_PROD_BONUSPLAN plan" + 
+    				" where" + 
+    				" plan.SETT_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
+    				" and info.PROD_ID = plan.PROD_ID)";
+    	}
+    	else if ( repId.equals("CP_001_002_011") ) {//开放及净值公告（公募）：并且开放结束日+1=当天
+    		Map<String,Object> p = new HashMap<>();
+    		p.put("busi_date", statDate);
+    		p.put("is_holiday", "0");
+    		p.put("market_code", "04");
+    		Date preStatDate = holidayService.getLastWorkDay(p);
+    		String preQueryDate = sdf.format(preStatDate);
+    		condition = " exists ( select 1 from" + 
+    				" DIS_PROD_PLAN plan" + 
+    				" where" + 
+    				" plan.OPEN_END_DATE = to_date('"+preQueryDate+"','yyyy-mm-dd')" + 
+    				" and info.PROD_ID = plan.PROD_ID)";
+    	}
+    	else if ( repId.equals("CP_001_002_012") ) {//开放及净值报告（私募）：并且运作起始日=当天
+    		condition = " exists ( select 1 from" + 
+    				" DIS_PROD_PLAN plan" + 
+    				" where" + 
+    				" plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
+    				" and info.PROD_ID = plan.PROD_ID)";
+    	}    	
+    	else if ( repId.equals("CP_001_002_012") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
+    		condition = "info.MDATE>=to_date('"+queryDate+"')";
+    		//找到本周一
+    		Calendar cal = Calendar.getInstance();
+    		cal.setTime(statDate);
+    		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);//周一
+    		Date firstWorkDateOfWeek = cal.getTime();
+    		if ( holidayService.isHoliday(firstWorkDateOfWeek, "04")==true ) {
+        		Map<String,Object> p = new HashMap<>();
+        		p.put("busi_date", firstWorkDateOfWeek);
+        		p.put("is_holiday", "0");
+        		p.put("market_code", "04");
+    			firstWorkDateOfWeek = holidayService.getNextWorkDay(p);
+    		}
+    		String firstWorkDateofWeekStr = sdf.format(firstWorkDateOfWeek);
+    		condition += " and exists ( select 1 from" + 
+    				" dual" + 
+    				" where to_date('"+firstWorkDateofWeekStr+"','yyyy-mm-dd')=to_date('"+queryDate+"')"; 
+    	}
+    	else if ( repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016")  ) {//季度报告：下一季度第三个工作日<=当天<=下一季度15个工作日之前
+    		//找到上季度的第一天
+    		Date qDate = getLastDurationFirstDate(statDate,"Q");
+    		String qDateStr = sdf.format(qDate);
+    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+    	}
+    	else if ( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018")  ) {//半年度报告：下一半年度第三个工作日<=当天<=下一半年度90个工作日之前
+    		//找到上个半年的第一天
+    		Date qDate = getLastDurationFirstDate(statDate,"H");
+    		String qDateStr = sdf.format(qDate);
+    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+    	}
+    	else if ( repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020")  ) {//年度报告：下一年度第三个工作日<=当天<=下一年度60个工作日之前
+    		//找到上个年度的第一天
+    		Date qDate = getLastDurationFirstDate(statDate,"Y");
+    		String qDateStr = sdf.format(qDate);
+    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+    	}
+    	
+    	if ( condition.length()>0 )
+    		map.put("condition", condition);
+    	return map;
+    }
+    
+    private Date getLastDurationFirstDate(Date queryDate, String durationType ) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(queryDate);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+    	if ( durationType.equals("Y")) {
+    		year = year-1;
+    		cal.set(year,0,1);
+    	} else if ( durationType.equals("H") ) {
+    		if (month<6 ) {
+    			month = 6;
+    			year = year-1; 
+    		} else {
+    			month = 0;
+    		}
+    		cal.set(year,month,1);
+    	} else if ( durationType.equals("Q") ) {
+    		if ( month<3 ) {
+    			year = year-1;
+    			month = 9;
+    		} else if ( month>=3 && month<6 ) {
+    			month = 0;
+    		} else if ( month>=6 && month<9 ) {
+    			month = 3;
+    		} else if ( month>=9 && month<12 ) {
+    			month = 6;
+    		}
+    		cal.set(year,month,1);
+    	}
+    	return cal.getTime();
+    }
+    
+    private int genStat(String repId,Date statDate) {
+    	int counts = queryCounts(repId,statDate);
+    	DisHomePageStat dto = new DisHomePageStat();
+    	dto.setStatId(IDGenerator.generate());
+    	dto.setRepId(repId);
+    	dto.setStatDate(statDate);
+    	dto.setExpectCounts(counts);
+    	homeExpectRevealMapper.insert(dto);
+    	return counts;
+    }
+    
+    private int queryStat(String repId,Date statDate) {
+    	DisHomePageStat stat = homeExpectRevealMapper.select(repId,statDate);
+    	if ( stat!=null )
+    		return stat.getExpectCounts();
+    	else
+    		return -1;
+    }
+}

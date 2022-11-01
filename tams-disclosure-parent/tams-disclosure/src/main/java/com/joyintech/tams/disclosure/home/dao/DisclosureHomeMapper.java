@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.disclosure.home.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.RepFtpPath;
+import com.joyintech.tams.disclosure.home.dto.HomePageStatsDto;
 import com.joyintech.tams.disclosure.home.dto.InfoAreaDto;
 import com.joyintech.tams.disclosure.home.dto.RepFtpPathDto;
 import com.joyintech.tams.disclosure.home.dto.SubmitInformationRegistrationDto;
@@ -116,4 +118,6 @@ public interface DisclosureHomeMapper {
      */
 	List<RepFtpPathDto> queryYplFail(Map<String, Object> parmMap);
 
+	List<HomePageStatsDto> selectHomePageStat(@Param("statDate") Date statDate);
+	
 }
