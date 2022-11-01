@@ -70,7 +70,7 @@ public class BonusCalist003Controller extends BaseController {
                         report.getExcessAchievementProp()==null || report.getAchievementBasis()==null){
                     AjaxResult ajax=new AjaxResult();
                     ajax.setStatuCode(500);
-                    ajax.setMessage("相关数据缺失!",MessageType.错误消息);
+                    ajax.setMessage("子产品代码"+prodId+"相关数据缺失!",MessageType.错误消息);
                     return ajax;
                 }
             }
