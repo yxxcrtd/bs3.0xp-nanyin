@@ -251,7 +251,7 @@
         T1.IS_GRADE isGrade,
         T1.PROD_TYPE prodType
         from REP_PROD_INFO T1
-        left join REP_PROD_INFO T3 on T1.P_PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '01'
+        left join REP_PROD_INFO T3 on T1.P_PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '01' AND T1.STATUS = 'E'
         where T1.PROD_ID = #{prodId,jdbcType=VARCHAR}
         and T1.REP_PROD_TYPE = '03'
         union all
@@ -260,7 +260,7 @@
                T1.IS_GRADE isGrade,
                T1.PROD_TYPE prodType
         from REP_PROD_INFO T1
-        where T1.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where T1.PROD_ID = #{prodId,jdbcType=VARCHAR} AND T1.STATUS = 'E'
           and T1.REP_PROD_TYPE = '02'
     </select>
 
