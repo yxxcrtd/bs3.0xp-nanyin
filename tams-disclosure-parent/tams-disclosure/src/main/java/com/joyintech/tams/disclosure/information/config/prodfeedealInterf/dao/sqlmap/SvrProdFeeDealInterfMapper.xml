@@ -117,6 +117,7 @@
         where PROD_ID = #{prodId,jdbcType=CHAR}
           and PAY_DATE = #{payDate,jdbcType=DATE}
           and FEE_TYPE = #{feeType,jdbcType=CHAR}
+          and status !='D'
     </update>
 
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto"  >
@@ -127,6 +128,7 @@
 		where PROD_ID = #{prodId,jdbcType=CHAR}
           and PAY_DATE = #{payDate,jdbcType=DATE}
           and FEE_TYPE = #{feeType,jdbcType=CHAR}
+          and STATUS != 'D'
 	</delete>
 
     <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
@@ -141,7 +143,7 @@
                rft.UPDATE_TIME updateTime,
                rft.ERRORMSG errmsg
         from REP_FEE_TRD rft
-        left join V_REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        left join V_REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID and rpi.status='E'
         <where>
             <if test="prodIdList != null and prodIdList.size() > 0">
                 AND rft.PROD_ID in

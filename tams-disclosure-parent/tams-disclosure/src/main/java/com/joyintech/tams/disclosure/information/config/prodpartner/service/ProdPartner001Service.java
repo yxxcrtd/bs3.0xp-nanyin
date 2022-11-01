@@ -287,7 +287,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 }else{
                     //验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(platDate,DateUtil.parse(list.get(2).trim()))>0){
-                       message.add("生效日要大于等于平台日期！");
+//                       message.add("生效日要大于等于平台日期！");
                     }
                 }
             }
@@ -303,7 +303,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                     Date effEndDate=DateUtil.parse(list.get(3).trim());
                     //生效截止日期是否大于等于平台日期
                     if (DateUtil.compareDate(platDate,effEndDate)>0){
-                        message.add("生效截止日期要大于等于平台日期！");
+//                        message.add("生效截止日期要大于等于平台日期！");
                     }
                     if(isDateStr(list.get(2).trim())){
                         Date effDate=DateUtil.parse(list.get(2).trim());

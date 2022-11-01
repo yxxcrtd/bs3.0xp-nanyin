@@ -135,7 +135,7 @@
                 REJECT_REMARK = #{rejectRemark,jdbcType=VARCHAR},
             </if>
             <if test="rptIssueDate != null" >
-                RPT_ISSUE_DATE = to_date(#{rptIssueDateStr},'YYYY-MM-DD'),
+                RPT_ISSUE_DATE = to_date(#{rptIssueDateStr},'YYYY/MM/DD'),
             </if>
             <if test="dataStatus != null" >
                 DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
@@ -152,7 +152,7 @@
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR} and
         PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
-        and DEAL_DATE = #{dealDate,jdbcType=DATE}
+        and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
     </update>
 
 
@@ -227,7 +227,7 @@
            from DIS_LARGE_REDEMPTION
            where PROD_ID = #{prodId,jdbcType=VARCHAR} and
             PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
-            and DEAL_DATE = #{dealDate,jdbcType=DATE}
+            and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
             and DATA_STATUS = 'E'
 
     </select>
@@ -263,11 +263,11 @@
         select
         A.PROD_REGIST_NO,
         A.PROD_ID,
-        to_char(A.DEAL_DATE,'yyyy/mm/dd') dealDateStr
+        to_char(A.RPT_ISSUE_DATE,'yyyy/mm/dd') rptIssueDateStr
         from DIS_LARGE_REDEMPTION A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_REGIST_NO,A.PROD_ID,to_char(A.DEAL_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
-                (#{item.prodRegistNo},#{item.prodId},#{item.dealDateStr},'E')
+            <foreach collection="list" item="item" open="(A.PROD_REGIST_NO,A.PROD_ID,to_char(A.RPT_ISSUE_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
+                (#{item.prodRegistNo},#{item.prodId},#{item.rptIssueDateStr},'E')
             </foreach>
         </where>
     </select>
