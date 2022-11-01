@@ -12,6 +12,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.information.config.bonuscalist.dao.BonusCalist001Mapper;
 import com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto;
 import com.joyintech.tams.disclosure.information.config.bonuscalist.service.BonusCalist001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -37,6 +38,9 @@ public class BonusCalist002Controller extends BaseController {
     
     @Autowired
     private BonusCalist001Service bonusCalist001Service;
+
+    @Autowired
+    private BonusCalist001Mapper bonusCalist001Mapper;
 
     @Override
     @RequestMapping(PAGE_INIT)
@@ -69,10 +73,10 @@ public class BonusCalist002Controller extends BaseController {
             return new AjaxResult(result);
         }
         if (StringUtil.equals(dto.getOperateType(),"new")) {
-            List<BonusCalist001Dto> paramList =new ArrayList<>(1);
-            paramList.add(dto);
-            List<BonusCalist001Dto> list = bonusCalist001Service.selectBonusInfoByKey(paramList);
-            if (list!=null && list.size()>0) {
+//            List<BonusCalist001Dto> paramList =new ArrayList<>(1);
+//            paramList.add(dto);
+            List<String> list = bonusCalist001Mapper.isRepeated(dto);
+            if (list!=null && list.size()>0&&(list.contains("A")||list.contains("E"))) {
                 AjaxResult ajax=new AjaxResult();
                 ajax.setStatuCode(500);
                 ajax.setMessage("（子产品代码+收益分配基准日）作为联合主键不可以重复！", MessageType.警告消息);
