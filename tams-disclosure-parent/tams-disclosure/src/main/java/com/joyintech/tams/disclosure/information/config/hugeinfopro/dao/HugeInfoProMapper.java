@@ -39,4 +39,6 @@ public interface HugeInfoProMapper {
     int isRelate(@Param("prodRegistNo") String prodRegistNo, @Param("prodId")String prodId);
 
     List<HugeInfoPro001Dto> selectHugeInfoList(@Param("list") List<HugeInfoPro001Dto> list);
+
+    List<HugeInfoPro001Dto> selectHugeInfoByProdId(Map<String, Object> map);
 }

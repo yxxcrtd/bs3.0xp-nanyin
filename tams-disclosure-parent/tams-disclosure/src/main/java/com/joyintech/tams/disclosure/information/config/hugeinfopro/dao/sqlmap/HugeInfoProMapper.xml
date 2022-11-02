@@ -274,4 +274,22 @@
             </foreach>
         </where>
     </select>
+
+    <select id="selectHugeInfoByProdId"   resultType="com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto">
+        select
+        A.PROD_ID,
+        A.RPT_ISSUE_DATE
+        from DIS_LARGE_REDEMPTION A
+        <where>
+            <if test="prodId != null and prodId != ''">
+                AND	PROD_ID=#{prodId,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != ''">
+                AND	DATA_STATUS=#{status,jdbcType=VARCHAR}
+            </if>
+            <if test="rptIssueDateStr != null and rptIssueDateStr != ''">
+                AND	RPT_ISSUE_DATE = to_date(#{rptIssueDateStr,jdbcType=VARCHAR},'yyyy-MM-dd')
+            </if>
+        </where>
+    </select>
 </mapper>
