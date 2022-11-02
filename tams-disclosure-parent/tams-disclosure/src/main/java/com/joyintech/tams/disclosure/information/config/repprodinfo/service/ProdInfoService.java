@@ -1127,8 +1127,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
          //查留痕表对应workflowId的数据，并还原数据状态
         ProdInfoDto dto = prodInfoMapper.selectHisData(workflowId);
         ProdInfoDto prodInfoDto = new ProdInfoDto();
-        BeanUtil.copyPropertiesIgnoreNull(prodInfoDto,dto);
-        prodInfoMapper.updateStatus(prodInfoDto);
+        if(dto!=null){
+            BeanUtil.copyPropertiesIgnoreNull(prodInfoDto,dto);
+            prodInfoMapper.updateStatus(prodInfoDto);
+        }
+
     }
 
     public void updateIssuingStatus(ProdInfoDto dto) {
