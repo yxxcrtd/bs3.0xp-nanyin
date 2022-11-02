@@ -18,8 +18,10 @@ public class BonusCalist001Validator implements BeanValidator {
         BonusCalist001Dto dto = (BonusCalist001Dto) value;
         List<ValidMessage> resultList = new ArrayList<>();
         if (!StringUtil.equals(dto.getOperateType(),"delete")){
-            if (DateUtil.compareDate(dto.getProfitBaseDate(),dto.getLastProfitBaseDate())<= 0){
-                resultList.add(new ValidMessage("上一收益分配基准日应小于本期收益分配基准日！"));
+            if(StringUtil.isNotEmpty(dto.getProfitBaseDate()) && StringUtil.isNotEmpty(dto.getLastProfitBaseDate())) {
+                if (DateUtil.compareDate(dto.getProfitBaseDate(), dto.getLastProfitBaseDate()) <= 0) {
+                    resultList.add(new ValidMessage("上一收益分配基准日应小于本期收益分配基准日！"));
+                }
             }
         }
 
