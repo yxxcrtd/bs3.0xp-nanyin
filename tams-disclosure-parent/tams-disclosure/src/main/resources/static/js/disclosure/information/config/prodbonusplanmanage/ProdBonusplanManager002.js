@@ -146,7 +146,9 @@ $(function() {
 		$('#ProdBonusplanManager002_btn_submit').click(function() {
 			saveOrSubmit('submit');
 		});
-
+		if($('#achievement').val()==='无'){
+			$("#excessAchievementProp").attr("disabled", true );
+		}
 
 	});
 });
