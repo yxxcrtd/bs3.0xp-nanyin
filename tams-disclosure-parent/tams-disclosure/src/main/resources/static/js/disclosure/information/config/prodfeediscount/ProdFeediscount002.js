@@ -110,5 +110,14 @@ $(function() {
 		$('#ProdFeediscount002_btn_submit').click(function() {
 			saveOrSubmit('submit');
 		});
+
+		$('#prodRegistNo').prop("disabled",true);
+		if (pageModel == PAGE_MODEL_NEW){
+			$('#prodId').change(function () {
+				var prodId = $('#prodId').val();
+				var data = $('#prodId').select2("data")[0].object;
+				$('#prodRegistNo').textSelect('setValue',data);
+			});
+		}
 	});
 }());
