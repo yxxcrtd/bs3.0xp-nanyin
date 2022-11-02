@@ -60,11 +60,14 @@ $(function() {
 	 */
 	var init = function() {
 		$('#prodRegistNo').prop("disabled",true);
-		$('#prodId').change(function () {
-			var prodId = $('#prodId').val();
-			var data = $('#prodId').select2("data")[0].object;
-			$('#prodRegistNo').textSelect('setValue',data);
-		});
+		if (pageModel == PAGE_MODEL_NEW){
+			$('#prodId').change(function () {
+				var prodId = $('#prodId').val();
+				var data = $('#prodId').select2("data")[0].object;
+				$('#prodRegistNo').textSelect('setValue',data);
+			});
+		}
+
 		if (pageModel == PAGE_MODEL_EDIT){
 			$('#prodRegistNo').prop("disabled",true);
 			$('#prodId').prop("disabled",true);
