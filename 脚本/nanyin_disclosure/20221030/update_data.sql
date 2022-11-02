@@ -328,3 +328,13 @@ delete from REP_RULE where  ID in('D0000000000000000020','D0000000000000000021')
 insert into REP_RULE values ('D0000000000000000020','到期公告（公募）_规则','到期公告（公募）','CP_001_003_001','A02','','14','02','0','01','','02','1','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','01','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 insert into REP_RULE values ('D0000000000000000021','到期报告（私募）_规则','到期报告（私募）','CP_001_003_002','A02','','14','02','0','01','','02','1','01','09:00:00','01','16','','','','docx','','/joyintech/disclosure/download/','02','01','system','',to_date('2022/07/21','yyyy/MM/dd'),'system',to_date('2022/07/21','yyyy/MM/dd'),'','01');
 -- 到期规则修改 add by zhengxiaolian 2022-10-26 end
+
+update REP_INFO R set R.Home_Page_Type='01' where r.rep_id in('CP_001_002_003','CP_001_002_004');
+update REP_INFO R set R.Home_Page_Type='02' where r.rep_id in('CP_001_002_005','CP_001_002_006');
+update REP_INFO R set R.Home_Page_Type='03' where r.rep_id in('CP_001_001_001');
+update REP_INFO R set R.Home_Page_Type='04' where r.rep_id in('CP_001_003_001','CP_001_003_002');
+update REP_INFO R set R.Home_Page_Type='05' where r.rep_id in('CP_001_002_007','CP_001_002_008');
+update REP_INFO R set R.Home_Page_Type='06' where r.rep_id in('CP_001_002_015','CP_001_002_016');
+update REP_INFO R set R.Home_Page_Type='07' where r.rep_id in('CP_001_002_017','CP_001_002_018','CP_001_002_019','CP_001_002_020');
+update REP_INFO R set R.Home_Page_Type='08' where r.rep_id in('CP_001_002_009','CP_001_002_010','CP_001_002_011','CP_001_002_012','CP_001_002_013','CP_001_002_014');
+

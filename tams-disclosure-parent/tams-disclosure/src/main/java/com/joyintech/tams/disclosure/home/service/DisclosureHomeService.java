@@ -535,7 +535,7 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     }
 
     public Map<String, RepRevealInfo> searchRevealList(List<String> menulist) {
-       
+       /*
     	List<RepRevealInfo> dtoList = new ArrayList<RepRevealInfo>();
 
         Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
@@ -552,9 +552,8 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
         }
 
         return resultMap;
-       
+        */
     	
-    	/*
     	//定义结果集合
         Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
 
@@ -608,7 +607,7 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
 		resultMap.put("99",sumInfo);
 		
         return resultMap;
-	*/
+	
     }
     
 }
