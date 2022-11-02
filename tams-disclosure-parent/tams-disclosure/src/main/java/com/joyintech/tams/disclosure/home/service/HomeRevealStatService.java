@@ -22,8 +22,10 @@ import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
-import com.joyintech.tams.disclosure.home.dao.HomeExpectRevealMapper;
+import com.joyintech.tams.disclosure.home.dao.HomeRevealStatMapper;
 import com.joyintech.tams.disclosure.home.dto.DisHomePageStat;
+import com.joyintech.tams.disclosure.home.dto.HomePageStatsDto;
+import com.joyintech.tams.disclosure.home.dto.RepRevealInfo;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 
@@ -33,10 +35,10 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
  */
 
 @Service
-public class HomeExpectRevealService {
+public class HomeRevealStatService {
 	
 	@Autowired
-	private HomeExpectRevealMapper homeExpectRevealMapper;
+	private HomeRevealStatMapper homeRevealStatMapper;
 	
 	@Autowired
 	private RepDetailsShow001Mapper repDetailsShow001Mapper;
@@ -44,24 +46,32 @@ public class HomeExpectRevealService {
 	@Autowired
 	private HolidayService holidayService;
 	
-	private int queryCounts(String repId,Date statDate) {
-		Map<String,Object> params = new HashMap<String,Object>();
-		Map<String,Object> expectConditions = getExpectRevealCondition(repId,statDate);
-		if ( expectConditions!=null && expectConditions.size()>0 )
-			params.putAll(expectConditions);
+	public RepRevealInfo queryCountsByHomeType(String homePageType, Date statDate) {
+		RepRevealInfo repRevealInfo = new RepRevealInfo();
 		
-		String sql = getRandgeRule(repId,params);
-		int counts = homeExpectRevealMapper.selectCountsByCondition(sql);
-		return counts;
-	}
-	
-	public int queryCountsByHomeType(String homePageType,Date statDate) {
-		int ret = 0;
-		List<RepInfo> listRepInfo = homeExpectRevealMapper.selectRepInfoByHomePageType(homePageType);
+		List<RepInfo> listRepInfo = homeRevealStatMapper.selectRepInfoByHomePageType(homePageType);
 		for ( RepInfo rep:listRepInfo ) {
-			int counts = 0;
+			RepRevealInfo info = new RepRevealInfo(); 
 			String repId = rep.getRepId();
-			if (repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016") ) {  //季报
+	        	
+	    	if ( repId.equals("CP_001_002_012") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
+	    		//找到本周一
+	    		Calendar cal = Calendar.getInstance();
+	    		cal.setTime(statDate);
+	    		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);//周一
+	    		Date monday = cal.getTime();
+	    		cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);//周日
+	    		Date sunday = cal.getTime();
+	    		
+	    		//统计已发生的列
+	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(monday,sunday);
+				info = queryOtherCounts(listStats);
+				
+				//统计预计披露的列
+				int counts = queryExcpectCountsByRepId( rep.getRepId(),statDate);
+				info.setExpectRevealCounts(counts);
+	    	}
+	    	else if (repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016") ) {  //季报
 	    		//找到本季度的第一天
 	    		Date qDate = DurationUtil.getQuarterStart(statDate.getYear()+1900,statDate.getMonth()/3+1);
 	    		Map<String,Object> p = new HashMap<>();
@@ -72,6 +82,13 @@ public class HomeExpectRevealService {
 	    		Date sDate = holidayService.getAferNWorkDay(p);
 	    		p.put("days", 15);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
+	    		
+	    		//统计已发生的列
+	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(sDate,eDate);
+				info = queryOtherCounts(listStats);
+	    		
+				//统计预计披露的列
+				int counts = 0;
 	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
 	    			counts = genStat(repId,statDate);
 	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
@@ -81,6 +98,7 @@ public class HomeExpectRevealService {
 	    		} else {
 	    			counts = 0;
 	    		}
+	    		info.setExpectRevealCounts(counts);
 			}
 			else if( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018") ) {  //半年报
 	    		//找到本周期的第一天
@@ -93,15 +111,23 @@ public class HomeExpectRevealService {
 	    		Date sDate = holidayService.getAferNWorkDay(p);
 	    		p.put("days", 90);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
+	    		
+	    		//统计已发生的列
+	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(sDate,eDate);
+				info = queryOtherCounts(listStats);
+	    		
+				//统计预计披露的列
+				int counts = 0;
 	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
 	    			counts = genStat(repId,statDate);
 	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
 	    			counts = queryStat(repId,sDate);
 	    			if ( counts==-1 )  //首次生成
-	    				counts = genStat(repId,statDate);	    			
+	    				counts = genStat(repId,statDate);
 	    		} else {
 	    			counts = 0;
 	    		}
+	    		info.setExpectRevealCounts(counts);
 			}
 			else if (repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020") ){  //年报
 	    		//找到本周期的第一天
@@ -114,21 +140,86 @@ public class HomeExpectRevealService {
 	    		Date sDate = holidayService.getAferNWorkDay(p);
 	    		p.put("days", 60);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
+
+	    		//统计已发生的列
+	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(sDate,eDate);
+				info = queryOtherCounts(listStats);
+				
+				//统计预计披露的列	    		
+				int counts = 0;
 	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
 	    			counts = genStat(repId,statDate);
 	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
 	    			counts = queryStat(repId,sDate);
 	    			if ( counts==-1 )  //首次生成
-	    				counts = genStat(repId,statDate);	    			
+	    				counts = genStat(repId,statDate);
 	    		} else {
 	    			counts = 0;
 	    		}
-			} else {
-				counts = queryCounts( rep.getRepId(),statDate);
+	    		info.setExpectRevealCounts(counts);
 			}
-			ret += counts;
+			else {  //其他报表
+				//统计已发生的列
+	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(statDate,statDate);
+				info = queryOtherCounts(listStats);
+				
+				//统计预计披露的列
+				int counts = queryExcpectCountsByRepId( rep.getRepId(),statDate);
+				info.setExpectRevealCounts(counts);
+	    	}
+
+	    	repRevealInfo.setExpectRevealCounts(repRevealInfo.getExpectRevealCounts()+info.getExpectRevealCounts());
+	    	repRevealInfo.setRevealCounts(repRevealInfo.getRevealCounts()+info.getRevealCounts());
+	    	repRevealInfo.setGenFailCounts(repRevealInfo.getGenFailCounts()+info.getGenFailCounts());
+	    	repRevealInfo.setToBeReviewedCounts(repRevealInfo.getToBeReviewedCounts()+info.getToBeReviewedCounts());
+	    	repRevealInfo.setToBeConfirmedCounts(repRevealInfo.getToBeConfirmedCounts()+info.getToBeConfirmedCounts());
+	    	repRevealInfo.setToBeTgReviewedCounts(repRevealInfo.getToBeTgReviewedCounts()+info.getToBeTgReviewedCounts());
+	    	repRevealInfo.setToBeRevealedCounts(repRevealInfo.getToBeRevealedCounts()+info.getToBeRevealedCounts());
 		}
-		return ret;
+		return repRevealInfo;
+	}
+	
+	private RepRevealInfo queryOtherCounts(List<HomePageStatsDto> listStats) {
+		RepRevealInfo info = new RepRevealInfo();
+
+		if ( listStats==null )
+			return info;
+		
+		for (HomePageStatsDto dto : listStats) {
+			if (dto.getHomePageType() == null || dto.getHomePageType().length() < 1)
+				continue;
+			// 生成成功
+			info.setGenFailCounts(info.getGenFailCounts() + dto.getCounts());
+
+			if ("01".equals(dto.getRevealStatus())) { // 已披露：披露状态='01'
+				info.setRevealCounts(info.getRevealCounts() + dto.getCounts());
+			} else { // 待披露
+				info.setToBeRevealedCounts(info.getToBeRevealedCounts() + dto.getCounts());
+			}
+
+			if (!"1".equals(dto.getConfirmStatus())) { // 待确认：确认状态：0,2
+				info.setToBeConfirmedCounts(info.getToBeConfirmedCounts() + dto.getCounts());
+			}
+
+			if ("01".equals(dto.getReviewStatus())) {
+				info.setToBeReviewedCounts(info.getToBeReviewedCounts() + dto.getCounts());
+			}
+			if ("01".equals(dto.getReviewTgStatus())) {
+				info.setToBeTgReviewedCounts(info.getToBeTgReviewedCounts() + dto.getCounts());
+			}
+		}
+		return info;
+	}
+	
+	private int queryExcpectCountsByRepId(String repId,Date statDate) {
+		Map<String,Object> params = new HashMap<String,Object>();
+		Map<String,Object> expectConditions = getExpectRevealCondition(repId,statDate);
+		if ( expectConditions!=null && expectConditions.size()>0 )
+			params.putAll(expectConditions);
+		
+		String sql = getRandgeRule(repId,params);
+		int counts = homeRevealStatMapper.selectCountsByCondition(sql);
+		return counts;
 	}
 	
     private String getRandgeRule(String repId,Map<String, Object> params){
@@ -315,21 +406,23 @@ public class HomeExpectRevealService {
     }
     
     private int genStat(String repId,Date statDate) {
-    	int counts = queryCounts(repId,statDate);
+    	int counts = queryExcpectCountsByRepId(repId,statDate);
     	DisHomePageStat dto = new DisHomePageStat();
     	dto.setStatId(IDGenerator.generate());
     	dto.setRepId(repId);
     	dto.setStatDate(statDate);
     	dto.setExpectCounts(counts);
-    	homeExpectRevealMapper.insert(dto);
+    	homeRevealStatMapper.insert(dto);
     	return counts;
     }
     
     private int queryStat(String repId,Date statDate) {
-    	DisHomePageStat stat = homeExpectRevealMapper.select(repId,statDate);
+    	DisHomePageStat stat = homeRevealStatMapper.select(repId,statDate);
     	if ( stat!=null )
     		return stat.getExpectCounts();
     	else
     		return -1;
     }
+    
+    
 }
