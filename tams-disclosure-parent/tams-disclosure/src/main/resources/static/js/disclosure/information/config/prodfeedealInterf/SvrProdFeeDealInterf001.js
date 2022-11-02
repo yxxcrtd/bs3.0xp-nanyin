@@ -45,7 +45,9 @@ $(function() {
                     pageModel: PAGE_MODEL_REFERENCE,
                     prodId: data.prodId,
                     feeType: data.feeType,
-                    payDate: data.payDateStr
+                    payDate: data.payDateStr,
+                    status:data.status,
+                    updateTimeStr:new Date(data.updateTime).Format('yyyy-MM-dd hh:mm:ss')
                 });
         },
         cols : [ {
@@ -182,6 +184,8 @@ $(function() {
                 prodId: data.prodId,
                 feeType: data.feeType,
                 payDate: data.payDateStr,
+                status:data.status,
+                updateTimeStr:new Date(data.updateTime).Format('yyyy-MM-dd hh:mm:ss'),
                 operateType: "edit"};//请求参数
             Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/check', object, function(result) {
                 Joyin.dialog(JoyinUtil.getLabel("产品费用交易信息维护编辑"),
