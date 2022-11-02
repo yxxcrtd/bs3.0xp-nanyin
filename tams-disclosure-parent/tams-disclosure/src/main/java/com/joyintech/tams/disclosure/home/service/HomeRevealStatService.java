@@ -4,6 +4,7 @@
 package com.joyintech.tams.disclosure.home.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepInfo;
 import com.joyintech.tams.common.base.entity.RepJobRange;
+import com.joyintech.tams.common.base.entity.RepScreen;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
@@ -54,22 +56,29 @@ public class HomeRevealStatService {
 			RepRevealInfo info = new RepRevealInfo(); 
 			String repId = rep.getRepId();
 	        	
-	    	if ( repId.equals("CP_001_002_012") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
+	    	if ( repId.equals("CP_001_002_005") || repId.equals("CP_001_002_006") ) {//每周净值公告/报告：并且每周第一个工作日=当天，未到期的产品
 	    		//找到本周一
 	    		Calendar cal = Calendar.getInstance();
 	    		cal.setTime(statDate);
-	    		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);//周一
-	    		Date monday = cal.getTime();
 	    		cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);//周日
 	    		Date sunday = cal.getTime();
+	    		cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);//周六
+	    		Date saturday = cal.getTime();
+	    		
+	    		//本周的第一个工作日
+	    		Map<String,Object> p = new HashMap<>();
+	    		p.put("busi_date", sunday);
+	    		p.put("is_holiday", "0");
+	    		p.put("market_code", "04");
+	    		Date sDate = holidayService.getNextWorkDay(p);
 	    		
 	    		//统计已发生的列
-	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(monday,sunday);
-				info = queryOtherCounts(listStats);
+				info = queryOtherCounts(repId,sunday,saturday);
 				
 				//统计预计披露的列
-				int counts = queryExcpectCountsByRepId( rep.getRepId(),statDate);
-				info.setExpectRevealCounts(counts);
+				int counts = queryExpectCounts(repId,sDate,saturday,statDate);
+	    		info.setExpectRevealCounts(counts);
+				
 	    	}
 	    	else if (repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016") ) {  //季报
 	    		//找到本季度的第一天
@@ -84,20 +93,10 @@ public class HomeRevealStatService {
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 	    		
 	    		//统计已发生的列
-	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(sDate,eDate);
-				info = queryOtherCounts(listStats);
+				info = queryOtherCounts(repId,sDate,eDate);
 	    		
 				//统计预计披露的列
-				int counts = 0;
-	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
-	    			counts = genStat(repId,statDate);
-	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
-	    			counts = queryStat(repId,sDate);
-	    			if ( counts==-1 )  //首次生成
-	    				counts = genStat(repId,statDate);
-	    		} else {
-	    			counts = 0;
-	    		}
+				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
 	    		info.setExpectRevealCounts(counts);
 			}
 			else if( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018") ) {  //半年报
@@ -109,24 +108,14 @@ public class HomeRevealStatService {
 	    		p.put("market_code", "04");
 	    		p.put("days", 3);
 	    		Date sDate = holidayService.getAferNWorkDay(p);
-	    		p.put("days", 90);
+	    		p.put("days", 60);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 	    		
 	    		//统计已发生的列
-	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(sDate,eDate);
-				info = queryOtherCounts(listStats);
+				info = queryOtherCounts(repId,sDate,eDate);
 	    		
 				//统计预计披露的列
-				int counts = 0;
-	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
-	    			counts = genStat(repId,statDate);
-	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
-	    			counts = queryStat(repId,sDate);
-	    			if ( counts==-1 )  //首次生成
-	    				counts = genStat(repId,statDate);
-	    		} else {
-	    			counts = 0;
-	    		}
+				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
 	    		info.setExpectRevealCounts(counts);
 			}
 			else if (repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020") ){  //年报
@@ -138,30 +127,19 @@ public class HomeRevealStatService {
 	    		p.put("market_code", "04");
 	    		p.put("days", 3);
 	    		Date sDate = holidayService.getAferNWorkDay(p);
-	    		p.put("days", 60);
+	    		p.put("days", 90);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 
 	    		//统计已发生的列
-	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(sDate,eDate);
-				info = queryOtherCounts(listStats);
+				info = queryOtherCounts(repId,sDate,eDate);
 				
 				//统计预计披露的列	    		
-				int counts = 0;
-	    		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
-	    			counts = genStat(repId,statDate);
-	    		} else if (sDate.compareTo(statDate)<=0 && eDate.compareTo(statDate)>=0 ) {
-	    			counts = queryStat(repId,sDate);
-	    			if ( counts==-1 )  //首次生成
-	    				counts = genStat(repId,statDate);
-	    		} else {
-	    			counts = 0;
-	    		}
+				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
 	    		info.setExpectRevealCounts(counts);
 			}
 			else {  //其他报表
 				//统计已发生的列
-	    		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(statDate,statDate);
-				info = queryOtherCounts(listStats);
+				info = queryOtherCounts(repId,statDate,statDate);
 				
 				//统计预计披露的列
 				int counts = queryExcpectCountsByRepId( rep.getRepId(),statDate);
@@ -179,7 +157,24 @@ public class HomeRevealStatService {
 		return repRevealInfo;
 	}
 	
-	private RepRevealInfo queryOtherCounts(List<HomePageStatsDto> listStats) {
+	private int queryExpectCounts(String repId,Date sDate,Date eDate,Date statDate ) {
+		int counts = 0;
+		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
+			counts = genStat(repId,statDate);
+		} else if (sDate.compareTo(statDate)<0 && eDate.compareTo(statDate)>=0 ) {
+			counts = queryStat(repId,sDate);
+			if ( counts==-1 )  //首次生成
+				counts = genStat(repId,statDate);
+		} else {
+			counts = 0;
+		}
+		return counts;
+	}
+	
+	private RepRevealInfo queryOtherCounts( String repId,Date sDate,Date eDate ) {
+		
+		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(repId,sDate,eDate);
+		
 		RepRevealInfo info = new RepRevealInfo();
 
 		if ( listStats==null )
@@ -262,6 +257,18 @@ public class HomeRevealStatService {
             }
         }
         
+        List<RepScreen> listScreen = repDetailsShow001Mapper.getRepScreenList(repId);
+        List<String> listScreenKey = new ArrayList<>();
+        listScreen.forEach(item->listScreenKey.add(item.getScreenKey()));
+        
+    	if( listScreenKey.contains("pprodid") ) {  //母产品维度
+    		if ( listScreenKey.contains("prodid")) {  //子产品维度
+    			sb.append(" and REP_PROD_TYPE in ('02','03')");
+    		} else {
+    			sb.append(" and REP_PROD_TYPE in ('01','02')");
+    		}
+        }
+        
         for ( Entry<String, Object> entry:params.entrySet() ) {	
         	if ( entry.getValue()!=null && entry.getValue().toString().length()>0 ) {
         		String str = " and " + entry.getValue();
@@ -330,24 +337,28 @@ public class HomeRevealStatService {
     				" plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
     				" and info.PROD_ID = plan.PROD_ID)";
     	}    	
-    	else if ( repId.equals("CP_001_002_012") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
-    		condition = "info.MDATE>=to_date('"+queryDate+"')";
-    		//找到本周一
-    		Calendar cal = Calendar.getInstance();
-    		cal.setTime(statDate);
-    		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);//周一
-    		Date firstWorkDateOfWeek = cal.getTime();
-    		if ( holidayService.isHoliday(firstWorkDateOfWeek, "04")==true ) {
-        		Map<String,Object> p = new HashMap<>();
-        		p.put("busi_date", firstWorkDateOfWeek);
-        		p.put("is_holiday", "0");
-        		p.put("market_code", "04");
-    			firstWorkDateOfWeek = holidayService.getNextWorkDay(p);
-    		}
-    		String firstWorkDateofWeekStr = sdf.format(firstWorkDateOfWeek);
-    		condition += " and exists ( select 1 from" + 
-    				" dual" + 
-    				" where to_date('"+firstWorkDateofWeekStr+"','yyyy-mm-dd')=to_date('"+queryDate+"')"; 
+    	else if ( repId.equals("CP_001_002_005") || repId.equals("CP_001_002_006") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
+    		//找到上周的第一天
+    		Date qDate = getLastDurationFirstDate(statDate,"W");
+    		String qDateStr = sdf.format(qDate);
+    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+
+//    		//找到本周一
+//    		Calendar cal = Calendar.getInstance();
+//    		cal.setTime(statDate);
+//    		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);//周一
+//    		Date firstWorkDateOfWeek = cal.getTime();
+//    		if ( holidayService.isHoliday(firstWorkDateOfWeek, "04")==true ) {
+//        		Map<String,Object> p = new HashMap<>();
+//        		p.put("busi_date", firstWorkDateOfWeek);
+//        		p.put("is_holiday", "0");
+//        		p.put("market_code", "04");
+//    			firstWorkDateOfWeek = holidayService.getNextWorkDay(p);
+//    		}
+//    		String firstWorkDateofWeekStr = sdf.format(firstWorkDateOfWeek);
+//    		condition += " and exists ( select 1 from" + 
+//    				" dual" + 
+//    				" where to_date('"+firstWorkDateofWeekStr+"','yyyy-mm-dd')=to_date('"+queryDate+"')"; 
     	}
     	else if ( repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016")  ) {//季度报告：下一季度第三个工作日<=当天<=下一季度15个工作日之前
     		//找到上季度的第一天
@@ -378,7 +389,11 @@ public class HomeRevealStatService {
     	cal.setTime(queryDate);
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH);
-    	if ( durationType.equals("Y")) {
+		if ( durationType.equals("W") ) {
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);//周一
+	        return DateUtil.addWeeks(cal.getTime(), -1);
+		}
+		else if ( durationType.equals("Y")) {
     		year = year-1;
     		cal.set(year,0,1);
     	} else if ( durationType.equals("H") ) {

@@ -485,3 +485,21 @@ comment on column BOK_BALANCE_FSE.update_time
 comment on column BOK_BALANCE_FSE.status
     is '数据状态';
 alter table BOK_BALANCE_FSE add constraint PK_BOK_BALANCE_FSE_ID_01 primary key (bookset_id,date_start,date_end,subject_no);
+
+ALTER TABLE REP_INFO ADD (HOME_PAGE_TYPE VARCHAR2(2) );
+COMMENT ON COLUMN REP_INFO.HOME_PAGE_TYPE IS '首页报表分类';
+
+CREATE TABLE DIS_HOMEPAGE_STAT 
+   (	STAT_ID VARCHAR2(50 BYTE) NOT NULL ENABLE, 
+	REP_ID VARCHAR2(32 BYTE), 
+	STAT_DATE DATE, 
+	EXPECT_COUNTS NUMBER(10,0), 
+	REMARK VARCHAR2(256 BYTE), 
+	 CONSTRAINT "DIS_HOMEPAGE_STAT_PK" PRIMARY KEY ("STAT_ID")
+  );
+comment on table DIS_HOMEPAGE_STAT  is '首页报表分类信披统计数据表';
+comment on column DIS_HOMEPAGE_STAT.STAT_ID is '统计ID';
+comment on column DIS_HOMEPAGE_STAT.REP_ID is '报表ID';
+comment on column DIS_HOMEPAGE_STAT.STAT_DATE is '统计日期';
+comment on column DIS_HOMEPAGE_STAT.EXPECT_COUNTS is '预计披露条数';
+comment on column DIS_HOMEPAGE_STAT.REMARK is '备注';

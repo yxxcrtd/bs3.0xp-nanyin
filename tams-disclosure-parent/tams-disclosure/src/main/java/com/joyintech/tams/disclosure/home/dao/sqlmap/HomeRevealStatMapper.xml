@@ -71,6 +71,7 @@
 				where reveal.STATUS='E'
 				and reveal.END_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE} 
 			) REP_HOMEPAGE_STAT
+		where REP_ID=#{repId,jdbcType=VARCHAR}
 		group by HOME_PAGE_TYPE,REVEAL_STATUS,CONFIRM_STATUS,REVIEW_STATUS,REVIEW_TG_STATUS
     </select>
 </mapper>
