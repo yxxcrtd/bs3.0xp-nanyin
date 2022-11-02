@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.disclosure.home.dao.HomeExpectRevealMapper">
+<mapper namespace="com.joyintech.tams.disclosure.home.dao.HomeRevealStatMapper">
 
 	<select id="selectCountsByCondition" resultType="java.lang.Integer">
 		select
@@ -58,4 +58,19 @@
 		and STAT_DATE = #{statDate,jdbcType=DATE}
 	</select>
     
+    <select id="selectHomePageStat" resultType="com.joyintech.tams.disclosure.home.dto.HomePageStatsDto">
+	    select count(1) counts,
+	    	HOME_PAGE_TYPE,REVEAL_STATUS,CONFIRM_STATUS,REVIEW_STATUS,REVIEW_TG_STATUS 
+	    from 
+			(select reveal.ID,reveal.REP_ID,reveal.REPORT_CATEGORY,reveal.REVEAL_STATUS,reveal.CONFIRM_STATUS 
+				,info.HOME_PAGE_TYPE
+				,review.REVIEW_STATUS,review.REVIEW_TG_STATUS
+				from REP_REVEAL reveal
+				left join REP_INFO info on reveal.REP_ID=info.REP_ID
+				left join REP_REVEAL_REVIEW review on reveal.ID=review.REVEAL_ID
+				where reveal.STATUS='E'
+				and reveal.END_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE} 
+			) REP_HOMEPAGE_STAT
+		group by HOME_PAGE_TYPE,REVEAL_STATUS,CONFIRM_STATUS,REVIEW_STATUS,REVIEW_TG_STATUS
+    </select>
 </mapper>

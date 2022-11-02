@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.RepInfo;
 import com.joyintech.tams.disclosure.home.dto.DisHomePageStat;
+import com.joyintech.tams.disclosure.home.dto.HomePageStatsDto;
 
 
 /**
@@ -25,11 +26,11 @@ import com.joyintech.tams.disclosure.home.dto.DisHomePageStat;
  * 〈功能详细描述〉
  * @author chenxc
  * @version 1.0 2022-10-31
- * @see HomeExpectRevealMapper
+ * @see HomeRevealStatMapper
  * @since 1.0
  */
 @Repository
-public interface HomeExpectRevealMapper {
+public interface HomeRevealStatMapper {
 
 	int selectCountsByCondition(@Param("condition")String condition);
 	
@@ -38,4 +39,6 @@ public interface HomeExpectRevealMapper {
 	int insert(DisHomePageStat record);
 	
 	DisHomePageStat select ( @Param("repId") String repId,@Param("statDate") Date statDate);
+	
+	List<HomePageStatsDto> selectHomePageStat(@Param("sDate") Date statDate,@Param("eDate") Date eDate);
 }

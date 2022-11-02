@@ -118,6 +118,4 @@ public interface DisclosureHomeMapper {
      */
 	List<RepFtpPathDto> queryYplFail(Map<String, Object> parmMap);
 
-	List<HomePageStatsDto> selectHomePageStat(@Param("statDate") Date statDate);
-	
 }
