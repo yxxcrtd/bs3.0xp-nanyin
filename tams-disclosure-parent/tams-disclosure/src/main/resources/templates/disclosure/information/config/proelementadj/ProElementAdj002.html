@@ -55,7 +55,7 @@
                                            data-th-text="调整此产品要素原因">调整此产品要素原因</label>
                                     <div class="layui-input-inline input-inline">
                                         <textarea id="adjReason" name="adjReason" onkeyup="this.value=value.match(/^.{1,500}/)" th:text="${entity?.adjReason}"
-                                                  class="layui-textarea" placeholder="请输入内容"  required data-th-value="${entity?.adjReason}"
+                                                  class="layui-textarea" placeholder="请输入内容"  data-th-value="${entity?.adjReason}"
                                                   th:placeholder="#{SysCommon.placeholder}"></textarea>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                                            data-th-text="#{ProElementAdj001.prodAdjRemark}">描述文字1</label>
                                     <div class="layui-input-inline input-inline">
                                         <textarea id="prodAdjRemark" name="prodAdjRemark" maxlength="500" th:text="${entity?.prodAdjRemark}"
-                                                  class="layui-textarea" placeholder="请输入内容"  required data-th-value="${entity?.prodAdjRemark}"
+                                                  class="layui-textarea" placeholder="请输入内容"  data-th-value="${entity?.prodAdjRemark}"
                                                   th:placeholder="#{SysCommon.placeholder}"></textarea>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
                                            data-th-text="#{ProElementAdj001.prodAdjRemark2}">描述文字2</label>
                                     <div class="layui-input-inline input-inline">
                                         <textarea id="prodAdjRemark2" name="prodAdjRemark2" maxlength="500" th:text="${entity?.prodAdjRemark2}"
-                                                  class="layui-textarea" placeholder="请输入内容"  required data-th-value="${entity?.prodAdjRemark2}"
+                                                  class="layui-textarea" placeholder="请输入内容" data-th-value="${entity?.prodAdjRemark2}"
                                                   th:placeholder="#{SysCommon.placeholder}"></textarea>
                                     </div>
                                 </div>
@@ -135,7 +135,7 @@
                                            data-th-text="#{ProElementAdj001.adjReason2}">对此要素调整（原因）</label>
                                     <div class="layui-input-inline input-inline">
                                         <textarea id="adjReason2" name="adjReason2" maxlength="500" th:text="${entity?.adjReason2}"
-                                                  class="layui-textarea" placeholder="请输入内容"  required data-th-value="${entity?.adjReason2}"
+                                                  class="layui-textarea" placeholder="请输入内容"  data-th-value="${entity?.adjReason2}"
                                                   th:placeholder="#{SysCommon.placeholder}"></textarea>
                                     </div>
                                 </div>
@@ -146,7 +146,7 @@
                                            data-th-text="#{ProElementAdj002.fieldAdjRemark}">调整此要素（补充说明文1）</label>
                                     <div class="layui-input-inline input-inline">
                                         <textarea id="fieldAdjRemark" name="fieldAdjRemark" onkeyup="this.value=value.match(/^.{1,500}/)" th:text="${entity?.fieldAdjRemark}"
-                                                  class="layui-textarea" placeholder="请输入内容"  required data-th-value="${entity?.fieldAdjRemark}"
+                                                  class="layui-textarea" placeholder="请输入内容"  data-th-value="${entity?.fieldAdjRemark}"
                                                   th:placeholder="#{SysCommon.placeholder}"></textarea>
                                     </div>
                                 </div>
@@ -157,7 +157,7 @@
                                            data-th-text="#{ProElementAdj002.fieldAdjRemark2}">调整此要素（补充说明文2）</label>
                                     <div class="layui-input-inline input-inline">
                                         <textarea id="fieldAdjRemark2" name="fieldAdjRemark2" onkeyup="this.value=value.match(/^.{1,500}/)" th:text="${entity?.fieldAdjRemark2}"
-                                                  class="layui-textarea" placeholder="请输入内容"  required data-th-value="${entity?.fieldAdjRemark2}"
+                                                  class="layui-textarea" placeholder="请输入内容" data-th-value="${entity?.fieldAdjRemark2}"
                                                   th:placeholder="#{SysCommon.placeholder}"></textarea>
                                     </div>
                                 </div>

@@ -259,7 +259,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                         Date effEndDate=sdf.parse(list.get(10).trim());
                         Date effDate=sdf.parse(list.get(9).trim());
                         if(DateUtil.compareDate(effDate, effEndDate) > 0){
-                            message.add(this.getMessage("BUSS_COM_E_0004", "生效日截止日", "生效日"));
+                            message.add("生效日截止日期要大于等于生效日！");
                         }else if (StringUtil.isNotEmpty(list.get(0))){
                             //校验同一产品生效区间是否重叠
                             List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(list.get(0).trim());
