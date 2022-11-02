@@ -250,11 +250,6 @@ public class ProdInfo002Controller extends BaseController {
                 return new AjaxResult("子产品代码已存在", MessageType.错误消息);
             }
         }
-
-        //NYLCXP-1284【产品基础数据维护】导入和新建未校验产品登记编码的唯一性
-        if (prodInfoService.hasReapetData(dto)>0){
-            return new AjaxResult("该主产品代码已存在相同的产品登记代码！",MessageType.错误消息);
-        }
         return result;
     }
 
@@ -307,6 +302,7 @@ public class ProdInfo002Controller extends BaseController {
             }
 
         }
+
         if (StringUtils.equals(DictCodeListExt5.信披募集方式_公募.getValue(), dto.getRaiseType())
                 && dto.getProdRe().length() != 14) {
             return new AjaxResult("募集方式为公募,产品登记编码为14位", MessageType.错误消息);
