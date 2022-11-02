@@ -9,8 +9,8 @@
 			<Cell order="5" name="优惠的费用">feename</Cell>
 			<Cell order="6" name="优惠前费率">preFeerate</Cell>
 			<Cell order="7" name="优惠后费率">afterFeerate</Cell>
-			<Cell order="8" name="优惠起始时间">startDateStr</Cell>
-			<Cell order="9" name="优惠截止时间">endDateStr</Cell>
+			<Cell order="8" name="优惠起始时间">startDate</Cell>
+			<Cell order="9" name="优惠截止时间">endDate</Cell>
 <!--			<Cell order="9" name="本次优惠前费率">thisPreFeerate</Cell>-->
 <!--			<Cell order="10" name="本次优惠后费率">thisAfterFeerate</Cell>-->
 <!--			<Cell order="11" name="本次优惠结束后费率">thisEndFeerate</Cell>-->
