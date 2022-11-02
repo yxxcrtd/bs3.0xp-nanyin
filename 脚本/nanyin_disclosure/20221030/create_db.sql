@@ -503,3 +503,6 @@ comment on column DIS_HOMEPAGE_STAT.REP_ID is '报表ID';
 comment on column DIS_HOMEPAGE_STAT.STAT_DATE is '统计日期';
 comment on column DIS_HOMEPAGE_STAT.EXPECT_COUNTS is '预计披露条数';
 comment on column DIS_HOMEPAGE_STAT.REMARK is '备注';
+
+--修改产品分红计算清单表运行天数字段精度
+alter table DIS_BONUS_LIST MODIFY(RUN_DAYS NUMBER(10));
