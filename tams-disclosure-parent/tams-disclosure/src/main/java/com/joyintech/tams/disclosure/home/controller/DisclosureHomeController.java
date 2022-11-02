@@ -215,7 +215,7 @@ public class DisclosureHomeController extends BaseController {
     @RequestMapping("/searchRevealList")
     @ResponseBody
     public Map<String, RepRevealInfo> searchRevealList() {
-        List<String> menulist= Arrays.asList("01", "02","03", "04","05", "06","07","08","99");
+        List<String> menulist= Arrays.asList("01", "02","03", "04","05", "06","07","08");
         return reportHomeService.searchRevealList(menulist);
     }
 }

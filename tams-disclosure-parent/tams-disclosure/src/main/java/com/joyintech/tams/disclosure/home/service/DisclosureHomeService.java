@@ -20,12 +20,9 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepFtpPath;
-import com.joyintech.tams.common.base.entity.RepJobRange;
-import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.common.common.util.DateCalcUtil;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.home.dao.DisclosureHomeMapper;
@@ -60,7 +57,7 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     private DisclosureHomeMapper disclosureHomeMapper;
     
     @Autowired
-    private HomeExpectRevealService homeExpectRevealService;
+    private HomeRevealStatService homeRevealStatService;
     
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
@@ -538,7 +535,8 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     }
 
     public Map<String, RepRevealInfo> searchRevealList(List<String> menulist) {
-        List<RepRevealInfo> dtoList = new ArrayList<RepRevealInfo>();
+       
+    	List<RepRevealInfo> dtoList = new ArrayList<RepRevealInfo>();
 
         Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
         for (String menuId : menulist) {
@@ -554,56 +552,31 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
         }
 
         return resultMap;
-        
+       
+    	
     	/*
+    	//定义结果集合
         Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
 
-        //List<RepRevealInfo> dtoList = new ArrayList<RepRevealInfo>();
+        //结果集合中增加8行空白行
+        for (String menuId : menulist) {
+        	RepRevealInfo repRevealInfo=new RepRevealInfo();
+        	 resultMap.put(menuId,repRevealInfo);
+        }
+
+        //查询时间
 		Date statDate = commonPlatformDateService.getSysDate();//平台时间
-		
-        List<HomePageStatsDto> listStats = disclosureHomeMapper.selectHomePageStat(statDate);
-        
-    	for ( HomePageStatsDto dto:listStats ) {
-    		if ( dto.getHomePageType()==null || dto.getHomePageType().length()<1 )
-    			continue;
-    		RepRevealInfo info = resultMap.get(dto.getHomePageType());
-    		if ( info==null ) {
-    			info = new  RepRevealInfo();
-    			resultMap.put(dto.getHomePageType(),info);
-    		}
-    		
-    		//生成成功
-    		info.setGenFailCounts(info.getGenFailCounts()+dto.getCounts());
 
-    		if ( "01".equals(dto.getRevealStatus()) ) {  //已披露：披露状态='01'
-    			info.setRevealCounts(info.getRevealCounts()+dto.getCounts());
-    		} else {  //待披露
-    			info.setToBeRevealedCounts(info.getToBeRevealedCounts()+dto.getCounts());
-    		}
-    		
-    		if ( !"1".equals(dto.getConfirmStatus() ))  {  //待确认：确认状态：0,2
-    			info.setToBeConfirmedCounts(info.getToBeConfirmedCounts()+dto.getCounts());
-    		}
-    		
-    		if ( "01".equals(dto.getReviewStatus()) ) {
-    			info.setToBeReviewedCounts(info.getToBeReviewedCounts()+dto.getCounts());
-    		}
-    		if ( "01".equals(dto.getReviewTgStatus()) ) {
-    			info.setToBeTgReviewedCounts(info.getToBeTgReviewedCounts()+dto.getCounts());
-    		}
-    	}
-
+		//最后合计行
     	RepRevealInfo sumInfo = new  RepRevealInfo();
     	
     	for (  Entry<String, RepRevealInfo>entry:resultMap.entrySet() ) {
+    		
     		String homePageType = entry.getKey();
-    		
-    		int expectCounts = homeExpectRevealService.queryCountsByHomeType(homePageType, statDate);
-
-    		//取出第一行
     		RepRevealInfo repRevealInfo = entry.getValue();
-    		repRevealInfo.setExpectRevealCounts(expectCounts);
+    		repRevealInfo = homeRevealStatService.queryCountsByHomeType(homePageType, statDate);
     		
+    		//统计合并行   		
     		sumInfo.setExpectRevealCounts(sumInfo.getExpectRevealCounts()+repRevealInfo.getExpectRevealCounts());
     		sumInfo.setRevealCounts(sumInfo.getRevealCounts()+repRevealInfo.getRevealCounts());
     		sumInfo.setGenFailCounts(sumInfo.getGenFailCounts()+repRevealInfo.getGenFailCounts());
@@ -612,6 +585,7 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     		sumInfo.setToBeTgReviewedCounts(sumInfo.getToBeTgReviewedCounts()+repRevealInfo.getToBeTgReviewedCounts());
     		sumInfo.setToBeRevealedCounts(sumInfo.getToBeRevealedCounts()+repRevealInfo.getToBeRevealedCounts());
     		
+    		//将数字赋值给字符串进行显示
     		repRevealInfo.setExpectRevealNum(repRevealInfo.getExpectRevealCounts()+"");
     		repRevealInfo.setRevealNum(repRevealInfo.getRevealCounts()+"");
     		repRevealInfo.setGenFailNum(repRevealInfo.getGenFailCounts()+"");
@@ -619,6 +593,7 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     		repRevealInfo.setToBeConfirmedNum(repRevealInfo.getToBeConfirmedCounts()+"");
     		repRevealInfo.setToBeTgReviewedNum(repRevealInfo.getToBeTgReviewedCounts()+"");
     		repRevealInfo.setToBeRevealedNum(repRevealInfo.getToBeRevealedCounts()+"");
+    		resultMap.put(homePageType, repRevealInfo);
     	}
     	
     	sumInfo.setExpectRevealNum(sumInfo.getExpectRevealCounts()+"");
@@ -629,10 +604,11 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     	sumInfo.setToBeTgReviewedNum(sumInfo.getToBeTgReviewedCounts()+"");
     	sumInfo.setToBeRevealedNum(sumInfo.getToBeRevealedCounts()+"");
     	
+    	//将合计行放入结果集
 		resultMap.put("99",sumInfo);
 		
         return resultMap;
-        */
+	*/
     }
     
 }
