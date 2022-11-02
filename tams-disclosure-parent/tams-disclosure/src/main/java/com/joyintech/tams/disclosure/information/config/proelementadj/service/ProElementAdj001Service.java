@@ -159,35 +159,24 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
-            List<ProElementAdj001Dto> entities = this.convertToBean(dataList);
-            List<ProElementAdj001Dto> data = this.selectProElementAdjByKey(entities);
-            if (data != null && data.size() > 0) {
-                Map<String, List<ProElementAdj001Dto>> map = entities.stream().collect(
-                        JoyinCollectors.groupingBy(x ->
-                                x.getProdId()
-                                        + GlobalConstant.UNDER_LINE + x.getRptIssueDateStr()
-                        ));
-                // 将序号放入list中
-                List<String> excelNumList = new ArrayList<>();
-                List<Integer> excelNumIntList = new ArrayList<>();
-                for (ProElementAdj001Dto dto : data) {
-                    List<ProElementAdj001Dto> listTemp = map.get(dto.getProdId()
-                            + GlobalConstant.UNDER_LINE + dto.getRptIssueDateStr());
-                    excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+            //List<ProElementAdj001Dto> entities = this.convertToBean(dataList);
+            List<String> excelNumList = new ArrayList<>();
+            for (int i = 0; i < dataList.size(); i++) {
+                List<String> x=dataList.get(i);
+                ProElementAdj001Dto tmp=this.convertToEntity(x);
+                if ( CollectionUtils.isNotEmpty(this.getExistsData(tmp))) {
+                    excelNumList.add(String.valueOf(i+2));
                 }
-                // 将list进行排序，并转化为string
-                Collections.sort(excelNumIntList);
-                for (Integer rowNo : excelNumIntList) {
-                    excelNumList.add(String.valueOf(rowNo));
-                }
+            }
+            if (!excelNumList.isEmpty()) {
                 webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_0001",
+                        this.getMessage("REPORT_COMMON_FILE_C_2222",
                                 StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                        MessageType.确认消息);}
-                else{
-                    // 防止在进行导入前check时进行了两次的弹框
-                    webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-                }
+                        MessageType.错误消息);
+            } else {
+                // 防止在进行导入前check时进行了两次的弹框
+                webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            }
         } else {
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
@@ -404,5 +393,10 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
     }
     public String selectData(Map<String, Object> param) {
         return proElementAdjMapper.selectData(param);
+    }
+
+    public List<ProElementAdj001Dto>getExistsData(ProElementAdj001Dto dto){
+        List<ProElementAdj001Dto> list=proElementAdjMapper.getExistsData(dto);
+        return list;
     }
 }

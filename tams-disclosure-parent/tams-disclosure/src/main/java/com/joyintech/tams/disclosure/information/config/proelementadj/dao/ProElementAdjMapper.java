@@ -37,4 +37,6 @@ public interface ProElementAdjMapper {
     List<ProElementAdj001Dto> selectProElementAdjByKey(@Param("list") List<ProElementAdj001Dto> list);
 
     String selectData(Map<String, Object> param);
+
+    List<ProElementAdj001Dto> getExistsData(ProElementAdj001Dto dto);
 }

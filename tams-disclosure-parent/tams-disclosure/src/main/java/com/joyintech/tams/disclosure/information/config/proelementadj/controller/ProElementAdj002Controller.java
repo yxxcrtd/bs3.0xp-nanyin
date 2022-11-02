@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.proelementadj.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -18,6 +19,7 @@ import com.joyintech.tams.disclosure.information.config.proelementadj.service.Pr
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,6 +72,11 @@ public class ProElementAdj002Controller extends BaseController {
             ValidateGroupEdit.class}) ProElementAdj001Dto dto, BindingResult result) {
         if (result.hasErrors()) {
             return new AjaxResult(result);
+        }
+        if (StringUtil.equals(dto.getOperateType(),"new")) {
+            if(CollectionUtils.isNotEmpty(proElementAdj001Service.getExistsData(dto))) {
+                return new AjaxResult("不可创建重复数据！", MessageType.错误消息);
+            }
         }
         return commonCheck(result, dto.getOperateType());
     }
