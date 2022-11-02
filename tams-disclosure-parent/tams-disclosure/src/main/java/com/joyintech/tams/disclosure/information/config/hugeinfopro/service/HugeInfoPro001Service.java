@@ -538,4 +538,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
 
         return parentNodes;
     }
+    public List<HugeInfoPro001Dto> selectHugeInfoByProdId(Map<String, Object> param) {
+        param.put("status",DictCodeListExt1.维护数据状态_有效.getValue());
+        return hugeInfoProMapper.selectHugeInfoByProdId(param);
+    }
 }

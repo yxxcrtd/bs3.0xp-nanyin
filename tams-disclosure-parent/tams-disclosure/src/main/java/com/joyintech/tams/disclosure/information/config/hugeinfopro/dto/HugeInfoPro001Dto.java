@@ -25,6 +25,9 @@ public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, 
      * 序列
      */
     private static final long serialVersionUID = -2744914232496735261L;
+
+
+    private String pageModel;
     /**
      * excle行
      */
@@ -157,5 +160,13 @@ public String dealDateStr;
 
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
+    }
+
+    public String getPageModel() {
+        return pageModel;
+    }
+
+    public void setPageModel(String pageModel) {
+        this.pageModel = pageModel;
     }
 }
