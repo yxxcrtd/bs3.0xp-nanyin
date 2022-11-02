@@ -331,7 +331,8 @@
         TO_CHAR(NVL(dpf.Update_Time,dpf.Create_Time),'yyyy-mm-dd hh24:mi:ss') updateDateStr,
         rpi.prod_name prodName
         FROM DIS_PROD_FEEDISCOUNT dpf
-        LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpf.PROD_ID WHERE 1=1
+        LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpf.PROD_ID  and rpi.status='E'
+        WHERE 1=1
         <if test="dataStatusArr != null and dataStatusArr.length > 0">
             AND dpf.DATA_STATUS IN
             <foreach item="item" collection="dataStatusArr" index="index"
@@ -381,7 +382,7 @@
                dpf.CREATE_TIME, dpf.UPDATE_USER, dpf.UPDATE_TIME,dpf.CREATE_DEPT,
                rpi.prod_name   prodName
         FROM DIS_PROD_FEEDISCOUNT dpf
-                 LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpf.PROD_ID
+                 LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpf.PROD_ID and rpi.status='E'
         WHERE 1 = 1
           and dpf.PROD_DISCOUNT_ID = #{keyId,jdbcType=VARCHAR}
     </select>
