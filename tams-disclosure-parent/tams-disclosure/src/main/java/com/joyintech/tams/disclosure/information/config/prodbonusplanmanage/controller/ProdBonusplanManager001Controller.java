@@ -184,7 +184,10 @@ public class ProdBonusplanManager001Controller extends BaseController {
 			ValidateGroupEdit.class}) ProdBonusplanDto dto, BindingResult result) {
 		/*prodBonusplanManager002Service.delete(param);
 		return new AjaxResult("删除成功");*/
-
+		dto.getSelectedItem().forEach(item->{
+			item.setProdName(item.getProdId());
+			item.setSettDateStr(DateUtil.format(item.getSettDate(),"yyyy/MM/dd"));
+		});
 		dto.setUpdateUser(LoginUserUtil.getUserName());
 		ProcessParameter<ProdBonusplanDto> processParameter = new ProcessParameter<ProdBonusplanDto>();
 		WorkFlowParameter<ProdBonusplanDto> params = new WorkFlowParameter<ProdBonusplanDto>();
