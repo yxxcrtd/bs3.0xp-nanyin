@@ -195,6 +195,7 @@
     <select id="selectByPrimaryKey"
             resultType="com.joyintech.tams.disclosure.information.config.bonuscalist.dto.BonusCalist001Dto">
         select
+        distinct
         <include refid="com.joyintech.tams.common.base.dao.DisBonusListMapper.Base_Column_List" />,
         case when rpi.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else rpi.PROD_NAME end prodName
