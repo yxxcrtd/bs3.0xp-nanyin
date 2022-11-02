@@ -408,6 +408,13 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             } else if (!isDateStr(rowData.get(3))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "现金红利发放日"));
             }
+            if(isDateStr(rowData.get(2))&&isDateStr(rowData.get(3))){
+                Date settDate=DateUtil.parse(rowData.get(2));
+                Date paymentDate=DateUtil.parse(rowData.get(3));
+                if(DateUtil.compareTo(paymentDate,settDate)<0){
+                    message.add("现金红利发放日必须大于等于收益分配基准日");
+                }
+            }
             if (!StringUtil.isNotEmpty(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩报酬"));
             }
