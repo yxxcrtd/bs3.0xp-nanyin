@@ -319,10 +319,10 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             }else if(!isDateStr(rowData.get(2))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "报告发布日期"));
             }
-            if (map.containsKey(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(5))) {
+            if (map.containsKey(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
-            map.put(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(6), rowData);
+            map.put(rowData.get(1) + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(rowData.get(1)
                         + GlobalConstant.UNDER_LINE + rowData.get(6),
