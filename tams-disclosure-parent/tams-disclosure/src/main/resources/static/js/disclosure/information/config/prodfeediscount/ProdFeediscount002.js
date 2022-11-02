@@ -85,14 +85,14 @@ $(function() {
 	function changeDate(){
 		var startDate = $('#startDate').val();
 		var endDate = $('#endDate').val();
-		if (startDate && endDate){
-			var days = (Date.ofDate(endDate) - Date.ofDate(startDate))/(24*60*60*1000);
-			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("优惠截至时间必须大于优惠开始时间", JoyinUtil.getLabel("ProdFeediscount002.endDate")));
-				$('#endDate').val('');
-				return;
-			}
-		}
+		// if (startDate && endDate){
+		// 	var days = (Date.ofDate(endDate) - Date.ofDate(startDate))/(24*60*60*1000);
+		// 	if(days<0){
+		// 		Joyin.error(JoyinUtil.getMessage("优惠截至时间必须大于优惠开始时间", JoyinUtil.getLabel("ProdFeediscount002.endDate")));
+		// 		$('#endDate').val('');
+		// 		return;
+		// 	}
+		// }
 	}
 
 	/**
