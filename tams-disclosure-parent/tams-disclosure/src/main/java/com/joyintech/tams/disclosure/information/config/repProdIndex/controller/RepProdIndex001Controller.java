@@ -7,12 +7,16 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
+import com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.service.RepProdIndexService;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -94,10 +98,18 @@ public class RepProdIndex001Controller extends BaseController {
         List<RepProdIndexDto> selectedItem = dto.getSelectedItem();
         selectedItem.forEach(e->{
             e.setOperateType("DELETE");
-            repProdIndexService.doComplete(e,OperationType.DELETE);
         });
-
-        return new AjaxResult("删除成功",MessageType.提示消息);
+        ProcessParameter<RepProdIndexDto> processParameter = new ProcessParameter<RepProdIndexDto>();
+        WorkFlowParameter<RepProdIndexDto> params = new WorkFlowParameter<RepProdIndexDto>();
+        params.setPageId("RepProdIndex002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(item -> item.getProdId());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_产品净值信息.getValue());
+        // 业务说明：产品代码 + "(" + 产品代码 + ")" + "-" + "合作机构" + "-" + "生效日"
+        params.setComment(entity -> "子产品代码" + "(" + entity.getProdId() + ")");
+        processParameter.setWorkFlowParameter(params);
+        String msg = repProdIndexService.start(processParameter, selectedItem.toArray(new RepProdIndexDto[selectedItem.size()]));
+        return new AjaxResult(msg);
     }
 
     /**

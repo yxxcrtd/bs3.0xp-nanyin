@@ -10,10 +10,14 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
+import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndexGz.dto.RepProdIndexGzDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndexGz.service.RepProdIndexGzService;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -90,10 +94,19 @@ public class RepProdIndexGz001Controller extends BaseController {
         List<RepProdIndexGzDto> selectedItem = dto.getSelectedItem();
         selectedItem.forEach(e->{
             e.setOperateType("DELETE");
-            repProdIndexGzService.doComplete(e,OperationType.DELETE);
         });
+        ProcessParameter<RepProdIndexGzDto> processParameter = new ProcessParameter<RepProdIndexGzDto>();
+        WorkFlowParameter<RepProdIndexGzDto> params = new WorkFlowParameter<RepProdIndexGzDto>();
+        params.setPageId("RepProdIndexGz002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(item -> item.getProdId());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_产品净值信息_估值.getValue());
+        // 业务说明：产品代码 + "(" + 产品代码 + ")" + "-" + "合作机构" + "-" + "生效日"
+        params.setComment(entity -> "子产品代码" + "(" + entity.getProdId() + ")");
+        processParameter.setWorkFlowParameter(params);
+        String msg = repProdIndexGzService.start(processParameter, selectedItem.toArray(new RepProdIndexGzDto[selectedItem.size()]));
+        return new AjaxResult(msg);
 
-        return new AjaxResult("删除成功",MessageType.提示消息);
     }
 
     /**
