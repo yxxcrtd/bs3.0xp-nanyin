@@ -15,7 +15,7 @@
             <Cell order="11" name="生成时间">createTimeStr</Cell>
             <Cell order="12" name="确认时间">confirmDateStr</Cell>
             <Cell order="13" name="确认方式">isConfirmName</Cell>
-            <Cell order="14" name="复核时间">reviewTimeStr</Cell>
+            <Cell order="14" name="报表复核时间">reviewTimeStr</Cell>
             <Cell order="15" name="复核人">reviewUser</Cell>
             <Cell order="16" name="附件">annex</Cell>
         </Row>
