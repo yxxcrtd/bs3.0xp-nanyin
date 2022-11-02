@@ -312,7 +312,7 @@ public class Performance001Service extends CommonExportService<Performance001Dto
                 webResult.setMessage(
                         this.getMessage("REPORT_COMMON_FILE_C_2222",
                                 StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                        MessageType.警告消息);
+                        MessageType.错误消息);
             } else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
