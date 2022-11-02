@@ -264,12 +264,13 @@
 
     <select id="selectHugeInfoList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto">
         select
+        A.PROD_REGIST_NO,
         A.PROD_ID,
         to_char(A.RPT_ISSUE_DATE,'yyyy/mm/dd') rptIssueDateStr
         from DIS_LARGE_REDEMPTION A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.RPT_ISSUE_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
-                (#{item.prodId},#{item.rptIssueDateStr},'E')
+            <foreach collection="list" item="item" open="(A.PROD_REGIST_NO,A.PROD_ID,to_char(A.RPT_ISSUE_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
+                (#{item.prodRegistNo},#{item.prodId},#{item.rptIssueDateStr},'E')
             </foreach>
         </where>
     </select>
