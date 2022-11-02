@@ -210,7 +210,9 @@
                 <if test="status != null and ! status.equals('')">
                 	and rft.STATUS = #{status,jdbcType=VARCHAR}
             	</if>
-
+                <if test="updateTimeStr != null and ! updateTimeStr.equals('')">
+                    and to_char(rft.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss')=#{updateTimeStr,jdbcType=VARCHAR}
+                </if>
     </select>
 
     <select id="selectByProdID" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >

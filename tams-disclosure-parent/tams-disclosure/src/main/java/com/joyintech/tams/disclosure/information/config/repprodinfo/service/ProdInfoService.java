@@ -881,6 +881,16 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     if(prodInfoDtoList!=null && prodInfoDtoList.size()>0){
                         message.add("已存在相同产品主代码！");
                     }
+                    //
+                    if(StringUtil.isNotEmpty(list.get(0))&&StringUtil.isNotEmpty(list.get(8))){
+                        ProdInfoDto prodInfoDto= prodInfoMapper.selectByProdStatus(list.get(0), "E");
+                        if(prodInfoDto!=null){
+                            if(!StringUtil.equals(prodInfoDto.getpProdId(),list.get(8))){
+                                message.add("导入文件产品主代码与系统已存在数据的产品主代码不一致！");
+                            }
+                        }
+                    }
+
                 }
             }
             if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), list.get(21))

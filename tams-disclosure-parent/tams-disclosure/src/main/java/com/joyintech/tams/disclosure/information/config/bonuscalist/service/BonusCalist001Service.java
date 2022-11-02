@@ -10,6 +10,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -364,6 +365,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             }
             map.put(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(5), rowData);
+            lengthCheck(rowData,message);
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(rowData.get(0)
                         + GlobalConstant.UNDER_LINE + rowData.get(5),
@@ -541,6 +543,115 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
         }
          return 1;
         }
+
+    private void lengthCheck(List<String> rowData,List<String> message) {
+        if (StringUtil.isNotBlank(rowData.get(1))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(1)).setScale(2,BigDecimal.ROUND_HALF_UP);;
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "产品资产净值", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("产品资产净值只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(2))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(2)).setScale(2,BigDecimal.ROUND_HALF_UP);;
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "产品期末余额(份额)", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("产品期末余额(份额)只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(3))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(3)).setScale(4,BigDecimal.ROUND_HALF_UP);;
+            if (bigDecimal.precision() > 10) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "单位净值", String.valueOf(10)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("单位净值只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(6))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(6));
+            if (bigDecimal.precision() > 4) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "运行天数", String.valueOf(4)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("运行天数只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(7))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(7)).setScale(2,BigDecimal.ROUND_HALF_UP);;
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "可供分配利润", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("可供分配利润只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(8))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(8));;
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("运行天数只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(9))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(9)).setScale(2,BigDecimal.ROUND_HALF_UP);;
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "业绩比较基准收益", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("业绩比较基准收益只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(10))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(10)).setScale(2,BigDecimal.ROUND_HALF_UP);;
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "超出部分", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("超出部分只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(11))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(11)).setScale(2,BigDecimal.ROUND_HALF_UP);;
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "业绩报酬", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("业绩报酬只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(12))) {
+            BigDecimal bigDecimal=new BigDecimal(rowData.get(12)).setScale(2,BigDecimal.ROUND_HALF_UP);;
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "应分配分红金额", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("应分配分红金额只能填写大于等于0的数据");
+            }
+        }
+        if (StringUtil.isNotBlank(rowData.get(13))) {
+            BigDecimal bigDecimal = new BigDecimal(rowData.get(13)).setScale(2, BigDecimal.ROUND_HALF_UP);
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "单位分红", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("单位分红只能填写大于等于0的数据");
+            }
+        }
+
+        if (StringUtil.isNotBlank(rowData.get(14))) {
+            BigDecimal bigDecimal = new BigDecimal(rowData.get(14)).setScale(2, BigDecimal.ROUND_HALF_UP);
+            if (bigDecimal.precision() > 17) {
+                message.add(this.getMessage("REPORT_COMMON_E_0002_1", "收益率", String.valueOf(17)));
+            }
+            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
+                message.add("收益率只能填写大于等于0的数据");
+            }
+        }
+    }
 
 
 }

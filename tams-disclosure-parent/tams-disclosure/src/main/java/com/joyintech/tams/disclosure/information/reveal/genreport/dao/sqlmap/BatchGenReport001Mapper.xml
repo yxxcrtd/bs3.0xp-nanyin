@@ -43,6 +43,7 @@
 
    <select id="selectProdInfo" resultType="com.joyintech.framework.select.TreeNode">
         select
+        distinct
         PROD_ID id,
         PROD_NAME name,
         PD_STATUS||ISSUING_WAY||PROD_SERIES pid
@@ -55,6 +56,7 @@
     
     <select id="selectProdInfoSon" resultType="com.joyintech.framework.select.TreeNode">
         select
+        distinct
         prod.PROD_ID id,
         prod.PROD_ID || prod.PROD_NAME name,
         (prod.PD_STATUS||prod.ISSUING_WAY|| prod.PROD_SERIES ||

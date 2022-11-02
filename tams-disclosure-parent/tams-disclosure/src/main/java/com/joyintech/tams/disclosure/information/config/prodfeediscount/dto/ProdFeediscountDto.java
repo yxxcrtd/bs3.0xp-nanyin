@@ -91,7 +91,7 @@ public class ProdFeediscountDto extends DisProdFeediscount implements ITableRow,
         if(StringUtils.isNotBlank(this.endDateStr)){
             return this.endDateStr ;
         }else{
-            return this.endDateStr = this.getEndDate()==null?null: this.getStartDate();
+            return this.endDateStr = this.getEndDate()==null?null: this. getEndDate();
         }
     }
 

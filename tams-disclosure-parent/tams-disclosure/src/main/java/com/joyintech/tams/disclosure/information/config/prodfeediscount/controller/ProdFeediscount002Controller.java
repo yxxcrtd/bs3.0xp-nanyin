@@ -160,7 +160,7 @@ public class ProdFeediscount002Controller extends BaseController {
 		  if (StringUtil.equals(operateType,"new")) {
 			  if(CollectionUtils.isNotEmpty(prodFeediscountService.getProdFeeDiscount(dto))) {
 				  result.setStatuCode(500);
-				  result.setMessage("不可创建重复数据！",MessageType.警告消息);
+				  result.setMessage("不可创建重复数据！",MessageType.错误消息);
 				  return result;
 			  }
 		  }
