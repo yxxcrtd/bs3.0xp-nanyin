@@ -16,6 +16,8 @@ var RepFloatFee002 = function() {
             param.affirmDate = $('#affirmDate').val();
             param.businessCode = $("#businessCode").val();
             param.affirmNum = $("#affirmNum").val();
+            param.affirmAmt = $("#affirmAmt").val();
+            param.aboveAmt = $("#aboveAmt").val();
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/check',param,function(result){
                 if(result){
                     Joyin.ajaxJson(basePath + 'disclosure/information/config/repFloatFee/RepFloatFee002/checkExistData', param, function(checkResult){

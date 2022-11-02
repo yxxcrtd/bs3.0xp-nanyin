@@ -36,7 +36,7 @@ public class RepFloatFeeValidator implements BeanValidator {
             }else{
                 Date platDate = DateUtil.platDateFromCache();
                 if(DateUtil.compareDate(dto.getAffirmDate(), platDate) > 0){
-                    errorList.add(new ValidMessage("", "确认日不能大于平台日"));
+//                    errorList.add(new ValidMessage("", "确认日不能大于平台日"));
                 }
             }
 
