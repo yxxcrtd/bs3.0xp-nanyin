@@ -1,5 +1,10 @@
 //@ sourceURL=uploadFile001.js
-
+(function() {
+    if(viewFlag){
+        $('#multFileBtn').hide();
+        $('#multFileBtn2').hide();
+    }
+}());
 Date.prototype.format = function(format)
 {
     var o = {
@@ -187,6 +192,9 @@ $(function ($) {
                             /*_disabled = file.createUser != loginUser;*/
                             _disabled = file.createUser != file.updateUser;
                             actionHtml = '<td></td>';
+                        }
+                        if(viewFlag){
+                            _disabled=true;
                         }
                         rownum ++;
                         var tr = $(['<tr id="upload-'+ file.fileNo +'">',
