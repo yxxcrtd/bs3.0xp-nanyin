@@ -417,10 +417,20 @@ public class PoiReportService {
 				repReveal.setProdName(params.get("pprodName").toString());			
 		}
 		if (StringUtil.isNotEmpty(params.get("startDate"))) {
-			repReveal.setStartDate((Date)params.get("startDate"));
+			Object obj = params.get("startDate");
+			if (obj instanceof Date ) {
+				repReveal.setStartDate( (Date)(params.get("startDate")));
+			} else { 
+				repReveal.setStartDate(DateUtil.parse(params.get("startDate").toString()));
+			}
 		}
 		if (StringUtil.isNotEmpty(params.get("endDate"))) {
-			repReveal.setEndDate( (Date)params.get("endDate"));
+			Object obj = params.get("startDate");
+			if (obj instanceof Date ) {
+				repReveal.setEndDate( (Date)(params.get("endDate")));
+			} else {
+				repReveal.setEndDate(DateUtil.parse(params.get("endDate").toString()));
+			}
 		} else if (params.get("reportDate") != null){
 			repReveal.setEndDate((Date)params.get("reportDate"));
 		}else{//有一部分报表生成没有日期，需要用平台日处理
