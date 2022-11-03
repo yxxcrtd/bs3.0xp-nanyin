@@ -1,5 +1,10 @@
 //@ sourceURL=uploadFile001.js
-
+(function() {
+    if(pageModel==='2'){
+        $('#multFileBtn').hide();
+        $('#multFileBtn2').hide();
+    }
+}());
 Date.prototype.format = function(format)
 {
     var o = {
@@ -187,6 +192,9 @@ $(function ($) {
                             /*_disabled = file.createUser != loginUser;*/
                             _disabled = file.createUser != file.updateUser;
                             actionHtml = '<td></td>';
+                        }
+                        if(pageModel===PAGE_MODEL_REFERENCE){
+                            _disabled=true;
                         }
                         rownum ++;
                         var tr = $(['<tr id="upload-'+ file.fileNo +'">',
