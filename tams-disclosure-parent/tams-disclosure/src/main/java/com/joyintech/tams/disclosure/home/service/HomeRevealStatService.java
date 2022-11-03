@@ -83,8 +83,9 @@ public class HomeRevealStatService {
 	    	else if (repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016") ) {  //季报
 	    		//找到本季度的第一天
 	    		Date qDate = DurationUtil.getQuarterStart(statDate.getYear()+1900,statDate.getMonth()/3+1);
+	    		
 	    		Map<String,Object> p = new HashMap<>();
-	    		p.put("busi_date", qDate);
+	    		p.put("busi_date", DateUtil.addDay(qDate, -1));
 	    		p.put("is_holiday", "0");
 	    		p.put("market_code", "04");
 	    		p.put("days", 3);
@@ -92,8 +93,9 @@ public class HomeRevealStatService {
 	    		p.put("days", 15);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 	    		
-	    		//统计已发生的列
-				info = queryOtherCounts(repId,sDate,eDate);
+	    		//统计已发生的列：用上个季度的末的日期进行查询
+	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Q");
+				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
 	    		
 				//统计预计披露的列
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
@@ -103,7 +105,7 @@ public class HomeRevealStatService {
 	    		//找到本周期的第一天
 	    		Date qDate = DurationUtil.getHalfYearStart(statDate.getYear()+1900,statDate.getMonth()/6+1);
 	    		Map<String,Object> p = new HashMap<>();
-	    		p.put("busi_date", qDate);
+	    		p.put("busi_date", DateUtil.addDay(qDate, -1));
 	    		p.put("is_holiday", "0");
 	    		p.put("market_code", "04");
 	    		p.put("days", 3);
@@ -112,7 +114,8 @@ public class HomeRevealStatService {
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 	    		
 	    		//统计已发生的列
-				info = queryOtherCounts(repId,sDate,eDate);
+	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "H");
+				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
 	    		
 				//统计预计披露的列
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
@@ -122,7 +125,7 @@ public class HomeRevealStatService {
 	    		//找到本周期的第一天
 	    		Date qDate = DurationUtil.getYearStart(statDate.getYear()+1900);
 	    		Map<String,Object> p = new HashMap<>();
-	    		p.put("busi_date", qDate);
+	    		p.put("busi_date", DateUtil.addDay(qDate, -1));
 	    		p.put("is_holiday", "0");
 	    		p.put("market_code", "04");
 	    		p.put("days", 3);
@@ -131,7 +134,8 @@ public class HomeRevealStatService {
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 
 	    		//统计已发生的列
-				info = queryOtherCounts(repId,sDate,eDate);
+	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Y");
+				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
 				
 				//统计预计披露的列	    		
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
@@ -142,7 +146,7 @@ public class HomeRevealStatService {
 				info = queryOtherCounts(repId,statDate,statDate);
 				
 				//统计预计披露的列
-				int counts = queryExcpectCountsByRepId( rep.getRepId(),statDate);
+				int counts = queryExcpectCountsByRepId(repId,statDate);
 				info.setExpectRevealCounts(counts);
 	    	}
 
@@ -160,11 +164,11 @@ public class HomeRevealStatService {
 	private int queryExpectCounts(String repId,Date sDate,Date eDate,Date statDate ) {
 		int counts = 0;
 		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
-			counts = genStat(repId,statDate);
+			counts = genStat(repId,sDate);
 		} else if (sDate.compareTo(statDate)<0 && eDate.compareTo(statDate)>=0 ) {
 			counts = queryStat(repId,sDate);
 			if ( counts==-1 )  //首次生成
-				counts = genStat(repId,statDate);
+				counts = genStat(repId,sDate);
 		} else {
 			counts = 0;
 		}
@@ -292,11 +296,12 @@ public class HomeRevealStatService {
     		condition = "info.MDATE>=to_date('"+queryDate+"','yyyy-mm-dd')";
     	}
     	else if ( repId.equals("CP_001_002_007") ) {//周期型产品开放公告（公募产品）：并且运作起始日=当天
-    		condition = " exists ( select 1 from" + 
-    				" DIS_PROD_PLAN plan" + 
-    				" where" + 
-    				" plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
-    				" and info.PROD_ID = plan.PROD_ID)";
+    		condition = " exists ( select 1 from"  
+    				+ " DIS_PROD_PLAN plan"  
+    				+ " where" 
+    				+ " plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" 
+    				+ " and plan.DATA_STATUS='E'"
+    				+ " and info.PROD_ID = plan.PROD_ID)";
     	}
     	else if ( repId.equals("CP_001_002_008") ) {//周期型产品开放公告（公募产品-单赎回）：并且自动赎回日=当天
     		condition = " exists ( select 1 from" + 
@@ -311,11 +316,12 @@ public class HomeRevealStatService {
     			) { //开放、净值及分红公告：并且当期收益分配基准日=当天 
     		        //净值及分红报告；
     				//到期公告；
-    		condition = " exists ( select 1 from" + 
-    				" DIS_PROD_BONUSPLAN plan" + 
-    				" where" + 
-    				" plan.SETT_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
-    				" and info.PROD_ID = plan.PROD_ID)";
+    		condition = " exists ( select 1 from"  
+    				+ " DIS_PROD_BONUSPLAN plan"  
+    				+ " where" 
+    				+ " plan.SETT_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" 
+    				+ " and plan.DATA_STATUS='E'" 
+    				+ " and info.PROD_ID = plan.PROD_ID)";
     	}
     	else if ( repId.equals("CP_001_002_011") ) {//开放及净值公告（公募）：并且开放结束日+1=当天
     		Map<String,Object> p = new HashMap<>();
@@ -324,25 +330,26 @@ public class HomeRevealStatService {
     		p.put("market_code", "04");
     		Date preStatDate = holidayService.getLastWorkDay(p);
     		String preQueryDate = sdf.format(preStatDate);
-    		condition = " exists ( select 1 from" + 
-    				" DIS_PROD_PLAN plan" + 
-    				" where" + 
-    				" plan.OPEN_END_DATE = to_date('"+preQueryDate+"','yyyy-mm-dd')" + 
-    				" and info.PROD_ID = plan.PROD_ID)";
+    		condition = " exists ( select 1 from"  
+    				+ " DIS_PROD_PLAN plan" 
+    				+ " where" 
+    				+ " plan.OPEN_END_DATE = to_date('"+preQueryDate+"','yyyy-mm-dd')" 
+    				+ " and plan.DATA_STATUS='E'"
+    				+ " and info.PROD_ID = plan.PROD_ID)";
     	}
     	else if ( repId.equals("CP_001_002_012") ) {//开放及净值报告（私募）：并且运作起始日=当天
-    		condition = " exists ( select 1 from" + 
-    				" DIS_PROD_PLAN plan" + 
-    				" where" + 
-    				" plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
-    				" and info.PROD_ID = plan.PROD_ID)";
+    		condition = " exists ( select 1 from"  
+    				+ " DIS_PROD_PLAN plan" 
+    				+ " where" 
+    				+ " plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" 
+    				+ " and plan.DATA_STATUS='E'" 
+    				+ " and info.PROD_ID = plan.PROD_ID)";
     	}    	
     	else if ( repId.equals("CP_001_002_005") || repId.equals("CP_001_002_006") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
     		//找到上周的第一天
     		Date qDate = getLastDurationFirstDate(statDate,"W");
     		String qDateStr = sdf.format(qDate);
     		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
-
 //    		//找到本周一
 //    		Calendar cal = Calendar.getInstance();
 //    		cal.setTime(statDate);
@@ -419,6 +426,48 @@ public class HomeRevealStatService {
     	}
     	return cal.getTime();
     }
+    
+    private Date getLastDurationEndDate(Date queryDate, String durationType ) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(queryDate);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		int day=30;
+		if ( durationType.equals("Q") ) {
+    		if ( month<3 ) {
+    			year = year-1;
+    			month = 11;
+    			day=31;
+    		} else if ( month>=3 && month<6 ) {
+    			month = 2;
+    			day=30;
+    		} else if ( month>=6 && month<9 ) {
+    			month = 5;
+    			day=30;
+    		} else if ( month>=9 && month<12 ) {
+    			month = 8;
+    			day=31;
+    		}
+    	}
+		else if ( durationType.equals("H") ) {
+    		if ( month<6 ) {
+    			year = year-1;
+    			month = 11;
+    			day=31;
+    		} else {
+    			month = 5;
+    			day=30;
+    		}
+    	}
+		else if (  durationType.equals("Y") ) {
+			year = year-1;
+			month=11;
+			day = 31;
+		}
+		cal.set(year,month,day);
+    	return cal.getTime();
+    }
+    
     
     private int genStat(String repId,Date statDate) {
     	int counts = queryExcpectCountsByRepId(repId,statDate);
