@@ -258,6 +258,9 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                                     //本次分红方案（元/1份份额）
                                     String unitProfitStr1 =  unitValue1==null?"0":unitValue1.setScale(4, BigDecimal.ROUND_DOWN).toString();
                                     reportKfqzjfhgg001Dto.setUnitProfit(unitProfitStr1);
+                                } else {
+                                	reportKfqzjfhgg001Dto.setUnitValue(null);
+                                	reportKfqzjfhgg001Dto.setUnitProfit(null);
                                 }
                                 //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
                                 
