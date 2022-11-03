@@ -151,7 +151,7 @@
         else '' end pid
         from
         V_REP_PROD_INFO
-        where status='E' AND PROD_SERIES is not null
+        where status !='D' AND PROD_SERIES is not null
     </select>
 
     <select id="selectProdInfo1" resultType="com.joyintech.framework.select.TreeNode">
@@ -287,9 +287,44 @@
         from
         REP_PROD_INFO prod
         left join V_REP_PROD_INFO pprod
-        on prod.p_prod_id = pprod.prod_id
+        on prod.p_prod_id = pprod.prod_id and pprod.STATUS != 'D'
         where  prod.rep_prod_type in ('02','03')
-        AND prod.PROD_SERIES is not null and prod.STATUS = 'E'
+        AND prod.PROD_SERIES is not null and prod.STATUS != 'D'
+    </select>
+
+    <select id="selectRepProdIndexSon" resultType="com.joyintech.framework.select.TreeNode">
+        SELECT
+        distinct
+        T1.PROD_ID id,
+        T1.PROD_ID||nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') name,
+        case T1.PD_STATUS
+        when '01' then
+        (case T1.ISSUING_WAY
+        when '01' then '0101' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        when '02' then '0102' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        else '' end
+        )
+        when '02' then
+        (case T1.ISSUING_WAY
+        when '01' then '0201' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        when '02' then '0202' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        else '' end
+        )
+        when '03' then
+        (case T1.ISSUING_WAY
+        when '01' then '0301' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        when '02' then '0302' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        else '' end
+        )
+        else '' end pid
+        FROM
+        REP_PROD_INFO T1
+        left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
+        left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
+        where T1.P_PROD_ID is not null
+        AND T1.STATUS not in ('D')
+        AND T1.PROD_SERIES is not null
+        AND T1.status='E'
     </select>
 
     <select id="selectProdBonusInfo" resultType="com.joyintech.framework.select.TreeNode">

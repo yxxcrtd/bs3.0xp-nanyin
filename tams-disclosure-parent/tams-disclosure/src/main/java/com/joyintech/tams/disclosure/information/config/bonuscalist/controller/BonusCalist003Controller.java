@@ -77,7 +77,7 @@ public class BonusCalist003Controller extends BaseController {
                 }
             }
         }
-        if(message!=null){
+        if(StringUtil.isNotEmpty(message)){
             ajax2.setStatuCode(500);
             ajax2.setMessage("子产品代码"+message.toString().substring(0,message.length()-1)+"相关数据缺失!",MessageType.错误消息);
             return ajax2;

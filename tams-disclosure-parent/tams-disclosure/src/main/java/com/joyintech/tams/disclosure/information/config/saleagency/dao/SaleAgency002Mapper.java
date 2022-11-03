@@ -93,6 +93,8 @@ public interface SaleAgency002Mapper extends DisProdAgencyMapper {
 
     List<String> selectAllProdSeriesSon(Map<String,Object> param);
 
+    List<String> selectAllRepProdIndexSon(Map<String,Object> param);
+
     List<String> selectAllProdSeriesBonusSon(Map<String,Object> param);
 
     List<String> selectAllProdSeriesHugeSon(Map<String,Object> param);

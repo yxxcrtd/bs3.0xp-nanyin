@@ -76,6 +76,7 @@
         editCell : function(value, data, field, cell, column){
                if (value == '无'){
                    var RowData = {};
+                   RowData.projectNo='1'
                    RowData.financier='无';
                    RowData.projectName='无';
                    RowData.remFinancingPeriod='无';

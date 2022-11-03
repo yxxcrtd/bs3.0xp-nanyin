@@ -342,3 +342,9 @@ update REP_INFO R set R.Home_Page_Type='08' where r.rep_id in('CP_001_002_009','
 update sys_wfl_business_module a set a.module_id='oneApproval' where a.page_id='RepProdIndexGz002' and a.element_id='RepProdIndex001_btn_delete';
 update sys_wfl_business_module a set a.module_id='oneApproval' where a.page_id='RepProdIndex002' and a.element_id='RepProdIndex001_btn_delete';
 -- 产品净值信息删除走流程 add by zhengxiaolian 2022-11-02 end
+
+--产品净值信息子查询树 2022-11-03 wanglei
+delete from SYS_PAGE where PAGE_ID = 'RepProdIndex004';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RepProdIndex004', 'DIS', '/disclosure/information/config/repProdIndex/RepProdIndex004', 'disclosure/information/config/repProdIndex/RepProdIndex004', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
