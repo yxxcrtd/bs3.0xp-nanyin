@@ -32,11 +32,11 @@
             ,{field:'infoType', visible:false}
             ,{field:'infoStatus', visible:false}
             ,{field:'infoDevStatus', visible:false}
-        	,{field:'indexNo', width:120, title: '序号',render:function(data, type, row, meta) {
+        	,{field:'indexNo', width:120, title: '序号',sortable:false,render:function(data, type, row, meta) {
         	    return row.LAY_TABLE_INDEX+1;
                 }}
-        	,{field:'infoTypeText', width:120, title: '类型'}
-        	,{field:'infoName', width:600, title: '报表/模板名称'}
+        	,{field:'infoTypeText', width:120, sortable:false,title: '类型'}
+        	,{field:'infoName', width:600,sortable:false, title: '报表/模板名称'}
         	//,{field:'approveUser', width:200, title: '当前处理人', sortable:false}
             ,{field:'infoStatusText', width:200, title: '当前状态', sortable:false}
         	,{field:'infoDevStatusText', width:200, title: '开发状态', sortable:false}
