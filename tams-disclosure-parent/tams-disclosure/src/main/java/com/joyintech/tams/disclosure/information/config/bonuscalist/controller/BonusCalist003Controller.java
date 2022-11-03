@@ -50,6 +50,8 @@ public class BonusCalist003Controller extends BaseController {
         }
         List<BonusCalist001Dto> paramList =new ArrayList<>();
         List<String> prodIds = StringUtil.splitToList(GlobalConstant.COMMA, dto.getProdId());
+        AjaxResult ajax2=new AjaxResult();
+        StringBuffer message=new StringBuffer();
 //        paramList.add(dto);
         //根据页面选择的多个子产品代码循环
         for (String prodId : prodIds){
@@ -69,12 +71,16 @@ public class BonusCalist003Controller extends BaseController {
                 if ((report.geteDate()==null)|| report.getAssetsValue()==null||report.getCapital()==null||
                         report.getSettDate()==null|| report.getAchievementBasisProp()==null||
                         report.getExcessAchievementProp()==null || report.getAchievementBasis()==null){
-                    AjaxResult ajax=new AjaxResult();
-                    ajax.setStatuCode(500);
-                    ajax.setMessage("子产品代码"+prodId+"相关数据缺失!",MessageType.错误消息);
-                    return ajax;
+                    //ajax2.setStatuCode(500);
+                    message.append(prodId+GlobalConstant.COMMA);
+                    //ajax2.setMessage("子产品代码"+prodId+"相关数据缺失!",MessageType.错误消息);
                 }
             }
+        }
+        if(message!=null){
+            ajax2.setStatuCode(500);
+            ajax2.setMessage("子产品代码"+message.toString().substring(0,message.length()-1)+"相关数据缺失!",MessageType.错误消息);
+            return ajax2;
         }
 
             return commonCheck(result, dto.getOperateType());
