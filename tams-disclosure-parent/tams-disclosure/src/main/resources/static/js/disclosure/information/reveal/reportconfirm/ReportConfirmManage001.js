@@ -128,11 +128,11 @@ $(function () {
 						   if(row.confirmStatus != '1') {
 							   //update by yantianyuan 二级法人按钮改造 start
 							   if(purviewElements.indexOf('_manual')!=-1){
-								   str = '<a id="jumpTab" style="color: green;" href=\'javascript:redirectUrl2("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传披露文档" class="iconfont icon-upload manual"></i></a>';
+								   str = '<a id="jumpTab" style="color: green;" href=\'javascript:redirectUrl2("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传披露文档,暂支持上传（word、pdf、zip）" class="iconfont icon-upload manual"></i></a>';
 								   str += '&nbsp;&nbsp;&nbsp;&nbsp;';
 							   }
 							   if(purviewElements.indexOf('_batch')!=-1){
-								   str += '<a id="jumpTab" href=\'javascript:redirectUrl2("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传附件" class="iconfont icon-cloud-upload1 batch"></i></a>';
+								   str += '<a id="jumpTab" href=\'javascript:redirectUrl2("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传附件,暂支持上传（word、pdf、zip）" class="iconfont icon-cloud-upload1 batch"></i></a>';
 								   str += '&nbsp;&nbsp;&nbsp;&nbsp;';
 							   }
 //                		   str = '<a id="jumpTab" style="color: green;" href=\'javascript:redirectUrl2("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传披露文档" class="iconfont icon-upload"></i></a>';
@@ -470,7 +470,7 @@ $(function () {
 			    object.pageModel = pageModel;
 			    object.updateTypeFlag = "QR";//当前操作为确认还是下发【确认："QR",下发："XF"】
 			    if(workflowId) {
-			    	Joyin.uploadFile({exts:'pdf|docx|xlsx'},function(fileName,file) {
+			    	Joyin.uploadFile({exts:'zip|doc|pdf|docx'},function(fileName,file) {
 			    		Joyin.ajax(basePath +"disclosure/information/reveal/reportconfirm/ReportConfirmManage003/uploadFile?", {
 			    			fileName:fileName,id:param,fileNo:file[0].fileNo,option:option,srcName:file[0].srcName
 			    		},function(result){
@@ -483,7 +483,7 @@ $(function () {
 			    }else {
 			    	Joyin.ajax(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check',
 			    			object,function(){
-			    		Joyin.uploadFile({exts:'pdf|docx|xlsx'},function(fileName,file) {
+			    		Joyin.uploadFile({exts:'zip|doc|pdf|docx'},function(fileName,file) {
 			    			Joyin.ajax(basePath +"disclosure/information/reveal/reportconfirm/ReportConfirmManage003/uploadFile?", {
 			    				fileName:fileName,id:param,fileNo:file[0].fileNo,option:option,srcName:file[0].srcName
 			    			},function(result){
@@ -496,7 +496,7 @@ $(function () {
 			    	});
 			    }
 	     }else {
-	    	 Joyin.uploadFile({exts:''},function(fileName,file) {
+	    	 Joyin.uploadFile({exts:'zip|doc|pdf|docx'},function(fileName,file) {
 		    		Joyin.ajax(basePath +"disclosure/information/reveal/reportconfirm/ReportConfirmManage003/uploadFile?", {
 		    			fileName:fileName,id:param,fileNo:file[0].fileNo,option:option,srcName:file[0].srcName
 		    		},function(result){
