@@ -58,37 +58,9 @@ public class ProdPartnerInfoValidator implements BeanValidator {
                 //根据主键查询被修改的数据
                 List<ProdPartnerDto> prodPartnerDtoList=prodPartner002Service.checkPartnerExistByProdId(map);
                 if(!prodPartnerDtoList.isEmpty()){
-                    ProdPartnerDto partnerDto = prodPartnerDtoList.get(0);
-                    if(DateUtil.compareDate(partnerDto.getEffDate(),platDate)>0){
-                        //生效日和生效截止日都是大于平台日的，前台都可以修改，要加校验
-//                        if(StringUtil.isNotEmpty(dto.getEffDate())){
-//                            if(DateUtil.compareDate(platDate,dto.getEffDate())>0){
-//                                resultList.add(new ValidMessage("生效日要大于等于平台日期！"));
-//                            }
-//                        }
-//                        if(StringUtil.isNotEmpty(dto.getEffEndDate())){
-//                            if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-//                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
-//                            }
-//                        }
-                        //生效日截止日期要大于等于生效日
-                        if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
-                            if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
-                                resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
-                            }
-                        }
-                    }else if(DateUtil.compareDate(partnerDto.getEffEndDate(),platDate)>0){
-                        //前台生效截止日可修改，要检验生效截止日
-//                        if(StringUtil.isNotEmpty(dto.getEffEndDate())){
-//                            if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-//                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
-//                            }
-//                        }
-                        //生效日截止日期要大于等于生效日
-                        if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
-                            if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
-                                resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
-                            }
+                    if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
+                        if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
+                            resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
                         }
                     }
                 }
