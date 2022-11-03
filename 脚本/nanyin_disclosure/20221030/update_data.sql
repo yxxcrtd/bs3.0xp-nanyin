@@ -348,3 +348,11 @@ delete from SYS_PAGE where PAGE_ID = 'RepProdIndex004';
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RepProdIndex004', 'DIS', '/disclosure/information/config/repProdIndex/RepProdIndex004', 'disclosure/information/config/repProdIndex/RepProdIndex004', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null, sysdate, 'system', sysdate);
+
+-- 报表删除分红计算清单 add by zhengxiaolian 2022-11-03 start
+delete from rep_reportinfo where REPORTID='CP_001_007_001';
+delete from REP_INFO where REP_ID='CP_001_007_001';
+delete from REP_SCREEN where REP_ID='CP_001_007_001';
+delete from rep_tree where TREE_ID in('CP_001_007','CP_001_007_001');
+delete from REP_RULE where REP_ID ='CP_001_007_001';
+-- 报表删除分红计算清单 add by zhengxiaolian 2022-11-03 end
