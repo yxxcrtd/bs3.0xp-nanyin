@@ -38,7 +38,8 @@ public class UploadFile002Controller extends BaseController {
         model.addAttribute("fileType2", fileType);
         //modify by yanya on 20210824 增加是否复制的判定
         String COPY_FLAG = getParam("COPY_FLAG");
-
+        String viewFlag = getParam("viewFlag");
+        model.addAttribute("viewFlag", viewFlag);
         if(StringUtil.isNotEmpty(businessId)){
             Map<String,String> param = new HashMap<String,String>();
             param.put("businessId",businessId);

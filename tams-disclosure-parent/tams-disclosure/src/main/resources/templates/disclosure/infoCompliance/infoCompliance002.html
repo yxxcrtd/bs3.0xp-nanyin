@@ -44,10 +44,10 @@
         </div>
 
         <div class="page-component" th:data-path="@{/disclosure/infoCompliance/uploadFile001/init}"
-             th:data-params="|{fileType: '01', businessId: '${seqno ?: ''}'}|"></div>
+             th:data-params="|{viewFlag:'${viewFlag ?: ''}',fileType: '01', businessId: '${seqno ?: ''}'}|"></div>
 
         <div class="page-component" th:data-path="@{/disclosure/infoCompliance/uploadFile002/init}"
-             th:data-params="|{fileType: '02', businessId: '${seqno ?: ''}'}|"></div>
+             th:data-params="|{viewFlag:'${viewFlag ?: ''}',fileType: '02', businessId: '${seqno ?: ''}'}|"></div>
 
         <div class="pro-module-wrap">
             <div class="pro-module">

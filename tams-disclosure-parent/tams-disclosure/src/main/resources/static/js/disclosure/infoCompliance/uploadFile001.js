@@ -1,6 +1,6 @@
 //@ sourceURL=uploadFile001.js
 (function() {
-    if(pageModel==='2'){
+    if(viewFlag){
         $('#multFileBtn').hide();
         $('#multFileBtn2').hide();
     }
@@ -193,7 +193,7 @@ $(function ($) {
                             _disabled = file.createUser != file.updateUser;
                             actionHtml = '<td></td>';
                         }
-                        if(pageModel===PAGE_MODEL_REFERENCE){
+                        if(viewFlag){
                             _disabled=true;
                         }
                         rownum ++;
