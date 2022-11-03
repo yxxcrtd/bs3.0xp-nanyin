@@ -39,7 +39,7 @@ import java.util.List;
 public class ProdBonusplanManager003Controller extends BaseController {
 
 	@Autowired
-	private ProdBonusplanManager003Service prodBonusplanManager003Service;
+	private DisProdPlanManage003Service disProdPlanManage003Service;
 	/**
 	 * 内容初始化 {@inheritDoc}
 	 */
@@ -61,7 +61,7 @@ public class ProdBonusplanManager003Controller extends BaseController {
 			//return reportContentEnum002Service.getProductTreeByAgencyId(agencyId);
 			return null;
 		} else{//新建
-			return prodBonusplanManager003Service.getProductTree();
+			return disProdPlanManage003Service.getProductTree();
 		}
 	}
 
