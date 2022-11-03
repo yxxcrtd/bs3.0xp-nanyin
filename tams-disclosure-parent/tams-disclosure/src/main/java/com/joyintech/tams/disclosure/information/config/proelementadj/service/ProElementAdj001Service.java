@@ -257,28 +257,28 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             } else if(!prodList.contains(rowData.get(1))){
                 message.add("子产品代码未在产品基本信息表中维护。");
             }
-            if (StringUtil.isNotEmpty(rowData.get(3)) && rowData.get(3).length() > 500){
+            if (StringUtil.isNotEmpty(rowData.get(3)) && rowData.get(3).length() > 1300){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整此产品要素原因"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(4)) && rowData.get(4).length() > 500){
+            if (StringUtil.isNotEmpty(rowData.get(4)) && rowData.get(4).length() > 1300){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "此产品要素调整描述文字1"));
             }
-            if (StringUtil.isNotEmpty(rowData.get(5)) && rowData.get(5).length() > 500){
+            if (StringUtil.isNotEmpty(rowData.get(5)) && rowData.get(5).length() > 1300){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "此产品要素调整描述文字2"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(6))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整要素"));
-            } else if (rowData.get(6).length() > 1500){
+            } else if (rowData.get(6).length() > 1300){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整要素"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(7))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整前"));
-            } else if (rowData.get(7).length() > 1500){
+            } else if (rowData.get(7).length() > 1300){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整前"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(8))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "调整后"));
-            } else if (rowData.get(8).length() > 1500){
+            } else if (rowData.get(8).length() > 1300){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "调整后"));
             }
             if (!StringUtil.isNotEmpty(rowData.get(9))){
