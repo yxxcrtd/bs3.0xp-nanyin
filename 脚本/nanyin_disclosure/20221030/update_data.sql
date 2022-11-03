@@ -338,3 +338,7 @@ update REP_INFO R set R.Home_Page_Type='06' where r.rep_id in('CP_001_002_015','
 update REP_INFO R set R.Home_Page_Type='07' where r.rep_id in('CP_001_002_017','CP_001_002_018','CP_001_002_019','CP_001_002_020');
 update REP_INFO R set R.Home_Page_Type='08' where r.rep_id in('CP_001_002_009','CP_001_002_010','CP_001_002_011','CP_001_002_012','CP_001_002_013','CP_001_002_014');
 
+-- 产品净值信息删除走流程 add by zhengxiaolian 2022-11-02 start
+update sys_wfl_business_module a set a.module_id='oneApproval' where a.page_id='RepProdIndexGz002' and a.element_id='RepProdIndex001_btn_delete';
+update sys_wfl_business_module a set a.module_id='oneApproval' where a.page_id='RepProdIndex002' and a.element_id='RepProdIndex001_btn_delete';
+-- 产品净值信息删除走流程 add by zhengxiaolian 2022-11-02 end

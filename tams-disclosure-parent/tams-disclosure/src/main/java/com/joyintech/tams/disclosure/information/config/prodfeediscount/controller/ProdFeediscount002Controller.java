@@ -180,7 +180,7 @@ public class ProdFeediscount002Controller extends BaseController {
 			AjaxResult result = new AjaxResult();
 			if(CollectionUtils.isNotEmpty(prodFeediscountService.getProdFeeDiscount(dto))) {
 				result.setStatuCode(500);
-				result.setMessage("不可创建重复数据！",MessageType.警告消息);
+				result.setMessage("不可创建重复数据！",MessageType.错误消息);
 				return result;
 			}
 		}

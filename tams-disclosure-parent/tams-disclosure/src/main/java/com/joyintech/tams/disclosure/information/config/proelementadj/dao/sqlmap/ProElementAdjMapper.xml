@@ -264,4 +264,108 @@
         where DATA_STATUS!='D' and PROD_ID = #{prodId,jdbcType=VARCHAR}
             and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
     </select>
+
+    <select id="getExistsData" resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
+        select * from
+            DIS_PROD_ADJUST
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+          and DATA_STATUS='E'
+        <choose>
+            <when test="isSalesAgency !=null and isSalesAgency != ''">
+                AND IS_SALES_AGENCY =  #{isSalesAgency,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND IS_SALES_AGENCY is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="prodAdjRemark !=null and prodAdjRemark != ''">
+                AND PROD_ADJ_REMARK =  #{prodAdjRemark,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND PROD_ADJ_REMARK is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="prodAdjRemark2 !=null and prodAdjRemark2 != ''">
+                AND PROD_ADJ_REMARK2 =  #{prodAdjRemark2,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND PROD_ADJ_REMARK2 is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="adjField !=null and adjField != ''">
+                AND ADJ_FIELD =  #{adjField,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND ADJ_FIELD is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="preAdjust !=null and preAdjust != ''">
+                AND PRE_ADJUST =  #{preAdjust,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND PRE_ADJUST is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="afterAdjust !=null and afterAdjust != ''">
+                AND AFTER_ADJUST =  #{afterAdjust,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND AFTER_ADJUST is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="effDate !=null">
+                AND EFF_DATE =  #{effDate,jdbcType=DATE}
+            </when>
+            <otherwise>
+                AND EFF_DATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="fieldAdjRemark !=null and fieldAdjRemark != ''">
+                AND FIELD_ADJ_REMARK =  #{fieldAdjRemark,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND FIELD_ADJ_REMARK is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="fieldAdjRemark2 !=null and fieldAdjRemark2 != ''">
+                AND FIELD_ADJ_REMARK2 =  #{fieldAdjRemark2,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND FIELD_ADJ_REMARK2 is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="rptIssueDate !=null">
+                AND RPT_ISSUE_DATE =  #{rptIssueDate,jdbcType=DATE}
+            </when>
+            <otherwise>
+                AND RPT_ISSUE_DATE is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="adjReason !=null and adjReason != ''">
+                AND ADJ_REASON =  #{adjReason,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND ADJ_REASON is null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="adjReason !=null and adjReason != ''">
+                AND ADJ_REASON2 =  #{adjReason2,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                AND ADJ_REASON2 is null
+            </otherwise>
+        </choose>
+    </select>
 </mapper>

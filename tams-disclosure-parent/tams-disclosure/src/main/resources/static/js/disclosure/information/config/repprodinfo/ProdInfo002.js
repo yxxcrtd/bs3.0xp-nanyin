@@ -7,7 +7,10 @@
     var prodTypeGlobal = $('#prodTypeGlobal').val();
     var prodNo = '';
     var flag = false;
-    if ('' == prodIdInit || null == prodIdInit) {
+    if (pageModel === PAGE_MODEL_REFERENCE) {
+        $("#magnifier").hide();
+    }
+        if ('' == prodIdInit || null == prodIdInit) {
         //新建页面
         $('#issuePartyId').val(issuePartyId_New);
         $('#prodId').blur(function () {
@@ -19,8 +22,6 @@
         });
 
     } else {
-        //修改、查看，放大镜按钮隐藏 NYLCXP-978
-        $("#magnifier").hide();
         //修改页面
         $("#prodId").attr("disabled", "disabled");
         $("#isGrade").attr("disabled", "disabled");
@@ -211,12 +212,17 @@
                 } else {
                     //组件赋值 先清后赋
                     $.each(Joyin.curfromData['ProdInfo002'],function(id, value){
-                        resetForm(id, value.odata, '');
+                        if(id!=='prodId'&&id!=='prodName'&&id!=='setDate'){
+                            resetForm(id, value.odata, '');
+                        }
+
                     });
                     //该版本的框架存在问题，Joyin.curfromData['ProdInfo002']没加载到下拉框控件，需单独处理下拉框控件
                     resetSelectForm();
                     $.each(result.data, function(id, value) {
-                        setData(id, value, '');
+                        if(id!=='prodId'&&id!=='prodName'&&id!=='setDate'){
+                            setData(id, value, '');
+                        }
                     });
                     //置灰产品登记编码、产品主代码，是否是分级产品
                     if($("#prodRe").val()){

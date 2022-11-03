@@ -238,6 +238,7 @@
         where
         PROD_ID =  #{prodId,jdbcType=VARCHAR} and
         PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}
+        and DATA_STATUS!='D'
     </delete>
 
     <select id="findRe" resultType="java.lang.String">
