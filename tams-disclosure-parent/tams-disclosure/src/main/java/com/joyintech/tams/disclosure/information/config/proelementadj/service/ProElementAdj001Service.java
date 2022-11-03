@@ -217,16 +217,8 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
                     item.setProdAdjustId(IDGenerator.generate(36));
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("prodId", item.getProdId());
-                    map.put("rptIssueDate", item.getRptIssueDate());
-                    if (null != this.selectData(map)){
-                        item.setProdAdjustId(this.selectData(map));
-                        this.doComplete(item, OperationType.MODIFY);
-                    } else {
-                        item.setCreateUser(CommonUtil.getUserName());
-                        this.doComplete(item, OperationType.NEW);
-                    }
+                    item.setCreateUser(CommonUtil.getUserName());
+                    this.doComplete(item, OperationType.NEW);
                 });
             }
             return checkResult;
