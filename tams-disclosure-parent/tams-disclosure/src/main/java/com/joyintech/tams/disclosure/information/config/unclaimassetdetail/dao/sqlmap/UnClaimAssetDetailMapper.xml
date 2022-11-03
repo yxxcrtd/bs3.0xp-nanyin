@@ -212,7 +212,7 @@
                 AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
             </if>
         </where>
-        ORDER BY DNDC.PROJECT_NO
+        ORDER BY to_number(DNDC.PROJECT_NO) asc
     </select>
     <select id="checkNostdExistByProdId" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
         select
