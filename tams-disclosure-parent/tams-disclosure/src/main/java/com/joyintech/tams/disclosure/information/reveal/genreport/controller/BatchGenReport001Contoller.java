@@ -221,6 +221,9 @@ public class BatchGenReport001Contoller extends BaseController {
 		int idx = 1;
 		String repId = params.get("repId").toString();
 		String repName =  params.get("repName").toString();
+		int totalCounts = listProds.size();
+		int failCounts = 0;
+		
 		for (RepProdInfo prod : listProds) {
 			BatchGenResultDto dto = null;
 			try {
@@ -270,6 +273,7 @@ public class BatchGenReport001Contoller extends BaseController {
 			}
 			if ( "F".equals(dto.getResult())) {
 				sbRet.append("<font color=\"#FF0000\">☆☆"); 
+				failCounts++;
 			} else {
 				sbRet.append("★★");	
 			}
@@ -288,7 +292,7 @@ public class BatchGenReport001Contoller extends BaseController {
 		}
 		progressPercent = 1d;
 		progressBarService.updatePercent(pageId, PROCESS_KEY, progressPercent, false);
-		ret.setMessage("报表生成完成，详见明细信息。", MessageType.提示消息);
+		ret.setMessage("报表生成完成，共"+totalCounts+"条，成功"+(totalCounts-failCounts)+"条，失败"+failCounts+"条。详见明细信息。", MessageType.提示消息);
 		progressBarService.removePercent(pageId, PROCESS_KEY);
 		return ret;
     }
