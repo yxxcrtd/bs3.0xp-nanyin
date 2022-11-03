@@ -235,11 +235,11 @@ $(function() {
                 return;
             }
             if ( selArrDelete.length > 0) {
-                Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
+                Joyin.error(JoyinUtil.getMessage("只能删除有效和待处理数据，请重新选择!"));
                 return;
             }
             if ((!selArrUseful || selArrUseful.length == 0)){
-                Joyin.error(JoyinUtil.getMessage("只能删除有效数据，请重新选择!"));
+                Joyin.error(JoyinUtil.getMessage("只能删除有效和待处理数据，请重新选择!"));
                 return;
             }
 

@@ -162,7 +162,7 @@ $(function() {
             }
             for(var i=0;i<selArr.length;i++){
                 if(selArr[i].status =="D"){
-                    return Joyin.error("只能删除有效数据，请重新选择!");
+                    return Joyin.error("只能删除有效和待处理数据，请重新选择!");
                 }
                 // selArr[i].operateType =  "delete";
             }

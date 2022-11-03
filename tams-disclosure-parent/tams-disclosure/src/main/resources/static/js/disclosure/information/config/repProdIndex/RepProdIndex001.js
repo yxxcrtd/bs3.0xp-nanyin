@@ -201,7 +201,7 @@ $(function() {
                     return Joyin.error("数据在流程中，不允许删除!");
                 }
                 if(selArr[i].status =="D"){
-                    return Joyin.error("只能删除有效数据，请重新选择!");
+                    return Joyin.error("只能删除有效和待处理数据，请重新选择!");
                 }
                 // selArr[i].operateType =  "delete";
             }
