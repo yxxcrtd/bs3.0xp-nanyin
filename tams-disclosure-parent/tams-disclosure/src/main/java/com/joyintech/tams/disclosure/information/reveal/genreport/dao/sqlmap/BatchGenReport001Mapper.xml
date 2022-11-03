@@ -66,6 +66,7 @@
         REP_PROD_INFO prod
         left join V_REP_PROD_INFO pprod
         on prod.p_prod_id = pprod.prod_id
+        and pprod.status='E'
         where  prod.rep_prod_type='03'
         AND prod.status='E' AND prod.PROD_SERIES is not null
         union all
