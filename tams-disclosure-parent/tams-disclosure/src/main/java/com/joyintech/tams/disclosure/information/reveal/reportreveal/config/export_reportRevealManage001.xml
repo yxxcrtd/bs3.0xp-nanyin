@@ -3,6 +3,7 @@
 	<Worksheet javaBean="com.joyintech.tams.disclosure.interf.common.busicommon.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
 		<Row>
 			<Cell order="1" name="披露状态">revealStatusName</Cell>
+			<Cell order="2" name="披露时间">revealDateStr</Cell>
 			<Cell order="2" name="产品代码">prodid</Cell>
 			<Cell order="3" name="产品名称">prodName</Cell>
 			<Cell order="4" name="报表名称">reportName</Cell>
@@ -13,10 +14,10 @@
 			<Cell order="9" name="生成时间">createTimeStr</Cell>
 			<Cell order="10" name="确认时间">confirmDateStr</Cell>
 			<Cell order="11" name="确认方式">isConfirmName</Cell>
-			<Cell order="12" name="披露时间">revealDateStr</Cell>
-			<Cell order="13" name="披露渠道">revealChannelName</Cell>
-			<Cell order="14" name="披露方式">isRevealName</Cell>
-			<Cell order="15" name="披露方式">revealUser</Cell>
+			<Cell order="12" name="报表复核时间">reviewTimeStr</Cell>
+			<Cell order="13" name="复核人">reviewUser</Cell>
+			<Cell order="14" name="托管复核时间">reviewTgTimeStr</Cell>
+			<Cell order="15" name="托管复核人">reviewTgUser</Cell>
 			<Cell order="16" name="附件">annex</Cell>
 		</Row>
 	</Worksheet>
