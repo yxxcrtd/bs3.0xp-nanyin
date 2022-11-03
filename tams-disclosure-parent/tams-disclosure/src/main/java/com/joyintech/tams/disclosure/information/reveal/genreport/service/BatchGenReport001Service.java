@@ -372,39 +372,37 @@ public class BatchGenReport001Service extends CommonExportService<RepDetailsShow
 	public List<ProdInfoListEntity> queryProdList(String repId, Date execDate) {
 		// 获取作业范围list
 		List<RepJobRange> repJobRangeList = infoDisclosureReadAndGenMapper.getRepJobRangeList(repId);
-		if (repJobRangeList == null || repJobRangeList.size() == 0) {
-			return null;
-		}
-
 		StringBuffer sqlVal = new StringBuffer();
 
-		// 通过规则id组装并查询产品信息方法
-		for (RepJobRange dto : repJobRangeList) {
-			if (StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_募集方式.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_发行方式.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_发行状态.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_开放模式.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否独立开户.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_产品类型.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_理财类型.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_产品期限类型.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_开放频率.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_信批产品类别.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())) {
-				sqlVal.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
-						.append(dto.getRuleType4()).append("'");
-			} else if (StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_起息日.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_到期日.getValue())
-					|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_清盘日.getValue())) {
-				String sysDate = DateUtil.getCurrentDate();
-				if (dto.getRuleType4() == null || StringUtil.isEmpty(dto.getRuleType4())) {
-					sqlVal.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')")
-							.append(dto.getRuleType2()).append("'").append(sysDate).append("'");
-				} else {
-					sqlVal.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')")
-							.append(dto.getRuleType2()).append("'").append(dto.getRuleType4()).append("'");
+		if (repJobRangeList != null && repJobRangeList.size() > 0) {
+			// 通过规则id组装并查询产品信息方法
+			for (RepJobRange dto : repJobRangeList) {
+				if (StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_募集方式.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_发行方式.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_发行状态.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_开放模式.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否独立开户.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_产品类型.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_理财类型.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_产品期限类型.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_开放频率.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_信批产品类别.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeExt1.发行方式_信批.getValue())) {
+					sqlVal.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
+							.append(dto.getRuleType4()).append("'");
+				} else if (StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_起息日.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_到期日.getValue())
+						|| StringUtil.equals(dto.getRuleType1(), DictCodeListExt2.作业规则1_清盘日.getValue())) {
+					String sysDate = DateUtil.getCurrentDate();
+					if (dto.getRuleType4() == null || StringUtil.isEmpty(dto.getRuleType4())) {
+						sqlVal.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')")
+								.append(dto.getRuleType2()).append("'").append(sysDate).append("'");
+					} else {
+						sqlVal.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')")
+								.append(dto.getRuleType2()).append("'").append(dto.getRuleType4()).append("'");
+					}
 				}
 			}
 		}
