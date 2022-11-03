@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workbook filePath="RepProdIndexGz001.xlsx" name="产品净值信息(估值)">
-    <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto">
+    <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.repProdIndexGz.dto.RepProdIndexGzDto">
         <Row>
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="产品子代码">prodId</Cell>
             <Cell order="3" name="产品名称">prodName</Cell>
             <Cell order="4" name="产品主代码">pProdId</Cell>
             <Cell order="5" name="日期">valueDateStr</Cell>
-            <Cell order="6" name="子产品资产净值">assetsValue</Cell>
-            <Cell order="7" name="子产品实收资本">capital</Cell>
+            <Cell order="6" name="子产品资产净值">assetsValueStr</Cell>
+            <Cell order="7" name="子产品实收资本">capitalStr</Cell>
             <Cell order="8" name="子产品单位净值">unitValue</Cell>
             <Cell order="9" name="子产品单位累计净值">unitValueT</Cell>
             <Cell order="10" name="子产品万份收益">wYield</Cell>
             <Cell order="11" name="子产品七日年化收益率">yield7</Cell>
-            <Cell order="12" name="母产品总资产">pAssets</Cell>
-            <Cell order="13" name="母产品资产净值">pAssetsValue</Cell>
-            <Cell order="14" name="母产品实收资本">pCapital</Cell>
+            <Cell order="12" name="母产品总资产">pAssetsStr</Cell>
+            <Cell order="13" name="母产品资产净值">pAssetsValueStr</Cell>
+            <Cell order="14" name="母产品实收资本">pCapitalStr</Cell>
             <Cell order="15" name="母产品单位净值">pUnitValue</Cell>
             <Cell order="16" name="母产品单位累计净值">pUnitValueT</Cell>
             <Cell order="17" name="母产品万份收益">pWYield</Cell>

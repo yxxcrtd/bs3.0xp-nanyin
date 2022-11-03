@@ -256,4 +256,20 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
     public void setDataStatus(String dataStatus) {
         this.dataStatus = dataStatus;
     }
+
+    public String getAssetsValueStr(){
+        return getAssetsValue().toString();
+    }
+    public String getCapitalStr(){
+        return getCapital().toString();
+    }
+    public String getpAssetsStr(){
+        return getpAssets().toString();
+    }
+    public String getpAssetsValueStr(){
+        return getpAssetsValue().toString();
+    }
+    public String getpCapitalStr(){
+        return getpCapital().toString();
+    }
 }

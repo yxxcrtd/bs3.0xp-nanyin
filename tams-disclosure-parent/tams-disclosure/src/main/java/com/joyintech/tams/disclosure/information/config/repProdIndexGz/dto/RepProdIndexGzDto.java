@@ -257,4 +257,20 @@ public class RepProdIndexGzDto extends RepProdIndex implements ITableRow, Proces
     public void setDataStatus(String dataStatus) {
         this.dataStatus = dataStatus;
     }
+
+    public String getAssetsValueStr(){
+        return getAssetsValue().toString();
+    }
+    public String getCapitalStr(){
+        return getCapital().toString();
+    }
+    public String getpAssetsStr(){
+        return getpAssets().toString();
+    }
+    public String getpAssetsValueStr(){
+        return getpAssetsValue().toString();
+    }
+    public String getpCapitalStr(){
+        return getpCapital().toString();
+    }
 }
