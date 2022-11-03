@@ -330,14 +330,14 @@
         inner join REP_PROD_INFO t on rrc.PROD_ID=T.P_PROD_ID
         where rrc.DATA_STATUS ='E'
         <if test="prodIdArr != null and prodIdArr.size > 0">
-            AND (t.PROD_ID IN
+            AND (rrc.PROD_ID IN
             <foreach item="item" collection="prodIdArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>)
         </if>
         <if test="finprodIdArr != null and finprodIdArr.size > 0">
-            AND (t.PROD_ID IN
+            AND (rrc.PROD_ID IN
             <foreach item="item" collection="finprodIdArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
