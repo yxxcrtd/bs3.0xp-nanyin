@@ -93,8 +93,9 @@ public class HomeRevealStatService {
 	    		p.put("days", 15);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 	    		
-	    		//TODO:统计已发生的列：用上个季度的末的日期进行查询
-				info = queryOtherCounts(repId,sDate,eDate);
+	    		//统计已发生的列：用上个季度的末的日期进行查询
+	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Q");
+				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
 	    		
 				//统计预计披露的列
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
@@ -113,7 +114,8 @@ public class HomeRevealStatService {
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 	    		
 	    		//统计已发生的列
-				info = queryOtherCounts(repId,sDate,eDate);
+	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "H");
+				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
 	    		
 				//统计预计披露的列
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
@@ -132,7 +134,8 @@ public class HomeRevealStatService {
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 
 	    		//统计已发生的列
-				info = queryOtherCounts(repId,sDate,eDate);
+	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Y");
+				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
 				
 				//统计预计披露的列	    		
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
@@ -347,7 +350,6 @@ public class HomeRevealStatService {
     		Date qDate = getLastDurationFirstDate(statDate,"W");
     		String qDateStr = sdf.format(qDate);
     		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
-
 //    		//找到本周一
 //    		Calendar cal = Calendar.getInstance();
 //    		cal.setTime(statDate);
@@ -424,6 +426,48 @@ public class HomeRevealStatService {
     	}
     	return cal.getTime();
     }
+    
+    private Date getLastDurationEndDate(Date queryDate, String durationType ) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(queryDate);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		int day=30;
+		if ( durationType.equals("Q") ) {
+    		if ( month<3 ) {
+    			year = year-1;
+    			month = 11;
+    			day=31;
+    		} else if ( month>=3 && month<6 ) {
+    			month = 2;
+    			day=30;
+    		} else if ( month>=6 && month<9 ) {
+    			month = 5;
+    			day=30;
+    		} else if ( month>=9 && month<12 ) {
+    			month = 8;
+    			day=31;
+    		}
+    	}
+		else if ( durationType.equals("H") ) {
+    		if ( month<6 ) {
+    			year = year-1;
+    			month = 11;
+    			day=31;
+    		} else {
+    			month = 5;
+    			day=30;
+    		}
+    	}
+		else if (  durationType.equals("Y") ) {
+			year = year-1;
+			month=11;
+			day = 31;
+		}
+		cal.set(year,month,day);
+    	return cal.getTime();
+    }
+    
     
     private int genStat(String repId,Date statDate) {
     	int counts = queryExcpectCountsByRepId(repId,statDate);

@@ -69,9 +69,9 @@
 				left join REP_INFO info on reveal.REP_ID=info.REP_ID
 				left join REP_REVEAL_REVIEW review on reveal.ID=review.REVEAL_ID
 				where reveal.STATUS='E'
+				and reveal.REP_ID=#{repId,jdbcType=VARCHAR}
 				and reveal.END_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE} 
 			) REP_HOMEPAGE_STAT
-		where REP_ID=#{repId,jdbcType=VARCHAR}
 		group by HOME_PAGE_TYPE,REVEAL_STATUS,CONFIRM_STATUS,REVIEW_STATUS,REVIEW_TG_STATUS
     </select>
 </mapper>

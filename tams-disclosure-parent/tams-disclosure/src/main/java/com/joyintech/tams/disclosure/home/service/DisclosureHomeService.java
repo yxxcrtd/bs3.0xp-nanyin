@@ -1,6 +1,8 @@
 package com.joyintech.tams.disclosure.home.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +28,6 @@ import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant
 import com.joyintech.tams.disclosure.common.common.util.DateCalcUtil;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.home.dao.DisclosureHomeMapper;
-import com.joyintech.tams.disclosure.home.dto.HomePageStatsDto;
 import com.joyintech.tams.disclosure.home.dto.InfoAreaDto;
 import com.joyintech.tams.disclosure.home.dto.RepFtpPathDto;
 import com.joyintech.tams.disclosure.home.dto.RepRevealInfo;
@@ -565,7 +566,15 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
 
         //查询时间
 		Date statDate = commonPlatformDateService.getSysDate();//平台时间
-
+		
+		//强制修改日期的测试代码，用于特殊日期的测试用
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		try {
+//			statDate = sdf.parse("2022-07-10");
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+		
 		//最后合计行
     	RepRevealInfo sumInfo = new  RepRevealInfo();
     	
