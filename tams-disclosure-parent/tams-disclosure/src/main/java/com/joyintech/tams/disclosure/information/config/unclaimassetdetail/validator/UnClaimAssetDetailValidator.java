@@ -72,6 +72,32 @@ public class UnClaimAssetDetailValidator implements BeanValidator {
                     }
                 }
             }else{
+                if(StringUtil.equals("submit",dto.getOperateType())||StringUtil.equals("save",dto.getOperateType())){
+                    if(dto.getUnclaimList().size()==0){
+                        resultList.add(new ValidMessage("请至少维护一条非标资产明细！"));
+                    }
+                    for (UnClaimAssetDetailDto unClaimAssetDetailDto:dto.getUnclaimList()){
+                        if (!StringUtil.isNotEmpty(unClaimAssetDetailDto.getFinancier())){
+                            resultList.add(new ValidMessage("融资客户 必填！"));
+                        }
+                        if (!StringUtil.isNotEmpty(unClaimAssetDetailDto.getProjectName())){
+                            resultList.add(new ValidMessage("项目名称 必填！"));
+                        }
+                        if (!StringUtil.isNotEmpty(unClaimAssetDetailDto.getRemFinancingPeriod())){
+                            resultList.add(new ValidMessage("剩余融资期限 必填！"));
+                        }
+                        if (!StringUtil.isNotEmpty(unClaimAssetDetailDto.getIncomeDistribute())){
+                            resultList.add(new ValidMessage("到期收益分配 必填！"));
+                        }
+                        if (!StringUtil.isNotEmpty(unClaimAssetDetailDto.getTrdConstruct())){
+                            resultList.add(new ValidMessage("交易结构 必填！"));
+                        }
+                        if (!StringUtil.isNotEmpty(unClaimAssetDetailDto.getRiskInfo())){
+                            resultList.add(new ValidMessage("风险状况 必填！"));
+                        }
+                    }
+                }
+
                 Map<String,Object> map=new HashMap<>();
                 map.put("nostdAssetId",dto.getNostdAssetId());
                 //根据主键查询被修改的数据
