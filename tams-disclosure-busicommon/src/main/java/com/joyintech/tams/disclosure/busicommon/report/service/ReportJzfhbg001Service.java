@@ -198,6 +198,10 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             	} else {
                             		reportJzfhbg001Dto.setYield("0.00%");
                             	}
+                            } else {
+                            	reportJzfhbg001Dto.setcUnitValue(null);
+                            	reportJzfhbg001Dto.setcUnitProfit(null);
+                            	reportJzfhbg001Dto.setYield("0.00%");
                             }
                             //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
                             
