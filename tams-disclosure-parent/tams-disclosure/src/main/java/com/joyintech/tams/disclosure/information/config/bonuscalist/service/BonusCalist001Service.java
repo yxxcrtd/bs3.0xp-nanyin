@@ -609,12 +609,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                 message.add("可供分配利润只能填写大于等于0的数据");
             }
         }
-        if (StringUtil.isNotBlank(rowData.get(8))) {
-            BigDecimal bigDecimal=new BigDecimal(rowData.get(8));;
-            if(bigDecimal.compareTo(BigDecimal.ZERO)<0){
-                message.add("运行天数只能填写大于等于0的数据");
-            }
-        }
+
         if (StringUtil.isNotBlank(rowData.get(9))) {
             BigDecimal bigDecimal=new BigDecimal(rowData.get(9));
             BigDecimal b=bigDecimal;
