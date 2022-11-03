@@ -120,7 +120,7 @@
             rpi.ISSUE_STATUS ISSUE_STATUS,
             rpi.REP_PROD_TYPE REP_PROD_TYPE,
 
-            rpi.HOLDDAY HOLDDAY,
+            prpi.HOLDDAY HOLDDAY,
             rpi.TRUSTPART TRUSTPART,
             rpi.ERRORMSG ERRORMSG,
 
