@@ -269,13 +269,16 @@ public class BatchGenReport001Contoller extends BaseController {
 				logger.error("生成报表失败",e);
 			}
 			if ( "F".equals(dto.getResult())) {
-				sbRet.append("☆☆");
+				sbRet.append("<font color=\"#FF0000\">☆☆"); 
 			} else {
 				sbRet.append("★★");	
 			}
 			sbRet.append(repName+idx++ +"：");
 			sbRet.append(dto);
 			sbRet.append("<br><br>");
+			if ( "F".equals(dto.getResult())) {
+				sbRet.append("</font>");
+			}
 			progressPercent = 0.05+idx*0.9/listProds.size();
 			progressBarService.updatePercent(pageId, PROCESS_KEY,progressPercent , false);
 		}
