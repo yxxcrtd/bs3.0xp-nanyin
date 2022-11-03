@@ -138,7 +138,7 @@ $(function() {
             }]
     });
     function addrule() {
-        Joyin.dialog("产品选择",basePath+"disclosure/information/config/repProdIndex/RepProdIndex003/init","80%","80%",
+        Joyin.dialog("产品选择",basePath+"disclosure/information/config/repProdIndex/RepProdIndex004/init","80%","80%",
             {},function () {
                 var finprodIds = $('#finprodIds').data('finprodIds');
                 if(!finprodIds || finprodIds.length ==0){
