@@ -91,17 +91,21 @@
         },
         done: function () {
             this.bind('click', '.delt', function (data, index) {
-                //var object = { selectedItem: [data], operateType: "delete" };
                 var length = unclaimTable.getAllRows().length;
-                // 删除后面的行序号递减
-                if (length - 1 > index) {
-                    for (var i = index + 1; i < length; i++) {
-                        var row = unclaimTable.getRow(i);
-                        row.projectNo = i;
-                        unclaimTable.renderRow(i, row);
+                //var object = { selectedItem: [data], operateType: "delete" };
+                if(data.financier==='无'){
+                    unclaimTable.clear()
+                }else{
+                    // 删除后面的行序号递减
+                    if (length - 1 > index) {
+                        for (var i = index + 1; i < length; i++) {
+                            var row = unclaimTable.getRow(i);
+                            row.projectNo = i;
+                            unclaimTable.renderRow(i, row);
+                        }
                     }
+                    unclaimTable.deleteRow(index);
                 }
-                unclaimTable.deleteRow(index);
 
             });
         }
