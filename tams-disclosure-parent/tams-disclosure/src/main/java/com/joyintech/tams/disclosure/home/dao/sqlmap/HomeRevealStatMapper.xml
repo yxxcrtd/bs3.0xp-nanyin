@@ -70,7 +70,14 @@
 				left join REP_REVEAL_REVIEW review on reveal.ID=review.REVEAL_ID
 				where reveal.STATUS='E'
 				and reveal.REP_ID=#{repId,jdbcType=VARCHAR}
-				and reveal.END_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE} 
+				<choose>
+					<when test="repId =='CP_001_003_002' or repId =='CP_001_003_001' or  repId =='CP_001_002_012'or repId =='CP_001_002_013' or repId =='CP_001_002_014' or  repId =='CP_001_002_009'or repId =='CP_001_002_010' or  repId =='CP_001_002_011'">
+						and reveal.END_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE}
+					</when>
+					<otherwise>
+						and to_char(reveal.reveal_end_date,'yyyy-MM-dd') between to_char(#{sDate,jdbcType=DATE},'yyyy-MM-dd') and to_char(#{eDate,jdbcType=DATE} ,'yyyy-MM-dd')
+					</otherwise>
+				</choose>
 			) REP_HOMEPAGE_STAT
 		group by HOME_PAGE_TYPE,REVEAL_STATUS,CONFIRM_STATUS,REVIEW_STATUS,REVIEW_TG_STATUS
     </select>
