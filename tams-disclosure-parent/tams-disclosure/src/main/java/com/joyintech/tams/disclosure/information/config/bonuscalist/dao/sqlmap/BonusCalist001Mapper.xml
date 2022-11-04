@@ -77,7 +77,8 @@
         to_char(A.PROFIT_BASE_DATE,'yyyy/mm/dd') profitBaseDateStr
         from DIS_BONUS_LIST A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.PROFIT_BASE_DATE,'yyyy/mm/dd')) IN (" separator="," close=")">
+            A.DATA_STATUS!='D'
+            <foreach collection="list" item="item" open="and (A.PROD_ID,to_char(A.PROFIT_BASE_DATE,'yyyy/mm/dd')) IN (" separator="," close=")">
                 (#{item.prodId,jdbcType=VARCHAR},#{item.profitBaseDateStr,jdbcType=VARCHAR})
             </foreach>
         </where>
