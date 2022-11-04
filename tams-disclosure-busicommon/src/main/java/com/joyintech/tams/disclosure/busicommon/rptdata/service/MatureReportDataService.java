@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +63,7 @@ public class MatureReportDataService implements IReportDataService {
 	public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
 
 		List<Map<String, Object>> listResult = new ArrayList<>();
-
+		DecimalFormat df = new DecimalFormat("#,##0.00");
 		MatureReportDto matureReportDto = new MatureReportDto();
 		try {
 //			String prodId = (paraMap.get("portnum") == null ? null : paraMap.get("portnum").toString());
@@ -212,7 +213,7 @@ public class MatureReportDataService implements IReportDataService {
 			matureReportDto.setSumValueAmt(accuValue);
 			matureReportDto.setRefYearYield(yearYield.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN).toPlainString() );
 			matureReportDto.setCustProfit(custProfit.setScale(2,BigDecimal.ROUND_DOWN));
-			
+			matureReportDto.setCustProfitStr(df.format(matureReportDto.getCustProfit()));
 			//查询所有相关费用，通过主产品查找，如果是子产品id，还要找到主产品id
 			List<RepFeeTrd> listFee = matureReportMapper.selectFees(paraMap);
 			matureReportDto.setPurFee(BigDecimal.ZERO);
