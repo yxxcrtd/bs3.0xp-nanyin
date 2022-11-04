@@ -53,6 +53,9 @@ public class InfoCompliance002Controller extends BaseController {
 
         // 查看模式
         boolean readonly = StringUtils.equals(getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE);
+        if(WorkFlowUtil.isNotFromToDoList() && readonly){
+            viewFlag="view";
+        }
         InfoComplianceDto dto = null;
         Map<String,String> paramMap = new HashMap<String,String>();
         if(StringUtil.isNotEmpty(seqno)){
