@@ -293,10 +293,10 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                                                  List<BonusCalist001Dto> entities) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
-        List<String> message = new ArrayList<>();
         List<String> registNoList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         List<String> prodList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> message = new ArrayList<>();
             List<String> rowData = dataList.get(i);
             if (null == rowData || rowData.size() != 15) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),

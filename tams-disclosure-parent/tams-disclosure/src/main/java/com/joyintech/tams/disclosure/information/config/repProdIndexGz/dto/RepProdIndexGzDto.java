@@ -259,18 +259,18 @@ public class RepProdIndexGzDto extends RepProdIndex implements ITableRow, Proces
     }
 
     public String getAssetsValueStr(){
-        return getAssetsValue().toString();
+        return getAssetsValue()==null?null :getAssetsValue().toString();
     }
     public String getCapitalStr(){
-        return getCapital().toString();
+        return getCapital()==null?null:getCapital().toString();
     }
     public String getpAssetsStr(){
-        return getpAssets().toString();
+        return getpAssets()==null?null:getpAssets().toString();
     }
     public String getpAssetsValueStr(){
-        return getpAssetsValue().toString();
+        return getpAssetsValue()==null ? null :getpAssetsValue().toString();
     }
     public String getpCapitalStr(){
-        return getpCapital().toString();
+        return getpCapital()==null?null:getpCapital().toString();
     }
 }
