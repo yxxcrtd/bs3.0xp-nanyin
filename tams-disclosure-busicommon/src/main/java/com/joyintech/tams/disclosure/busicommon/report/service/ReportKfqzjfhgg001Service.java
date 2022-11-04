@@ -127,6 +127,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     List<ReportOpenPlanDto> openPlanList = reportKfqzjfhgg001Mapper.getOpenPlanList(searchParam);
                     //查询“申购/赎回确认日”小于等于当前收益分配基准日的过去所有历史数据
                     List<ReportKfqHisBonusDto> list = reportKfqzjfhgg001Mapper.getHisBonusReportList(searchParam);
+                    reportKfqzjfhgg001Dto.setPprodId(reportCommonProdDto.getPprodId());
                     //标题
                     reportKfqzjfhgg001Dto.setTitleName(reportCommonProdDto.getTitleName());
                     //收益分配基准日

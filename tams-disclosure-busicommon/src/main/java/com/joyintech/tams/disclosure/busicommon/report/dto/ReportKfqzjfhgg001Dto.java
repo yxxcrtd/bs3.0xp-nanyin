@@ -59,6 +59,8 @@ public class ReportKfqzjfhgg001Dto {
     /*增加公告期*/
     private String enddate;
 
+    private String pprodId;
+
     public String getEnddate() {
         return enddate;
     }
@@ -185,5 +187,13 @@ public class ReportKfqzjfhgg001Dto {
 
     public void setList(List<ReportKfqHisBonusDto> list) {
         this.list = list;
+    }
+
+    public String getPprodId() {
+        return pprodId;
+    }
+
+    public void setPprodId(String pprodId) {
+        this.pprodId = pprodId;
     }
 }

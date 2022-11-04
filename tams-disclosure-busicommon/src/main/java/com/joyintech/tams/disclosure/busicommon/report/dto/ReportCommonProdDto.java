@@ -29,6 +29,8 @@ public class ReportCommonProdDto {
      */
     private String prodName;
 
+    private String pprodId;
+
     public String getTitleName() {
         return titleName;
     }
@@ -66,5 +68,13 @@ public class ReportCommonProdDto {
 
     public void setProdName(String prodName) {
         this.prodName = prodName;
+    }
+
+    public String getPprodId() {
+        return pprodId;
+    }
+
+    public void setPprodId(String pprodId) {
+        this.pprodId = pprodId;
     }
 }
