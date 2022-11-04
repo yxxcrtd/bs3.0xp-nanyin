@@ -190,10 +190,12 @@ public class HomeRevealStatService {
 			// 生成成功
 			info.setGenFailCounts(info.getGenFailCounts() + dto.getCounts());
 
-			if ("01".equals(dto.getRevealStatus())) { // 已披露：披露状态='01'
-				info.setRevealCounts(info.getRevealCounts() + dto.getCounts());
-			} else { // 待披露
-				info.setToBeRevealedCounts(info.getToBeRevealedCounts() + dto.getCounts());
+			if("02".equals(dto.getReviewStatus())||"02".equals(dto.getReviewTgStatus())){
+				if ("01".equals(dto.getRevealStatus())) { // 已披露：披露状态='01'
+					info.setRevealCounts(info.getRevealCounts() + dto.getCounts());
+				} else { // 待披露
+					info.setToBeRevealedCounts(info.getToBeRevealedCounts() + dto.getCounts());
+				}
 			}
 
 			if (!"1".equals(dto.getConfirmStatus())) { // 待确认：确认状态：0,2
