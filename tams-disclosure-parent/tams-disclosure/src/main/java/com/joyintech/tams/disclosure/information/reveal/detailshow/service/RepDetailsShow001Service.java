@@ -631,7 +631,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));  //单产品只传了pprodid
 
 		//以下新增参数
-		if ( params.get("endDate")!=null )
+		if ( params.get("endDate")!=null&& params.get("reportDate")==null )
 			params.put("reportDate", DateUtil.parse(params.get("endDate").toString()) );
 		params.put("platformDate", commonPlatformDateService.getSysDate());
 		
