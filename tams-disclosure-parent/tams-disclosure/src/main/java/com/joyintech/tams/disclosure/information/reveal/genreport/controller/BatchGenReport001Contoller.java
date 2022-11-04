@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,9 @@ public class BatchGenReport001Contoller extends BaseController {
      */
     @Autowired
     private ProgressBarService progressBarService;
+
+	@Autowired
+	private ReportTreeMenuConfiguration001Service reportTreeMenuConfiguration001Service;
     
     /**
      * 日志
@@ -352,5 +356,13 @@ public class BatchGenReport001Contoller extends BaseController {
 	public String dateCheck() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		return batchGenReport001Service.dateCheck(param);
+	}
+
+	@RequestMapping("/getRepGroup")
+	@ResponseBody
+	public List<TreeNode> getRepGroup(String reportCode){
+		String pageId=this.getPageId();
+		List<TreeNode> list = reportTreeMenuConfiguration001Service.getTreeNodeListByTreeName(reportCode,pageId);
+		return list;
 	}
 }

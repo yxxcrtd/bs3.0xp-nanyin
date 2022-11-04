@@ -137,8 +137,8 @@ public class RepDetailsShow001Contoller extends BaseController {
      */
     @SuppressWarnings("rawtypes")
 	@GetMapping("getTreeNodeListByTreeName")
-    public List<TreeNode> getTreeNodeListByTreeName(String tmpCName){
-        List<TreeNode> list = reportTreeMenuConfiguration001Service.getTreeNodeListByTreeName(tmpCName);
+    public List<TreeNode> getTreeNodeListByTreeName(String tmpCName,String pageId){
+        List<TreeNode> list = reportTreeMenuConfiguration001Service.getTreeNodeListByTreeName(tmpCName,pageId);
         return list;
     }
     

@@ -20,6 +20,8 @@ public class ReportTreeMenuConfiguration001Dto extends RepTree {
 	
 	private String object;
 
+	private String pageId;
+
 	/**
 	 * 是否展示，默认为展示true
 	 */
@@ -94,4 +96,11 @@ public class ReportTreeMenuConfiguration001Dto extends RepTree {
 		return "RepTree [flag=" + this.getFlag() + ", paraTreeName=" + paraTreeName + ", show=" + show + "]";
 	}
 
+	public String getPageId() {
+		return pageId;
+	}
+
+	public void setPageId(String pageId) {
+		this.pageId = pageId;
+	}
 }

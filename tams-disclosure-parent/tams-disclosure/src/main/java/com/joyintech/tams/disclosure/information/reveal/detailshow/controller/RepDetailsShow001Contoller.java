@@ -187,7 +187,8 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@RequestMapping("/getRepGroup")
     @ResponseBody
     public List<TreeNode> getRepGroup(String reportCode){
-        List<TreeNode> list = reportTreeMenuConfiguration001Service.getTreeNodeListByTreeName(reportCode);
+		String pageId=this.getPageId();
+        List<TreeNode> list = reportTreeMenuConfiguration001Service.getTreeNodeListByTreeName(reportCode,pageId);
         return list;
     }
     

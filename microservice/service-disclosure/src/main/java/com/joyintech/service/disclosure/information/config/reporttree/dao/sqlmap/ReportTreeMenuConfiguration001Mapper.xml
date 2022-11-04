@@ -57,6 +57,9 @@
 		<if test="paraTreeName != null and paraTreeName != ''">
 			and T.TREE_NAME like '%'||#{paraTreeName}||'%'
 		</if>
+		<if test="pageId =='BatchGenReport001'">
+			and B.REPORT_CATEGORY not in('04','05')
+		</if>
 		<if test="roleIdList != null and roleIdList.size > 0">
 			AND (
 				(T.FLAG != 'Y' OR T.FLAG='C' or  T.FLAG is null)/*Y以外（为节点）则全部查出*/

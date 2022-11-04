@@ -351,9 +351,9 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public List<TreeNode> getTreeNodeListByTreeName(String tmpCName) {
+    public List<TreeNode> getTreeNodeListByTreeName(String tmpCName,String pageId) {
     	return  restTemplate.getForList(
-                 ServiceApplication.VALUATION_SERVICE_NAME + "/RepDetailsShow001/getTreeNodeListByTreeName?tmpCName="+tmpCName,
+                 ServiceApplication.VALUATION_SERVICE_NAME + "/RepDetailsShow001/getTreeNodeListByTreeName?tmpCName="+tmpCName+"&pageId="+pageId,
                  TreeNode.class);
     	
     	

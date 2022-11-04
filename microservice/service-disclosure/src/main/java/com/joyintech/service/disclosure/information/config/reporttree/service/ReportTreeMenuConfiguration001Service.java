@@ -325,13 +325,14 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
     
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public List<TreeNode> getTreeNodeListByTreeName(String tmpCName) {
+    public List<TreeNode> getTreeNodeListByTreeName(String tmpCName,String pageId) {
         List<TreeNode> treeList = new ArrayList<TreeNode>();
         // 查出报表树节点list
         ReportTreeMenuConfiguration001Dto para = new ReportTreeMenuConfiguration001Dto();
         para.setParaTreeName(tmpCName);
         List<String> roleIdList = getRoleIdList(para);
         para.setRoleIdList(roleIdList);//增加当前用户的权限过滤
+        para.setPageId(pageId);
 
         List<ReportTreeMenuConfiguration001Dto> repTreeList = reportTreeMenuConfiguration001Mapper.findParentOrSAubTreeList(para);
         if(StringUtil.isEmptyList(repTreeList)){
