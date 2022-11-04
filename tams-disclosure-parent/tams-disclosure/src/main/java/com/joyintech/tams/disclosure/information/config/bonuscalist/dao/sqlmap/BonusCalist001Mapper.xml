@@ -165,6 +165,7 @@
         where
         PROD_ID =  #{prodId,jdbcType=VARCHAR} and
         PROFIT_BASE_DATE = #{profitBaseDate,jdbcType=DATE}
+        and DATA_STATUS!='D'
     </update>
 
     <update id="updateByKey">
