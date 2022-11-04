@@ -21,7 +21,8 @@ public class MatureReportDto extends ReportDto {
 	private BigDecimal sumValueAmt;//累计净值
 	private String refYearYield;  //参考年化收益率
 	private BigDecimal custProfit;   //客户收益
-	
+
+	private String custProfitStr;   //客户收益
 	private BigDecimal trustFee;  //托管费
 	private BigDecimal mgrFee;  //固定管理费
 	private BigDecimal  floatFee;  //超额管理费
@@ -96,4 +97,11 @@ public class MatureReportDto extends ReportDto {
 		this.redemFee = redemFee;
 	}
 
+	public String getCustProfitStr() {
+		return custProfitStr;
+	}
+
+	public void setCustProfitStr(String custProfitStr) {
+		this.custProfitStr = custProfitStr;
+	}
 }
