@@ -370,6 +370,8 @@ values ('BonusCalist001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system'
 
 
 -- 页面菜单配置 add by zhengxiaolian 2022-11-05 start
+delete from sys_menu;
+
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('REPORT_001', 'DIS', 'icon-xinxipilou', null, null, 1, '02', '信披合规管理', 'system', null, sysdate, 'system', sysdate);
 
