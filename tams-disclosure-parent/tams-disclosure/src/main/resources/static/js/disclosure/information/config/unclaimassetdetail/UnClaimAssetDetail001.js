@@ -139,7 +139,7 @@
             }
             var object = {
                 selectedItem: selArr,
-                operateType:"submit"
+                operateType:"batchSubmit"
             };
             Joyin.ajaxJson(basePath + '/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getLabel("请确认是否进行批量审批？"), function(){
