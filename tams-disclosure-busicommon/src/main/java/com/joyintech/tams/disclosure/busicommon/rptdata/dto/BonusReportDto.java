@@ -32,7 +32,7 @@ public class BonusReportDto  extends ReportDto {
 	private BigDecimal distributedProfit;        //应分配分红金额
 	private BigDecimal unitProfit;        //单位分红
 	private BigDecimal yearYield;        //年化收益率
-
+	private String pProdId;
 	public String getIssuingWay() {
 		return issuingWay;
 	}
@@ -141,5 +141,12 @@ public class BonusReportDto  extends ReportDto {
 	public void setYearYield(BigDecimal yearYield) {
 		this.yearYield = yearYield;
 	}
-	
+
+	public String getpProdId() {
+		return pProdId;
+	}
+
+	public void setpProdId(String pProdId) {
+		this.pProdId = pProdId;
+	}
 }

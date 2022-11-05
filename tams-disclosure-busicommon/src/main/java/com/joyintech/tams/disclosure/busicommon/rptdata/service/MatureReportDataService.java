@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.disclosure.common.common.dao.ChbDeadLineMapper;
+import com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,9 @@ public class MatureReportDataService implements IReportDataService {
 	
     @Autowired
     private ReportJzfhbg001Mapper reportJzfhbg001Mapper;
+
+	@Autowired
+	private ChbDeadLineMapper chbDeadLineMapper;
     
 	/**
 	 * 日志
@@ -91,11 +96,14 @@ public class MatureReportDataService implements IReportDataService {
 				matureReportDto.setReportTitle(dto.getReportTitle());
 				matureReportDto.setProdName(dto.getProdName());
 				matureReportDto.setProdId(dto.getProdId());
+				matureReportDto.setpProdId(dto.getpProdId());
 				matureReportDto.setProdRe(dto.getProdRe());
 				matureReportDto.seteDate(dto.geteDate());
 				
 				if ( "02".equals(dto.getBonusMode()) ) {  //分红方式==到期兑付
-					matureReportDto.setmDate( dto.getSettDate() );
+					ChbDeadLine001Dto holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline("01",
+							DateUtil.format(dto.getSettDate()), "01" , 1);
+					matureReportDto.setmDate( holidaymarket001Dto.getBusiDate());
 				} else {
 					matureReportDto.setmDate(dto.getSettDate());
 				}

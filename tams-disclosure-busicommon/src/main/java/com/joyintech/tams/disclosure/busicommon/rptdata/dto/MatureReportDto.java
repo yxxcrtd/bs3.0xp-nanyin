@@ -29,7 +29,7 @@ public class MatureReportDto extends ReportDto {
 	private BigDecimal saleFee;  //销售费
 	private BigDecimal purFee;  //申购费
 	private BigDecimal redemFee;  //赎回费
-	
+	private String pProdId;
 	public String getIssuingWay() {
 		return issuingWay;
 	}
@@ -103,5 +103,13 @@ public class MatureReportDto extends ReportDto {
 
 	public void setCustProfitStr(String custProfitStr) {
 		this.custProfitStr = custProfitStr;
+	}
+
+	public String getpProdId() {
+		return pProdId;
+	}
+
+	public void setpProdId(String pProdId) {
+		this.pProdId = pProdId;
 	}
 }
