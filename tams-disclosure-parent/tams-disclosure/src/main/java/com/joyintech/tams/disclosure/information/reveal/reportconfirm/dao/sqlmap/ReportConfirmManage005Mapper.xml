@@ -3,12 +3,15 @@
 <mapper namespace="com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage005Mapper">
     <select id="getUserList" resultType="com.joyintech.system.base.entity.SysUser">
         select
-            USER_ID userId,
-            USER_NAME userName,
-            REAL_NAME realName
+        su.USER_ID userId,
+        su.USER_NAME userName,
+        su.REAL_NAME realName
         from SYS_USER su
+        inner join sys_user_role sur on su.user_name=sur.USER_ID
+        inner join sys_role sr on sur.ROLE_ID=sr.ROLE_ID
         where 1=1
-            and su.DEPT_CODE='000000'
+        and sr.role_name='报表复核岗'
+          and su.USER_NAME!=#{loginUser}
         <if test="searchValue != null and searchValue != ''">
             and (su.USER_NAME like
             concat(concat('%',#{searchValue}),'%')

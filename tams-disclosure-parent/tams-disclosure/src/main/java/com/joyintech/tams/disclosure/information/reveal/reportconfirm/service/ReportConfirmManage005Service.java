@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.reveal.reportconfirm.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage005Mapper;
@@ -19,6 +20,8 @@ public class ReportConfirmManage005Service extends BaseService {
 
     public Page<SysUser> findPage(Map<String, Object> param){
         Page<SysUser>page = new Page<SysUser>();
+        String loginUser= LoginUserUtil.getUserName();
+        param.put("loginUser",loginUser);
         List<SysUser>userList=reportConfirmManage005Mapper.getUserList(param);
         if(!CollectionUtils.isEmpty(userList)){
             page.setRoot(userList);
