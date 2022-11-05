@@ -368,3 +368,203 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('BonusCalist001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
 --  add by zhuhc 20221103 end
 
+
+-- 页面菜单配置 add by zhengxiaolian 2022-11-05 start
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_001', 'DIS', 'icon-xinxipilou', null, null, 1, '02', '信披合规管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_002', 'DIS', 'icon-xinxipilou', null, null, 2, '02', '报表配置', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003', 'DIS', 'icon-xinxipilou', null, null, 3, '02', '基础数据维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_004', 'DIS', 'icon-xinxipilou', null, null, 4, '02', '定期报告数据维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_005', 'DIS', 'icon-xinxipilou', null, null, 5, '02', '产品数据维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006', 'DIS', 'icon-xinxipilou', null, null, 6, '02', '报表管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001', 'SYS', 'jyicon-system-config', null, null, 17, '2', '系统管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_001_001', 'DIS', null, 'REPORT_001', 'InfoCompliance001', 1, '02', '信披合规留痕管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_001_002', 'DIS', null, 'REPORT_001', 'ReportPageManage001', 2, '02', '模板启用/禁用管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_002_001', 'DIS', null, 'REPORT_002', 'ReportModelManage001', 1, '02', '报表模板管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_002_002', 'DIS', null, 'REPORT_002', 'ReportMenuPowerConfig001', 2, '02', '报表权限管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_002_003', 'DIS', null, 'REPORT_002', 'ReportTreeMenuConfiguration001', 3, '02', '报表集合管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_002_004', 'DIS', null, 'REPORT_002', 'ReportRule001', 4, '02', '报表规则设置', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_002_005', 'DIS', null, 'REPORT_002', 'ReportWorkManage001', 5, '02', '报表作业管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_002_006', 'DIS', null, 'REPORT_002', 'ReportWorkMonitor001', 6, '02', '报表作业监控', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_001', 'DIS', null, 'REPORT_003', 'ProdInfo001', 1, '02', '产品基本信息', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_002', 'DIS', null, 'REPORT_003', 'DisProdPlanManage001', 2, '02', '产品排期计划', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_003', 'DIS', null, 'REPORT_003', 'ProdBonusplanManager001', 3, '02', '产品分红到期计划', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_004', 'SVR', null, 'REPORT_003', 'RepProdIndexGz001', 4, '02', '产品净值信息(估值)', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_005', 'SVR', null, 'REPORT_003', 'RepProdIndex001', 5, '02', '产品净值信息', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_006', 'DIS', null, 'REPORT_003', 'SubBalanceInfoPro001', 6, '03', '科目余额信息维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_007', 'SVR', null, 'REPORT_003', 'SvrProdFeeDealInterf001', 7, '02', '产品费用交易信息维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_008', 'SVR', null, 'REPORT_003', 'BonusCalist001', 8, '02', '产品分红计算清单', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_009', 'SVR', null, 'REPORT_003', 'RepFloatFee001', 9, '02', '产品超额业绩报酬信息维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_004_001', 'DIS', null, 'REPORT_004', 'Performance001', 1, '03', '产品业绩比较基准维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_004_002', 'DIS', null, 'REPORT_004', 'UnClaimAssetDetail001', 2, '02', '非标债权类资产明细维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_004_003', 'DIS', null, 'REPORT_004', 'ProdPartner001', 3, '02', '合作机构信息维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_004_004', 'DIS', null, 'REPORT_004', 'ProdAssetInfo001', 4, '02', '产品资产组合情况维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_004_005', 'SVR', null, 'REPORT_004', 'RepInvestAccount001', 5, '02', '投资账户信息维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_004_006', 'SVR', null, 'REPORT_004', 'RepRelDeal001', 6, '02', '关联交易情况维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_004_007', 'DIS', null, 'REPORT_004', 'ReportContentEnum001', 7, '02', '报表文本描述', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_005_001', 'DIS', null, 'REPORT_005', 'ProElementAdj001', 1, '02', '产品要素调整', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_005_002', 'DIS', null, 'REPORT_005', 'ProdFeediscount001', 2, '02', '产品费率优惠', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_005_003', 'DIS', null, 'REPORT_005', 'ProFailureInfo001', 3, '02', '产品不成立信息维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_005_004', 'DIS', null, 'REPORT_005', 'HugeInfoPro001', 4, '03', '巨额赎回信息维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_005_005', 'DIS', null, 'REPORT_005', 'SaleAgency001', 5, '02', '代销机构维护', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_001', 'DIS', null, 'REPORT_006', 'RepDetailsShow001', 1, '02', '报表生成管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_002', 'DIS', null, 'REPORT_006', 'ReportCheck001', 2, '02', '报表数据校验', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_003', 'DIS', null, 'REPORT_006', 'ReportConfirmManage001', 3, '02', '报表确认管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_004', 'DIS', null, 'REPORT_006', 'ReportReview001', 4, '02', '报表复核管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_005', 'DIS', null, 'REPORT_006', 'ReportReviewTg001', 5, '02', '托管复核管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_006', 'DIS', null, 'REPORT_006', 'ReportRevealManage001', 6, '02', '报表披露管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_007', 'DIS', null, 'REPORT_006', 'BatchGenReport001', 7, '02', '报表批量生成', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_001', 'SYS', null, 'SYSTEM_001', null, 1, '2', '权限管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_002', 'SYS', null, 'SYSTEM_001', null, 2, '2', '日志管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_001_001', 'SYS', null, 'SYSTEM_001_001', 'SysInstitution001', 1, '2', '机构管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_001_002', 'SYS', null, 'SYSTEM_001_001', 'SysUser001', 2, '2', '用户管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_001_003', 'SYS', null, 'SYSTEM_001_001', 'SysActorAssign001', 3, '2', '角色分配', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_001_004', 'SYS', null, 'SYSTEM_001_001', 'SysActorRole001', 4, '2', '角色权限管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_001_005', 'SYS', null, 'SYSTEM_001_001', 'SysDepartment001', 5, '2', '部门管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_002_001', 'SYS', null, 'SYSTEM_001_002', 'SysActionLog001', 1, '2', '行为日志', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_002_002', 'SYS', null, 'SYSTEM_001_002', 'WorkflowMonitor001', 2, '2', '流程监控', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_002_004', 'SYS', null, 'SYSTEM_001_002', 'SysDataProcessMark001', 4, '2', '历史数据日志', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_002_005', 'SYS', null, 'SYSTEM_001_002', 'SysBatchLog001', 5, '2', '批处理日志', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_003', 'SYS', null, 'SYSTEM_001', null, 3, '2', '投组批处理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_003_002', 'SYS', null, 'SYSTEM_001_003', 'SystemBatchQuartzConfig001', 3, '2', '定时任务管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_003_005', 'SYS', null, 'SYSTEM_001_003', 'SysBatchMonitor001', 6, '2', '批处理监控', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_004', 'SYS', null, 'SYSTEM_001', null, 5, '2', '系统参数管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_004_002', 'SYS', null, 'SYSTEM_001_004', 'SysParaSet001', 2, '2', '系统参数管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_005', 'SYS', null, 'SYSTEM_001', null, 4, '2', '批处理配置', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_003_006', 'SYS', null, 'SYSTEM_001_003', 'SysDate001', 7, '2', '平台日调整', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_003_003', 'SYS', null, 'SYSTEM_001_003', 'SysBatchStart001', 6, '02', '批处理启动', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_003_100', 'DIS', null, 'SYSTEM_001_003', 'Workflow001', 1, '02', '工作流配置', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_003_101', 'DIS', null, 'SYSTEM_001_003', 'SysDataDict001', 2, '02', '数据字典管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_003_102', 'DIS', null, 'SYSTEM_001_003', 'SysFuncWflMatch001', 3, '02', '工作流管理', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SYSTEM_001_005_100', 'DIS', null, 'SYSTEM_001_005', 'SysBatchProcess001', 3, '02', '批处理配置', 'system', null, sysdate, 'system', sysdate);
+-- 页面菜单配置 add by zhengxiaolian 2022-11-05 end
