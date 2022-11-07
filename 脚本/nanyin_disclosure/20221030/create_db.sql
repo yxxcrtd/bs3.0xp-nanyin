@@ -518,3 +518,125 @@ ALTER TABLE DIS_PROD_ADJUST MODIFY  FIELD_ADJ_REMARK VARCHAR2(4000);
 ALTER TABLE DIS_PROD_ADJUST MODIFY  FIELD_ADJ_REMARK2 VARCHAR2(4000);
 ALTER TABLE DIS_PROD_ADJUST MODIFY  ADJ_REASON VARCHAR2(4000);
 ALTER TABLE DIS_PROD_ADJUST MODIFY  ADJ_REASON2 VARCHAR2(4000);
+
+-- 新增"科目发生额信息维护" 菜单20221107
+
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004_016' AND SYS_MENU.REMARK = '科目发生额信息维护';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_005_006', 'DIS', null, 'REPORT_005', 'AccountAmount001', 6, '02', '科目发生额信息维护', 'system', null, SYSDATE, 'system', SYSDATE);
+
+-- 新增 "科目发生额信息维护" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AccountAmount001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('AccountAmount001', 'DIS', '/disclosure/information/config/accountamount/AccountAmount001', 'disclosure/information/config/accountamount/AccountAmount001',
+       'REPORT_005_006', NULL, NULL, '02', '01', '科目发生额信息维护', 'system', NULL, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AccountAmount002');
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('AccountAmount002', 'DIS', '/disclosure/information/config/accountamount/AccountAmount002', 'disclosure/information/config/accountamount/AccountAmount002', null, null, null, '02', '01', '科目发生额信息维护新建', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_DATADICT where dict_code = 'SUBJECT_NO';
+insert into SYS_DATADICT values ('SUBJECT_NO','VAL','科目发生额信息科目号','','02','system','',sysdate, 'system',sysdate);
+
+delete from sys_datadict_list sdl where sdl.dict_code = 'SUBJECT_NO';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SUBJECT_NO', '1', '6405', 1, '0', 'system', '', sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SUBJECT_NO', '2', '6407', 2, '0', 'system', '', sysdate, 'system', sysdate);
+
+-- 科目发生额信息维护 添加 页面字典绑定
+delete from sys_page_dictlist where page_id='AccountAmount001' and DICT_ID='MAINTAIN_STATUS';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+
+-- 科目发生额信息维护 页面控件流程模板设置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'AccountAmount002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+--科目发生额信息维护历史表20221107
+drop table BOK_BALANCE_FSE_HIS;
+CREATE TABLE
+    BOK_BALANCE_FSE_HIS
+    (
+		HIS_NO NUMBER NOT NULL,
+        BOOKSET_ID VARCHAR2(50) NOT NULL,
+        DATE_START DATE NOT NULL,
+        DATE_END DATE NOT NULL,
+        SUBJECT_NO VARCHAR2(300) NOT NULL,
+        O_CCY VARCHAR2(50),
+        TDY_O_D_AMT NUMBER(30,2),
+        ERRORMSG VARCHAR2(200),
+        CREATE_USER VARCHAR2(20),
+        CREATE_DEPT VARCHAR2(32),
+        CREATE_TIME TIMESTAMP(6),
+        UPDATE_USER VARCHAR2(20),
+        UPDATE_TIME TIMESTAMP(6),
+        STATUS VARCHAR2(20),
+        CONSTRAINT PK_BOK_BALANCE_FSE_HIS_ID_01 PRIMARY KEY (HIS_NO,BOOKSET_ID, DATE_START, DATE_END,
+        SUBJECT_NO)
+    );
+COMMENT ON TABLE BOK_BALANCE_FSE
+IS
+    '科目余额（发生额）历史表';
+COMMENT ON COLUMN BOK_BALANCE_FSE.HIS_NO
+IS
+    '履历番号';
+COMMENT ON COLUMN BOK_BALANCE_FSE.BOOKSET_ID
+IS
+    '产品主代码';
+COMMENT ON COLUMN BOK_BALANCE_FSE.DATE_START
+IS
+    '开始日期';
+COMMENT ON COLUMN BOK_BALANCE_FSE.DATE_END
+IS
+    '开始日期';
+COMMENT ON COLUMN BOK_BALANCE_FSE.SUBJECT_NO
+IS
+    '科目号';
+COMMENT ON COLUMN BOK_BALANCE_FSE.O_CCY
+IS
+    '原币币种：AED阿联酋迪拉姆(AED),AUD澳大利亚元（AUD）,CAD加拿大元（CAD）,CHF瑞士法郎（CHF）,CNY人民币（CNY）,DKK丹麦克朗（DKK）,EUR欧元（EUR）,GBP英镑（GBP）,HKD港元（HKD）,HUF匈牙利福林(HUF),JPY日元（JPY）,KHR柬埔寨瑞尔(KHR),KRW韩元(KRW),KZT哈萨克斯坦坚戈(KZT),MNT蒙古图格里克 (MNT),MOP澳门元（MOP）,MXN墨西哥元(MXN),MYR马来西亚林吉特(MYR),NOK挪威克朗(NOK),NZD新西兰元(NZD),PLN波兰兹罗提(PLN),RUB俄罗斯卢布（RUB）,SAR沙特里亚尔(SAR),SEK瑞典克朗（SEK）,SGD新加坡元（SGD）,THB泰铢(THB),TRY新土耳其里拉(TRY),TWD新台币（TWD）,USD美元（USD）,ZAR南非兰特(ZAR)'
+    ;
+COMMENT ON COLUMN BOK_BALANCE_FSE.TDY_O_D_AMT
+IS
+    '发生额（借方）';
+COMMENT ON COLUMN BOK_BALANCE_FSE.ERRORMSG
+IS
+    '错误信息';
+COMMENT ON COLUMN BOK_BALANCE_FSE.CREATE_USER
+IS
+    '创建人';
+COMMENT ON COLUMN BOK_BALANCE_FSE.CREATE_DEPT
+IS
+    '创建部门';
+COMMENT ON COLUMN BOK_BALANCE_FSE.CREATE_TIME
+IS
+    '创建时间';
+COMMENT ON COLUMN BOK_BALANCE_FSE.UPDATE_USER
+IS
+    '更新人';
+COMMENT ON COLUMN BOK_BALANCE_FSE.UPDATE_TIME
+IS
+    '更新时间';
+COMMENT ON COLUMN BOK_BALANCE_FSE.STATUS
+IS
+    '数据状态';
+
+DROP SEQUENCE BOK_BALANCE_FSE_HIS_NO;
+
+-- 创建序列20221107
+create sequence BOK_BALANCE_FSE_HIS_NO
+minvalue 1
+maxvalue 9999999999999999999999999999
+start with 37
+increment by 1
+nocache;
+
+
+
