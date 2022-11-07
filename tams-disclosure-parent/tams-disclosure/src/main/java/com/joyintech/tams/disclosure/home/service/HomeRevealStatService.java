@@ -87,15 +87,16 @@ public class HomeRevealStatService {
 	    		Map<String,Object> p = new HashMap<>();
 	    		p.put("busi_date", DateUtil.addDay(qDate, -1));
 	    		p.put("is_holiday", "0");
-	    		p.put("market_code", "04");
+	    		p.put("market_code", "01");
 	    		p.put("days", 3);
 	    		Date sDate = holidayService.getAferNWorkDay(p);
 	    		p.put("days", 15);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 	    		
 	    		//统计已发生的列：用上个季度的末的日期进行查询
-	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Q");
-				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
+//	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Q");
+//				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
+				info = queryOtherCounts(repId,sDate,eDate);
 
 				//统计预计披露的列
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
@@ -107,15 +108,16 @@ public class HomeRevealStatService {
 	    		Map<String,Object> p = new HashMap<>();
 	    		p.put("busi_date", DateUtil.addDay(qDate, -1));
 	    		p.put("is_holiday", "0");
-	    		p.put("market_code", "04");
+	    		p.put("market_code", "01");
 	    		p.put("days", 3);
 	    		Date sDate = holidayService.getAferNWorkDay(p);
 	    		p.put("days", 60);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 	    		
 	    		//统计已发生的列
-	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "H");
-				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
+//	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "H");
+//				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
+				info = queryOtherCounts(repId,sDate,eDate);
 	    		
 				//统计预计披露的列
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
@@ -127,15 +129,16 @@ public class HomeRevealStatService {
 	    		Map<String,Object> p = new HashMap<>();
 	    		p.put("busi_date", DateUtil.addDay(qDate, -1));
 	    		p.put("is_holiday", "0");
-	    		p.put("market_code", "04");
+	    		p.put("market_code", "01");
 	    		p.put("days", 3);
 	    		Date sDate = holidayService.getAferNWorkDay(p);
 	    		p.put("days", 90);
 	    		Date eDate = holidayService.getAferNWorkDay(p);
 
 	    		//统计已发生的列
-	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Y");
-				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
+//	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Y");
+//				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
+				info = queryOtherCounts(repId,sDate,eDate);
 
 				//统计预计披露的列	    		
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
