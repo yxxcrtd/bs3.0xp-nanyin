@@ -279,7 +279,7 @@ public class ProdBonusplanManager002Controller extends BaseController {
         params.setPageId("ProdBonusplanManager002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getProdName());
-        params.setBusinessType(DictCodeListExt4.共通业务类型_产品分红到期计划.getValue());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_分红表单维护.getValue());
         params.setComment(entity -> "分红计划编号-产品代码" + "(" + entity.getProdName() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);

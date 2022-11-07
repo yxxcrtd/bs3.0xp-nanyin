@@ -28,7 +28,7 @@ $(function() {
          * 双击查看
          */
         dblclick: function (table, data) {
-            Joyin.dialog(JoyinUtil.getLabel("产品超额业绩报酬信息维护查看"),
+            Joyin.dialog(JoyinUtil.getLabel("周期型产品超额业绩报酬信息维护查看"),
                 basePath + "disclosure/information/config/repFloatFee/RepFloatFee002/init",
                 "99%", "99%", {
                     pageModel: PAGE_MODEL_REFERENCE,
@@ -125,7 +125,7 @@ $(function() {
         //新建点击事件
         $('#RepFloatFee001_btn_add').click(function() {
             var data={operateType:"add", pageModel:PAGE_MODEL_NEW};
-            Joyin.dialog('产品超额业绩报酬信息维护-新建',basePath+'disclosure/information/config/repFloatFee/RepFloatFee002/init', '90%', '80%',data,function(){table.reload();});
+            Joyin.dialog('周期型产品超额业绩报酬信息维护-新建',basePath+'disclosure/information/config/repFloatFee/RepFloatFee002/init', '90%', '80%',data,function(){table.reload();});
         });
 
         // 行内删除按钮点击事件
@@ -173,7 +173,7 @@ $(function() {
                 prodId: data.prodId,
                 affirmDate: data.affirmDateStr,
                 operateType: PAGE_MODEL_EDIT};//请求参数
-            Joyin.dialog(JoyinUtil.getLabel("产品超额业绩报酬信息维护-编辑"),
+            Joyin.dialog(JoyinUtil.getLabel("周期型产品超额业绩报酬信息维护-编辑"),
                 JoyinUtil.getRealPath("disclosure/information/config/repFloatFee/RepFloatFee002/init"),
                 "90%", "80%", object,
                 function(data){

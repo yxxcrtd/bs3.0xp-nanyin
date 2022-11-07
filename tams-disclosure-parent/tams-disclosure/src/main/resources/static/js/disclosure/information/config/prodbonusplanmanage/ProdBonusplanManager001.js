@@ -171,7 +171,7 @@
 	     */
 	   dataTable.bind('click', '.edit', function(data, index) {
 	    	data.operateType = "edit";
-	    	Joyin.dialog(JoyinUtil.getLabel("产品分红到期计划编辑"),
+	    	Joyin.dialog(JoyinUtil.getLabel("分红表单维护编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init"),
 	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId,editFlag:"02"},
 	                function(data){
@@ -209,7 +209,7 @@
 			*/
 		   dblclick: function (dataTable2, data) {
 			   data.pageModel=PAGE_MODEL_REFERENCE;
-			   Joyin.dialog(JoyinUtil.getLabel("产品分红到期计划查看"),
+			   Joyin.dialog(JoyinUtil.getLabel("分红表单查看"),
 				   basePath + "disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init",
 				   "50%", "90%", data,function(){dataTable2.reload();});
 		   },
@@ -250,7 +250,7 @@
 	   dataTable2.bind('click', '.edit', function(data, index) {
 		   var object = {selectedItem: [data], operateType: "edit"};
 		   Joyin.ajaxJson(basePath + '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/check', object, function (result) {
-	    	Joyin.dialog(JoyinUtil.getLabel("产品分红到期计划编辑"),
+	    	Joyin.dialog(JoyinUtil.getLabel("分红表单编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init"),
 	                "50%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId,editFlag:"02"},
 	                function(data){
@@ -320,7 +320,7 @@
 
 	   // 配置页面[新建]
 	    var addNew = function(){    	
-	    	Joyin.dialog(JoyinUtil.getLabel('产品分红到期计划新建'), '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init', "50%", "90%", {editFlag:"01"},
+	    	Joyin.dialog(JoyinUtil.getLabel('分红表单新建'), '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init', "50%", "90%", {editFlag:"01"},
 	    			function(result) {
 	    			dataTable.reload();
 	    			dataTable2.reload();

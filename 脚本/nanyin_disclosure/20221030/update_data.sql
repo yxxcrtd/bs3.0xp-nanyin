@@ -581,3 +581,24 @@ DELETE FROM sys_menu WHERE MENU_ID='REPORT_007_005';
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('REPORT_007_005', 'SVR', null, 'REPORT_007', 'SvrProdFeeDealInterf001', 5, '02', '产品费用交易信息维护', 'system', null, sysdate, 'system', sysdate);
 --  add by zhuhc 20221107 end
+
+--  add by zhuhc 20221107 start
+-- 页面菜单配置 产品分红到期计划-->分红表单维护
+DELETE FROM sys_menu WHERE MENU_ID='REPORT_007_001';
+
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_007_001', 'DIS', null, 'REPORT_007', 'ProdBonusplanManager001', 1, '02', '分红表单维护', 'system', null, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID='ProdBonusplanManager001';
+insert into SYS_PAGE(PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ProdBonusplanManager001','DIS','/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001','disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001','REPORT_006_004_006',null,null,'02','01','分红表单维护','system',null,sysdate,'system',sysdate);
+
+
+-- 页面菜单配置 产品超额业绩报酬信息维护-->周期型产品超额业绩报酬信息维护
+DELETE FROM sys_menu WHERE MENU_ID='REPORT_003_009';
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_003_009', 'SVR', null, 'REPORT_003', 'RepFloatFee001', 9, '02', '周期型产品超额业绩报酬信息维护', 'system', null, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID='RepFloatFee001';
+insert into SYS_PAGE(PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('RepFloatFee001','SVR','/disclosure/information/config/repFloatFee/RepFloatFee001','disclosure/information/config/repFloatFee/RepFloatFee001','REPORT_006_004_022',null,null,'02','01','周期型产品超额业绩报酬信息维护','system',null,sysdate,'system',sysdate);
+
+--  add by zhuhc 20221107 end
