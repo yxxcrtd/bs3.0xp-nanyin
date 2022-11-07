@@ -201,11 +201,12 @@ public class HomeRevealStatService {
 			if (!"1".equals(dto.getConfirmStatus())) { // 待确认：确认状态：0,2
 				info.setToBeConfirmedCounts(info.getToBeConfirmedCounts() + dto.getCounts());
 			}
-
-			if ("01".equals(dto.getReviewStatus())) {
+			//NYLCXP-1784 【我的主页】报表类型为日报，待复核没有统计被托管退回和被披露退回
+			if ("01".equals(dto.getReviewStatus()) ||"04".equals(dto.getReviewStatus()) ||"05".equals(dto.getReviewStatus())) {
 				info.setToBeReviewedCounts(info.getToBeReviewedCounts() + dto.getCounts());
 			}
-			if ("01".equals(dto.getReviewTgStatus())) {
+			//NYLCXP-1786【我的主页】报表类型为日报，待托管复核没有统计被披露退回
+			if ("01".equals(dto.getReviewTgStatus()) ||"05".equals(dto.getReviewStatus())) {
 				info.setToBeTgReviewedCounts(info.getToBeTgReviewedCounts() + dto.getCounts());
 			}
 		}
