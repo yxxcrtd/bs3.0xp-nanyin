@@ -75,9 +75,9 @@ public class Report1Cpnys001Service implements IReportDataService {
         // 调整原因
         dataMap.put("adjustReason", cpnysDto.getAdjustReason());
         // 调整补充说明1
-        dataMap.put("remark1", cpnysDto.getRemark1());
+        dataMap.put("remark1", cpnysDto.getRemark1()==null?"":cpnysDto.getRemark1());
         // 调整补充说明2
-        dataMap.put("remark2", cpnysDto.getRemark2());
+        dataMap.put("remark2", cpnysDto.getRemark2()==null?"":cpnysDto.getRemark2());
         // 设置公告、报告字样
         reportCommonService.setPubString(cpnysDto.getRaiseType(), dataMap);
         // 设置是否有代销机构字样
