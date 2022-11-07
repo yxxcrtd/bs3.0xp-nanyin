@@ -23,10 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -179,6 +176,7 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
                 UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
                 BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto, item);
                 unClaimAssetDetailDto.setDataStatus("C");
+                unClaimAssetDetailDto.setUpdateTime(new Date());
                 unClaimAssetDetailMapper.update(unClaimAssetDetailDto);
             });
         }else if(OperationType.DELETE.equals(type)){

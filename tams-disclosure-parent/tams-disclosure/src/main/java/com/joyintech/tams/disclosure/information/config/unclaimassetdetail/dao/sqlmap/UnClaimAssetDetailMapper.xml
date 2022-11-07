@@ -584,6 +584,9 @@
             <if test="dataStatus != null" >
                 DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
             </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
         </set>
         where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
     </update>
