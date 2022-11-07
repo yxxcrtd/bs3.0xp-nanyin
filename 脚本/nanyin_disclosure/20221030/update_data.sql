@@ -573,3 +573,11 @@ values ('SYSTEM_001_003_102', 'DIS', null, 'SYSTEM_001_003', 'SysFuncWflMatch001
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('SYSTEM_001_005_100', 'DIS', null, 'SYSTEM_001_005', 'SysBatchProcess001', 3, '02', '批处理配置', 'system', null, sysdate, 'system', sysdate);
 -- 页面菜单配置 add by zhengxiaolian 2022-11-05 end
+
+--  add by zhuhc 20221107 start
+-- 页面菜单配置 产品费用交易信息维护变更到分红数据维护菜单下
+DELETE FROM sys_menu WHERE MENU_ID='REPORT_003_007';
+DELETE FROM sys_menu WHERE MENU_ID='REPORT_007_005';
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_007_005', 'SVR', null, 'REPORT_007', 'SvrProdFeeDealInterf001', 5, '02', '产品费用交易信息维护', 'system', null, sysdate, 'system', sysdate);
+--  add by zhuhc 20221107 end
