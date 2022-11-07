@@ -251,7 +251,9 @@ public class BatchGenReport001Contoller extends BaseController {
 						params.put("pprodname", prodInfo.getProdName());					
 					} else if ("02".equals(prodInfo.getRepProdType()) ) {  //单产品
 						params.put("pprodId", prodInfo.getpProdId());  
-						params.put("pprodid", prodInfo.getpProdId());	
+						params.put("pprodid", prodInfo.getpProdId());
+						params.put("pprodName", prodInfo.getProdName());
+						params.put("pprodname", prodInfo.getProdName());
 					}
 				} else {  //针对子产品的报表+单产品报表
 					params.put("pprodId", prodInfo.getpProdId());  
