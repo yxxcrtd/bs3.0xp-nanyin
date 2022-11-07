@@ -200,13 +200,13 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     }
 
                     //披露日 = 开放结束日 + 1 工作日
-                    searchparam.put("busi_date", DateUtil.parse(openEndDateStr));
-                    searchparam.put("is_holiday", "0");
-                    searchparam.put("market_code", "04");
-                    Date accountDate = holidayService.getNextWorkDay(searchparam);
-                    if (accountDate == null) {
-                        accountDate = DateUtil.addDay(DateUtil.parse(openEndDateStr), 1);
-                    }
+//                    searchparam.put("busi_date", DateUtil.parse(openEndDateStr));
+//                    searchparam.put("is_holiday", "0");
+//                    searchparam.put("market_code", "04");
+                    Date accountDate =  DateUtil.addDay(DateUtil.parse(reportKfjzgg001Dto.getOpenEndDateT()), 1);
+//                    if (accountDate == null) {
+//                        accountDate = DateUtil.addDay(DateUtil.parse(reportKfjzgg001Dto.getOpenEndDateT()), 1);
+//                    }
                     reportKfjzgg001Dto.setAnnounceT(DateUtil.format(accountDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
                     logger.info("开放及净值公告（公募）/（私募）【{}】生成成功", JsonUtils.object2Json(paraMap));
                 } else {
