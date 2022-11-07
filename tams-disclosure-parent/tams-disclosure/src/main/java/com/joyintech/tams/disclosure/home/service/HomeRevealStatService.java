@@ -96,7 +96,7 @@ public class HomeRevealStatService {
 	    		//统计已发生的列：用上个季度的末的日期进行查询
 	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Q");
 				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
-	    		
+
 				//统计预计披露的列
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
 	    		info.setExpectRevealCounts(counts);
@@ -136,7 +136,7 @@ public class HomeRevealStatService {
 	    		//统计已发生的列
 	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "Y");
 				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
-				
+
 				//统计预计披露的列	    		
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
 	    		info.setExpectRevealCounts(counts);
@@ -206,7 +206,8 @@ public class HomeRevealStatService {
 				info.setToBeReviewedCounts(info.getToBeReviewedCounts() + dto.getCounts());
 			}
 			//NYLCXP-1786【我的主页】报表类型为日报，待托管复核没有统计被披露退回
-			if ("01".equals(dto.getReviewTgStatus()) ||"05".equals(dto.getReviewStatus())) {
+			if (StringUtil.equals(dto.getReviewStatus(),"03")
+					&& ("01".equals(dto.getReviewTgStatus()) ||"03".equals(dto.getReviewTgStatus()))) {
 				info.setToBeTgReviewedCounts(info.getToBeTgReviewedCounts() + dto.getCounts());
 			}
 		}
