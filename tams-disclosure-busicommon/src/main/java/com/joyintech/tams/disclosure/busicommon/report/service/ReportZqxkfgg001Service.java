@@ -173,7 +173,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                                         param.put("lastWorkDay",DateUtil.parse(reportOpenPlanDto.getAutoRedeemDate()));
                                         ReportValueDto value = reportZqxkfgg001Mapper.getValueInfo(param);
                                         if(value!=null){
-                                            redValue=new BigDecimal(reportValueDto.getUnitValue());
+                                            redValue=new BigDecimal(value.getUnitValue());
                                         }else{
                                             redValue = null;
                                         }
