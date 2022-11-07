@@ -223,6 +223,24 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                                         + GlobalConstant.UNDER_LINE + x.getEffDateStr()
                                         + GlobalConstant.UNDER_LINE + x.getEffEndDateStr()
                         ));
+
+                for (String key:map.keySet()){
+                    List<UnClaimAssetDetailDto>list=map.get(key);
+
+                    Map<String, List<UnClaimAssetDetailDto>> map3=list.stream().collect(
+                            JoyinCollectors.groupingBy(x ->
+                                    x.getProdId()
+                                            + GlobalConstant.UNDER_LINE + x.getEffDateStr()
+                                            + GlobalConstant.UNDER_LINE + x.getEffEndDateStr()+ GlobalConstant.UNDER_LINE+x.getFinancier()+ GlobalConstant.UNDER_LINE
+                            ));
+                    for (String key3:map3.keySet()){
+                        if(key3.contains("_无_")&&map3.get(key3).size() > 1){
+                            webResult.setMessage("当非标债权类资产明细有一项维护成无时，明细数据只能有一条："+key, MessageType.错误消息);
+                            return webResult;
+                        }
+                    }
+                }
+
                 // 将序号放入list中
                 List<String> excelNumList = new ArrayList<>();
                 List<Integer> excelNumIntList = new ArrayList<>();
@@ -302,6 +320,20 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
                 entity.setEffEndDateStr(" ");
             }
             entity.setExcelNum(String.valueOf(i+2));
+            if(StringUtil.equals("无",list.get(1))
+                    ||StringUtil.equals("无",list.get(2))
+                    ||StringUtil.equals("无",list.get(3))
+                    ||StringUtil.equals("无",list.get(4))
+                    ||StringUtil.equals("无",list.get(5))
+                    ||StringUtil.equals("无",list.get(6))
+            ){
+                entity.setFinancier("无");
+                entity.setProjectName("无");
+                entity.setRemFinancingPeriod("无");
+                entity.setIncomeDistribute("无");
+                entity.setTrdConstruct("无");
+                entity.setRiskInfo("无");
+            }
             entities.add(entity);
         }
         return entities;
