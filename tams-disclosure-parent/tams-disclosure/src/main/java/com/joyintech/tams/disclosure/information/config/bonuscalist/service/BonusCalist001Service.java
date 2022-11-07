@@ -454,15 +454,11 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
             List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(map);
             for (BonusReportDto report : listReport) {  //指定产品后，只有一条数据
                 // 上一分配基准日
-                if ("01".equals(report.getIssuingWay())) { // 开放式
-                    DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(map);
-                    if (plan == null) { // 第一个计划
-                        bonusCalist001Dto.setLastProfitBaseDate(report.geteDate());
-                    } else {
-                        bonusCalist001Dto.setLastProfitBaseDate(plan.getSettDate());
-                    }
-                } else {
+                DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(map);
+                if (plan == null) { // 第一个计划
                     bonusCalist001Dto.setLastProfitBaseDate(report.geteDate());
+                } else {
+                    bonusCalist001Dto.setLastProfitBaseDate(plan.getSettDate());
                 }
                 //uuid
                 bonusCalist001Dto.setBonusListId(IDGenerator.generate(36));
