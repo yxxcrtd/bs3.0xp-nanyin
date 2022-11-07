@@ -69,7 +69,7 @@ public class HomeRevealStatService {
 	    		Map<String,Object> p = new HashMap<>();
 	    		p.put("busi_date", sunday);
 	    		p.put("is_holiday", "0");
-	    		p.put("market_code", "04");
+	    		p.put("market_code", "01");
 	    		Date sDate = holidayService.getNextWorkDay(p);
 	    		
 	    		//统计已发生的列
@@ -354,9 +354,10 @@ public class HomeRevealStatService {
     	}    	
     	else if ( repId.equals("CP_001_002_005") || repId.equals("CP_001_002_006") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
     		//找到上周的第一天
-    		Date qDate = getLastDurationFirstDate(statDate,"W");
-    		String qDateStr = sdf.format(qDate);
-    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+//    		Date qDate = getLastDurationFirstDate(statDate,"W");
+//    		String qDateStr = sdf.format(qDate);
+//    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+			condition = "info.MDATE = to_date('"+queryDate + "','yyyy-mm-dd')";
 //    		//找到本周一
 //    		Calendar cal = Calendar.getInstance();
 //    		cal.setTime(statDate);
