@@ -602,3 +602,20 @@ DELETE FROM SYS_PAGE WHERE PAGE_ID='RepFloatFee001';
 insert into SYS_PAGE(PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('RepFloatFee001','SVR','/disclosure/information/config/repFloatFee/RepFloatFee001','disclosure/information/config/repFloatFee/RepFloatFee001','REPORT_006_004_022',null,null,'02','01','周期型产品超额业绩报酬信息维护','system',null,sysdate,'system',sysdate);
 
 --  add by zhuhc 20221107 end
+
+--  add by zhuhc 20221107 start
+-- 产品分红计算清单 添加 页面字典绑定
+delete from sys_page_dictlist where page_id='SvrProdFeeDealInterf001' and DICT_ID='FEE_TYPE_REP';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '01', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '02', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '05', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '06', null, null, 'system', null, sysdate, 'system', sysdate, null);
+--  add by zhuhc 20221107 end
