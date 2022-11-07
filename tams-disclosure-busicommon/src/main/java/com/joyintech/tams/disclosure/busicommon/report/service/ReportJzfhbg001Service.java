@@ -234,10 +234,12 @@ public class ReportJzfhbg001Service implements IReportDataService {
                     searchParam.put("busi_date", DateUtil.parse(settDateStr));
                     searchParam.put("is_holiday", "0");
                     searchParam.put("market_code", "04");
+                    searchParam.put("settDate",DateUtil.format(DateUtil.parse(reportJzfhbg001Dto.getSettDateT()),"yyyy-MM-dd"));
                     Date announceDate = holidayService.getNextWorkDay(searchParam);
                     if (announceDate == null) {
                         announceDate = DateUtil.addDay(DateUtil.parse(settDateStr), 1);
                     }
+
                     reportJzfhbg001Dto.setAnnounceT(DateUtil.format(announceDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
                     //赎回价格（元/份）
                     reportJzfhbg001Dto.setRedValue("1.0000");
