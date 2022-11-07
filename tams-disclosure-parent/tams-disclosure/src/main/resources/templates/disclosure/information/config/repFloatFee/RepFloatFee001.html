@@ -17,13 +17,12 @@
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-lable"
-                           data-th-text="产品全称">产品全称</label>
+                           data-th-text="子产品全称">子产品全称</label>
                     <div class="layui-input-inline input-inline">
                         <select type="text" id="prodId" name="prodId"
                                 class="layui-input form-input input-select" allowClear="true"
-                                placeholder="请输入"
+                                placeholder="请输入" formatoption=true multiple
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
-                                formatoption=true multiple="true"
                                 data-th-data-url="@{/disclosure/information/config/repFloatFee/RepFloatFee001/queryProdIdInfo}">
                         </select>
                     </div>
