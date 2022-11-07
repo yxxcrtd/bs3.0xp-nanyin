@@ -89,7 +89,7 @@
 		<div class="layui-form-item">
 			<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
 				<label class="layui-form-label form-lable" >
-					业绩报酬<i class="iconfont must" style="display: inline;">*</i></label>
+					业绩报酬（文本描述）<i class="iconfont must" style="display: inline;">*</i></label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" id="achievement" name="achievement" placeholder=""
 							   class="layui-input form-input "
@@ -102,26 +102,7 @@
 		<div class="layui-form-item">
 			<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
 				<label class="layui-form-label form-lable" >
-					超额业绩报酬收取比例（%）<i class="iconfont must" style="display: inline;">*</i></label>
-				<div class="layui-input-inline input-inline">
-					<input type="text" id="excessAchievementProp" name="excessAchievementProp" placeholder=""
-						   class="layui-input form-input " maxLength="7"
-						   onkeyup="if(this.value < 0){
-							   this.value= 0;
-						   }else if (value >= 10000) {
-							this.value= '';
-						  }else{
-							  this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后两位
-						   }"
-						   data-th-Value="${entity?.excessAchievementProp}" >
-				</div>
-			</div>
-		</div>
-
-		<div class="layui-form-item">
-			<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
-				<label class="layui-form-label form-lable" >
-					业绩比较基准<i class="iconfont must" style="display: inline;">*</i></label>
+					业绩比较基准（文本描述）<i class="iconfont must" style="display: inline;">*</i></label>
 				<div class="layui-input-inline input-inline">
 					<input type="text" id="achievementBasis" name="achievementBasis" placeholder=""
 						   class="layui-input form-input "
@@ -149,6 +130,25 @@
 						   data-th-Value="${entity?.achievementBasisProp}" >
 				</div>
 			</div>
+
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
+				<label class="layui-form-label form-lable" >
+					超额业绩报酬收取比例（%）<i class="iconfont must" style="display: inline;">*</i></label>
+				<div class="layui-input-inline input-inline">
+					<input type="text" id="excessAchievementProp" name="excessAchievementProp" placeholder=""
+						   class="layui-input form-input " maxLength="7"
+						   onkeyup="if(this.value < 0){
+							   this.value= 0;
+						   }else if (value >= 10000) {
+							this.value= '';
+						  }else{
+							  this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后两位
+						   }"
+						   data-th-Value="${entity?.excessAchievementProp}" >
+				</div>
+			</div>
+		</div>
 		</div>
 
 

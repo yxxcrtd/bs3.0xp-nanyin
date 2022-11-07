@@ -147,9 +147,9 @@
 				 ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
 				 ,{field:'settDateStr',  title: '收益分配基准日',width:150,sortable:false}
 				 ,{field:'paymentDateStr',  title: '现金红利发放日',width:150,sortable:false}
-				 ,{field:'achievement',  title: '业绩报酬',width:100,sortable:false}
+				 ,{field:'achievement',  title: '业绩报酬（文本描述）',width:100,sortable:false}
 				 ,{field:'excessAchievementProp',  title: '超额业绩报酬收取比例（%）',width:200,sortable:false}
-				 ,{field:'achievementBasis',  title: '业绩比较基准',width:120,sortable:false}
+				 ,{field:'achievementBasis',  title: '业绩比较基准（文本描述）',width:120,sortable:false}
 				 ,{field:'achievementBasisProp',  title: '业绩比较基准比例（%）',width:200,sortable:false}
 				 ,{field:'bonusModeName',title: '分红方式',width:90,sortable:false}
 				 ,{field:'dataStatusName',title: '数据状态',width:90,sortable:false}
@@ -223,9 +223,9 @@
 			   ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
 			   ,{field:'settDateStr',  title: '收益分配基准日',sortField:"settDateStr",width:150}
 			   ,{field:'paymentDateStr',  title: '现金红利发放日',sortField:"paymentDateStr", width:150}
-			   ,{field:'achievement',  title: '业绩报酬',width:100,sortField:"achievement"}
+			   ,{field:'achievement',  title: '业绩报酬（文本描述）',width:100,sortField:"achievement"}
 			   ,{field:'excessAchievementProp',  title: '超额业绩报酬收取比例（%）',width:200,sortable:false}
-			   ,{field:'achievementBasis',  title: '业绩比较基准',width:120,sortable:false}
+			   ,{field:'achievementBasis',  title: '业绩比较基准（文本描述）',width:120,sortable:false}
 			   ,{field:'achievementBasisProp',  title: '业绩比较基准比例（%）',width:200,sortable:false}
 			   ,{field:'bonusModeName',title: '分红方式',width:90,sortable:false}
 			   ,{field:'dataStatusName',title: '数据状态',width:90,sortable:false}
