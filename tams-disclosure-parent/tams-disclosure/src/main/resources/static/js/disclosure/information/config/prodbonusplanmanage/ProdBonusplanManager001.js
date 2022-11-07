@@ -147,9 +147,9 @@
 				 ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
 				 ,{field:'settDateStr',  title: '收益分配基准日',width:150,sortable:false}
 				 ,{field:'paymentDateStr',  title: '现金红利发放日',width:150,sortable:false}
-				 ,{field:'achievement',  title: '业绩报酬',width:100,sortable:false}
+				 ,{field:'achievement',  title: '业绩报酬（文本描述）',width:100,sortable:false}
 				 ,{field:'excessAchievementProp',  title: '超额业绩报酬收取比例（%）',width:200,sortable:false}
-				 ,{field:'achievementBasis',  title: '业绩比较基准',width:120,sortable:false}
+				 ,{field:'achievementBasis',  title: '业绩比较基准（文本描述）',width:120,sortable:false}
 				 ,{field:'achievementBasisProp',  title: '业绩比较基准比例（%）',width:200,sortable:false}
 				 ,{field:'bonusModeName',title: '分红方式',width:90,sortable:false}
 				 ,{field:'dataStatusName',title: '数据状态',width:90,sortable:false}
@@ -171,7 +171,7 @@
 	     */
 	   dataTable.bind('click', '.edit', function(data, index) {
 	    	data.operateType = "edit";
-	    	Joyin.dialog(JoyinUtil.getLabel("产品分红到期计划编辑"),
+	    	Joyin.dialog(JoyinUtil.getLabel("分红表单维护编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init"),
 	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId,editFlag:"02"},
 	                function(data){
@@ -209,7 +209,7 @@
 			*/
 		   dblclick: function (dataTable2, data) {
 			   data.pageModel=PAGE_MODEL_REFERENCE;
-			   Joyin.dialog(JoyinUtil.getLabel("产品分红到期计划查看"),
+			   Joyin.dialog(JoyinUtil.getLabel("分红表单查看"),
 				   basePath + "disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init",
 				   "50%", "90%", data,function(){dataTable2.reload();});
 		   },
@@ -223,9 +223,9 @@
 			   ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
 			   ,{field:'settDateStr',  title: '收益分配基准日',sortField:"settDateStr",width:150}
 			   ,{field:'paymentDateStr',  title: '现金红利发放日',sortField:"paymentDateStr", width:150}
-			   ,{field:'achievement',  title: '业绩报酬',width:100,sortField:"achievement"}
+			   ,{field:'achievement',  title: '业绩报酬（文本描述）',width:100,sortField:"achievement"}
 			   ,{field:'excessAchievementProp',  title: '超额业绩报酬收取比例（%）',width:200,sortable:false}
-			   ,{field:'achievementBasis',  title: '业绩比较基准',width:120,sortable:false}
+			   ,{field:'achievementBasis',  title: '业绩比较基准（文本描述）',width:120,sortable:false}
 			   ,{field:'achievementBasisProp',  title: '业绩比较基准比例（%）',width:200,sortable:false}
 			   ,{field:'bonusModeName',title: '分红方式',width:90,sortable:false}
 			   ,{field:'dataStatusName',title: '数据状态',width:90,sortable:false}
@@ -250,7 +250,7 @@
 	   dataTable2.bind('click', '.edit', function(data, index) {
 		   var object = {selectedItem: [data], operateType: "edit"};
 		   Joyin.ajaxJson(basePath + '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/check', object, function (result) {
-	    	Joyin.dialog(JoyinUtil.getLabel("产品分红到期计划编辑"),
+	    	Joyin.dialog(JoyinUtil.getLabel("分红表单编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init"),
 	                "50%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId,editFlag:"02"},
 	                function(data){
@@ -320,7 +320,7 @@
 
 	   // 配置页面[新建]
 	    var addNew = function(){    	
-	    	Joyin.dialog(JoyinUtil.getLabel('产品分红到期计划新建'), '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init', "50%", "90%", {editFlag:"01"},
+	    	Joyin.dialog(JoyinUtil.getLabel('分红表单新建'), '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init', "50%", "90%", {editFlag:"01"},
 	    			function(result) {
 	    			dataTable.reload();
 	    			dataTable2.reload();

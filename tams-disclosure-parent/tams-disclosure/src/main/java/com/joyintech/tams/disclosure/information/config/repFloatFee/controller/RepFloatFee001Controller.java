@@ -33,7 +33,7 @@ import java.util.Map;
 
 
 /**
- * 产品超额业务报酬信息维护
+ * 周期型产品超额业绩报酬信息维护
  * @author shengning
  *
  */

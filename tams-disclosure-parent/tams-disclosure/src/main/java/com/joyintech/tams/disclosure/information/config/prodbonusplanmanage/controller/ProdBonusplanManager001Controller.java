@@ -14,25 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.groups.ValidateGroupDelete;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt4;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
-import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
-import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
-import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
-import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
-import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +32,26 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt4;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
 /**
- * 产品分红到期计划 〈一句话功能简述〉 〈功能详细描述〉
+ * 分红表单维护 〈一句话功能简述〉 〈功能详细描述〉
  * 
  * @author lishicheng
  * @version 1.0 2018年11月9日
@@ -194,8 +191,8 @@ public class ProdBonusplanManager001Controller extends BaseController {
 		params.setPageId("ProdBonusplanManager002");
 		params.setElementId(dto.getElementId());
 		params.setBusinessCode(item -> item.getProdId());
-		params.setBusinessType(DictCodeListExt4.共通业务类型_产品分红到期计划.getValue());
-		params.setComment(entity -> "产品分红到期计划-产品代码"+ "(" + entity.getProdId() + ")");
+		params.setBusinessType(DictCodeListExt4.共通业务类型_分红表单维护.getValue());
+		params.setComment(entity -> "分红表单维护-产品代码"+ "(" + entity.getProdId() + ")");
 		processParameter.setOperationType(OperationType.DELETE);
 		processParameter.setWorkFlowParameter(params);
 		//String msg =prodBonusplanManager002Service.start(processParameter, dto);

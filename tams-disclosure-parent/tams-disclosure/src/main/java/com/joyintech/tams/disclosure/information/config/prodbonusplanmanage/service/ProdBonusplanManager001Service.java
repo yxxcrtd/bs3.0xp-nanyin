@@ -416,22 +416,24 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                 }
             }
             if (!StringUtil.isNotEmpty(rowData.get(4))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩报酬"));
-            }
-            if (!StringUtil.isNotEmpty(rowData.get(5))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "超额业绩报酬收取比例"));
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩报酬（文本描述）"));
             }
             if(StringUtil.equals(rowData.get(4),"无")){
                 if(!StringUtil.equals(rowData.get(5),"0")){
                     message.add("当业绩报酬为无时，超额业绩报酬收取比例必须填0。");
                 }
             }
-            if (!StringUtil.isNotEmpty(rowData.get(6))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准"));
+            if (!StringUtil.isNotEmpty(rowData.get(5))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准（文本描述）"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(7))) {
+            if (!StringUtil.isNotEmpty(rowData.get(6))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩比较基准比例"));
             }
+
+            if (!StringUtil.isNotEmpty(rowData.get(7))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "超额业绩报酬收取比例"));
+            }
+            
             if (StringUtil.isNotEmpty(rowData.get(0))) {
                 int num = prodBonusplanManager001Service.selectByProdId2(rowData.get(0));
                 if (StringUtils.equals("到期兑付", rowData.get(1))

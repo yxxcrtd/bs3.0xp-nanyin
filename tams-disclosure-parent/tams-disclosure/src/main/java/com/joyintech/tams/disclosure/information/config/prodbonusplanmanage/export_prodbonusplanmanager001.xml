@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="ProdBonusplanManager001.xlsx" name="产品分红到期计划模板配置">
+<Workbook filePath="ProdBonusplanManager001.xlsx" name="产品分红表单维护模板配置">
 	<Worksheet javaBean="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
 		<Row>
 			<Cell order="1" name="子产品代码">prodId</Cell>
@@ -7,10 +7,10 @@
 			<Cell order="3" name="分红方式">bonusModeName</Cell>
 			<Cell order="4" name="收益分配基准日">settDateStr</Cell>
 			<Cell order="5" name="现金红利发放日">paymentDateStr</Cell>
-			<Cell order="6" name="业绩报酬">achievement</Cell>
-			<Cell order="7" name="超额业绩报酬收取比例（%）">excessAchievementProp</Cell>
-			<Cell order="8" name="业绩比较基准">achievementBasis</Cell>
+			<Cell order="6" name="业绩报酬（文本描述）">achievement</Cell>
+			<Cell order="8" name="业绩比较基准（文本描述）">achievementBasis</Cell>
 			<Cell order="9" name="业绩比较基准比例（%）">achievementBasisProp</Cell>
+			<Cell order="7" name="超额业绩报酬收取比例（%）">excessAchievementProp</Cell>
 			<Cell order="7" name="数据状态">dataStatusName</Cell>
 			<Cell order="8" name="更新时间">updateTime</Cell>
 			<Cell order="9" name="更新人">updateUser</Cell>
