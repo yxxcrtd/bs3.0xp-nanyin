@@ -49,4 +49,6 @@ public interface GetPrdInfoSelectMapper {
 	 */
 	List<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> paraMap);
 
+	List<SelectOptionDto> getProFailureList(Map<String, Object> paraMap);
+
 }

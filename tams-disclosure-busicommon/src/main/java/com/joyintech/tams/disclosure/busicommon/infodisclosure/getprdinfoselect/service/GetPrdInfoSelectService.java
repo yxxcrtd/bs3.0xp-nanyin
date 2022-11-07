@@ -113,32 +113,37 @@ public class GetPrdInfoSelectService extends BaseService {
 	}
 
 	public Page<SelectOptionDto> getPProdIdList(Map<String, Object> paraMap){
-		if(StringUtil.isNotEmpty(paraMap.get("repId"))){
-			String repId=(String)paraMap.get("repId");
-			if(StringUtil.equals(repId,"CP_001_004_004")
-					||StringUtil.equals(repId,"CP_001_004_005")
-					||StringUtil.equals(repId,"CP_001_004_006")
-					||StringUtil.equals(repId,"CP_001_004_007")
-					||StringUtil.equals(repId,"CP_001_004_008")
-					||StringUtil.equals(repId,"CP_001_004_009")
-					||StringUtil.equals(repId,"CP_001_004_010")
-					||StringUtil.equals(repId,"CP_001_004_011")){
-				//费率相关的
-				paraMap.put("flag","01");
+		Page<SelectOptionDto> page;
+		if(StringUtil.equals("CP_001_004_002",paraMap.get("repId").toString())||StringUtil.equals("CP_001_004_003",paraMap.get("repId").toString())){
+			page=this.queryForPage(GetPrdInfoSelectMapper.class, "getProFailureList", paraMap);
+		}else{
+			if(StringUtil.isNotEmpty(paraMap.get("repId"))){
+				String repId=(String)paraMap.get("repId");
+				if(StringUtil.equals(repId,"CP_001_004_004")
+						||StringUtil.equals(repId,"CP_001_004_005")
+						||StringUtil.equals(repId,"CP_001_004_006")
+						||StringUtil.equals(repId,"CP_001_004_007")
+						||StringUtil.equals(repId,"CP_001_004_008")
+						||StringUtil.equals(repId,"CP_001_004_009")
+						||StringUtil.equals(repId,"CP_001_004_010")
+						||StringUtil.equals(repId,"CP_001_004_011")){
+					//费率相关的
+					paraMap.put("flag","01");
+				}
+				else if(StringUtil.equals(repId,"CP_001_004_012")
+						||StringUtil.equals(repId,"CP_001_004_013")
+						||StringUtil.equals(repId,"CP_001_004_014")
+						||StringUtil.equals(repId,"CP_001_004_015")){
+					//产品要素调整
+					paraMap.put("flag","02");
+				}else if (StringUtil.equals(repId, "CP_001_004_016")
+						||StringUtil.equals(repId, "CP_001_004_017")) {
+					//巨额赎回
+					paraMap.put("flag","03");
+				}
 			}
-			else if(StringUtil.equals(repId,"CP_001_004_012")
-					||StringUtil.equals(repId,"CP_001_004_013")
-					||StringUtil.equals(repId,"CP_001_004_014")
-					||StringUtil.equals(repId,"CP_001_004_015")){
-			    //产品要素调整
-				paraMap.put("flag","02");
-			}else if (StringUtil.equals(repId, "CP_001_004_016")
-					||StringUtil.equals(repId, "CP_001_004_017")) {
-				//巨额赎回
-				paraMap.put("flag","03");
-			}
+			page = this.queryForPage(GetPrdInfoSelectMapper.class, "getPProdIdList", paraMap);
 		}
-		Page<SelectOptionDto> page = this.queryForPage(GetPrdInfoSelectMapper.class, "getPProdIdList", paraMap);
 		return page;
 	}
 

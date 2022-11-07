@@ -237,4 +237,23 @@
 		</if>
 		)where NUM=1
 	</select>
+
+	<select id="getProFailureList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		distinct RPI.PROD_ID id,
+		RPI.PROD_NAME text
+		from
+		V_REP_PROD_INFO RPI
+		inner join DIS_PROD_NOCREATE DPO on DPO.PROD_REGIST_NO=RPI.PROD_RE and DPO.DATA_STATUS='E'
+		where RPI.STATUS='E'
+		and rep_prod_type in ('01','02')
+		and ISSUE_STATUS ='01'
+		<if test="search != null and search != ''">
+			and (RPI.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or RPI.PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+		</if>
+		<if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+	</select>
 </mapper>
