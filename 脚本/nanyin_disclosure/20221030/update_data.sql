@@ -604,7 +604,7 @@ insert into SYS_PAGE(PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH
 --  add by zhuhc 20221107 end
 
 --  add by zhuhc 20221107 start
--- 产品分红计算清单 添加 页面字典绑定
+-- 产品费用交易信息维护 添加费用类型 页面字典绑定
 delete from sys_page_dictlist where page_id='SvrProdFeeDealInterf001' and DICT_ID='FEE_TYPE_REP';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '01', null, null, 'system', null, sysdate, 'system', sysdate, null);

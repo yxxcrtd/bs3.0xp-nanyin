@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.accountamount.dao.AccountAmountMapper">
+
+    <select id="select"
+            resultType="com.joyintech.tams.disclosure.information.config.accountamount.dto.AccountAmount001Dto">
+        select
+        bbf.BOOKSET_ID booksetId,
+        bbf.SUBJECT_NO subjectNo,
+        bbf.O_CCY oCcy,
+        bbf.TDY_O_D_AMT tdyODAmt,
+        bbf.STATUS status,
+        bbf.DATE_START dateStart,
+        bbf.DATE_END dateEnd,
+        bbf.ERRORMSG errormsg,
+        bbf.UPDATE_TIME updateTime,
+        bbf.UPDATE_USER updateUser
+        from
+        BOK_BALANCE_FSE bbf
+        left join V_REP_PROD_INFO rpi on bbf.BOOKSET_ID = rpi.PROD_ID
+        <where>
+            <if test="booksetIdList != null and booksetIdList.size() > 0">
+                AND bbf.BOOKSET_ID in
+                <foreach collection="booksetIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="subjectNo != null and !subjectNo.equals('')">
+                AND bbf.SUBJECT_NO =#{subjectNo}
+            </if>
+            <if test="status != null and !status.equals('')">
+                AND bbf.STATUS=#{status}
+            </if>
+            <if test="dateStart != null and dateStart != ''">
+                <![CDATA[AND  DATE_START = TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
+            </if>
+            <if test="dateEnd != null and dateEnd != ''">
+                <![CDATA[AND  DATE_END = TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+            </if>
+        </where>
+        union all
+        select
+        bbfh.BOOKSET_ID booksetId,
+        bbfh.SUBJECT_NO subjectNo,
+        bbfh.O_CCY oCcy,
+        bbfh.TDY_O_D_AMT tdyODAmt,
+        bbfh.STATUS status,
+        bbfh.DATE_START dateStart,
+        bbfh.DATE_END dateEnd,
+        bbfh.ERRORMSG errormsg,
+        bbfh.UPDATE_TIME updateTime,
+        bbfh.UPDATE_USER updateUser
+        from
+        BOK_BALANCE_FSE_HIS bbfh
+        left join V_REP_PROD_INFO rpi on bbfh.BOOKSET_ID = rpi.PROD_ID
+        <where>
+            <if test="booksetIdList != null and booksetIdList.size() > 0">
+                AND bbfh.BOOKSET_ID in
+                <foreach collection="booksetIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="subjectNo != null and !subjectNo.equals('')">
+                AND bbfh.SUBJECT_NO =#{subjectNo}
+            </if>
+            <if test="status != null and !status.equals('')">
+                AND bbfh.STATUS=#{status}
+            </if>
+            <if test="dateStart != null and dateStart != ''">
+                <![CDATA[AND  bbfh.DATE_START = TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
+            </if>
+            <if test="dateEnd != null and dateEnd != ''">
+                <![CDATA[AND  bbfh.DATE_END = TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+            </if>
+        </where>
+        order by updateTime desc
+    </select>
+    <select id="selectByPrimaryKey"
+            resultType="com.joyintech.tams.disclosure.information.config.accountamount.dto.AccountAmount001Dto">
+       select
+          bbf.BOOKSET_ID booksetId,
+        bbf.SUBJECT_NO subjectNo,
+        bbf.O_CCY oCcy,
+        bbf.TDY_O_D_AMT tdyODAmt,
+        bbf.STATUS status,
+        bbf.DATE_START dateStart,
+        bbf.DATE_END dateEnd,
+        bbf.ERRORMSG errormsg,
+        bbf.UPDATE_TIME updateTime,
+        bbf.UPDATE_USER updateUser
+       from
+        BOK_BALANCE_FSE  bbf
+        left join V_REP_PROD_INFO rpi on bbf.BOOKSET_ID = rpi.PROD_ID
+      where bbf.BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and
+      bbf.DATE_START = to_date(#{dateStart,jdbcType=DATE},'YYYY-MM-DD')
+      and bbf.DATE_END = to_date(#{dateEnd,jdbcType=DATE},'YYYY-MM-DD')
+      and bbf.SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+   </select>
+
+    <delete id="deleteByKey">
+        delete from BOK_BALANCE_FSE
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and
+        DATE_START = #{dateStart,jdbcType=DATE}
+        and DATE_END = #{dateEnd,jdbcType=DATE}
+        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert">
+        insert into BOK_BALANCE_FSE (BOOKSET_ID, DATE_START, DATE_END,
+            SUBJECT_NO, O_CCY, TDY_O_D_AMT,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, STATUS,
+            ERRORMSG)
+        values (#{booksetId,jdbcType=VARCHAR}, #{dateStart,jdbcType=DATE}, #{dateEnd,jdbcType=DATE},#{subjectNo,jdbcType=VARCHAR},
+            #{oCcy,jdbcType=VARCHAR},#{tdyODAmt,jdbcType=DECIMAL},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR},
+            #{errormsg,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertHis">
+        insert into BOK_BALANCE_FSE_HIS
+        select BOK_BALANCE_FSE_HIS_NO.NEXTVAL hisNo,
+        BOOKSET_ID, DATE_START, DATE_END,
+            SUBJECT_NO, O_CCY, TDY_O_D_AMT,ERRORMSG,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            #{updateUser,jdbcType=VARCHAR}, UPDATE_TIME, 'D'
+        from BOK_BALANCE_FSE
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and
+        DATE_START = #{dateStart,jdbcType=DATE}
+        and DATE_END = #{dateEnd,jdbcType=DATE}
+        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </insert>
+
+    <update id="updateByKey">
+        update BOK_BALANCE_FSE
+        <set >
+            <if test="oCcy != null" >
+                O_CCY = #{oCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="oAmt != null" >
+                O_AMT = #{oAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyODAmt != null" >
+                TDY_O_D_AMT = #{tdyODAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="errormsg != null" >
+                ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and
+        DATE_START = #{dateStart,jdbcType=DATE}
+        and DATE_END = #{dateEnd,jdbcType=DATE}
+        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="getRegistNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        DISTINCT
+        PROD_RE id,
+        PROD_RE text
+        FROM
+            V_REP_PROD_INFO
+        WHERE PROD_RE IS NOT NULL
+    </select>
+    <select id="selectByProdRegistNo" resultType="java.lang.String">
+        select PROD_RE
+        from V_REP_PROD_INFO
+        where PROD_RE = #{prodRegistNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_ABBR
+        FROM
+            V_REP_PROD_INFO
+    </select>
+    <select id="getRegistNoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+          SELECT
+             PROD_REGIST_NO id,
+             PROD_REGIST_NO text
+        FROM
+             DIS_PROD_ADJUST
+    </select>
+    <select id="getProdIdlist" resultType="com.joyintech.framework.select.SelectOptionDto">
+             SELECT
+        d.PROD_ID id,
+        r.PROD_NAME text,
+        r.PROD_ABBR
+        FROM
+        DIS_PROD_ADJUST d left join V_REP_PROD_INFO r
+        on d.PROD_ID = r.PROD_ID
+    </select>
+    <select id="getRePord" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+       distinct
+        dp.BOOKSET_ID id,
+         rp.PROD_NAME text
+        from BOK_BALANCE dp
+        left join V_REP_PROD_INFO  rp
+        on dp.BOOKSET_ID = rp.PROD_ID
+        <where>
+            <if test="search != null and search != ''">
+                and (BOOKSET_ID like
+                concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+            <if test="prodIdList != null and prodIdList.size() > 0 ">
+                <foreach item="item" collection="prodIdList" index="index"
+                         open="and" separator="OR" close="">
+                    (PROD_ID like concat(concat('%',#{item}),'%')
+                    or PROD_NAME like concat(concat('%',#{item}),'%'))
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="findProdName" resultType="java.util.HashMap">
+
+    </select>
+    <select id="findProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_NAME object
+        FROM
+        V_REP_PROD_INFO
+        where
+        REP_PROD_TYPE in ('02','01') and STATUS = 'E'
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <select id="findSubjectNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+           bb.SUBJECT_NO id,
+           bs.SUBJECT_NAME text
+        from BOK_BALANCE bb
+        left join BOK_SUBJECT bs
+        on bb.SUBJECT_NO = bs.SUBJECT_NO
+        where 1=1
+        <if test="search != null and search != ''">
+            and (bb.SUBJECT_NO  like
+            concat(concat('%',#{search}),'%')
+            or bs.SUBJECT_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+
+
+    <select id="getProdId1" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_RE object
+        FROM
+        V_REP_PROD_INFO
+        <where>
+        status='E'
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+        union all
+        SELECT
+        P_PROD_ID id,
+        PROD_NAME text,
+        PROD_RE object
+        FROM
+        REP_PROD_INFO
+        <where>
+            status='E'
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (P_PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBalanceList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.accountamount.dto.AccountAmount001Dto">
+        select
+        A.BOOKSET_ID,
+        A.SUBJECT_NO,
+        to_char(A.DATE_START,'yyyy/mm/dd') dateStartStr,
+        to_char(A.DATE_END,'yyyy/mm/dd') dateEndStr
+        from BOK_BALANCE_FSE A
+        <where>
+            <foreach collection="list" item="item" open="(A.BOOKSET_ID,A.SUBJECT_NO,to_char(A.DATE_START,'yyyy/mm/dd'),to_char(A.DATE_END,'yyyy/mm/dd'),A.STATUS) IN (" separator="," close=")">
+                (#{item.booksetId},#{item.subjectNo},#{item.dateStartStr},#{item.dateEndStr},'E')
+            </foreach>
+        </where>
+    </select>
+</mapper>
