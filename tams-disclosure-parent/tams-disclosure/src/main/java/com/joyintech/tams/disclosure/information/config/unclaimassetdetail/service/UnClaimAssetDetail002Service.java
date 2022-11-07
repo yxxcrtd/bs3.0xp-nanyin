@@ -170,24 +170,17 @@ public class UnClaimAssetDetail002Service extends CommonExportService<UnClaimAss
 //                unClaimAssetDetailDto.setDataStatus("C");
 //                unClaimAssetDetailMapper.update(unClaimAssetDetailDto);
             });
-            dto.setDataStatus("E");
-            unClaimAssetDetailMapper.deleteOnReal(dto);
-            dto.setDataStatus("A");
-            unClaimAssetDetailMapper.deleteOnReal(dto);
-            int num=0;
-            for (UnClaimAssetDetailDto unclaimDto:unclaimList){
-                String code = IDGenerator.generate(36);
-                if (unclaimDto.getProdId()==null){
-                    unclaimDto.setProdId(dto.getProdId());
-                }
-                num+=1;
-                unclaimDto.setDataStatus("C");
-                unclaimDto.setNostdAssetId(code);
-                unclaimDto.setEffDate(dto.getEffDate());
-                unclaimDto.setEffEndDate(dto.getEffEndDate());
-                unclaimDto.setProjectNo(String.valueOf(num));
-                unClaimAssetDetailMapper.insert(unclaimDto);
-            }
+            existList.forEach(item -> {
+                item.setId(item.getNostdAssetId());
+                item.setWorkflowId(dto.getWorkflowId());
+                // 数据存入留痕表备份 流程作废方便恢复
+                unClaimAssetDetailMapper.saveHisData(item);
+                //进入流程，数据状态改为 待复核
+                UnClaimAssetDetailDto unClaimAssetDetailDto = new UnClaimAssetDetailDto();
+                BeanUtil.copyPropertiesIgnoreNull(unClaimAssetDetailDto, item);
+                unClaimAssetDetailDto.setDataStatus("C");
+                unClaimAssetDetailMapper.update(unClaimAssetDetailDto);
+            });
         }else if(OperationType.DELETE.equals(type)){
             Map<String, Object> map = new HashMap<>();
             map.put("prodId", dto.getProdId());
