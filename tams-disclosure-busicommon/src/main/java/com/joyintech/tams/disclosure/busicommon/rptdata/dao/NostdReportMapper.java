@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.busicommon.rptdata.dao;
 
 import java.util.List;
 
+import com.joyintech.tams.disclosure.busicommon.rptdata.dto.NostdReportDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +28,6 @@ import com.joyintech.tams.common.base.entity.RepProdInfo;
 @Repository
 public interface NostdReportMapper{
 	
-	public List<RepProdInfo> selectProdInfo(@Param("prodId") String prodId );
+	public List<NostdReportDto> selectProdInfo(@Param("prodId") String prodId );
 	
 }
