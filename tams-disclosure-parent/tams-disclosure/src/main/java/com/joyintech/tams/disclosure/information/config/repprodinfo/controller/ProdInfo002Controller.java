@@ -175,7 +175,7 @@ public class ProdInfo002Controller extends BaseController {
 
 
     /**
-     * check
+     * getPrdInfo
      *
      * @param prodId 查询产品明细信息
      * @return 结果
@@ -190,7 +190,7 @@ public class ProdInfo002Controller extends BaseController {
     }
 
     /**
-     * check
+     * checkSave
      *
      * @param dto 待校验数据
      * @return 结果

@@ -39,7 +39,6 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 产品简称：母产品简称/普通产品的产品简称，子产品为空
      */
-    @NotEmpty(fieldName = "产品简称")
     private String prodAbbr;
 
     /**
@@ -127,7 +126,6 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 产品托管人名称：无需区分母子产品
      */
-    @NotEmpty(fieldName = "产品托管人名称")
     private String acctChnname;
 
     /**
