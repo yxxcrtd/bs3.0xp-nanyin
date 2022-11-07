@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.disclosure.busicommon.rptdata.dto.NostdReportDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,8 @@ public class NostdReportDataService implements IReportDataService {
 
 		try {
 			String prodId = paraMap.get("pprodid").toString();
-			List<RepProdInfo> listProdInfo = nostdReportMapper.selectProdInfo(prodId);
-			RepProdInfo prodInfo = new RepProdInfo();
+			List<NostdReportDto> listProdInfo = nostdReportMapper.selectProdInfo(prodId);
+			NostdReportDto prodInfo = new NostdReportDto();
 			if ( listProdInfo!=null && listProdInfo.size()>0 )
 				prodInfo = listProdInfo.get(0);
 			Map<String,Object> dataMap = new HashMap<>();
