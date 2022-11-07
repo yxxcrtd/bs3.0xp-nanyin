@@ -618,4 +618,18 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '05', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('SvrProdFeeDealInterf001', '999999', 'FEE_TYPE_REP', '06', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+delete from sys_page_dictlist where page_id='SvrProdFeeDealInterf002' and DICT_ID='FEE_TYPE_REP';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '01', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '02', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '05', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '06', null, null, 'system', null, sysdate, 'system', sysdate, null);
 --  add by zhuhc 20221107 end
