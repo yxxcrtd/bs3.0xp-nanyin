@@ -163,11 +163,20 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                                 BigDecimal affirmAmt = reportOpenPlanDto.getAffirmAmt();
                                 //确认份额
                                 BigDecimal affirmNum = reportOpenPlanDto.getAffirmNum();
-                                //自动赎回日小于平台日
-                                if (autoRedeemDate != null && autoRedeemDate.compareTo(plateDate) < 0) {
+                                //自动赎回日小于运作起始日
+                                if (autoRedeemDate != null && autoRedeemDate.compareTo(DateUtil.parse(announceDate)) <= 0) {
                                     //超额业绩报酬为0  赎回确认单位净值=申购确认单位净值
                                     if ((aboveAmt != null && aboveAmt.compareTo(BigDecimal.ZERO) == 0)||aboveAmt == null) {
-                                        redValue = unitValue;
+                                        //取自动赎回日的单位净值
+                                        Map<String, Object> param = new HashMap<>();
+                                        param.put("prodId",searchparam.get("prodId"));
+                                        param.put("lastWorkDay",DateUtil.parse(reportOpenPlanDto.getAutoRedeemDate()));
+                                        ReportValueDto value = reportZqxkfgg001Mapper.getValueInfo(param);
+                                        if(value!=null){
+                                            redValue=new BigDecimal(reportValueDto.getUnitValue());
+                                        }else{
+                                            redValue = null;
+                                        }
                                     } else {
                                         if (affirmAmt != null && affirmNum != null) {
                                             redValue = affirmAmt.divide(affirmNum,10,BigDecimal.ROUND_DOWN).setScale(4, BigDecimal.ROUND_DOWN);
