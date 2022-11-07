@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class SettReportDataService implements IReportDataService {
 	public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
 
 		List<Map<String, Object>> listResult = new ArrayList<>();
-
+		DecimalFormat df = new DecimalFormat("#,##0.00");
 		SettReportDto settReportDto = new SettReportDto();
 		try {
 			String prodId = (paraMap.get("prodid") == null ? null : paraMap.get("prodid").toString());
@@ -110,7 +111,7 @@ public class SettReportDataService implements IReportDataService {
 				BigDecimal amt = mapBalance.get("100201");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setDeposit(amt.toString()); // 银行存款
+					settReportDto.setDeposit(df.format(amt)); // 银行存款
 					sumAssetAmt = sumAssetAmt.add(amt);
 				} else {
 					settReportDto.setDeposit("-");  
@@ -121,7 +122,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("103106");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setGuarantyAmt(amt.toString()); //保证金
+					settReportDto.setGuarantyAmt(df.format(amt)); //保证金
 					sumAssetAmt = sumAssetAmt.add(amt);
 				} else {
 					settReportDto.setGuarantyAmt("-");  
@@ -132,7 +133,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("10020601");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setIntAmt(amt.toString()); //利息
+					settReportDto.setIntAmt(df.format(amt)); //利息
 					sumAssetAmt = sumAssetAmt.add(amt);
 				} else {
 					settReportDto.setIntAmt("-");  
@@ -141,7 +142,7 @@ public class SettReportDataService implements IReportDataService {
 				
 				// 资产合计
 				if ( sumAssetAmt!=null &&  sumAssetAmt.compareTo(BigDecimal.ZERO)!=0 ) {
-					settReportDto.setSumAssetAmt(sumAssetAmt.setScale(2,BigDecimal.ROUND_DOWN).toString()); // 银行存款
+					settReportDto.setSumAssetAmt(df.format(sumAssetAmt.setScale(2,BigDecimal.ROUND_DOWN))); // 银行存款
 				} else {
 					settReportDto.setSumAssetAmt("-");  
 				}
@@ -152,7 +153,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("220601");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setMgrFee(amt.toString()); // 银行存款
+					settReportDto.setMgrFee(df.format(amt)); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
 					settReportDto.setMgrFee("-");  
@@ -163,7 +164,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("220602");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setFloatFee(amt.toString()); 
+					settReportDto.setFloatFee(df.format(amt));
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
 					settReportDto.setFloatFee("-");  
@@ -174,7 +175,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("2207");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setTrustFee(amt.toString()); 
+					settReportDto.setTrustFee(df.format(amt));
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
 					settReportDto.setTrustFee("-");  
@@ -185,7 +186,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("2208");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setSaleFee(amt.toString()); // 银行存款
+					settReportDto.setSaleFee(df.format(amt)); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
 					settReportDto.setSaleFee("-");  
@@ -196,7 +197,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("2203");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setRedemAmt(amt.toString()); // 银行存款
+					settReportDto.setRedemAmt(df.format(amt)); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
 					settReportDto.setRedemAmt("-");  
@@ -207,7 +208,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("2221");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setTaxFee(amt.toString()); // 银行存款
+					settReportDto.setTaxFee(df.format(amt)); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
 					settReportDto.setTaxFee("-");  
@@ -218,7 +219,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("2232");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setProfit(amt.toString()); 
+					settReportDto.setProfit(df.format(amt));
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
 					settReportDto.setProfit("-");  
@@ -229,7 +230,7 @@ public class SettReportDataService implements IReportDataService {
 				amt = mapBalance.get("2241");
 				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
 					amt = amt.setScale(2,BigDecimal.ROUND_DOWN);
-					settReportDto.setOtherPayAmt(amt.toString()); // 银行存款
+					settReportDto.setOtherPayAmt(df.format(amt)); // 银行存款
 					sumDebtAmt = sumDebtAmt.add(amt);
 				} else {
 					settReportDto.setOtherPayAmt("-");  
@@ -243,7 +244,7 @@ public class SettReportDataService implements IReportDataService {
 //						.add(mapBalance.get("2221")).add(mapBalance.get("2232")).add(mapBalance.get("2241"))); 
 				// 负债合计
 				if ( sumDebtAmt!=null &&  sumDebtAmt.compareTo(BigDecimal.ZERO)!=0 ) {
-					settReportDto.setSumDebtAmt(sumDebtAmt.setScale(2,BigDecimal.ROUND_DOWN).toString()); // 银行存款
+					settReportDto.setSumDebtAmt(df.format(sumDebtAmt.setScale(2,BigDecimal.ROUND_DOWN))); // 银行存款
 				} else {
 					settReportDto.setSumDebtAmt("-");  
 				}
