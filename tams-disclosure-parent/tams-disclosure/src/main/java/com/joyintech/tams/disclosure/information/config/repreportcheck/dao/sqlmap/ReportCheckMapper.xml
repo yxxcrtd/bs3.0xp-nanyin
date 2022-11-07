@@ -334,7 +334,14 @@
             <foreach item="item" collection="prodIdArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
-            </foreach>)
+            </foreach>
+            or
+            T.PROD_ID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )
         </if>
         <if test="finprodIdArr != null and finprodIdArr.size > 0">
             AND (rrc.PROD_ID IN
