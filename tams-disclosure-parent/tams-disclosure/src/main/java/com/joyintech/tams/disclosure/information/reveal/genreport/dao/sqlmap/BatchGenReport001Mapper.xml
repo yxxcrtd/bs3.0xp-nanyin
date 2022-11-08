@@ -52,6 +52,7 @@
         where status='E' 
         and REP_PROD_TYPE in ('01','02')
         and PROD_SERIES is not null
+		and PD_STATUS='01'
     </select>
     
     <select id="selectProdInfoSon" resultType="com.joyintech.framework.select.TreeNode">
@@ -79,6 +80,7 @@
         -- left join V_REP_PROD_INFO pprod
         -- on prod.p_prod_id = pprod.prod_id
         where  prod.rep_prod_type='02'
+        and prod.PD_STATUS='01'
         AND prod.status='E' AND prod.PROD_SERIES is not null        
     </select>
     
