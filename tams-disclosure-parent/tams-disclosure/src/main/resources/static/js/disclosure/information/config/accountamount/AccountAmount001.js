@@ -180,10 +180,10 @@
                 }
             }
             var object = {selectedItem: selArr, operateType: "delete"};
-            Joyin.ajaxJson(basePath + 'disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro001/check', object, function (result) {
+            Joyin.ajaxJson(basePath + 'disclosure/information/config/accountamount/AccountAmount001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
-                    WorkFlow.doDeleteList(basePath + 'disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro001/delete', object,
-                        "SubBalanceInfoPro001_btn_delete", "SubBalanceInfoPro002");
+                    WorkFlow.doDeleteList(basePath + 'disclosure/information/config/accountamount/AccountAmount001/delete', object,
+                        "AccountAmount001_btn_delete", "AccountAmount002");
                 });
             });
         });
