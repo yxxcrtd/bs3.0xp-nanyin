@@ -4,8 +4,10 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportKfqgg001Mapper;
+import com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqgg001Dto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto;
 import com.joyintech.tams.disclosure.busicommon.report.util.ReportCollectionUtils;
@@ -34,6 +36,9 @@ public class ReportKfqgg001Service implements IReportDataService {
 
     @Autowired
     private ReportKfqgg001Mapper reportKfqgg001Mapper;
+
+    @Autowired
+    private ReportRkcpjz001Mapper reportRkcpjz001Mapper;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -102,6 +107,13 @@ public class ReportKfqgg001Service implements IReportDataService {
         RepReveal repReveal = new RepReveal();
         String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         repReveal.setProdid(prodId);
+        Map<String, Object> param = new HashMap<>();
+        param.put("prodId", prodId);
+        RepProdInfo info=reportRkcpjz001Mapper.getProdId(param);
+        if(StringUtil.isNotEmpty(info)){
+            repReveal.setProdid(info.getpProdId());
+        }
+
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate(DateUtil.platDateFromCache());
         //封装导出文件名称

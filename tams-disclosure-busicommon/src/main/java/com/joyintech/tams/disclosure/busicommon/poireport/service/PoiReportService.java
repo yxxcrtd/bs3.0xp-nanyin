@@ -385,7 +385,9 @@ public class PoiReportService {
 		repReveal.setSysFilepath(fileKey);
 		repReveal.setSysFilename(fileName);
 		repReveal.setReportName(reportInfo.getReportName());
-		if(!(StringUtil.equals(repReveal.getRepId(),"CP_001_002_003")
+		if(!(StringUtil.equals(repReveal.getRepId(),"CP_001_002_001")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_002")
+				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_003")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_004")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_005")
 				||StringUtil.equals(repReveal.getRepId(),"CP_001_002_006")
