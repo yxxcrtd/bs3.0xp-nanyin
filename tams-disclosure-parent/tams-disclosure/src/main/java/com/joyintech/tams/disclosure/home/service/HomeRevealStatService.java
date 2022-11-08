@@ -395,6 +395,7 @@ public class HomeRevealStatService {
     	}
     	
     	if ( condition.length()>0 )
+			condition = condition + "AND info.ISSUE_STATUS = '01'";
     		map.put("condition", condition);
     	return map;
     }
