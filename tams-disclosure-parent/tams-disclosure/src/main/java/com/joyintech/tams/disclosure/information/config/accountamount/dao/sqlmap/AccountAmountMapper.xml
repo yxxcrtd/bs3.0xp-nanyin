@@ -5,6 +5,7 @@
     <select id="select"
             resultType="com.joyintech.tams.disclosure.information.config.accountamount.dto.AccountAmount001Dto">
         select
+        distinct
         bbf.BOOKSET_ID booksetId,
         bbf.SUBJECT_NO subjectNo,
         bbf.O_CCY oCcy,
@@ -33,14 +34,33 @@
                 AND bbf.STATUS=#{status}
             </if>
             <if test="dateStart != null and dateStart != ''">
-                <![CDATA[AND  DATE_START = TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
+                <![CDATA[AND  DATE_START >= TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
             </if>
             <if test="dateEnd != null and dateEnd != ''">
-                <![CDATA[AND  DATE_END = TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+                <![CDATA[AND  DATE_START <= TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+            </if>
+            <if test="dateStart != null and dateStart != ''">
+                 <![CDATA[OR  DATE_END >= TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
+            </if>
+            <if test="dateEnd != null and dateEnd != ''">
+                <![CDATA[AND  DATE_END <= TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+            </if>
+            <if test="booksetIdList != null and booksetIdList.size() > 0">
+                AND bbf.BOOKSET_ID in
+                <foreach collection="booksetIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="subjectNo != null and !subjectNo.equals('')">
+                AND bbf.SUBJECT_NO =#{subjectNo}
+            </if>
+            <if test="status != null and !status.equals('')">
+                AND bbf.STATUS=#{status}
             </if>
         </where>
         union all
         select
+        distinct
         bbfh.BOOKSET_ID booksetId,
         bbfh.SUBJECT_NO subjectNo,
         bbfh.O_CCY oCcy,
@@ -69,10 +89,28 @@
                 AND bbfh.STATUS=#{status}
             </if>
             <if test="dateStart != null and dateStart != ''">
-                <![CDATA[AND  bbfh.DATE_START = TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
+                <![CDATA[AND  bbfh.DATE_START >= TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
             </if>
             <if test="dateEnd != null and dateEnd != ''">
-                <![CDATA[AND  bbfh.DATE_END = TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+                <![CDATA[AND  bbfh.DATE_START <= TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+            </if>
+            <if test="dateStart != null and dateStart != ''">
+                <![CDATA[OR  bbfh.DATE_END >= TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
+            </if>
+            <if test="dateEnd != null and dateEnd != ''">
+                <![CDATA[AND  bbfh.DATE_END <= TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+            </if>
+            <if test="booksetIdList != null and booksetIdList.size() > 0">
+                AND bbfh.BOOKSET_ID in
+                <foreach collection="booksetIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="subjectNo != null and !subjectNo.equals('')">
+                AND bbfh.SUBJECT_NO =#{subjectNo}
+            </if>
+            <if test="status != null and !status.equals('')">
+                AND bbfh.STATUS=#{status}
             </if>
         </where>
         order by updateTime desc
