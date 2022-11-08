@@ -519,18 +519,6 @@ ALTER TABLE DIS_PROD_ADJUST MODIFY  FIELD_ADJ_REMARK2 VARCHAR2(4000);
 ALTER TABLE DIS_PROD_ADJUST MODIFY  ADJ_REASON VARCHAR2(4000);
 ALTER TABLE DIS_PROD_ADJUST MODIFY  ADJ_REASON2 VARCHAR2(4000);
 
--- 新增"科目发生额信息维护" 菜单20221107
-
-DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004_016' AND SYS_MENU.REMARK = '科目发生额信息维护';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('REPORT_005_006', 'DIS', null, 'REPORT_005', 'AccountAmount001', 6, '02', '科目发生额信息维护', 'system', null, SYSDATE, 'system', SYSDATE);
-
--- 新增 "科目发生额信息维护" 画面
-DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AccountAmount001');
-INSERT INTO SYS_PAGE
-(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES('AccountAmount001', 'DIS', '/disclosure/information/config/accountamount/AccountAmount001', 'disclosure/information/config/accountamount/AccountAmount001',
-       'REPORT_005_006', NULL, NULL, '02', '01', '科目发生额信息维护', 'system', NULL, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AccountAmount002');
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -544,20 +532,6 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('SUBJECT_NO', '1', '6405', 1, '0', 'system', '', sysdate, 'system', sysdate);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('SUBJECT_NO', '2', '6407', 2, '0', 'system', '', sysdate, 'system', sysdate);
-
--- 科目发生额信息维护 添加 页面字典绑定
-delete from sys_page_dictlist where page_id='AccountAmount001' and DICT_ID='MAINTAIN_STATUS';
-insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
-insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
-
-
--- 科目发生额信息维护 页面控件流程模板设置
-delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'AccountAmount002';
-INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
-INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
-INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 --科目发生额信息维护历史表20221107
 drop table BOK_BALANCE_FSE_HIS;
@@ -660,5 +634,20 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('SUBJECT_NO', '6605', '6605', 1, '0', 'system', '', sysdate, 'system', sysdate);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('SUBJECT_NO', '6407', '6407', 2, '0', 'system', '', sysdate, 'system', sysdate);
+
+-- 科目发生额信息维护 页面控件流程模板设置20221108
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'AccountAmount002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount001_btn_delete', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount002_btn_save', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount002_btn_submit', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+-- 科目发生额信息维护 添加 页面字典绑定
+delete from sys_page_dictlist where page_id='AccountAmount001' and DICT_ID='MAINTAIN_STATUS';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'A', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 

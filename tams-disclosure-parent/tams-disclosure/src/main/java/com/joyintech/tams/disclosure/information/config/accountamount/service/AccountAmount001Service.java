@@ -280,7 +280,7 @@ public class AccountAmount001Service extends CommonExportService<AccountAmount00
                 webResult.setMessage(
                         this.getMessage("REPORT_COMMON_FILE_C_1111_1",
                                 StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                        MessageType.确认消息);
+                        MessageType.错误消息);
             } else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
