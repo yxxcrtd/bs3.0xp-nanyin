@@ -61,6 +61,8 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
      */
     private String prodName;
 
+    private String subjectName;
+
     @NotEmpty(fieldName = "产品名称", groups = {ValidateGroupEdit.class})
     public String getProdName() {
         return prodName;
@@ -161,7 +163,6 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
     }
 
     @Override
-    @NotEmpty(fieldName = "原币发生额(借方)", groups = {ValidateGroupEdit.class})
     public BigDecimal getTdyODAmt() {
         return super.getTdyODAmt();
     }
@@ -180,5 +181,13 @@ public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, Pr
 
     public void setExcelNum(String excelNum) {
         this.excelNum = excelNum;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 }

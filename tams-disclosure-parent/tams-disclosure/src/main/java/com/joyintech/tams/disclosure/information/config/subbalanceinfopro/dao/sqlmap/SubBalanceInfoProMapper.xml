@@ -14,10 +14,12 @@
           bb.STATUS status,
           bb.ERRORMSG errormsg,
           bb.UPDATE_TIME updateTime,
-          bb.UPDATE_USER updateUser
+          bb.UPDATE_USER updateUser,
+          bs.SUBJECT_NAME subjectName
        from
         BOK_BALANCE  bb
         left join V_REP_PROD_INFO rpi on bb.BOOKSET_ID = rpi.PROD_ID
+        left join bok_subject bs on bb.SUBJECT_NO=bs.SUBJECT_NO
     <where>
         <if test="booksetIdList != null and booksetIdList.size() > 0">
             AND bb.BOOKSET_ID in
@@ -49,6 +51,7 @@
         and not exists
         (select 1 from dual where instr(bb.SUBJECT_NO, '220701') > 0)
         ))
+       and nvl(bb.O_AMT,0)!=0
     </where>
         order by NVL(bb.UPDATE_TIME,bb.CREATE_TIME) desc
     </select>

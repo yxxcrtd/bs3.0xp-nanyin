@@ -55,9 +55,9 @@
             {field:'prodName',  title: '产品名称',sortField:"prodName"}//产品名称
             ,{field:'balanceDate',  title: '余额日期',sortField:"balanceDate",type:'date'}//余额日期
             ,{field:'subjectNo',  title: '科目号',sortField:"subjectNo"}//科目号
+            ,{field:'subjectName',  title: '科目名称',sortField:"subjectName"}//科目号
             ,{field:'oCcy',  title: '原币币种',sortField:"oCcy"}//原币币种
             ,{field:'oAmt',  title: '原币余额',sortField:"oAmt",type:'number'}//原币余额
-            ,{field:'tdyODAmt',  title: '原币发生额(借方)',sortField:"tdyODAmt",type:'number'}//原币发生额（借方）
             ,{field:'errormsg',  title: '错误信息',sortField:"errormsg"}//错误信息
             ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人

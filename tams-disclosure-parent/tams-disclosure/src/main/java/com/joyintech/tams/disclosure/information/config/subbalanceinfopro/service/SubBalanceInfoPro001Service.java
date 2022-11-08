@@ -375,13 +375,13 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
             } else if (new BigDecimal(rowData.get(4)).compareTo(BigDecimal.ZERO) < 0) {
                 message.add("原币余额需要大于等于0。");
             }
-            if (!StringUtil.isNotEmpty(rowData.get(5))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "原币发生额（借方）"));
-            } else if (!isBigDecimal(rowData.get(5))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "原币发生额（借方）"));
-            } else if (new BigDecimal(rowData.get(5)).compareTo(BigDecimal.ZERO) < 0) {
-                message.add("原币发生额（借方）需要大于等于0。");
-            }
+//            if (!StringUtil.isNotEmpty(rowData.get(5))) {
+//                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "原币发生额（借方）"));
+//            } else if (!isBigDecimal(rowData.get(5))) {
+//                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "原币发生额（借方）"));
+//            } else if (new BigDecimal(rowData.get(5)).compareTo(BigDecimal.ZERO) < 0) {
+//                message.add("原币发生额（借方）需要大于等于0。");
+//            }
             if (map.containsKey(rowData.get(0)
                     + GlobalConstant.UNDER_LINE + rowData.get(1)
                     + GlobalConstant.UNDER_LINE + rowData.get(2))) {
@@ -420,9 +420,9 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         if (StringUtil.isNotEmpty(rowData.get(4))) {
             subBalanceInfoPro001Dto.setoAmt(new BigDecimal(rowData.get(4)));
         }
-        if (StringUtil.isNotEmpty(rowData.get(5))) {
-            subBalanceInfoPro001Dto.setTdyODAmt(new BigDecimal(rowData.get(5)));
-        }
+//        if (StringUtil.isNotEmpty(rowData.get(5))) {
+//            subBalanceInfoPro001Dto.setTdyODAmt(new BigDecimal(rowData.get(5)));
+//        }
         return subBalanceInfoPro001Dto;
     }
 
