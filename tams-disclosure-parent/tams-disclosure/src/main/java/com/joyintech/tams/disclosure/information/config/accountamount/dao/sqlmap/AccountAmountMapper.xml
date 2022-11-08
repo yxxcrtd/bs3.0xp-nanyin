@@ -57,6 +57,7 @@
             <if test="status != null and !status.equals('')">
                 AND bbf.STATUS=#{status}
             </if>
+            and bbf.TDY_O_D_AMT is not null and bbf.TDY_O_D_AMT!=0
         </where>
         union all
         select
@@ -112,6 +113,7 @@
             <if test="status != null and !status.equals('')">
                 AND bbfh.STATUS=#{status}
             </if>
+            and bbfh.TDY_O_D_AMT is not null and bbfh.TDY_O_D_AMT!=0
         </where>
         order by updateTime desc
     </select>
