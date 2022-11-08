@@ -308,14 +308,14 @@ public class HomeRevealStatService {
     				+ " where" 
     				+ " plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" 
     				+ " and plan.DATA_STATUS='E'"
-    				+ " and info.PROD_ID = plan.PROD_ID)";
+    				+ " and info.P_PROD_ID = plan.PROD_ID)";
     	}
     	else if ( repId.equals("CP_001_002_008") ) {//周期型产品开放公告（公募产品-单赎回）：并且自动赎回日=当天
     		condition = " exists ( select 1 from" + 
     				" DIS_PROD_PLAN plan" + 
     				" where" + 
     				" plan.AUTO_REDEEM_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
-    				" and info.PROD_ID = plan.PROD_ID)";
+    				" and info.P_PROD_ID = plan.PROD_ID)";
     	}    	
     	else if ( repId.equals("CP_001_002_009")|| repId.equals("CP_001_002_010")
     			|| repId.equals("CP_001_002_013")|| repId.equals("CP_001_002_014")
@@ -334,7 +334,7 @@ public class HomeRevealStatService {
     		Map<String,Object> p = new HashMap<>();
     		p.put("busi_date", statDate);
     		p.put("is_holiday", "0");
-    		p.put("market_code", "04");
+    		p.put("market_code", "01");
     		Date preStatDate = holidayService.getLastWorkDay(p);
     		String preQueryDate = sdf.format(preStatDate);
     		condition = " exists ( select 1 from"  
@@ -342,7 +342,7 @@ public class HomeRevealStatService {
     				+ " where" 
     				+ " plan.OPEN_END_DATE = to_date('"+preQueryDate+"','yyyy-mm-dd')" 
     				+ " and plan.DATA_STATUS='E'"
-    				+ " and info.PROD_ID = plan.PROD_ID)";
+    				+ " and info.P_PROD_ID = plan.PROD_ID)";
     	}
     	else if ( repId.equals("CP_001_002_012") ) {//开放及净值报告（私募）：并且运作起始日=当天
     		condition = " exists ( select 1 from"  
@@ -350,7 +350,7 @@ public class HomeRevealStatService {
     				+ " where" 
     				+ " plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" 
     				+ " and plan.DATA_STATUS='E'" 
-    				+ " and info.PROD_ID = plan.PROD_ID)";
+    				+ " and info.P_PROD_ID = plan.PROD_ID)";
     	}    	
     	else if ( repId.equals("CP_001_002_005") || repId.equals("CP_001_002_006") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
     		//找到上周的第一天
