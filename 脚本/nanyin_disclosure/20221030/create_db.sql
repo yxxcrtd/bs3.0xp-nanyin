@@ -651,5 +651,14 @@ INSERT INTO SYS_PAGE
 VALUES('AccountAmount001', 'DIS', '/disclosure/information/config/accountamount/AccountAmount001', 'disclosure/information/config/accountamount/AccountAmount001',
        'REPORT_004_008', NULL, NULL, '02', '01', '科目发生额', 'system', NULL, sysdate, 'system', sysdate);
 
+--修改科目发生额科目号枚举值20221108
+delete from SYS_DATADICT where dict_code = 'SUBJECT_NO';
+insert into SYS_DATADICT values ('SUBJECT_NO','VAL','科目发生额信息科目号','','02','system','',sysdate, 'system',sysdate);
+
+delete from sys_datadict_list sdl where sdl.dict_code = 'SUBJECT_NO';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SUBJECT_NO', '6605', '6605', 1, '0', 'system', '', sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SUBJECT_NO', '6407', '6407', 2, '0', 'system', '', sysdate, 'system', sysdate);
 
 
