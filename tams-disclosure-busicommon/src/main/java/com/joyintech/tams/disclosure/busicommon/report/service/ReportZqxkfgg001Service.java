@@ -170,7 +170,15 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                                         //取自动赎回日的单位净值
                                         Map<String, Object> param = new HashMap<>();
                                         param.put("prodId",searchparam.get("prodId"));
-                                        param.put("lastWorkDay",DateUtil.parse(reportOpenPlanDto.getAutoRedeemDate()));
+
+                                        param.put("busi_date", DateUtil.parse(reportOpenPlanDto.getAutoRedeemDate()));
+                                        param.put("is_holiday", "0");
+                                        param.put("market_code", "04");
+                                        Date lastWorkDay2 = holidayService.getLastWorkDay(param);
+                                        if (lastWorkDay2 == null) {
+                                            lastWorkDay2 = DateUtil.addDay(DateUtil.parse(reportOpenPlanDto.getAutoRedeemDate()), -1);
+                                        }
+                                        param.put("lastWorkDay", lastWorkDay2);
                                         ReportValueDto value = reportZqxkfgg001Mapper.getValueInfo(param);
                                         if(value!=null){
                                             redValue=new BigDecimal(value.getUnitValue());
