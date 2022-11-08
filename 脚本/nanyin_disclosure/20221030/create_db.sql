@@ -638,5 +638,18 @@ start with 37
 increment by 1
 nocache;
 
+-- 更改"科目发生额信息维护" 菜单20221108
+
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_004_008' AND SYS_MENU.REMARK = '科目发生额';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_004_008', 'DIS', null, 'REPORT_004', 'AccountAmount001', 8, '02', '科目发生额', 'system', null, SYSDATE, 'system', SYSDATE);
+
+-- 新增 "科目发生额信息维护" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AccountAmount001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('AccountAmount001', 'DIS', '/disclosure/information/config/accountamount/AccountAmount001', 'disclosure/information/config/accountamount/AccountAmount001',
+       'REPORT_004_008', NULL, NULL, '02', '01', '科目发生额', 'system', NULL, sysdate, 'system', sysdate);
+
 
 
