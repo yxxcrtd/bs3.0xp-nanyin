@@ -99,6 +99,7 @@ public class AccountAmount001Dto extends BokBalance implements ITableRow, Proces
     }
 
     @Override
+    @NotEmpty(fieldName = "产品名称",groups={ValidateGroupEdit.class})
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getBooksetId() {
         return booksetId;
@@ -109,6 +110,7 @@ public class AccountAmount001Dto extends BokBalance implements ITableRow, Proces
         this.booksetId = booksetId;
     }
 
+    @NotEmpty(fieldName = "开始时间",groups={ValidateGroupEdit.class})
     public Date getDateStart() {
         return dateStart;
     }
@@ -117,7 +119,7 @@ public class AccountAmount001Dto extends BokBalance implements ITableRow, Proces
         this.dateStart = dateStart;
     }
 
-
+    @NotEmpty(fieldName = "结束时间",groups={ValidateGroupEdit.class})
     public Date getDateEnd() {
         return dateEnd;
     }
@@ -127,6 +129,7 @@ public class AccountAmount001Dto extends BokBalance implements ITableRow, Proces
     }
 
     @Override
+    @NotEmpty(fieldName = "科目号",groups={ValidateGroupEdit.class})
     @PrimaryKey(PrimaryKey.Field.PK_4)
     public String getSubjectNo() {
         return subjectNo;
@@ -148,6 +151,7 @@ public class AccountAmount001Dto extends BokBalance implements ITableRow, Proces
     }
 
     @Override
+    @NotEmpty(fieldName = "科目发生额",groups={ValidateGroupEdit.class})
     public BigDecimal getTdyODAmt() {
         return tdyODAmt;
     }
