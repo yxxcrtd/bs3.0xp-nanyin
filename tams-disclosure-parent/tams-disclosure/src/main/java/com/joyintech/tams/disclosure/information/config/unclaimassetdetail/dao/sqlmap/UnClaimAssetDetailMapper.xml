@@ -587,6 +587,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
         </set>
         where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
     </update>
