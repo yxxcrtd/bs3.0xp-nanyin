@@ -37,7 +37,7 @@
 
                                 <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                                     <label class="layui-form-label form-label-wrap"
-                                           data-th-text="产品开始日期">产品开始日期</label>
+                                           data-th-text="开始日期">开始日期</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="dateStart" name="dateStart"
                                                class="layui-input form-input input-dateSelect"
@@ -50,7 +50,7 @@
 
                                 <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                                     <label class="layui-form-label form-label-wrap"
-                                           data-th-text="产品开始日期">产品开始日期</label>
+                                           data-th-text="结束日期">结束日期</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="dateEnd" name="dateEnd"
                                                class="layui-input form-input input-dateSelect"
@@ -65,7 +65,7 @@
                                 <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
                                     <label class="layui-form-label form-lable" data-th-text="科目号">科目号</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="subjectNo" name="subjectNo" class="layui-input form-input input-select" allowClear="true"
+                                        <select type="text" id="subjectNo" name="subjectNo" class="layui-input form-input input-select" allowClear="true" required="required"
                                                 data-th-initValue="${entity?.subjectNo}" data-th-data-result="${SUBJECT_NO}" searchable="false" data-th-placeholder="#{SysCommon.placeholder}">
                                         </select>
                                     </div>
@@ -78,7 +78,7 @@
                                         <input type="text" id="tdyODAmt" name="tdyODAmt" onkeyup="if(this.value < 0){
                                                           this.value= 0;
                                                          }else{
-                                                    this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/)}"
+                                                    this.value= value.toString().match(/^\d{1,28}(?:\.\d{0,2})?/)}"
                                                data-th-value="${entity?.tdyODAmt}" data-textrange="2" required
                                                class="layui-input form-input text-number" >
                                     </div>
