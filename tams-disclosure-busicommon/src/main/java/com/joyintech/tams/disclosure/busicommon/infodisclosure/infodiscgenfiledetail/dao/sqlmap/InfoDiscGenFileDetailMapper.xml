@@ -79,5 +79,10 @@
 		sourceid=#{execflag, jdbcType=VARCHAR} and fromfilepath like 
 		'%' || #{execDate, jdbcType=VARCHAR} || '%'
 	</select>
+
+	<select id="checkSaleAgency" resultType="int">
+		select count(1) from dis_sale_agency a
+		where a.agreement_vdate=#{execDate, jdbcType=DATE} or a.agreement_mdate=#{execDate, jdbcType=DATE}
+	</select>
 	
 </mapper>

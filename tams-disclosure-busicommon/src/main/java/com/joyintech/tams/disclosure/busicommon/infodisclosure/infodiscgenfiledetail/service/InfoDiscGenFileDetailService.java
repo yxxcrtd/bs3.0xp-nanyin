@@ -117,7 +117,15 @@ public class InfoDiscGenFileDetailService {
 			entity.setRevDeadDate(ptDate);
 			RepInstallFile repInstallFile = this.doRepInstallFile(entity, dateMap, infoDisclosureReadAndGenEntity, repRule);
 			List<RepInstallFile> revealList = new ArrayList<>();
-			revealList.add(repInstallFile);
+			if(StringUtil.equals(repRule.getRepId(),"CP_001_005_001")){
+				//代理销售机构名单公告
+				Date endDate=repInstallFile.getEndDate();
+				if(infoDiscGenFileDetailMapper.checkSaleAgency(endDate)>0){
+					revealList.add(repInstallFile);
+				}
+			}else {
+				revealList.add(repInstallFile);
+			}
 		    infoDisclosureReadAndGenDetailService.insertRepInstallFile(revealList);
 
 			flag = true;

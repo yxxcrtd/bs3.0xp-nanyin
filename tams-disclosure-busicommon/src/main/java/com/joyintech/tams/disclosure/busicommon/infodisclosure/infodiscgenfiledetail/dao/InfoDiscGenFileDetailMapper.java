@@ -66,4 +66,6 @@ public interface InfoDiscGenFileDetailMapper {
      * @since 1.0
      */
     int queryAdptDateisReadyFile(@Param("execDate")String execDate,@Param("execflag")String execflag);
+
+	int checkSaleAgency(@Param("execDate")Date execDate);
 }
