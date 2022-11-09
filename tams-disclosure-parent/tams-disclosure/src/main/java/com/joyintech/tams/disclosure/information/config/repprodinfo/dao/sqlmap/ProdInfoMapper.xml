@@ -121,7 +121,7 @@
             rpi.REP_PROD_TYPE REP_PROD_TYPE,
 
             prpi.HOLDDAY HOLDDAY,
-            rpi.TRUSTPART TRUSTPART,
+            prpi.TRUSTPART TRUSTPART,
             rpi.ERRORMSG ERRORMSG,
 
             prpi.prod_name as pProdName ,
