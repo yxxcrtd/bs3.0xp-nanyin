@@ -48,7 +48,7 @@ $(function() {
             title : '子产品代码'
         }, {
             field : 'prodName',width:'10%',
-            title : '子产品全称'
+            title : '子产品名称'
         }, {
             field : 'affirmDateStr',width:'10%',
             title : '确认日',

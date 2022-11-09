@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.information.config.disprodplanmanage.servi
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -156,14 +157,22 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
     @Override
     public void doInsert(DisProdPlanManage002Dto dto, OperationType type) {
         //如果是提交按钮,则数据状态设置为待复核
-        if("update".equals(dto.getOperateType())){
-            // 数据存入留痕表备份 流程作废方便恢复
+        if(OperationType.MODIFY.equals(type)){
+            // 数据存入留痕表备份 流程作废方便恢复delete
             disProdPlanManage002Mapper.saveHisData(dto);
-
             //进入流程，数据状态改为 待复核
             DisProdPlanManage002Dto disProdPlanManage002Dto = new DisProdPlanManage002Dto();
             BeanUtil.copyPropertiesIgnoreNull(disProdPlanManage002Dto,dto);
             disProdPlanManage002Dto.setDataStatus("C");
+            disProdPlanManage002Dto.setUpdateUser(LoginUserUtil.getUserName());
+            disProdPlanManage002Mapper.updateByPrimaryKey(disProdPlanManage002Dto);
+        }else if(OperationType.DELETE.equals(type)){
+            disProdPlanManage002Mapper.saveHisData(dto);
+            //进入流程，数据状态改为 待复核
+            DisProdPlanManage002Dto disProdPlanManage002Dto = new DisProdPlanManage002Dto();
+            BeanUtil.copyPropertiesIgnoreNull(disProdPlanManage002Dto,dto);
+            disProdPlanManage002Dto.setDataStatus("C");
+            disProdPlanManage002Dto.setUpdateUser(LoginUserUtil.getUserName());
             disProdPlanManage002Mapper.updateByPrimaryKey(disProdPlanManage002Dto);
         }
     }

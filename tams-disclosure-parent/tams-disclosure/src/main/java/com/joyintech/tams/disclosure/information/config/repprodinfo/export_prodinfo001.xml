@@ -8,7 +8,7 @@
 			<Cell order="4" name="产品状态">pdStatusName</Cell>
 			<Cell order="5" name="发行状态">issueStatusStr</Cell>
 			<Cell order="6" name="产品系列">prodSeries</Cell>
-			<Cell order="7" name="产品名称">pProdName</Cell>
+			<Cell order="7" name="产品全称">pProdName</Cell>
 			<Cell order="8" name="产品简称">prodAbbr</Cell>
 			<Cell order="9" name="产品登记编码">prodRe</Cell>
 			<Cell order="10" name="产品主代码">pProdId</Cell>

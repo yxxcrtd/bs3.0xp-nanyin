@@ -185,7 +185,7 @@
 	    	cellMinWidth:100 ,
 	    	 cols:[{field:'prodPlanId',title:'主键',width:80,sortable:false,visible:false,align:'center'}
 	    		/*,{field:'prodPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
-				 ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
+				 ,{field:'prodName',  title: '产品全称',width:250,sortable:false}
 				 ,{field:'prodId',  title: '产品主代码',width:150,sortable:false}
 				 ,{field:'openStartDateStr',  title: '开放起始日',width:100,sortable:false}
 				 ,{field:'openEndDateStr',  title: '开放结束日',width:100,sortable:false}

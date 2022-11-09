@@ -131,5 +131,8 @@ public interface ChbDeadLineMapper {
     Date getCLRDate(@Param("prodId") String prodId,@Param("sysDate") Date sysDate);
     Date getMDATE(@Param("prodId") String prodId,@Param("sysDate") Date sysDate);
 
+    int checkOpenEndDate(@Param("prodId") String prodId,@Param("openEndDate") Date openEndDate);
+
+    int checkOperationStartDate(@Param("prodId") String prodId,@Param("operationStartDate") Date operationStartDate);
 
 }

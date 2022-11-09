@@ -44,7 +44,7 @@ $(function() {
             ,{field:'pdStatusName', sortable:true, width:100, title: '产品状态',sortField:'PD_STATUS'}
             ,{field:'issueStatusStr', sortable:true, width:100, title: '发行状态',sortField:'ISSUE_STATUS'}
             ,{field:'prodSeries', sortable:true, width:100, title: '产品系列',sortField:'PROD_SERIES'}
-            ,{field:'pProdName', sortable:true, width:200, title: '产品名称',sortField:'pProdName'}
+            ,{field:'pProdName', sortable:true, width:200, title: '产品全称',sortField:'pProdName'}
             ,{field:'prodAbbr', sortable:true, width:150, title: '产品简称',sortField:'PROD_ABBR'}
             ,{field:'prodRe', sortable:true, width:150, title: '产品登记编码',sortField:'PROD_RE'}
             ,{field:'pProdId', sortable:true, width:150, title: '产品主代码',sortField:'P_PROD_ID'}

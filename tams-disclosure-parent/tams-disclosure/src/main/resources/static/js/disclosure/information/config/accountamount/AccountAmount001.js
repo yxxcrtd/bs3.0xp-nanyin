@@ -45,7 +45,8 @@
         cols: [
             // {field:'prodAdjustId',  visible: false},
             {field:'statusStr',  title: 'ProElementAdj001.dataStatus',sortField:"status",width: 100},//数据状态
-            {field:'booksetId',  title: '产品主代码',sortField:"booksetId"},//产品主代码
+            {field:'booksetId',  title: '产品主代码',sortField:"booksetId"},
+            {field:'prodName',  title: '产品全称',sortField:"prodName"},//产品主代码
             {field:'dateStart',  title: '开始日期',sortField:"dateStart",type:'date'}//余额日期
             ,{field:'dateEnd',  title: '结束日期',sortField:"dateEnd",type:'date'}//余额日期
             ,{field:'subjectNo',  title: '科目号',sortField:"subjectNo"}//科目号
@@ -159,7 +160,7 @@
         });
         //新建(点击打开新建画面)
         $('#AccountAmount001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("科目余额信息新建"),
+            Joyin.dialog(JoyinUtil.getLabel("科目发生额新建"),
                 basePath + "disclosure/information/config/accountamount/AccountAmount002/init","100%", "100%", {pageModel:PAGE_MODEL_NEW},
                 function() {
                     table.reload();

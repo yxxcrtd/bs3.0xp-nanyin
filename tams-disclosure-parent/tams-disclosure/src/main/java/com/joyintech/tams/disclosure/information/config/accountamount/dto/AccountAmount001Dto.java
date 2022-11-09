@@ -55,6 +55,10 @@ public class AccountAmount001Dto extends BokBalance implements ITableRow, Proces
     private String dateStartStr;
     private String dateEndStr;
     private String subjectNo;
+    /**
+     * 产品名称
+     */
+    private String prodName;
     private String oCcy;
     /**
      * 科目发生额
@@ -213,6 +217,11 @@ public class AccountAmount001Dto extends BokBalance implements ITableRow, Proces
         }
     }
 
-
-
+    public String getProdName() {
+        return prodName;
     }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
+}

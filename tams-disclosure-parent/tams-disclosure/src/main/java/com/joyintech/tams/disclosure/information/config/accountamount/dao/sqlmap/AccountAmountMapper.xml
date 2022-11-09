@@ -8,6 +8,7 @@
         distinct
         bbf.BOOKSET_ID booksetId,
         bbf.SUBJECT_NO subjectNo,
+        rpi.PROD_NAME prodName,
         bbf.O_CCY oCcy,
         bbf.TDY_O_D_AMT tdyODAmt,
         bbf.STATUS status,
@@ -64,6 +65,7 @@
         distinct
         bbfh.BOOKSET_ID booksetId,
         bbfh.SUBJECT_NO subjectNo,
+        rpi.PROD_NAME prodName,
         bbfh.O_CCY oCcy,
         bbfh.TDY_O_D_AMT tdyODAmt,
         bbfh.STATUS status,

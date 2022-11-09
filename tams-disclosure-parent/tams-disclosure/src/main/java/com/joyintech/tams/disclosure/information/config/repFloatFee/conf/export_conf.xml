@@ -4,7 +4,7 @@
         <Row>
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="子产品代码">prodId</Cell>
-            <Cell order="3" name="产品名称">prodName</Cell>
+            <Cell order="3" name="子产品名称">prodName</Cell>
             <Cell order="4" name="确认日">affirmDateStr</Cell>
             <Cell order="5" name="业务代码">businessCodeStr</Cell>
             <Cell order="6" name="确认份额">affirmNum</Cell>

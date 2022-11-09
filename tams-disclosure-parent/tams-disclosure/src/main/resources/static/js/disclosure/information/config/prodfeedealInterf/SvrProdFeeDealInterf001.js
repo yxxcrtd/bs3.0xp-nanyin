@@ -62,7 +62,7 @@ $(function() {
             title : '产品主代码'
         }, {
             field : 'prodName',width:'10%',
-            title : '产品名称'
+            title : '产品全称'
         }, {
             field : 'feeTypeStr',width:'10%',
             title : '费用类型',

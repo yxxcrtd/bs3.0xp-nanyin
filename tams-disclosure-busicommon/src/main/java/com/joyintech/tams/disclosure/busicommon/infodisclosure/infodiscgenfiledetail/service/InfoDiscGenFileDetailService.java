@@ -429,6 +429,22 @@ public class InfoDiscGenFileDetailService {
 				}
 				revealList.add(repInstallFile);
 			}
+			else if (StringUtil.equals(repRule.getRepId(),"CP_001_002_011")) {
+				//开放及净值公告（公募)
+				//根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告；
+				Date openEndDate=repInstallFile.getEndDate();
+				if(chbDeadLineMapper.checkOpenEndDate(repInstallFile.getProdid(),openEndDate)==0){
+					revealList.add(repInstallFile);
+				}
+			}
+			else if (StringUtil.equals(repRule.getRepId(),"CP_001_002_012")) {
+				//开放及净值报告（私募）
+				Date operationStartDate=repInstallFile.getEndDate();
+				if(chbDeadLineMapper.checkOperationStartDate(repInstallFile.getProdid(),operationStartDate)==0){
+					revealList.add(repInstallFile);
+				}
+				//根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告；
+			}
 //			else if(StringUtil.equals(DictCodeListExt2.报表类别_净值披露.getValue(), repRule.getReportCategory())){
 //				if(repInstallFile.getEndDate()!=null&&DateUtil.compareDate(prodInfoListEntity.getActMdate(), repInstallFile.getEndDate())>0
 //						&&DateUtil.compareDate(repInstallFile.getEndDate(), prodInfoListEntity.getVdate())>=0){
