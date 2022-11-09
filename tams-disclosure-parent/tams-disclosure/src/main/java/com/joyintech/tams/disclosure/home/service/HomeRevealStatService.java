@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.joyintech.framework.web.PlatformDate;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +53,7 @@ public class HomeRevealStatService {
 	 * PlatformDate
 	 */
 	@Autowired(required = false)
-	private PlatformDate platformDateService;
+	private CommonPlatformDateService commonPlatformDateService;
 	
 	public RepRevealInfo queryCountsByHomeType(String homePageType, Date statDate) {
 		RepRevealInfo repRevealInfo = new RepRevealInfo();
@@ -227,7 +227,7 @@ public class HomeRevealStatService {
 	private int queryExcpectCountsByRepId(String repId,Date statDate) {
 		Map<String,Object> params = new HashMap<String,Object>();
 		// 当前平台日
-		Date platformDate = platformDateService.getSysDate();
+		String platformDate = DateUtil.format(commonPlatformDateService.getSysDate());
 		Map<String,Object> expectConditions = getExpectRevealCondition(repId,statDate,platformDate);
 		if ( expectConditions!=null && expectConditions.size()>0 )
 			params.putAll(expectConditions);
@@ -299,7 +299,7 @@ public class HomeRevealStatService {
         return sb.toString();
     }
 
-    private Map<String,Object> getExpectRevealCondition(String repId,Date statDate,Date planDate) {
+    private Map<String,Object> getExpectRevealCondition(String repId,Date statDate,String planDate) {
     	Map<String,Object> map = new HashMap<String,Object>();
     	String condition = "";
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -366,7 +366,7 @@ public class HomeRevealStatService {
 //    		Date qDate = getLastDurationFirstDate(statDate,"W");
 //    		String qDateStr = sdf.format(qDate);
 //    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
-			condition = " planDate = to_date('"+queryDate + "','yyyy-mm-dd')";
+			condition = planDate + "=" +queryDate;
 //    		//找到本周一
 //    		Calendar cal = Calendar.getInstance();
 //    		cal.setTime(statDate);
