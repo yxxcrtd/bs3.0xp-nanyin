@@ -93,14 +93,14 @@ public class RepProdIndexGz002Controller extends BaseController {
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) RepProdIndexGzDto dto,
                             BindingResult result) {
-        if (CollectionUtils.isEmpty(result.getAllErrors())) {
+       /* if (CollectionUtils.isEmpty(result.getAllErrors())) {
             AjaxResult ajax=new AjaxResult();
             if(repProdIndexGzService.checkExistsData(dto)){
                 ajax.setMessage("已存在母产品的净值信息，是否覆盖？", MessageType.确认消息);
                 return ajax;
             }
 
-        }
+        }*/
         return commonCheck(result, dto.getOperateType());
     }
 
