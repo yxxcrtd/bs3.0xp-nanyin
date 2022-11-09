@@ -61,7 +61,7 @@ public class ProdBonusplanManager003Controller extends BaseController {
 			//return reportContentEnum002Service.getProductTreeByAgencyId(agencyId);
 			return null;
 		} else{//新建
-			return disProdPlanManage003Service.getProductTree();
+			return disProdPlanManage003Service.getProductTree(null);
 		}
 	}
 
