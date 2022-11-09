@@ -159,8 +159,8 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
-        if (null == tempList.get(0) || tempList.get(0).size() != 6) {
-            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 6), MessageType.错误消息);
+        if (null == tempList.get(0) || tempList.get(0).size() != 5) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 5), MessageType.错误消息);
             return webResult;
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
@@ -343,9 +343,9 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         List<String> findList =  subBalanceInfoProMapper.getProdId1(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
-            if (null == rowData || rowData.size() != 6) {
+            if (null == rowData || rowData.size() != 5) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
-                        this.getMessage("REPORT_COMMON_FILE_E_0030", 6)));
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 5)));
                 break;
             }
             // 验证消息
