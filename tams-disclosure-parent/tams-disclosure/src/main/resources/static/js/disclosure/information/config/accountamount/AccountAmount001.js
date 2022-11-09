@@ -159,7 +159,7 @@
         });
         //新建(点击打开新建画面)
         $('#AccountAmount001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("科目余额信息新建"),
+            Joyin.dialog(JoyinUtil.getLabel("科目发生额新建"),
                 basePath + "disclosure/information/config/accountamount/AccountAmount002/init","100%", "100%", {pageModel:PAGE_MODEL_NEW},
                 function() {
                     table.reload();
