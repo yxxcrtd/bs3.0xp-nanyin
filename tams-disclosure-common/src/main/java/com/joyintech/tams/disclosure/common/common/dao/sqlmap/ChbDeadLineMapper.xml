@@ -346,4 +346,26 @@
 		  AND T.MDATE = #{sysDate, jdbcType=DATE}
 		  AND T.PROD_ID= #{prodId, jdbcType=VARCHAR}
 	</select>
+
+	<select id="checkOpenEndDate" resultType="int">
+		select count(1) from DIS_PROD_BONUSPLAN DRB
+		where DRB.SETT_DATE=#{openEndDate, jdbcType=DATE}
+		and DRB.PROD_ID=#{prodId, jdbcType=VARCHAR}
+		and DRB.DATA_STATUS='E'
+	</select>
+
+	<select id="checkOperationStartDate" resultType="int">
+		SELECT count(1)
+		  FROM REP_PROD_INFO INFO
+		 INNER JOIN DIS_PROD_PLAN DPP
+			ON DPP.PROD_ID = NVL(INFO.P_PROD_ID, INFO.PROD_ID)
+		   AND DPP.OPERATION_START_DATE=#{operationStartDate, jdbcType=DATE}
+		   AND DPP.DATA_STATUS = 'E'
+		 INNER JOIN DIS_PROD_BONUSPLAN PLAN
+		   ON PLAN.PROD_ID=INFO.PROD_ID
+		   AND PLAN.DATA_STATUS='E'
+		   AND PLAN.SETT_DATE=DPP.OPEN_END_DATE
+		WHERE INFO.STATUS='E'
+		  AND NVL(INFO.P_PROD_ID, INFO.PROD_ID)=#{prodId,jdbcType=VARCHAR}
+	</select>
 </mapper>
