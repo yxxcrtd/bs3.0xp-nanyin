@@ -88,7 +88,7 @@
             rpi.PROD_NAME PROD_NAME,
             rpi.SET_DATE SET_DATE,
             rpi.RAISE_AMT RAISE_AMT,
-            rpi.PROD_ABBR PROD_ABBR,
+            prpi.PROD_ABBR PROD_ABBR,
             <!-- 子产品的登记编码为空，取母产品登记编码 modify by kongzhifang 2022-08-11 start -->
             prpi.PROD_RE PROD_RE,
             <!-- 子产品的登记编码为空，取母产品登记编码 modify by kongzhifang 2022-08-11 end -->
