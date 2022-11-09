@@ -142,8 +142,8 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
-        if (null == tempList.get(0) || tempList.get(0).size() != 7) {
-            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 7), MessageType.错误消息);
+        if (null == tempList.get(0) || tempList.get(0).size() != 6) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 6), MessageType.错误消息);
             return webResult;
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
@@ -323,9 +323,9 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
         Map<String, List<String>> map = new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
-            if (null == rowData || rowData.size() != 7) {
+            if (null == rowData || rowData.size() != 6) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
-                        this.getMessage("REPORT_COMMON_FILE_E_0030", 7)));
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 6)));
                 break;
             }
             // 验证消息
