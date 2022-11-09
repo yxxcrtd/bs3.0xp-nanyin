@@ -45,7 +45,8 @@
         cols: [
             // {field:'prodAdjustId',  visible: false},
             {field:'statusStr',  title: 'ProElementAdj001.dataStatus',sortField:"status",width: 100},//数据状态
-            {field:'booksetId',  title: '产品主代码',sortField:"booksetId"},//产品主代码
+            {field:'booksetId',  title: '产品主代码',sortField:"booksetId"},
+            {field:'prodName',  title: '产品全称',sortField:"prodName"},//产品主代码
             {field:'dateStart',  title: '开始日期',sortField:"dateStart",type:'date'}//余额日期
             ,{field:'dateEnd',  title: '结束日期',sortField:"dateEnd",type:'date'}//余额日期
             ,{field:'subjectNo',  title: '科目号',sortField:"subjectNo"}//科目号
