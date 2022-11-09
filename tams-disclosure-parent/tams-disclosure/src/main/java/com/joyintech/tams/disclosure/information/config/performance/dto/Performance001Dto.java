@@ -71,6 +71,8 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
 
     private String workflowId;
 
+    private String prodName;
+
 
     public String getWorkflowId() {
         return workflowId;
@@ -274,9 +276,15 @@ public class Performance001Dto extends RepProdBasicChange implements ProcessEnti
 //    }
     private String updateUser;
 
+    public String getProdName() {
+        return prodName;
+    }
 
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
 
-//    @Override
+    //    @Override
 //    public String getUpdateUser() {
 //        return this.getUpdateUser();
 //    }

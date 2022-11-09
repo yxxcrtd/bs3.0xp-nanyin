@@ -4,14 +4,15 @@
         <Row>
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="子产品代码">prodId</Cell>
-            <Cell order="3" name="业绩比较基准生效日">effDateStr</Cell>
-            <Cell order="4" name="业绩比较基准生效截止日">expDateStr</Cell>
-            <Cell order="5" name="中债新综合全价指数收益率【系数】(%)">zzqjStr</Cell>
-            <Cell order="6" name="中债新综合财富指数（1-3年）收益率【系数】(%)">zzcfStr</Cell>
-            <Cell order="7" name="中证501指数收益率【系数】(%)">zz500Str</Cell>
-            <Cell order="8" name="沪深300指数收益率【系数】(%)">hs300Str</Cell>
-            <Cell order="9" name="更新时间">updateTimeStr</Cell>
-            <Cell order="10" name="更新人">updateUser</Cell>
+            <Cell order="3" name="子产品名称">prodName</Cell>
+            <Cell order="4" name="业绩比较基准生效日">effDateStr</Cell>
+            <Cell order="5" name="业绩比较基准生效截止日">expDateStr</Cell>
+            <Cell order="6" name="中债新综合全价指数收益率【系数】(%)">zzqjStr</Cell>
+            <Cell order="7" name="中债新综合财富指数（1-3年）收益率【系数】(%)">zzcfStr</Cell>
+            <Cell order="8" name="中证501指数收益率【系数】(%)">zz500Str</Cell>
+            <Cell order="9" name="沪深300指数收益率【系数】(%)">hs300Str</Cell>
+            <Cell order="10" name="更新时间">updateTimeStr</Cell>
+            <Cell order="11" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>
