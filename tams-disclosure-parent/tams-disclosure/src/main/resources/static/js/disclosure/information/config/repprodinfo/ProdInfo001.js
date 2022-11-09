@@ -38,40 +38,39 @@ $(function() {
                 "99%", "95%", data);
         },
         cols:[
-            {field:'prodId',visible:false}
-            ,{field:'prodId', sortable:false, width:100, title: '子产品代码'}
-            ,{field:'prodName', sortable:false, width:100, title: '子产品名称'}
-            ,{field:'setDateStr', sortable:false, width:120, title: '子产品成立日期'}
-            ,{field:'pdStatusName', sortable:false, width:100, title: '产品状态'}
-            ,{field:'issueStatusStr', sortable:false, width:100, title: '发行状态'}
-            ,{field:'prodSeries', sortable:false, width:100, title: '产品系列'}
-            ,{field:'pProdName', sortable:false, width:150, title: '产品名称'}
-            ,{field:'prodAbbr', sortable:false, width:150, title: '产品简称'}
-            ,{field:'prodRe', sortable:false, width:120, title: '产品登记编码'}
-            ,{field:'pProdId', sortable:false, width:100, title: '产品主代码'}
-            ,{field:'raiseStrdateStr', sortable:false, width:120, title: '募集起始日期'}
-            ,{field:'raiseEnddateStr', sortable:false, width:120, title: '募集结束日期'}
-            ,{field:'raiseAmt', sortable:false, width:120, title: '总产品募集金额'}
-            ,{field:'pSetDateStr', sortable:false, width:120, title: '产品成立日期'}
-            ,{field:'mdateStr', sortable:false, width:120, title: '产品到期日期'}
-            ,{field:'raiseTypeName', sortable:false, width:100, title: '募集方式'}
-            ,{field:'prodTypeName', sortable:false, width:100, title: '产品类型'}
-            ,{field:'issuingWayName', sortable:false, width:100, title: '发行方式'}
-            ,{field:'openFreqName', sortable:false, width:100, title: '开放频率'}
-            ,{field:'holdday', sortable:false, width:120, title: '最低持有天数'}
-            ,{field:'profitTypeName', sortable:false, width:120, title: '产品运作方式'}
-            ,{field:'isPeriodName', sortable:false, width:150, title: '是否是客户周期型产品'}
-            ,{field:'isGradeName', sortable:false, width:120, title: '是否是分级产品'}
-            ,{field:'isIndexName', sortable:false, width:130, title: '是否是指数型产品'}
-            ,{field:'performCompare', sortable:false, width:130, title: '产品业绩比较基准'}
-            ,{field:'natureInvestName', sortable:false, width:100, title: '投资性质'}
-            ,{field:'acctChnname', sortable:false, width:130, title: '产品托管人名称'}
-            ,{field:'statusName',  sortable:false,width:100 , title: '数据状态'}
-            ,{field:'trustpart', sortable:false, width:100, title: '托管部门'}
-            ,{field:'errormsg', sortable:false, width:100, title: '错误信息'}
-            ,{field:'updateDateStr', sortable:false, width:100, title: '更新时间'}
-            ,{field:'updateUser', sortable:false, width:100, title: '更新人'}
-            ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action',
+            {field:'prodId', sortable:true, width:150, title: '子产品代码',sortField:'PROD_ID'}
+            ,{field:'prodName', sortable:true, width:200, title: '子产品名称',sortField:'PROD_NAME'}
+            ,{field:'setDateStr', sortable:true, width:120, title: '子产品成立日期',sortField:'SET_DATE'}
+            ,{field:'pdStatusName', sortable:true, width:100, title: '产品状态',sortField:'PD_STATUS'}
+            ,{field:'issueStatusStr', sortable:true, width:100, title: '发行状态',sortField:'ISSUE_STATUS'}
+            ,{field:'prodSeries', sortable:true, width:100, title: '产品系列',sortField:'PROD_SERIES'}
+            ,{field:'pProdName', sortable:true, width:200, title: '产品名称',sortField:'pProdName'}
+            ,{field:'prodAbbr', sortable:true, width:150, title: '产品简称',sortField:'PROD_ABBR'}
+            ,{field:'prodRe', sortable:true, width:150, title: '产品登记编码',sortField:'PROD_RE'}
+            ,{field:'pProdId', sortable:true, width:150, title: '产品主代码',sortField:'P_PROD_ID'}
+            ,{field:'raiseStrdateStr', sortable:true, width:120, title: '募集起始日期',sortField:'RAISE_STRDATE'}
+            ,{field:'raiseEnddateStr', sortable:true, width:120, title: '募集结束日期',sortField:'RAISE_ENDDATE'}
+            ,{field:'raiseAmt', sortable:true, width:120, title: '总产品募集金额',sortField:'RAISE_AMT'}
+            ,{field:'pSetDateStr', sortable:true, width:120, title: '产品成立日期',sortField:'pSetDate'}
+            ,{field:'mdateStr', sortable:true, width:120, title: '产品到期日期',sortField:'MDATE'}
+            ,{field:'raiseTypeName', sortable:true, width:100, title: '募集方式',sortField:'RAISE_TYPE'}
+            ,{field:'prodTypeName', sortable:true, width:100, title: '产品类型',sortField:'PROD_TYPE'}
+            ,{field:'issuingWayName', sortable:true, width:100, title: '发行方式',sortField:'ISSUING_WAY'}
+            ,{field:'openFreqName', sortable:true, width:150, title: '开放频率',sortField:'OPEN_FREQ'}
+            ,{field:'holdday', sortable:true, width:120, title: '最低持有天数',sortField:'HOLDDAY'}
+            ,{field:'profitTypeName', sortable:true, width:120, title: '产品运作方式',sortField:'PROFIT_TYPE'}
+            ,{field:'isPeriodName', sortable:true, width:150, title: '是否是客户周期型产品',sortField:'IS_PERIOD'}
+            ,{field:'isGradeName', sortable:true, width:120, title: '是否是分级产品',sortField:'IS_GRADE'}
+            ,{field:'isIndexName', sortable:true, width:130, title: '是否是指数型产品',sortField:'IS_INDEX'}
+            ,{field:'performCompare', sortable:true, width:130, title: '产品业绩比较基准',sortField:'PERFORM_COMPARE'}
+            ,{field:'natureInvestName', sortable:true, width:100, title: '投资性质',sortField:'NATURE_INVEST'}
+            ,{field:'acctChnname', sortable:true, width:130, title: '产品托管人名称',sortField:'ACCT_CHNNAME'}
+            ,{field:'statusName',  sortable:true,width:100 , title: '数据状态',sortField:'STATUS'}
+            ,{field:'trustpart', sortable:true, width:100, title: '托管部门',sortField:'TRUSTPART'}
+            ,{field:'errormsg', sortable:true, width:100, title: '错误信息',sortField:'ERRORMSG'}
+            ,{field:'updateDateStr', sortable:true, width:150, title: '更新时间',sortField:'UPDATE_TIME'}
+            ,{field:'updateUser', sortable:true, width:100, title: '更新人',sortField:'UPDATE_USER'}
+            ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:true, type:'action',
                 buttons: ['edit', 'delt'],render: function (data, type, row, meta) {
                     if (row.status == 'D'|| row.status == 'C')
                         return '';
