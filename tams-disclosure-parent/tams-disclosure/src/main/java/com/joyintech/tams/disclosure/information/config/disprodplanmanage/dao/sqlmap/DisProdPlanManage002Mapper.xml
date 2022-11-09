@@ -114,7 +114,8 @@
         update DIS_PROD_PLAN
         set
             DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
-            UPDATE_TIME = sysdate
+            UPDATE_TIME = sysdate,
+            UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
             where PROD_PLAN_ID = #{prodPlanId,jdbcType=VARCHAR}
     </update>
 
