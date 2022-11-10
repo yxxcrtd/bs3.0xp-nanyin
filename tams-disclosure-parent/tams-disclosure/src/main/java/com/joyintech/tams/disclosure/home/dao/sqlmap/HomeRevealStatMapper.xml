@@ -8,7 +8,7 @@
 		from
 		REP_PROD_INFO info
 		where 1=1
-		and STATUS='E'
+		and info.STATUS='E'
 		<if test="condition != null and condition != ''">
 			<![CDATA[ ${condition}  ]]>
 		</if>
@@ -57,6 +57,13 @@
 		where REP_ID=#{repId,jdbcType=VARCHAR}
 		and STAT_DATE = #{statDate,jdbcType=DATE}
 	</select>
+
+	<delete id="delete" parameterType="com.joyintech.tams.disclosure.home.dto.DisHomePageStat">
+		select *
+		from DIS_HOMEPAGE_STAT
+		where REP_ID=#{repId,jdbcType=VARCHAR}
+		  and STAT_DATE = #{statDate,jdbcType=DATE}
+	</delete>
     
     <select id="selectHomePageStat" resultType="com.joyintech.tams.disclosure.home.dto.HomePageStatsDto">
 	    select count(1) counts,

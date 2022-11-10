@@ -37,6 +37,8 @@ public interface HomeRevealStatMapper {
 	List<RepInfo> selectRepInfoByHomePageType(@Param("homePageType")String homePageType);
 	
 	int insert(DisHomePageStat record);
+
+	int delete(DisHomePageStat record);
 	
 	DisHomePageStat select ( @Param("repId") String repId,@Param("statDate") Date statDate);
 	

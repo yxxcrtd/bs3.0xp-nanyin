@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.disclosure.home.controller;
 
+import java.text.ParseException;
 import java.util.*;
 
 import com.joyintech.framework.util.StringUtil;
@@ -216,9 +217,9 @@ public class DisclosureHomeController extends BaseController {
 
     @RequestMapping("/searchRevealList")
     @ResponseBody
-    public Map<String, RepRevealInfo> searchRevealList() {
+    public Map<String, RepRevealInfo> searchRevealList() throws ParseException {
         List<String> menuList= DictCodeListExt5.valuesfromDictCode(DictCodeExt1.主页分类);
-        //List<String> menuList= Arrays.asList("08");
+        //List<String> menuList= Arrays.asList("06");
         return reportHomeService.searchRevealList(menuList);
     }
 }

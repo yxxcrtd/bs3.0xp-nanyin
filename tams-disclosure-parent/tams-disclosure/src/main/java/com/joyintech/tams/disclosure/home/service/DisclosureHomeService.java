@@ -535,7 +535,7 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
         }
     }
 
-    public Map<String, RepRevealInfo> searchRevealList(List<String> menulist) {
+    public Map<String, RepRevealInfo> searchRevealList(List<String> menulist) throws ParseException {
     	//定义结果集合
         Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
 

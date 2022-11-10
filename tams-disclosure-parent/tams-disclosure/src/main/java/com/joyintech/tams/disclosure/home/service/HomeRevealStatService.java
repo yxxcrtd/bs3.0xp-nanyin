@@ -3,6 +3,7 @@
  */
 package com.joyintech.tams.disclosure.home.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,7 +56,7 @@ public class HomeRevealStatService {
 	@Autowired(required = false)
 	private CommonPlatformDateService commonPlatformDateService;
 	
-	public RepRevealInfo queryCountsByHomeType(String homePageType, Date statDate) {
+	public RepRevealInfo queryCountsByHomeType(String homePageType, Date statDate) throws ParseException {
 		RepRevealInfo repRevealInfo = new RepRevealInfo();
 		
 		List<RepInfo> listRepInfo = homeRevealStatMapper.selectRepInfoByHomePageType(homePageType);
@@ -110,25 +111,32 @@ public class HomeRevealStatService {
 	    		info.setExpectRevealCounts(counts);
 			}
 			else if( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018") ) {  //半年报
-	    		//找到本周期的第一天
-	    		Date qDate = DurationUtil.getHalfYearStart(statDate.getYear()+1900,statDate.getMonth()/6+1);
-	    		Map<String,Object> p = new HashMap<>();
-	    		p.put("busi_date", DateUtil.addDay(qDate, -1));
-	    		p.put("is_holiday", "0");
-	    		p.put("market_code", "01");
-	    		p.put("days", 3);
-	    		Date sDate = holidayService.getAferNWorkDay(p);
-	    		p.put("days", 60);
-	    		Date eDate = holidayService.getAferNWorkDay(p);
-	    		
-	    		//统计已发生的列
+
+				if(DateUtil.getMonth(DateUtil.format(statDate))==7){
+					//找到本周期的第一天
+					Date qDate = DurationUtil.getHalfYearStart(statDate.getYear()+1900,statDate.getMonth()/6+1);
+					Map<String,Object> p = new HashMap<>();
+					p.put("busi_date", DateUtil.addDay(qDate, -1));
+					p.put("is_holiday", "0");
+					p.put("market_code", "01");
+					p.put("days", 3);
+					Date sDate = holidayService.getAferNWorkDay(p);
+					p.put("days", 60);
+					Date eDate = holidayService.getAferNWorkDay(p);
+
+					//统计已发生的列
 //	    		Date lastQuarterEndDate = this.getLastDurationEndDate(statDate, "H");
 //				info = queryOtherCounts(repId,lastQuarterEndDate,lastQuarterEndDate);
-				info = queryOtherCounts(repId,sDate,eDate);
-	    		
-				//统计预计披露的列
-				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
-	    		info.setExpectRevealCounts(counts);
+					info = queryOtherCounts(repId,sDate,eDate);
+
+					//统计预计披露的列
+					int counts = queryExpectCounts(repId,sDate,eDate,statDate);
+					info.setExpectRevealCounts(counts);
+				}else{
+					info.setExpectRevealCounts(0);
+				}
+
+
 			}
 			else if (repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020") ){  //年报
 	    		//找到本周期的第一天
@@ -186,7 +194,11 @@ public class HomeRevealStatService {
 				counts = 0;
 			}
 		}
+		return counts;
+	}
 
+	private int queryDQExpectCounts(String repId,Date sDate,Date eDate,Date statDate ) {
+		int counts = 0;
 
 		return counts;
 	}
@@ -417,21 +429,34 @@ public class HomeRevealStatService {
     	}
     	else if ( repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016")  ) {//季度报告：下一季度第三个工作日<=当天<=下一季度15个工作日之前
     		//找到上季度的第一天
-    		Date qDate = getLastDurationFirstDate(statDate,"Q");
-    		String qDateStr = sdf.format(qDate);
-    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+			//定期报表必须满足成立日距离（上季末最后一天）大于90天，（上季末最后一天）离实际到期日大于90天
+			String qDate = DateUtil.format(getLastMonthDay(statDate),"yyyy-MM-dd");
+			condition = " exists (select 1 from v_rep_prod_info v "
+						+ " where v.PROD_ID = nvl(info.p_prod_id, info.prod_id)"
+						+ " and v.STATUS = 'E' "
+						+ " and (to_date('"+qDate + "','yyyy-MM-dd') - v.SET_DATE) > 90 "
+						+ "and (v.MDATE - to_date('"+qDate + "','yyyy-MM-dd') > 90)) ";
+
     	}
     	else if ( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018")  ) {//半年度报告：下一半年度第三个工作日<=当天<=下一半年度90个工作日之前
     		//找到上个半年的第一天
-    		Date qDate = getLastDurationFirstDate(statDate,"H");
-    		String qDateStr = sdf.format(qDate);
-    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+			//定期报表必须满足成立日距离结束日大于90天，结束日离实际到期日大于90天
+			String qDate = DateUtil.format(getLastMonthDay(statDate),"yyyy-MM-dd");
+			condition = " exists (select 1 from v_rep_prod_info v "
+					+ " where v.PROD_ID = nvl(info.p_prod_id, info.prod_id)"
+					+ " and v.STATUS = 'E' "
+					+ " and (to_date('"+qDate + "','yyyy-MM-dd') - v.SET_DATE) > 90 "
+					+ "and (v.MDATE - to_date('"+qDate + "','yyyy-MM-dd') > 90)) ";
     	}
     	else if ( repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020")  ) {//年度报告：下一年度第三个工作日<=当天<=下一年度60个工作日之前
     		//找到上个年度的第一天
-    		Date qDate = getLastDurationFirstDate(statDate,"Y");
-    		String qDateStr = sdf.format(qDate);
-    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
+			//定期报表必须满足成立日距离结束日大于90天，结束日离实际到期日大于90天
+			String qDate = DateUtil.format(getLastMonthDay(statDate),"yyyy-MM-dd");
+			condition = " exists (select 1 from v_rep_prod_info v "
+					+ " where v.PROD_ID = nvl(info.p_prod_id, info.prod_id)"
+					+ " and v.STATUS = 'E' "
+					+ " and (to_date('"+qDate + "','yyyy-MM-dd') - v.SET_DATE) > 90 "
+					+ "and (v.MDATE - to_date('"+qDate + "','yyyy-MM-dd') > 90) )";
     	}
     	
     	if ( condition.length()>0 )
@@ -526,6 +551,7 @@ public class HomeRevealStatService {
     	dto.setRepId(repId);
     	dto.setStatDate(statDate);
     	dto.setExpectCounts(counts);
+		homeRevealStatMapper.delete(dto);
     	homeRevealStatMapper.insert(dto);
     	return counts;
     }
@@ -537,6 +563,16 @@ public class HomeRevealStatService {
     	else
     		return -1;
     }
-    
+
+	public Date getLastMonthDay(Date todayDate) {
+		Calendar calendar = Calendar.getInstance();
+		// 把平台日期赋值给Calendar
+		calendar.setTime(todayDate);
+		calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH)-1);
+		int endday = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		calendar.set(Calendar.DAY_OF_MONTH, endday);
+		return calendar.getTime();
+	}
     
 }
