@@ -64,16 +64,16 @@
             {field:'dataStatusStr',  title: 'ProElementAdj001.dataStatus',sortField:"dataStatus"},//数据状态
             {field:'prodRegistNo',  title: 'ProElementAdj001.prodRegistNo',sortField:"prodRegistNo" ,width: 160},//产品登记编码
             {field:'prodId',  title: 'ProElementAdj001.prodId',sortField:"prodId",width: 160}//子产品代码
-            ,{field:'adjReason',  title: '调整此产品要素原因',sortField:"adjReason",width: 160} //调整此产品要素原因
+            ,{field:'adjReason',  title: '单产品多要素段1',sortField:"adjReason",width: 160} //调整此产品要素原因
             ,{field:'prodAdjRemark',  title: 'ProElementAdj001.prodAdjRemark',sortField:"prodAdjRemark",width: 160} //此产品要素调整（补充性）描述文字1
             ,{field:'prodAdjRemark2',  title: 'ProElementAdj001.prodAdjRemark2',sortField:"prodAdjRemark2",width: 160} //此产品要素调整（补充性）描述文字2
             ,{field:'adjField',  title: 'ProElementAdj001.adjField',sortField:"adjField",width: 160} //调整要素
             ,{field:'preAdjust',  title: '调整前',sortField:"preAdjust",width: 160} //调整前
             ,{field:'afterAdjust',  title: '调整后',sortField:"afterAdjust",width: 160} //调整后
             ,{field:'effDate',  title: '生效时间',sortField:"effDate",type:'date'}//生效时间
-            ,{field:'adjReason2',  title: '对此要素调整（原因）',sortField:"adjReason2",width: 160} //对此要素调整（原因）
-            ,{field:'fieldAdjRemark',  title: '调整此要素（补充说明文1）',sortField:"fieldAdjRemark",width: 160} //调整此要素（补充说明文1）
-            ,{field:'fieldAdjRemark2',  title: '调整此要素（补充说明文2）',sortField:"fieldAdjRemark2",width: 160} //调整此要素（补充说明文2）
+            ,{field:'adjReason2',  title: '单要素多产品段1',sortField:"adjReason2",width: 160} //对此要素调整（原因）
+            ,{field:'fieldAdjRemark',  title: '单要素多产品段2',sortField:"fieldAdjRemark",width: 160} //调整此要素（补充说明文1）
+            ,{field:'fieldAdjRemark2',  title: '单要素多产品段3',sortField:"fieldAdjRemark2",width: 160} //调整此要素（补充说明文2）
             ,{field:'rptIssueDate',  title: '报告发布日期',sortField:"rptIssueDate",type:'date'}//报告发布日期
             ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
