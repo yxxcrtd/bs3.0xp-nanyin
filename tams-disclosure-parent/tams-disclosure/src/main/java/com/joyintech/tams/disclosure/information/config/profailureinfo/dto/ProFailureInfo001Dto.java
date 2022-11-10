@@ -50,6 +50,11 @@ public class ProFailureInfo001Dto extends DisProdNocreate implements ITableRow, 
      */
     private  String prodId;
 
+    /**
+     * 产品名称
+     */
+    private String prodName;
+
 
     public void setProdId(String prodId) {
         this.prodId = prodId;
@@ -77,6 +82,14 @@ public class ProFailureInfo001Dto extends DisProdNocreate implements ITableRow, 
 
     public String getElementId() {
         return elementId;
+    }
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
     }
 
     public void setElementId(String elementId) {

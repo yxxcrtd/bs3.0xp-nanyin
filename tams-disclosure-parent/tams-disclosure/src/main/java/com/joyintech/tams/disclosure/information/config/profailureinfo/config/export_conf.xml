@@ -3,11 +3,12 @@
     <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
         <Row>
             <Cell order="1" name="数据状态">dataStatusStr</Cell>
-            <Cell order="2" name="产品登记编码">prodRegistNo</Cell>
-            <Cell order="3" name="不成立原因">nocreateReason</Cell>
-            <Cell order="4" name="报告发布日期">reportIssueDate</Cell>
-            <Cell order="5" name="更新时间">updateTimeStr</Cell>
-            <Cell order="6" name="更新人">updateUser</Cell>
+            <Cell order="2" name="产品全称">prodName</Cell>
+            <Cell order="3" name="产品登记编码">prodRegistNo</Cell>
+            <Cell order="4" name="不成立原因">nocreateReason</Cell>
+            <Cell order="5" name="报告发布日期">reportIssueDate</Cell>
+            <Cell order="6" name="更新时间">updateTimeStr</Cell>
+            <Cell order="7" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

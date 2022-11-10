@@ -62,7 +62,7 @@
             {field:'prodDiscountId',  visible: false,width:80}
             ,{field:'prodRegistNo',  title: '产品登记编码',sortField:"prodRegistNo",width:150}
             ,{field:'prodId',  title: '子产品代码',sortField:"prodId",width:150}
-            , {field:'prodDisRemark',  title: '此产品优惠调整描述文字',sortField:"prodDisRemark",width:200,sortable:false}
+            , {field:'prodDisRemark',  title: '单产品多费率描述文字',sortField:"prodDisRemark",width:200,sortable:false}
             , {field:'feename',  title: '优惠的费用',sortField:"feename",width:120}
             , {field:'preFeerate',  title: '优惠前费率',sortField:"preFeerate",width:120,sortable:false}
             , {field:'afterFeerate',  title: '优惠后费率',sortField:"afterFeerate",width:120,sortable:false}
@@ -71,7 +71,7 @@
             // , {field:'thisPreFeerate',  title: '本次优惠前费率',sortField:"thisPreFeerate",width:120,sortable:false}
             // , {field:'thisAfterFeerate',  title: '本次优惠后费率',sortField:"thisAfterFeerate",width:120,sortable:false}
             // , {field:'thisEndFeerate',  title: '本次优惠结束后费率',sortField:"thisEndFeerate",width:120,sortable:false}
-            ,{field:'feeDisRemark',  title: '对此费率优惠调整描述文字',sortField:"feeDisRemark",width:200,sortable:false}
+            ,{field:'feeDisRemark',  title: '单费率多产品描述文字',sortField:"feeDisRemark",width:200,sortable:false}
             ,{field:'rptIssueDate',  title: '报告发布日期',sortField:"rptIssueDate",type:'date',width:120}
             ,{field:'dataStatusName',  title: '数据状态',sortField:"dataStatus",width:100}
             ,{field:'updateDateStr',  title: '更新时间',sortField:"updateTime",type:'date',width:180}

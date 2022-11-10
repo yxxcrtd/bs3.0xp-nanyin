@@ -3,41 +3,43 @@
 <mapper namespace="com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFailureInfoMapper">
 
     <select id="select"  resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
-       select
-          PROD_REGIST_NO prodRegistNo,
-          DATA_STATUS dataStatus,
-          NOCREATE_REASON nocreateReason,
-          REPORT_ISSUE_DATE reportIssueDate,
-          IS_SALES_AGENCY isSalesAgency,
-          DATA_SOURCE,
-          UPDATE_TIME updateTime,
-          UPDATE_USER updateUser
-       from
-        DIS_PROD_NOCREATE
+        select
+        rpi.PROD_NAME prodName,
+        dpn.PROD_REGIST_NO prodRegistNo,
+        dpn.DATA_STATUS dataStatus,
+        dpn.NOCREATE_REASON nocreateReason,
+        dpn.REPORT_ISSUE_DATE reportIssueDate,
+        dpn.IS_SALES_AGENCY isSalesAgency,
+        dpn.DATA_SOURCE,
+        dpn.UPDATE_TIME updateTime,
+        dpn.UPDATE_USER updateUser
+        from
+        DIS_PROD_NOCREATE dpn
+        left join V_REP_PROD_INFO rpi on dpn.PROD_REGIST_NO = rpi.PROD_RE
     <where>
         <if test="prodRegistNoList != null and prodRegistNoList.size() > 0">
-            AND PROD_REGIST_NO in
+            AND dpn.PROD_REGIST_NO in
             <foreach collection="prodRegistNoList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
         <if test="prodIdList != null and prodIdList.size() > 0">
-            AND PROD_ID in
+            AND dpn.PROD_ID in
             <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
         <if test="dataStatus != null and !dataStatus.equals('')">
-            AND DATA_STATUS=#{dataStatus}
+            AND dpn.DATA_STATUS=#{dataStatus}
         </if>
         <if test="reportIssueDateStart != null and reportIssueDateStart != ''">
-            <![CDATA[AND  REPORT_ISSUE_DATE >= TO_DATE(#{reportIssueDateStart},'YYYY-MM-DD') ]]>
+            <![CDATA[AND  dpn.REPORT_ISSUE_DATE >= TO_DATE(#{reportIssueDateStart},'YYYY-MM-DD') ]]>
         </if>
         <if test="reportIssueDateEnd != null and reportIssueDateEnd != ''">
-            <![CDATA[AND  REPORT_ISSUE_DATE <= TO_DATE(#{reportIssueDateEnd},'YYYY-MM-DD')]]>
+            <![CDATA[AND  dpn.REPORT_ISSUE_DATE <= TO_DATE(#{reportIssueDateEnd},'YYYY-MM-DD')]]>
         </if>
     </where>
-        order by UPDATE_TIME desc
+        order by dpn.UPDATE_TIME desc
     </select>
    <select id="selectByPrimaryKey"
            resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">

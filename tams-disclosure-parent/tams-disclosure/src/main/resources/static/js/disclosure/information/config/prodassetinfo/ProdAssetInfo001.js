@@ -58,7 +58,7 @@ $(function(){
                ,{field:'dataStatus', visible: false}
               ,{field:'statusStr', width:'10%', sortField:'dataStatus', title: '数据状态'}
               ,{field:'prodId', width:'10%', sortField:'prodId', title: '产品主代码'}
-              ,{field:'prodName', width:'10%', sortField:'prodName', title: '产品名称'}
+              ,{field:'prodName', width:'10%', sortField:'prodName', title: '产品全称'}
               ,{field:'fixPreRatio', width:'10%', title: '穿透前固定收益类资产占总资产比例',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
