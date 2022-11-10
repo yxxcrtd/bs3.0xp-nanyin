@@ -3,7 +3,7 @@
 	<Worksheet javaBean="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
 		<Row>
 			<Cell order="1" name="子产品代码">prodId</Cell>
-			<Cell order="2" name="产品名称">prodName</Cell>
+			<Cell order="2" name="产品全称">prodName</Cell>
 			<Cell order="3" name="分红方式">bonusModeName</Cell>
 			<Cell order="4" name="收益分配基准日">settDateStr</Cell>
 			<Cell order="5" name="现金红利发放日">paymentDateStr</Cell>
