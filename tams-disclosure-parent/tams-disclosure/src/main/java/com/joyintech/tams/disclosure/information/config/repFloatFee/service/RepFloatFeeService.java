@@ -336,48 +336,45 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
                 message.add("产品代码未在产品基本信息表中维护。");
             }
             if (!StringUtil.isNotEmpty(rowData.get(1))) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品名称"));
-            }
-            if (!StringUtil.isNotEmpty(rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "确认日"));
-            } else if (!isDateStr(rowData.get(2))) {
+            } else if (!isDateStr(rowData.get(1))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "确认日"));
             } else if (rowData.get(2).compareTo(DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_ANOTHER_FORMAT)) > 0) {
                // message.add("确认日只能小于等于平台日。");
             }
-            if (!StringUtil.isNotEmpty(rowData.get(3))) {
+            if (!StringUtil.isNotEmpty(rowData.get(2))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业务代码"));
-            } else if (!rowData.get(3).equals("赎回")) {
+            } else if (!rowData.get(2).equals("赎回")) {
                 message.add("业务代码默认赎回。");
             }
-            if (!StringUtil.isNotEmpty(rowData.get(4))) {
+            if (!StringUtil.isNotEmpty(rowData.get(3))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "确认份额"));
-            } else if (!isBigDecimal(rowData.get(4))) {
+            } else if (!isBigDecimal(rowData.get(3))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "确认份额"));
-            } else if (new BigDecimal(rowData.get(4)).compareTo(BigDecimal.ZERO) <= 0) {
+            } else if (new BigDecimal(rowData.get(3)).compareTo(BigDecimal.ZERO) <= 0) {
                 message.add("确认份额需要大于0。");
             }
-            if (!StringUtil.isNotEmpty(rowData.get(5))) {
+            if (!StringUtil.isNotEmpty(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "确认金额"));
-            } else if (!isBigDecimal(rowData.get(5))) {
+            } else if (!isBigDecimal(rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "确认金额"));
-            } else if (new BigDecimal(rowData.get(5)).compareTo(BigDecimal.ZERO) <= 0) {
+            } else if (new BigDecimal(rowData.get(4)).compareTo(BigDecimal.ZERO) <= 0) {
                 message.add("确认金额需要大于0。");
             }
-            if (!StringUtil.isNotEmpty(rowData.get(6))) {
+            if (!StringUtil.isNotEmpty(rowData.get(5))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "超额报酬"));
-            } else if (!isBigDecimal(rowData.get(6))) {
+            } else if (!isBigDecimal(rowData.get(5))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "超额报酬"));
-            } else if (new BigDecimal(rowData.get(6)).compareTo(BigDecimal.ZERO) < 0) {
+            } else if (new BigDecimal(rowData.get(5)).compareTo(BigDecimal.ZERO) < 0) {
                 message.add("超额报酬需要大于等于0。");
             }
-            if (map.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2))) {
+            if (map.containsKey(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(1))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
-            map.put(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
+            map.put(rowData.get(0) + GlobalConstant.UNDER_LINE + rowData.get(1), rowData);
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(rowData.get(0)
-                        + GlobalConstant.UNDER_LINE + rowData.get(2),
+                        + GlobalConstant.UNDER_LINE + rowData.get(1),
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             else {
@@ -393,22 +390,19 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
             repFloatFeeDto.setProdId(rowData.get(0).toString());
         }
         if (StringUtil.isNotEmpty(rowData.get(1))) {
-            repFloatFeeDto.setProdName(rowData.get(1).toString());
+            repFloatFeeDto.setAffirmDate(DateUtil.parse(rowData.get(1).toString()));
         }
         if (StringUtil.isNotEmpty(rowData.get(2))) {
-            repFloatFeeDto.setAffirmDate(DateUtil.parse(rowData.get(2).toString()));
-        }
-        if (StringUtil.isNotEmpty(rowData.get(3))) {
             repFloatFeeDto.setBusinessCode("03");
         }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            repFloatFeeDto.setAffirmNum(new BigDecimal(rowData.get(3).toString()));
+        }
         if (StringUtil.isNotEmpty(rowData.get(4))) {
-            repFloatFeeDto.setAffirmNum(new BigDecimal(rowData.get(4).toString()));
+            repFloatFeeDto.setAffirmAmt(new BigDecimal(rowData.get(4).toString()));
         }
         if (StringUtil.isNotEmpty(rowData.get(5))) {
-            repFloatFeeDto.setAffirmAmt(new BigDecimal(rowData.get(5).toString()));
-        }
-        if (StringUtil.isNotEmpty(rowData.get(6))) {
-            repFloatFeeDto.setAboveAmt(new BigDecimal(rowData.get(6).toString()));
+            repFloatFeeDto.setAboveAmt(new BigDecimal(rowData.get(5).toString()));
         }
         repFloatFeeDto.setStatus("E");
         return repFloatFeeDto;
