@@ -144,7 +144,7 @@
 	    	 cols:[{field:'bonusPlanId',title:'主键',width:80,sortable:false,visible:false,align:'center'}
 	    		/*,{field:'bonusPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
 				 ,{field:'prodId',  title: '子产品代码',width:150,sortable:false}
-				 ,{field:'prodName',  title: '产品全称',width:250,sortable:false}
+				 ,{field:'prodName',  title: '子产品名称',width:250,sortable:false}
 				 ,{field:'settDateStr',  title: '收益分配基准日',width:150,sortable:false}
 				 ,{field:'paymentDateStr',  title: '现金红利发放日',width:150,sortable:false}
 				 ,{field:'achievement',  title: '业绩报酬（文本描述）',width:100,sortable:false}
@@ -220,7 +220,7 @@
 			   /*,{field:'bonusPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
 			   /*,{field:'bonusPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
 			   ,{field:'prodId',  title: '子产品代码',width:150,sortable:false}
-			   ,{field:'prodName',  title: '产品全称',width:250,sortable:false}
+			   ,{field:'prodName',  title: '子产品名称',width:250,sortable:false}
 			   ,{field:'settDateStr',  title: '收益分配基准日',sortField:"settDateStr",width:150}
 			   ,{field:'paymentDateStr',  title: '现金红利发放日',sortField:"paymentDateStr", width:150}
 			   ,{field:'achievement',  title: '业绩报酬（文本描述）',width:100,sortField:"achievement"}
