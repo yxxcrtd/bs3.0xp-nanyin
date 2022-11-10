@@ -4,7 +4,7 @@
         <Row>
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="产品主代码">prodId</Cell>
-            <Cell order="3" name="产品名称">prodName</Cell>
+            <Cell order="3" name="产品全称">prodName</Cell>
             <Cell order="4" name="账户类型">accountTypeStr</Cell>
             <Cell order="5" name="账号">accountNum</Cell>
             <Cell order="6" name="账户名称">accountName</Cell>
