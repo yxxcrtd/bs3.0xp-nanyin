@@ -203,8 +203,8 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
             } else {
                 entity.setProdId(" ");
             }
-            if (StringUtil.isNotEmpty(list.get(2))) {
-                entity.setAffirmDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setAffirmDateStr(list.get(1));
             } else {
                 entity.setAffirmDateStr(" ");
             }
