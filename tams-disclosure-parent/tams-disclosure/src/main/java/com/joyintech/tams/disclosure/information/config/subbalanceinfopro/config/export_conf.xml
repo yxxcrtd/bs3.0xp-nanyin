@@ -4,7 +4,7 @@
         <Row>
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="产品主代码">booksetId</Cell>
-            <Cell order="3" name="产品名称">prodName</Cell>
+            <Cell order="3" name="产品全称">prodName</Cell>
             <Cell order="4" name="余额日期">balanceDateStr</Cell>
             <Cell order="5" name="科目号">subjectNo</Cell>
             <Cell order="6" name="科目名称">subjectName</Cell>
