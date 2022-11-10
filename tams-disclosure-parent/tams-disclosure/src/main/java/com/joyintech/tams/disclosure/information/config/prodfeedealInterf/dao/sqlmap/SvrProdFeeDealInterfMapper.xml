@@ -151,6 +151,13 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="prodIdArr != null and prodIdArr.length > 0">
+                AND rft.PROD_ID IN
+                <foreach item="item" collection="prodIdArr" index="index"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
             <if test='feeType != null and !feeType.equals("")'>
                 and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
             </if>
