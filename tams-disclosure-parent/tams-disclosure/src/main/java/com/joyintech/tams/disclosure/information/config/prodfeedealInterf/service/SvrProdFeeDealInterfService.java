@@ -140,6 +140,12 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
     }
 
     public Page<SvrProdFeeDealInterfDto> selectForExport(Map<String, Object> param) {
+        String[] prodIdArr = null;
+        String prodId = (String) param.get("prodId");
+        if (StringUtil.isNotEmpty(prodId)) {
+            prodIdArr = prodId.split(",");
+        }
+        param.put("prodIdArr", prodIdArr);
 //        List<SvrProdFeeDealInterfDto> entityList = new ArrayList<>();
 //        if (param.containsKey("selectData")) {
 //            String keyList = param.get("selectData").toString();
