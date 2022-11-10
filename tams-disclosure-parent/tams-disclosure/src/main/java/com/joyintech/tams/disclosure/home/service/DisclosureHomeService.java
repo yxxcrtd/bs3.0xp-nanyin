@@ -536,25 +536,6 @@ public class DisclosureHomeService extends BaseService<RevalInfo>{
     }
 
     public Map<String, RepRevealInfo> searchRevealList(List<String> menulist) {
-       /*
-    	List<RepRevealInfo> dtoList = new ArrayList<RepRevealInfo>();
-
-        Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
-        for (String menuId : menulist) {
-            RepRevealInfo repRevealInfo=new RepRevealInfo();
-            repRevealInfo.setExpectRevealNum("111");
-            repRevealInfo.setRevealNum("1111");
-            repRevealInfo.setGenFailNum("222");
-            repRevealInfo.setToBeReviewedNum("333");
-            repRevealInfo.setToBeConfirmedNum("444");
-            repRevealInfo.setToBeTgReviewedNum("555");
-            repRevealInfo.setToBeRevealedNum("666");
-            resultMap.put(menuId,repRevealInfo);
-        }
-
-        return resultMap;
-        */
-    	
     	//定义结果集合
         Map<String, RepRevealInfo> resultMap = new HashMap<String, RepRevealInfo>();
 

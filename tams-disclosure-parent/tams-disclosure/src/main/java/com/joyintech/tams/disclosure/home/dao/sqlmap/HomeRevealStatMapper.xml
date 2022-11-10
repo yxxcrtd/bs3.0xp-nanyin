@@ -71,12 +71,8 @@
 				where reveal.STATUS='E'
 				and reveal.REP_ID=#{repId,jdbcType=VARCHAR}
 				<choose>
-					<when test="repId =='CP_001_002_012'or repId =='CP_001_002_013' or repId =='CP_001_002_014' or  repId =='CP_001_002_009'or repId =='CP_001_002_010' or  repId =='CP_001_002_011'">
+					<when test="repId =='CP_001_003_002' or repId =='CP_001_003_001' or repId =='CP_001_002_012'or repId =='CP_001_002_013' or repId =='CP_001_002_014' or  repId =='CP_001_002_009'or repId =='CP_001_002_010' or  repId =='CP_001_002_011'">
 						and reveal.END_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE}
-					</when>
-					<when test="repId =='CP_001_003_002' or repId =='CP_001_003_001'">
-						and (to_date(decode(review.REVIEW_STATUS,'02',decode(reveal.REVEAL_STATUS,'01',reveal_end_date,reveal.END_DATE),reveal.END_DATE)) between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE}
-							  or to_date(decode(review.REVIEW_TG_STATUS,'02',decode(reveal.REVEAL_STATUS,'01',reveal_end_date,reveal.END_DATE),reveal.END_DATE)) between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE})
 					</when>
 					<otherwise>
 						and to_char(reveal.reveal_end_date,'yyyy-MM-dd') between to_char(#{sDate,jdbcType=DATE},'yyyy-MM-dd') and to_char(#{eDate,jdbcType=DATE} ,'yyyy-MM-dd')
@@ -85,4 +81,12 @@
 			) REP_HOMEPAGE_STAT
 		group by HOME_PAGE_TYPE,REVEAL_STATUS,CONFIRM_STATUS,REVIEW_STATUS,REVIEW_TG_STATUS
     </select>
+
+	<select id="selectRevealedData" resultType="int">
+		select count(1) from REP_REVEAL reveal
+		where reveal.STATUS='E'
+		  and reveal.REP_ID=#{repId,jdbcType=VARCHAR}
+		  and reveal.REVEAL_STATUS='01'
+		  and to_char(reveal.reveal_end_date,'yyyy-MM-dd')=to_char(#{revealEndDate,jdbcType=DATE},'yyyy-MM-dd')
+	</select>
 </mapper>

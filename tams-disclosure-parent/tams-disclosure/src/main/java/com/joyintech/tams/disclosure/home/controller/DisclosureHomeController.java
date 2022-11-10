@@ -13,6 +13,8 @@ package com.joyintech.tams.disclosure.home.controller;
 import java.util.*;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.home.dto.RepRevealInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -215,7 +217,8 @@ public class DisclosureHomeController extends BaseController {
     @RequestMapping("/searchRevealList")
     @ResponseBody
     public Map<String, RepRevealInfo> searchRevealList() {
-        List<String> menulist= Arrays.asList("01", "02","03", "04","05", "06","07","08");
-        return reportHomeService.searchRevealList(menulist);
+        List<String> menuList= DictCodeListExt5.valuesfromDictCode(DictCodeExt1.主页分类);
+        //List<String> menuList= Arrays.asList("08");
+        return reportHomeService.searchRevealList(menuList);
     }
 }

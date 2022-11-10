@@ -120,6 +120,24 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     托管复核状态_待复核(DictCodeExt1.托管复核状态,"01","待复核"),
     托管复核状态_已推送披露(DictCodeExt1.托管复核状态,"02","已推送披露"),
     托管复核状态_被披露退回(DictCodeExt1.托管复核状态,"03","被披露退回"),
+
+    主页分类_日报(DictCodeExt1.主页分类,"01","日报"),
+
+    主页分类_周报(DictCodeExt1.主页分类,"02","周报"),
+
+    主页分类_发行公告(DictCodeExt1.主页分类,"03","发行公告"),
+
+    主页分类_到期公告(DictCodeExt1.主页分类,"04","到期公告"),
+
+    主页分类_周期型报告(DictCodeExt1.主页分类,"05","周期型报告"),
+
+    主页分类_季度报告(DictCodeExt1.主页分类,"06","季度报告"),
+
+    主页分类_半_年度报告(DictCodeExt1.主页分类,"07","（半）年度报告"),
+
+    主页分类_开放分红公告(DictCodeExt1.主页分类,"08","开放分红公告"),
+
+    主页分类_合计(DictCodeExt1.主页分类,"99","合计"),
     ;
     /**
      * 对应于数据字典code
@@ -203,10 +221,10 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
      * @see
      * @since 1.0
      */
-    public static List<String> valuesfromDictCode(DictCode dictCode) {
+    public static List<String> valuesfromDictCode(DictCodeExt1 dictCode) {
         List<String> result = new ArrayList<>();
-        DictCodeListExt4[] values = DictCodeListExt4.values();
-        for (DictCodeListExt4 code : values) {
+        DictCodeListExt5[] values = DictCodeListExt5.values();
+        for (DictCodeListExt5 code : values) {
             if (code.getDictCode() == dictCode) {
                 result.add(code.getValue());
             }

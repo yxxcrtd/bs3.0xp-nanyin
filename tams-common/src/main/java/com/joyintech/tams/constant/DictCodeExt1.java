@@ -103,6 +103,7 @@ public enum DictCodeExt1 implements BaseDictCode {
     指标年度("DIS_INDEX_YEAR"),
     指标周期("DIS_INDEX_PERIOD"),
 
+    主页分类("HOME_PAGE_TYPE"),
     ;
     private String value;
 

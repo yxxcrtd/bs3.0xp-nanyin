@@ -41,4 +41,6 @@ public interface HomeRevealStatMapper {
 	DisHomePageStat select ( @Param("repId") String repId,@Param("statDate") Date statDate);
 	
 	List<HomePageStatsDto> selectHomePageStat(@Param("repId") String repId,@Param("sDate") Date statDate,@Param("eDate") Date eDate);
+
+	int selectRevealedData(@Param("repId") String repId,@Param("revealEndDate") Date revealEndDate);
 }

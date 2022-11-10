@@ -173,15 +173,21 @@ public class HomeRevealStatService {
 	
 	private int queryExpectCounts(String repId,Date sDate,Date eDate,Date statDate ) {
 		int counts = 0;
-		if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
+		if(StringUtil.equals("CP_001_002_005",repId)||StringUtil.equals("CP_001_002_006",repId)){
 			counts = genStat(repId,sDate);
-		} else if (sDate.compareTo(statDate)<0 && eDate.compareTo(statDate)>=0 ) {
-			counts = queryStat(repId,sDate);
-			if ( counts==-1 )  //首次生成
+		}else {
+			if ( sDate.compareTo(statDate)==0 ) { //当日就是一个季度的第3个工作日，生成统计数据
 				counts = genStat(repId,sDate);
-		} else {
-			counts = 0;
+			} else if (sDate.compareTo(statDate)<0 && eDate.compareTo(statDate)>=0 ) {
+				counts = queryStat(repId,sDate);
+				if ( counts==-1 )  //首次生成
+					counts = genStat(repId,sDate);
+			} else {
+				counts = 0;
+			}
 		}
+
+
 		return counts;
 	}
 	
@@ -221,6 +227,19 @@ public class HomeRevealStatService {
 				info.setToBeTgReviewedCounts(info.getToBeTgReviewedCounts() + dto.getCounts());
 			}
 		}
+		if(StringUtil.equals("CP_001_003_001",repId)
+				||StringUtil.equals("CP_001_003_002",repId)
+				||StringUtil.equals("CP_001_002_009",repId)
+				||StringUtil.equals("CP_001_002_010",repId)
+				||StringUtil.equals("CP_001_002_011",repId)
+				||StringUtil.equals("CP_001_002_012",repId)
+				||StringUtil.equals("CP_001_002_013",repId)
+				||StringUtil.equals("CP_001_002_014",repId)){
+			//到期公告
+			//开放分红公告的已披露要特殊处理 查询披露截止日等于当日，并且已披露的数据
+			info.setRevealCounts(homeRevealStatMapper.selectRevealedData(repId,sDate));
+		}
+
 		return info;
 	}
 	
@@ -327,18 +346,28 @@ public class HomeRevealStatService {
     				" and info.P_PROD_ID = plan.PROD_ID)";
     	}    	
     	else if ( repId.equals("CP_001_002_009")|| repId.equals("CP_001_002_010")
-    			|| repId.equals("CP_001_002_013")|| repId.equals("CP_001_002_014")
-    			|| repId.equals("CP_001_003_001")|| repId.equals("CP_001_003_002")
-    			) { //开放、净值及分红公告：并且当期收益分配基准日=当天 
+    			|| repId.equals("CP_001_002_013")|| repId.equals("CP_001_002_014")) {
+					//开放、净值及分红公告：并且当期收益分配基准日=当天
     		        //净值及分红报告；
-    				//到期公告；
     		condition = " exists ( select 1 from"  
     				+ " DIS_PROD_BONUSPLAN plan"  
     				+ " where" 
     				+ " plan.SETT_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" 
-    				+ " and plan.DATA_STATUS='E'" 
+    				+ " and plan.DATA_STATUS='E'"
+					+ " and plan.BONUS_MODE='01'"
     				+ " and info.PROD_ID = plan.PROD_ID)";
     	}
+		else if ( repId.equals("CP_001_003_001")|| repId.equals("CP_001_003_002")
+		) {
+			//到期公告；
+			condition = " exists ( select 1 from"
+					+ " DIS_PROD_BONUSPLAN plan"
+					+ " where"
+					+ " plan.SETT_DATE = to_date('"+queryDate+"','yyyy-mm-dd')"
+					+ " and plan.DATA_STATUS='E'"
+					+ " and plan.BONUS_MODE='02'"
+					+ " and info.PROD_ID = plan.PROD_ID)";
+		}
     	else if ( repId.equals("CP_001_002_011") ) {//开放及净值公告（公募）：并且开放结束日+1=当天
     		Map<String,Object> p = new HashMap<>();
     		p.put("busi_date", statDate);
@@ -351,7 +380,8 @@ public class HomeRevealStatService {
     				+ " where" 
     				+ " plan.OPEN_END_DATE = to_date('"+preQueryDate+"','yyyy-mm-dd')" 
     				+ " and plan.DATA_STATUS='E'"
-    				+ " and info.P_PROD_ID = plan.PROD_ID)";
+    				+ " and info.P_PROD_ID = plan.PROD_ID"
+					+ " and not exists (select 1 from dis_prod_bonusplan dpb where plan.OPEN_END_DATE = dpb.sett_date and info.PROD_ID = dpb.PROD_ID and dpb.data_status = 'E'))";
     	}
     	else if ( repId.equals("CP_001_002_012") ) {//开放及净值报告（私募）：并且运作起始日=当天
     		condition = " exists ( select 1 from"  
@@ -359,7 +389,8 @@ public class HomeRevealStatService {
     				+ " where" 
     				+ " plan.OPERATION_START_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" 
     				+ " and plan.DATA_STATUS='E'" 
-    				+ " and info.P_PROD_ID = plan.PROD_ID)";
+    				+ " and info.P_PROD_ID = plan.PROD_ID"
+					+ " and not exists (select 1 from dis_prod_bonusplan dpb where plan.OPEN_END_DATE = dpb.sett_date and info.PROD_ID = dpb.PROD_ID and dpb.data_status = 'E'))";
     	}    	
     	else if ( repId.equals("CP_001_002_005") || repId.equals("CP_001_002_006") ) {//每周净值公告：并且每周第一个工作日=当天，未到期的产品
     		//找到上周的第一天
