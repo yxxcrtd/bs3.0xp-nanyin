@@ -355,7 +355,11 @@ public class HomeRevealStatService {
     				" DIS_PROD_PLAN plan" + 
     				" where" + 
     				" plan.AUTO_REDEEM_DATE = to_date('"+queryDate+"','yyyy-mm-dd')" + 
-    				" and info.P_PROD_ID = plan.PROD_ID)";
+    				" and info.P_PROD_ID = plan.PROD_ID"
+					+ " and not exists (select 1 from DIS_PROD_PLAN t1 "
+					+ " where T1.OPEN_START_DATE > plan.OPEN_START_DATE "
+					+ " AND plan.AUTO_REDEEM_DATE = T1.OPERATION_START_DATE "
+					+ " and t1.prod_id = info.p_prod_id)) ";
     	}    	
     	else if ( repId.equals("CP_001_002_009")|| repId.equals("CP_001_002_010")
     			|| repId.equals("CP_001_002_013")|| repId.equals("CP_001_002_014")) {
