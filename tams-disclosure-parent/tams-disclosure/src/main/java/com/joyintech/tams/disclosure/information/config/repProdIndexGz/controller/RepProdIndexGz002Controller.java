@@ -87,6 +87,12 @@ public class RepProdIndexGz002Controller extends BaseController {
         return repProdIndexGzService.selectProdInfo(prodId);
     }
 
+    @ResponseBody
+    @RequestMapping("/selectProdInfo3")
+    public RepProdIndexGzDto selectProdInfo3(String prodId){
+        return repProdIndexGzService.selectProdInfo3(prodId);
+    }
+
 
     @ResponseBody
     @RequestMapping("check")

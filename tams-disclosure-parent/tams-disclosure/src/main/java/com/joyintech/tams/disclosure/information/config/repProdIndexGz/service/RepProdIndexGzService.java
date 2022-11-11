@@ -141,6 +141,10 @@ public class RepProdIndexGzService extends CommonExportService<RepProdIndexGzDto
         return repProdIndexGzMapper.selectProdInfo(prodId);
     }
 
+    public RepProdIndexGzDto selectProdInfo3(String prodId) {
+        return repProdIndexGzMapper.selectProdInfo3(prodId);
+    }
+
     public RepProdIndexGzDto selectByProdIDAndValueDate(RepProdIndexGzDto dto) {
         return repProdIndexGzMapper.selectByProdIDAndValueDate(dto);
     }
