@@ -270,6 +270,7 @@ public class ReportRevealManage001Service extends CommonExportService<ReportRevi
         String data = dto.getData();
         List<ReportConfirmManage001Dto> rDtoList = JsonUtils.json2List(data, ReportConfirmManage001Dto.class);
         for (ReportConfirmManage001Dto dto2 : rDtoList) {
+            dto2.setRevealDate(null);
             dto2.setRevealStatus(DictCodeListExt2.披露状态_未披露.getValue());
             dto2.setIsReveal(DictCodeListExt2.披露方式_手动.getValue());
             mapper.updateRevealStatusById(dto2);
