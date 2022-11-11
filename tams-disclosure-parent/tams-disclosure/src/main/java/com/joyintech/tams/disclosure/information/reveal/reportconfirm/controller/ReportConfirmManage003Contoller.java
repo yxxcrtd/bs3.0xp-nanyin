@@ -229,7 +229,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 					continue;
 				}
 				String[] arr = getFileDetail(listFileName.get(i));
-				if(arr.length>3){
+				if(arr.length>4){
 					String localFileName = getLocalFileName(listFileName.get(i));
 					String msg = "文件名格式不正确，请检查"+localFileName;
 					checkList.add(new ValidMessage(msg));
@@ -558,9 +558,19 @@ public class ReportConfirmManage003Contoller extends BaseController {
 			}else{
 				return false;
 			}
-			
-			
     	}
+		else if (arr.length == 4){
+			if(StringUtil.isNotEmpty(checkDate(arr[1]))){
+				//若长度为3，则三个全传过来
+				repReveal.setProdid(arr[0]);
+				repReveal.setStartDate(DateUtil.parse(checkDate(arr[1])));
+				repReveal.setReportName(arr[2]);
+			}else{
+				return false;
+			}
+
+
+		}
 		else {
 			return false;
 		}
@@ -598,6 +608,12 @@ public class ReportConfirmManage003Contoller extends BaseController {
 			repReveal.setStartDate(DateUtil.parse(checkDate(arr[1])));
     		repReveal.setReportName(arr[2]);
     	}
+		else if (arr.length == 4){
+			//若长度为3，则三个全传过来
+			repReveal.setProdid(arr[0]);
+			repReveal.setStartDate(DateUtil.parse(checkDate(arr[1])));
+			repReveal.setReportName(arr[2]);
+		}
 		return repReveal;
 	}
 	
