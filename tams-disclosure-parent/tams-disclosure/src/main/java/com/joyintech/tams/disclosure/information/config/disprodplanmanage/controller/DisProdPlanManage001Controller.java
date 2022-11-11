@@ -171,14 +171,17 @@ public class DisProdPlanManage001Controller extends BaseController {
         dto.setUpdateUser(LoginUserUtil.getUserName());
         ProcessParameter<DisProdPlanManage002Dto> processParameter = new ProcessParameter<DisProdPlanManage002Dto>();
         WorkFlowParameter<DisProdPlanManage002Dto> params = new WorkFlowParameter<DisProdPlanManage002Dto>();
+        List<DisProdPlanManage002Dto> selectedItem = dto.getSelectedItem();
+        selectedItem.forEach(e->{
+            e.setOperateType("DELETE");
+        });
         params.setPageId("DisProdPlanManage002");
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getProdPlanId());
+        params.setBusinessCode(item->item.getProdPlanId());
         params.setBusinessType(DictCodeListExt4.共通业务类型_产品排期计划.getValue());
         params.setComment(entity -> "共通业务类型_产品排期计划-产品代码" + "(" + entity.getProdId() + ")");
-        processParameter.setOperationType(OperationType.DELETE);
         processParameter.setWorkFlowParameter(params);
-        String msg = disProdPlanManage002Service.start(processParameter, dto.getSelectedItem().toArray(new DisProdPlanManage002Dto[dto.getSelectedItem().size()]));
+        String msg = disProdPlanManage002Service.start(processParameter, selectedItem.toArray(new DisProdPlanManage002Dto[selectedItem.size()]));
 
         return new AjaxResult(msg);
     }
