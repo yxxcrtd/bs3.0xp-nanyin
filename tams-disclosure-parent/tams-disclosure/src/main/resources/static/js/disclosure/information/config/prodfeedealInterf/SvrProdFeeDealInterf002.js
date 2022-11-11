@@ -85,13 +85,14 @@ $(function() {
 
     $('#prodId').change(function(){
         var prodId = $('#prodId').val();
-        if('' != prodId && null != prodId){
+        /*if('' != prodId && null != prodId){
             Joyin.ajaxJson(basePath+'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/selectProdName?prodId='+prodId,{},function (result){
                 $('#prodName').val(result['PROD_NAME']);
             })
         } else {
             $('#prodName').val('');
-        }
+        }*/
+        $('#prodName').val(prodId);
     });
 
     $('#feeType').change(function(){
