@@ -1054,6 +1054,14 @@ public class PoiReportService {
 					||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
 					||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
 					||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
+
+				List<Map<String, Object>>listAssetsDetail=(List<Map<String, Object>>)dataMap.get("listAssetsDetail");
+				if(!CollectionUtils.isEmpty(listAssetsDetail)){
+					if(listAssetsDetail.size()>10){
+						resultSb.append((index++)+"："+"前十名资产投资明细数量超过10条"+"<br>");
+					}
+				}
+
 				//先把规则查询出来
 				List<RepDataCheck>checkList=poiReportMapper.getRepDataCheckList();
 				Map<String,List<RepDataCheck>>checkMap=checkList.stream().collect(JoyinCollectors.groupingBy(x->x.getCheckId()));
