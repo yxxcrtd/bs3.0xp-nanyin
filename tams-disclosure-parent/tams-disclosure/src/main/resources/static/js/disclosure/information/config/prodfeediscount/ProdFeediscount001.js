@@ -62,6 +62,7 @@
             {field:'prodDiscountId',  visible: false,width:80}
             ,{field:'prodRegistNo',  title: '产品登记编码',sortField:"prodRegistNo",width:150}
             ,{field:'prodId',  title: '子产品代码',sortField:"prodId",width:150}
+            ,{field:'prodName',  title: '子产品名称',sortField:"prodName",width:150}
             , {field:'prodDisRemark',  title: '单产品多费率描述文字',sortField:"prodDisRemark",width:200,sortable:false}
             , {field:'feename',  title: '优惠的费用',sortField:"feename",width:120}
             , {field:'preFeerate',  title: '优惠前费率',sortField:"preFeerate",width:120,sortable:false}
