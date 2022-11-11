@@ -26,6 +26,8 @@ public interface RepProdIndexGzMapper {
 
     RepProdIndexGzDto selectProdInfo(@Param("prodId") String prodId);
 
+    RepProdIndexGzDto selectProdInfo3(@Param("prodId") String prodId);
+
     RepProdIndexGzDto selectByProdIDAndValueDate(RepProdIndexGzDto record);
 
     RepProdIndexGzDto selectPProdInfo(RepProdIndexGzDto record);

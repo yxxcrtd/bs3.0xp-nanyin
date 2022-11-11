@@ -67,7 +67,7 @@ $(function () {
                     }
                 },
                 {field:'prodid', title: '产品代码',width:150, sort: true},
-                {field:'prodName', title: '产品名称',width:150, sort: true},
+                {field:'prodName', title: '产品全称',width:150, sort: true},
                 {field:'reportName', title: '报表名称',width:100,sort: true},
                 {field:'startDate', title: '开始日',visible:false,type:"date"},
                 {field:'endDate', title: '结束日',visible:false,type:"date"},
