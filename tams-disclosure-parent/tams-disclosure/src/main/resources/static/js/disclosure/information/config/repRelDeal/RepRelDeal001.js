@@ -57,7 +57,7 @@ $(function() {
             title : '产品主代码'
         }, {
             field : 'prodName',width:'10%',
-            title : '产品名称'
+            title : '产品全称'
         }, {
             field : 'creditorAmt',width:'20%',
             title : '投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额',

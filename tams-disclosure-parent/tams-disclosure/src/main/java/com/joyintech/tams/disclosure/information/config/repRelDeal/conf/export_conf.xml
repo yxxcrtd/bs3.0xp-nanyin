@@ -4,7 +4,7 @@
         <Row>
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="产品主代码">prodId</Cell>
-            <Cell order="3" name="产品名称">prodName</Cell>
+            <Cell order="3" name="产品全称">prodName</Cell>
             <Cell order="4" name="投资于关联方发行的证券、关联方作为融资人的非标准化债权类资产业务交易金额">creditorAmtStr</Cell>
             <Cell order="5" name="投资于关联方承销的证券交易金额">bondAmtStr</Cell>
             <Cell order="6" name="与关联方作为交易对手开展的投融资业务交易金额">investAmtStr</Cell>
