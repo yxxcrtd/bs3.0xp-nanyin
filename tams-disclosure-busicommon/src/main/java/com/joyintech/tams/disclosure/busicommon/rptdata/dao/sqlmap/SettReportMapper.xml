@@ -24,8 +24,12 @@
     
     <select id="selectProdInfo" resultType="com.joyintech.tams.disclosure.busicommon.rptdata.dto.SettReportDto">
 		select
-		    info.PROD_ID
-		    ,r1.PROD_NAME
+		    info.PROD_ID,
+		     case  info.REP_PROD_TYPE
+				when '03' then(
+				select t1.PROD_NAME from V_REP_PROD_INFO t1 where t1.PROD_ID=info.P_PROD_ID and t1.STATUS='E')
+				when '02' then info.PROD_NAME
+				end as prodName
 		    ,info.PROD_RE
 		    ,info.SET_DATE EDATE
 		    ,info.ACCT_CHNNAME trustName
@@ -36,7 +40,6 @@
 		    REP_PROD_INFO info
 		    left join DIS_PROD_BONUSPLAN plan
 		    on info.PROD_ID = plan.PROD_ID and plan.BONUS_MODE = '02' and plan.DATA_STATUS = 'E'
-			left join REP_PROD_INFO r1 on r1.PROD_ID=info.P_PROD_ID and r1.STATUS='E'
 		where
 			info.STATUS = 'E'
 			<if test="prodId!=null">
