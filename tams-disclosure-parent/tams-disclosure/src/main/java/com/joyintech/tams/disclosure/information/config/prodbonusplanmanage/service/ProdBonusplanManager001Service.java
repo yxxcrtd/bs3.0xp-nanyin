@@ -419,7 +419,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "业绩报酬（文本描述）"));
             }
             if(StringUtil.equals(rowData.get(4),"无")){
-                if(!StringUtil.equals(rowData.get(5),"0")){
+                if(!StringUtil.equals(rowData.get(7),"0")){
                     message.add("当业绩报酬为无时，超额业绩报酬收取比例必须填0。");
                 }
             }
