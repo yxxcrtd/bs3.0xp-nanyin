@@ -4,7 +4,7 @@
         <Row>
             <Cell order="1" name="报表类别">reportTypeName</Cell>
             <Cell order="2" name="报表名称">reportName</Cell>
-            <Cell order="3" name="产品名称">prodName</Cell>
+            <Cell order="3" name="产品全称">prodName</Cell>
             <Cell order="4" name="产品主代码">pprodId</Cell>
             <Cell order="5" name="子产品代码">prodId</Cell>
             <Cell order="6" name="检查日期">checkDateStr</Cell>
