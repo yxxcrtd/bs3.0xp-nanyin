@@ -493,13 +493,13 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             prodBonusplanDto.setAchievement(rowData.get(4));
         }
         if (StringUtil.isNotEmpty(rowData.get(5))) {
-            prodBonusplanDto.setExcessAchievementProp(new BigDecimal(rowData.get(5)));
-        }
-        if (StringUtil.isNotEmpty(rowData.get(6))) {
             prodBonusplanDto.setAchievementBasis(rowData.get(6));
         }
-        if (StringUtil.isNotEmpty(rowData.get(7))) {
+        if (StringUtil.isNotEmpty(rowData.get(6))) {
             prodBonusplanDto.setAchievementBasisProp(new BigDecimal(rowData.get(7)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(7))) {
+            prodBonusplanDto.setExcessAchievementProp(new BigDecimal(rowData.get(5)));
         }
         return prodBonusplanDto;
     }
