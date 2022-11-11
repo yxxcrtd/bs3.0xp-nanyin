@@ -5,7 +5,7 @@
 			<Cell order="1" name="披露状态">revealStatusName</Cell>
 			<Cell order="2" name="披露时间">revealDateStr</Cell>
 			<Cell order="2" name="产品代码">prodid</Cell>
-			<Cell order="3" name="产品名称">prodName</Cell>
+			<Cell order="3" name="产品全称">prodName</Cell>
 			<Cell order="4" name="报表名称">reportName</Cell>
 			<Cell order="5" name="报告期">reportDate</Cell>
 			<Cell order="6" name="披露截至日">revealEndDateStr</Cell>
