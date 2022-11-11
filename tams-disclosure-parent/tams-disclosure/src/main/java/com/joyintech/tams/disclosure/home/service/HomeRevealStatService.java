@@ -204,8 +204,9 @@ public class HomeRevealStatService {
 	}
 	
 	private RepRevealInfo queryOtherCounts( String repId,Date sDate,Date eDate ) {
-		
-		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(repId,sDate,eDate);
+		Date platformDate = commonPlatformDateService.getSysDate();
+
+		List<HomePageStatsDto> listStats = homeRevealStatMapper.selectHomePageStat(repId,sDate,eDate,platformDate);
 		
 		RepRevealInfo info = new RepRevealInfo();
 

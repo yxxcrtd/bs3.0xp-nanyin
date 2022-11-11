@@ -81,6 +81,10 @@
 					<when test="repId =='CP_001_003_002' or repId =='CP_001_003_001' or repId =='CP_001_002_012'or repId =='CP_001_002_013' or repId =='CP_001_002_014' or  repId =='CP_001_002_009'or repId =='CP_001_002_010' or  repId =='CP_001_002_011'">
 						and reveal.END_DATE between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE}
 					</when>
+					<when test="repId =='CP_001_002_015' or repId =='CP_001_002_016' or repId =='CP_001_002_017' or repId =='CP_001_002_018' or repId =='CP_001_002_019' or repId =='CP_001_002_020'">
+						and to_char(reveal.reveal_end_date,'yyyy-MM-dd') between to_char(#{sDate,jdbcType=DATE},'yyyy-MM-dd') and to_char(#{eDate,jdbcType=DATE} ,'yyyy-MM-dd')
+				  		and #{platformDate,jdbcType=DATE} between #{sDate,jdbcType=DATE} and #{eDate,jdbcType=DATE}
+					</when>
 					<otherwise>
 						and to_char(reveal.reveal_end_date,'yyyy-MM-dd') between to_char(#{sDate,jdbcType=DATE},'yyyy-MM-dd') and to_char(#{eDate,jdbcType=DATE} ,'yyyy-MM-dd')
 					</otherwise>
