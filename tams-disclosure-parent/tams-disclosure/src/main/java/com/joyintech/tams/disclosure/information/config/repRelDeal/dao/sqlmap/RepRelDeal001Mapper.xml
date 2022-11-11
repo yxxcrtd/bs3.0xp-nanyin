@@ -65,6 +65,7 @@
                 and T1.EFFDELIDATE &lt;= to_date(#{endEffdelidate,jdbcType=DATE},'yyyy-MM-dd')
             </if>
         </where>
+        order by T1.UPDATE_TIME  desc
     </select>
 
     <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
