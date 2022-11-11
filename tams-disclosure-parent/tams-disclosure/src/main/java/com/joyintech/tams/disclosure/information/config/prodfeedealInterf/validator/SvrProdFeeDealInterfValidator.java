@@ -79,12 +79,12 @@ public class SvrProdFeeDealInterfValidator implements BeanValidator {
             }
             if(dto.getPayDate()== null){
                 errorList.add(new ValidMessage("", "支付日不能为空"));
-            }else{
+            }/*else{
                 Date platDate = DateUtil.platDateFromCache();
                 if(DateUtil.compareDate(dto.getPayDate(), platDate) > 0){
                     errorList.add(new ValidMessage("", "支付日不能大于平台日"));
                 }
-            }
+            }*/
         }
 
         return errorList;
