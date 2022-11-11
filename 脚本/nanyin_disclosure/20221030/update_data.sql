@@ -633,3 +633,7 @@ values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '05', null, null, '
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '06', null, null, 'system', null, sysdate, 'system', sysdate, null);
 --  add by zhuhc 20221107 end
+
+-- 产品不成立报表条件删除产品发布日期 add by zhengxiaolian 2022-11-11 start
+delete from rep_screen a where a.screen_id in('100000069','100000071');
+-- 产品不成立报表条件删除产品发布日期 add by zhengxiaolian 2022-11-11 end

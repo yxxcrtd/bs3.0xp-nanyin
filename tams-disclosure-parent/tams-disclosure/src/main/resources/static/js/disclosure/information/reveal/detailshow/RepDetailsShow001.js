@@ -428,20 +428,10 @@ $(function () {
 					Joyin.alert('产品名称必填!',2);
 					return;
 				}
-				if (params['enddate']===null||params['enddate']===undefined) {
-					Joyin.alert('产品发布日期必填!',2);
-					return;
-				}
-			}
-			if(modelId==="CPBCLGG_GM"||modelId==="CPBCLBG_SM"){
-				if (params['pprodid']===null||params['pprodid']===undefined) {
-					Joyin.alert('产品名称必填!',2);
-					return;
-				}
-				if (params['enddate']===null||params['enddate']===undefined) {
-					Joyin.alert('产品发布日期必填!',2);
-					return;
-				}
+				// if (params['enddate']===null||params['enddate']===undefined) {
+				// 	Joyin.alert('产品发布日期必填!',2);
+				// 	return;
+				// }
 			}
 			if(modelId==="DCPDFLMB1_GM"||modelId==="DCPDFLMB1_SM"||modelId==="DCPDFLMB2_GM"||modelId==="DCPDFLMB2_SM"){
 				if (params['pprodid']===null||params['pprodid']===undefined) {
