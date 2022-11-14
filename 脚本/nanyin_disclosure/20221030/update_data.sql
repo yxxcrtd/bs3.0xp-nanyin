@@ -637,3 +637,6 @@ values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '06', null, null, '
 -- 产品不成立报表条件删除产品发布日期 add by zhengxiaolian 2022-11-11 start
 delete from rep_screen a where a.screen_id in('100000069','100000071');
 -- 产品不成立报表条件删除产品发布日期 add by zhengxiaolian 2022-11-11 end
+
+--修改分红表单维护字段业绩比较基准比例精度
+alter table DIS_PROD_BONUSPLAN modify ACHIEVEMENT_BASIS_PROP  NUMBER(7,4);
