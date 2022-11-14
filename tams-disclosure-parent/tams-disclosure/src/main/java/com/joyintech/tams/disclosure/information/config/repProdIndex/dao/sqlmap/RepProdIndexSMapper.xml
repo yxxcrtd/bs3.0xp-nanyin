@@ -49,6 +49,7 @@
 
     <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
         select
+        distinct
         T.PROD_ID prodId,
         nvl(rpi2.PROD_NAME,rpi1.PROD_NAME) prodName,
         T.VALUE_DATE valueDate,
@@ -314,6 +315,7 @@
     </select>
     <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
         select
+        distinct
         T.PROD_ID prodId,
         rpi.PROD_NAME prodName,
         T.VALUE_DATE valueDate,
