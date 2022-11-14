@@ -846,6 +846,14 @@
         and status!='D'
     </update>
 
+    <update id="updateIssuingStatusBypProdId">
+        update REP_PROD_INFO set ISSUE_STATUS = #{issuingStatusNew,jdbcType=VARCHAR},
+            update_time=#{updateTime,jdbcType=DATE},
+            UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+        where P_PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and status!='D'
+    </update>
+
     <!-- 查询母产品下所有的子产品信息 -->
     <select id="selectListByPprodId" resultMap="BaseResultMap">
         select *

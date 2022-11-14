@@ -18,6 +18,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -1143,6 +1144,15 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 ppdto.setIssuingStatusNew(DictCodeListExt1.发行状态_发行成功.getValue());
                 prodInfoMapper.updateIssuingStatus(ppdto);
             }
+        } else if (StringUtils.equals(DictCodeListExt5.信批产品类别_子产品.getValue(), dto.getRepProdType())
+                && StringUtils.equals(DictCodeListExt1.发行状态_发行失败.getValue(), dto.getIssuingStatusNew())) {
+            ProdInfoDto ppdto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId(),"E");
+            ppdto.setIssuingStatusNew(DictCodeListExt1.发行状态_发行失败.getValue());
+            ppdto.setUpdateUser(LoginUserUtil.getUserName());
+            prodInfoMapper.updateIssuingStatus(ppdto);
+            //更新所有子产品状态为发行失败
+
+            prodInfoMapper.updateIssuingStatusBypProdId(ppdto);
         }
         prodInfoMapper.updateIssuingStatus(dto);
     }

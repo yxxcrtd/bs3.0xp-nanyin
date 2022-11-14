@@ -45,6 +45,8 @@ public interface DisProdBaseInfoMapper  {
 
     void updateIssuingStatus(ProdInfoDto dto);
 
+    int updateIssuingStatusBypProdId(ProdInfoDto dto);
+
     List<ProdInfoDto> queryForList(String[] split);
 
     List<ProdInfoDto> selectListByPprodId(@Param("prodId") String prodId);
