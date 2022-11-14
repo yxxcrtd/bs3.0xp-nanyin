@@ -56,6 +56,7 @@
             {field:'dataStatusStr',  title: 'ProElementAdj001.dataStatus',sortField:"dataStatus"},//数据状态
             {field:'prodRegistNo',  title: 'ProElementAdj001.prodRegistNo',sortField:"prodRegistNo"},//产品登记编码
             {field:'prodId',  title: 'ProElementAdj001.prodId',sortField:"prodId"}//子产品代码
+            ,{field:'prodName',  title: '子产品名称',sortField:"prodName"}
             ,{field:'dealDate',  title: '巨额赎回日期',sortField:"dealDate",type:'date'} //巨额赎回时间
             ,{field:'triggerRemark',  title: 'HugeInfoPro001.triggerRemark',sortField:"triggerRemark"} //触发的情形说明文字
             ,{field:'rejectRemark',  title: 'HugeInfoPro001.rejectRemark',sortField:"rejectRemark"} //拒绝赎回说明（文字）

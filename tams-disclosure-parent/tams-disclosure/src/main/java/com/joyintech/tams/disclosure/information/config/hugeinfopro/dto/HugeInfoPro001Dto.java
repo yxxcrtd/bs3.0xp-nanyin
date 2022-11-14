@@ -47,6 +47,11 @@ public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, 
      */
     private String elementId;
 
+    /**
+     * 产品名称
+     */
+    private String prodName;
+
     public String getOperateType() {
         return operateType;
     }
@@ -168,5 +173,13 @@ public String dealDateStr;
 
     public void setPageModel(String pageModel) {
         this.pageModel = pageModel;
+    }
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
     }
 }
