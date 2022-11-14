@@ -41,11 +41,21 @@
                                     <label class="layui-form-label form-lable mst-lable" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="prodId" name="prodId" class="input-select"
-                                                data-th-initValue="${entity?.prodId}" formatoption="false"
+                                                data-th-initValue="${entity?.prodId}"
                                                 data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj002/getProdId}"
                                                 placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
-                                                allowClear="true" required>
+                                                allowClear="true" data-selection="id" formatoption="true" required>
                                         </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div >
+                                    <label class="layui-form-label form-lable mst-lable" >子产品名称</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" id="prodName" name="prodName"
+                                               class="layui-input form-input" placeholder="请选择"
+                                               data-th-value="${entity?.prodName}" disabled="disabled" required>
                                     </div>
                                 </div>
                             </div>
