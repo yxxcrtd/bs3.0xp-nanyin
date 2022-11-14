@@ -43,8 +43,10 @@ public interface ReportJzfhbg001Mapper {
      * @param searchParam
      * @return
      */
-    RepProdIndex getIndexBySettDate(Map<String, Object> searchParam);
+    RepProdIndex getIndexBySettDateGZ(Map<String, Object> searchParam);
 
+
+    RepProdIndex getIndexBySettDate(Map<String, Object> searchParam);
     /**
      * 根据业绩分配基准日查询上次分红计划表
      * @param searchParam

@@ -121,7 +121,7 @@ public class ReportJzfhbg001Service implements IReportDataService {
                         //设置现金分红日
                         reportJzfhbg001Dto.setPaymentDate(DateUtil.format(bonusplan.getPaymentDate()));
                         //查询业绩分配基准日净值数据
-                        RepProdIndex repProdIndex = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
+                        RepProdIndex repProdIndex = reportJzfhbg001Mapper.getIndexBySettDateGZ(searchParam);
 
                         if (repProdIndex != null) {
                             /**

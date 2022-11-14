@@ -1016,30 +1016,30 @@ public class PoiReportService {
 				}
 
 			}else if (StringUtil.equals(rptType,DisReportType.KFJZJFHGG_BNYS)
-					||StringUtil.equals(rptType,DisReportType.KFJZJFHGG_BNYN)){
+					||StringUtil.equals(rptType,DisReportType.KFJZJFHGG_BNYN)) {
 				//	开放、净值及分红公告
 				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
-				String baseDate=(String) dataMap.get("baseDate");
-				String pprodId=StringUtil.isNotEmpty(params.get("pprodId"))?params.get("pprodId").toString():dataMap.get("pprodId").toString();
-				if(StringUtil.equals(params.get("opttype"),"batch")){
-					pprodId=dataMap.get("pprodId").toString();
+				String baseDate = (String) dataMap.get("baseDate");
+				String pprodId = StringUtil.isNotEmpty(params.get("pprodId")) ? params.get("pprodId").toString() : dataMap.get("pprodId").toString();
+				if (StringUtil.equals(params.get("opttype"), "batch")) {
+					pprodId = dataMap.get("pprodId").toString();
 				}
-				if(poiReportMapper.checkBaseDate(pprodId,baseDate)<1){
-					resultSb.append((index++)+"："+"分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
-				}
-
-			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
-				//净值及分红报告
-				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
-				String settDate=(String) dataMap.get("settDate");
-				String pprodId=StringUtil.isNotEmpty(params.get("pprodId"))?params.get("pprodId").toString():dataMap.get("pprodId").toString();
-				if(StringUtil.equals(params.get("opttype"),"batch")){
-					pprodId=dataMap.get("pprodId").toString();
-				}
-				if(poiReportMapper.checkBaseDate(pprodId,settDate)<1){
-					resultSb.append((index++)+"："+"分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
+				if (poiReportMapper.checkBaseDate(pprodId, baseDate) < 1) {
+					resultSb.append((index++) + "：" + "分红权益登记日一定是对应产品某一开放周期的开放结束日" + "<br>");
 				}
 			}
+//			}else if (StringUtil.equals(rptType,DisReportType.JZJFHBG_SMKF)){
+//				//净值及分红报告
+//				//分红权益登记日一定是对应产品某一开放周期的开放结束日（根据产品排期计划判断）或产品的到期日（根据产品分红到期计划判断）
+//				String settDate=(String) dataMap.get("settDate");
+//				String pprodId=StringUtil.isNotEmpty(params.get("pprodId"))?params.get("pprodId").toString():dataMap.get("pprodId").toString();
+//				if(StringUtil.equals(params.get("opttype"),"batch")){
+//					pprodId=dataMap.get("pprodId").toString();
+//				}
+//				if(poiReportMapper.checkBaseDate(pprodId,settDate)<1){
+//					resultSb.append((index++)+"："+"分红权益登记日一定是对应产品某一开放周期的开放结束日"+"<br>");
+//				}
+//			}
 			else if (StringUtil.equals(rptType,DisReportType.QSBG)){
 				//清算报告 资产类合计=负债类合计；
 				String sumAssetAmt=(String)dataMap.get("sumAssetAmt");
