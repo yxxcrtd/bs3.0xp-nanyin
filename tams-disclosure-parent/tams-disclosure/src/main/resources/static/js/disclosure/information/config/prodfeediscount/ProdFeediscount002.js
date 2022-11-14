@@ -118,12 +118,8 @@ $(function() {
 				var prodId = $('#prodId').val();
 				var data = $('#prodId').select2("data")[0].object;
 				$('#prodRegistNo').textSelect('setValue',data);
-				if('' != data && null != data){
-					Joyin.ajaxJson(basePath+'disclosure/information/config/repProdIndexGz/RepProdIndexGz002/selectProdInfo3?prodId='+prodId,{},function (result){
-						if(result){
-							$('#prodName').val(result.prodName);
-						}
-					})}
+				var prodName = $('#prodId').select2("data")[0].text;
+				$('#prodName').val(prodName);
 			});
 		}
 	});

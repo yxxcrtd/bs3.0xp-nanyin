@@ -43,7 +43,9 @@ $(function() {
 		$('#prodId').change(function () {
 			var prodId = $('#prodId').val();
 			var data = $('#prodId').select2("data")[0].object;
+			var prodName = $('#prodId').select2("data")[0].text;
 			$('#prodRegistNo').textSelect('setValue',data);
+			$('#prodName').val(prodName);
 		});
 		$('#prodRegistNo').prop("disabled",true);
 		if (pageModel == PAGE_MODEL_EDIT){

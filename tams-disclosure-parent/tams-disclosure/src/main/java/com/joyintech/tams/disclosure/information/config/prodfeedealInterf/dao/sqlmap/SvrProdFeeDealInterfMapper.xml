@@ -26,8 +26,8 @@
     </select>
     <select id="getProdInsId2" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        PROD_NAME id,
-        PROD_ID text,
+        PROD_ID id,
+        PROD_Name text,
         PROD_NAME object
         FROM
         V_REP_PROD_INFO

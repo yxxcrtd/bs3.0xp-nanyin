@@ -2,75 +2,79 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper">
 
-    <select id="select"  resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
-       select
-          PROD_ADJUST_ID,
-          ADJ_REASON adjReason,
-          ADJ_REASON2 adjReason2,
-          DATA_STATUS dataStatus,
-          PROD_REGIST_NO prodRegistNo,
-          PROD_ID prodId,
-          IS_SALES_AGENCY isSalesAgency,
-          PROD_ADJ_REMARK prodAdjRemark,
-          PROD_ADJ_REMARK2 prodAdjRemark2,
-          ADJ_FIELD adjField,
-          PRE_ADJUST preAdjust,
-          AFTER_ADJUST afterAdjust,
-          EFF_DATE effDate,
-          FIELD_ADJ_REMARK fieldAdjRemark,
-          FIELD_ADJ_REMARK2 fieldAdjRemark2,
-          RPT_ISSUE_DATE rptIssueDate,
-          UPDATE_TIME updateTime,
-          UPDATE_USER updateUser,
-          CREATE_TIME createTime,
-          CREATE_USER createUser
-       from
-          DIS_PROD_ADJUST
-    <where>
-        <if test="prodRegistNoList != null and prodRegistNoList.size() > 0">
-            AND PROD_REGIST_NO in
-            <foreach collection="prodRegistNoList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="prodIdList != null and prodIdList.size() > 0">
-            AND PROD_ID in
-            <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="adjFieldList != null and adjFieldList.size() > 0">
-            AND ADJ_FIELD in
-            <foreach collection="adjFieldList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="isSalesAgency != null and !isSalesAgency.equals('')">
-            AND IS_SALES_AGENCY=#{isSalesAgency}
-        </if>
-        <if test="dataStatus != null and !dataStatus.equals('')">
-            AND DATA_STATUS=#{dataStatus}
-        </if>
-        <if test="rptIssueDateStart != null and rptIssueDateStart != ''">
-            <![CDATA[AND  RPT_ISSUE_DATE >= TO_DATE(#{rptIssueDateStart},'YYYY-MM-DD') ]]>
-        </if>
-        <if test="rptIssueDateEnd != null and rptIssueDateEnd != ''">
-            <![CDATA[AND  RPT_ISSUE_DATE <= TO_DATE(#{rptIssueDateEnd},'YYYY-MM-DD')]]>
-        </if>
-    </where>
-        ORDER BY NVL(UPDATE_TIME,CREATE_TIME) DESC
+    <select id="select"
+            resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
+        select
+        dpa.PROD_ADJUST_ID,
+        dpa.ADJ_REASON adjReason,
+        dpa.ADJ_REASON2 adjReason2,
+        dpa.DATA_STATUS dataStatus,
+        dpa.PROD_REGIST_NO prodRegistNo,
+        dpa.PROD_ID prodId,
+        rpi.PROD_NAME prodName,
+        dpa.IS_SALES_AGENCY isSalesAgency,
+        dpa.PROD_ADJ_REMARK prodAdjRemark,
+        dpa.PROD_ADJ_REMARK2 prodAdjRemark2,
+        dpa.ADJ_FIELD adjField,
+        dpa.PRE_ADJUST preAdjust,
+        dpa.AFTER_ADJUST afterAdjust,
+        dpa.EFF_DATE effDate,
+        dpa.FIELD_ADJ_REMARK fieldAdjRemark,
+        dpa.FIELD_ADJ_REMARK2 fieldAdjRemark2,
+        dpa.RPT_ISSUE_DATE rptIssueDate,
+        dpa.UPDATE_TIME updateTime,
+        dpa.UPDATE_USER updateUser,
+        dpa.CREATE_TIME createTime,
+        dpa.CREATE_USER createUser
+        from
+        DIS_PROD_ADJUST dpa
+        left join REP_PROD_INFO rpi on dpa.PROD_ID = rpi.PROD_ID
+        <where>
+            <if test="prodRegistNoList != null and prodRegistNoList.size() > 0">
+                AND dpa.PROD_REGIST_NO in
+                <foreach collection="prodRegistNoList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="prodIdList != null and prodIdList.size() > 0">
+                AND dpa.PROD_ID in
+                <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="adjFieldList != null and adjFieldList.size() > 0">
+                AND dpa.ADJ_FIELD in
+                <foreach collection="adjFieldList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isSalesAgency != null and !isSalesAgency.equals('')">
+                AND dpa.IS_SALES_AGENCY=#{isSalesAgency}
+            </if>
+            <if test="dataStatus != null and !dataStatus.equals('')">
+                AND dpa.DATA_STATUS=#{dataStatus}
+            </if>
+            <if test="rptIssueDateStart != null and rptIssueDateStart != ''">
+                <![CDATA[AND  dpa.RPT_ISSUE_DATE >= TO_DATE(#{rptIssueDateStart},'YYYY-MM-DD') ]]>
+            </if>
+            <if test="rptIssueDateEnd != null and rptIssueDateEnd != ''">
+                <![CDATA[AND  dpa.RPT_ISSUE_DATE <= TO_DATE(#{rptIssueDateEnd},'YYYY-MM-DD')]]>
+            </if>
+        </where>
+        ORDER BY NVL(dpa.UPDATE_TIME,dpa.CREATE_TIME) DESC
     </select>
    <select id="selectByPrimaryKey"
            resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
       select
-      PROD_ADJUST_ID, ADJ_REASON,ADJ_REASON2,
-        PROD_REGIST_NO , PROD_ID , IS_SALES_AGENCY ,
-        PROD_ADJ_REMARK , PROD_ADJ_REMARK2 , ADJ_FIELD ,
-        PRE_ADJUST , AFTER_ADJUST , EFF_DATE , FIELD_ADJ_REMARK ,
-        FIELD_ADJ_REMARK2 , RPT_ISSUE_DATE , DATA_STATUS ,
-        DATA_SOURCE , CREATE_USER , CREATE_TIME , UPDATE_USER ,
-        UPDATE_TIME
-      from DIS_PROD_ADJUST
+      dpa.PROD_ADJUST_ID, dpa.ADJ_REASON,dpa.ADJ_REASON2,
+        dpa.PROD_REGIST_NO , dpa.PROD_ID ,rpi.PROD_NAME prodName, dpa.IS_SALES_AGENCY ,
+        dpa.PROD_ADJ_REMARK , dpa.PROD_ADJ_REMARK2 , dpa.ADJ_FIELD ,
+        dpa.PRE_ADJUST , dpa.AFTER_ADJUST , dpa.EFF_DATE , dpa.FIELD_ADJ_REMARK ,
+        dpa.FIELD_ADJ_REMARK2 , dpa.RPT_ISSUE_DATE , dpa.DATA_STATUS ,
+        dpa.DATA_SOURCE , dpa.CREATE_USER , dpa.CREATE_TIME , dpa.UPDATE_USER ,
+        dpa.UPDATE_TIME
+      from DIS_PROD_ADJUST dpa
+      left join REP_PROD_INFO rpi on dpa.PROD_ID = rpi.PROD_ID
       where PROD_ADJUST_ID = #{prodAdjustId,jdbcType=VARCHAR}
    </select>
 
@@ -187,7 +191,7 @@
     <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         PROD_ID id,
-        PROD_ID text,
+        PROD_Name text,
         PROD_RE object
         FROM
         rep_prod_info

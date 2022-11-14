@@ -92,7 +92,8 @@ $(function() {
         } else {
             $('#prodName').val('');
         }*/
-        $('#prodName').val(prodId);
+        var prodName = $('#prodId').select2("data")[0].text;
+        $('#prodName').val(prodName);
     });
 
     $('#feeType').change(function(){

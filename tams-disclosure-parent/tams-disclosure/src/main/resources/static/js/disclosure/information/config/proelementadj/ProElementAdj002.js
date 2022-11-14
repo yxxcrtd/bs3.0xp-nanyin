@@ -65,6 +65,8 @@ $(function() {
 				var prodId = $('#prodId').val();
 				var data = $('#prodId').select2("data")[0].object;
 				$('#prodRegistNo').textSelect('setValue',data);
+				var prodName = $('#prodId').select2("data")[0].text;
+				$('#prodName').val(prodName);
 			});
 		}
 

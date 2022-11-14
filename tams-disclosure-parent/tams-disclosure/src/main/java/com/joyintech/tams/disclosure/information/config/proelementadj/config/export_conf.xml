@@ -5,19 +5,20 @@
             <Cell order="1" name="数据状态">dataStatusStr</Cell>
             <Cell order="2" name="产品登记编码">prodRegistNo</Cell>
             <Cell order="3" name="子产品代码">prodId</Cell>
-            <Cell order="4" name="单产品多要素段1">adjReason</Cell>
-            <Cell order="5" name="单产品多要素段2">prodAdjRemark</Cell>
-            <Cell order="6" name="单产品多要素段3">prodAdjRemark2</Cell>
-            <Cell order="7" name="调整要素">adjField</Cell>
-            <Cell order="8" name="调整前">preAdjust</Cell>
-            <Cell order="9" name="调整后">afterAdjust</Cell>
-            <Cell order="10" name="生效时间">effDateStr</Cell>
-            <Cell order="11" name="单要素多产品段1">adjReason</Cell>
-            <Cell order="12" name="单要素多产品段2">fieldAdjRemark</Cell>
-            <Cell order="13" name="单要素多产品段3">fieldAdjRemark2</Cell>
-            <Cell order="14" name="报告发布日期">rptIssueDateStr</Cell>
-            <Cell order="15" name="更新时间">updateTimeStr</Cell>
-            <Cell order="16" name="更新人">updateUser</Cell>
+            <Cell order="4" name="子产品名称">prodName</Cell>
+            <Cell order="5" name="单产品多要素段1">adjReason</Cell>
+            <Cell order="6" name="单产品多要素段2">prodAdjRemark</Cell>
+            <Cell order="7" name="单产品多要素段3">prodAdjRemark2</Cell>
+            <Cell order="8" name="调整要素">adjField</Cell>
+            <Cell order="9" name="调整前">preAdjust</Cell>
+            <Cell order="10" name="调整后">afterAdjust</Cell>
+            <Cell order="11" name="生效时间">effDateStr</Cell>
+            <Cell order="12" name="单要素多产品段1">adjReason</Cell>
+            <Cell order="13" name="单要素多产品段2">fieldAdjRemark</Cell>
+            <Cell order="14" name="单要素多产品段3">fieldAdjRemark2</Cell>
+            <Cell order="15" name="报告发布日期">rptIssueDateStr</Cell>
+            <Cell order="16" name="更新时间">updateTimeStr</Cell>
+            <Cell order="17" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

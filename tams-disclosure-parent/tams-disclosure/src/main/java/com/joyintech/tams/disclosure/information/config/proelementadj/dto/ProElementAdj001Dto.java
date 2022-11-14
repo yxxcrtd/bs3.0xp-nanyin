@@ -50,6 +50,11 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
      */
     private String elementId;
 
+    /**
+     * 产品名称
+     */
+    private String prodName;
+
     public String getOperateType() {
         return operateType;
     }
@@ -158,4 +163,11 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
         this.excelNum = excelNum;
     }
 
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
 }

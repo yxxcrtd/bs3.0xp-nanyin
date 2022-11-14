@@ -2,56 +2,60 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.config.hugeinfopro.dao.HugeInfoProMapper">
 
-    <select id="select"  resultType="com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto">
-       select
+    <select id="select" resultType="com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto">
+        select
         REDEMPTION_ID redemptionId,
-          DATA_STATUS dataStatus,
-          PROD_REGIST_NO prodRegistNo,
-          PROD_ID prodId,
-          IS_SALES_AGENCY isSalesAgency,
-          TRIGGER_REMARK triggerRemark,
-          REJECT_REMARK rejectRemark,
-          RPT_ISSUE_DATE rptIssueDate,
-          DEAL_DATE dealDate,
-          UPDATE_TIME updateTime,
-          UPDATE_USER updateUser,
-        TO_CHAR(UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
-       from
-          DIS_LARGE_REDEMPTION
-    <where>
-        <if test="prodRegistNoList != null and prodRegistNoList.size() > 0">
-            AND PROD_REGIST_NO in
-            <foreach collection="prodRegistNoList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="prodIdList != null and prodIdList.size() > 0">
-            AND PROD_ID in
-            <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="dataStatus != null and !dataStatus.equals('')">
-            AND DATA_STATUS=#{dataStatus}
-        </if>
-        <if test="rptIssueDateStart != null and rptIssueDateStart != ''">
-            <![CDATA[AND  RPT_ISSUE_DATE >= TO_DATE(#{rptIssueDateStart},'YYYY-MM-DD') ]]>
-        </if>
-        <if test="rptIssueDateEnd != null and rptIssueDateEnd != ''">
-            <![CDATA[AND  RPT_ISSUE_DATE <= TO_DATE(#{rptIssueDateEnd},'YYYY-MM-DD')]]>
-        </if>
-    </where>
-    order by UPDATE_TIME desc
+        dlr.DATA_STATUS dataStatus,
+        dlr.PROD_REGIST_NO prodRegistNo,
+        dlr.PROD_ID prodId,
+        rpi.PROD_NAME prodName,
+        dlr.IS_SALES_AGENCY isSalesAgency,
+        dlr.TRIGGER_REMARK triggerRemark,
+        dlr. REJECT_REMARK rejectRemark,
+        dlr. RPT_ISSUE_DATE rptIssueDate,
+        dlr. DEAL_DATE dealDate,
+        dlr. UPDATE_TIME updateTime,
+        dlr. UPDATE_USER updateUser,
+        TO_CHAR(dlr.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+        from
+        DIS_LARGE_REDEMPTION dlr
+        left join REP_PROD_INFO rpi on dlr.PROD_ID = rpi.PROD_ID
+        <where>
+            <if test="prodRegistNoList != null and prodRegistNoList.size() > 0">
+                AND dlr.PROD_REGIST_NO in
+                <foreach collection="prodRegistNoList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="prodIdList != null and prodIdList.size() > 0">
+                AND dlr.PROD_ID in
+                <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="dataStatus != null and !dataStatus.equals('')">
+                AND dlr.DATA_STATUS=#{dataStatus}
+            </if>
+            <if test="rptIssueDateStart != null and rptIssueDateStart != ''">
+                <![CDATA[AND  dlr.RPT_ISSUE_DATE >= TO_DATE(#{rptIssueDateStart},'YYYY-MM-DD') ]]>
+            </if>
+            <if test="rptIssueDateEnd != null and rptIssueDateEnd != ''">
+                <![CDATA[AND  dlr.RPT_ISSUE_DATE <= TO_DATE(#{rptIssueDateEnd},'YYYY-MM-DD')]]>
+            </if>
+        </where>
+        order by dlr.UPDATE_TIME desc
     </select>
    <select id="selectByPrimaryKey"
            resultType="com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto">
            select
-           REDEMPTION_ID REDEMPTION_ID, PROD_ID PROD_ID, PROD_REGIST_NO PROD_REGIST_NO, IS_SALES_AGENCY IS_SALES_AGENCY,
-           DEAL_DATE DEAL_DATE, TRIGGER_REMARK TRIGGER_REMARK, REJECT_REMARK REJECT_REMARK,
-           RPT_ISSUE_DATE RPT_ISSUE_DATE, DATA_STATUS DATA_STATUS, DATA_SOURCE DATA_SOURCE,
-           CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
-           CREATE_DEPT CREATE_DEPT
-           from DIS_LARGE_REDEMPTION
+           distinct
+           dlr.REDEMPTION_ID REDEMPTION_ID, dlr.PROD_ID PROD_ID, rpi.PROD_NAME prodName,dlr.PROD_REGIST_NO PROD_REGIST_NO, dlr.IS_SALES_AGENCY IS_SALES_AGENCY,
+           dlr.DEAL_DATE DEAL_DATE, dlr.TRIGGER_REMARK TRIGGER_REMARK, dlr.REJECT_REMARK REJECT_REMARK,
+           dlr.RPT_ISSUE_DATE RPT_ISSUE_DATE, dlr.DATA_STATUS DATA_STATUS, dlr.DATA_SOURCE DATA_SOURCE,
+           dlr.CREATE_USER CREATE_USER, dlr.CREATE_TIME CREATE_TIME, dlr.UPDATE_USER UPDATE_USER, dlr.UPDATE_TIME UPDATE_TIME,
+           dlr.CREATE_DEPT CREATE_DEPT
+           from DIS_LARGE_REDEMPTION dlr
+           left join REP_PROD_INFO rpi on dlr.PROD_ID = rpi.PROD_ID
            where REDEMPTION_ID = #{redemptionId,jdbcType=VARCHAR}
    </select>
 
@@ -239,7 +243,7 @@
     <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         PROD_ID id,
-        PROD_ID text,
+        PROD_NAME text,
         PROD_RE object
         FROM
         rep_prod_info

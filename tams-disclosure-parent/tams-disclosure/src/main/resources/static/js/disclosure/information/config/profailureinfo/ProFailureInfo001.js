@@ -53,11 +53,11 @@
          */
         cols: [
             // {field:'prodAdjustId',  visible: false},
-            {field:'dataStatusStr',  title: 'ProElementAdj001.dataStatus',sortField:"dataStatus",width: 100},//数据状态
             {field:'prodName',  title: '产品全称',sortField:"prodName"},
             {field:'prodRegistNo',  title: 'ProElementAdj001.prodRegistNo',sortField:"prodRegistNo"},//产品登记编码
             {field:'nocreateReason',  title: '不成立原因',sortField:"nocreateReason"}//不成立原因
             ,{field:'reportIssueDate',  title: '报告发布日期',sortField:"reportIssueDate",type:'date'}//报告发布日期
+            ,{field:'dataStatusStr',  title: 'ProElementAdj001.dataStatus',sortField:"dataStatus",width: 150}//数据状态
             ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
