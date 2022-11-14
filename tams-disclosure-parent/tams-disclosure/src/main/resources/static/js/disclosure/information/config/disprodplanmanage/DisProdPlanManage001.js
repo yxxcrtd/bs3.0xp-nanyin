@@ -417,8 +417,10 @@
 	   };
 
 	 	function addrule() {
+			var data = {};
+			data.prodId=$('#finprodId').val()== null ? null : $('#finprodId').val().join(",");
 			Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
-				{},function () {
+				data,function () {
 					var finprodIds = $('#finprodIds').data('finprodIds');
 					if(!finprodIds || finprodIds.length ==0){
 						return;
