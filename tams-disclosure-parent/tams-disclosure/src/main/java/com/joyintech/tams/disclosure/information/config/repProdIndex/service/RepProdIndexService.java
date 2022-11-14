@@ -725,7 +725,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         List<TreeNode> parentNodes = getParentNodes();
         result.addAll(parentNodes);
         //查询当前所有产品，作为子节点
-        List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectProdInfo2();
+        List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectProdInfoSon();
         result.addAll(prodInfoNodes);
         return result;
     }
@@ -746,7 +746,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         List<TreeNode> parentNodes = getParentSonNodes();
         result.addAll(parentNodes);
         //查询当前所有产品，作为子节点
-        List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectRepProdIndexSon();
+        List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectProdInfoSon();
         if(CollectionUtils.isNotEmpty(prodIdList)){
             for (TreeNode prodInfoNode : prodInfoNodes) {
                 if(prodIdList.contains(prodInfoNode.getId())){
@@ -769,6 +769,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         List<DataDictItem> prodStatusList = new ArrayList<DataDictItem>();//产品状态
         List<DataDictItem> issueTypeList = new ArrayList<DataDictItem>();//发行方式
         List<String> prodSeriesList = new ArrayList<String>();//产品系列
+        List<String> prodSeriesListSon = new ArrayList<String>();
         List<TreeNode> parentNodes = new ArrayList<TreeNode>();
         prodStatusList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.信披_产品状态.getValue());
         issueTypeList = (List<DataDictItem>) SysDataUtil.getDataDictItem(DictCodeExt1.发行方式_信批.getValue());
@@ -803,6 +804,16 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                             treeDto_3.setpId(map_1.getItemCode() + map_2.getItemCode());
                             treeDto_3.setOpen(true);
                             parentNodes.add(treeDto_3);
+                            param.put("prodSeries",map_3);
+                            prodSeriesListSon=saleAgency002Mapper.selectAllProdSeriesBonusSon(param);
+                            for (String map_4 : prodSeriesListSon) {
+                                TreeNode treeDto_4 = new TreeNode();
+                                treeDto_4.setId(map_1.getItemCode() + map_2.getItemCode() + map_3+map_4);
+                                treeDto_4.setName(map_4);
+                                treeDto_4.setpId(map_1.getItemCode() + map_2.getItemCode()+ map_3);
+                                treeDto_4.setOpen(true);
+                                parentNodes.add(treeDto_4);
+                            }
                         }
                     }else{
                         TreeNode treeDto_3 = new TreeNode();

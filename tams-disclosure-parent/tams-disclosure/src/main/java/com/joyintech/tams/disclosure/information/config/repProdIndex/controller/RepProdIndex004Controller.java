@@ -14,6 +14,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage004Service;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.service.RepProdIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,9 @@ public class RepProdIndex004Controller extends BaseController {
 
 	@Autowired
 	private RepProdIndexService repProdIndexService;
+
+	@Autowired
+	private DisProdPlanManage004Service disProdPlanManage004Service;
 	/**
 	 * 内容初始化 {@inheritDoc}
 	 */
@@ -80,7 +84,7 @@ public class RepProdIndex004Controller extends BaseController {
 			//return reportContentEnum002Service.getProductTreeByAgencyId(agencyId);
 			return null;
 		} else{//新建
-			return repProdIndexService.getProductSonTree(prodIdList);
+			return disProdPlanManage004Service.getProductTree();
 		}
 	}
 

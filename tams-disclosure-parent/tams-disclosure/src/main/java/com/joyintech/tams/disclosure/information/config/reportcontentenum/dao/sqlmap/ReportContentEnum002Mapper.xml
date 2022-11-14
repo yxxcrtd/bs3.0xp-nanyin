@@ -188,7 +188,7 @@
         SELECT
         distinct
         T1.PROD_ID id,
-        nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') name,
+        nvl(T3.PROD_NAME,T2.PROD_NAME ) name,
         case T1.PD_STATUS
         when '01' then
         (case T1.ISSUING_WAY
@@ -256,30 +256,30 @@
         select
         distinct
         prod.PROD_ID id,
-        prod.PROD_ID || case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        prod.PROD_ID || case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else prod.PROD_NAME end name,
         case prod.PD_STATUS
         when '01' then
         (case prod.ISSUING_WAY
-        when '01' then '0101' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        when '01' then '0101' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else prod.PROD_NAME end)
-        when '02' then '0102' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        when '02' then '0102' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else prod.PROD_NAME end)
         else '' end
         )
         when '02' then
         (case prod.ISSUING_WAY
-        when '01' then '0201' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        when '01' then '0201' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else prod.PROD_NAME end)
-        when '02' then '0202' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        when '02' then '0202' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else prod.PROD_NAME end)
         else '' end
         )
         when '03' then
         (case prod.ISSUING_WAY
-        when '01' then '0301' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        when '01' then '0301' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else prod.PROD_NAME end)
-        when '02' then '0302' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME||'('||prod.PROD_NAME||')'
+        when '02' then '0302' || prod.PROD_SERIES || to_char(case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
         else prod.PROD_NAME end)
         else '' end
         )
@@ -296,24 +296,24 @@
         SELECT
         distinct
         T1.PROD_ID id,
-        T1.PROD_ID||nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') name,
+        T1.PROD_ID||nvl(T3.PROD_NAME,T2.PROD_NAME ) name,
         case T1.PD_STATUS
         when '01' then
         (case T1.ISSUING_WAY
-        when '01' then '0101' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
-        when '02' then '0102' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        when '01' then '0101' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME ))
+        when '02' then '0102' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME ))
         else '' end
         )
         when '02' then
         (case T1.ISSUING_WAY
-        when '01' then '0201' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
-        when '02' then '0202' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        when '01' then '0201' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME ))
+        when '02' then '0202' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME ))
         else '' end
         )
         when '03' then
         (case T1.ISSUING_WAY
-        when '01' then '0301' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
-        when '02' then '0302' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')'))
+        when '01' then '0301' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME ))
+        when '02' then '0302' || T1.PROD_SERIES || to_char(nvl(T3.PROD_NAME,T2.PROD_NAME ))
         else '' end
         )
         else '' end pid
@@ -322,9 +322,8 @@
         left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
         left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
         where T1.P_PROD_ID is not null
-        AND T1.STATUS not in ('D')
+        AND T1.STATUS not in ('D','C')
         AND T1.PROD_SERIES is not null
-        AND T1.status='E'
     </select>
 
     <select id="selectProdBonusInfo" resultType="com.joyintech.framework.select.TreeNode">

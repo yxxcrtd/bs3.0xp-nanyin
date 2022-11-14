@@ -68,7 +68,7 @@ public class ProdBonusplanManager004Service extends CommonExportService<DisProdP
         //获取父节点
         result.addAll(this.getParentNodes());
         //查询当前所有产品，作为子节点
-        List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectProdBonusInfo();
+        List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectProdInfoSon();
         result.addAll(prodInfoNodes);
         return result;
     }

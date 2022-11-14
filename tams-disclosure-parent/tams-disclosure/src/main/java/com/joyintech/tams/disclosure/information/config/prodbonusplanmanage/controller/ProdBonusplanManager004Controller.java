@@ -14,6 +14,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage004Service;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager004Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,7 @@ import java.util.List;
 public class ProdBonusplanManager004Controller extends BaseController {
 
 	@Autowired
-	private ProdBonusplanManager004Service prodBonusplanManager004Service;
+	private DisProdPlanManage004Service disProdPlanManage004Service;
 	/**
 	 * 内容初始化 {@inheritDoc}
 	 */
@@ -60,7 +61,7 @@ public class ProdBonusplanManager004Controller extends BaseController {
 			//return reportContentEnum002Service.getProductTreeByAgencyId(agencyId);
 			return null;
 		} else{//新建
-			return prodBonusplanManager004Service.getProductTree();
+			return disProdPlanManage004Service.getProductTree();
 		}
 	}
 
