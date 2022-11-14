@@ -43,14 +43,14 @@
 
         cols:[
             {field:'nostdAssetId', visible: false},
-            {field:'dataStatusStr', title: 'UnClaimAssetDetail002.dataStatus',width:150, sortField:'datastatus'},
-            {field:'prodId', title: 'UnClaimAssetDetail002.prodId', width:150},
-            {field:'prodName', title: 'UnClaimAssetDetail002.prodName',width:150},
-            {field:'effDateStr', title: 'UnClaimAssetDetail002.effDate',  width:150,type:'date', sortField:'effDate'}
-            ,{field:'effEndDateStr', title: 'UnClaimAssetDetail002.effEndDate', width:150,type:'date', sortField:'effEndDate'}
-            ,{field:'updateTime',type: 'datetime', title: 'UnClaimAssetDetail002.updateTime', width:150}
-            ,{field:'updateUser', title: 'UnClaimAssetDetail002.updateUser', width:150}
-            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],width: 150,
+            {field:'dataStatusStr', title: 'UnClaimAssetDetail002.dataStatus',width:160, sortField:'datastatus'},
+            {field:'prodId', title: 'UnClaimAssetDetail002.prodId', width:160},
+            {field:'prodName', title: 'UnClaimAssetDetail002.prodName',width:160},
+            {field:'effDateStr', title: 'UnClaimAssetDetail002.effDate',  width:160,type:'date', sortField:'effDate'}
+            ,{field:'effEndDateStr', title: 'UnClaimAssetDetail002.effEndDate', width:160,type:'date', sortField:'effEndDate'}
+            ,{field:'updateTime',type: 'datetime', title: 'UnClaimAssetDetail002.updateTime', width:160}
+            ,{field:'updateUser', title: 'UnClaimAssetDetail002.updateUser', width:160}
+            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],width: 160,
                 render: function (data, type, row, meta) {
                     if (row.dataStatus == 'D' || row.dataStatus == 'C')
                         return '';
