@@ -99,6 +99,7 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
 		where PROD_ID = #{prodId,jdbcType=CHAR}
           and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+          and  STATUS != 'D'
 	</delete>
 
     <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
