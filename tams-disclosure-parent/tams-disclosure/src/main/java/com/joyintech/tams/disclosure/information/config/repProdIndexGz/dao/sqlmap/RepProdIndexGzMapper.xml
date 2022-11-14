@@ -43,7 +43,8 @@
         select
         distinct
         T.PROD_ID prodId,
-        nvl(rpi2.PROD_NAME,rpi1.PROD_NAME) prodName,
+        <!--nvl(rpi2.PROD_NAME,rpi1.PROD_NAME) prodName,-->
+        rpi.PROD_NAME prodName,
         T.VALUE_DATE valueDate,
         T.ASSETS_VALUE assetsValue,
         T.CAPITAL capital,
@@ -64,10 +65,10 @@
         T.UPDATE_TIME updateTime,
         T.ERRORMSG errormsg
         from REP_PROD_INDEX_GZ T
-        left join REP_PROD_INFO rpi on T.PROD_ID = rpi.PROD_ID
+        left join REP_PROD_INFO rpi on T.PROD_ID = rpi.PROD_ID AND rpi.REP_PROD_TYPE = '03'
         left join REP_PROD_INDEX_GZ T2 on rpi.P_PROD_ID = T2.PROD_ID and T.VALUE_DATE = T2.VALUE_DATE
-        left join REP_PROD_INFO rpi1 on rpi.P_PROD_ID = rpi1.PROD_ID and rpi1.REP_PROD_TYPE = '01'
-        left join REP_PROD_INFO rpi2 on rpi.PROD_ID = rpi2.PROD_ID and rpi2.REP_PROD_TYPE = '02'
+        <!--left join REP_PROD_INFO rpi1 on rpi.P_PROD_ID = rpi1.PROD_ID and rpi1.REP_PROD_TYPE = '03'
+        left join REP_PROD_INFO rpi2 on rpi.PROD_ID = rpi2.PROD_ID and rpi2.REP_PROD_TYPE = '02'-->
         where rpi.P_PROD_ID is not null
         <if test="prodList != null  and prodIds!= ''">
             <foreach collection="prodList" item="item" open="and T.PROD_ID in(" separator="," close=")">

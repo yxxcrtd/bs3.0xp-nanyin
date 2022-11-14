@@ -52,7 +52,7 @@ $(function() {
             title : '子产品代码'
         }, {
             field : 'prodName',width:'10%',
-            title : '产品全称'
+            title : '子产品名称'
         }, {
             field : 'pProdId',width:'10%',
             title : '产品主代码'
