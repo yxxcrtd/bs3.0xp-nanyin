@@ -248,7 +248,7 @@
         SELECT
         distinct
         T1.P_PROD_ID pProdId,
-        T3.PROD_NAME || '(' || T1.PROD_NAME || ')' prodName,
+        T1.PROD_NAME prodName,
         T1.IS_GRADE isGrade,
         T1.PROD_TYPE prodType
         from REP_PROD_INFO T1
