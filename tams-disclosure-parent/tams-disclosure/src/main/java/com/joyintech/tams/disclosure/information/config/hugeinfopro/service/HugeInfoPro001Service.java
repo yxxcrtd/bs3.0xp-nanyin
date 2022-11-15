@@ -95,6 +95,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         else if (StringUtil.equals(type, "NEW")) {
             HugeInfoPro001Dto hugeInfoPro001Dto = new HugeInfoPro001Dto();
             BeanUtil.copyPropertiesIgnoreNull(hugeInfoPro001Dto,dto);
+            String prodRegistNo=hugeInfoProMapper.selectProdRegistNo(dto.getProdId());
+            hugeInfoPro001Dto.setProdRegistNo(prodRegistNo);
             hugeInfoPro001Dto.setDataStatus("E");
             hugeInfoProMapper.insert(hugeInfoPro001Dto);
         }
@@ -128,8 +130,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
         }
-        if (null == tempList.get(0) || tempList.get(0).size() != 6) {
-            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 6), MessageType.错误消息);
+        if (null == tempList.get(0) || tempList.get(0).size() != 5) {
+            webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 5), MessageType.错误消息);
             return webResult;
         }
         List<List<String>> dataList = tempList.subList(1, tempList.size());
@@ -145,16 +147,14 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             if (data != null && data.size() > 0) {
                 Map<String, List<HugeInfoPro001Dto>> map = entities.stream().collect(
                         JoyinCollectors.groupingBy(x ->
-                                x.getProdRegistNo()
-                                        + GlobalConstant.UNDER_LINE + x.getProdId()
+                               x.getProdId()
                                         + GlobalConstant.UNDER_LINE + x.getRptIssueDateStr()
                         ));
                 // 将序号放入list中
                 List<String> excelNumList = new ArrayList<>();
                 List<Integer> excelNumIntList = new ArrayList<>();
                 for (HugeInfoPro001Dto dto : data) {
-                    List<HugeInfoPro001Dto> listTemp = map.get(dto.getProdRegistNo()
-                            + GlobalConstant.UNDER_LINE + dto.getProdId()
+                    List<HugeInfoPro001Dto> listTemp = map.get(dto.getProdId()
                             + GlobalConstant.UNDER_LINE + dto.getRptIssueDateStr());
                     excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
                 }
@@ -188,22 +188,17 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             List<String> list =  dataList.get(i);
             HugeInfoPro001Dto entity = new HugeInfoPro001Dto();
             if (StringUtil.isNotEmpty(list.get(0))) {
-                entity.setProdRegistNo(list.get(0));
-            } else {
-                entity.setProdRegistNo(" ");
-            }
-            if (StringUtil.isNotEmpty(list.get(1))) {
-                entity.setProdId(list.get(1));
+                entity.setProdId(list.get(0));
             } else {
                 entity.setProdId(" ");
             }
-            if (StringUtil.isNotEmpty(list.get(2))) {
-                entity.setDealDateStr(list.get(2));
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                entity.setDealDateStr(list.get(1));
             } else {
                 entity.setDealDateStr(" ");
             }
-            if (StringUtil.isNotEmpty(list.get(5))) {
-                entity.setRptIssueDateStr(list.get(5));
+            if (StringUtil.isNotEmpty(list.get(4))) {
+                entity.setRptIssueDateStr(list.get(4));
             } else {
                 entity.setRptIssueDateStr(" ");
             }
@@ -285,13 +280,12 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
                 entities.forEach(item -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("prodId", item.getProdId());
-                    map.put("prodRegistNo", item.getProdRegistNo());
                     map.put("rptIssueDate", item.getRptIssueDate());
                     item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                     item.setUpdateTime(DateUtil.now());
                     item.setUpdateUser(CommonUtil.getUserName());
                     HugeInfoPro001Dto dto = this.selectByBusPK(map);
-                    if (dto != null && !StringUtil.equals(dto.getDataStatus(),"D")) {
+                        if (dto != null && !StringUtil.equals(dto.getDataStatus(),"D")) {
                         hugeInfoProMapper.updateByBusKey(item);
                     } else {
                         item.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
@@ -317,58 +311,55 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         List<String> prodList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> rowData = dataList.get(i);
-            if (null == rowData || rowData.size() != 6) {
+            if (null == rowData || rowData.size() != 5) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
-                        this.getMessage("REPORT_COMMON_FILE_E_0030", 6)));
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 5)));
                 break;
             }
             // 验证消息
             List<String> message = new ArrayList<>();
-            if (!StringUtil.isNotEmpty(rowData.get(0))){
+            /*if (!StringUtil.isNotEmpty(rowData.get(0))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品登记编码"));
             } else if (!registNoList.contains(rowData.get(0).trim())){
                 message.add("产品登记编码未在产品基本信息表中维护。");
-            }
-            if (!StringUtil.isNotEmpty(rowData.get(1))){
+            }*/
+            if (!StringUtil.isNotEmpty(rowData.get(0))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "子产品代码"));
-            } else if (!prodList.contains(rowData.get(1).trim())){
+            } else if (!prodList.contains(rowData.get(0).trim())){
                 message.add("子产品代码未在产品基本信息表中维护。");
             }
-            if (!StringUtil.isNotEmpty(rowData.get(2))){
+            if (!StringUtil.isNotEmpty(rowData.get(1))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "巨额赎回日期"));
-            } else if (!isDateStr(rowData.get(2))){
+            } else if (!isDateStr(rowData.get(1))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "巨额赎回日期"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(3))){
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "触发的情形说明文字"));
-            } else if (rowData.get(3).length() > 500) {
-                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "触发的情形说明文字"));
+            if (!StringUtil.isNotEmpty(rowData.get(2))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "触发的情形说明文字(文字）"));
+            } else if (rowData.get(2).length() > 500) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "触发的情形说明文字(文字）"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(4))){
+            if (!StringUtil.isNotEmpty(rowData.get(3))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "拒绝赎回说明（文字）"));
-            } else if (rowData.get(4).length() > 500) {
+            } else if (rowData.get(3).length() > 500) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0005", "拒绝赎回说明（文字）"));
             }
-            if (!StringUtil.isNotEmpty(rowData.get(5))){
+            if (!StringUtil.isNotEmpty(rowData.get(4))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "报告发布日期"));
-            }else if(!isDateStr(rowData.get(5))){
+            }else if(!isDateStr(rowData.get(4))){
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "报告发布日期"));
             }
-            if(hugeInfoProMapper.isRelate(rowData.get(0), rowData.get(1)) == 0){
+           /* if(hugeInfoProMapper.isRelate(rowData.get(0), rowData.get(1)) == 0){
                 message.add( "产品登记编码与产品子代码不存在联系。");
-            }
+            }*/
             if (map.containsKey(rowData.get(0)
-                    + GlobalConstant.UNDER_LINE + rowData.get(1)
-                    + GlobalConstant.UNDER_LINE + rowData.get(5))) {
+                    + GlobalConstant.UNDER_LINE + rowData.get(4))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
             }
             map.put(rowData.get(0)
-                    + GlobalConstant.UNDER_LINE + rowData.get(1)
-                    + GlobalConstant.UNDER_LINE + rowData.get(5), rowData);
+                    + GlobalConstant.UNDER_LINE + rowData.get(4), rowData);
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(rowData.get(0)
-                        + GlobalConstant.UNDER_LINE + rowData.get(1)
-                        + GlobalConstant.UNDER_LINE + rowData.get(5),
+                checkResult.add(new ExcelValidDto( rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(4),
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
             else {
@@ -381,22 +372,19 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
     private HugeInfoPro001Dto convertToEntity(List<String> rowData) {
         HugeInfoPro001Dto hugeInfoPro001Dto = new HugeInfoPro001Dto();
         if (StringUtil.isNotEmpty(rowData.get(0))) {
-            hugeInfoPro001Dto.setProdRegistNo(rowData.get(0));
+            hugeInfoPro001Dto.setProdId(rowData.get(0));
         }
         if (StringUtil.isNotEmpty(rowData.get(1))) {
-            hugeInfoPro001Dto.setProdId(rowData.get(1));
+            hugeInfoPro001Dto.setDealDate(DateUtil.parse(rowData.get(1)));
         }
         if (StringUtil.isNotEmpty(rowData.get(2))) {
-            hugeInfoPro001Dto.setDealDate(DateUtil.parse(rowData.get(2)));
+            hugeInfoPro001Dto.setTriggerRemark(rowData.get(2));
         }
         if (StringUtil.isNotEmpty(rowData.get(3))) {
-            hugeInfoPro001Dto.setTriggerRemark(rowData.get(3));
+            hugeInfoPro001Dto.setRejectRemark(rowData.get(3));
         }
         if (StringUtil.isNotEmpty(rowData.get(4))) {
-            hugeInfoPro001Dto.setRejectRemark(rowData.get(4));
-        }
-        if (StringUtil.isNotEmpty(rowData.get(5))) {
-            hugeInfoPro001Dto.setRptIssueDate(DateUtil.parse(rowData.get(5)));
+            hugeInfoPro001Dto.setRptIssueDate(DateUtil.parse(rowData.get(4)));
         }
         return hugeInfoPro001Dto;
     }

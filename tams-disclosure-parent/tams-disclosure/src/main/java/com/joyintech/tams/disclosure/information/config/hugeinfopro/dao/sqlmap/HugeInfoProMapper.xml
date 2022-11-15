@@ -155,8 +155,7 @@
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where PROD_ID = #{prodId,jdbcType=VARCHAR} and
-        PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
         and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
         and DATA_STATUS!='D'
     </update>
@@ -232,8 +231,7 @@
            CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
            CREATE_DEPT CREATE_DEPT
            from DIS_LARGE_REDEMPTION
-           where PROD_ID = #{prodId,jdbcType=VARCHAR} and
-            PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+           where PROD_ID = #{prodId,jdbcType=VARCHAR}
             and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
             and DATA_STATUS = 'E'
 
@@ -273,8 +271,8 @@
         to_char(A.RPT_ISSUE_DATE,'yyyy/mm/dd') rptIssueDateStr
         from DIS_LARGE_REDEMPTION A
         <where>
-            <foreach collection="list" item="item" open="(A.PROD_REGIST_NO,A.PROD_ID,to_char(A.RPT_ISSUE_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
-                (#{item.prodRegistNo},#{item.prodId},#{item.rptIssueDateStr},'E')
+            <foreach collection="list" item="item" open="(A.PROD_ID,to_char(A.RPT_ISSUE_DATE,'yyyy/mm/dd'),A.DATA_STATUS) IN (" separator="," close=")">
+                (#{item.prodId},#{item.rptIssueDateStr},'E')
             </foreach>
         </where>
     </select>
@@ -294,6 +292,16 @@
             <if test="rptIssueDateStr != null and rptIssueDateStr != ''">
                 AND	RPT_ISSUE_DATE = to_date(#{rptIssueDateStr,jdbcType=VARCHAR},'yyyy-MM-dd')
             </if>
+        </where>
+    </select>
+
+    <select id="selectProdRegistNo"   resultType="java.lang.String">
+        select
+        distinct
+        PROD_RE
+        from  rep_prod_info
+        <where>
+            PROD_ID=#{prodId,jdbcType=VARCHAR}
         </where>
     </select>
 </mapper>

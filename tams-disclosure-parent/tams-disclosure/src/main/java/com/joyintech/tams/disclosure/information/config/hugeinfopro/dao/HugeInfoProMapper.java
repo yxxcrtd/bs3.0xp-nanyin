@@ -41,4 +41,5 @@ public interface HugeInfoProMapper {
     List<HugeInfoPro001Dto> selectHugeInfoList(@Param("list") List<HugeInfoPro001Dto> list);
 
     List<HugeInfoPro001Dto> selectHugeInfoByProdId(Map<String, Object> map);
+    String selectProdRegistNo(String prodId);
 }
