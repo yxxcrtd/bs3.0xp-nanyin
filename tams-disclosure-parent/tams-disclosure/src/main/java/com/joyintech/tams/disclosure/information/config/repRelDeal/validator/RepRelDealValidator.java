@@ -59,6 +59,13 @@ public class RepRelDealValidator implements BeanValidator {
             if(dto.getEffdelidate()== null){
                 errorList.add(new ValidMessage("", "生效截止日期 不能为空!"));
             }
+            if(dto.getEffdate()!= null&&dto.getEffdelidate()!= null){
+                String dateS=DateUtil.format(dto.getEffdate());
+                String dateE=DateUtil.format(dto.getEffdelidate());
+                if(!DateV(dateS,dateE)){
+                    errorList.add(new ValidMessage("","当开始日期为xxxx/01/01，结束日期只能为xxxx/03/31，xxxx/06/30，xxxx/12/31；当开始日期为xxxx/04/01，结束日期只能为xxxx/06/30；当开始日期为xxxx/07/01，结束日期只能为xxxx/09/30，xxxx/12/31；当开始日期为xxxx/10/01，结束日期只能为xxxx/12/31。"));
+                }
+            }
             Map<String, Object> map = new HashMap<>();
             map.put("uuid",dto.getUuid());
             RepRelDealDto repRelDealDto =repRelDealService.selectData(map);
@@ -107,7 +114,7 @@ public class RepRelDealValidator implements BeanValidator {
             }
 
 
-            if(StringUtil.isNotEmpty(dto.getProdId()) && StringUtil.isNotEmpty(dto.getEffdate()) && StringUtil.isNotEmpty(dto.getEffdelidate())){
+           /* if(StringUtil.isNotEmpty(dto.getProdId()) && StringUtil.isNotEmpty(dto.getEffdate()) && StringUtil.isNotEmpty(dto.getEffdelidate())){
                 List<RepRelDealDto> list = repRelDealService.selectExist(dto);
 //                if(list.size() > 0){
 //                    errorList.add(new ValidMessage("", "生效区间范围与已有数据有重叠"));
@@ -117,9 +124,46 @@ public class RepRelDealValidator implements BeanValidator {
                     errorList.add(new ValidMessage("生效区间范围有重叠！"+"{"+DateUtil.format(entity.getEffdate(),"yyyy-MM-dd")
                             +"-"+DateUtil.format(entity.getEffdelidate(),"yyyy-MM-dd")+"}"));
                 }
-            }
+            }*/
         }
 
         return errorList;
+    }
+    public static boolean DateV(String dataS,String dataE) {
+        boolean result=false;
+        String monthStrS=dataS.split("-")[1];
+        String dayStrS=dataS.split("-")[2];
+        String monthStrE=dataE.split("-")[1];
+        String dayStrE=dataE.split("-")[2];
+        if((StringUtil.equals(monthStrS,"01")||StringUtil.equals(monthStrS,'1'))&&(StringUtil.equals(dayStrS,"01")||StringUtil.equals(dayStrS,'1'))){
+            if((StringUtil.equals(monthStrE,"03")||StringUtil.equals(monthStrE,'3'))&&StringUtil.equals(dayStrE,"31")){
+                result=true;
+            }
+            if((StringUtil.equals(monthStrE,"06")||StringUtil.equals(monthStrE,'6'))&&StringUtil.equals(dayStrE,"30")){
+                result=true;
+            }
+            if(StringUtil.equals(monthStrE,"12")&&StringUtil.equals(dayStrE,"31")){
+                result=true;
+            }
+        }
+        else if((StringUtil.equals(monthStrS,"04")||StringUtil.equals(monthStrS,'4'))&&(StringUtil.equals(dayStrS,"01")||StringUtil.equals(dayStrS,'1'))){
+            if((StringUtil.equals(monthStrE,"06")||StringUtil.equals(monthStrE,'6'))&&StringUtil.equals(dayStrE,"30")){
+                result=true;
+            }
+        }
+        else if((StringUtil.equals(monthStrS,"07")||StringUtil.equals(monthStrS,'7'))&&(StringUtil.equals(dayStrS,"01")||StringUtil.equals(dayStrS,'1'))){
+            if((StringUtil.equals(monthStrE,"09")||StringUtil.equals(monthStrE,'9'))&&StringUtil.equals(dayStrE,"30")){
+                result=true;
+            }
+            if(StringUtil.equals(monthStrE,"12")&&StringUtil.equals(dayStrE,"31")){
+                result=true;
+            }
+        }
+        else if(StringUtil.equals(monthStrS,"10")&&(StringUtil.equals(dayStrS,"01")||StringUtil.equals(dayStrS,'1'))){
+            if(StringUtil.equals(monthStrE,"12")&&StringUtil.equals(dayStrE,"31")){
+                result=true;
+            }
+        }
+        return result;
     }
 }

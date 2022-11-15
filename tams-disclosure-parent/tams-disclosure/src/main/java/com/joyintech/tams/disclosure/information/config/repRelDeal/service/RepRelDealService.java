@@ -404,13 +404,17 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
                     if (DateUtil.compareDate(effdelidate, effdate) < 0) {
                         message.add("生效截止日期不能小于生效日。");
                     }
+                    if(!DateV(rowData.get(8),rowData.get(9))){
+                        message.add("当开始日期为xxxx/01/01，结束日期只能为xxxx/03/31，xxxx/06/30，xxxx/12/31；当开始日期为xxxx/04/01，结束日期只能为xxxx/06/30；当开始日期为xxxx/07/01，结束日期只能为xxxx/09/30，xxxx/12/31；当开始日期为xxxx/10/01，结束日期只能为xxxx/12/31。");
+                    }
                 }
             }
+
 
             if (StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(8)) && StringUtil.isNotEmpty(rowData.get(9))
                     && isDateStr(rowData.get(8).trim()) && isDateStr(rowData.get(9).trim())) {
 
-                Date effdate = DateUtil.parse(rowData.get(8).toString().trim());
+              /*  Date effdate = DateUtil.parse(rowData.get(8).toString().trim());
                 Date effdelidate = DateUtil.parse(rowData.get(9).toString().trim());
                 if (DateUtil.compareDate(effdelidate, effdate) >= 0) {
                     RepRelDealDto ser = new RepRelDealDto();
@@ -428,7 +432,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
                             break;
                         }
                     }
-                }
+                }*/
                 if (map.containsKey(rowData.get(0)
                         + GlobalConstant.UNDER_LINE + rowData.get(8)
                         + GlobalConstant.UNDER_LINE + rowData.get(9))) {
@@ -455,7 +459,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
         }
-        if (checkResult.isEmpty()) {
+        /*if (checkResult.isEmpty()) {
             List<String> message = new ArrayList<>();
             Map<String, List<RepRelDealDto>> realmap = entities.stream().collect(Collectors.groupingBy(RepRelDealDto::getProdId));
             for (String key : realmap.keySet()) {
@@ -482,7 +486,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(realmap.entrySet().stream().findFirst().get().getValue().get(0).getEffdateStr()+GlobalConstant.UNDER_LINE+realmap.entrySet().stream().findFirst().get().getValue().get(0).getEffdelidateStr(), String.valueOf(realmap.entrySet().stream().findFirst().get().getValue().get(0).getExcelNum()), StringUtil.joinString(message, "<br>")));
             }
-        }
+        }*/
         return checkResult;
     }
 
@@ -521,5 +525,42 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
         repRelDealDto.setStatus("E");
         repRelDealDto.setUuid(IDGenerator.generate(36));
         return repRelDealDto;
+    }
+    public static boolean DateV(String dataS,String dataE) {
+        boolean result=false;
+        String monthStrS=dataS.split("/")[1];
+        String dayStrS=dataS.split("/")[2];
+        String monthStrE=dataE.split("/")[1];
+        String dayStrE=dataE.split("/")[2];
+        if((StringUtil.equals(monthStrS,"01")||StringUtil.equals(monthStrS,'1'))&&(StringUtil.equals(dayStrS,"01")||StringUtil.equals(dayStrS,'1'))){
+            if((StringUtil.equals(monthStrE,"03")||StringUtil.equals(monthStrE,'3'))&&StringUtil.equals(dayStrE,"31")){
+                result=true;
+            }
+            if((StringUtil.equals(monthStrE,"06")||StringUtil.equals(monthStrE,'6'))&&StringUtil.equals(dayStrE,"30")){
+                result=true;
+            }
+            if(StringUtil.equals(monthStrE,"12")&&StringUtil.equals(dayStrE,"31")){
+                result=true;
+            }
+        }
+        else if((StringUtil.equals(monthStrS,"04")||StringUtil.equals(monthStrS,'4'))&&(StringUtil.equals(dayStrS,"01")||StringUtil.equals(dayStrS,'1'))){
+            if((StringUtil.equals(monthStrE,"06")||StringUtil.equals(monthStrE,'6'))&&StringUtil.equals(dayStrE,"30")){
+                result=true;
+            }
+        }
+        else if((StringUtil.equals(monthStrS,"07")||StringUtil.equals(monthStrS,'7'))&&(StringUtil.equals(dayStrS,"01")||StringUtil.equals(dayStrS,'1'))){
+            if((StringUtil.equals(monthStrE,"09")||StringUtil.equals(monthStrE,'9'))&&StringUtil.equals(dayStrE,"30")){
+                result=true;
+            }
+            if(StringUtil.equals(monthStrE,"12")&&StringUtil.equals(dayStrE,"31")){
+                result=true;
+            }
+        }
+        else if(StringUtil.equals(monthStrS,"10")&&(StringUtil.equals(dayStrS,"01")||StringUtil.equals(dayStrS,'1'))){
+            if(StringUtil.equals(monthStrE,"12")&&StringUtil.equals(dayStrE,"31")){
+                result=true;
+            }
+        }
+        return result;
     }
 }
