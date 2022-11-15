@@ -84,7 +84,7 @@ public class RepProdIndex004Controller extends BaseController {
 			//return reportContentEnum002Service.getProductTreeByAgencyId(agencyId);
 			return null;
 		} else{//新建
-			return disProdPlanManage004Service.getProductTree();
+			return disProdPlanManage004Service.getProductTree(prodIdList);
 		}
 	}
 
