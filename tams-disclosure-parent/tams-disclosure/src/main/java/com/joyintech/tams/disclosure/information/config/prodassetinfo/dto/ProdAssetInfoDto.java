@@ -126,49 +126,49 @@ public class ProdAssetInfoDto extends DisProdAsset implements ProcessEntity{
 	}
 
 	@Override
-	@NotEmpty(fieldName = "穿透前固定收益类资产占总资产比例",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "穿透前固定收益类资产占总资产比例(%)",groups={ValidateGroupEdit.class})
 	public BigDecimal getFixPreRatio() {
 		return super.getFixPreRatio();
 	}
 
 	@Override
-	@NotEmpty(fieldName = "穿透后固定收益类资产占总资产比例",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "穿透后固定收益类资产占总资产比例(%)",groups={ValidateGroupEdit.class})
 	public BigDecimal getFixAfterRatio() {
 		return super.getFixAfterRatio();
 	}
 
 	@Override
-	@NotEmpty(fieldName = "穿透前权益类资产占总资产比例",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "穿透前权益类资产占总资产比例(%)",groups={ValidateGroupEdit.class})
 	public BigDecimal getEquityPreRatio() {
 		return super.getEquityPreRatio();
 	}
 
 	@Override
-	@NotEmpty(fieldName = "穿透后权益类资产占总资产比例",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "穿透后权益类资产占总资产比例(%)",groups={ValidateGroupEdit.class})
 	public BigDecimal getEquityAfterRatio() {
 		return super.getEquityAfterRatio();
 	}
 
 	@Override
-	@NotEmpty(fieldName = "穿透前商品及金融衍生品类资产占总资产比例",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "穿透前商品及金融衍生品类资产占总资产比例(%)",groups={ValidateGroupEdit.class})
 	public BigDecimal getFdPreRatio() {
 		return super.getFdPreRatio();
 	}
 
 	@Override
-	@NotEmpty(fieldName = "穿透后商品及金融衍生品类资产占总资产比例",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "穿透后商品及金融衍生品类资产占总资产比例(%)",groups={ValidateGroupEdit.class})
 	public BigDecimal getFdAfterRatio() {
 		return super.getFdAfterRatio();
 	}
 
 	@Override
-	@NotEmpty(fieldName = "穿透前混合类资产占总资产比例",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "穿透前混合类资产占总资产比例(%)",groups={ValidateGroupEdit.class})
 	public BigDecimal getMixPreRatio() {
 		return super.getMixPreRatio();
 	}
 
 	@Override
-	@NotEmpty(fieldName = "穿透后混合类资产占总资产比例",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "穿透后混合类资产占总资产比例(%)",groups={ValidateGroupEdit.class})
 	public BigDecimal getMixAfterRatio() {
 		return super.getMixAfterRatio();
 	}

@@ -59,49 +59,49 @@ $(function(){
               ,{field:'statusStr', width:'10%', sortField:'dataStatus', title: '数据状态'}
               ,{field:'prodId', width:'10%', sortField:'prodId', title: '产品主代码'}
               ,{field:'prodName', width:'10%', sortField:'prodName', title: '产品全称'}
-              ,{field:'fixPreRatio', width:'10%', title: '穿透前固定收益类资产占总资产比例',render: function (data, type, row, meta) {
+              ,{field:'fixPreRatio', width:'17%', title: '穿透前固定收益类资产占总资产比例(%)',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
                      }
                      return formatMoney(data, 2);
                  }}
-              ,{field:'fixAfterRatio', width:'10%', title: '穿透后固定收益类资产占总资产比例',render: function (data, type, row, meta) {
+              ,{field:'fixAfterRatio', width:'17%', title: '穿透后固定收益类资产占总资产比例(%)',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
                      }
                      return formatMoney(data, 2);
                  }}
-              ,{field:'equityPreRatio', width:'10%', title: '穿透前权益类资产占总资产比例',render: function (data, type, row, meta) {
+              ,{field:'equityPreRatio', width:'17%', title: '穿透前权益类资产占总资产比例(%)',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
                      }
                      return formatMoney(data, 2);
                  }}
-              ,{field:'equityAfterRatio', width:'10%', title: '穿透后权益类资产占总资产比例',render: function (data, type, row, meta) {
+              ,{field:'equityAfterRatio', width:'17%', title: '穿透后权益类资产占总资产比例(%)',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
                      }
                      return formatMoney(data, 2);
                  }}
-              ,{field:'fdPreRatio', width:'10%', title: '穿透前商品及金融衍生品类资产占总资产比例',render: function (data, type, row, meta) {
+              ,{field:'fdPreRatio', width:'19%', title: '穿透前商品及金融衍生品类资产占总资产比例(%)',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
                      }
                      return formatMoney(data, 2);
                  }}
-              ,{field:'fdAfterRatio', width:'10%', title: '穿透后商品及金融衍生品类资产占总资产比例',render: function (data, type, row, meta) {
+              ,{field:'fdAfterRatio', width:'19%', title: '穿透后商品及金融衍生品类资产占总资产比例(%)',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
                      }
                      return formatMoney(data, 2);
                  }}
-              ,{field:'mixPreRatio', width:'10%', title: '穿透前混合类资产占总资产比例',render: function (data, type, row, meta) {
+              ,{field:'mixPreRatio', width:'17%', title: '穿透前混合类资产占总资产比例(%)',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
                      }
                      return formatMoney(data, 2);
                  }}
-              ,{field:'mixAfterRatio', width:'10%', title: '穿透后混合类资产占总资产比例',render: function (data, type, row, meta) {
+              ,{field:'mixAfterRatio', width:'17%', title: '穿透后混合类资产占总资产比例(%)',render: function (data, type, row, meta) {
                      if(data == '') {
                          return '';
                      }
