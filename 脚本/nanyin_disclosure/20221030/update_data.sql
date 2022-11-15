@@ -640,3 +640,23 @@ delete from rep_screen a where a.screen_id in('100000069','100000071');
 
 --修改分红表单维护字段业绩比较基准比例精度
 alter table DIS_PROD_BONUSPLAN modify ACHIEVEMENT_BASIS_PROP  NUMBER(7,4);
+
+-- 非指数型半年报/年报修改 add by zhengxiaolian 2022-11-15 start
+update rep_reportinfo a set a.reportdesc='半年度报告非指数型非现管类产品' where id='1221';
+update rep_reportinfo a set a.reportdesc='年度报告非指数型非现管类产品' where id='1223';
+
+update REP_INFO a set a.template_name='半年度报告非指数型非现管类产品',a.report_name='半年度报告非指数型非现管类产品' where a.rep_id='CP_001_002_018';
+update REP_INFO a set a.template_name='年度报告非指数型非现管类产品',a.report_name='年度报告非指数型非现管类产品' where a.rep_id='CP_001_002_020';
+
+update rep_tree a set a.tree_name='半年度报告非指数型非现管类产品' where a.tree_id='CP_001_002_018';
+update rep_tree a set a.tree_name='年度报告非指数型非现管类产品' where a.tree_id='CP_001_002_020';
+
+insert into REP_JOB_RANGE values ('D1000000000000000067','CP_001_002_018','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D1000000000000000071','CP_001_002_020','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+
+update REP_RULE a set a.rule_name='半年度报告非指数型非现管类产品_规则',a.rep_name='半年度报告非指数型非现管类产品' where a.id='D0000000000000000017';
+update REP_RULE a set a.rule_name='年度报告非指数型非现管类产品_规则',a.rep_name='年度报告非指数型非现管类产品' where a.id='D0000000000000000019';
+
+update REP_JOB a set a.job_name='半年度报告非指数型非现管类产品'where a.job_id='100000017';
+update REP_JOB a set a.job_name='年度报告非指数型非现管类产品'where a.job_id='100000019';
+-- 非指数型半年报/年报修改 add by zhengxiaolian 2022-11-15 end
