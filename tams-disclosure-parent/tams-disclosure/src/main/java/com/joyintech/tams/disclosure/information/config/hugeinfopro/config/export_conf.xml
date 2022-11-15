@@ -6,7 +6,7 @@
             <Cell order="2" name="子产品代码">prodId</Cell>
             <Cell order="3" name="子产品名称">prodName</Cell>
             <Cell order="4" name="巨额赎回日期">dealDateStr</Cell>
-            <Cell order="5" name="触发的情形说明文字">triggerRemark</Cell>
+            <Cell order="5" name="触发的情形说明文字（文字）">triggerRemark</Cell>
             <Cell order="6" name="拒绝赎回说明（文字）">rejectRemark</Cell>
             <Cell order="7" name="报告发布日期">rptIssueDateStr</Cell>
             <Cell order="8" name="数据状态">dataStatusStr</Cell>
