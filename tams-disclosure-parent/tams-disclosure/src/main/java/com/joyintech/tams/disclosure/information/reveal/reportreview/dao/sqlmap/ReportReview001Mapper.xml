@@ -20,14 +20,9 @@
             REVIEW.REVIEW_TIME reviewTime,
             F2.REAL_NAME reviewUser,
             REVEAL.REP_ID repId,
-            REVEAL.PRODID prodid,
-            decode(
-                    R1.REP_PROD_TYPE,
-                    '03',
-                    R2.PROD_NAME,
-                    decode(R1.PROD_NAME, null, REVEAL.PROD_NAME, R1.PROD_NAME)
-                ) prodName,
-            REVEAL.REPORT_CATEGORY reportCategory,
+            REVEAL.PRODID prodid
+            ,decode(R1.REP_PROD_TYPE,'01',R1.PROD_NAME,'03',R1.PROD_NAME,'02',R2.PROD_NAME,decode(R1.PROD_NAME,null,REVEAL.PROD_NAME,R1.PROD_NAME)) prodName
+            ,REVEAL.REPORT_CATEGORY reportCategory,
             rfp.NAME reportCategoryName,
             REVEAL.REPORT_NAME reportName,
             case
@@ -60,8 +55,8 @@
             REP_REVEAL REVEAL
                 inner join REP_REVEAL_REVIEW REVIEW on REVEAL.ID = REVIEW.REVEAL_ID
                 and REVIEW.REVIEW_USER = #{loginUser} and REVIEW.REVIEW_STATUS != #{REVIEW_STATUS_06}
-                left join REP_PROD_INFO R1 on REVEAL.PRODID = R1.PROD_ID
-                left join REP_PROD_INFO R2 on R1.P_PROD_ID = R2.PROD_ID
+                left join REP_PROD_INFO R1 on REVEAL.PRODID = R1.PROD_ID and R1.STATUS!='D' and R1.REP_PROD_TYPE in ('01','03')
+                left join REP_PROD_INFO R2 on REVEAL.PRODID = R2.P_PROD_ID and R2.STATUS!='D' and R2.REP_PROD_TYPE ='02'
                 left join (SELECT * FROM(
                                             SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
                                             FROM SYS_USER su
