@@ -6,7 +6,7 @@
 		REVEAL.ID id
 		,REVEAL.REP_ID repId
 		,REVEAL.REPORT_NAME reportName
-		,decode(R1.PROD_NAME,null,R2.PROD_NAME,R1.PROD_NAME) prodName
+		,decode(R1.REP_PROD_TYPE,'01',R1.PROD_NAME,'03',R1.PROD_NAME,'02',R2.PROD_NAME,decode(R1.PROD_NAME,null,REVEAL.PROD_NAME,R1.PROD_NAME)) prodName
 		,REVEAL.PRODID prodid
 		,case when
 		REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
@@ -56,8 +56,8 @@
 			review.REVIEW_TG_GROUP reviewTgGroup
 		</if>
 		FROM REP_REVEAL REVEAL
-		left join REP_PROD_INFO R1 on REVEAL.PRODID = R1.PROD_ID
-		left join REP_PROD_INFO R2 on REVEAL.PRODID = R2.P_PROD_ID
+		left join REP_PROD_INFO R1 on REVEAL.PRODID = R1.PROD_ID and R1.STATUS!='D' and R1.REP_PROD_TYPE in ('01','03')
+		left join REP_PROD_INFO R2 on REVEAL.PRODID = R2.P_PROD_ID and R2.STATUS!='D' and R2.REP_PROD_TYPE ='02'
 		<if test="revealPage!=null">
 			inner join REP_REVEAL_REVIEW review on review.REVEAL_ID=REVEAL.id and (review.REVIEW_STATUS='02' or review.REVIEW_TG_STATUS='02')
 		    left join sys_user ss1 on ss1.USER_NAME=review.REVIEW_USER
