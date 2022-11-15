@@ -475,7 +475,7 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                 //期末余额
                 bonusCalist001Dto.setProdEndBalance(report.getCapital());
                 //单位净值
-                bonusCalist001Dto.setUnitNum(bonusCalist001Dto.getProdAssets().divide(bonusCalist001Dto.getProdEndBalance(),4,BigDecimal.ROUND_DOWN));
+                bonusCalist001Dto.setUnitNum(bonusCalist001Dto.getProdAssets().divide(bonusCalist001Dto.getProdEndBalance(),4,BigDecimal.ROUND_HALF_UP));
                 // 运行天数
                 if (bonusCalist001Dto.getLastProfitBaseDate().compareTo(report.geteDate()) == 0) {
                     bonusCalist001Dto.setRunDays((short)(com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil.getBetweenDayNumber(bonusCalist001Dto.getLastProfitBaseDate(),report.getSettDate() ) + 1));
@@ -494,11 +494,11 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                     BigDecimal abProfit =
                             report.getCapital().multiply(report.getAchievementBasisProp())
                                     .multiply(new BigDecimal(365))
-                                    .divide(new BigDecimal(bonusCalist001Dto.getRunDays()),20,BigDecimal.ROUND_DOWN);
+                                    .divide(new BigDecimal(bonusCalist001Dto.getRunDays()),20,BigDecimal.ROUND_HALF_UP);
                     bonusCalist001Dto.setPerBaseProfit(
                             report.getCapital().multiply(report.getAchievementBasisProp())
                                     .multiply(new BigDecimal(bonusCalist001Dto.getRunDays()))
-                                    .divide(new BigDecimal(365),2,BigDecimal.ROUND_DOWN) );
+                                    .divide(new BigDecimal(365),2,BigDecimal.ROUND_HALF_UP) );
 
                     // 超出部分
 //                BigDecimal esProfit = report.getDistributableProfit().subtract(abProfit);
@@ -509,10 +509,10 @@ public class BonusCalist001Service extends CommonExportService<BonusCalist001Dto
                     if (report.getFloatFee()!=null && StringUtil.equals(report.getFloatFee().toString(),"无")){
                         bonusCalist001Dto.setPerFee(new BigDecimal("0.00"));
                     }else
-                        bonusCalist001Dto.setPerFee(bonusCalist001Dto.getExceed().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_DOWN));
+                        bonusCalist001Dto.setPerFee(bonusCalist001Dto.getExceed().multiply(report.getExcessAchievementProp()).setScale(2, BigDecimal.ROUND_HALF_UP));
 
                     // 应分配利润
-                    bonusCalist001Dto.setDisBonusMoney(bonusCalist001Dto.getAvaiProfit().subtract(bonusCalist001Dto.getPerFee()).setScale(2,BigDecimal.ROUND_DOWN));
+                    bonusCalist001Dto.setDisBonusMoney(bonusCalist001Dto.getAvaiProfit().subtract(bonusCalist001Dto.getPerFee()).setScale(2,BigDecimal.ROUND_HALF_UP));
 
                     // 单位分红
                     bonusCalist001Dto.setUnitBonus(
