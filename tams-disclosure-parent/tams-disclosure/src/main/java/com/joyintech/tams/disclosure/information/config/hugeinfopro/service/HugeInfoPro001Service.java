@@ -95,8 +95,10 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         else if (StringUtil.equals(type, "NEW")) {
             HugeInfoPro001Dto hugeInfoPro001Dto = new HugeInfoPro001Dto();
             BeanUtil.copyPropertiesIgnoreNull(hugeInfoPro001Dto,dto);
-            String prodRegistNo=hugeInfoProMapper.selectProdRegistNo(dto.getProdId());
-            hugeInfoPro001Dto.setProdRegistNo(prodRegistNo);
+            if (StringUtil.isEmpty(hugeInfoPro001Dto.getProdRegistNo())) {
+                String prodRegistNo = hugeInfoProMapper.selectProdRegistNo(dto.getProdId());
+                hugeInfoPro001Dto.setProdRegistNo(prodRegistNo);
+            }
             hugeInfoPro001Dto.setDataStatus("E");
             hugeInfoProMapper.insert(hugeInfoPro001Dto);
         }
