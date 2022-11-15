@@ -230,6 +230,12 @@ public class JasparConnectUtilService {
 				dataMap.put("prodname", prodInfo.getProdName());
 			}
 			dataMap.put("repId",r1.getReportID());
+			if(StringUtil.isNotEmpty(params.get("quarter"))){
+				dataMap.put("quarter", params.get("quarter"));
+			}
+			if(StringUtil.isNotEmpty(params.get("halfyear"))){
+				dataMap.put("halfyear", params.get("halfyear"));
+			}
 			params.put("batchCheckData",dataMap);
 
 			Map<String, Object> resultMap=poiReportService.dataCheck(params);
