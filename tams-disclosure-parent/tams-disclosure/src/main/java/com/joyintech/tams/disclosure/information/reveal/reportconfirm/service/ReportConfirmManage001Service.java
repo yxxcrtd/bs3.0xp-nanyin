@@ -392,7 +392,13 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
                         // TODO
-                        String reportName = report.getReportName()+ GlobalConstant.UNDER_LINE+report.getProdName();
+                        String reportName="";
+                        if(StringUtil.equals("04",report.getReportCategory())||StringUtil.equals("05",report.getReportCategory())){
+                            reportName = report.getReportName();
+                        }else{
+                            reportName = report.getReportName()+ GlobalConstant.UNDER_LINE+report.getProdName();
+                        }
+
                         if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                     + GlobalConstant.UNDER_LINE + reportName;
