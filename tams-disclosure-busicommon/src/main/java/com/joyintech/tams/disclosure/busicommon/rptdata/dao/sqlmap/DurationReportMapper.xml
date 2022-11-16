@@ -189,9 +189,9 @@
 		<if test="prodid!=null">
 			and deal.PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>
-		<if test="reportDate!=null">
-			and #{reportDate,jdbcType=DATE} between EFFDATE and EFFDELIDATE		
-		</if>
+		and EFFDATE=#{startDate,jdbcType=DATE}
+		and EFFDELIDATE=#{endDate,jdbcType=DATE}
+
 	</select>
 
    <select id="selectOtherFee" resultType="com.joyintech.tams.common.base.entity.BokBalance">
