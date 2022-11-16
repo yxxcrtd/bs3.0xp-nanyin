@@ -7,6 +7,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto;
+import com.joyintech.tams.disclosure.information.config.repRelDeal.dao.RepRelDeal001Mapper;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto;
 import com.joyintech.tams.disclosure.information.config.repRelDeal.service.RepRelDealService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class RepRelDealValidator implements BeanValidator {
 
     @Autowired
     private RepRelDealService repRelDealService;
+
+    @Autowired
+    private RepRelDeal001Mapper repRelDeal001Mapper;
 
     @Override
     public List<ValidMessage> valid(Object o) {
@@ -86,6 +90,13 @@ public class RepRelDealValidator implements BeanValidator {
                     }
                 }
 
+                if(dto.getEffdate()!= null&&dto.getEffdelidate()!= null){
+                    RepRelDealDto realDto=repRelDeal001Mapper.selectRelDealdto(dto);
+                    if(realDto!=null){
+                        errorList.add(new ValidMessage("子产品代码+生效日+生效截止日期数据已重复，请重新输入！"));
+                    }
+
+                }
 
             }else{
 

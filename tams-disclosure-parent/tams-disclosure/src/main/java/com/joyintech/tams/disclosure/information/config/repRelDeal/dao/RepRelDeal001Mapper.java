@@ -35,4 +35,6 @@ public interface RepRelDeal001Mapper {
     int importInfo(RepRelDealDto record);
 
     List<RepRelDealDto> selectRelDealList(@Param("list") List<RepRelDealDto> list);
+
+    RepRelDealDto selectRelDealdto(RepRelDealDto dto);
 }

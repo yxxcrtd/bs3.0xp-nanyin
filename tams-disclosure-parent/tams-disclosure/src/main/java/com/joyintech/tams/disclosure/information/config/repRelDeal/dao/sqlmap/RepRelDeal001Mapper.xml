@@ -296,4 +296,16 @@
             </foreach>
         </where>
     </select>
+    <select id="selectRelDealdto"   resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto">
+        select
+        distinct
+        A.PROD_ID,
+        to_char(A.EFFDATE,'yyyy/mm/dd') effdateStr,
+        to_char(A.EFFDELIDATE,'yyyy/mm/dd') effdelidateStr
+        from REP_REL_DEAL A
+        where
+            A.EFFDATE = #{effdate,jdbcType=DATE}
+            and A.EFFDELIDATE = #{effdelidate,jdbcType=DATE}
+            and A.PROD_ID=#{prodId}
+    </select>
 </mapper>
