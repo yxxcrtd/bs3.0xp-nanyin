@@ -528,8 +528,8 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
     }
     public static boolean DateV(String dataS,String dataE) {
         boolean result=false;
-        String yearStrS=dataS.split("-")[0];
-        String yearStrE=dataE.split("-")[0];
+        String yearStrS=dataS.split("/")[0];
+        String yearStrE=dataE.split("/")[0];
         if(!StringUtil.equals(yearStrS,yearStrE)){
             return false;
         }
