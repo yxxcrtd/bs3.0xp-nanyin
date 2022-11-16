@@ -74,7 +74,7 @@ public class RepRelDealValidator implements BeanValidator {
             map.put("uuid",dto.getUuid());
             RepRelDealDto repRelDealDto =repRelDealService.selectData(map);
             Date platDate = DateUtil.platDateFromCache();
-            if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+            if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)||StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
 //                if(StringUtil.isNotEmpty(dto.getEffdate())) {
 //                    if (DateUtil.compareDate(dto.getEffdate(), platDate) < 0) {
 //                        errorList.add(new ValidMessage("", "生效日不能小于平台日"));
