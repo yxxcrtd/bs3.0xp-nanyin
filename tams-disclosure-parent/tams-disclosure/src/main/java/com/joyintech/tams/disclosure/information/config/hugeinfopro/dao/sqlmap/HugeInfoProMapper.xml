@@ -4,6 +4,7 @@
 
     <select id="select" resultType="com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto">
         select
+        distinct
         REDEMPTION_ID redemptionId,
         dlr.DATA_STATUS dataStatus,
         dlr.PROD_REGIST_NO prodRegistNo,
