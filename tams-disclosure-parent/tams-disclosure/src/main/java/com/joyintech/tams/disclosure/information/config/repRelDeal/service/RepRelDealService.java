@@ -405,7 +405,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
                         message.add("生效截止日期不能小于生效日。");
                     }
                     if(!DateV(rowData.get(8),rowData.get(9))){
-                        message.add("当开始日期为xxxx/01/01，结束日期只能为xxxx/03/31，xxxx/06/30，xxxx/12/31；当开始日期为xxxx/04/01，结束日期只能为xxxx/06/30；当开始日期为xxxx/07/01，结束日期只能为xxxx/09/30，xxxx/12/31；当开始日期为xxxx/10/01，结束日期只能为xxxx/12/31。");
+                        message.add("当开始日期为xxxx/01/01，结束日期只能为xxxx/03/31，xxxx/06/30，xxxx/12/31；当开始日期为xxxx/04/01，结束日期只能为xxxx/06/30；当开始日期为xxxx/07/01，结束日期只能为xxxx/09/30，xxxx/12/31；当开始日期为xxxx/10/01，结束日期只能为xxxx/12/31且xxxx必须为同一年。");
                     }
                 }
             }
@@ -528,6 +528,11 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
     }
     public static boolean DateV(String dataS,String dataE) {
         boolean result=false;
+        String yearStrS=dataS.split("-")[0];
+        String yearStrE=dataE.split("-")[0];
+        if(!StringUtil.equals(yearStrS,yearStrE)){
+            return false;
+        }
         String monthStrS=dataS.split("/")[1];
         String dayStrS=dataS.split("/")[2];
         String monthStrE=dataE.split("/")[1];

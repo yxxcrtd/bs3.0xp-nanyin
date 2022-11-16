@@ -67,7 +67,7 @@ public class RepRelDealValidator implements BeanValidator {
                 String dateS=DateUtil.format(dto.getEffdate());
                 String dateE=DateUtil.format(dto.getEffdelidate());
                 if(!DateV(dateS,dateE)){
-                    errorList.add(new ValidMessage("","当开始日期为xxxx/01/01，结束日期只能为xxxx/03/31，xxxx/06/30，xxxx/12/31；当开始日期为xxxx/04/01，结束日期只能为xxxx/06/30；当开始日期为xxxx/07/01，结束日期只能为xxxx/09/30，xxxx/12/31；当开始日期为xxxx/10/01，结束日期只能为xxxx/12/31。"));
+                    errorList.add(new ValidMessage("","当开始日期为xxxx/01/01，结束日期只能为xxxx/03/31，xxxx/06/30，xxxx/12/31；当开始日期为xxxx/04/01，结束日期只能为xxxx/06/30；当开始日期为xxxx/07/01，结束日期只能为xxxx/09/30，xxxx/12/31；当开始日期为xxxx/10/01，结束日期只能为xxxx/12/31且xxxx必须为同一年。"));
                 }
             }
             Map<String, Object> map = new HashMap<>();
@@ -142,6 +142,11 @@ public class RepRelDealValidator implements BeanValidator {
     }
     public static boolean DateV(String dataS,String dataE) {
         boolean result=false;
+        String yearStrS=dataS.split("-")[0];
+        String yearStrE=dataE.split("-")[0];
+        if(!StringUtil.equals(yearStrS,yearStrE)){
+            return false;
+        }
         String monthStrS=dataS.split("-")[1];
         String dayStrS=dataS.split("-")[2];
         String monthStrE=dataE.split("-")[1];
