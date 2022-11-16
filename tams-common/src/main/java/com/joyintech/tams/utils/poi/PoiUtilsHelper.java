@@ -482,7 +482,7 @@ public class PoiUtilsHelper {
 				}
 			}
 			//合并部分单元格
-			if ( rule.getMergeRow()>0 && rule.getMergeCol()>0 ) {
+			if ( rule.getMergeRow()>0 && rule.getMergeCol()>0&&listData.size()>1 ) {
 				mergeCellsVertically(table,rule.getMergeCol(),rule.getMergeRow(),rule.getMergeRow()+listData.size());
 			}
 			
