@@ -694,7 +694,7 @@ INSERT INTO SYS_PAGE
  UPDATE_USER, UPDATE_TIME)
 VALUES('InvestmentInfo001', 'DIS',
        '/disclosure/information/config/investmentInfo/InvestmentInfo001',
-       '/disclosure/information/config/investmentInfo/InvestmentInfo001', 'REPORT_004_009', NULL,
+       'disclosure/information/config/investmentInfo/InvestmentInfo001', 'REPORT_004_009', NULL,
        NULL, '02', '01', '前十名投资者交易', 'system', NULL, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('InvestmentInfo002');
@@ -704,7 +704,7 @@ INSERT INTO SYS_PAGE
  UPDATE_USER, UPDATE_TIME)
 VALUES('InvestmentInfo002', 'DIS',
        '/disclosure/information/config/investmentInfo/InvestmentInfo002',
-       '/disclosure/information/config/investmentInfo/InvestmentInfo002', '', NULL,
+       'disclosure/information/config/investmentInfo/InvestmentInfo002', '', NULL,
        NULL, '02', '01', '前十名投资者交易维护新建', 'system', NULL, sysdate, 'system', sysdate);
 
 
@@ -758,7 +758,7 @@ update REP_JOB a set a.job_name='年度报告非指数型非现管类产品'wher
 -- 非指数型半年报/年报修改 add by zhengxiaolian 2022-11-15 end
 
 -- 新增"前十名资产投资明细" 菜单 2022-11-17 start
-DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_004_0010' AND SYS_MENU.REMARK = '前十名资产投资明细';
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_004_0010';
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('REPORT_004_0010', 'DIS', null, 'REPORT_004', 'AssetInvestmentDetail001', 10, '02', '前十名资产投资明细', 'system', null, SYSDATE, 'system', SYSDATE);
 
