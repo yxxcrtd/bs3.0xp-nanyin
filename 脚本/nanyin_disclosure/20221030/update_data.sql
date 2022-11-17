@@ -747,6 +747,7 @@ update REP_INFO a set a.template_name='年度报告非指数型非现管类产�
 update rep_tree a set a.tree_name='半年度报告非指数型非现管类产品' where a.tree_id='CP_001_002_018';
 update rep_tree a set a.tree_name='年度报告非指数型非现管类产品' where a.tree_id='CP_001_002_020';
 
+delete from REP_JOB_RANGE where id in('D1000000000000000067','D1000000000000000071');
 insert into REP_JOB_RANGE values ('D1000000000000000067','CP_001_002_018','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D1000000000000000071','CP_001_002_020','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 
