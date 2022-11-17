@@ -99,6 +99,7 @@ public class InvestmentInfo002Controller extends BaseController {
                         +  "-" + "开始日期"+ "(" + entity.getDateStartStr() + ")"
                         +  "-" + "结束日期"+ "(" + entity.getDateEndStr() + ")");*/
         processParameter.setWorkFlowParameter(params);
+        dto.setFlag(false);
         String msg = investmentInfo001Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
