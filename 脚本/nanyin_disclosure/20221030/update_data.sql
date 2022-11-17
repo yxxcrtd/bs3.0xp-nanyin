@@ -759,3 +759,26 @@ update REP_RULE a set a.rule_name='年度报告非指数型非现管类产品_�
 update REP_JOB a set a.job_name='半年度报告非指数型非现管类产品'where a.job_id='100000017';
 update REP_JOB a set a.job_name='年度报告非指数型非现管类产品'where a.job_id='100000019';
 -- 非指数型半年报/年报修改 add by zhengxiaolian 2022-11-15 end
+
+-- 新增"前十名资产投资明细" 菜单 2022-11-17 start
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_004_0010' AND SYS_MENU.REMARK = '前十名资产投资明细';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_004_0010', 'DIS', null, 'REPORT_004', 'AssetInvestmentDetail001', 10, '02', '前十名资产投资明细', 'system', null, SYSDATE, 'system', SYSDATE);
+
+-- 新增 "前十名资产投资明细" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AssetInvestmentDetail001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('AssetInvestmentDetail001', 'DIS', '/disclosure/information/config/assetinvestmentdetail/AssetInvestmentDetail001', 'disclosure/information/config/assetinvestmentdetail/AssetInvestmentDetail001',
+       'REPORT_004_0010', NULL, NULL, '02', '01', '前十名资产投资明细', 'system', NULL, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AssetInvestmentDetail002');
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('AssetInvestmentDetail002', 'DIS', '/disclosure/information/config/assetinvestmentdetail/AssetInvestmentDetail002', 'disclosure/information/config/assetinvestmentdetail/AssetInvestmentDetail002', null, null, null, '02', '01', '前十名资产投资明细新建', 'system', null, sysdate, 'system', sysdate);
+
+-- 前十名资产投资明细 页面控件流程模板设置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'AssetInvestmentDetail002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AssetInvestmentDetail002', 'AssetInvestmentDetail001_btn_delete', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AssetInvestmentDetail002', 'AssetInvestmentDetail002_btn_save', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AssetInvestmentDetail002', 'AssetInvestmentDetail002_btn_submit', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+-- 新增"前十名资产投资明细" 菜单 2022-11-17 end

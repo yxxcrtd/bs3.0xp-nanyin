@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.dao.AssetInvestmentDetailMapper">
+
+    <select id="select"
+            resultType="com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.dto.AssetInvestmentDetail001Dto">
+        select
+        distinct
+        rac.PROD_ID prodId,
+        rac.PUB_DATE pubDate,
+        rpi.PROD_NAME prodName,
+        rac.ASSETS_CODE assetCode,
+        rac.ASSETS_NAME assetName,
+        rac.FAIR_VALUE fairValue,
+        rac.PD_PROP pdDrop,
+        rac.STATUS status,
+        rac.UPDATE_TIME updateTime,
+        rac.UPDATE_USER updateUser
+        from
+        REP_ASSETS_COMB rac
+        left join V_REP_PROD_INFO rpi on rac.PROD_ID = rpi.PROD_ID
+        <where>
+            <if test="prodIdList != null and prodIdList.size() > 0">
+                AND rac.PROD_ID in
+                <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetCode != null and !assetCode.equals('')">
+                AND rac.ASSETS_CODE =#{assetCode}
+            </if>
+            <if test="status != null and !status.equals('')">
+                AND rac.STATUS=#{status}
+            </if>
+            <if test="dateStart != null and dateStart != ''">
+                <![CDATA[AND  PUB_DATE >= TO_DATE(#{dateStart},'YYYY-MM-DD') ]]>
+            </if>
+            <if test="dateEnd != null and dateEnd != ''">
+                <![CDATA[AND  PUB_DATE <= TO_DATE(#{dateEnd},'YYYY-MM-DD')]]>
+            </if>
+        </where>
+        order by updateTime desc
+    </select>
+    <select id="selectByPrimaryKey"
+            resultType="com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.dto.AssetInvestmentDetail001Dto">
+       select
+        rac.PROD_ID prodId,
+        rac.PUB_DATE pubDate,
+        rac.ASSETS_CODE assetCode,
+        rac.ASSETS_NAME assetName,
+        rac.FAIR_VALUE fairValue,
+        rac.PD_PROP pdDrop,
+        rac.UPDATE_TIME updateTime,
+        rac.UPDATE_USER updateUser
+       from
+        REP_ASSETS_COMB  rac
+      where rac.PROD_ID = #{prodId,jdbcType=VARCHAR} and
+      rac.PUB_DATE = to_date(#{pubDate,jdbcType=DATE},'YYYY-MM-DD')
+      and rac.ASSETS_CODE = #{assetCode,jdbcType=VARCHAR}
+   </select>
+
+    <delete id="deleteByKey">
+        delete from BOK_BALANCE_FSE
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and
+        DATE_START = #{dateStart,jdbcType=DATE}
+        and DATE_END = #{dateEnd,jdbcType=DATE}
+        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert">
+        insert into REP_ASSETS_COMB (PROD_ID, PUB_DATE, ASSETS_CODE,
+            ASSETS_NAME, FAIR_VALUE, PD_PROP,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, STATUS)
+        values (#{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE},#{assetCode,jdbcType=VARCHAR},
+            #{assetName,jdbcType=VARCHAR},#{fairValue,jdbcType=DECIMAL},#{pdDrop,jdbcType=DECIMAL},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+    </insert>
+
+
+    <update id="updateByKey">
+        update REP_ASSETS_COMB
+        <set >
+            <if test="assetName != null" >
+                ASSETS_NAME = #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="fairValue != null" >
+                FAIR_VALUE = #{fairValue,jdbcType=DECIMAL},
+            </if>
+            <if test="pdDrop != null" >
+                PD_PROP = #{pdDrop,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PROD_ID = #{prodId,jdbcType=VARCHAR} and
+        PUB_DATE = #{pubDate,jdbcType=DATE}
+        and ASSETS_CODE = #{assetCode,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="getRegistNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        DISTINCT
+        PROD_RE id,
+        PROD_RE text
+        FROM
+            V_REP_PROD_INFO
+        WHERE PROD_RE IS NOT NULL
+    </select>
+    <select id="selectByProdRegistNo" resultType="java.lang.String">
+        select PROD_RE
+        from V_REP_PROD_INFO
+        where PROD_RE = #{prodRegistNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_ABBR
+        FROM
+            V_REP_PROD_INFO
+    </select>
+    <select id="getRegistNoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+          SELECT
+             PROD_REGIST_NO id,
+             PROD_REGIST_NO text
+        FROM
+             DIS_PROD_ADJUST
+    </select>
+    <select id="getProdIdlist" resultType="com.joyintech.framework.select.SelectOptionDto">
+             SELECT
+        d.PROD_ID id,
+        r.PROD_NAME text,
+        r.PROD_ABBR
+        FROM
+        DIS_PROD_ADJUST d left join V_REP_PROD_INFO r
+        on d.PROD_ID = r.PROD_ID
+    </select>
+    <select id="getRePord" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+       distinct
+        dp.BOOKSET_ID id,
+         rp.PROD_NAME text
+        from BOK_BALANCE dp
+        left join V_REP_PROD_INFO  rp
+        on dp.BOOKSET_ID = rp.PROD_ID
+        <where>
+            <if test="search != null and search != ''">
+                and (BOOKSET_ID like
+                concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+            <if test="prodIdList != null and prodIdList.size() > 0 ">
+                <foreach item="item" collection="prodIdList" index="index"
+                         open="and" separator="OR" close="">
+                    (PROD_ID like concat(concat('%',#{item}),'%')
+                    or PROD_NAME like concat(concat('%',#{item}),'%'))
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="findProdName" resultType="java.util.HashMap">
+
+    </select>
+    <select id="findProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_NAME object
+        FROM
+        V_REP_PROD_INFO
+        where
+        REP_PROD_TYPE in ('02','01') and STATUS = 'E'
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <select id="findSubjectNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+           bb.SUBJECT_NO id,
+           bs.SUBJECT_NAME text
+        from BOK_BALANCE bb
+        left join BOK_SUBJECT bs
+        on bb.SUBJECT_NO = bs.SUBJECT_NO
+        where 1=1
+        <if test="search != null and search != ''">
+            and (bb.SUBJECT_NO  like
+            concat(concat('%',#{search}),'%')
+            or bs.SUBJECT_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+
+
+    <select id="getProdId1" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_RE object
+        FROM
+        V_REP_PROD_INFO
+        <where>
+        status='E'
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+        union all
+        SELECT
+        P_PROD_ID id,
+        PROD_NAME text,
+        PROD_RE object
+        FROM
+        REP_PROD_INFO
+        <where>
+            status='E'
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (P_PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBalanceList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.accountamount.dto.AccountAmount001Dto">
+        select
+        A.BOOKSET_ID,
+        A.SUBJECT_NO,
+        to_char(A.DATE_START,'yyyy/mm/dd') dateStartStr,
+        to_char(A.DATE_END,'yyyy/mm/dd') dateEndStr
+        from BOK_BALANCE_FSE A
+        <where>
+            <foreach collection="list" item="item" open="(A.BOOKSET_ID,A.SUBJECT_NO,to_char(A.DATE_START,'yyyy/mm/dd'),to_char(A.DATE_END,'yyyy/mm/dd'),A.STATUS) IN (" separator="," close=")">
+                (#{item.booksetId},#{item.subjectNo},#{item.dateStartStr},#{item.dateEndStr},'E')
+            </foreach>
+        </where>
+    </select>
+</mapper>
