@@ -684,7 +684,7 @@ INSERT INTO SYS_MENU
 (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD,
  REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES('REPORT_004_009', 'DIS', NULL, 'REPORT_004', 'InvestmentInfo001',
-       9, '02', '前十名投资者交易', 'system', NULL, sysdate, 'system', sysdate);
+       9, '02', '前十名投资者信息', 'system', NULL, sysdate, 'system', sysdate);
 
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('InvestmentInfo001');
@@ -695,7 +695,7 @@ INSERT INTO SYS_PAGE
 VALUES('InvestmentInfo001', 'DIS',
        '/disclosure/information/config/investmentInfo/InvestmentInfo001',
        'disclosure/information/config/investmentInfo/InvestmentInfo001', 'REPORT_004_009', NULL,
-       NULL, '02', '01', '前十名投资者交易', 'system', NULL, sysdate, 'system', sysdate);
+       NULL, '02', '01', '前十名投资者信息', 'system', NULL, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('InvestmentInfo002');
 INSERT INTO SYS_PAGE
@@ -705,7 +705,7 @@ INSERT INTO SYS_PAGE
 VALUES('InvestmentInfo002', 'DIS',
        '/disclosure/information/config/investmentInfo/InvestmentInfo002',
        'disclosure/information/config/investmentInfo/InvestmentInfo002', '', NULL,
-       NULL, '02', '01', '前十名投资者交易维护新建', 'system', NULL, sysdate, 'system', sysdate);
+       NULL, '02', '01', '前十名投资者信息维护新建', 'system', NULL, sysdate, 'system', sysdate);
 
 
 delete from sys_wfl_business_module where PAGE_ID = 'InvestmentInfo002';
