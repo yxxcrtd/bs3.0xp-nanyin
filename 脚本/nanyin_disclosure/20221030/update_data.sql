@@ -782,3 +782,13 @@ INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AssetInvestmentDetail002', 'AssetInvestmentDetail002_btn_save', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AssetInvestmentDetail002', 'AssetInvestmentDetail002_btn_submit', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 -- 新增"前十名资产投资明细" 菜单 2022-11-17 end
+
+-- 前十名资产投资明细 添加 页面字典绑定 2022-11-17 start
+delete from sys_page_dictlist where page_id='AssetInvestmentDetail001' and DICT_ID='MAINTAIN_STATUS';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AssetInvestmentDetail001', '999999', 'MAINTAIN_STATUS', 'A', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AssetInvestmentDetail001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AssetInvestmentDetail001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+-- 前十名资产投资明细 添加 页面字典绑定 2022-11-17 end
