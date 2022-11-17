@@ -634,66 +634,41 @@ create table TOP_INVESTOR_INFORMATION
     create_time TIMESTAMP(6),
     update_user VARCHAR2(20),
     update_time TIMESTAMP(6),
-    status      VARCHAR2(20)
-)
-    tablespace BS30CVR_V306_XP_TEST_02_DATA
-  pctfree 10
-  initrans 1
-  maxtrans 255
-  storage
-  (
-    initial 64K
-    next 1M
-    minextents 1
-    maxextents unlimited
-  );
+    status      VARCHAR2(20),
+    constraint PK_TOP_INVESTOR_INFORMATION primary key (id)
+);
 -- Add comments to the table
 comment on table TOP_INVESTOR_INFORMATION
-  is '前十大投资者信息表';
+    is '前十大投资者信息表';
 -- Add comments to the columns
 comment on column TOP_INVESTOR_INFORMATION.id
-  is '业务主键';
+    is '业务主键';
 comment on column TOP_INVESTOR_INFORMATION.bookset_id
-  is '产品主代码';
+    is '产品主代码';
 comment on column TOP_INVESTOR_INFORMATION.index_year
-  is '年度';
+    is '年度';
 comment on column TOP_INVESTOR_INFORMATION.index_type
-  is '指标类型';
+    is '指标类型';
 comment on column TOP_INVESTOR_INFORMATION.tz_rank
-  is '排名';
+    is '排名';
 comment on column TOP_INVESTOR_INFORMATION.tz_type
-  is '类别';
+    is '类别';
 comment on column TOP_INVESTOR_INFORMATION.hold_share
-  is '持有份额(份)';
+    is '持有份额(份)';
 comment on column TOP_INVESTOR_INFORMATION.proportion_share
-  is '占总份额比例（%）';
+    is '占总份额比例（%）';
 comment on column TOP_INVESTOR_INFORMATION.create_user
-  is '创建人';
+    is '创建人';
 comment on column TOP_INVESTOR_INFORMATION.create_dept
-  is '创建部门';
+    is '创建部门';
 comment on column TOP_INVESTOR_INFORMATION.create_time
-  is '创建时间';
+    is '创建时间';
 comment on column TOP_INVESTOR_INFORMATION.update_user
-  is '更新人';
+    is '更新人';
 comment on column TOP_INVESTOR_INFORMATION.update_time
-  is '更新时间';
+    is '更新时间';
 comment on column TOP_INVESTOR_INFORMATION.status
-  is '数据状态';
--- Create/Recreate primary, unique and foreign key constraints
-alter table TOP_INVESTOR_INFORMATION
-    add constraint PK_TOP_INVESTOR_INFORMATION_ID_01 primary key (id)
-    using index
-  tablespace BS30CVR_V306_XP_TEST_02_DATA
-  pctfree 10
-  initrans 2
-  maxtrans 255
-  storage
-  (
-    initial 64K
-    next 1M
-    minextents 1
-    maxextents unlimited
-  );
+    is '数据状态';
 
 
 DROP TABLE TOP_INVESTOR_INFORMATION_HIS;
@@ -714,79 +689,51 @@ create table TOP_INVESTOR_INFORMATION_HIS
     create_time TIMESTAMP(6),
     update_user VARCHAR2(20),
     update_time TIMESTAMP(6),
-    status      VARCHAR2(20)
-)
-    tablespace BS30CVR_V306_XP_TEST_02_DATA
-  pctfree 10
-  initrans 1
-  maxtrans 255
-  storage
-  (
-    initial 64K
-    next 1M
-    minextents 1
-    maxextents unlimited
-  );
+    status      VARCHAR2(20),
+    constraint PK_TOP_INVESTOR_INFO_HIS primary key (his_no)
+);
 -- Add comments to the table
 comment on table TOP_INVESTOR_INFORMATION_HIS
-  is '前十大投资者信息历史表';
+    is '前十大投资者信息历史表';
 -- Add comments to the columns
 comment on column TOP_INVESTOR_INFORMATION_HIS.his_no
-  is '历史表主键';
+    is '历史表主键';
 comment on column TOP_INVESTOR_INFORMATION_HIS.id
-  is 'id';
+    is 'id';
 comment on column TOP_INVESTOR_INFORMATION_HIS.bookset_id
-  is '产品主代码';
+    is '产品主代码';
 comment on column TOP_INVESTOR_INFORMATION_HIS.index_year
-  is '年度';
+    is '年度';
 comment on column TOP_INVESTOR_INFORMATION_HIS.index_type
-  is '指标类型';
+    is '指标类型';
 comment on column TOP_INVESTOR_INFORMATION_HIS.tz_rank
-  is '排名';
+    is '排名';
 comment on column TOP_INVESTOR_INFORMATION_HIS.tz_type
-  is '类别';
+    is '类别';
 comment on column TOP_INVESTOR_INFORMATION_HIS.hold_share
-  is '持有份额(份)';
+    is '持有份额(份)';
 comment on column TOP_INVESTOR_INFORMATION_HIS.proportion_share
-  is '占总份额比例（%）';
+    is '占总份额比例（%）';
 comment on column TOP_INVESTOR_INFORMATION_HIS.create_user
-  is '创建人';
+    is '创建人';
 comment on column TOP_INVESTOR_INFORMATION_HIS.create_dept
-  is '创建部门';
+    is '创建部门';
 comment on column TOP_INVESTOR_INFORMATION_HIS.create_time
-  is '创建时间';
+    is '创建时间';
 comment on column TOP_INVESTOR_INFORMATION_HIS.update_user
-  is '更新人';
+    is '更新人';
 comment on column TOP_INVESTOR_INFORMATION_HIS.update_time
-  is '更新时间';
+    is '更新时间';
 comment on column TOP_INVESTOR_INFORMATION_HIS.status
-  is '数据状态';
--- Create/Recreate primary, unique and foreign key constraints
-alter table TOP_INVESTOR_INFORMATION_HIS
-    add constraint PK_TOP_INVESTOR_INFORMATION_his_no_01 primary key (his_no)
-    using index
-  tablespace BS30CVR_V306_XP_TEST_02_DATA
-  pctfree 10
-  initrans 2
-  maxtrans 255
-  storage
-  (
-    initial 64K
-    next 1M
-    minextents 1
-    maxextents unlimited
-  );
+    is '数据状态';
 -- 创建前十大投资信息表 以及 删除历史表 add by huzhangshun 2022/11/17 end
 
 -- 创建前十大投资者信息序列 add by huzhangshun 2022/11/17 start
-drop sequence TOP_INVESTOR_INFORMATION_HIS_NO;
-create sequence TOP_INVESTOR_INFORMATION_HIS_NO
+drop sequence TOP_INVESTOR_INFORMATION_SEQ;
+create sequence TOP_INVESTOR_INFORMATION_SEQ
     minvalue 1
     maxvalue 9999999999999999999999999999
     start with 37
     increment by 1
     nocache;
 -- 创建前十大投资者信息序列 add by huzhangshun 2022/11/17 end
-
-
-
