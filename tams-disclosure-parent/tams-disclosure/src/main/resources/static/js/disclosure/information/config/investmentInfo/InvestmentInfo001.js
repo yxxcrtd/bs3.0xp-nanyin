@@ -13,7 +13,7 @@
 
         return {
             booksetId:booksetId,
-            indexPeriod:$('#indexPeriod').val(),
+            indexType:$('#indexType').val(),
             indexYear:$('#indexYear').val(),
             status:$('#status').val()
         };
@@ -163,6 +163,7 @@
         });
         //初始化查询
         $('#InvestmentInfo001_btn_search').click(function () {
+            console.log("查询")
             table.load();
             $('#InvestmentInfo001_btn_delete').show();
         });
