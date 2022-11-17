@@ -684,7 +684,7 @@ INSERT INTO SYS_MENU
 (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD,
  REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES('REPORT_004_009', 'DIS', NULL, 'REPORT_004', 'InvestmentInfo001',
-       9, '02', '前十大投资者交易', 'system', NULL, sysdate, 'system', sysdate);
+       9, '02', '前十名投资者交易', 'system', NULL, sysdate, 'system', sysdate);
 
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('InvestmentInfo001');
@@ -695,7 +695,7 @@ INSERT INTO SYS_PAGE
 VALUES('InvestmentInfo001', 'DIS',
        '/disclosure/information/config/investmentInfo/InvestmentInfo001',
        '/disclosure/information/config/investmentInfo/InvestmentInfo001', 'REPORT_004_009', NULL,
-       NULL, '02', '01', '前十大投资者交易', 'system', NULL, sysdate, 'system', sysdate);
+       NULL, '02', '01', '前十名投资者交易', 'system', NULL, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('InvestmentInfo002');
 INSERT INTO SYS_PAGE
@@ -705,21 +705,18 @@ INSERT INTO SYS_PAGE
 VALUES('InvestmentInfo002', 'DIS',
        '/disclosure/information/config/investmentInfo/InvestmentInfo002',
        '/disclosure/information/config/investmentInfo/InvestmentInfo002', '', NULL,
-       NULL, '02', '01', '前十大投资者交易维护新建', 'system', NULL, sysdate, 'system', sysdate);
+       NULL, '02', '01', '前十名投资者交易维护新建', 'system', NULL, sysdate, 'system', sysdate);
 
 
-delete from sys_wfl_business_module where PAGE_ID = 'InvestmentInfo002'
-    insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo001_btn_delete', 'noneApproval', 'system', '', sysdate,
-    'system',sysdate,'ALL','02');
-insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo002_btn_save', 'noneApproval', 'system', '', sysdate,
-                                            'system',sysdate,'ALL','02');
-insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo002_btn_submit', 'noneApproval', 'system', '', sysdate,
-                                            'system',sysdate,'ALL','02');
+delete from sys_wfl_business_module where PAGE_ID = 'InvestmentInfo002';
 
+insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo001_btn_delete', 'noneApproval', 'system', '', sysdate,'system',sysdate,'ALL','02');
+insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo002_btn_save', 'noneApproval', 'system', '', sysdate, 'system',sysdate,'ALL','02');
+insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo002_btn_submit', 'noneApproval', 'system', '', sysdate,'system',sysdate,'ALL','02');
 
 delete from SYS_DATADICT where DICT_CODE='DIS_INDEX_TYPE';
 insert into SYS_DATADICT (DICT_CODE,SYSTEM_CODE,DICT_CNNAME,DICT_ENNAME,UPDATE_FLG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-values ('DIS_INDEX_TYPE','REP','前十大投资者信息指标类型','','02','system',null,sysdate,'system',sysdate);
+values ('DIS_INDEX_TYPE','REP','前十名投资者信息指标类型','','02','system',null,sysdate,'system',sysdate);
 
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'DIS_INDEX_TYPE';
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
@@ -730,7 +727,7 @@ VALUES('DIS_INDEX_TYPE','02','年报','2','0','system',sysdate,'system',sysdate)
 
 delete from SYS_DATADICT where DICT_CODE='DIS_TZ_TYPE';
 insert into SYS_DATADICT (DICT_CODE,SYSTEM_CODE,DICT_CNNAME,DICT_ENNAME,UPDATE_FLG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-values ('DIS_TZ_TYPE','REP','前十大投资者信息类别','','02','system',null,sysdate,'system',sysdate);
+values ('DIS_TZ_TYPE','REP','前十名投资者信息类别','','02','system',null,sysdate,'system',sysdate);
 
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'DIS_TZ_TYPE';
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
