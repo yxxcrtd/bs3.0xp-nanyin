@@ -307,5 +307,6 @@
             A.EFFDATE = #{effdate,jdbcType=DATE}
             and A.EFFDELIDATE = #{effdelidate,jdbcType=DATE}
             and A.PROD_ID=#{prodId}
+            and A.STATUS!='D'
     </select>
 </mapper>
