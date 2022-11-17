@@ -190,4 +190,20 @@
             </if>
         </where>
     </select>
+
+    <select id="selectTopInfoList" parameterType="java.util.List"  resultType="com.joyintech.tams.disclosure.information.config.investmentInfo.dto.InvestmentInfo001Dto">
+        select
+        tii.id,
+        tii.BOOKSET_ID booksetId,
+        tii.index_year indexYear,
+        tii.index_type indexType,
+        tii.tz_rank tzRank,
+        tii.status status
+        from TOP_INVESTOR_INFORMATION tii
+        <where>
+            <foreach collection="list" item="item" open="(tii.BOOKSET_ID,tii.index_year,tii.index_type,tii.tz_rank,tii.status) IN (" separator="," close=")">
+                (#{item.booksetId},#{item.indexYear},#{item.indexType},#{item.tzRank},'E')
+            </foreach>
+        </where>
+    </select>
 </mapper>
