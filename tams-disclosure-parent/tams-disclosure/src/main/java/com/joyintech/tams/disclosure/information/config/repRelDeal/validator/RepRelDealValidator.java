@@ -74,7 +74,7 @@ public class RepRelDealValidator implements BeanValidator {
             map.put("uuid",dto.getUuid());
             RepRelDealDto repRelDealDto =repRelDealService.selectData(map);
             Date platDate = DateUtil.platDateFromCache();
-            if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)||StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+            if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
 //                if(StringUtil.isNotEmpty(dto.getEffdate())) {
 //                    if (DateUtil.compareDate(dto.getEffdate(), platDate) < 0) {
 //                        errorList.add(new ValidMessage("", "生效日不能小于平台日"));
@@ -121,6 +121,15 @@ public class RepRelDealValidator implements BeanValidator {
                             }
                         }
                     }
+                }
+                if(dto.getEffdate()!= null&&dto.getEffdelidate()!= null){
+                    RepRelDealDto realDto=repRelDeal001Mapper.selectRelDealdto(dto);
+                    if(realDto!=null){
+                        if(DateUtil.compareDate(dto.getEffdate(),realDto.getEffdate())!=0&&DateUtil.compareDate(dto.getEffdelidate(),realDto.getEffdelidate())!=0) {
+                            errorList.add(new ValidMessage("子产品代码+生效日+生效截止日期数据已重复，请重新输入！"));
+                        }
+                    }
+
                 }
             }
 

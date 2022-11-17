@@ -300,8 +300,8 @@
         select
         distinct
         A.PROD_ID,
-        to_char(A.EFFDATE,'yyyy/mm/dd') effdateStr,
-        to_char(A.EFFDELIDATE,'yyyy/mm/dd') effdelidateStr
+        A.EFFDATE  effdate,
+        A.EFFDELIDATE effdelidate
         from REP_REL_DEAL A
         where
             A.EFFDATE = #{effdate,jdbcType=DATE}
