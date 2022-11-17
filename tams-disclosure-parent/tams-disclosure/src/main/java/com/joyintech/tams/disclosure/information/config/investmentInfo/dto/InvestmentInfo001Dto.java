@@ -93,6 +93,17 @@ public class InvestmentInfo001Dto extends BaseEntity implements ITableRow, Proce
 
     private String status;
 
+    //是否导入 true导入
+    private Boolean flag;
+
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
+
     public void setItemId(String itemId) {
         this.itemId = itemId;
     }

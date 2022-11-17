@@ -45,7 +45,7 @@
         cols: [
             // {field:'prodAdjustId',  visible: false},
             {field:'statusStr',  title: 'ProElementAdj001.dataStatus',sortField:"status",width: 100},//数据状态
-            {field:'itemId',  title: '业务主键',sortField:"itemId",width: 50},//业务主键
+            {field:'itemId',  title: '业务主键',sortField:"itemId",width: 50,visible:false},//业务主键
             {field:'booksetId',  title: '产品主代码',sortField:"booksetId"},
             {field:'prodName',  title: '产品全称',sortField:"prodName"},//产品主代码
             {field:'indexYear',  title: '年度',sortField:"indexYear"},//年度

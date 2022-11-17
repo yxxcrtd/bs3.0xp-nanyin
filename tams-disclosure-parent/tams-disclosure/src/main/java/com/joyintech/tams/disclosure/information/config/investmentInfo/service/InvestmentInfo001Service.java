@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,13 +55,16 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
         return result;
     }
 
+    //flag 判断是否导入  false否  true是
     @Override
     public void doComplete(InvestmentInfo001Dto dto, OperationType operationType) {
 
         dto.setUpdateTime(DateUtil.now());
         dto.setOperateType(operationType.toString());
         String type = dto.getOperateType();
-        dto.setProportionShare(dto.getProportionShare().divide(new BigDecimal("100")).setScale(4,BigDecimal.ROUND_HALF_UP));
+        if (Objects.nonNull(dto.getFlag())&&!dto.getFlag()){
+            dto.setProportionShare(dto.getProportionShare().divide(new BigDecimal("100")).setScale(4,BigDecimal.ROUND_HALF_UP));
+        }
         Map<String,Object> map =new HashMap();
         if (StringUtil.equals(type, "DELETE")) {
             map.put("id",dto.getId());
@@ -274,6 +279,7 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
             List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
             if (checkResult.isEmpty()) {
                 entities.forEach(item -> {
+                    item.setFlag(true);
                     this.doComplete(item, OperationType.NEW);
                 });
             }
@@ -297,6 +303,21 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
             List<String> message = new ArrayList<>();
             if (!findList.contains(rowData.get(3).trim())) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0033"));
+            }
+            Pattern pattern = Pattern.compile("[0-9]*\\.?[0-9]+");
+            if (rowData.get(5).indexOf(".")>0){
+                Matcher isNum = pattern.matcher(rowData.get(5));
+                if (!isNum.matches()){
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0036"));
+                }
+                if (rowData.get(5).substring(rowData.get(5).indexOf(".")+1).length()>2){
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0034"));
+                }
+            }
+            if (rowData.get(6).indexOf(".")>0){
+                if (rowData.get(6).substring(rowData.get(6).indexOf(".")+1).length()>4){
+                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0035"));
+                }
             }
 
             /*if (map.containsKey(rowData.get(0)

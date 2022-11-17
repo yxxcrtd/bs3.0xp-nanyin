@@ -648,11 +648,11 @@ comment on column TOP_INVESTOR_INFORMATION.bookset_id
 comment on column TOP_INVESTOR_INFORMATION.index_year
     is '年度';
 comment on column TOP_INVESTOR_INFORMATION.index_type
-    is '指标类型';
+    is '指标类型  01半年报 02年报';
 comment on column TOP_INVESTOR_INFORMATION.tz_rank
     is '排名';
 comment on column TOP_INVESTOR_INFORMATION.tz_type
-    is '类别';
+    is '类别 01个人 02机构';
 comment on column TOP_INVESTOR_INFORMATION.hold_share
     is '持有份额(份)';
 comment on column TOP_INVESTOR_INFORMATION.proportion_share
@@ -668,7 +668,7 @@ comment on column TOP_INVESTOR_INFORMATION.update_user
 comment on column TOP_INVESTOR_INFORMATION.update_time
     is '更新时间';
 comment on column TOP_INVESTOR_INFORMATION.status
-    is '数据状态';
+    is '数据状态 D删除 E有效';
 
 
 DROP TABLE TOP_INVESTOR_INFORMATION_HIS;
@@ -705,11 +705,11 @@ comment on column TOP_INVESTOR_INFORMATION_HIS.bookset_id
 comment on column TOP_INVESTOR_INFORMATION_HIS.index_year
     is '年度';
 comment on column TOP_INVESTOR_INFORMATION_HIS.index_type
-    is '指标类型';
+    is '指标类型 01半年报 02年报';
 comment on column TOP_INVESTOR_INFORMATION_HIS.tz_rank
     is '排名';
 comment on column TOP_INVESTOR_INFORMATION_HIS.tz_type
-    is '类别';
+    is '类别 01个人 02机构';
 comment on column TOP_INVESTOR_INFORMATION_HIS.hold_share
     is '持有份额(份)';
 comment on column TOP_INVESTOR_INFORMATION_HIS.proportion_share
@@ -725,7 +725,7 @@ comment on column TOP_INVESTOR_INFORMATION_HIS.update_user
 comment on column TOP_INVESTOR_INFORMATION_HIS.update_time
     is '更新时间';
 comment on column TOP_INVESTOR_INFORMATION_HIS.status
-    is '数据状态';
+    is '数据状态 D删除 E有效';
 -- 创建前十大投资信息表 以及 删除历史表 add by huzhangshun 2022/11/17 end
 
 -- 创建前十大投资者信息序列 add by huzhangshun 2022/11/17 start
