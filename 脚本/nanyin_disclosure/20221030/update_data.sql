@@ -638,8 +638,107 @@ values ('SvrProdFeeDealInterf002', '999999', 'FEE_TYPE_REP', '06', null, null, '
 delete from rep_screen a where a.screen_id in('100000069','100000071');
 -- 产品不成立报表条件删除产品发布日期 add by zhengxiaolian 2022-11-11 end
 
---修改分红表单维护字段业绩比较基准比例精度
-alter table DIS_PROD_BONUSPLAN modify ACHIEVEMENT_BASIS_PROP  NUMBER(7,4);
+
+-- 更改"科目发生额信息维护" 菜单20221108
+
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_004_008' AND SYS_MENU.REMARK = '科目发生额';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_004_008', 'DIS', null, 'REPORT_004', 'AccountAmount001', 8, '02', '科目发生额', 'system', null, SYSDATE, 'system', SYSDATE);
+
+-- 新增 "科目发生额信息维护" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('AccountAmount001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('AccountAmount001', 'DIS', '/disclosure/information/config/accountamount/AccountAmount001', 'disclosure/information/config/accountamount/AccountAmount001',
+       'REPORT_004_008', NULL, NULL, '02', '01', '科目发生额', 'system', NULL, sysdate, 'system', sysdate);
+
+--修改科目发生额科目号枚举值20221108
+delete from SYS_DATADICT where dict_code = 'SUBJECT_NO';
+insert into SYS_DATADICT values ('SUBJECT_NO','VAL','科目发生额信息科目号','','02','system','',sysdate, 'system',sysdate);
+
+delete from sys_datadict_list sdl where sdl.dict_code = 'SUBJECT_NO';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SUBJECT_NO', '6605', '6605', 1, '0', 'system', '', sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SUBJECT_NO', '6407', '6407', 2, '0', 'system', '', sysdate, 'system', sysdate);
+
+-- 科目发生额信息维护 页面控件流程模板设置20221108
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'AccountAmount002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount001_btn_delete', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount002_btn_save', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('AccountAmount002', 'AccountAmount002_btn_submit', 'noneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+-- 科目发生额信息维护 添加 页面字典绑定
+delete from sys_page_dictlist where page_id='AccountAmount001' and DICT_ID='MAINTAIN_STATUS';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'A', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('AccountAmount001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+
+--新建前十大投资者信息菜单工作流 以及 前十大投资者信息指标类型  前十大投资者信息类别 add by huzhangshun 2022/11/17 start
+DELETE FROM SYS_MENU WHERE MENU_ID='REPORT_004_009';
+INSERT INTO SYS_MENU
+(MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD,
+ REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('REPORT_004_009', 'DIS', NULL, 'REPORT_004', 'InvestmentInfo001',
+       9, '02', '前十大投资者交易', 'system', NULL, sysdate, 'system', sysdate);
+
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('InvestmentInfo001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH,
+ IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+ UPDATE_USER, UPDATE_TIME)
+VALUES('InvestmentInfo001', 'DIS',
+       '/disclosure/information/config/investmentInfo/InvestmentInfo001',
+       '/disclosure/information/config/investmentInfo/InvestmentInfo001', 'REPORT_004_009', NULL,
+       NULL, '02', '01', '前十大投资者交易', 'system', NULL, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('InvestmentInfo002');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH,
+ IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+ UPDATE_USER, UPDATE_TIME)
+VALUES('InvestmentInfo002', 'DIS',
+       '/disclosure/information/config/investmentInfo/InvestmentInfo002',
+       '/disclosure/information/config/investmentInfo/InvestmentInfo002', '', NULL,
+       NULL, '02', '01', '前十大投资者交易维护新建', 'system', NULL, sysdate, 'system', sysdate);
+
+
+delete from sys_wfl_business_module where PAGE_ID = 'InvestmentInfo002'
+    insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo001_btn_delete', 'noneApproval', 'system', '', sysdate,
+    'system',sysdate,'ALL','02');
+insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo002_btn_save', 'noneApproval', 'system', '', sysdate,
+                                            'system',sysdate,'ALL','02');
+insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo002_btn_submit', 'noneApproval', 'system', '', sysdate,
+                                            'system',sysdate,'ALL','02');
+
+
+delete from SYS_DATADICT where DICT_CODE='DIS_INDEX_TYPE';
+insert into SYS_DATADICT (DICT_CODE,SYSTEM_CODE,DICT_CNNAME,DICT_ENNAME,UPDATE_FLG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('DIS_INDEX_TYPE','REP','前十大投资者信息指标类型','','02','system',null,sysdate,'system',sysdate);
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'DIS_INDEX_TYPE';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+VALUES('DIS_INDEX_TYPE','01','半年报','1','0','system',sysdate,'system',sysdate);
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+VALUES('DIS_INDEX_TYPE','02','年报','2','0','system',sysdate,'system',sysdate);
+
+
+delete from SYS_DATADICT where DICT_CODE='DIS_TZ_TYPE';
+insert into SYS_DATADICT (DICT_CODE,SYSTEM_CODE,DICT_CNNAME,DICT_ENNAME,UPDATE_FLG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('DIS_TZ_TYPE','REP','前十大投资者信息类别','','02','system',null,sysdate,'system',sysdate);
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'DIS_TZ_TYPE';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+VALUES('DIS_TZ_TYPE','01','个人','1','0','system',sysdate,'system',sysdate);
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+VALUES('DIS_TZ_TYPE','02','机构','2','0','system',sysdate,'system',sysdate);
+
+--新建前十大投资者信息菜单工作流 以及 前十大投资者信息指标类型  前十大投资者信息类别 add by huzhangshun 2022/11/17 end
 
 -- 非指数型半年报/年报修改 add by zhengxiaolian 2022-11-15 start
 update rep_reportinfo a set a.reportdesc='半年度报告非指数型非现管类产品' where id='1221';
