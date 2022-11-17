@@ -95,7 +95,7 @@
                                         <input type="text" id="holdShare" name="holdShare" onkeyup="if(this.value < 0){
                                                           this.value= 0;
                                                          }else{
-                                                    this.value= value.toString().match(/^\d{1,28}(?:\.\d{0,2})?/)}"
+                                                    this.value= value.toString().replaceAll(',','').match(/^\d+(?:\.\d{0,2})?/)}"
                                                data-th-value="${entity?.holdShare}" required
                                                class="layui-input form-input text-number">
                                     </div>
@@ -111,7 +111,7 @@
                                         <input type="text" id="proportionShare" name="proportionShare" onkeyup="if(this.value < 0){
                                                           this.value= 0;
                                                          }else{
-                                                    this.value= value.toString().match(/^\d{1,28}(?:\.\d{0,2})?/)}"
+                                                    this.value= value.toString().replaceAll(',','').match(/^\d+(?:\.\d{0,4})?/)}"
                                                data-th-value="${entity?.proportionShareStr}" required
                                                class="layui-input form-input text-number">
                                     </div>
