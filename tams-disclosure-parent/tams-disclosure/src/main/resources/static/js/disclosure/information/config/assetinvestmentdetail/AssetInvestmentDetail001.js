@@ -14,6 +14,7 @@
          return {
              prodId:prodId,
              assetCode:$('#assetCode').val(),
+             assetName:$('#assetName').val(),
              dateStart:$('#pubDate').startDate(),
              dateEnd:$('#pubDate').endDate(),
              status:$('#status').val()
