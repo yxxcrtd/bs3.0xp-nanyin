@@ -81,6 +81,8 @@ public class RepRelDeal extends BaseEntity {
      */
     private String errormsg;
 
+    private String editFlag;
+
     /**
      * 取得 主键
      * @return 主键
@@ -290,5 +292,13 @@ public class RepRelDeal extends BaseEntity {
      */
     public void setErrormsg(String errormsg) {
         this.errormsg = errormsg == null ? null : errormsg.trim();
+    }
+
+    public String getEditFlag() {
+        return editFlag;
+    }
+
+    public void setEditFlag(String editFlag) {
+        this.editFlag = editFlag;
     }
 }

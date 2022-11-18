@@ -26,4 +26,6 @@ public interface InvestmentInfo001Mapper {
     int deleteByKey(InvestmentInfo001Dto dto);
 
     List<SelectOptionDto> getProdId1(Map<Object, Object> map);
+
+    List<InvestmentInfo001Dto> selectTopInfoList(List<InvestmentInfo001Dto> dataList);
 }

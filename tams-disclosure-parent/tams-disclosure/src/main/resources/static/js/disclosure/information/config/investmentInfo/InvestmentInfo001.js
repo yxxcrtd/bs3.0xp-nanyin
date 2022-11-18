@@ -13,7 +13,7 @@
 
         return {
             booksetId:booksetId,
-            indexPeriod:$('#indexPeriod').val(),
+            indexType:$('#indexType').val(),
             indexYear:$('#indexYear').val(),
             status:$('#status').val()
         };
@@ -139,8 +139,10 @@
         Joyin.exportExcel('export', paramObj);//导出（共通）
     };
     function addrule() {
+        var data = {};
+        data.prodId=$('#booksetId').val()== null ? null : $('#booksetId').val().join(",");
         Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
-            {},function () {
+            data,function () {
                 var finprodIds = $('#finprodIds').data('finprodIds');
                 if(!finprodIds || finprodIds.length ==0){
                     return;
@@ -161,6 +163,7 @@
         });
         //初始化查询
         $('#InvestmentInfo001_btn_search').click(function () {
+            console.log("查询")
             table.load();
             $('#InvestmentInfo001_btn_delete').show();
         });

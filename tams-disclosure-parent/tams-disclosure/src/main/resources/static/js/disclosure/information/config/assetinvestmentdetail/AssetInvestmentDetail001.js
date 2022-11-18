@@ -14,6 +14,7 @@
          return {
              prodId:prodId,
              assetCode:$('#assetCode').val(),
+             assetName:$('#assetName').val(),
              dateStart:$('#pubDate').startDate(),
              dateEnd:$('#pubDate').endDate(),
              status:$('#status').val()
@@ -115,13 +116,15 @@
     }
 
     function addrule() {
+        var data = {};
+        data.prodId=$('#prodId').val()== null ? null : $('#prodId').val().join(",");
         Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
-            {},function () {
+            data,function () {
                 var finprodIds = $('#finprodIds').data('finprodIds');
                 if(!finprodIds || finprodIds.length ==0){
                     return;
                 }
-                $('#booksetId').textSelect('setValue',finprodIds);
+                $('#prodId').textSelect('setValue',finprodIds);
             });
         return;
     };

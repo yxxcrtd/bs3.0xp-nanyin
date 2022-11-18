@@ -7,6 +7,8 @@ var RepRelDeal002 = function() {
             if(pageModel!=PAGE_MODEL_NEW){
                 $("#prodId").attr('disabled',true);
                 $("#prodName").attr('disabled',true);
+                $("#effdate").attr('disabled',true);
+                $("#effdelidate").attr('disabled',true);
             }
 
             // if($('#effdate').val() != '' && $('#effdate').val() != null){
@@ -52,6 +54,7 @@ var RepRelDeal002 = function() {
             param.effdate = $("#effdate").val();
             param.effdelidate = $("#effdelidate").val();
             param.uuid = $("#uuid").val();
+            param.editFlag=editFlag;
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repRelDeal/RepRelDeal002/check',param,function(result){
                 if(result){
                     Joyin.confirm("请确认是否要操作？", function () {

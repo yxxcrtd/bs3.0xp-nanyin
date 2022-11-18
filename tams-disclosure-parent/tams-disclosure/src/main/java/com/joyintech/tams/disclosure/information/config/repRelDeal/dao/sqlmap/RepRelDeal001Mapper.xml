@@ -169,7 +169,10 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             STATUS = #{status,jdbcType=VARCHAR}
-        where UUID = #{uuid,jdbcType=CHAR}
+        where EFFDATE = #{effdate,jdbcType=DATE}
+            and EFFDELIDATE = #{effdelidate,jdbcType=DATE}
+            and PROD_ID=#{prodId}
+            and STATUS!='D'
     </update>
 
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto"  >
@@ -177,7 +180,10 @@
 		set STATUS = 'D',
 		UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
 		UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
-		where UUID = #{uuid,jdbcType=VARCHAR}
+		where EFFDATE = #{effdate,jdbcType=DATE}
+            and EFFDELIDATE = #{effdelidate,jdbcType=DATE}
+            and PROD_ID=#{prodId}
+            and STATUS!='D'
 	</delete>
     <select id="selectExist" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
         select *
@@ -300,13 +306,25 @@
         select
         distinct
         A.PROD_ID,
-        to_char(A.EFFDATE,'yyyy/mm/dd') effdateStr,
-        to_char(A.EFFDELIDATE,'yyyy/mm/dd') effdelidateStr
+        A.EFFDATE  effdate,
+        A.EFFDELIDATE effdelidate
         from REP_REL_DEAL A
         where
             A.EFFDATE = #{effdate,jdbcType=DATE}
             and A.EFFDELIDATE = #{effdelidate,jdbcType=DATE}
             and A.PROD_ID=#{prodId}
+            and A.STATUS!='D'
+    </select>
+
+    <select id="selectExistDto"   resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto">
+        select
+        distinct
+        A.PROD_ID,
+        A.EFFDATE  effdate,
+        A.EFFDELIDATE effdelidate
+        from REP_REL_DEAL A
+        where
+            A.PROD_ID=#{prodId}
             and A.STATUS!='D'
     </select>
 </mapper>

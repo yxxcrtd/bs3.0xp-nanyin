@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -16,7 +15,6 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
-import com.joyintech.tams.disclosure.information.config.accountamount.dto.AccountAmount001Dto;
 import com.joyintech.tams.disclosure.information.config.investmentInfo.dao.InvestmentInfo001Mapper;
 import com.joyintech.tams.disclosure.information.config.investmentInfo.dto.InvestmentInfo001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
@@ -31,8 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,9 +58,7 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
         dto.setUpdateTime(DateUtil.now());
         dto.setOperateType(operationType.toString());
         String type = dto.getOperateType();
-        if (Objects.nonNull(dto.getFlag())&&!dto.getFlag()){
-            dto.setProportionShare(dto.getProportionShare().divide(new BigDecimal("100")).setScale(4,BigDecimal.ROUND_HALF_UP));
-        }
+        dto.setProportionShare(dto.getProportionShare().divide(new BigDecimal("100")).setScale(4,BigDecimal.ROUND_HALF_UP));
         Map<String,Object> map =new HashMap();
         if (StringUtil.equals(type, "DELETE")) {
             map.put("id",dto.getId());
@@ -155,32 +149,24 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
-            List<InvestmentInfo001Dto> entities = null;
-            try {
-                entities = this.convertToBean(dataList);
-            } catch (Exception e) {
-                webResult.setMessage(e.getMessage(), MessageType.错误消息);
-                return webResult;
-            }
-            // 防止在进行导入前check时进行了两次的弹框
-            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-            /*List<InvestmentInfo001Dto> data = this.selectBalanceByKey(entities);
+            List<InvestmentInfo001Dto> entities = this.convertToBean(dataList);
+            List<InvestmentInfo001Dto> data = this.selectTopInfoByKey(entities);
             if (data != null && data.size() > 0) {
-                Map<String, List<AccountAmount001Dto>> map = entities.stream().collect(
+                Map<String, List<InvestmentInfo001Dto>> map = entities.stream().collect(
                         JoyinCollectors.groupingBy(x ->
                                 x.getBooksetId()
-                                        + GlobalConstant.UNDER_LINE + x.getDateStartStr()
-                                        + GlobalConstant.UNDER_LINE + x.getDateEndStr()
-                                        + GlobalConstant.UNDER_LINE + x.getSubjectNo()
+                                        + GlobalConstant.UNDER_LINE + x.getIndexYear()
+                                        + GlobalConstant.UNDER_LINE + x.getIndexType()
+                                        + GlobalConstant.UNDER_LINE + x.getTzRank()
                         ));
                 // 将序号放入list中
                 List<String> excelNumList = new ArrayList<>();
                 List<Integer> excelNumIntList = new ArrayList<>();
-                for (AccountAmount001Dto dto : data) {
-                    List<AccountAmount001Dto> listTemp = map.get(dto.getBooksetId()
-                            + GlobalConstant.UNDER_LINE + dto.getDateStartStr()
-                            + GlobalConstant.UNDER_LINE + dto.getDateEndStr()
-                            + GlobalConstant.UNDER_LINE + dto.getSubjectNo());
+                for (InvestmentInfo001Dto dto : data) {
+                    List<InvestmentInfo001Dto> listTemp = map.get(dto.getBooksetId()
+                            + GlobalConstant.UNDER_LINE + dto.getIndexYear()
+                            + GlobalConstant.UNDER_LINE + dto.getIndexType()
+                            + GlobalConstant.UNDER_LINE + dto.getTzRank());
                     excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
                 }
                 // 将list进行排序，并转化为string
@@ -189,13 +175,13 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
                     excelNumList.add(String.valueOf(rowNo));
                 }
                 webResult.setMessage(
-                        this.getMessage("REPORT_COMMON_FILE_C_1111_1",
+                        this.getMessage("REPORT_COMMON_FILE_C_0001_002",
                                 StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                        MessageType.错误消息);
-            } else {
+                        MessageType.确认消息);
+            }else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-            }*/
+            }
         } else {
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
@@ -204,66 +190,66 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
 
     }
 
+    private List<InvestmentInfo001Dto> selectTopInfoByKey(List<InvestmentInfo001Dto> dataList) {
+        int maxDataCountOneTime = 1000;
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            return investmentInfo001Mapper.selectTopInfoList(dataList);
+        }
+        // 导入大于1000时，返回值
+        List<InvestmentInfo001Dto> equtiyList = new ArrayList<>();
+
+        List<InvestmentInfo001Dto> newDataList = new ArrayList<>(dataList);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        List<InvestmentInfo001Dto> listTemp;
+        for (int i = 0; i < part; i++ ) {
+            listTemp = investmentInfo001Mapper.selectTopInfoList(newDataList.subList(0, maxDataCountOneTime));
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            listTemp = investmentInfo001Mapper.selectTopInfoList(newDataList);
+            // 不为空，放入返回list中
+            if (CollectionUtils.isNotEmpty(listTemp)) {
+                equtiyList.addAll(listTemp);
+            }
+        }
+        return equtiyList;
+    }
+
     private List<InvestmentInfo001Dto> convertToBean(List<List<String>> dataList) {
         List<InvestmentInfo001Dto> entities = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++ ) {
-            int i1 = i+2;
             List<String> list =  dataList.get(i);
             InvestmentInfo001Dto entity = new InvestmentInfo001Dto();
+            entity.setIndexYear(" ");
             if (StringUtil.isNotEmpty(list.get(0))) {
-                entity.setIndexYear(list.get(0).trim());
-            } else {
-                throw new BusinessException("第"+i1+"行年度不能为空!");
+                entity.setIndexYear(list.get(0));
             }
+            entity.setIndexType(" ");
             if (StringUtil.isNotEmpty(list.get(1))) {
-                //半年报年报
-                if(DictCodeListExt3.前十大投资者信息指标类型_半年报.getCodeName().equals(list.get(1).trim())){
-                    entity.setIndexType("01");
-                }else if (DictCodeListExt3.前十大投资者信息指标类型_年报.getCodeName().equals(list.get(1).trim())){
-                    entity.setIndexType("02");
-                }else{
-                    throw new BusinessException("第"+i1+"行数据类型必须是年报跟非年报！");
+                if (DictCodeListExt3.前十大投资者信息指标类型_年报.getCodeName().equals(list.get(1))){
+                    entity.setIndexType(DictCodeListExt3.前十大投资者信息指标类型_年报.getValue());
                 }
-            } else {
-                throw new BusinessException("第"+i1+"行数据类型不能为空!");
+                if (DictCodeListExt3.前十大投资者信息指标类型_半年报.getCodeName().equals(list.get(1))){
+                    entity.setIndexType(DictCodeListExt3.前十大投资者信息指标类型_半年报.getValue());
+                }
             }
+            entity.setTzRank(" ");
             if (StringUtil.isNotEmpty(list.get(2))) {
-                entity.setTzRank(list.get(2).trim());
-            } else {
-                throw new BusinessException("第"+i1+"行排名不能为空!");
+                entity.setTzRank(list.get(2));
             }
-            if (StringUtil.isNotEmpty(list.get(3))) {
-                entity.setBooksetId(list.get(3).trim());
-            } else {
-                throw new BusinessException("第"+i1+"行产品主代码不能为空!");
+            entity.setBooksetId(" ");
+            if (StringUtil.isNotEmpty(list.get(3))){
+                entity.setBooksetId(list.get(3));
             }
-            if (StringUtil.isNotEmpty(list.get(4))) {
-                entity.setTzType(list.get(4).trim());
-            } else {
-                throw new BusinessException("第"+i1+"行类别不能为空!");
-            }
-            if (StringUtil.isNotEmpty(list.get(5))) {
-                BigDecimal bigDecimal = new BigDecimal("0");
-                try {
-                    bigDecimal = new BigDecimal(list.get(5));
-                } catch (Exception e) {
-                    throw new BusinessException("第"+i1+"行请检查持有份额类型!");
-                }
-                entity.setHoldShare(bigDecimal);
-            } else {
-                throw new BusinessException("第"+i1+"行持有份额不能为空!");
-            }
-            if (StringUtil.isNotEmpty(list.get(6))) {
-                BigDecimal bigDecimal = new BigDecimal("0");
-                try {
-                    bigDecimal = new BigDecimal(list.get(6));
-                } catch (Exception e) {
-                    throw new BusinessException("第"+i1+"行请检查占总份额比例类型!");
-                }
-                entity.setProportionShare(bigDecimal);
-            } else {
-                throw new BusinessException("第"+i1+"行持有份额不能为空!");
-            }
+            entity.setExcelNum(String.valueOf(i+2));
             entities.add(entity);
         }
         return entities;
@@ -276,14 +262,16 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
         List<List<String>> dataList = ExcelUtil.getDataList(fileName);
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             List<InvestmentInfo001Dto> entities = new ArrayList<>(dataList.size());
-            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
-            if (checkResult.isEmpty()) {
-                entities.forEach(item -> {
-                    item.setFlag(true);
-                    this.doComplete(item, OperationType.NEW);
-                });
+            List<ExcelValidDto> checkResult = checkToEntitys(dataList, entities);
+            if (!checkResult.isEmpty()) {
+                return checkResult;
             }
-            return checkResult;
+            convertToEntitys(dataList,entities);
+            entities.forEach(item -> {
+                item.setFlag(true);
+                this.doComplete(item, OperationType.NEW);
+            });
+            return new ArrayList<>();
         } else {
             List<ExcelValidDto> checkResult = new ArrayList<>();
             checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
@@ -292,32 +280,54 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
         }
     }
 
-    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+    private void convertToEntitys(List<List<String>> dataList, List<InvestmentInfo001Dto> entities) {
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            entities.add(this.convertToEntity(rowData));
+        }
+    }
+
+    private List<ExcelValidDto> checkToEntitys(List<List<String>> dataList,
                                                  List<InvestmentInfo001Dto> entities) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
         List<String> findList =  investmentInfo001Mapper.getProdId1(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
         for (int i = 0; i < dataList.size(); i++ ) {
+
             List<String> rowData = dataList.get(i);
             // 验证消息
             List<String> message = new ArrayList<>();
+
+            if (StringUtil.isEmpty(rowData.get(0).trim())) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0036"));
+            }
+            if (StringUtil.isEmpty(rowData.get(1).trim()) ||
+                (!DictCodeListExt3.前十大投资者信息指标类型_半年报.getCodeName().equals(rowData.get(1).trim())
+                        && !DictCodeListExt3.前十大投资者信息指标类型_年报.getCodeName().equals(rowData.get(1).trim()))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0037"));
+            }
+            if (StringUtil.isEmpty(rowData.get(2))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0038"));
+            }
+            if (StringUtil.isEmpty(rowData.get(4)) ||
+                    (!DictCodeListExt3.前十大投资者信息类别_个人.getCodeName().equals(rowData.get(4)) &&
+            !DictCodeListExt3.前十大投资者信息类别_机构.getCodeName().equals(rowData.get(4)))){
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0039"));
+            }
             if (!findList.contains(rowData.get(3).trim())) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0033"));
             }
-            Pattern pattern = Pattern.compile("[0-9]*\\.?[0-9]+");
-            if (rowData.get(5).indexOf(".")>0){
-                Matcher isNum = pattern.matcher(rowData.get(5));
-                if (!isNum.matches()){
-                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0036"));
-                }
-                if (rowData.get(5).substring(rowData.get(5).indexOf(".")+1).length()>2){
-                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0034"));
-                }
+            BigDecimal holdShare = new BigDecimal("0");
+            try {
+                holdShare = new BigDecimal(rowData.get(5));
+            } catch (Exception e) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0034"));
             }
-            if (rowData.get(6).indexOf(".")>0){
-                if (rowData.get(6).substring(rowData.get(6).indexOf(".")+1).length()>4){
-                    message.add(this.getMessage("REPORT_COMMON_FILE_E_0035"));
-                }
+            BigDecimal proportionShare = new BigDecimal("0");
+            try {
+                proportionShare = new BigDecimal(rowData.get(6));
+            } catch (Exception e) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0035"));
             }
 
             /*if (map.containsKey(rowData.get(0)
@@ -337,7 +347,6 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
                         + GlobalConstant.UNDER_LINE + rowData.get(3),
                         String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
             }
-            entities.add(this.convertToEntity(rowData));
         }
         return checkResult;
     }
@@ -371,10 +380,10 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
             }
         }
         if (StringUtil.isNotEmpty(rowData.get(5))){
-            investmentInfo001Dto.setHoldShare(new BigDecimal(rowData.get(5)));
+            investmentInfo001Dto.setHoldShare(new BigDecimal(rowData.get(5)).setScale(2,BigDecimal.ROUND_HALF_DOWN));
         }
         if (StringUtil.isNotEmpty(rowData.get(6))){
-            investmentInfo001Dto.setProportionShare(new BigDecimal(rowData.get(6)));
+            investmentInfo001Dto.setProportionShare(new BigDecimal(rowData.get(6)).setScale(4,BigDecimal.ROUND_HALF_DOWN));
         }
         return investmentInfo001Dto;
     }

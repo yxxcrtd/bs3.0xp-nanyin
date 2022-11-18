@@ -123,8 +123,10 @@
     };
 
     function addrule1() {
+        var data = {};
+        data.prodId=$('#prodId').val()== null ? null : $('#prodId').val().join(",");
         Joyin.dialog("产品选择", basePath + "disclosure/information/config/disprodplanmanage/DisProdPlanManage004/init", "80%", "80%",
-            {}, function () {
+            data, function () {
                 var finprodIds = $('#finprodIds').data('finprodIds');
                 if (!finprodIds||finprodIds.length == 0) {
                     return;
