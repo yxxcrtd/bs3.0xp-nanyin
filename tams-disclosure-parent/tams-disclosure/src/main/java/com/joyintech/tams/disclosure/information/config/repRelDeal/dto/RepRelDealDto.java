@@ -52,7 +52,6 @@ public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntit
     private String effdelidateStr;
 
     @Override
-    @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getUuid() {
         return super.getUuid();
     }
@@ -88,7 +87,7 @@ public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntit
         this.selectedItem = selectedItem;
     }
 
-
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getProdName() {
         return prodName;
     }
@@ -104,7 +103,7 @@ public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntit
     public String getPubDateStr() {
         return this.getPubDate()==null?null: DateUtil.format(this.getPubDate(), "yyyy-MM-dd");
     }
-
+    @PrimaryKey(PrimaryKey.Field.PK_2)
     public String getEffdateStr() {
         if (StringUtil.isNotEmpty(this.effdateStr)) {
             return this.effdateStr;
@@ -112,7 +111,7 @@ public class RepRelDealDto extends RepRelDeal implements ITableRow, ProcessEntit
             return this.getEffdate() == null ? null : DateUtil.format(this.getEffdate(), "yyyy-MM-dd");
         }
     }
-
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getEffdelidateStr() {
         if (StringUtil.isNotEmpty(this.effdelidateStr)) {
             return this.effdelidateStr;
