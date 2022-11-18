@@ -81,7 +81,20 @@
 		$('#RepProdIndex003_btn_submit').click(function() {
 			saveOrSubmit();
 		});
+		$('#RepProdIndex003_btn_cancel').click(function () {
+			Joyin.confirm("请确认是否要关闭?", function(){
+				var params = new Array();
+				if(prodId){
+					params=prodId.split(",");
+				}
+				parent.$('#finprodIds').data('finprodIds',params);
+				var index = parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index);
 
+			}, function() {
+				console.log('取消');
+			});
+		});
 		$('#expandAll').next().on('click',function(){
 			expandAll();
 		});
