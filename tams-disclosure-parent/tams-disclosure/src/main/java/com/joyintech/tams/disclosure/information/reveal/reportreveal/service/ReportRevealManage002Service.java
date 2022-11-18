@@ -173,6 +173,11 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
             exportFilePath = exportFilePath + DateUtil.formatDate(DateUtil.getCurrentDate());
             File file=new File(exportFilePath);
             com.joyintech.tams.disclosure.interf.interf.common.util.FileUtil.deleteDir(file);
+
+            String remotePath = CacheUtil.getSysParam("SFTP_DIS_FPATH");
+            remotePath = remotePath + DateUtil.getCurrentDate();
+            File file2=new File(remotePath);
+            com.joyintech.tams.disclosure.interf.interf.common.util.FileUtil.deleteDir(file2);
         }
 
         //查询要处理的信披单据，没有关联代销机构的产品对应的单据，不进行披露
