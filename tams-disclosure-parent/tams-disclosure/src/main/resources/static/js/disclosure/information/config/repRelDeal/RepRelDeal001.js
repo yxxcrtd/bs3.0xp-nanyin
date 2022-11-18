@@ -147,7 +147,7 @@ $(function() {
 
         //新建点击事件
         $('#RepRelDeal001_btn_add').click(function() {
-            var data={operateType:"add", pageModel:PAGE_MODEL_NEW};
+            var data={operateType:"add", pageModel:PAGE_MODEL_NEW,editFlag:"01"};
             Joyin.dialog('关联交易情况维护-新建',basePath+'disclosure/information/config/repRelDeal/RepRelDeal002/init', '100%', '100%',data,function(){table.reload();});
         });
 
@@ -194,6 +194,7 @@ $(function() {
         table.bind('click', '.edit', function(data, index) {
             var object = {pageModel:PAGE_MODEL_EDIT,
                 uuid: data.uuid,
+                editFlag:"02",
                 operateType: PAGE_MODEL_EDIT};//请求参数
             Joyin.dialog(JoyinUtil.getLabel("关联交易情况维护-编辑"),
                 JoyinUtil.getRealPath("disclosure/information/config/repRelDeal/RepRelDeal002/init"),

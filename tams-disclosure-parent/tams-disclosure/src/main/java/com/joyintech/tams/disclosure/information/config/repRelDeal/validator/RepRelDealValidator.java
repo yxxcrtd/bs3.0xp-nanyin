@@ -1,5 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.repRelDeal.validator;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
@@ -70,6 +72,11 @@ public class RepRelDealValidator implements BeanValidator {
                     errorList.add(new ValidMessage("","当开始日期为xxxx/01/01，结束日期只能为xxxx/03/31，xxxx/06/30，xxxx/12/31；当开始日期为xxxx/04/01，结束日期只能为xxxx/06/30；当开始日期为xxxx/07/01，结束日期只能为xxxx/09/30，xxxx/12/31；当开始日期为xxxx/10/01，结束日期只能为xxxx/12/31且xxxx必须为同一年。"));
                 }
             }
+            if(StringUtil.isNotEmpty(dto.getEditFlag())){
+                if(repRelDealService.isInWorkflow(dto)){
+                    errorList.add(new ValidMessage("所选对象中存在流程中的数据！"));
+                }
+            }
             Map<String, Object> map = new HashMap<>();
             map.put("uuid",dto.getUuid());
             RepRelDealDto repRelDealDto =repRelDealService.selectData(map);
@@ -122,7 +129,7 @@ public class RepRelDealValidator implements BeanValidator {
                         }
                     }
                 }
-                if(dto.getEffdate()!= null&&dto.getEffdelidate()!= null){
+                /*if(dto.getEffdate()!= null&&dto.getEffdelidate()!= null){
                     RepRelDealDto realDto=repRelDeal001Mapper.selectRelDealdto(dto);
                     if(realDto!=null){
                         if(DateUtil.compareDate(dto.getEffdate(),realDto.getEffdate())!=0&&DateUtil.compareDate(dto.getEffdelidate(),realDto.getEffdelidate())!=0) {
@@ -130,7 +137,7 @@ public class RepRelDealValidator implements BeanValidator {
                         }
                     }
 
-                }
+                }*/
             }
 
 

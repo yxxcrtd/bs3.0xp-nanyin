@@ -44,6 +44,8 @@ public class RepRelDeal002Controller extends BaseController {
     public String init(Model model) {
         Map<String, Object> parm = RequestUtil.getPageParam();
         String pageModel = this.getParam("pageModel");
+        String editFlag = getParam("editFlag");
+        model.addAttribute("editFlag", editFlag);
         if(parm.containsKey("effdate")){
             parm.put("effdate", DateUtil.parse(parm.get("effdate").toString()));
         }
