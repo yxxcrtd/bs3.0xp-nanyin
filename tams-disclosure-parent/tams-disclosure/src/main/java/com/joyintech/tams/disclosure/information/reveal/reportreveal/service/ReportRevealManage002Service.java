@@ -162,6 +162,11 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                 joyinDFSTemplate.upload(uploadFile);
 
             }
+        }else{
+            String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+            exportFilePath = exportFilePath + DateUtil.formatDate(DateUtil.getCurrentDate());
+            File file=new File(exportFilePath);
+            com.joyintech.tams.disclosure.interf.interf.common.util.FileUtil.deleteDir(file);
         }
         return true;
     }
