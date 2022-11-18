@@ -48,7 +48,7 @@
             {field:'statusStr',  title: 'ProElementAdj001.dataStatus',sortField:"status",width: 100},//数据状态
             {field:'prodId',  title: '产品主代码',sortField:"prodId"},
             {field:'prodName',  title: '产品全称',sortField:"prodName"},
-            {field:'pubDate',  title: '日期',sortField:"dateStart",type:'date'}
+            {field:'pubDate',  title: '日期',sortField:"pubDate",type:'date'}
             ,{field:'assetCode',  title: '资产代码',sortField:"assetCode"}
             ,{field:'assetName',  title: '资产名称',sortField:"assetName"}
             ,{field:'fairValue',  title: '公允价值（元）',sortField:"fairValue",type:'number'}
