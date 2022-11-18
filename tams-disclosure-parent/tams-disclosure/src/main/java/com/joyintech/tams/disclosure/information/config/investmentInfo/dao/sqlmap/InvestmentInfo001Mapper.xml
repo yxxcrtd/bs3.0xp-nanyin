@@ -93,6 +93,23 @@
         from
             TOP_INVESTOR_INFORMATION tii
         where tii.id = #{id}
+        union all
+        select
+        distinct
+        tiih.id,
+        tiih.BOOKSET_ID booksetId,
+        tiih.index_year indexYear,
+        tiih.index_type indexType,
+        tiih.tz_rank tzRank,
+        tiih.tz_type tzType,
+        tiih.hold_share holdShare,
+        tiih.proportion_share proportionShare,
+        tiih.STATUS status,
+        tiih.UPDATE_TIME updateTime,
+        tiih.UPDATE_USER updateUser
+        from
+            TOP_INVESTOR_INFORMATION_HIS tiih
+        where tiih.id = #{id}
     </select>
 
     <select id="findProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
