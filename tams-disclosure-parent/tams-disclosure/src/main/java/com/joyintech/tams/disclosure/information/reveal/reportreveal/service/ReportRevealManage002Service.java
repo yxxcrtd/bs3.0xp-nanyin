@@ -24,6 +24,8 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.RepFtpPathMapper;
+import com.joyintech.tams.common.base.entity.RepFtpPath;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -40,6 +42,7 @@ import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
@@ -92,6 +95,9 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
 
     @Autowired
     private FtpDetailService ftpDetailService;
+
+    @Autowired
+    private RepFtpPathMapper repFtpPathMapper;
 
     /**
      * 进度条接口
@@ -168,6 +174,18 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
             File file=new File(exportFilePath);
             com.joyintech.tams.disclosure.interf.interf.common.util.FileUtil.deleteDir(file);
         }
+
+        //查询要处理的信披单据，没有关联代销机构的产品对应的单据，不进行披露
+        if(mapper.getRevealListNum(param)==0){
+            List<RepFtpPath> pathList=repFtpPathMapper.selectAllData();
+            for (RepFtpPath path : pathList) {
+                String dateStr = DateUtil.format(new Date(),"yyyyMMdd");
+                String newFtpPath = path.getPath() +"/" + dateStr;
+                File file=new File(newFtpPath);
+                com.joyintech.tams.disclosure.interf.interf.common.util.FileUtil.deleteDir(file);
+            }
+        }
+
         return true;
     }
 

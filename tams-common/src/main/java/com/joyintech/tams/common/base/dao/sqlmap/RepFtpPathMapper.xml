@@ -203,4 +203,10 @@
             BEAN_VAL = #{beanVal,jdbcType=VARCHAR}
         where ID = #{id,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectAllData" resultType="com.joyintech.tams.common.base.entity.RepFtpPath">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepFtpPathMapper.Base_Column_List" />
+        from REP_FTP_PATH
+    </select>
 </mapper>

@@ -49,4 +49,6 @@ public interface ReportRevealManageEX001Mapper {
     int backToTgReview(ReportReview001Dto dto);
 
     int backToReview(ReportReview001Dto dto);
+
+    int getRevealListNum(HashMap<String, Object> map);
 }

@@ -4,6 +4,8 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.RepFtpPath;
 
+import java.util.List;
+
 @Repository
 public interface RepFtpPathMapper {
     int deleteByPrimaryKey(String id);
@@ -19,4 +21,6 @@ public interface RepFtpPathMapper {
     int updateByPrimaryKeySelective(RepFtpPath record);
 
     int updateByPrimaryKey(RepFtpPath record);
+
+    List<RepFtpPath> selectAllData();
 }

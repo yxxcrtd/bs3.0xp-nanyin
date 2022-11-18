@@ -167,4 +167,12 @@
 			review.UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
 		where review.REVEAL_ID=#{id,jdbcType=VARCHAR}
 	</update>
+
+	<select id="getRevealListNum" resultType="int">
+		SELECT count(1)
+			FROM REP_REVEAL reveal
+		where reveal.STATUS='E'
+			and to_char(reveal.REVEAL_DATE, 'yyyy-MM-dd') = #{date,jdbcType=VARCHAR}
+			and reveal.REVEAL_STATUS = '01'
+	</select>
 </mapper>
