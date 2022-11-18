@@ -208,13 +208,13 @@ public class JasparConnectUtilService {
 				params.put("quarter","01");
 			}
 
-		} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+		} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)|| rptType.equals(DisReportType.BNDBG_FZSXXGL) ) {  //半年报
 			if(DateUtil.getMonth(params.get("enddate").toString())>11){
 				params.put("halfyear","02");
 			}else{
 				params.put("halfyear","01");
 			}
-		} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报
+		} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)|| rptType.equals(DisReportType.NDBG_FZSXXGL) ) { //年报
 
 		}
 

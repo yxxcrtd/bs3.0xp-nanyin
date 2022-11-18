@@ -150,6 +150,23 @@
 		order by rac.PD_PROP desc,rac.FAIR_VALUE desc
 	</select>
 
+	<select id="selectListInvester" resultType="com.joyintech.tams.common.base.entity.TopInvestorInformation">
+		select
+		TII.tz_rank,
+		TII.tz_type,
+		TII.hold_share,
+		TII.proportion_share
+		from TOP_INVESTOR_INFORMATION TII
+		where
+		TII.STATUS='E'
+		<if test="prodid!=null">
+			and TII.bookset_id=#{prodid,jdbcType=VARCHAR}
+		</if>
+		AND  TII.index_year=#{year,jdbcType=VARCHAR}
+		AND  TII.index_type=#{indexType,jdbcType=VARCHAR}
+		order by to_number(TII.tz_rank) ASC
+	</select>
+
 	<select id="selectAccts" resultType="com.joyintech.tams.common.base.entity.RepInvestAccount">
 		select
 		rownum personalField

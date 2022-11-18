@@ -161,8 +161,10 @@ public class PoiReportCheckService {
 					||StringUtil.equals(rptType,DisReportType.JDBG_FZSX)
 					||StringUtil.equals(rptType,DisReportType.BNDBG_ZSX)
 					||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
+					||StringUtil.equals(rptType,DisReportType.BNDBG_FZSXXGL)
 					||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
-					||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
+					||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)
+					||StringUtil.equals(rptType,DisReportType.NDBG_FZSXXGL)){
 				//先把规则查询出来
 				List<RepDataCheck>checkList=poiReportMapper.getRepDataCheckList();
 				Map<String,List<RepDataCheck>>checkMap=checkList.stream().collect(JoyinCollectors.groupingBy(x->x.getCheckId()));
@@ -359,8 +361,10 @@ public class PoiReportCheckService {
 
 					if(StringUtil.equals(rptType,DisReportType.BNDBG_ZSX)
 						||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
+						||StringUtil.equals(rptType,DisReportType.BNDBG_FZSXXGL)
 						||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
-						||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
+						||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)
+						||StringUtil.equals(rptType,DisReportType.NDBG_FZSXXGL)){
 						//半年报、年报：
 						//TODO:
 						//	当产品的募集方式为“公募”，发行方式为“开放式”时，“报告期末产品杠杆水平”小于等于140； 100000005

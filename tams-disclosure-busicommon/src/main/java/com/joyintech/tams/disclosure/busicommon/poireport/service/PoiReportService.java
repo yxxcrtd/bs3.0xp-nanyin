@@ -1052,13 +1052,24 @@ public class PoiReportService {
 					||StringUtil.equals(rptType,DisReportType.JDBG_FZSX)
 					||StringUtil.equals(rptType,DisReportType.BNDBG_ZSX)
 					||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
+					||StringUtil.equals(rptType,DisReportType.BNDBG_FZSXXGL)
 					||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
-					||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
+					||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)
+					||StringUtil.equals(rptType,DisReportType.NDBG_FZSXXGL)){
 
 				List<Map<String, Object>>listAssetsDetail=(List<Map<String, Object>>)dataMap.get("listAssetsDetail");
 				if(!CollectionUtils.isEmpty(listAssetsDetail)){
 					if(listAssetsDetail.size()>10){
 						resultSb.append((index++)+"："+"前十名资产投资明细数量超过10条"+"<br>");
+					}
+				}
+
+				if(StringUtil.equals(rptType,DisReportType.BNDBG_FZSXXGL)||StringUtil.equals(rptType,DisReportType.NDBG_FZSXXGL)){
+					List<Map<String, Object>>listInvester=(List<Map<String, Object>>)dataMap.get("listInvester");
+					if(!CollectionUtils.isEmpty(listInvester)){
+						if(listAssetsDetail.size()>10){
+							resultSb.append((index++)+"："+"前10名投资者情况数量超过10条"+"<br>");
+						}
 					}
 				}
 
@@ -1258,8 +1269,10 @@ public class PoiReportService {
 
 					if(StringUtil.equals(rptType,DisReportType.BNDBG_ZSX)
 						||StringUtil.equals(rptType,DisReportType.BNDBG_FZSX)
+						||StringUtil.equals(rptType,DisReportType.BNDBG_FZSXXGL)
 						||StringUtil.equals(rptType,DisReportType.NDBG_ZSX)
-						||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)){
+						||StringUtil.equals(rptType,DisReportType.NDBG_FZSX)
+						||StringUtil.equals(rptType,DisReportType.NDBG_FZSXXGL)){
 						//半年报、年报：
 						//TODO:
 						//	当产品的募集方式为“公募”，发行方式为“开放式”时，“报告期末产品杠杆水平”小于等于140； 100000005

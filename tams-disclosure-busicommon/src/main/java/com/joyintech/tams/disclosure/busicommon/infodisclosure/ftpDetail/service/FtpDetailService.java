@@ -292,7 +292,7 @@ public class FtpDetailService {
 					newFileName=repReveal.getProdName()+"("+repReveal.getProdid()+")"+DateUtil.format(repReveal.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN)+
 							suffix+fileSuffix;
 				}
-			}else if("CP_001_002_017".equals(repId) || "CP_001_002_018".equals(repId)){
+			}else if("CP_001_002_017".equals(repId) || "CP_001_002_018".equals(repId)|| "CP_001_002_022".equals(repId)){
 				if(newFileName.contains("（上半）")){
 					newFileName=newFileName.replace("（上半）","（半）");
 				}

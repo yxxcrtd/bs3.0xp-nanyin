@@ -110,7 +110,7 @@ public class HomeRevealStatService {
 				int counts = queryExpectCounts(repId,sDate,eDate,statDate);
 	    		info.setExpectRevealCounts(counts);
 			}
-			else if( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018") ) {  //半年报
+			else if( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018") || repId.equals("CP_001_002_022")) {  //半年报
 
 				if(DateUtil.getMonth(DateUtil.format(statDate))==7){
 					//找到本周期的第一天
@@ -138,7 +138,7 @@ public class HomeRevealStatService {
 
 
 			}
-			else if (repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020") ){  //年报
+			else if (repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020") || repId.equals("CP_001_002_023")){  //年报
 	    		//找到本周期的第一天
 	    		Date qDate = DurationUtil.getYearStart(statDate.getYear()+1900);
 	    		Map<String,Object> p = new HashMap<>();
@@ -443,7 +443,7 @@ public class HomeRevealStatService {
 						+ "and (v.MDATE - to_date('"+qDate + "','yyyy-MM-dd') > 90)) ";
 
     	}
-    	else if ( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018")  ) {//半年度报告：下一半年度第三个工作日<=当天<=下一半年度90个工作日之前
+    	else if ( repId.equals("CP_001_002_017") || repId.equals("CP_001_002_018") || repId.equals("CP_001_002_022") ) {//半年度报告：下一半年度第三个工作日<=当天<=下一半年度90个工作日之前
     		//找到上个半年的第一天
 			//定期报表必须满足成立日距离结束日大于90天，结束日离实际到期日大于90天
 			String qDate = DateUtil.format(getLastMonthDay(statDate),"yyyy-MM-dd");
@@ -453,7 +453,7 @@ public class HomeRevealStatService {
 					+ " and (to_date('"+qDate + "','yyyy-MM-dd') - v.SET_DATE) > 90 "
 					+ "and (v.MDATE - to_date('"+qDate + "','yyyy-MM-dd') > 90)) ";
     	}
-    	else if ( repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020")  ) {//年度报告：下一年度第三个工作日<=当天<=下一年度60个工作日之前
+    	else if ( repId.equals("CP_001_002_019") || repId.equals("CP_001_002_020") || repId.equals("CP_001_002_023") ) {//年度报告：下一年度第三个工作日<=当天<=下一年度60个工作日之前
     		//找到上个年度的第一天
 			//定期报表必须满足成立日距离结束日大于90天，结束日离实际到期日大于90天
 			String qDate = DateUtil.format(getLastMonthDay(statDate),"yyyy-MM-dd");

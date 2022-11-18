@@ -14,20 +14,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.common.base.entity.DisNostdCreditor;
-import com.joyintech.tams.common.base.entity.DisProdAsset;
-import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
-import com.joyintech.tams.common.base.entity.RepAssetsComb;
-import com.joyintech.tams.common.base.entity.RepIndexSub;
-import com.joyintech.tams.common.base.entity.RepInvestAccount;
-import com.joyintech.tams.common.base.entity.RepJobRange;
-import com.joyintech.tams.common.base.entity.RepProdBasicChange;
-import com.joyintech.tams.common.base.entity.RepProdIndex;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
-import com.joyintech.tams.common.base.entity.RepRelDeal;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dto.DurationReportDto;
 
 /**
@@ -73,4 +63,5 @@ public interface DurationReportMapper {
 	List<RepProdInfo> selectProdInfoBySql(@Param("sql") String sql);
 	
 	List<DisProdPlanInfo> selectProdPlan(Map<String,Object>paras);
+	List<TopInvestorInformation> selectListInvester (Map<String,Object>paras );
 }

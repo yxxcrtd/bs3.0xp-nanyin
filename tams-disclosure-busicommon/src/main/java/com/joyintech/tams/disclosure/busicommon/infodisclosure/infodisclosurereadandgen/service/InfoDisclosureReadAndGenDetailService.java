@@ -576,7 +576,9 @@ public class InfoDisclosureReadAndGenDetailService{
 					||StringUtil.equals("CP_001_002_017", repRule.getRepId())
 					||StringUtil.equals("CP_001_002_018", repRule.getRepId())
 					||StringUtil.equals("CP_001_002_019", repRule.getRepId())
-					||StringUtil.equals("CP_001_002_020", repRule.getRepId())){
+					||StringUtil.equals("CP_001_002_020", repRule.getRepId())
+					||StringUtil.equals("CP_001_002_022", repRule.getRepId())
+					||StringUtil.equals("CP_001_002_023", repRule.getRepId())){
 				if(repExpectedLog.getEndDate()!=null&&!(com.joyintech.framework.util.DateUtil.getBetweenDayNumber(prodInfoListEntity.getSetDate(), repExpectedLog.getEndDate())<90
 						|| com.joyintech.framework.util.DateUtil.getBetweenDayNumber(repExpectedLog.getEndDate(), prodInfoListEntity.getMdate())<90)
 						&& com.joyintech.framework.util.DateUtil.compareDate(prodInfoListEntity.getMdate(), repExpectedLog.getEndDate())>0){

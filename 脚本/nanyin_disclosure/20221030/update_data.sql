@@ -790,3 +790,212 @@ values ('AssetInvestmentDetail001', '999999', 'MAINTAIN_STATUS', 'D', null, null
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('AssetInvestmentDetail001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
 -- 前十名资产投资明细 添加 页面字典绑定 2022-11-17 end
+
+-- 非指数型现管类半年报/年报修改 add by zhengxiaolian 2022-11-18 start
+delete from rep_reportinfo where id in('1247','1248');
+
+insert into rep_reportinfo values ('1247','CP_001_002_022','BNDBG_FZSXXGL','/CP','/joyintech','半年度报告非指数型现管类产品','PROJECT','JasperSource','','','[{"paramNum":0,"paramName":"pprodid","paramType":"01","name":"产品名称","paramMultiFlag":"N"},{"paramNum":1,"paramName":"year","paramType":"07","name":"报告年度","paramMultiFlag":"N"},{"paramNum":2,"paramName":"halfyear","paramType":"06","name":"报告（半）年度","paramMultiFlag":"N"}]','','system',to_date('2022/11/15','yyyy/mm/dd'),'system',to_date('2022/11/15', 'yyyy/mm/dd'));
+insert into rep_reportinfo values ('1248','CP_001_002_023','NDBG_FZSXXGL','/CP','/joyintech','年度报告非指数型现管类产品','PROJECT','JasperSource','','','[{"paramNum":0,"paramName":"pprodid","paramType":"01","name":"产品名称","paramMultiFlag":"N"},{"paramNum":1,"paramName":"year","paramType":"08","name":"报告年度","paramMultiFlag":"N"}]','','system',to_date('2022/11/15','yyyy/mm/dd'),'system',to_date('2022/11/15', 'yyyy/mm/dd'));
+
+delete from REP_INFO where rep_id in('CP_001_002_022','CP_001_002_023');
+
+insert into REP_INFO values ('CP_001_002_022','BNDBG_FZSXXGL','/CP','半年度报告非指数型现管类产品','半年度报告非指数型现管类产品','Y','','system','',to_date('2022/11/15','yyyy/mm/dd'),'system',to_date('2022/11/15', 'yyyy/mm/dd'),'02','{prodname}{year}年{halfyear}年度报告','07');
+insert into REP_INFO values ('CP_001_002_023','NDBG_FZSXXGL','/CP','年度报告非指数型现管类产品','年度报告非指数型现管类产品','Y','','system','',to_date('2022/07/18','yyyy/mm/dd'),'system',to_date('2022/07/18', 'yyyy/mm/dd'),'02','{prodname}{year}年年度报告','07');
+
+delete from REP_SCREEN where rep_id in('CP_001_002_022','CP_001_002_023');
+
+insert into REP_SCREEN values ('200000053','CP_001_002_022','01','pprodid','产品名称','','Y','system',to_date('2022/11/15','yyyy/mm/dd'),'system',to_date('2022/11/15', 'yyyy/mm/dd'),'','1','N');
+insert into REP_SCREEN values ('200000054','CP_001_002_022','07','year','报告年度','','Y','system',to_date('2022/11/15','yyyy/mm/dd'),'system',to_date('2022/11/15', 'yyyy/mm/dd'),'','2','N');
+insert into REP_SCREEN values ('200000055','CP_001_002_022','06','halfyear','报告（半）年度','','Y','system',to_date('2022/11/15','yyyy/mm/dd'),'system',to_date('2022/11/15', 'yyyy/mm/dd'),'','3','N');
+insert into REP_SCREEN values ('200000060','CP_001_002_023','01','pprodid','产品名称','','Y','system',to_date('2022/11/15','yyyy/mm/dd'),'system',to_date('2022/11/15', 'yyyy/mm/dd'),'','1','N');
+insert into REP_SCREEN values ('200000061','CP_001_002_023','07','year','报告年度','','Y','system',to_date('2022/11/15','yyyy/mm/dd'),'system',to_date('2022/11/15', 'yyyy/mm/dd'),'','2','N');
+
+delete from rep_tree where tree_id in('CP_001_002_022','CP_001_002_023');
+
+insert into rep_tree values ('CP_001_002_022','CP_001_002','半年度报告非指数型现管类产品','Y','');
+insert into rep_tree values ('CP_001_002_023','CP_001_002','年度报告非指数型现管类产品','Y','');
+
+delete from REP_JOB_RANGE where job_id in('200000017','200000019');
+
+insert into REP_JOB_RANGE values ('D2000000000000000066','200000017','02','IS_INDEX','=','02','02','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D2000000000000000067','200000017','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D2000000000000000068','200000017','02','PROD_TYPE','=','02','04','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+
+insert into REP_JOB_RANGE values ('D2000000000000000070','200000019','02','IS_INDEX','=','02','02','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D2000000000000000071','200000019','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D2000000000000000072','200000019','02','PROD_TYPE','=','02','04','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+
+delete from REP_JOB_RANGE where job_id in('CP_001_002_022','CP_001_002_023');
+
+insert into REP_JOB_RANGE values ('D2100000000000000066','CP_001_002_022','02','IS_INDEX','=','02','02','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D2100000000000000067','CP_001_002_022','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D2100000000000000068','CP_001_002_022','02','PROD_TYPE','=','02','04','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+
+insert into REP_JOB_RANGE values ('D2100000000000000070','CP_001_002_023','02','IS_INDEX','=','02','02','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D2100000000000000071','CP_001_002_023','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D2100000000000000072','CP_001_002_023','02','PROD_TYPE','=','02','04','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'));
+
+
+delete from REP_RULE where id in('D1000000000000000017','D1000000000000000019');
+
+insert into REP_RULE values ('D1000000000000000017','半年度报告非指数型现管类产品_规则','半年度报告非指数型现管类产品','CP_001_002_022','A02','','01','01','3','01','','02','57','01','09:00:00','01','06','','','','docx','','/joyintech/disclosure/download/','01','01','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'),'','01');
+insert into REP_RULE values ('D1000000000000000019','年度报告非指数型现管类产品_规则','年度报告非指数型现管类产品','CP_001_002_023','A02','','01','01','3','01','','02','87','01','09:00:00','01','06','','','','docx','','/joyintech/disclosure/download/','01','01','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'),'','01');
+
+delete from REP_JOB where job_id in('200000017','200000019');
+
+insert into REP_JOB values ('200000017','半年度报告非指数型现管类产品','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D1000000000000000017','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'),'Y');
+insert into REP_JOB values ('200000019','年度报告非指数型现管类产品','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D1000000000000000019','system','',to_date('2022/11/15','yyyy/MM/dd'),'system',to_date('2022/11/15','yyyy/MM/dd'),'Y');
+
+
+delete from REP_CHECK;
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
+    where a.busi_date >= (SELECT trunc(date$qryEndDate,''d'') FROM dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''d'') + 7 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''04''
+    order by a.busi_date asc)
+    where num=1
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1001','','05','03','检查每周净值公告/报告日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
+    where a.busi_date >= (SELECT trunc(date$qryEndDate,''d'' ) FROM dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''d'') + 7 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''04''
+    order by a.busi_date asc)
+    where num=1
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1002','','05','03','检查每周净值公告/报告日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
+    where a.busi_date >= (SELECT trunc(date$qryEndDate,''q'') FROM dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''q'') + 30 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''01''
+    order by a.busi_date asc)
+    where num=3
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1003','','05','03','检查季度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
+    where a.busi_date >= (SELECT trunc(date$qryEndDate,''q'') FROM dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''q'') + 30 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''01''
+    order by a.busi_date asc)
+    where num=3
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1004','','05','03','检查季度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
+    where a.busi_date >= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) from dual)
+    and a.busi_date <= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) + 10 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''01''
+    order by a.busi_date asc)
+    where num=3
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1005','','05','03','检查半年度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
+    where a.busi_date >= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) from dual)
+    and a.busi_date <= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) + 10 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''01''
+    order by a.busi_date asc)
+    where num=3
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1006','','05','03','检查半年度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
+    where a.busi_date >= (SELECT trunc(date$qryEndDate,''yyyy'') from dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''yyyy'') +10 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''01''
+    order by a.busi_date asc)
+    where num=3
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1007','','05','03','检查年度报告（指数产品）日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
+    where a.busi_date >= (SELECT trunc(date$qryEndDate,''yyyy'') from dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''yyyy'') +10 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''01''
+    order by a.busi_date asc)
+    where num=3
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1008','','05','03','检查年度报告（非指数型产品）日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+-- 校验关系
+delete from REP_CHECK_RELATION;
+insert into REP_CHECK_RELATION values ('1001','CP_001_002_005','1001','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+insert into REP_CHECK_RELATION values ('1002','CP_001_002_006','1002','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+insert into REP_CHECK_RELATION values ('1003','CP_001_002_015','1003','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+insert into REP_CHECK_RELATION values ('1004','CP_001_002_016','1004','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+insert into REP_CHECK_RELATION values ('1005','CP_001_002_017','1005','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+insert into REP_CHECK_RELATION values ('1006','CP_001_002_018','1006','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+insert into REP_CHECK_RELATION values ('1007','CP_001_002_019','1007','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+insert into REP_CHECK_RELATION values ('1008','CP_001_002_020','1008','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+
+
+delete from REP_CHECK where CHECK_ID in('1009','1010');
+
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date ,ROWNUM num from chb_mkt_holiday a
+    where a.busi_date >= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) from dual)
+    and a.busi_date <= (SELECT add_months(trunc(date$qryEndDate,''yyyy''),6) + 10 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''01''
+    order by a.busi_date asc)
+    where num=3
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1009','','05','03','检查半年度报告（非指数型现管类产品）日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+
+declare v_clob clob :='select 1 from dual
+where
+date$qryEndDate=(
+    select busi_date from(
+    select a.busi_date,ROWNUM num  from chb_mkt_holiday a
+    where a.busi_date >= (SELECT trunc(date$qryEndDate,''yyyy'') from dual)
+    and a.busi_date <= (SELECT trunc(date$qryEndDate,''yyyy'') +10 from dual)
+    and a.is_holiday=''0''
+    and a.market_code=''01''
+    order by a.busi_date asc)
+    where num=3
+)'; begin insert into  REP_CHECK(CHECK_ID,QUERY_SCOPE,QUERY_TYPE,BASE_DATA_TYPE,QUERY_CONTEN_DESCR,QUERY_CONTEN,QUERY_PARAM,DATA_TYPE,PARAM_TYPE,PARAM_VALUE1,PARAM_VALUE2,STATUS,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('1010','','05','03','检查年度报告（非指数型现管类产品）日期是否满足条件',v_clob,'qryEndDate=execDate','02','01','0','','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd')); end;
+/
+
+delete from REP_CHECK_RELATION where CHECK_ID in('1009','1010');
+
+insert into REP_CHECK_RELATION values ('1009','CP_001_002_022','1009','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+insert into REP_CHECK_RELATION values ('1010','CP_001_002_023','1010','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+-- 非指数型现管类半年报/年报修改 add by zhengxiaolian 2022-11-18 end

@@ -235,6 +235,7 @@ public class ReportDataService {
 		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
 				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
 				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+				|| rptType.equals(DisReportType.BNDBG_FZSXXGL) || rptType.equals(DisReportType.NDBG_FZSXXGL)
 		) { // 定期公告-季度/半年度/年度报告指数型和非指数型
 			service = durationReportDataService;
 		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
@@ -302,6 +303,7 @@ public class ReportDataService {
 		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
 				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
 				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+				|| rptType.equals(DisReportType.BNDBG_FZSXXGL) || rptType.equals(DisReportType.NDBG_FZSXXGL)
 		) { // 定期公告-季度/半年度/年度报告指数型和非指数型
 			repReveal = durationReportDataService.getRepReveal(params);
 		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
@@ -380,6 +382,7 @@ public class ReportDataService {
 		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
 				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
 				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+				|| rptType.equals(DisReportType.BNDBG_FZSXXGL) || rptType.equals(DisReportType.NDBG_FZSXXGL)
 		) { // 定期公告-季度/半年度/年度报告指数型和非指数型
 			repReveal = durationReportDataService.getRepReveal(params);
 		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告

@@ -369,7 +369,7 @@ $(function () {
 					return;
 				}
 			}
-			if(modelId==="BNDBG_ZSX"||modelId==='BNDBG_FZSX'){
+			if(modelId==="BNDBG_ZSX"||modelId==='BNDBG_FZSX'||modelId==='BNDBG_FZSXXGL'){
 				if (params['pprodid']===null||params['pprodid']===undefined) {
 					Joyin.alert('产品名称必填!',2);
 					return;
@@ -383,7 +383,7 @@ $(function () {
 					return;
 				}
 			}
-			if(modelId==="NDBG_ZSX"||modelId==='NDBG_FZSX'){
+			if(modelId==="NDBG_ZSX"||modelId==='NDBG_FZSX'||modelId==='NDBG_FZSXXGL'){
 				if (params['pprodid']===null||params['pprodid']===undefined) {
 					Joyin.alert('产品名称必填!',2);
 					return;

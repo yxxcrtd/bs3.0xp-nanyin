@@ -56,7 +56,8 @@ public class DurationReportDto extends ReportDto {
 	private Map<String,Object> prodAssetComb;  //产品资产组合汇总情况
 	
 	private List<Map<String,Object>> listAssetsDetail;  //报告期末按公允价值占产品资产净值比例大小排序的前十名资产投资明细,REP_ASSETS_COMB
-	
+
+	private List<Map<String,Object>> listInvester; //前10名投资者情况
 	private List<Map<String,Object>>  listNostds;  //报告期末非标准化债权类资产明细；DisNostdCreditor
 	
 	private List<Map<String,Object>> listAccts; //投资账户信息
@@ -279,4 +280,11 @@ public class DurationReportDto extends ReportDto {
 		this.repRelDeal = repRelDeal;
 	}
 
+	public List<Map<String, Object>> getListInvester() {
+		return listInvester;
+	}
+
+	public void setListInvester(List<Map<String, Object>> listInvester) {
+		this.listInvester = listInvester;
+	}
 }

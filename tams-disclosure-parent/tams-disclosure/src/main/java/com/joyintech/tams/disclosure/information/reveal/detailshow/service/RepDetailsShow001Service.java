@@ -365,7 +365,8 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                 bis = new ByteArrayInputStream(bytes);
                 String rptType = params.get("uri").toString();
                 if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
-        				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) 
+        				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+                        || rptType.equals(DisReportType.BNDBG_FZSXXGL) || rptType.equals(DisReportType.NDBG_FZSXXGL)
         				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
                 	PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath,"4.其它费用");
                 } else {

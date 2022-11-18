@@ -366,7 +366,9 @@ public class InfoDiscGenFileDetailService {
 			||StringUtil.equals("CP_001_002_017", repRule.getRepId())
 			||StringUtil.equals("CP_001_002_018", repRule.getRepId())
 			||StringUtil.equals("CP_001_002_019", repRule.getRepId())
-			||StringUtil.equals("CP_001_002_020", repRule.getRepId())){
+			||StringUtil.equals("CP_001_002_020", repRule.getRepId())
+			||StringUtil.equals("CP_001_002_022", repRule.getRepId())
+			||StringUtil.equals("CP_001_002_023", repRule.getRepId())){
 				if(repInstallFile.getEndDate()!=null&&!(DateUtil.getBetweenDayNumber(prodInfoListEntity.getSetDate(), repInstallFile.getEndDate())<90
 						||DateUtil.getBetweenDayNumber(repInstallFile.getEndDate(), prodInfoListEntity.getMdate())<90)
 						&&DateUtil.compareDate(prodInfoListEntity.getMdate(), repInstallFile.getEndDate())>0){
@@ -380,7 +382,8 @@ public class InfoDiscGenFileDetailService {
 					}
 
 					if(StringUtil.equals("CP_001_002_017", repRule.getRepId())
-							||StringUtil.equals("CP_001_002_018", repRule.getRepId())){
+							||StringUtil.equals("CP_001_002_018", repRule.getRepId())
+							||StringUtil.equals("CP_001_002_022", repRule.getRepId())){
 						//半年报startDate取半年初第一天
 						Date endDate=repInstallFile.getEndDate();
 
@@ -401,7 +404,8 @@ public class InfoDiscGenFileDetailService {
 					}
 
 					if(StringUtil.equals("CP_001_002_019", repRule.getRepId())
-							||StringUtil.equals("CP_001_002_020", repRule.getRepId())){
+							||StringUtil.equals("CP_001_002_020", repRule.getRepId())
+							||StringUtil.equals("CP_001_002_023", repRule.getRepId())){
 						//年报startDate取年初第一天
 						Date endDate=repInstallFile.getEndDate();
 						Date startDate=DateUtil.getFirstDayOfYear(endDate);

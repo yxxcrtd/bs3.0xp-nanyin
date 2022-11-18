@@ -21,6 +21,8 @@ public interface DisReportType {
 	public static final String BNDBG_FZSX="BNDBG_FZSX";
 	public static final String NDBG_ZSX="NDBG_ZSX";
 	public static final String NDBG_FZSX="NDBG_FZSX";
+	public static final String BNDBG_FZSXXGL="BNDBG_FZSXXGL";
+	public static final String NDBG_FZSXXGL="NDBG_FZSXXGL";
 	public static final String TZTZFBZCGG="TZTZFBZCGG";
 	public static final String DQGG_GM="DQGG_GM";
 	public static final String DQGBG_SM="DQGBG_SM";

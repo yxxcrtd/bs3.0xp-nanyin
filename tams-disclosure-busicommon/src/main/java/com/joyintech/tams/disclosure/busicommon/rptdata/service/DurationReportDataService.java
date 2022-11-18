@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,20 +20,6 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.RepExtConusMapper;
-import com.joyintech.tams.common.base.entity.DisNostdCreditor;
-import com.joyintech.tams.common.base.entity.DisProdAsset;
-import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
-import com.joyintech.tams.common.base.entity.RepAssetsComb;
-import com.joyintech.tams.common.base.entity.RepExtConus;
-import com.joyintech.tams.common.base.entity.RepExtConusKey;
-import com.joyintech.tams.common.base.entity.RepIndexSub;
-import com.joyintech.tams.common.base.entity.RepInvestAccount;
-import com.joyintech.tams.common.base.entity.RepJobRange;
-import com.joyintech.tams.common.base.entity.RepProdBasicChange;
-import com.joyintech.tams.common.base.entity.RepProdIndex;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
-import com.joyintech.tams.common.base.entity.RepRelDeal;
-import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
@@ -108,11 +95,13 @@ public class DurationReportDataService implements IReportDataService {
 						indexPeriod = DictCodeListExt5.指标周期_四季度.getValue();
 					}
 						
-				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+						|| rptType.equals(DisReportType.BNDBG_FZSXXGL)) {  //半年报
 					halfYear= Integer.parseInt(paraMap.get("halfyear").toString());
 					reportDate = DurationUtil.getHalfYearEnd(year,halfYear);
 					indexPeriod = DictCodeListExt5.指标周期_半年.getValue();					
-				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
+				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+						|| rptType.equals(DisReportType.NDBG_FZSXXGL)) { //年报
 					reportDate = DurationUtil.getYearEnd(year);
 					indexPeriod = DictCodeListExt5.指标周期_全年.getValue();
 				}
@@ -144,6 +133,8 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//报表时间信息
 			try {
+				reportDto.setCapital(reportDto.getCapital()==null?reportDto.getCapital():reportDto.getCapital().setScale(2,BigDecimal.ROUND_DOWN));
+				reportDto.setLeverage(reportDto.getLeverage()==null?reportDto.getLeverage():reportDto.getLeverage().setScale(2,BigDecimal.ROUND_DOWN));
 				reportDto.setYear(year);
 				reportDto.setHalfYear(halfYear);
 				reportDto.setQuarter(quarter);
@@ -154,11 +145,13 @@ public class DurationReportDataService implements IReportDataService {
 					reportDto.setDuration(DurationUtil.getQuarterDuration(year, quarter, reportDto.geteDate()));
 					reportDto.setDurStartDate(DurationUtil.getQuarterStart(year, quarter));
 					reportDto.setDurEndDate(DurationUtil.getQuarterEnd(year, quarter));
-				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+						|| rptType.equals(DisReportType.BNDBG_FZSXXGL)) {  //半年报
 					reportDto.setDuration(DurationUtil.getHalfYearDuration(year, halfYear, reportDto.geteDate()));
 					reportDto.setDurStartDate(DurationUtil.getHalfYearStart(year, halfYear));
 					reportDto.setDurEndDate(DurationUtil.getHalfYearEnd(year, halfYear));
-				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
+				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+						|| rptType.equals(DisReportType.NDBG_FZSXXGL)) { //年报
 					reportDto.setDuration(DurationUtil.getYearDuration(year, reportDto.geteDate()));
 					reportDto.setDurStartDate(DurationUtil.getYearStart(year));
 					reportDto.setDurEndDate(DurationUtil.getYearEnd(year));
@@ -207,12 +200,14 @@ public class DurationReportDataService implements IReportDataService {
 					Date durStartDate = DurationUtil.getQuarterStart(year, quarter);
 					Date durEndDate = DurationUtil.getQuarterEnd(year, quarter);
 					listBasis = this.calcAchivementBasis3(child,durStartDate,durEndDate);
-				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+						|| rptType.equals(DisReportType.BNDBG_FZSXXGL)) {  //半年报
 					mapChild.put("duration",DurationUtil.getHalfYearDuration(year, halfYear, child.getSetDate()));
 					Date durStartDate = DurationUtil.getHalfYearStart(year, halfYear);
 					Date durEndDate = DurationUtil.getHalfYearEnd(year, halfYear);
 					listBasis = this.calcAchivementBasis3(child,durStartDate,durEndDate);
-				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
+				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+						|| rptType.equals(DisReportType.NDBG_FZSXXGL)) { //年报
 					mapChild.put("duration",DurationUtil.getYearDuration(year, child.getSetDate()));
 					Date durStartDate = DurationUtil.getYearStart(year);
 					Date durEndDate = DurationUtil.getYearEnd(year);
@@ -360,6 +355,27 @@ public class DurationReportDataService implements IReportDataService {
 			}  catch (Exception e) {
 				logger.error("报表产品资产投资明细信息错误.");
 				e.printStackTrace();				
+			}
+
+			if(rptType.equals(DisReportType.BNDBG_FZSXXGL)||rptType.equals(DisReportType.NDBG_FZSXXGL)){
+				if(rptType.equals(DisReportType.BNDBG_FZSXXGL)){
+					paraMap.put("indexType","01");
+				}else{
+					paraMap.put("indexType","02");
+				}
+
+				List<TopInvestorInformation> dataList = durationReportMapper.selectListInvester (paraMap);
+				List<Map<String,Object>> listInvester = new ArrayList<>();
+
+				for (TopInvestorInformation dto:dataList) {
+					Map<String,Object> map=new HashMap<>();
+					map.put("tzRank",dto.getTzRank());
+					map.put("tzType",dto.getTzTypeStr());
+					map.put("holdShare",df.format(dto.getHoldShare()));
+					map.put("proportionShare",df.format(dto.getProportionShare()));
+					listInvester.add(map);
+				}
+				reportDto.setListInvester(listInvester);
 			}
 
 			//非标资产
@@ -692,11 +708,13 @@ public class DurationReportDataService implements IReportDataService {
 				quarter = Integer.parseInt(paraMap.get("quarter").toString());
 				sDate = DurationUtil.getQuarterStart(year, quarter);
 				eDate = DurationUtil.getQuarterEnd(year, quarter);
-			} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+			} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+					|| rptType.equals(DisReportType.BNDBG_FZSXXGL)) {  //半年报
 				halfYear = Integer.parseInt(paraMap.get("halfyear").toString());
 				sDate = DurationUtil.getHalfYearStart(year, halfYear);
 				eDate = DurationUtil.getHalfYearEnd(year, halfYear);
-			} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
+			} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+					|| rptType.equals(DisReportType.NDBG_FZSXXGL)) { //年报
 				sDate = DurationUtil.getYearStart(year);
 				eDate = DurationUtil.getYearEnd(year);
 			}						
