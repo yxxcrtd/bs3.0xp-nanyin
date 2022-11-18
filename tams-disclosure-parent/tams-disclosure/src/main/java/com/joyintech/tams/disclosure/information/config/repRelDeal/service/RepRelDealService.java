@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.repRelDeal.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -18,6 +19,7 @@ import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -567,5 +569,23 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
             }
         }
         return result;
+    }
+    public boolean isInWorkflow(RepRelDealDto dto){
+        try {
+            ProcessMark processMark = new ProcessMark();
+            processMark.setPageId("RepRelDeal002");
+            processMark.setBusinessDataPk1(dto.getProdId());
+            processMark.setBusinessDataPk2(dto.getEffdateStr());
+            processMark.setBusinessDataPk3(dto.getEffdelidateStr());
+            List<String> resultList = WorkflowContext.getProcessMarkService().getBusinessDataInFlow(
+                    processMark);
+            if (!StringUtil.isEmptyList(resultList)) {
+                return true;
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException("处理失败", e);
+        }
+        return false;
     }
 }
