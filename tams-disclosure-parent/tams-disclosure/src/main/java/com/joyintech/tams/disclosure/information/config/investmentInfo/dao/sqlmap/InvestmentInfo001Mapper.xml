@@ -215,7 +215,9 @@
         tii.index_year indexYear,
         tii.index_type indexType,
         tii.tz_rank tzRank,
-        tii.status status
+        tii.status status,
+        tii.hold_share  holdShare,
+        tii.proportion_share proportionShare
         from TOP_INVESTOR_INFORMATION tii
         <where>
             <foreach collection="list" item="item" open="(tii.BOOKSET_ID,tii.index_year,tii.index_type,tii.tz_rank,tii.status) IN (" separator="," close=")">
@@ -223,4 +225,30 @@
             </foreach>
         </where>
     </select>
+
+    <update id="updateByParam">
+        update TOP_INVESTOR_INFORMATION
+        <set >
+            <if test="tzType != null and !tzType.equals('')" >
+                tz_type = #{tzType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null and !status.equals('')" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="holdShare != null" >
+                hold_share = #{holdShare,jdbcType=DECIMAL},
+            </if>
+            <if test="proportionShare != null" >
+                proportion_share = #{proportionShare,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where bookset_id = #{booksetId,jdbcType=VARCHAR} and index_year = #{indexYear,jdbcType=VARCHAR}
+        and index_type = #{indexType,jdbcType=VARCHAR} and tz_rank = #{tzRank,jdbcType=VARCHAR}
+    </update>
 </mapper>

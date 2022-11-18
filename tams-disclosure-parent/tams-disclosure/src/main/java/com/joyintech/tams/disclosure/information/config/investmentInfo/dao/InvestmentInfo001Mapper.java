@@ -28,4 +28,6 @@ public interface InvestmentInfo001Mapper {
     List<SelectOptionDto> getProdId1(Map<Object, Object> map);
 
     List<InvestmentInfo001Dto> selectTopInfoList(List<InvestmentInfo001Dto> dataList);
+
+    int updateByParam(InvestmentInfo001Dto dto);
 }

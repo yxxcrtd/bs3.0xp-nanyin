@@ -50,7 +50,7 @@
             {field:'prodName',  title: '产品全称',sortField:"prodName"},//产品主代码
             {field:'indexYear',  title: '年度',sortField:"indexYear"},//年度
             {field:'indexTypeStr',  title: '指标类型',sortField:"indexType",width: 100},//指标类型
-            {field:'tzRank',  title: '排名',sortField:"tzRank",type:'number'},//排名
+            {field:'tzRank',  title: '排名',sortField:"tzRank"},//排名
             {field:'tzTypeStr',  title: '类别',sortField:"tzType",width: 100},//类别
             {field:'holdShare',  title: '持有份额',sortField:"holdShare",type:'number'},//持有份额
             {field:'proportionShareStr',  title: '占总份额比例（%）',sortField:"proportionShare"},//占总份额比例（%）
@@ -85,13 +85,12 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        alert(111111);
         console.log("+++"+data);
         var object = {selectedItem: [data], operateType:"delete"};
         console.log("+++"+object);
         Joyin.ajaxJson(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo002/delete', object,
+                WorkFlow.doDeleteList(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo001/delete', object,
                     "InvestmentInfo001_btn_delete", "InvestmentInfo002",function() {
                         table.reload();
                     });
@@ -194,7 +193,7 @@
             console.log(object);
             Joyin.ajaxJson(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
-                    WorkFlow.doDeleteList(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo002/delete', object,
+                    WorkFlow.doDeleteList(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo001/delete', object,
                         "InvestmentInfo001_btn_delete", "InvestmentInfo002");
                 });
             });

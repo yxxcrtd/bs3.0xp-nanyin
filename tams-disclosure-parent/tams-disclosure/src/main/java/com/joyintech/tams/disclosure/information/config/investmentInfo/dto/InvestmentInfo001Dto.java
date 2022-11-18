@@ -228,7 +228,7 @@ public class InvestmentInfo001Dto extends BaseEntity implements ITableRow, Proce
     }
     public String getProportionShareStr(){
         if (Objects.nonNull(this.getProportionShare())){
-            return this.getProportionShare().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP).toString()+"%";
+            return this.getProportionShare().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
         }else {
             return "";
         }

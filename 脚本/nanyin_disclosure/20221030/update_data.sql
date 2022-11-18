@@ -710,7 +710,7 @@ VALUES('InvestmentInfo002', 'DIS',
 
 delete from sys_wfl_business_module where PAGE_ID = 'InvestmentInfo002';
 
-insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo001_btn_delete', 'noneApproval', 'system', '', sysdate,'system',sysdate,'ALL','02');
+insert into sys_wfl_business_module values ('InvestmentInfo001', 'InvestmentInfo001_btn_delete', 'noneApproval', 'system', '', sysdate,'system',sysdate,'ALL','02');
 insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo002_btn_save', 'noneApproval', 'system', '', sysdate, 'system',sysdate,'ALL','02');
 insert into sys_wfl_business_module values ('InvestmentInfo002', 'InvestmentInfo002_btn_submit', 'noneApproval', 'system', '', sysdate,'system',sysdate,'ALL','02');
 
