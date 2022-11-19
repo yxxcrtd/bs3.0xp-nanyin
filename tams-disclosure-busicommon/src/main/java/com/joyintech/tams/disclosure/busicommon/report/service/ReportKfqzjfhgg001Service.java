@@ -199,7 +199,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             if (lastBonus != null && lastBonus.getLastUnitValueT() != null) {
                                 bonusDto.setMunitValueT(lastBonus.getLastUnitValueT().add(thisUnitBonus).toString());
                             }else{
-                                bonusDto.setMunitValueT((new BigDecimal("1").add(thisUnitBonus).toString()));
+                                bonusDto.setMunitValueT((new BigDecimal("1.0000").add(thisUnitBonus).toString()));
                             }
                             //设置历史净值当前封闭期
                             bonusDto.setCurRange(curRange);
