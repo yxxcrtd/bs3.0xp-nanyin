@@ -99,7 +99,11 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
         else {
             dto.setStatus("E");
             dto.setUpdateUser(CommonUtil.getUserName());
-            investmentInfo001Mapper.updateByKey(dto);
+            if (Objects.nonNull(dto.getFlag()) && dto.getFlag()){
+                investmentInfo001Mapper.updateByParam(dto);
+            }else{
+                investmentInfo001Mapper.updateByKey(dto);
+            }
 
         }
     }
@@ -268,8 +272,20 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
             }
             convertToEntitys(dataList,entities);
             entities.forEach(item -> {
-                item.setFlag(true);
-                this.doComplete(item, OperationType.NEW);
+                List<InvestmentInfo001Dto> paramList = new ArrayList<>();
+                InvestmentInfo001Dto param = new InvestmentInfo001Dto();
+                param.setBooksetId(item.getBooksetId());
+                param.setIndexYear(item.getIndexYear());
+                param.setIndexType(item.getIndexType());
+                param.setTzRank(item.getTzRank());
+                paramList.add(param);
+                List<InvestmentInfo001Dto> resultList = investmentInfo001Mapper.selectTopInfoList(paramList);
+                if (CollectionUtils.isNotEmpty(resultList)) {
+                    item.setFlag(true);
+                    this.doComplete(item, OperationType.MODIFY);
+                } else {
+                    this.doComplete(item, OperationType.NEW);
+                }
             });
             return new ArrayList<>();
         } else {

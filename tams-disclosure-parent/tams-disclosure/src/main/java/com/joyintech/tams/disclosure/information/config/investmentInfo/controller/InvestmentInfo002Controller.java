@@ -103,35 +103,4 @@ public class InvestmentInfo002Controller extends BaseController {
         String msg = investmentInfo001Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
-
-    @ResponseBody
-    @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) InvestmentInfo001Dto dto, BindingResult br) throws WorkFlowException {
-        if(br.hasErrors()){
-            return new AjaxResult(br);
-        }
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        dto.setCreateTime(sysDate);
-        dto.setUpdateTime(sysDate);
-        dto.setCreateUser(CommonUtil.getUserName());
-        dto.setUpdateUser(CommonUtil.getUserName());
-        ProcessParameter<InvestmentInfo001Dto> processParameter = new ProcessParameter<InvestmentInfo001Dto>();
-        WorkFlowParameter<InvestmentInfo001Dto> params = new WorkFlowParameter<InvestmentInfo001Dto>();
-        params.setElementId(dto.getElementId());
-        params.setBusinessType(DictCodeListExt3.共通业务类型_前十大投资者信息维护.getValue());
-        params.setPageId(this.getPageId());
-        // 设置流程业务说明, entity即传入的dto
-        /*params.setComment(
-                entity -> "科目号"+ "(" + entity.getSubjectNo()+ ")"
-                        +  "-" + "产品主代码"+ "(" + entity.getBooksetId() + ")"
-                        +  "-" + "开始日期"+ "(" + entity.getDateStartStr() + ")"
-                        +  "-" + "结束日期"+ "(" + entity.getDateEndStr() + ")");*/
-        InvestmentInfo001Dto[] investmentInfo001Dtos = dto.getSelectedItem().toArray(new InvestmentInfo001Dto[dto.getSelectedItem().size()]);
-        processParameter.setWorkFlowParameter(params);
-        //String msg = investmentInfo001Service.start(processParameter,investmentInfo001Dtos);
-        for (InvestmentInfo001Dto investmentInfo001Dto : dto.getSelectedItem()) {
-            investmentInfo001Service.doComplete(investmentInfo001Dto,OperationType.DELETE);
-        }
-        return new AjaxResult("处理成功");
-    }
 }
