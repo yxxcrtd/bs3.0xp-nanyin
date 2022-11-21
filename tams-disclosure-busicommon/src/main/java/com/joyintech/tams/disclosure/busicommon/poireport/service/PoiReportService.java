@@ -1062,6 +1062,8 @@ public class PoiReportService {
 					if(listAssetsDetail.size()>10){
 						resultSb.append((index++)+"："+"前十名资产投资明细数量超过10条"+"<br>");
 					}
+				}else{
+					resultSb.append((index++)+"："+"前十名资产投资明细缺失"+"<br>");
 				}
 
 				if(StringUtil.equals(rptType,DisReportType.BNDBG_FZSXXGL)||StringUtil.equals(rptType,DisReportType.NDBG_FZSXXGL)){
