@@ -51,7 +51,6 @@
         and not exists
         (select 1 from dual where instr(bb.SUBJECT_NO, '220701') > 0)
         ))
-       and nvl(bb.O_AMT,0)!=0
     </where>
         order by NVL(bb.UPDATE_TIME,bb.CREATE_TIME) desc
     </select>

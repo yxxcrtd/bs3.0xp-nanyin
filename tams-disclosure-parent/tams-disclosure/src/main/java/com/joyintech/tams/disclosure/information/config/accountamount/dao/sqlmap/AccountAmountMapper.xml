@@ -21,7 +21,7 @@
         BOK_BALANCE_FSE bbf
         left join V_REP_PROD_INFO rpi on bbf.BOOKSET_ID = rpi.PROD_ID
         <where>
-            bbf.TDY_O_D_AMT is not null and bbf.TDY_O_D_AMT!=0
+            1=1
             <if test="booksetIdList != null and booksetIdList.size() > 0">
                 AND bbf.BOOKSET_ID in
                 <foreach collection="booksetIdList" item="item" open="(" close=")" separator=",">
