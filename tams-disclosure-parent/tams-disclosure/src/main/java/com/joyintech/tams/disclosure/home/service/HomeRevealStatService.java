@@ -341,7 +341,12 @@ public class HomeRevealStatService {
     		condition = "SET_DATE=to_date('"+queryDate + "','yyyy-mm-dd')";
     	}
     	else if ( repId.equals("CP_001_002_003") || repId.equals("CP_001_002_004") ) { //日开产品净值公告，未到期的产品
-    		condition = "info.MDATE>=to_date('"+queryDate+"','yyyy-mm-dd')";
+			condition = " exists ( select 1 from"
+					+ " CHB_MKT_HOLIDAY CMH"
+					+ " where"
+					+ " CMH.BUSI_DATE = to_date('"+queryDate+"','yyyy-mm-dd')"
+					+ " and CMH.MARKET_CODE='04'"
+					+ " and CMH.IS_HOLIDAY = '0')";
     	}
     	else if ( repId.equals("CP_001_002_007") ) {//周期型产品开放公告（公募产品）：并且运作起始日=当天
     		condition = " exists ( select 1 from"  
