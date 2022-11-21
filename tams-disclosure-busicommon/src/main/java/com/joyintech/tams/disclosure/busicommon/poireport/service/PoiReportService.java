@@ -1070,8 +1070,10 @@ public class PoiReportService {
 					List<Map<String, Object>>listInvester=(List<Map<String, Object>>)dataMap.get("listInvester");
 					if(!CollectionUtils.isEmpty(listInvester)){
 						if(listAssetsDetail.size()>10){
-							resultSb.append((index++)+"："+"前10名投资者情况数量超过10条"+"<br>");
+							resultSb.append((index++)+"："+"前十名投资者情况数量超过10条"+"<br>");
 						}
+					}else{
+						resultSb.append((index++)+"："+"前十名投资者情况缺失"+"<br>");
 					}
 				}
 
