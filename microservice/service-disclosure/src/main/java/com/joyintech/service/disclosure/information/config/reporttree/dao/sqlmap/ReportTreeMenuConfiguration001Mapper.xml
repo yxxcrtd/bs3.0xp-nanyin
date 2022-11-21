@@ -58,7 +58,8 @@
 			and T.TREE_NAME like '%'||#{paraTreeName}||'%'
 		</if>
 		<if test="pageId =='BatchGenReport001'">
-			and B.REPORT_CATEGORY not in('04','05')
+		  and B.REPORT_CATEGORY not in('04','05')
+		  and B.rep_id != 'CP_001_002_021'
 		</if>
 		<if test="roleIdList != null and roleIdList.size > 0">
 			AND (

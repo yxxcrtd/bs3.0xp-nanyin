@@ -472,7 +472,10 @@ public class DurationReportDataService implements IReportDataService {
 				listResult.get(0).put("capitalStr", df.format(reportDto.getCapital()) );
 			else
 				listResult.get(0).put("capitalStr", " " );
-			
+			if(!rptType.equals(DisReportType.BNDBG_FZSXXGL)&&!rptType.equals(DisReportType.NDBG_FZSXXGL)){
+				listResult.get(0).put("listInvester_xx", "");
+			}
+
 			//排除检查项
 			listResult.get(0).put("endDate_xx", "");
 			listResult.get(0).put("leverage_xx", "");
