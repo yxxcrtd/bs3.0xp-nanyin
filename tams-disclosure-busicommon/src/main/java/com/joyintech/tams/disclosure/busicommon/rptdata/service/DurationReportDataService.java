@@ -863,8 +863,8 @@ public class DurationReportDataService implements IReportDataService {
 
 	        	//取行情的日期：取结束日行情，如果结束日是节假日，取前1个工作日
 	        	Date conusEDate = holidayService.getPreWorkDate(deDate,"04",true);
-	        	
-	        	int days = DateUtil.getBetweenDayNumber(conusSDate,conusEDate);
+
+	        	int days = DateUtil.getBetweenDayNumber(dsDate,durEndDate)+1;
 	        	String dur="";
 	    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 	    		dur = sdf.format(dsDate);
