@@ -187,13 +187,17 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
     }
 
     public Page<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> paraMap) {
+        Page<SelectOptionDto>page=new Page<>();
         if(paraMap.containsKey("initValue")){
             String str=paraMap.get("initValue").toString();
             List<String> prodIdList=Arrays.asList(str.split(","));
             paraMap.put("prodIdList",prodIdList);
         }
-        Page<SelectOptionDto> page = queryForPageForSelectReturn(()
-                -> disProdPlanManage002Mapper.getMontherAndCommonProdIdNew(paraMap));
+        List<SelectOptionDto>list=disProdPlanManage002Mapper.getMontherAndCommonProdIdNew(paraMap);
+        if(CollectionUtils.isNotEmpty(list)){
+            page.setRoot(list);
+        }
+
         return page;
     }
 
