@@ -197,7 +197,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             }
                             
                             if (lastBonus != null && lastBonus.getLastUnitValueT() != null) {
-                                bonusDto.setMunitValueT(lastBonus.getLastUnitValueT().add(thisUnitBonus).toString());
+                                bonusDto.setMunitValueT((lastBonus.getLastUnitValueT().add(thisUnitBonus)).setScale(4, BigDecimal.ROUND_DOWN).toString());
                             }else{
                                 bonusDto.setMunitValueT((new BigDecimal("1.0000").add(thisUnitBonus).toString()));
                             }
