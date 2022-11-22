@@ -162,7 +162,7 @@
         FROM
         V_REP_PROD_INFO
         where
-        STATUS in('A','E') AND REP_PROD_TYPE != '03' AND ISSUING_WAY = '01'
+        STATUS in('A','E') AND REP_PROD_TYPE != '03'
         <if test="search != null and search != ''">
             and (PROD_ID like concat(concat('%',#{search}),'%')
             or PROD_NAME like concat(concat('%',#{search}),'%'))
