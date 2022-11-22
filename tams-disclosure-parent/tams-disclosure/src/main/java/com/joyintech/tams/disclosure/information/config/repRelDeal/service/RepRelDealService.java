@@ -50,6 +50,7 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
      * @since 1.0
      */
     public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+        Page<SelectOptionDto>page1=new Page<>();
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         if(map.containsKey("initValue")){
             String str=map.get("initValue").toString();
@@ -64,7 +65,12 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
         if(StringUtil.isNotEmpty(pageParam.get("length"))){
             length=Integer.parseInt((String) pageParam.get("length"));
         }
-        return this.queryForPageForSelectReturn(page, length,()->repRelDeal001Mapper.getProdInsId(map));
+        //return this.queryForPageForSelectReturn(page, length,()->repRelDeal001Mapper.getProdInsId(map));
+        List<SelectOptionDto>list=repRelDeal001Mapper.getProdInsId(map);
+        if(CollectionUtils.isNotEmpty(list)){
+            page1.setRoot(list);
+        }
+        return page1;
     }
     public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
         return repRelDeal001Mapper.getProdInsId(map);
