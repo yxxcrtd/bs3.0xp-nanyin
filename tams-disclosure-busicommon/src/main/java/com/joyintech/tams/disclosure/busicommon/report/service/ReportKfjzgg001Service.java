@@ -106,6 +106,18 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     if (openList != null && openList.size() >0) {
                         //只取第一条
                         ReportOpenPlanDto reportOpenPlanDto = openList.get(0);
+                        if("02".equals(reportKfjzgg001Dto.getRaiseType())){
+                            reportOpenPlanDto.setOpenEndDate(reportOpenPlanDto.getCollingoffPeriod());
+                        }
+                        searchparam.put("busi_date", DateUtil.parse(reportOpenPlanDto.getOpenEndDate()));
+                        searchparam.put("is_holiday", "0");
+                        searchparam.put("market_code", "04");
+                        Date nextSetday = holidayService.getNextWorkDay(searchparam);
+                        if (nextSetday == null) {
+                            nextSetday = DateUtil.addDay(DateUtil.parse(reportOpenPlanDto.getOpenEndDate()), 1);
+                        }
+                        reportOpenPlanDto.setSettDate(DateUtil.format(nextSetday,"yyyy-MM-dd"));
+
                         openList.clear();
                         openList.add(reportOpenPlanDto);
                     } else {

@@ -20,7 +20,8 @@
 					  RPI2.PROD_NAME ||RPI.PROD_NAME
 				 ELSE RPI.PROD_NAME END prodName,
 			RPI.PROD_RE regCode,
-		    RPI.SET_DATE setDate
+		    RPI.SET_DATE setDate,
+		    RPI.RAISE_TYPE raiseType
 		FROM REP_PROD_INFO RPI
 		/*查询普通产品或者母产品数据  P_PROD_ID:母产品代码：当为子产品时填写母产品代码。普通产品为自己的产品代码。母产品为空*/
 		 LEFT JOIN REP_PROD_INFO RPI2 ON RPI.P_PROD_ID = RPI2.PROD_ID AND RPI2.STATUS = 'E'
