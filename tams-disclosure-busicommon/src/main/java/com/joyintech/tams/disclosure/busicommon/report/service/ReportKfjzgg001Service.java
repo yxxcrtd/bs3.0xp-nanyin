@@ -2,11 +2,7 @@
 package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepReveal;
@@ -234,6 +230,14 @@ public class ReportKfjzgg001Service implements IReportDataService {
         }
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate((Date) (paraMap.get("reportDate")));
+        //查询产品信息
+        //开放结束日
+        String openEndDateStr = (String) paraMap.get("enddate");
+        param.put("openEndDateStr", openEndDateStr);
+        ReportKfjzgg001Dto reportKfjzgg001Dto = reportKfjzgg001Mapper.getProdInfo(param);
+        if (Objects.nonNull(reportKfjzgg001Dto)){
+            paraMap.put("cusFileName",reportKfjzgg001Dto.getTitleName());
+        }
         return repReveal;
     }
 }
