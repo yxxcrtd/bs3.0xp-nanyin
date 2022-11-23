@@ -141,6 +141,27 @@
 		order by T1.PROD_SERIES
 	</select>
 
+	<select id="selectAllAccountProdSeries" resultType="java.lang.String">
+		select
+		distinct T1.PROD_SERIES
+		from
+		V_REP_PROD_INFO T1
+		LEFT JOIN BOK_BALANCE_FSE bbf
+		ON bbf.BOOKSET_ID = T1.PROD_ID
+		and bbf.BOOKSET_ID is not null
+		<where>
+			T1.PROD_SERIES is not null
+			and bbf.BOOKSET_ID is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and T1.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and T1.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by T1.PROD_SERIES
+	</select>
+
 	<select id="selectAllProdSeriesSon" resultType="java.lang.String">
 		select
 		distinct case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
