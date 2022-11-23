@@ -1162,6 +1162,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     }
 
     public Page<SelectOptionDto> queryPprodIds(Map<String, Object> map) {
+        Page<SelectOptionDto>page1=new Page<>();
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         if(map.containsKey("initValue")){
             String str=map.get("initValue").toString();
@@ -1176,9 +1177,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         if(StringUtil.isNotEmpty(pageParam.get("length"))){
             length=Integer.parseInt((String) pageParam.get("length"));
         }
-        Page<SelectOptionDto> result = queryForPageForSelectReturn(page, length, ()
-                -> prodInfoMapper.queryPprodIds(map));
-        return result;
+        List<SelectOptionDto>list=prodInfoMapper.queryPprodIds(map);
+        if(CollectionUtils.isNotEmpty(list)){
+            page1.setRoot(list);
+        }
+        return page1;
     }
 
     /**
