@@ -1265,3 +1265,10 @@ VALUES ('SubBalanceInfoPro003', 'DIS', '/disclosure/information/config/subbalanc
 delete from SYS_PAGE where PAGE_ID = 'AccountAmount003';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('AccountAmount003', 'DIS', '/disclosure/information/config/accountamount/AccountAmount003', 'disclosure/information/config/accountamount/AccountAmount003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
+
+-- 报表配置,开放净值及分红公告（公募且开放频率在半年以上），开放净值及分红公告（公募且开放频率在半年（不含）以内），开放及净值公告（公募），开放及净值报告（私募） 修改file_name
+update rep_info set file_name = '{cusFileName}{basedatet}开放、净值及分红公告' where template_id = 'KFJZJFHGG_BNYS';
+update rep_info set file_name = '{cusFileName}{basedatet}开放、净值及分红公告' where template_id = 'KFJZJFHGG_BNYN';
+update rep_info set file_name = '{cusFileName}{enddate}开放及净值公告' where template_id = 'KFJJZGG_GM';
+update rep_info set file_name = '{cusFileName}{enddate}开放及净值报告' where template_id = 'KFJJZGG_SM';
