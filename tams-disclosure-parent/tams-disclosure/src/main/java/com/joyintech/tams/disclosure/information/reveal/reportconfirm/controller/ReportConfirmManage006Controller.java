@@ -48,6 +48,8 @@ public class ReportConfirmManage006Controller extends BaseController {
 		//自定义指标id
 		String repIndexId = this.getParam("repIndexId");
 		model.addAttribute("repIndexId",repIndexId);
+		String prodId = this.getParam("prodId");
+		model.addAttribute("prodId",prodId);
 		return super.init(model);
 	}
 
@@ -56,12 +58,16 @@ public class ReportConfirmManage006Controller extends BaseController {
 	@RequestMapping("/getAllProdIds")
 	public List<TreeNode> getAllProdIds() {
 		String repIndexId=super.getRequest().getParameter("repIndexId");
-
+		String prodId=super.getRequest().getParameter("prodId");
+		List<String> prodIdList=null;
+		if(StringUtil.isNotEmpty(prodId)) {
+			prodIdList = StringUtil.splitToList(",", prodId);
+		}
 		if(StringUtil.isNotEmpty(repIndexId)){
 			//return reportContentEnum002Service.getProductTreeByAgencyId(agencyId);
 			return null;
 		} else{//新建
-			return reportConfirmManage006Service.getProductTree();
+			return reportConfirmManage006Service.getProductTree(prodIdList);
 		}
 	}
 
