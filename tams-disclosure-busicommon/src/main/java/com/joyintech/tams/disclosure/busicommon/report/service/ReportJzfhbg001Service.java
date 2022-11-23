@@ -254,6 +254,7 @@ public class ReportJzfhbg001Service implements IReportDataService {
 
                         if (openPlanList != null && openPlanList.size() > 0) {
                             for (ReportOpenPlanDto openPlanDto : openPlanList) {
+                                openPlanDto.setOpenEndDate(openPlanDto.getCollingoffPeriod());
                                 //查询申购/赎回确认日的下一工作日
                                 searchParam.put("busi_date", DateUtil.parse(openPlanDto.getOpenEndDate()));
                                 searchParam.put("is_holiday", "0");

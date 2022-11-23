@@ -22,6 +22,8 @@ public class ReportKfjzgg001Dto {
     /*增加公告期*/
     private String enddate;
 
+    private String raiseType;
+
     public String getEnddate() {
         return enddate;
     }
@@ -124,5 +126,13 @@ public class ReportKfjzgg001Dto {
 
     public void setTimes(String times) {
         this.times = times;
+    }
+
+    public String getRaiseType() {
+        return raiseType;
+    }
+
+    public void setRaiseType(String raiseType) {
+        this.raiseType = raiseType;
     }
 }
