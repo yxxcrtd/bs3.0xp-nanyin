@@ -124,4 +124,6 @@ public interface ReportContentEnum002Mapper {
 	int updateRepIndexSub(ReportContentEnum002Dto dto );
 	
 	 List<ReportContentEnum003Dto> selectRepIndeSubById(String id);
+
+	List<TreeNode> selectInvesProdInfo();
 }

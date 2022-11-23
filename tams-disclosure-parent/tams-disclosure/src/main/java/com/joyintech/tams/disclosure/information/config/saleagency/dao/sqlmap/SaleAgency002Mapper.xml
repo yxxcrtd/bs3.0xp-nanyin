@@ -215,5 +215,39 @@
 		where dpa.PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 
+	<select id="selectAllInvesProdSeries" resultType="java.lang.String">
+		select
+		distinct PROD_SERIES
+		from V_REP_PROD_INFO
+		<where>
+			STATUS ='E' and PROD_SERIES is not null and PROD_TYPE = '04'
+			<if test="prodStatus != null and prodStatus != ''">
+				and PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by PROD_SERIES
+	</select>
 
+	<select id="selectAllInvesProdSeriesSon" resultType="java.lang.String">
+		select
+		distinct
+		prod.PROD_NAME
+		from
+		V_REP_PROD_INFO prod
+		<where>
+			prod.STATUS ='E' and prod.PROD_TYPE = '04'  and prod.PROD_SERIES is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and prod.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and prod.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+			<if test="prodSeries != null and prodSeries != ''">
+				and prod.PROD_SERIES=#{prodSeries,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 </mapper>

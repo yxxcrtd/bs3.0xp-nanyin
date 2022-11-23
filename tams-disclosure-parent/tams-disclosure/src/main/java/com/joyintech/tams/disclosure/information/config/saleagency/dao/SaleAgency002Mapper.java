@@ -105,4 +105,6 @@ public interface SaleAgency002Mapper extends DisProdAgencyMapper {
      * @return
      */
     List<ProdSaleAgencyDto> selectAgencyByProdId(String prodId);
+
+    List<String> selectAllInvesProdSeries(Map<String, Object> param);
 }

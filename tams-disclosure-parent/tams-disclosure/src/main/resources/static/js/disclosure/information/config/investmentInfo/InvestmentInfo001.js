@@ -85,9 +85,7 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        console.log("+++"+data);
         var object = {selectedItem: [data], operateType:"delete"};
-        console.log("+++"+object);
         Joyin.ajaxJson(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                 WorkFlow.doDeleteList(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo001/delete', object,
@@ -140,7 +138,7 @@
     function addrule() {
         var data = {};
         data.prodId=$('#booksetId').val()== null ? null : $('#booksetId').val().join(",");
-        Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
+        Joyin.dialog("产品选择",basePath+"disclosure/information/config/investmentInfo/InvestmentInfo003/init","80%","80%",
             data,function () {
                 var finprodIds = $('#finprodIds').data('finprodIds');
                 if(!finprodIds || finprodIds.length ==0){

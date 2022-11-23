@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-@PageId("InvestmentInfo002")
+@PageId("InvestmentInfo001")
 @ValidLogic(targetClass = InvestmentInfoValidator.class, groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
 public class InvestmentInfo001Dto extends BaseEntity implements ITableRow, ProcessEntity {

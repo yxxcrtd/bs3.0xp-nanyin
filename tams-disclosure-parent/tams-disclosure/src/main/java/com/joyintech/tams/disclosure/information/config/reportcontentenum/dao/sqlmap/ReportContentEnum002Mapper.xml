@@ -449,5 +449,34 @@
 		from REP_INDEX_SUB sub
 		where sub.ID=#{id,jdbcType=VARCHAR}
     </select>
-    	
+
+    <select id="selectInvesProdInfo" resultType="com.joyintech.framework.select.TreeNode">
+        select
+        distinct
+        PROD_ID id,
+        PROD_ID || PROD_NAME name,
+        case PD_STATUS
+        when '01' then
+        (case ISSUING_WAY
+        when '01' then '0101' || PROD_SERIES || to_char(PROD_NAME)
+        when '02' then '0102' || PROD_SERIES || to_char(PROD_NAME)
+        else '' end
+        )
+        when '02' then
+        (case ISSUING_WAY
+        when '01' then '0201' || PROD_SERIES || to_char(PROD_NAME)
+        when '02' then '0202' || PROD_SERIES || to_char(PROD_NAME)
+        else '' end
+        )
+        when '03' then
+        (case ISSUING_WAY
+        when '01' then '0301' || PROD_SERIES || to_char(PROD_NAME)
+        when '02' then '0302' || PROD_SERIES || to_char(PROD_NAME)
+        else '' end
+        )
+        else '' end pid
+        from
+        V_REP_PROD_INFO
+        where  status='E' AND PROD_TYPE = '04' and PROD_SERIES is not null
+    </select>
 </mapper>
