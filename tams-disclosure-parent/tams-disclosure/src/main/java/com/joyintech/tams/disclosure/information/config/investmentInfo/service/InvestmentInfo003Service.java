@@ -114,7 +114,7 @@ public class InvestmentInfo003Service extends CommonExportService<InvestmentInfo
                             treeDto_3.setOpen(true);
                             parentNodes.add(treeDto_3);
                             param.put("prodSeries",map_3);
-                            prodSeriesListSon=saleAgency002Mapper.selectAllProdSeriesSon(param);
+                            prodSeriesListSon=saleAgency002Mapper.selectAllInvesProdSeriesSon(param);
                             for (String map_4 : prodSeriesListSon) {
                                 TreeNode treeDto_4 = new TreeNode();
                                 treeDto_4.setId(map_1.getItemCode() + map_2.getItemCode() + map_3+map_4);
