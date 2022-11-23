@@ -427,14 +427,36 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
      * @param
      * @return
      */
-    public List<TreeNode> getProductTree() {
+    public List<TreeNode> getProductTree(List<String>prodIdList) {
         List<TreeNode> result = new ArrayList<TreeNode>();
         //获取父节点
-        result.addAll(this.getParentNodes());
+        List<TreeNode> parentNodes = getParentNodes();
+        result.addAll(parentNodes);
         //查询当前所有产品，作为子节点
         List<TreeNode> prodInfoNodes=reportContentEnum002Mapper.selectProdHugeInfo();
+        if(CollectionUtils.isNotEmpty(prodIdList)){
+            for (TreeNode prodInfoNode : prodInfoNodes) {
+                if(prodIdList.contains(prodInfoNode.getId())){
+                    prodInfoNode.setChecked(true);
+                    prodInfoNode.setOpen(true);
+                    //循环将父节点置为选中状态
+                    setParentChecked(parentNodes,prodInfoNode.getpId());
+                }
+            }
+        }
         result.addAll(prodInfoNodes);
         return result;
+    }
+    private void setParentChecked(List<TreeNode> parentNodes, String pid) {
+        if (StringUtil.isNotBlank(pid)){
+            for (TreeNode node : parentNodes) {
+                if(pid.equals(node.getId())){
+                    node.setChecked(true);
+                    setParentChecked(parentNodes,node.getpId());
+                    break;
+                }
+            }
+        }
     }
 
     /**

@@ -87,7 +87,7 @@ public class UnClaimAssetDetail001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getProdInfo")
-    public List<SelectOptionDto> getProdInfo(){
+    public Page<SelectOptionDto> getProdInfo(){
 //        String param = RequestUtil.getParam("prodId");
         return unClaimAssetDetail001Service.getProdInfo(RequestUtil.getPageParam());
     }

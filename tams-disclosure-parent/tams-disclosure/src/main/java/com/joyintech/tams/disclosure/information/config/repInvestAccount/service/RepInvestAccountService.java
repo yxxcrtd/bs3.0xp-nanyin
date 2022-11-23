@@ -43,6 +43,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
      * @since 1.0
      */
     public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+        Page<SelectOptionDto>page1=new Page<>();
 //        return repInvestAccountMapper.getProdInsId(map);
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         if(map.containsKey("initValue")){
@@ -58,9 +59,11 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
         if(StringUtil.isNotEmpty(pageParam.get("length"))){
             length=Integer.parseInt((String) pageParam.get("length"));
         }
-        Page<SelectOptionDto> result = queryForPageForSelectReturn(page, length, ()
-                -> repInvestAccountMapper.getProdInsId(map));
-        return result;
+        List<SelectOptionDto>list=repInvestAccountMapper.getProdInsId(map);
+        if(CollectionUtils.isNotEmpty(list)){
+            page1.setRoot(list);
+        }
+        return page1;
     }
     public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
         return repInvestAccountMapper.getProdInsId2(map);

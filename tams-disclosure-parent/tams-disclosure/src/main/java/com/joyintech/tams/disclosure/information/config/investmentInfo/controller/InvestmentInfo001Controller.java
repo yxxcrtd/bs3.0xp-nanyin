@@ -72,20 +72,17 @@ public class InvestmentInfo001Controller extends BaseController {
         WorkFlowParameter<InvestmentInfo001Dto> params = new WorkFlowParameter<InvestmentInfo001Dto>();
         params.setElementId(dto.getElementId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_前十大投资者信息维护.getValue());
-        params.setPageId(this.getPageId());
+        params.setPageId("InvestmentInfo002");
         // 设置流程业务说明, entity即传入的dto
-        /*params.setComment(
-                entity -> "科目号"+ "(" + entity.getSubjectNo()+ ")"
-                        +  "-" + "产品主代码"+ "(" + entity.getBooksetId() + ")"
-                        +  "-" + "开始日期"+ "(" + entity.getDateStartStr() + ")"
-                        +  "-" + "结束日期"+ "(" + entity.getDateEndStr() + ")");*/
+        params.setComment(
+                entity -> "产品主代码"+ "(" + entity.getBooksetId() + ")");
         InvestmentInfo001Dto[] investmentInfo001Dtos = dto.getSelectedItem().toArray(new InvestmentInfo001Dto[dto.getSelectedItem().size()]);
         processParameter.setWorkFlowParameter(params);
-        String msg = investmentInfo001Service.start(processParameter,investmentInfo001Dtos);
-        /*for (InvestmentInfo001Dto investmentInfo001Dto : dto.getSelectedItem()) {
+        //String msg = investmentInfo001Service.start(processParameter,investmentInfo001Dtos);
+        for (InvestmentInfo001Dto investmentInfo001Dto : dto.getSelectedItem()) {
             investmentInfo001Service.doComplete(investmentInfo001Dto, OperationType.DELETE);
-        }*/
-        return new AjaxResult(msg);
+        }
+        return new AjaxResult("处理成功");
     }
 
     @ResponseBody

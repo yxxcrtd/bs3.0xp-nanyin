@@ -95,13 +95,19 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
      * @param map
      * @return
      */
-    public List<SelectOptionDto> getProdInfo(Map<String,Object> map){
+    public Page<SelectOptionDto> getProdInfo(Map<String,Object> map){
+        Page<SelectOptionDto>page1=new Page<>();
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
         if(map.containsKey("initValue")){
             String str=map.get("initValue").toString();
             List<String> prodIdList=Arrays.asList(str.split(","));
             map.put("prodIdList",prodIdList);
         }
-        return unClaimAssetDetailMapper.getProdInfo(map);
+        List<SelectOptionDto>list=unClaimAssetDetailMapper.getProdInfo(map);
+        if(CollectionUtils.isNotEmpty(list)){
+            page1.setRoot(list);
+        }
+        return page1;
     }
 
 

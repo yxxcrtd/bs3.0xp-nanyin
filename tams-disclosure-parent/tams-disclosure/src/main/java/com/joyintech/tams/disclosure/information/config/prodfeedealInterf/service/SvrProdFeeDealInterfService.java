@@ -70,6 +70,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
      * @since 1.0
      */
     public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+        Page<SelectOptionDto>page1=new Page<>();
 //        return svrProdFeeDealInterfMapper.getProdInsId(map);
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         if(map.containsKey("initValue")){
@@ -85,9 +86,11 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         if(StringUtil.isNotEmpty(pageParam.get("length"))){
             length=Integer.parseInt((String) pageParam.get("length"));
         }
-        Page<SelectOptionDto> result = queryForPageForSelectReturn(page, length, ()
-                -> svrProdFeeDealInterfMapper.getProdInsId(map));
-        return result;
+        List<SelectOptionDto>list=svrProdFeeDealInterfMapper.getProdInsId(map);
+        if(CollectionUtils.isNotEmpty(list)){
+            page1.setRoot(list);
+        }
+        return page1;
     }
 
     public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
