@@ -252,6 +252,39 @@
 
     </select>
 
+    <select id="selectProdInfo4" resultType="com.joyintech.framework.select.TreeNode">
+        select distinct
+        T1.PROD_ID id,
+        T1.PROD_NAME name,
+        case T1.PD_STATUS
+        when '01' then
+        (case T1.ISSUING_WAY
+        when '01' then '0101' || T1.PROD_SERIES
+        when '02' then '0102' || T1.PROD_SERIES
+        else '' end
+        )
+        when '02' then
+        (case T1.ISSUING_WAY
+        when '01' then '0201' || T1.PROD_SERIES
+        when '02' then '0202' || T1.PROD_SERIES
+        else '' end
+        )
+        when '03' then
+        (case T1.ISSUING_WAY
+        when '01' then '0301' || T1.PROD_SERIES
+        when '02' then '0302' || T1.PROD_SERIES
+        else '' end
+        )
+        else '' end pid
+        from
+        V_REP_PROD_INFO T1
+        LEFT JOIN BOK_BALANCE bb
+        ON bb.BOOKSET_ID = T1.PROD_ID
+        and bb.BOOKSET_ID is not null
+        where T1.status !='D' AND T1.PROD_SERIES is not null
+        and bb.BOOKSET_ID is not null
+    </select>
+
     <select id="selectProdInfoSon" resultType="com.joyintech.framework.select.TreeNode">
         select
         distinct

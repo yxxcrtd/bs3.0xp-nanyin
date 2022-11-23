@@ -91,6 +91,8 @@ public interface SaleAgency002Mapper extends DisProdAgencyMapper {
      */
     List<String> selectAllProdSeries(Map<String,Object> param);
 
+    List<String> selectAllSubProdSeries(Map<String,Object> param);
+
     List<String> selectAllProdSeriesSon(Map<String,Object> param);
 
     List<String> selectAllRepProdIndexSon(Map<String,Object> param);
