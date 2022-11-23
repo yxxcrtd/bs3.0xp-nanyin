@@ -1249,3 +1249,8 @@ values ('AssetInvestmentDetail001', 'AssetInvestmentDetail001_btn_import', '01',
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
 values ('AssetInvestmentDetail001', 'AssetInvestmentDetail001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
 -- 页面权限控制 add by zhengxiaolian 2022-11-23 end
+
+-- 科目余额信息主产品搜索树页面 2022-11-23
+delete from SYS_PAGE where PAGE_ID = 'SubBalanceInfoPro003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('SubBalanceInfoPro003', 'DIS', '/disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro003', 'disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
