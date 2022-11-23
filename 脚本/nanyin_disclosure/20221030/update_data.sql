@@ -1254,3 +1254,8 @@ values ('AssetInvestmentDetail001', 'AssetInvestmentDetail001_btn_search', '01',
 delete from SYS_PAGE where PAGE_ID = 'SubBalanceInfoPro003';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('SubBalanceInfoPro003', 'DIS', '/disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro003', 'disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 科目发生额主产品搜索树页面 2022-11-23
+delete from SYS_PAGE where PAGE_ID = 'AccountAmount003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('AccountAmount003', 'DIS', '/disclosure/information/config/accountamount/AccountAmount003', 'disclosure/information/config/accountamount/AccountAmount003', 'null', null, null, '02', '02', '报表文本描述产品树', 'system', null,SYSDATE, 'system', SYSDATE);
