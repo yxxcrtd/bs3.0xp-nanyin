@@ -106,13 +106,17 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
     }
 
     public Page<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paraMap){
+        Page<SelectOptionDto>page1=new Page<>();
         if(paraMap.containsKey("initValue")){
             String str=paraMap.get("initValue").toString();
             List<String> prodIdList=Arrays.asList(str.split(","));
             paraMap.put("prodIdList",prodIdList);
         }
-        Page<SelectOptionDto> page =  queryForPageForSelectReturn(()->reportConfirmManage001Mapper.getPrdInfoSelect(paraMap));
-        return page;
+        List<SelectOptionDto>list=reportConfirmManage001Mapper.getPrdInfoSelect(paraMap);
+        if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(list)){
+            page1.setRoot(list);
+        }
+        return page1;
     }
 
     /**

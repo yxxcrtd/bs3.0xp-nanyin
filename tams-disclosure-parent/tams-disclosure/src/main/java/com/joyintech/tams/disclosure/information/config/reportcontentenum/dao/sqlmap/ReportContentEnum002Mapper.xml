@@ -248,7 +248,7 @@
         LEFT JOIN fin_product
         ON fin_product.FINPROD_MARKET_ID = T1.PROD_ID
         and fin_product.P_FINPROD_ID is null
-        where T1.status='E' AND T1.PROD_SERIES is not null
+        where T1.status !='D' AND T1.PROD_SERIES is not null
 
     </select>
 
