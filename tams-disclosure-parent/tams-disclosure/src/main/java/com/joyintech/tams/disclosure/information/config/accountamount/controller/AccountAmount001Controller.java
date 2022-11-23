@@ -127,6 +127,12 @@ public class AccountAmount001Controller extends BaseController {
         return accountAmount001Service.importData(fileName);
     }
 
+    @ResponseBody
+    @RequestMapping("getRePord")
+    public List<SelectOptionDto> getRePord() {
+        return accountAmount001Service.getRePord(RequestUtil.getPageParam());
+    }
+
 
 
 }

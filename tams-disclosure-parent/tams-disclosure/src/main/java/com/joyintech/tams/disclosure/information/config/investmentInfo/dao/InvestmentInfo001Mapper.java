@@ -17,6 +17,8 @@ public interface InvestmentInfo001Mapper {
 
     List<SelectOptionDto> findProdId(Map<String, Object> map);
 
+    List<SelectOptionDto> findAllProdId(Map<String, Object> map);
+
     int updateByKey(InvestmentInfo001Dto dto);
 
     int insert(InvestmentInfo001Dto investmentInfo001Dto);

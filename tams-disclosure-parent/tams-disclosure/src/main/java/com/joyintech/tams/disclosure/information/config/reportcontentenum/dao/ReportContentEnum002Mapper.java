@@ -106,6 +106,10 @@ public interface ReportContentEnum002Mapper {
 
 	List<TreeNode> selectProdInfo3();
 
+	List<TreeNode> selectProdInfo4();
+
+	List<TreeNode> selectProdInfo5();
+
 	List<TreeNode> selectProdInfoSon();
 
 	List<TreeNode> selectRepProdIndexSon();
@@ -124,4 +128,6 @@ public interface ReportContentEnum002Mapper {
 	int updateRepIndexSub(ReportContentEnum002Dto dto );
 	
 	 List<ReportContentEnum003Dto> selectRepIndeSubById(String id);
+
+	List<TreeNode> selectInvesProdInfo();
 }

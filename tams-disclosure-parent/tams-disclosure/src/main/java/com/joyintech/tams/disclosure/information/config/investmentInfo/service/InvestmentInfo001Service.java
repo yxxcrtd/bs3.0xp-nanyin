@@ -116,6 +116,10 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
         return investmentInfo001Mapper.findProdId(map);
     }
 
+    public List<SelectOptionDto> findAllProdId(Map<String, Object> map) {
+        return investmentInfo001Mapper.findAllProdId(map);
+    }
+
     /**
      * 导出
      */

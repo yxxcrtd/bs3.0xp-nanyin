@@ -441,4 +441,13 @@ public class AccountAmount001Service extends CommonExportService<AccountAmount00
     public AccountAmount001Dto selectByPrimaryKey(Map map) {
         return accountAmountMapper.selectByPrimaryKey(map);
     }
+
+    public List<SelectOptionDto> getRePord(Map<String, Object> pageParam) {
+        if(pageParam.containsKey("initValue")){
+            String str=pageParam.get("initValue").toString();
+            List<String> prodIdList=Arrays.asList(str.split(","));
+            pageParam.put("prodIdList",prodIdList);
+        }
+        return accountAmountMapper.getRePord(pageParam);
+    }
 }

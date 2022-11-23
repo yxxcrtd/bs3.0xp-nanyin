@@ -128,6 +128,22 @@
         </if>
     </select>
 
+    <select id="findAllProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_NAME object
+        FROM
+        V_REP_PROD_INFO
+        where
+        STATUS = 'E'
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+
     <update id="updateByKey">
         update TOP_INVESTOR_INFORMATION
         <set >

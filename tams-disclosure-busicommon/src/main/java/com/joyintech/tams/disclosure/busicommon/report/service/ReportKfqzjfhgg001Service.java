@@ -3,12 +3,10 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.tams.constant.DictCodeListExt5;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -339,6 +337,21 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
         }
         repReveal.setRepId((String) paraMap.get("repId"));
         repReveal.setEndDate((Date) (paraMap.get("reportDate")));
+        //日期
+        String baseDate = (String) paraMap.get("enddate");
+        param.put("baseDate", baseDate);
+        ReportCommonProdDto reportCommonProdDto = reportKfqzjfhgg001Mapper.getProdInfo(param);
+        if (Objects.nonNull(reportCommonProdDto)){
+            paraMap.put("cusFileName",reportCommonProdDto.getTitleName());
+            if (reportCommonProdDto.getSetDate() != null) {
+                param.put("setDate", reportCommonProdDto.getSetDate());
+            }
+            paraMap.put("basedatet",baseDate);
+            List<ReportKfqHisBonusDto> list = reportKfqzjfhgg001Mapper.getHisBonusReportList(param);
+            if (CollectionUtils.isNotEmpty(list)){
+                paraMap.put("basedatet",DateUtil.format(list.get(0).getSettDate(),DateUtil.ABB_DATE_FORMAT_CN));
+            }
+        }
         return repReveal;
     }
 }

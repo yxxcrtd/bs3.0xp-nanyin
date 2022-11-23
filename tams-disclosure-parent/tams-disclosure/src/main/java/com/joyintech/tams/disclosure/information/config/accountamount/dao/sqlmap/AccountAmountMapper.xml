@@ -268,12 +268,13 @@
     <select id="getRePord" resultType="com.joyintech.framework.select.SelectOptionDto">
         select
        distinct
-        dp.BOOKSET_ID id,
+        bbf.BOOKSET_ID id,
          rp.PROD_NAME text
-        from BOK_BALANCE dp
+        from BOK_BALANCE_FSE bbf
         left join V_REP_PROD_INFO  rp
-        on dp.BOOKSET_ID = rp.PROD_ID
+        on bbf.BOOKSET_ID = rp.PROD_ID
         <where>
+            bbf.BOOKSET_ID is not null
             <if test="search != null and search != ''">
                 and (BOOKSET_ID like
                 concat(concat('%',#{search}),'%')

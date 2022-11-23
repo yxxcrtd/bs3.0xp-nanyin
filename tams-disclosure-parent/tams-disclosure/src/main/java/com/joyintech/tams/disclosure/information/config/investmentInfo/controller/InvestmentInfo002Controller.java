@@ -74,6 +74,12 @@ public class InvestmentInfo002Controller extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("findAllProdId")
+    public List<SelectOptionDto> findAllProdId() {
+        return investmentInfo001Service.findAllProdId(RequestUtil.getPageParam());
+    }
+
+    @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
             ValidateGroupEdit.class}) InvestmentInfo001Dto dto, BindingResult result)

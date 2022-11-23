@@ -135,7 +135,7 @@
     function addrule() {
         var data = {};
         data.prodId=$('#booksetId').val()== null ? null : $('#booksetId').val().join(",");
-        Joyin.dialog("产品选择",basePath+"disclosure/information/config/disprodplanmanage/DisProdPlanManage003/init","80%","80%",
+        Joyin.dialog("产品选择",basePath+"disclosure/information/config/accountamount/AccountAmount003/init","80%","80%",
             data,function () {
                 var finprodIds = $('#finprodIds').data('finprodIds');
                 if(!finprodIds || finprodIds.length ==0){

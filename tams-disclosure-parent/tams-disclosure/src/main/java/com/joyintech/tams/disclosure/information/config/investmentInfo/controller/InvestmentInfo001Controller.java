@@ -76,13 +76,13 @@ public class InvestmentInfo001Controller extends BaseController {
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity -> "产品主代码"+ "(" + entity.getBooksetId() + ")");
-        InvestmentInfo001Dto[] investmentInfo001Dtos = dto.getSelectedItem().toArray(new InvestmentInfo001Dto[dto.getSelectedItem().size()]);
         processParameter.setWorkFlowParameter(params);
-        //String msg = investmentInfo001Service.start(processParameter,investmentInfo001Dtos);
-        for (InvestmentInfo001Dto investmentInfo001Dto : dto.getSelectedItem()) {
+        InvestmentInfo001Dto[] investmentInfo001Dtos = dto.getSelectedItem().toArray(new InvestmentInfo001Dto[dto.getSelectedItem().size()]);
+        String msg = investmentInfo001Service.start(processParameter,investmentInfo001Dtos);
+        /*for (InvestmentInfo001Dto investmentInfo001Dto : dto.getSelectedItem()) {
             investmentInfo001Service.doComplete(investmentInfo001Dto, OperationType.DELETE);
-        }
-        return new AjaxResult("处理成功");
+        }*/
+        return new AjaxResult(msg);
     }
 
     @ResponseBody

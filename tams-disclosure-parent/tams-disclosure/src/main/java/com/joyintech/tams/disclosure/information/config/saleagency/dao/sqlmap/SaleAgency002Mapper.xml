@@ -120,6 +120,48 @@
 		order by PROD_SERIES
 	</select>
 
+	<select id="selectAllSubProdSeries" resultType="java.lang.String">
+		select
+		distinct T1.PROD_SERIES
+		from
+		V_REP_PROD_INFO T1
+		LEFT JOIN BOK_BALANCE bb
+		ON bb.BOOKSET_ID = T1.PROD_ID
+		and bb.BOOKSET_ID is not null
+		<where>
+			T1.status !='D' AND T1.PROD_SERIES is not null
+			and bb.BOOKSET_ID is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and T1.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and T1.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by T1.PROD_SERIES
+	</select>
+
+	<select id="selectAllAccountProdSeries" resultType="java.lang.String">
+		select
+		distinct T1.PROD_SERIES
+		from
+		V_REP_PROD_INFO T1
+		LEFT JOIN BOK_BALANCE_FSE bbf
+		ON bbf.BOOKSET_ID = T1.PROD_ID
+		and bbf.BOOKSET_ID is not null
+		<where>
+			T1.PROD_SERIES is not null
+			and bbf.BOOKSET_ID is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and T1.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and T1.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by T1.PROD_SERIES
+	</select>
+
 	<select id="selectAllProdSeriesSon" resultType="java.lang.String">
 		select
 		distinct case when prod.REP_PROD_TYPE = '03' then pprod.PROD_NAME
@@ -215,5 +257,39 @@
 		where dpa.PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 
+	<select id="selectAllInvesProdSeries" resultType="java.lang.String">
+		select
+		distinct PROD_SERIES
+		from V_REP_PROD_INFO
+		<where>
+			STATUS ='E' and PROD_SERIES is not null and PROD_TYPE = '04'
+			<if test="prodStatus != null and prodStatus != ''">
+				and PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by PROD_SERIES
+	</select>
 
+	<select id="selectAllInvesProdSeriesSon" resultType="java.lang.String">
+		select
+		distinct
+		prod.PROD_NAME
+		from
+		V_REP_PROD_INFO prod
+		<where>
+			prod.STATUS ='E' and prod.PROD_TYPE = '04'  and prod.PROD_SERIES is not null
+			<if test="prodStatus != null and prodStatus != ''">
+				and prod.PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and prod.ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+			<if test="prodSeries != null and prodSeries != ''">
+				and prod.PROD_SERIES=#{prodSeries,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 </mapper>
