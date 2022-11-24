@@ -113,9 +113,8 @@ public class JobDoThread implements Runnable{
             }
 
            //生成预生成任务
-            infoDisclosureReadAndGenDetailService.preReadAndGenDetail(detailJob, dateMap, DateUtil.addDay(new Date(), day));
-            
-            
+            //infoDisclosureReadAndGenDetailService.preReadAndGenDetail(detailJob, dateMap, DateUtil.addDay(new Date(), day));
+
 
             logger.info("作业:"+detailJob.getJobName() +",编号:"+detailJob.getJobId() +"结束生成作业"+"结束时间:"+DateUtil.format(new Date(),"yyyy-MM-dd hh:mm:ss"));
         }
