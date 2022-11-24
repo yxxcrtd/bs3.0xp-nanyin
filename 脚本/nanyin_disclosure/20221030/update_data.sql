@@ -318,7 +318,7 @@ VALUES ('BatchGenReport001', 'DIS', '/disclosure/information/reveal/genreport/Ba
 
 delete from SYS_MENU where MENU_ID='REPORT_006_002_106';
 INSERT INTO SYS_MENU(MENU_ID, SYSTEM_CODE, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6', '02', '报表批量生成', 'system', sysdate, 'system', sysdate)
+VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
 
 --删除半年报：枚举值中没有下半年的问题
 delete from sys_datadict_list where dict_code='HALF_YEAR' and item_code='02';
@@ -1270,5 +1270,5 @@ VALUES ('AccountAmount003', 'DIS', '/disclosure/information/config/accountamount
 -- 报表配置,开放净值及分红公告（公募且开放频率在半年以上），开放净值及分红公告（公募且开放频率在半年（不含）以内），开放及净值公告（公募），开放及净值报告（私募） 修改file_name
 update rep_info set file_name = '{cusFileName}{basedatet}开放、净值及分红公告' where template_id = 'KFJZJFHGG_BNYS';
 update rep_info set file_name = '{cusFileName}{basedatet}开放、净值及分红公告' where template_id = 'KFJZJFHGG_BNYN';
-update rep_info set file_name = '{cusFileName}{enddate}开放及净值公告' where template_id = 'KFJJZGG_GM';
-update rep_info set file_name = '{cusFileName}{enddate}开放及净值报告' where template_id = 'KFJJZGG_SM';
+update rep_info set file_name = '{cusFileName}{openenddatet}开放及净值公告' where template_id = 'KFJJZGG_GM';
+update rep_info set file_name = '{cusFileName}{openenddatet}开放及净值报告' where template_id = 'KFJJZGG_SM';

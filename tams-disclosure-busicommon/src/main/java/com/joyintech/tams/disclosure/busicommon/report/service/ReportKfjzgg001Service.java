@@ -249,6 +249,20 @@ public class ReportKfjzgg001Service implements IReportDataService {
         ReportKfjzgg001Dto reportKfjzgg001Dto = reportKfjzgg001Mapper.getProdInfo(param);
         if (Objects.nonNull(reportKfjzgg001Dto)){
             paraMap.put("cusFileName",reportKfjzgg001Dto.getTitleName());
+            //由于私募跟公募报表共用代码，   私募不需要展示： times 、OpenStartDateT、OpenEndDateT几个字段，需要特别隔离
+            if (StringUtil.equals(paraMap.get("uri"), DisReportType.KFJJZGG_SM)) {
+                paraMap.put("openenddatet","避开检测");
+            }
+            if (reportKfjzgg001Dto.getSetDate() != null) {
+                //需要增加产品成立日的过滤条件（子产品在没成立前查不到母产品历史净值数据）
+                param.put("setDate", reportKfjzgg001Dto.getSetDate());
+            }
+            //查询历史开放信息
+            List<ReportOpenPlanDto> openHisList = reportKfjzgg001Mapper.getOpenHisList(param);
+            if (openHisList != null && openHisList.size() > 0) {
+                //设置返回对象开放结束日
+                paraMap.put("openenddatet",DateUtil.format(DateUtil.parse(openHisList.get(0).getOpenEndDate()), DateUtil.DEFAULT_DATE_FORMAT_CN));
+            }
         }
         return repReveal;
     }
