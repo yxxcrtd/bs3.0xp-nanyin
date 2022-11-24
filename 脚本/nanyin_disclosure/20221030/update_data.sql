@@ -318,7 +318,7 @@ VALUES ('BatchGenReport001', 'DIS', '/disclosure/information/reveal/genreport/Ba
 
 delete from SYS_MENU where MENU_ID='REPORT_006_002_106';
 INSERT INTO SYS_MENU(MENU_ID, SYSTEM_CODE, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6', '02', '报表批量生成', 'system', sysdate, 'system', sysdate)
+VALUES ('REPORT_006_002_106', 'DIS', 'REPORT_006_002', 'BatchGenReport001', '6', '02', '报表批量生成', 'system', sysdate, 'system', sysdate);
 
 --删除半年报：枚举值中没有下半年的问题
 delete from sys_datadict_list where dict_code='HALF_YEAR' and item_code='02';
