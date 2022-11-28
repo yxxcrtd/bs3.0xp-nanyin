@@ -93,6 +93,8 @@ public class DisProdPlanManage002Controller extends BaseController {
 		
 		String id = this.getParam("prodPlanId");
 		String dataStatus = this.getParam("dataStatus");
+		String editFlag = getParam("editFlag");
+		model.addAttribute("editFlag", editFlag);
 		/*if (StringUtil.isNotEmpty(id)) {
 			model.addAttribute("entity", disProdPlanManage002Service.getDisProdPlanManage002Dto(id));
 		}*/
@@ -248,6 +250,11 @@ public class DisProdPlanManage002Controller extends BaseController {
 		//NYLCXP-1255【产品排期计划】不同用户，可以新建相同日期的指标数据
 		if (disProdPlanManage002Service.hasRepeatedData(dto)>0){
 			return new AjaxResult("系统已存在该产品主代码和运作起始日！", MessageType.错误消息);
+		}
+		if(StringUtil.isNotEmpty(dto.getEditFlag())){
+			if(disProdPlanManage002Service.isInWorkflow(dto)){
+				return new AjaxResult("所选对象中存在流程中的数据！", MessageType.错误消息);
+			}
 		}
 
 		return commonCheck(bindingResult, operateType);

@@ -364,7 +364,7 @@
             </otherwise>
         </choose>
         <choose>
-            <when test="adjReason !=null and adjReason != ''">
+            <when test="adjReason2 !=null and adjReason2 != ''">
                 AND ADJ_REASON2 =  #{adjReason2,jdbcType=VARCHAR}
             </when>
             <otherwise>

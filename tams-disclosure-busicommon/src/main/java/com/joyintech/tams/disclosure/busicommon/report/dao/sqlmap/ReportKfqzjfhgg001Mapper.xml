@@ -50,6 +50,7 @@
 		  SELECT TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd') openStartDate,TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') nextRange,TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') nextMdate
 		  FROM REP_PROD_INFO INFO,DIS_PROD_PLAN DPP
 		  WHERE INFO.STATUS = 'E'
+			AND DPP.DATA_STATUS='E'
 			AND DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
 			AND DPP.OPEN_START_DATE>TO_DATE(#{baseDate},'yyyy-MM-dd')
 			<if test="setDate != null">

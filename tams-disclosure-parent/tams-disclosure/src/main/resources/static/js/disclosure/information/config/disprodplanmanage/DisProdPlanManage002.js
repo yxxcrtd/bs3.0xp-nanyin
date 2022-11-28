@@ -58,6 +58,7 @@ $(function() {
 		object.raiseType = raiseType;
 		object.issuingWay = issuingWay;
 		object.isPeriod = isPeriod;
+		object.editFlag=editFlag;
 		/*Joyin.ajaxJson(
 			basePath+ 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002/check',object,
 			function(result) {

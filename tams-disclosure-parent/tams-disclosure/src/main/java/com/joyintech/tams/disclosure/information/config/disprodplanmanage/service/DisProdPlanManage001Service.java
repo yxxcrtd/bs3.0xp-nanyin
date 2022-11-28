@@ -158,6 +158,8 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0030", 7), MessageType.错误消息);
             return webResult;
         }
+
+
         List<List<String>> dataList = tempList.subList(1, tempList.size());
         if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
             int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null
@@ -167,7 +169,9 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 return webResult;
             }
             List<DisProdPlanManage002Dto> entities = this.convertToBean(dataList);
+
             List<DisProdPlanManage002Dto> data = this.selectProdPlanByKey(entities);
+
 
             if (data != null && data.size() > 0) {
                 Map<String, List<DisProdPlanManage002Dto>> planMap = entities.stream().collect(
@@ -326,19 +330,32 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, List<String>> prodplanMap = new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
+            // 验证消息
+            List<String> message = new ArrayList<>();
             List<String> rowData = dataList.get(i);
             if (null == rowData || rowData.size() != 7) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
                         this.getMessage("REPORT_COMMON_FILE_E_0030", 7)));
                 break;
             }
+
+            if (StringUtil.isNotEmpty(rowData.get(4))) {
+                String strDate = rowData.get(4).replaceAll("/", "-");
+                rowData.set(4, strDate);
+                if (StringUtil.isNotEmpty(rowData.get(0))) {
+                    if (disProdPlanManage002Service.isInWorkflowForImport(rowData.get(4), rowData.get(0))) {
+                        message.add("存在流程中的数据！");
+                    }
+                }
+            }
+
+
+
 //            DisProdPlanManage002Dto dto = disProdPlanManage002Service.selectCfsj(rowData.get(0),rowData.get(4));
 //            if (StringUtil.equals(dto.getDataStatus(),"C")){
 //                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
 //                        this.getMessage("DIS_001")));
 //            }
-            // 验证消息
-            List<String> message = new ArrayList<>();
             ProdInfoDto prodInfo = new ProdInfoDto();
             if (!StringUtil.isNotEmpty(rowData.get(0))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));

@@ -35,7 +35,7 @@
          */
         dblclick: function (table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("科目发生额信息维护查看"),
+            Joyin.dialog(JoyinUtil.getLabel("其他费用查看"),
                 basePath + "disclosure/information/config/accountamount/AccountAmount002/init",
                 "99%", "99%", data,function(){table.reload();});
         },
@@ -71,7 +71,7 @@
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'disclosure/information/config/accountamount/AccountAmount001/check', data, function(editResult){
-            Joyin.dialog(JoyinUtil.getLabel("科目发生额信息维护编辑"),
+            Joyin.dialog(JoyinUtil.getLabel("其他费用编辑"),
                 basePath + "disclosure/information/config/accountamount/AccountAmount002/init",
                 "95%", "90%",data,function() {
                     table.reload();
@@ -162,7 +162,7 @@
         });
         //新建(点击打开新建画面)
         $('#AccountAmount001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("科目发生额新建"),
+            Joyin.dialog(JoyinUtil.getLabel("其他费用新建"),
                 basePath + "disclosure/information/config/accountamount/AccountAmount002/init","100%", "100%", {pageModel:PAGE_MODEL_NEW},
                 function() {
                     table.reload();

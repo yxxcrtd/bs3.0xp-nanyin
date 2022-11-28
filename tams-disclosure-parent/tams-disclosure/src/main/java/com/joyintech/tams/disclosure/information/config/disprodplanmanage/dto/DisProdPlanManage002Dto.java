@@ -114,8 +114,9 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 	 */
 	private String raiseType;
 
+	private String editFlag;
+
 	@Override
-	@PrimaryKey(value = PrimaryKey.Field.PK_1)
 	public String getProdPlanId() {
 		return super.getProdPlanId();
 	}
@@ -218,6 +219,7 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 		this.collingoffPeriodStr = collingoffPeriodStr;
 	}
 
+	@PrimaryKey(PrimaryKey.Field.PK_2)
 	public String getOperationStartDateStr() {
 //		return operationStartDateStr;
 		if(StringUtils.isNotBlank(this.operationStartDateStr)){
@@ -299,5 +301,13 @@ public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRo
 
 	public void setOperationStartDateO(Date operationStartDateO) {
 		this.operationStartDateO = operationStartDateO;
+	}
+
+	public String getEditFlag() {
+		return editFlag;
+	}
+
+	public void setEditFlag(String editFlag) {
+		this.editFlag = editFlag;
 	}
 }

@@ -46,6 +46,7 @@
 		    inner join V_REP_PROD_INFO RPI on DPP.PROD_ID=RPI.PROD_ID
 		    where RPI.PROD_ID=#{prodId}
 		    and DPP.OPEN_END_DATE= TO_DATE(#{baseDate},'yyyy-MM-dd')
+		    AND DPP.DATA_STATUS='E'
 		)
 	</select>
 
