@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="AccountAmount.xlsx" name="科目发生额信息维护">
+<Workbook filePath="AccountAmount.xlsx" name="其他费用">
     <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.accountamount.dto.AccountAmount001Dto">
         <Row>
             <Cell order="1" name="数据状态">statusStr</Cell>
