@@ -72,6 +72,8 @@ public class DisProdPlanManage001Dto extends BaseEntity{
 	 */
 	private String dataSource;
 
+	private String editFlag;
+
 	/**
 	 * 取得 产品排期计划编号
 	 * @return 产品排期计划编号
@@ -357,6 +359,14 @@ public class DisProdPlanManage001Dto extends BaseEntity{
 	 */
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource == null ? null : dataSource.trim();
+	}
+
+	public String getEditFlag() {
+		return editFlag;
+	}
+
+	public void setEditFlag(String editFlag) {
+		this.editFlag = editFlag;
 	}
 }
 

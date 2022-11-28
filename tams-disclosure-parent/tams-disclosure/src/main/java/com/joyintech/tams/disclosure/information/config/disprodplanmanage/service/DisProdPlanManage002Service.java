@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.config.disprodplanmanage.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -24,6 +25,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage002Mapper;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -215,5 +217,41 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
 
     public DisProdPlanManage002Dto isRepeated(DisProdPlanManage002Dto dto) {
         return disProdPlanManage002Mapper.isRepeated(dto);
+    }
+
+    public boolean isInWorkflow(DisProdPlanManage002Dto dto){
+        try {
+            ProcessMark processMark = new ProcessMark();
+            processMark.setPageId("DisProdPlanManage002");
+            processMark.setBusinessDataPk1(dto.getProdId());
+            processMark.setBusinessDataPk2(dto.getOperationStartDateStr());
+            List<String> resultList = WorkflowContext.getProcessMarkService().getBusinessDataInFlow(
+                    processMark);
+            if (!StringUtil.isEmptyList(resultList)) {
+                return true;
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException("处理失败", e);
+        }
+        return false;
+    }
+
+    public boolean isInWorkflowForImport(String sDater,String proId){
+        try {
+            ProcessMark processMark = new ProcessMark();
+            processMark.setPageId("DisProdPlanManage002");
+            processMark.setBusinessDataPk1(proId);
+            processMark.setBusinessDataPk2(sDater);
+            List<String> resultList = WorkflowContext.getProcessMarkService().getBusinessDataInFlow(
+                    processMark);
+            if (!StringUtil.isEmptyList(resultList)) {
+                return true;
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException("处理失败", e);
+        }
+        return false;
     }
 }

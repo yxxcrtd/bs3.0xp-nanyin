@@ -2,6 +2,7 @@ package com.joyintech.tams.common.base.entity;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 import java.util.Date;
 
@@ -69,6 +70,7 @@ public class DisProdPlanInfo extends BaseEntity {
         this.prodPlanId = prodPlanId;
     }
 
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getProdId() {
         return prodId;
     }
