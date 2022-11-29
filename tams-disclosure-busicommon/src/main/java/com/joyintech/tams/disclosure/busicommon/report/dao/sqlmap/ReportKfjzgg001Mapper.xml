@@ -17,7 +17,7 @@
 					  RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
 				 ELSE RPI.PROD_NAME END titleName,
 			CASE WHEN RPI.IS_GRADE = '01' THEN
-					  RPI2.PROD_NAME ||RPI.PROD_NAME
+					  RPI2.PROD_NAME
 				 ELSE RPI.PROD_NAME END prodName,
 			RPI.PROD_RE regCode,
 		    RPI.SET_DATE setDate,

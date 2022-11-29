@@ -156,7 +156,7 @@ public class InfoDisclosureGenService {
 							
 							genFlag = gentFile(infoDisclosureGenAndSendEntity, null,screenList,execDate);
 							logger.info(
-									"=====生成报表结束======" + com.joyintech.framework.util.DateUtil.getCurrentDateTime());
+									"=====生成报表结束======" + com.joyintech.framework.util.DateUtil.getCurrentDateTime() + "=="+genFlag);
 
 							if (genFlag) {
 								exeStatus = DictCodeListExt2.执行结果_成功.getValue();
@@ -263,6 +263,7 @@ public class InfoDisclosureGenService {
 			fileInfo = jasparConnectUtilService.connectJasparAndDownload(url,fileName,
 					infoDisclosureGenAndSendEntity.getFileType(), infoDisclosureGenAndSendEntity.getTemplateId(),
 					infoDisclosureGenAndSendEntity.getProdid(),getParams(infoDisclosureGenAndSendEntity,screenList,execDate));
+			logger.info("文件信息:"+fileInfo);
 			if(fileInfo==null){
 				return false;
 			}

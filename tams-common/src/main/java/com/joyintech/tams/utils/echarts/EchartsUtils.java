@@ -391,12 +391,17 @@ public class EchartsUtils {
 //		}
 		if (!file.exists()) {
 			File dir = new File(file.getParent());
-			boolean ret = dir.mkdirs();
+			if (!dir.exists() && !dir.isDirectory()) {
+				boolean ret = dir.mkdirs();
+				logger.info("创建目录："+ret);
+			}
+			/*boolean ret = dir.mkdirs();
 			if ( ret==false ) {
 				logger.error("创建目录错误："+dir.getName());
-			}
+			}*/
 			try {
-				ret = file.createNewFile();
+				//ret = file.createNewFile();
+				boolean ret = file.createNewFile();
 				if ( ret ==true ) {
 					logger.info("创建新文件："+file.getName());
 				}
@@ -460,11 +465,15 @@ public class EchartsUtils {
 			File writename = new File(dataPath);
 			if (!writename.exists()) {
 				File dir = new File(writename.getParent());
-				boolean ret = dir.mkdirs();
+				if (!dir.exists() && !dir.isDirectory()) {
+					boolean ret = dir.mkdirs();
+					logger.info("创建目录："+ret);
+				}
+				/*boolean ret = dir.mkdirs();
 				if ( ret==false ) {
 					logger.error("创建目录错误："+dir.getName());
-				}
-				ret = writename.createNewFile();
+				}*/
+				boolean ret = writename.createNewFile();
 				if ( ret==true ) {
 					logger.info("创建新文件:"+writename.getName());
 				}
