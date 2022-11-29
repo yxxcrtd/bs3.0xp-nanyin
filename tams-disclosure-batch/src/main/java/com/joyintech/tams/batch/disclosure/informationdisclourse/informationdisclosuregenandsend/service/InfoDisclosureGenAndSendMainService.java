@@ -175,6 +175,7 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 					try {
 						taskResult = service.invokeAll(tasks);
 					} catch (InterruptedException e1) {
+						logger.error("---------多线程执行错误---------");
 						logger.error(e1.getMessage(),e1);
 						Thread.currentThread().interrupt();
 						throw new ExecutorException(e1);
@@ -183,6 +184,7 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 						try {
 							success = success && res.get();
 						} catch (InterruptedException | ExecutionException e) {
+							logger.error("xxxxxxxxxxx多线程执行错误xxxxxxxxxxx");
 							logger.error(e.getMessage(),e);
 							Thread.currentThread().interrupt();
 							throw new ExecutorException(e);
@@ -210,6 +212,7 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 
 
 	private  void batch(List<InfoDisclosureGenAndSendEntity> repFileList,String holidayIsWork,String executeDateStr,String jobSeq,Map<String, List<RepScreen>> screenMap){
+		logger.debug("--分批次生成报表开始--"+DateUtil.now());
 		for (InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity : repFileList) {
 			//在这里加上具体每个作业的工作日判断 add by zhengxiaolian
 			boolean isWork = false;
@@ -242,10 +245,13 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 			else if(ccm!=null){
 				logger.info(ccm.getMsg());
 				if(StringUtil.equals(ccm.getMsg(),"校验不满足")){
+					logger.debug("--校验不满足并删除临时表开始--"+infoDisclosureGenAndSendEntity.getId()+DateUtil.now());
 					repInstallFileMapper.deleteByPrimaryKey(infoDisclosureGenAndSendEntity.getId());
+					logger.debug("--校验不满足并删除临时表结束--"+infoDisclosureGenAndSendEntity.getId()+DateUtil.now());
 				}
 			}
 		}
+		logger.debug("--分批次生成报表结束--"+DateUtil.now());
 	}
 
 

@@ -127,7 +127,9 @@ public class InfoDiscGenFileDetailService {
 				revealList.add(repInstallFile);
 			}
 		    infoDisclosureReadAndGenDetailService.insertRepInstallFile(revealList);
-
+			if(CollectionUtils.isEmpty(revealList)){
+				return false;
+			}
 			flag = true;
 		}
 		//数据无关.直接送一个空产品    leipeng 20190305 end

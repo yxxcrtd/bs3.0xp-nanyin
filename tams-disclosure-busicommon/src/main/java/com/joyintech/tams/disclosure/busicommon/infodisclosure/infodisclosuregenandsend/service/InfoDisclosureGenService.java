@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +88,8 @@ public class InfoDisclosureGenService {
     @Autowired
     private RepCheckInfoService repCheckInfoService;
 
-	public void genDetail(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity, Map<String, List<RepScreen>> equityInfo001Map,Date execDate) {
+	public void genDetail(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity, Map<String, List<RepScreen>> equityInfo001Map,Date execDate){
+		logger.debug("--正常生成报表开始--"+infoDisclosureGenAndSendEntity.getId()+DateUtil.now());
 		String exeStatus = DictCodeListExt2.执行结果_失败.getValue();
 		String execDetail = "";
 		// 将查询出的配置转换成披露dto及日志详情dto
@@ -227,7 +229,9 @@ public class InfoDisclosureGenService {
 			// }
 			// }
 		} catch (Exception e) {
+			logger.error("生成报表报错");
 			logger.error("error:",e);
+			throw new BusinessException(e);
 		} finally {
 			repInstallLogDetail.setExecStatus(exeStatus);
 			repInstallLogDetail.setExecResult(execDetail);
@@ -238,6 +242,7 @@ public class InfoDisclosureGenService {
 			// 删除
 			// infoDisclosureGenAndSendMapper.updateRepInstallStatus(infoDisclosureGenAndSendEntity);
 			repInstallFileMapper.deleteByPrimaryKey(infoDisclosureGenAndSendEntity.getId());
+			logger.error("--正常生成报表结束--"+infoDisclosureGenAndSendEntity.getId()+DateUtil.now());
 		}
 	}
 
@@ -269,6 +274,7 @@ public class InfoDisclosureGenService {
 		} catch (Exception e) {
 			logger.error("error:",e);
 			logger.info("=======报表生成失败");
+			throw new BusinessException(e);
 		}
 		return flag;
 	}
