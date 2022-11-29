@@ -231,7 +231,6 @@ public class InfoDisclosureGenService {
 		} catch (Exception e) {
 			logger.error("生成报表报错");
 			logger.error("error:",e);
-			throw new BusinessException(e);
 		} finally {
 			repInstallLogDetail.setExecStatus(exeStatus);
 			repInstallLogDetail.setExecResult(execDetail);
@@ -274,7 +273,6 @@ public class InfoDisclosureGenService {
 		} catch (Exception e) {
 			logger.error("error:",e);
 			logger.info("=======报表生成失败");
-			throw new BusinessException(e);
 		}
 		return flag;
 	}
