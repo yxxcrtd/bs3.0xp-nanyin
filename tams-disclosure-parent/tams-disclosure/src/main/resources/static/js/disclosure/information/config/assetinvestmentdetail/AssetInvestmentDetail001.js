@@ -95,6 +95,20 @@
         });
     });
 
+    $('#AssetInvestmentDetail001_btn_import').click(function() {
+        Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function () {
+            Joyin.uploadFile(function(fileName) {
+                Joyin.ajax('checkImportData', {fileName: fileName}, function() {
+                    Joyin.ajax('importFile', {fileName: fileName});
+                },function() {
+                    $('iframe').contents().find("#loading").hide();
+                });
+            },function() {
+                table.reload();
+            });
+        });
+    });
+
 
 
 
@@ -114,6 +128,13 @@
         });
         return index;
     }
+    /**
+     * 导出选中的表格数据
+     */
+    var exportExcel = function() {
+        var paramObj = getSearchParams();//请求参数json格式
+        Joyin.exportExcel('export', paramObj);//导出（共通）
+    };
 
     function addrule() {
         var data = {};
@@ -134,6 +155,9 @@
      */
     $(function () {
         $('#AccountAmount001_btn_treeAdd').click(addrule);
+        $('#AssetInvestmentDetail001_btn_export').click(function () {
+            exportExcel();
+        });
         //初始化查询
         $('#AssetInvestmentDetail001_btn_search').click(function () {
             table.load();

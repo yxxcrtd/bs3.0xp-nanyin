@@ -10,6 +10,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.dto.AssetInvestmentDetail001Dto;
 import com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.service.AssetInvestmentDetail001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -90,5 +91,38 @@ public class AssetInvestmentDetail001Controller extends BaseController {
     public AjaxResult check(@RequestBody @Validated({ValidateGroupDelete.class}) AssetInvestmentDetail001Dto dto, BindingResult result) {
         return commonCheck(result, dto.getOperateType());
     }
+
+    /**
+     * 导出
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("export")
+    public ResponseEntity<byte[]> export(){
+        return assetInvestmentDetail001Service.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
+    }
+
+    /**
+     * 导入
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) {
+        return assetInvestmentDetail001Service.checkImportData(fileName);
+    }
+
+
+   /* @ResponseBody
+    @RequestMapping("importFile")
+    public List<ExcelValidDto> importFile(String fileName)  {
+        return assetInvestmentDetail001Service.importData(fileName);
+    }*/
 
 }
