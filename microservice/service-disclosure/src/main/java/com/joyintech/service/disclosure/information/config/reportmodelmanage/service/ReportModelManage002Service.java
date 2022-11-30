@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.service.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
 import org.apache.commons.collections4.CollectionUtils;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
