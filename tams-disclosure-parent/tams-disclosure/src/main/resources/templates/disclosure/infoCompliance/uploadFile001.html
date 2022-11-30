@@ -71,12 +71,8 @@
         $('#multFileBtn').click(function() {
             var files = FileCommon.getUploadFileInfo();
             loginUser = loginUser || '';
-            if(files.filter(f => f.createUser===loginUser || !f.createUser).length >=5){
-                Joyin.error("最大上传5个附件。");
-                return;
-            } else {
+
                 $('.mult-file-btn', '#FileCommon_DIV').trigger('click');
-            }
         });
 
     });

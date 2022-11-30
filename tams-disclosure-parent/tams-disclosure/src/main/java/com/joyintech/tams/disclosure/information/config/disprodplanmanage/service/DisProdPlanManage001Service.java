@@ -341,9 +341,9 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
 
             if (StringUtil.isNotEmpty(rowData.get(4))) {
                 String strDate = rowData.get(4).replaceAll("/", "-");
-                rowData.set(4, strDate);
+                //rowData.set(4, strDate);
                 if (StringUtil.isNotEmpty(rowData.get(0))) {
-                    if (disProdPlanManage002Service.isInWorkflowForImport(rowData.get(4), rowData.get(0))) {
+                    if (disProdPlanManage002Service.isInWorkflowForImport(strDate, rowData.get(0))) {
                         message.add("存在流程中的数据！");
                     }
                 }
