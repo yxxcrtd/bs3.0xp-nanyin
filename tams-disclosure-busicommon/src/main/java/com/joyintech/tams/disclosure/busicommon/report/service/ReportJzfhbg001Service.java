@@ -146,7 +146,7 @@ public class ReportJzfhbg001Service implements IReportDataService {
                                 paras.put("market_code", "04");
                                 Date beginDate = holidayService.getNextWorkDay(paras);
                                 reportJzfhbg001Dto.setRange(DateUtil.format( beginDate)
-                                		+ "至" + DateUtil.format(bonusplan.getSettDate()));
+                                        + "至" + DateUtil.format(bonusplan.getSettDate()));
                             }
 
                             //实收资本
@@ -176,35 +176,35 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             //本次分红方案（元/1份份额）
                             String unitProfitStr = "0" + unitValueStr.substring(unitValueStr.indexOf("."), unitValueStr.length());
                             reportJzfhbg001Dto.setcUnitProfit(unitProfitStr);
-                            
+
                             //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             Date profitBaseDate = sdf.parse(searchParam.get("settDate").toString());
                             searchParam.put("profitBaseDate", profitBaseDate);
                             List<DisBonusList> listBonus = reportJzfhbg001Mapper.selectBonusList(searchParam);
                             String unitProfitStr1 = "";
-                            if ( listBonus.size()>0 ) { 
-                            	BigDecimal unitValue1 = listBonus.get(0).getUnitBonus().setScale(4, BigDecimal.ROUND_DOWN);
+                            if ( listBonus.size()>0 ) {
+                                BigDecimal unitValue1 = listBonus.get(0).getUnitBonus().setScale(4, BigDecimal.ROUND_DOWN);
                                 String unitValueStr1 = BigDecimal.ONE.add(unitValue1).toString();
                                 //unitValueStr1 = "1" + unitValueStr1.substring(unitValueStr1.indexOf("."), unitValueStr1.length());
                                 reportJzfhbg001Dto.setcUnitValue(unitValueStr1);
                                 //本次分红方案（元/1份份额）
                                 unitProfitStr1 = unitValue1.toString();
                                 reportJzfhbg001Dto.setcUnitProfit(unitProfitStr1);
-                            	BigDecimal yield1 = listBonus.get(0).getYield();
-                            	if ( yield1!=null )  {
-                            		yield1 = yield1.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
-                            		reportJzfhbg001Dto.setYield(yield1.toString()+"%");
-                            	} else {
-                            		reportJzfhbg001Dto.setYield("0.00%");
-                            	}
+                                BigDecimal yield1 = listBonus.get(0).getYield();
+                                if ( yield1!=null )  {
+                                    yield1 = yield1.multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
+                                    reportJzfhbg001Dto.setYield(yield1.toString()+"%");
+                                } else {
+                                    reportJzfhbg001Dto.setYield("0.00%");
+                                }
                             } else {
-                            	reportJzfhbg001Dto.setcUnitValue(null);
-                            	reportJzfhbg001Dto.setcUnitProfit(null);
-                            	reportJzfhbg001Dto.setYield("0.00%");
+                                reportJzfhbg001Dto.setcUnitValue(null);
+                                reportJzfhbg001Dto.setcUnitProfit(null);
+                                reportJzfhbg001Dto.setYield("0.00%");
                             }
                             //取分红计算清单，指定产品，指定分红日期，有效数据有且仅有一条,二期变更：chenxc
-                            
+
                             /**
                              * 当期净值模块
                              */
@@ -216,20 +216,20 @@ public class ReportJzfhbg001Service implements IReportDataService {
                                 searchParam.put("settDate", DateUtil.format(lastBonus.getSettDate()));
                                 RepProdIndex lastRepProdIndex = reportJzfhbg001Mapper.getIndexBySettDate(searchParam);
                                 if (lastRepProdIndex != null) {
-                                        reportJzfhbg001Dto.setUnitValueT(lastRepProdIndex.getUnitValueT().add(new BigDecimal(unitProfitStr1)).toString());
+                                    reportJzfhbg001Dto.setUnitValueT(lastRepProdIndex.getUnitValueT().add(new BigDecimal(unitProfitStr1)).toString());
                                 }else {
                                     reportJzfhbg001Dto.setUnitValueT(new BigDecimal(unitProfitStr1).toString());
 
                                 }
                             }
                             //计算年化收益率 应分配分红金额/产品期末余额（份额）*365/运行天数，结果截位法按照小数展示，保留四位小数
-                           // BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 10, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
+                            // BigDecimal yield = unitValue.multiply(new BigDecimal(365)).divide(runday, 10, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(2,BigDecimal.ROUND_DOWN);
                             //年化收益率
                             //reportJzfhbg001Dto.setYield(yield.toString()+"%");
                         }
                     }
 
-                    
+
                     //设置公告日 = 收益分配基准日+1工作日
                     searchParam.put("busi_date", DateUtil.parse(settDateStr));
                     searchParam.put("is_holiday", "0");
@@ -298,6 +298,13 @@ public class ReportJzfhbg001Service implements IReportDataService {
         }
         //生成跑批日
         reportJzfhbg001Dto.setEnddate(settDateStr);
+        Map<String, Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        //封装导出文件名称
+        ReportJzfhbg001Dto dto =  reportJzfhbg001Mapper.getProdInfo(searchparam);
+        if(dto != null){
+            reportJzfhbg001Dto.setCusFileName(dto.getTitleName());
+        }
         resultMap.add(ReportCollectionUtils.bean2Map(reportJzfhbg001Dto));
         return resultMap;
     }

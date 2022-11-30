@@ -61,6 +61,8 @@ public class ReportKfqzjfhgg001Dto {
 
     private String pprodId;
 
+    private String cusFileName;
+
     public String getEnddate() {
         return enddate;
     }
@@ -195,5 +197,13 @@ public class ReportKfqzjfhgg001Dto {
 
     public void setPprodId(String pprodId) {
         this.pprodId = pprodId;
+    }
+
+    public String getCusFileName() {
+        return cusFileName;
+    }
+
+    public void setCusFileName(String cusFileName) {
+        this.cusFileName = cusFileName;
     }
 }
