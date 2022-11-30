@@ -24,6 +24,8 @@ public class ReportKfjzgg001Dto {
 
     private String raiseType;
 
+    private String cusFileName;
+
     public String getEnddate() {
         return enddate;
     }
@@ -134,5 +136,13 @@ public class ReportKfjzgg001Dto {
 
     public void setRaiseType(String raiseType) {
         this.raiseType = raiseType;
+    }
+
+    public String getCusFileName() {
+        return cusFileName;
+    }
+
+    public void setCusFileName(String cusFileName) {
+        this.cusFileName = cusFileName;
     }
 }

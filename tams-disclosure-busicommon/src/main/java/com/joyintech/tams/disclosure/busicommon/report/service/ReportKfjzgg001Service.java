@@ -226,6 +226,14 @@ public class ReportKfjzgg001Service implements IReportDataService {
         }
         //增加跑批日
         reportKfjzgg001Dto.setEnddate(openEndDateStr);
+        Map<String, Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        //封装导出文件名称
+        ReportKfjzgg001Dto dto =  reportKfjzgg001Mapper.getProdInfo(searchparam);
+        if(dto != null){
+            reportKfjzgg001Dto.setCusFileName(dto.getTitleName());
+        }
+
         resultMap.add(ReportCollectionUtils.bean2Map(reportKfjzgg001Dto));
         return resultMap;
     }
