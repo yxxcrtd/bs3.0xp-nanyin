@@ -288,14 +288,13 @@
 		  AND t2.PROD_ID= #{prodId, jdbcType=VARCHAR}
 		  and t2.rep_prod_type='02'
 		  AND T.DATA_STATUS='E'
-		  AND EXISTS(
+		  AND not EXISTS(
 				SELECT 1 FROM DIS_PROD_PLAN T1
 				left join v_rep_prod_info t3 on t1.prod_id=t3.prod_id
 				WHERE
-					T1.OPEN_START_DATE > T.OPEN_START_DATE
-					and t1.DATA_status='E'
+					T1.DATA_status='E'
 				    AND t3.PROD_ID= #{prodId, jdbcType=VARCHAR}
-				    AND T.AUTO_REDEEM_DATE!=T1.OPERATION_START_DATE
+				    AND T.AUTO_REDEEM_DATE=T1.OPERATION_START_DATE
 			)
 		union all
 		SELECT DISTINCT T.AUTO_REDEEM_DATE
@@ -306,14 +305,13 @@
 			AND T.DATA_STATUS='E'
 		  AND t.AUTO_REDEEM_DATE = #{sysDate, jdbcType=DATE}
 		  AND t2.PROD_ID= #{prodId, jdbcType=VARCHAR}
-		  AND EXISTS(
+		  AND not EXISTS(
 				SELECT 1 FROM DIS_PROD_PLAN T1
 								  left join rep_prod_info t3 on t1.prod_id=t3.p_prod_id
 				WHERE
-					T1.OPEN_START_DATE > T.OPEN_START_DATE
-					and t1.DATA_status='E'
+					T1.DATA_status='E'
 				  AND t3.PROD_ID= #{prodId, jdbcType=VARCHAR}
-				  AND T.AUTO_REDEEM_DATE!=T1.OPERATION_START_DATE
+				  AND T.AUTO_REDEEM_DATE =T1.OPERATION_START_DATE
 			)
 	</select>
 
