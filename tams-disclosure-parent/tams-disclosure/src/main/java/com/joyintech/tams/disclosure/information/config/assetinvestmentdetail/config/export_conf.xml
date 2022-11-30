@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="AssetInvestmentDetail.xlsx" name="其他费用">
+    <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.dto.AssetInvestmentDetail001Dto">
+        <Row>
+            <Cell order="1" name="数据状态">statusStr</Cell>
+            <Cell order="2" name="产品主代码">prodId</Cell>
+            <Cell order="3" name="产品全称">prodName</Cell>
+            <Cell order="4" name="日期">pubDate</Cell>
+            <Cell order="5" name="资产代码">assetCode</Cell>
+            <Cell order="6" name="资产名称">assetName</Cell>
+            <Cell order="7" name="公允价值（元）">fairValue</Cell>
+            <Cell order="8" name="占产品资产比例（%）">pdDrop</Cell>
+            <Cell order="9" name="更新时间">updateTimeStr</Cell>
+            <Cell order="10" name="更新人">updateUser</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

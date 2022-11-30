@@ -21,7 +21,6 @@ public interface AssetInvestmentDetailMapper {
 
     int insert(AssetInvestmentDetail001Dto assetInvestmentDetail001Dto);
 
-    int insertHis(AssetInvestmentDetail001Dto assetInvestmentDetail001Dto);
 
     int updateByKey(AssetInvestmentDetail001Dto dto);
 
@@ -45,5 +44,5 @@ public interface AssetInvestmentDetailMapper {
 
     List<SelectOptionDto> getProdId1(Map<String, Object> map);
 
-    List<AccountAmount001Dto> selectBalanceList(@Param("list") List<AccountAmount001Dto> list);
+    List<AssetInvestmentDetail001Dto> selectBalanceList(@Param("list") List<AssetInvestmentDetail001Dto> list);
 }
