@@ -276,7 +276,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 }
             }
             if(!StringUtil.isNotEmpty(list.get(1))){
-                message.add("合作机构 不能为空!");
+                message.add("合作机构（机构名称以“、”隔开） 不能为空!");
             }
             if (!StringUtil.isNotEmpty(list.get(2))){
                 message.add("生效日 不能为空！");

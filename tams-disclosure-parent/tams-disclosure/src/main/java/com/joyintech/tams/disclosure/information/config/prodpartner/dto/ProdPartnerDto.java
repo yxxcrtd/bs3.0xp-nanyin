@@ -124,7 +124,7 @@ public class ProdPartnerDto extends DisProdPartner implements ProcessEntity{
 	}
 
 	@Override
-	@NotEmpty(fieldName = "合作机构",groups={ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "合作机构（机构名称以“、”隔开）",groups={ValidateGroupEdit.class})
 	@Length(fieldName = "合作机构", max = 200)
 	public String getPartnerName() {
 		return super.getPartnerName();

@@ -5,7 +5,7 @@
             <Cell order="1" name="数据状态">statusStr</Cell>
             <Cell order="2" name="产品主代码">prodId</Cell>
             <Cell order="3" name="产品全称">prodName</Cell>
-            <Cell order="4" name="合作机构">partnerName</Cell>
+            <Cell order="4" name="合作机构（机构名称以“、”隔开）">partnerName</Cell>
             <Cell order="5" name="生效日">effDateStr</Cell>
             <Cell order="6" name="生效截止日期">effEndDateStr</Cell>
             <Cell order="7" name="更新时间">updateTimeStr</Cell>

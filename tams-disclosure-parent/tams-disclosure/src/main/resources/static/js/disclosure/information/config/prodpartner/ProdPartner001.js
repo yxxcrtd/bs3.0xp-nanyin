@@ -38,7 +38,7 @@ $(function(){
               ,{field:'statusStr', width:'10%', sortField:'dataStatus', title: '数据状态'}
               ,{field:'prodId', width:'15%', sortField:'prodId', title: '产品主代码'}
               ,{field:'prodName', width:'15%', sortField:'prodName', title: '产品全称'}
-              ,{field:'partnerName', width:'10%', sortField:'partnerName', title: '合作机构'}
+              ,{field:'partnerName', width:'10%', sortField:'partnerName', title: '合作机构（机构名称以“、”隔开）'}
               ,{field:'effDateStr',width:'10%' , sortField:"effDate", title: '生效日',type:'date'}
               ,{field:'effEndDateStr',width:'10%' , sortField:"effEndDate", title: '生效截止日期',type:'date'}
               ,{field: 'updateTime', type: 'datetime',width:'15%', sortField:"updateTime",title: "更新时间"}
