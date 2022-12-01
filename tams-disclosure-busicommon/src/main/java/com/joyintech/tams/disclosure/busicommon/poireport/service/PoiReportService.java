@@ -1069,7 +1069,7 @@ public class PoiReportService {
 				if(StringUtil.equals(rptType,DisReportType.BNDBG_FZSXXGL)||StringUtil.equals(rptType,DisReportType.NDBG_FZSXXGL)){
 					List<Map<String, Object>>listInvester=(List<Map<String, Object>>)dataMap.get("listInvester");
 					if(!CollectionUtils.isEmpty(listInvester)){
-						if(listAssetsDetail.size()>10){
+						if(listInvester.size()>10){
 							resultSb.append((index++)+"："+"前十名投资者情况数量超过10条"+"<br>");
 						}
 					}else{

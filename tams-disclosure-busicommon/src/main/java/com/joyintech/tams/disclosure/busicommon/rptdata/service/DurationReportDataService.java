@@ -366,10 +366,11 @@ public class DurationReportDataService implements IReportDataService {
 
 				List<TopInvestorInformation> dataList = durationReportMapper.selectListInvester (paraMap);
 				List<Map<String,Object>> listInvester = new ArrayList<>();
-
+				int i=0;
 				for (TopInvestorInformation dto:dataList) {
+					i++;
 					Map<String,Object> map=new HashMap<>();
-					map.put("tzRank",dto.getTzRank());
+					map.put("tzRank",String.valueOf(i));
 					map.put("tzType",dto.getTzTypeStr());
 					map.put("holdShare",df.format(dto.getHoldShare()));
 					map.put("proportionShare",df.format(dto.getProportionShare()));

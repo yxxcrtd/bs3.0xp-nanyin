@@ -152,7 +152,6 @@
 
 	<select id="selectListInvester" resultType="com.joyintech.tams.common.base.entity.TopInvestorInformation">
 		select
-		TII.tz_rank,
 		TII.tz_type,
 		TII.hold_share,
 		TII.proportion_share
@@ -164,7 +163,7 @@
 		</if>
 		AND  TII.index_year=#{year,jdbcType=VARCHAR}
 		AND  TII.index_type=#{indexType,jdbcType=VARCHAR}
-		order by to_number(TII.tz_rank) ASC
+		order by TII.hold_share DESC
 	</select>
 
 	<select id="selectAccts" resultType="com.joyintech.tams.common.base.entity.RepInvestAccount">
