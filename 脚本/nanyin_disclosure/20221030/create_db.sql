@@ -737,3 +737,8 @@ create sequence TOP_INVESTOR_INFORMATION_SEQ
     increment by 1
     nocache;
 -- 创建前十大投资者信息序列 add by huzhangshun 2022/11/17 end
+
+-- 去除前十大投资者信息排名字段非空校验 add by wanglei 2022/12/01 end
+Alter Table TOP_INVESTOR_INFORMATION Modify TZ_RANK VARCHAR2(50) Null;
+Alter Table TOP_INVESTOR_INFORMATION_HIS Modify TZ_RANK VARCHAR2(50) Null;
+-- 去除前十大投资者信息排名字段非空校验 add by wanglei 2022/12/01 end
