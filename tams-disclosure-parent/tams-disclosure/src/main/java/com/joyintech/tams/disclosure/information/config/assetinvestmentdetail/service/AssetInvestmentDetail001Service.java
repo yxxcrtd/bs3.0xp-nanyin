@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.service;
 
+import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -12,6 +13,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.dao.AssetInvestmentDetailMapper;
 import com.joyintech.tams.disclosure.information.config.assetinvestmentdetail.dto.AssetInvestmentDetail001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
@@ -24,7 +26,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -105,6 +112,37 @@ public class AssetInvestmentDetail001Service extends CommonExportService<AssetIn
         }
         return webResult;
 
+    }
+
+    public List<ExcelValidDto> importData(String fileName) {
+        SysUploadFileInfo suf = new SysUploadFileInfo();
+        suf.setPath(fileName);
+        joyinDFSTemplate.fetch(suf);
+        List<List<String>> dataList = ExcelUtil.getDataList(fileName);
+        if (!StringUtil.isEmptyList(dataList) && CollectionUtils.isNotEmpty(dataList)) {
+            List<AssetInvestmentDetail001Dto> entities = new ArrayList<>(dataList.size());
+            List<ExcelValidDto> checkResult = convertToEntitys(dataList, entities);
+            if (checkResult.isEmpty()) {
+                entities.forEach(item -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("prodId",item.getProdId());
+                    map.put("pubDate",item.getPubDateStr());
+                    map.put("assetCode",item.getAssetCode());
+                    AssetInvestmentDetail001Dto dto = this.selectByPrimaryKey(map);
+                    if (null !=dto && !StringUtil.equals(dto.getStatus(),"D")){
+                        this.doComplete(item, OperationType.MODIFY);
+                    } else {
+                        this.doComplete(item,OperationType.NEW);
+                    }
+                });
+            }
+            return checkResult;
+        } else {
+            List<ExcelValidDto> checkResult = new ArrayList<>();
+            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
+            return checkResult;
+        }
     }
 
 
@@ -256,5 +294,115 @@ public class AssetInvestmentDetail001Service extends CommonExportService<AssetIn
             }
         }
         return equtiyList;
+    }
+
+    private List<ExcelValidDto> convertToEntitys(List<List<String>> dataList,
+                                                 List<AssetInvestmentDetail001Dto> entities) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        List<String> findList =  assetInvestmentDetailMapper.getProdId1(Maps.newHashMap()).stream().map(SelectOptionDto::getId).collect(Collectors.toList());
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> rowData = dataList.get(i);
+            if (null == rowData || rowData.size() != 6) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                        this.getMessage("REPORT_COMMON_FILE_E_0030", 6)));
+                break;
+            }
+            // 验证消息
+            List<String> message = new ArrayList<>();
+            if (!StringUtil.isNotEmpty(rowData.get(0))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "产品主代码"));
+            }else if (!findList.contains(rowData.get(0).trim())) {
+                message.add("产品主代码在产品基本信息表中没有维护。");
+            }
+            if (!StringUtil.isNotEmpty(rowData.get(1))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "日期"));
+            } else if (!isDateStr(rowData.get(1))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0032", "日期"));
+            }
+
+            if (!StringUtil.isNotEmpty(rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "资产代码"));
+            }
+
+
+            if (!isBigDecimal(rowData.get(4))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "公允价值（元）"));
+            }
+
+            if (!isBigDecimal(rowData.get(5))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0012", "占产品资产比例（%）"));
+            }
+            if (map.containsKey(rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(1)
+                    + GlobalConstant.UNDER_LINE + rowData.get(2))) {
+                message.add(this.getMessage("REPORT_COMMON_FILE_E_0027"));
+            }
+            map.put(rowData.get(0)
+                    + GlobalConstant.UNDER_LINE + rowData.get(1)
+                    + GlobalConstant.UNDER_LINE + rowData.get(2), rowData);
+            if (CollectionUtils.isNotEmpty(message)) {
+                checkResult.add(new ExcelValidDto(rowData.get(0)
+                        + GlobalConstant.UNDER_LINE + rowData.get(1)
+                        + GlobalConstant.UNDER_LINE + rowData.get(2),
+                        String.valueOf(i + 2), StringUtil.joinString(message, "<br>")));
+            }
+            else {
+                entities.add(this.convertToEntity(rowData));
+            }
+        }
+        return checkResult;
+    }
+
+    private AssetInvestmentDetail001Dto convertToEntity(List<String> rowData) {
+        AssetInvestmentDetail001Dto assetInvestmentDetail001Dto = new AssetInvestmentDetail001Dto();
+        if (StringUtil.isNotEmpty(rowData.get(0))) {
+            assetInvestmentDetail001Dto.setProdId(rowData.get(0));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(1))) {
+            assetInvestmentDetail001Dto.setPubDate(DateUtil.parse(rowData.get(1)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(2))) {
+            assetInvestmentDetail001Dto.setAssetCode(rowData.get(2));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(3))) {
+            assetInvestmentDetail001Dto.setAssetName(rowData.get(3));
+        }
+
+        if (StringUtil.isNotEmpty(rowData.get(4))) {
+            assetInvestmentDetail001Dto.setFairValue(new BigDecimal(rowData.get(4)));
+        }
+        if (StringUtil.isNotEmpty(rowData.get(5))) {
+            assetInvestmentDetail001Dto.setPdDrop(new BigDecimal(rowData.get(5)));
+        }
+        return assetInvestmentDetail001Dto;
+    }
+
+    public static boolean isDateStr(String str) {
+        boolean result=true;
+        SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_ANOTHER_FORMAT);
+        try {
+            format.setLenient(false);
+            format.parse(str);
+            result=true;
+
+        } catch (Exception var3) {
+            result=false;
+        }
+        String yearStr=str.split("/")[0];
+        if(yearStr.startsWith("0")||yearStr.length()!=4){
+            result=false;
+        }
+        return result;
+    }
+
+    public static boolean isBigDecimal(String str) {
+        Pattern NUMERIC_PATTERN = Pattern.compile("^(\\-|\\+)?\\d+(\\.\\d+)?$");
+        Matcher m = NUMERIC_PATTERN.matcher(str);
+        if (m.find()) {
+            return true;
+        }else{
+            return false;
+        }
     }
 }

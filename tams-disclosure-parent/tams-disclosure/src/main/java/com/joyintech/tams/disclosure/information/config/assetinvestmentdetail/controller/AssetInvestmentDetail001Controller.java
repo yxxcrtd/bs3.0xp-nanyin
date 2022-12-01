@@ -119,10 +119,10 @@ public class AssetInvestmentDetail001Controller extends BaseController {
     }
 
 
-   /* @ResponseBody
+    @ResponseBody
     @RequestMapping("importFile")
     public List<ExcelValidDto> importFile(String fileName)  {
         return assetInvestmentDetail001Service.importData(fileName);
-    }*/
+    }
 
 }

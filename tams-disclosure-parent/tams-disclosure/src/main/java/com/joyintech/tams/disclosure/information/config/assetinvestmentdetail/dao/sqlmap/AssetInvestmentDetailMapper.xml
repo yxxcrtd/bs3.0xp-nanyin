@@ -244,7 +244,7 @@
         A.PROD_ID,
         A.ASSETS_CODE,
         to_char(A.PUB_DATE,'yyyy/mm/dd') pubDateStr
-        from BOK_BALANCE_FSE A
+        from REP_ASSETS_COMB A
         <where>
             <foreach collection="list" item="item" open="(A.PROD_ID,A.ASSETS_CODE,to_char(A.PUB_DATE,'yyyy/mm/dd'),A.STATUS) IN (" separator="," close=")">
                 (#{item.prodId},#{item.assetCode},#{item.pubDateStr},'E')
