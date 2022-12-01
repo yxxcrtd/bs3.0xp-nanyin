@@ -9,7 +9,6 @@
         tii.BOOKSET_ID booksetId,
         tii.index_year indexYear,
         tii.index_type indexType,
-        tii.tz_rank tzRank,
         tii.tz_type tzType,
         rpi.PROD_NAME prodName,
         tii.hold_share holdShare,
@@ -44,7 +43,6 @@
         tiih.BOOKSET_ID booksetId,
         tiih.index_year indexYear,
         tiih.index_type indexType,
-        tiih.tz_rank tzRank,
         tiih.tz_type tzType,
         rpi.PROD_NAME prodName,
         tiih.hold_share holdShare,
@@ -83,7 +81,6 @@
             tii.BOOKSET_ID booksetId,
             tii.index_year indexYear,
             tii.index_type indexType,
-            tii.tz_rank tzRank,
             tii.tz_type tzType,
             tii.hold_share holdShare,
             tii.proportion_share proportionShare,
@@ -100,7 +97,6 @@
         tiih.BOOKSET_ID booksetId,
         tiih.index_year indexYear,
         tiih.index_type indexType,
-        tiih.tz_rank tzRank,
         tiih.tz_type tzType,
         tiih.hold_share holdShare,
         tiih.proportion_share proportionShare,
@@ -153,9 +149,6 @@
             <if test="indexType != null and !indexType.equals('')" >
                 index_type = #{indexType,jdbcType=VARCHAR},
             </if>
-            <if test="tzRank != null and !tzRank.equals('')" >
-                tz_rank = #{tzRank,jdbcType=VARCHAR},
-            </if>
             <if test="tzType != null and !tzType.equals('')" >
                 tz_type = #{tzType,jdbcType=VARCHAR},
             </if>
@@ -180,11 +173,11 @@
 
     <insert id="insert">
         insert into TOP_INVESTOR_INFORMATION (ID,BOOKSET_ID, index_year, index_type,
-                                              tz_rank, tz_type, hold_share,proportion_share,
+                                               tz_type, hold_share,proportion_share,
                                               CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                               UPDATE_USER, UPDATE_TIME, STATUS)
         values (#{id,jdbcType=VARCHAR},#{booksetId,jdbcType=VARCHAR}, #{indexYear,jdbcType=VARCHAR}, #{indexType,jdbcType=VARCHAR},
-                #{tzRank,jdbcType=VARCHAR},#{tzType,jdbcType=VARCHAR},#{holdShare,jdbcType=DECIMAL},#{proportionShare,jdbcType=DECIMAL},
+                #{tzType,jdbcType=VARCHAR},#{holdShare,jdbcType=DECIMAL},#{proportionShare,jdbcType=DECIMAL},
                 #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
                 #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
     </insert>
@@ -193,7 +186,7 @@
         insert into TOP_INVESTOR_INFORMATION_HIS
         select TOP_INVESTOR_INFORMATION_HIS_NO.NEXTVAL hisNo,id,
                BOOKSET_ID, INDEX_YEAR, INDEX_TYPE,
-               TZ_RANK, TZ_TYPE, HOLD_SHARE,proportion_share,
+               TZ_TYPE, HOLD_SHARE,proportion_share,
                CREATE_USER, CREATE_DEPT, CREATE_TIME,
                #{updateUser,jdbcType=VARCHAR}, UPDATE_TIME, 'D'
         from TOP_INVESTOR_INFORMATION
@@ -230,14 +223,13 @@
         tii.BOOKSET_ID booksetId,
         tii.index_year indexYear,
         tii.index_type indexType,
-        tii.tz_rank tzRank,
         tii.status status,
         tii.hold_share  holdShare,
         tii.proportion_share proportionShare
         from TOP_INVESTOR_INFORMATION tii
         <where>
-            <foreach collection="list" item="item" open="(tii.BOOKSET_ID,tii.index_year,tii.index_type,tii.tz_rank,tii.status) IN (" separator="," close=")">
-                (#{item.booksetId},#{item.indexYear},#{item.indexType},#{item.tzRank},'E')
+            <foreach collection="list" item="item" open="(tii.BOOKSET_ID,tii.index_year,tii.index_type,tii.status) IN (" separator="," close=")">
+                (#{item.booksetId},#{item.indexYear},#{item.indexType},'E')
             </foreach>
         </where>
     </select>
@@ -265,6 +257,6 @@
             </if>
         </set>
         where bookset_id = #{booksetId,jdbcType=VARCHAR} and index_year = #{indexYear,jdbcType=VARCHAR}
-        and index_type = #{indexType,jdbcType=VARCHAR} and tz_rank = #{tzRank,jdbcType=VARCHAR}
+        and index_type = #{indexType,jdbcType=VARCHAR}
     </update>
 </mapper>

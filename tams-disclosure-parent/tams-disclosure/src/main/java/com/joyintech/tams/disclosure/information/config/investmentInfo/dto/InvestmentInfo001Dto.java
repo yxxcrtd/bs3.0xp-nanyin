@@ -181,7 +181,6 @@ public class InvestmentInfo001Dto extends BaseEntity implements ITableRow, Proce
         this.indexType = indexType;
     }
 
-    @NotEmpty(fieldName = "排名",groups={ValidateGroupEdit.class})
     public String getTzRank() {
         return tzRank;
     }

@@ -7,12 +7,11 @@
             <Cell order="3" name="产品全称">prodName</Cell>
             <Cell order="4" name="年度">indexYear</Cell>
             <Cell order="5" name="数据类型">indexTypeStr</Cell>
-            <Cell order="6" name="排名">tzRank</Cell>
-            <Cell order="7" name="类别">tzTypeStr</Cell>
-            <Cell order="8" name="持有份额">holdShare</Cell>
-            <Cell order="9" name="占总份额比例（%）">proportionShareStr</Cell>
-            <Cell order="10" name="更新时间">updateTime</Cell>
-            <Cell order="11" name="更新人">updateUser</Cell>
+            <Cell order="6" name="类别">tzTypeStr</Cell>
+            <Cell order="7" name="持有份额">holdShare</Cell>
+            <Cell order="8" name="占总份额比例（%）">proportionShareStr</Cell>
+            <Cell order="9" name="更新时间">updateTime</Cell>
+            <Cell order="10" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>
