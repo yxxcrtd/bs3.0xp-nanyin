@@ -17,7 +17,7 @@ public interface AssetInvestmentDetailMapper {
 
     AssetInvestmentDetail001Dto selectByPrimaryKey(Map map);
 
-    int deleteByKey(AssetInvestmentDetail001Dto dto);
+    int deleteByKey(Map map);
 
     int insert(AssetInvestmentDetail001Dto assetInvestmentDetail001Dto);
 

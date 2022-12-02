@@ -58,14 +58,15 @@
       where rac.PROD_ID = #{prodId,jdbcType=VARCHAR} and
       rac.PUB_DATE = to_date(#{pubDate,jdbcType=DATE},'YYYY-MM-DD')
       and rac.ASSETS_CODE = #{assetCode,jdbcType=VARCHAR}
+      and rac.STATUS='E'
    </select>
 
     <delete id="deleteByKey">
-        delete from BOK_BALANCE_FSE
-        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and
-        DATE_START = #{dateStart,jdbcType=DATE}
-        and DATE_END = #{dateEnd,jdbcType=DATE}
-        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+        delete from REP_ASSETS_COMB
+        where PROD_ID = #{prodId,jdbcType=VARCHAR} and
+        PUB_DATE = to_date(#{pubDate,jdbcType=DATE},'YYYY-MM-DD')
+        and ASSETS_CODE = #{assetCode,jdbcType=VARCHAR}
+        and STATUS='D'
     </delete>
 
     <insert id="insert">

@@ -186,7 +186,7 @@
         insert into TOP_INVESTOR_INFORMATION_HIS
         select TOP_INVESTOR_INFORMATION_HIS_NO.NEXTVAL hisNo,id,
                BOOKSET_ID, INDEX_YEAR, INDEX_TYPE,
-               TZ_TYPE, HOLD_SHARE,proportion_share,
+               TZ_RANK,TZ_TYPE, HOLD_SHARE,proportion_share,
                CREATE_USER, CREATE_DEPT, CREATE_TIME,
                #{updateUser,jdbcType=VARCHAR}, UPDATE_TIME, 'D'
         from TOP_INVESTOR_INFORMATION

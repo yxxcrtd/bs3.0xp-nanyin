@@ -191,7 +191,8 @@
             Joyin.ajaxJson(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
                     WorkFlow.doDeleteList(basePath + 'disclosure/information/config/investmentInfo/InvestmentInfo001/delete', object,
-                        "InvestmentInfo001_btn_delete", "InvestmentInfo002");
+                        "InvestmentInfo001_btn_delete", "InvestmentInfo002",function() {
+                            table.reload();});
                 });
             });
         });
