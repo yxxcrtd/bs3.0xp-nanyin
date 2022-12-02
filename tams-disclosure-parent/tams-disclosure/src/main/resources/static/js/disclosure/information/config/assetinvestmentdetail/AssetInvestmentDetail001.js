@@ -52,7 +52,7 @@
             ,{field:'assetCode',  title: '资产代码',sortField:"assetCode"}
             ,{field:'assetName',  title: '资产名称',sortField:"assetName"}
             ,{field:'fairValue',  title: '公允价值（元）',sortField:"fairValue",type:'number'}
-            ,{field:'pdDrop',  title: '占产品资产比例（%）',sortField:"pdDrop"}
+            ,{field:'pdDrop',  title: '占产品资产比例（%）',sortField:"pdDrop",type:'number'}
             ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'datetime'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],

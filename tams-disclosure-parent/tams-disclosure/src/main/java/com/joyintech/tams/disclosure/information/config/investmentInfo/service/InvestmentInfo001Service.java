@@ -155,7 +155,8 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
                 webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0028"), MessageType.错误消息);
                 return webResult;
             }
-            List<InvestmentInfo001Dto> entities = this.convertToBean(dataList);
+            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+            /*List<InvestmentInfo001Dto> entities = this.convertToBean(dataList);
             List<InvestmentInfo001Dto> data = this.selectTopInfoByKey(entities);
             if (data != null && data.size() > 0) {
                 Map<String, List<InvestmentInfo001Dto>> map = entities.stream().collect(
@@ -185,7 +186,7 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
             }else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-            }
+            }*/
         } else {
             webResult.setMessage(this.getMessage("REPORT_COMMON_FILE_E_0016"), MessageType.错误消息);
             return webResult;
@@ -269,7 +270,7 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
             }
             convertToEntitys(dataList,entities);
             entities.forEach(item -> {
-                List<InvestmentInfo001Dto> paramList = new ArrayList<>();
+                /*List<InvestmentInfo001Dto> paramList = new ArrayList<>();
                 InvestmentInfo001Dto param = new InvestmentInfo001Dto();
                 param.setBooksetId(item.getBooksetId());
                 param.setIndexYear(item.getIndexYear());
@@ -281,7 +282,8 @@ public class InvestmentInfo001Service extends CommonExportService<InvestmentInfo
                     this.doComplete(item, OperationType.MODIFY);
                 } else {
                     this.doComplete(item, OperationType.NEW);
-                }
+                }*/
+                this.doComplete(item, OperationType.NEW);
             });
             return new ArrayList<>();
         } else {
