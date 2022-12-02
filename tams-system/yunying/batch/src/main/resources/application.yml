@@ -5,6 +5,8 @@ spring:
   application:
     name: BATCH-SERVER #服务名称
     dfstype: 3
+  cache:
+    type: redis
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
