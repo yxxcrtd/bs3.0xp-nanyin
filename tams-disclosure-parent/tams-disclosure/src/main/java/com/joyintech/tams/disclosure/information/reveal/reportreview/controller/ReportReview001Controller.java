@@ -52,6 +52,7 @@ public class ReportReview001Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCodeExt1.复核状态,DictCodeExt1.信披报表类别);
+        model.addAttribute("reviewStatus", "01");
         return super.init(model);
     }
 

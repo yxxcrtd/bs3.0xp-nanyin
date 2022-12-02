@@ -175,6 +175,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
         	model.addAttribute("searchDateEnd", this.getParam("searchDateEnd"));
         }
 		model.addAttribute("editFlag", editFlag);
+		model.addAttribute("confirmStatus", "0");
          return super.init(model);
         
     }

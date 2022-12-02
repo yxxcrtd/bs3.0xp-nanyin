@@ -152,6 +152,7 @@ public class ReportRevealManage001Contoller extends BaseController {
             	model.addAttribute("quaryDate", DateUtil.addDay(mdate,0)+" - "+DateUtil.addDay(mdate,0));
             }
         }
+        model.addAttribute("revealStatus", "02");
         return super.init(model);
     }
     

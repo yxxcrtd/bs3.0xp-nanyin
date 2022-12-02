@@ -96,12 +96,12 @@
           </div>
           <div class="layui-form-item">
               <div class="layui-inline layui-col-md4">
-                  <label class="layui-form-label form-lable">报表类别</label>
+                  <label class="layui-form-label form-lable">披露状态</label>
                   <div class="layui-input-inline input-inline">
-                      <select id="repType" name="repType" class="layui-input form-input input-select"
-                              placeholder="请选择，可复选" data-th-data-result="${REPORT_STYLE}" allowClear="true"
-                              multiple="multiple" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue='${repType}'>
-                      </select>
+                      <input id="revealStatus" name="revealStatus" class="layui-input form-input input-checkbox"
+                             data-th-data-result="${DISCLOSURE_STATUS}"
+                             data-th-placeholder="#{SysCommon.placeholder}"
+                             allowClear="true" data-th-initValue="${revealStatus}">
                   </div>
               </div>
               <!-- add by guozhongbao 报表披露管理 20181204 start -->
@@ -121,12 +121,12 @@
           </div>
           <div class="layui-form-item">
               <div class="layui-inline layui-col-md4">
-                  <label class="layui-form-label form-lable">披露状态</label>
+                  <label class="layui-form-label form-lable">报表类别</label>
                   <div class="layui-input-inline input-inline">
-                      <input id="revealStatus" name="revealStatus" class="layui-input form-input input-checkbox"
-                             data-th-data-result="${DISCLOSURE_STATUS}"
-                             data-th-placeholder="#{SysCommon.placeholder}"
-                             allowClear="true" data-th-initValue="${revealStatus}">
+                      <select id="repType" name="repType" class="layui-input form-input input-select"
+                              placeholder="请选择，可复选" data-th-data-result="${REPORT_STYLE}" allowClear="true"
+                              multiple="multiple" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue='${repType}'>
+                      </select>
                   </div>
               </div>
             <div class="layui-inline layui-col-md4">
