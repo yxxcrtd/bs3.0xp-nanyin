@@ -147,17 +147,17 @@ public class PoiUtilsHelper {
 						for ( XWPFParagraph p:paragraphs ) {
 							List<XWPFRun> listRuns = p.getRuns();
 							String paraCode="";
-							for ( XWPFRun r:listRuns ) {
-								if (r==null ) continue;
-								    String rtext = r.getText(r.getTextPosition());  //getTextPosition: 取纯文本的起始位置，本行代码取出本run中的纯文本信息（不含控制符信息）
+							for (int j = 0; j < listRuns.size(); j++) {
+								if (listRuns.get(j)==null ) continue;
+								    String rtext = listRuns.get(j).getText(listRuns.get(j).getTextPosition());  //getTextPosition: 取纯文本的起始位置，本行代码取出本run中的纯文本信息（不含控制符信息）
 								if ( rtext==null ) continue;
 								//判断获取的参数是否完整
 								paraCode+=rtext;
 								if ( paracodeIsComplete(paraCode)==false ) {  //删除不完整的变量设置，如${xx，但后续没有 }，或者<，后续没有>
-									r.setText("", 0);
+									listRuns.get(j).setText("", 0);
 								    continue;
 								}
-								replaceRun(paraCode,p,r, params);
+								replaceRun(paraCode,p,listRuns.get(j), params);
 								paraCode=""; 
 							}
 						}
@@ -231,6 +231,21 @@ public class PoiUtilsHelper {
 			} else {
 				run.setText(text,0);
 			}
+		}
+		//如果text中含有换行符"\n"，poi不能自动换行，需要进行段落设置
+		if ( text.contains("\n")) {
+			run.setText("", 0);
+			String val[] = text.split("\n");
+			int pos = 0;
+			for ( String v:val ) {
+				XWPFRun newRun = paragraph.insertNewRun(pos);
+				newRun.getCTR().setRPr(run.getCTR().getRPr());
+				newRun.setText(v);
+				newRun.addBreak(BreakClear.ALL);
+				pos ++;//=  v.length();
+			}
+		} else {
+			run.setText(text,0);
 		}
 		return run;
 	}
