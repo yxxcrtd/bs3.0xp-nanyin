@@ -160,7 +160,7 @@ public class AssetInvestmentDetail001Service extends CommonExportService<AssetIn
             AssetInvestmentDetail001Dto dto1 = assetInvestmentDetailMapper.selectByPrimaryKey(map);
             dto1.setUpdateUser(LoginUserUtil.getUserName());
             dto1.setStatus("D");
-            assetInvestmentDetailMapper.deleteByKey(map);
+            /*assetInvestmentDetailMapper.deleteByKey(map);*/
             assetInvestmentDetailMapper.updateByKey(dto1);
         }
         else if (StringUtil.equals(type, "NEW")) {
