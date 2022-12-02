@@ -5,6 +5,7 @@ import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.web.PlatformDate;
+import com.joyintech.system.cache.CacheRefreshService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * 平台日切换批处理
@@ -33,6 +35,7 @@ public class ChangePlatformDateTask extends BatchBaseService {
      */
     @Autowired(required = false)
     private PlatformDate platformDateService;
+    private CacheRefreshService cacheRefreshService;
 
     /**
      * 日志
@@ -58,6 +61,8 @@ public class ChangePlatformDateTask extends BatchBaseService {
             platformDateService.updateSysDate(newPlatformDate);
 
             result.setStatus(BatchStatus.COMPLETED);
+
+            this.cacheRefreshService.updatePlatDate((Set)null);
 
         }
         catch (Exception e) {
