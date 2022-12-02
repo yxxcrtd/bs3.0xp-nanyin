@@ -35,6 +35,7 @@ public class ChangePlatformDateTask extends BatchBaseService {
      */
     @Autowired(required = false)
     private PlatformDate platformDateService;
+    @Autowired
     private CacheRefreshService cacheRefreshService;
 
     /**
