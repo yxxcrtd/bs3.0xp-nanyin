@@ -27,14 +27,13 @@
         select count(*) from REP_INFO_STATUS WHERE  REP_ID = #{repId,jdbcType=VARCHAR}
     </select>
 
-    <select id="getReportInfoByIDS" parameterType="list" resultType="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo">
+    <select id="getReportInfoByIDS"  resultType="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo">
         select
             REP_REPORTINFO.*
         from REP_REPORTINFO where 1 = 1
-        and reportid in
-        <foreach collection="ids" item="item" open="(" close=")"
+        <foreach collection="idList" item="item" open="and reportid in(" close=")"
         				 separator=",">
-        			#{item}
+        			#{item,jdbcType=VARCHAR}
         </foreach>
     </select>
 </mapper>

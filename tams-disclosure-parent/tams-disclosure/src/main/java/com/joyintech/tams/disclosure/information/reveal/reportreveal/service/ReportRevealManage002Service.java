@@ -112,6 +112,7 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
 
 	private Logger logger = LoggerFactory.getLogger(UploadattAchment001Controller.class);
 
+	@Autowired
     private ReportInfoMapper reportInfoMapper;
 	
     /**
@@ -119,39 +120,17 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
      * @param listdto
      */
     public boolean updateRevealStatusEX(List<ReportConfirmManage001Dto> listdto) throws IOException{
-        boolean result=true;
-        //周报(公募私募)  定期报告(季报(指数型 非指数型)半年报(非现管类非指数型 现管类非指数型 指数型) 年报(非现管类非指数型 现管类非指数型 指数型))不需要在此文件夹生成/home/weblogic
-        //根据所有报表id查询出报表类别
-        List<ReportInfo> reportInfoByIDS = reportInfoMapper.getReportInfoByIDS(listdto.stream().map(ReportConfirmManage001Dto::getRepId).distinct().collect(Collectors.toList()));
-        Map<String, String> map1 = reportInfoByIDS.stream().collect(Collectors.toMap(ReportInfo::getReportID, ReportInfo::getUri));
-        for (ReportConfirmManage001Dto dto : listdto) {
-            if (Objects.nonNull(map1.get(dto.getRepId()))){
-                dto.setUri(map1.get(dto.getRepId()));
-            }
-        }
-        //存放不需要官网生成文件的数据
-        List<ReportConfirmManage001Dto> list1 = new ArrayList<>();
-
-        for (ReportConfirmManage001Dto s : listdto) {
-            if (DisReportType.JDBG_ZSX.equals(s.getUri()) || DisReportType.JDBG_FZSX.equals(s.getUri())
-                    || DisReportType.BNDBG_ZSX.equals(s.getUri()) || DisReportType.BNDBG_FZSXXGL.equals(s.getUri()) || DisReportType.BNDBG_FZSX.equals(s.getUri())
-                    || DisReportType.NDBG_ZSX.equals(s.getUri()) || DisReportType.NDBG_FZSXXGL.equals(s.getUri()) || DisReportType.NDBG_FZSX.equals(s.getUri())
-                    || DisReportType.MZJZGG.equals(s.getUri()) || DisReportType.MZJJBG.equals(s.getUri())){
-             list1.add(s);
-            }
-        }
+        boolean result = true;
         //1.先将单条数据披露，发送文件至指定服务器
-        //result=this.updateRevealStatusByRevealId(listdto);
-        if (CollectionUtils.isNotEmpty(list1)){
-            result=this.updateRevealStatusByRevealId(list1);
-            //有披露失败的，默认全部失败，直接结束
-            if(!result){
-                return false;
-            }
+        result = this.updateRevealStatusByRevealId(listdto);
+        //有披露失败的，默认全部失败，直接结束
+        if (!result) {
+            return false;
         }
+
 
         List<String> prodIds = listdto.stream().distinct().map(ReportConfirmManage001Dto::getProdid).collect(Collectors.toList());
-        result=genFile(prodIds);
+        result = genFile(prodIds);
 
         return result;
     }
@@ -227,6 +206,19 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
      */
     private boolean updateRevealStatusByRevealId(List<ReportConfirmManage001Dto> listdto) {
         boolean flag=true;
+        //周报(公募私募)  定期报告(季报(指数型 非指数型)半年报(非现管类非指数型 现管类非指数型 指数型) 年报(非现管类非指数型 现管类非指数型 指数型))不需要在此文件夹生成/home/weblogic
+        //根据所有报表id查询出报表类别
+        List<String> ids=listdto.stream().map(ReportConfirmManage001Dto::getRepId).distinct().collect(Collectors.toList());
+        Map<String, Object> map=new HashMap<>();
+        map.put("idList",ids);
+        List<ReportInfo> reportInfoByIDS = reportInfoMapper.getReportInfoByIDS(map);
+
+        Map<String, String> map1 = reportInfoByIDS.stream().collect(Collectors.toMap(ReportInfo::getReportID, ReportInfo::getUri));
+        for (ReportConfirmManage001Dto dto : listdto) {
+            if (Objects.nonNull(map1.get(dto.getRepId()))){
+                dto.setUri(map1.get(dto.getRepId()));
+            }
+        }
         if(listdto!=null && listdto.size()>0){
             for (ReportConfirmManage001Dto entity : listdto) {
                 if(entity!=null){
@@ -250,14 +242,23 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
                     ftpDetailDto.setRevealChannel(entity.getRevealChannel());
                     ftpDetailDto.setRevealId(entity.getId());
 
-                    Boolean checkAndCreate = ftpDetailService.doReveal(ftpDetailDto);
-                    if(checkAndCreate) {
+                    Boolean f=DisReportType.JDBG_ZSX.equals(entity.getUri()) || DisReportType.JDBG_FZSX.equals(entity.getUri())
+                            || DisReportType.BNDBG_ZSX.equals(entity.getUri()) || DisReportType.BNDBG_FZSXXGL.equals(entity.getUri()) || DisReportType.BNDBG_FZSX.equals(entity.getUri())
+                            || DisReportType.NDBG_ZSX.equals(entity.getUri()) || DisReportType.NDBG_FZSXXGL.equals(entity.getUri()) || DisReportType.NDBG_FZSX.equals(entity.getUri())
+                            || DisReportType.MZJZGG.equals(entity.getUri()) || DisReportType.MZJJBG.equals(entity.getUri());
+                    if(f) {
                         entity.setUpdateUser(LoginUserUtil.getUserName());
                         mapper.updateRevealStatusByIdEX(entity);
-                    }else{
-                        //有一条数据披露失败，默认全部失败，直接返回false
-                        flag=false;
-                        break;
+                    }else {
+                        Boolean checkAndCreate = ftpDetailService.doReveal(ftpDetailDto);
+                        if (checkAndCreate) {
+                            entity.setUpdateUser(LoginUserUtil.getUserName());
+                            mapper.updateRevealStatusByIdEX(entity);
+                        } else {
+                            //有一条数据披露失败，默认全部失败，直接返回false
+                            flag = false;
+                            break;
+                        }
                     }
                     // add by guozhongbao 披露时上传文件 20181210 end
                 }
