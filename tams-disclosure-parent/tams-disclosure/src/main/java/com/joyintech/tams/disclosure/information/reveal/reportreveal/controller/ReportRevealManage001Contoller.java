@@ -12,16 +12,13 @@ package com.joyintech.tams.disclosure.information.reveal.reportreveal.controller
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.information.reveal.reportreveal.service.ReportRevealManage002Service;
 import com.joyintech.tams.disclosure.information.reveal.reportreview.dto.ReportReview001Dto;
 import org.slf4j.Logger;
@@ -125,6 +122,7 @@ public class ReportRevealManage001Contoller extends BaseController {
         model.addAttribute("REPORT_STYLE",JsonUtils.objectArray2Json(ftpPathService.getReportCategory().toArray()));
         this.setSelectOptionToModel(model,DictCode.披露状态);
         this.setSelectOptionToModel(model,DictCode.披露渠道);
+        this.setSelectOptionToModel(model, DictCodeExt1.信披_募集方式);
         // 首页跳转使用
         String confromPage = this.getParam("confromPage");
         if(StringUtil.equals("01", confromPage)){
@@ -196,8 +194,28 @@ public class ReportRevealManage001Contoller extends BaseController {
     		list.add(reportRevealManage001Service.getBussinessEntityByWorkflowId(workflowId));
     		page.setRoot(list);
 
-    	}else{
-    		page = reportRevealManage001Service.findPage(RequestUtil.getPageParam());
+    	}else {
+            page = reportRevealManage001Service.findPage(RequestUtil.getPageParam());
+        }
+            page.getRoot().forEach(dto -> {
+                String raiseType = reportConfirmManage001Service.selectRaiseTypebyProdID(dto.getProdid());
+                dto.setRaiseType(raiseType);
+            });
+            List<ReportReview001Dto> ReportReview001DtoList=page.getRoot();
+            String r=RequestUtil.getPageParam().get("raiseType").toString();
+            String raiseTypeRequest[]=null;
+            if(StringUtil.isNotEmpty(r)) {
+                raiseTypeRequest = RequestUtil.getPageParam().get("raiseType").toString().split(",");
+            }
+            if(StringUtil.isNotEmpty(raiseTypeRequest)) {
+                for (int i = 0; i < ReportReview001DtoList.size(); i++) {
+                    if(!Arrays.asList(raiseTypeRequest).contains(ReportReview001DtoList.get(i).getRaiseType())){
+                        ReportReview001DtoList.remove(i);
+                        // 减一操作
+                        i--;
+                    }
+                }
+            }
     		page.getRoot().forEach(dto -> {
     			if(dto.getFilename() != null) {
     				dto.setSysFilename(dto.getFilename());
@@ -210,7 +228,7 @@ public class ReportRevealManage001Contoller extends BaseController {
 				}
     			dto.setRevealChannelName(StringUtil.joinString(revealChannelNameList, ","));
             });
-    	}
+
     	return page;
     }
     
