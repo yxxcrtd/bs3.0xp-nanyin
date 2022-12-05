@@ -930,4 +930,9 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
             reportConfirmManage001Mapper.insertReviewStatusList(newDataList);
         }
     }
+
+    public String selectRaiseTypebyProdID(String prodId){
+        String raiseType=reportConfirmManage001Mapper.selectRaiseTypebyProdID(prodId);
+        return raiseType;
+    }
 }

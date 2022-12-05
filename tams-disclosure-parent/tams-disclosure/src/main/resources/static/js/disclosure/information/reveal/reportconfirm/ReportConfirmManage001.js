@@ -24,7 +24,8 @@ $(function () {
         	revealEndDateBegin : $('#revealEndDate').startDate(),
             revealEndDateEnd : $('#revealEndDate').endDate(),
 			reportDateStart : $('#reportDate').startDate(),
-			reportDateEnd : $('#reportDate').endDate()
+			reportDateEnd : $('#reportDate').endDate(),
+			raiseType:$('#raiseType').val() == null ? null : $('#raiseType').val().join(",")
         }
     };
     
@@ -66,6 +67,7 @@ $(function () {
                 {field:'reportName', title: '报表名称',width:200, sort: true},
                 {field:'repId', title: '报表代码',sort: true,visible:false},
                 {field:'reportDate', title: '报告期',width:170, sort: true},
+				{field:'raiseTypeName', sortable:true, width:100, title: '募集方式',sortField:'raiseType'},
                 {field:'revealEndDateStr', title: '披露截止日',width:170, sort: true},
                 {field:'reportCategory', title: 'reportCategory',sort: true,visible:false},
                 {field:'reportCategoryName', title: '报表类别',width:100, sort: true,sortField:"reportCategory"},

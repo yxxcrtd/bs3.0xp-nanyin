@@ -709,4 +709,11 @@
 		)A
 	</insert>
 
+	<select id="selectRaiseTypebyProdID" parameterType="java.lang.String"
+			resultType="java.lang.String">
+		select distinct  RAISE_TYPE from
+			REP_PROD_INFO
+		where PROD_ID = #{prodId} or P_PROD_ID=#{prodId}
+	</select>
+
 </mapper>

@@ -21,13 +21,14 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 /**
- * 
+ *
  * 产品资产查询Dto
  * @author 王耕耘
  * @version 1.0 2018年5月16日
@@ -41,14 +42,14 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 1L;
-    
+
     //@PrimaryKey(value=Field.PK_1)
     private String seqno;
-    
+
     // 业务主键为空，则从data的json字符串（选中的row）中取  zhangyf 20190111 start
     @PrimaryKey(value=Field.PK_1)
     String getPk() throws IOException {
-        
+
         if(StringUtil.isNotEmpty(seqno)){
             return seqno;
         }
@@ -59,8 +60,8 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
         throw new IllegalArgumentException("seqno or data.seqno Must not be empty !");
     }
     // 业务主键为空，则从data的json字符串（选中的row）中取  zhangyf 20190111 end
-    
-	private String confirmStatusName;
+
+    private String confirmStatusName;
     private String revealStatusName;
     private String createTimeStr;
     private String updateTypeFlag;//更新标识
@@ -70,7 +71,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     private String revealChannelName; //披露渠道
     private String isConfirmName;  //确认方式
     private String isRevealName;  //披露方式
- // add by guozhongbo 报表披露管理 20181204 end
+    // add by guozhongbo 报表披露管理 20181204 end
     /**
      * 勾选的数据json字符串
      */
@@ -88,6 +89,10 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     private String agencyName;
 
     private String reviewUser;
+
+    private String raiseType;
+
+    private String raiseTypeName;
     public String getReviewUser() {
         return reviewUser;
     }
@@ -121,7 +126,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
         return confirmDateStr;
     }
 
-    
+
     /**
      * 设置 confirmDateStr
      * @param confirmDateStr confirmDateStr
@@ -129,25 +134,25 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public void setConfirmDateStr(String confirmDateStr) {
         this.confirmDateStr = confirmDateStr;
     }
-  
+
     /**
      * 获取 revealStatusName
      * @return revealStatusName.
      */
     public String getRevealStatusName() {
-    	return  StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.披露状态, this.getRevealStatus()))?
-    	        SysDataUtil.getNameFromDataDict(DictCode.披露状态, this.getRevealStatus()):this.getRevealStatus();
-	}
+        return  StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.披露状态, this.getRevealStatus()))?
+                SysDataUtil.getNameFromDataDict(DictCode.披露状态, this.getRevealStatus()):this.getRevealStatus();
+    }
 
     /**
      * 设置 revealStatusName
      * @param revealStatusName revealStatusName
      */
-	public void setRevealStatusName(String revealStatusName) {
-		this.revealStatusName = revealStatusName;
-	}
+    public void setRevealStatusName(String revealStatusName) {
+        this.revealStatusName = revealStatusName;
+    }
 
-	/**
+    /**
      * 获取 serialversionuid
      * @return serialversionuid.
      */
@@ -161,9 +166,9 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     @Override
     public String toString() {
         return "ReportConfirmManage001Dto [prodName=" + this.getProdName() + ", prodid=" + this.getProdid()
-               + ", sysFilepath=" + this.getSysFilepath() + ", filename=" + this.getFilename() + "]";
+                + ", sysFilepath=" + this.getSysFilepath() + ", filename=" + this.getFilename() + "]";
     }
-  
+
     /**
      * 获取 createTimeStr
      * @return createTimeStr.
@@ -171,7 +176,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public String getCreateTimeStr() {
         return  createTimeStr;
     }
-   
+
     /**
      * 设置 createTimeStr
      * @param createTimeStr createTimeStr
@@ -179,7 +184,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
     }
-    
+
     /**
      * 获取 updateTypeFlag
      * @return updateTypeFlag.
@@ -187,7 +192,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public String getUpdateTypeFlag() {
         return updateTypeFlag;
     }
-    
+
     /**
      * 设置 updateTypeFlag
      * @param updateTypeFlag updateTypeFlag
@@ -195,7 +200,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public void setUpdateTypeFlag(String updateTypeFlag) {
         this.updateTypeFlag = updateTypeFlag;
     }
-    
+
     /**
      * 获取 data
      * @return data.
@@ -203,7 +208,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public String getData() {
         return data;
     }
-    
+
     /**
      * 设置 data
      * @param data data
@@ -211,7 +216,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public void setData(String data) {
         this.data = data;
     }
-  
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -219,7 +224,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public String getElementId() {
         return elementId;
     }
-  
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -227,17 +232,17 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-  
+
     /**
      * 获取 confirmStatusName
      * @return confirmStatusName.
      */
     public String getConfirmStatusName() {
-       
+
         return  StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.确认状态, this.getConfirmStatus()))?
-            SysDataUtil.getNameFromDataDict(DictCode.确认状态, this.getConfirmStatus()):this.getConfirmStatus();
+                SysDataUtil.getNameFromDataDict(DictCode.确认状态, this.getConfirmStatus()):this.getConfirmStatus();
     }
- 
+
     /**
      * 设置 confirmStatusName
      * @param confirmStatusName confirmStatusName
@@ -245,74 +250,74 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     public void setConfirmStatusName(String confirmStatusName) {
         this.confirmStatusName = confirmStatusName;
     }
-    
+
     public String getRevealDateStr() {
         return DateUtil.format(this.getRevealDate(),"yyyy-MM-dd HH:mm");
     }
 
-	public String getRevealChannelName() {
-		return revealChannelName;
-	}
+    public String getRevealChannelName() {
+        return revealChannelName;
+    }
 
-	public void setRevealChannelName(String revealChannelName) {
-		this.revealChannelName = revealChannelName;
-	}
+    public void setRevealChannelName(String revealChannelName) {
+        this.revealChannelName = revealChannelName;
+    }
 
-	public String getIsConfirmName() {
-		return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.确认类型, this.getIsConfirm()))?
-    	        SysDataUtil.getNameFromDataDict(DictCode.确认类型, this.getIsConfirm()):this.getIsConfirm();
-	}
+    public String getIsConfirmName() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.确认类型, this.getIsConfirm()))?
+                SysDataUtil.getNameFromDataDict(DictCode.确认类型, this.getIsConfirm()):this.getIsConfirm();
+    }
 
-	public void setIsConfirmName(String isConfirmName) {
-		this.isConfirmName = isConfirmName;
-	}
+    public void setIsConfirmName(String isConfirmName) {
+        this.isConfirmName = isConfirmName;
+    }
 
-	public String getIsRevealName() {
-		return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.披露方式, this.getIsReveal()))?
-    	        SysDataUtil.getNameFromDataDict(DictCode.披露方式, this.getIsReveal()):this.getIsReveal();
-	}
+    public String getIsRevealName() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.披露方式, this.getIsReveal()))?
+                SysDataUtil.getNameFromDataDict(DictCode.披露方式, this.getIsReveal()):this.getIsReveal();
+    }
 
-	public void setIsRevealName(String isRevealName) {
-		this.isRevealName = isRevealName;
-	}
+    public void setIsRevealName(String isRevealName) {
+        this.isRevealName = isRevealName;
+    }
 
-	public void setRevealDateStr(String revealDateStr) {
-		this.revealDateStr = revealDateStr;
-	}
+    public void setRevealDateStr(String revealDateStr) {
+        this.revealDateStr = revealDateStr;
+    }
 
-	public String getUploadTime() {
-		return uploadTime;
-	}
+    public String getUploadTime() {
+        return uploadTime;
+    }
 
-	public void setUploadTime(String uploadTime) {
-		this.uploadTime = uploadTime;
-	}
+    public void setUploadTime(String uploadTime) {
+        this.uploadTime = uploadTime;
+    }
 
-	public String getReportCategoryName() {
-		return reportCategoryName;
-	}
+    public String getReportCategoryName() {
+        return reportCategoryName;
+    }
 
-	public void setReportCategoryName(String reportCategoryName) {
-		this.reportCategoryName = reportCategoryName;
-	}
+    public void setReportCategoryName(String reportCategoryName) {
+        this.reportCategoryName = reportCategoryName;
+    }
 
-	public String getReportDate() {
-		return reportDate;
-	}
+    public String getReportDate() {
+        return reportDate;
+    }
 
-	public void setReportDate(String reportDate) {
-		this.reportDate = reportDate;
-	}
-
-
-	public String getRevealEndDateStr() {
-		return revealEndDateStr;
-	}
+    public void setReportDate(String reportDate) {
+        this.reportDate = reportDate;
+    }
 
 
-	public void setRevealEndDateStr(String revealEndDateStr) {
-		this.revealEndDateStr = revealEndDateStr;
-	}
+    public String getRevealEndDateStr() {
+        return revealEndDateStr;
+    }
+
+
+    public void setRevealEndDateStr(String revealEndDateStr) {
+        this.revealEndDateStr = revealEndDateStr;
+    }
 
 
 
@@ -333,6 +338,23 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     }
     public String getCheckTimeStr() {
         return DateUtil.formatDateTime(this.getCheckTime());
+    }
+
+    public String getRaiseType() {
+        return raiseType;
+    }
+
+    public void setRaiseType(String raiseType) {
+        this.raiseType = raiseType;
+    }
+
+    public String getRaiseTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCodeExt1.信披_募集方式,getRaiseType());
+
+    }
+
+    public void setRaiseTypeName(String raiseTypeName) {
+        this.raiseTypeName = raiseTypeName;
     }
 }
       			

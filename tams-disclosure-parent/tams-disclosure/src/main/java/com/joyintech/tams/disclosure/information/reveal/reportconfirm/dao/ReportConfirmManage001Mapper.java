@@ -281,4 +281,6 @@ public interface ReportConfirmManage001Mapper {
     int deleteReviewStatusByList(@Param("dataList")List<RepRevealReview> dataList);
 
     int insertReviewStatusList(@Param("dataList")List<RepRevealReview> dataList);
+
+    String selectRaiseTypebyProdID(String prodId);
 }
