@@ -12,6 +12,7 @@
             F2.REAL_NAME reviewUser,
             REVEAL.REP_ID repId,
             REVEAL.PRODID prodid,
+            NVL(R1.RAISE_TYPE,R2.RAISE_TYPE) raiseType,
             decode(R1.REP_PROD_TYPE,'01',R1.PROD_NAME,'03',R1.PROD_NAME,'02',R2.PROD_NAME,decode(R1.PROD_NAME,null,REVEAL.PROD_NAME,R1.PROD_NAME)) prodName,
             REVEAL.REPORT_CATEGORY reportCategory,
             rfp.NAME reportCategoryName,
