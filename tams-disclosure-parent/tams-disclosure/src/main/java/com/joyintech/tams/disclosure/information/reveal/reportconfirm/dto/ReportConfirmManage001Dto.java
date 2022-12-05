@@ -93,6 +93,17 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
     private String raiseType;
 
     private String raiseTypeName;
+
+    private String Uri;
+
+    public String getUri() {
+        return Uri;
+    }
+
+    public void setUri(String uri) {
+        Uri = uri;
+    }
+
     public String getReviewUser() {
         return reviewUser;
     }

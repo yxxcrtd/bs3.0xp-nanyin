@@ -24,4 +24,5 @@ public interface ReportInfoMapper {
 
     int getRepInfoStatus(Map<String, Object> params);
 
+    List<ReportInfo> getReportInfoByIDS(List<String> ids);
 }

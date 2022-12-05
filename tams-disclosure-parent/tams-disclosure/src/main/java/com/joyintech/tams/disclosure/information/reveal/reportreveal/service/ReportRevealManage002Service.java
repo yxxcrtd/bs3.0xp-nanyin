@@ -31,6 +31,9 @@ import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service.FtpDetailService;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
+import com.joyintech.tams.disclosure.common.DisReportType;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.controller.UploadattAchment001Controller;
@@ -53,10 +56,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -111,6 +111,8 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
     private static final String PROCESS_KEY = "exportProcessBar";
 
 	private Logger logger = LoggerFactory.getLogger(UploadattAchment001Controller.class);
+
+    private ReportInfoMapper reportInfoMapper;
 	
     /**
      * 手动披露
@@ -118,12 +120,36 @@ public class ReportRevealManage002Service  implements BaseProcessService<ReportC
      */
     public boolean updateRevealStatusEX(List<ReportConfirmManage001Dto> listdto) throws IOException{
         boolean result=true;
-        //1.先将单条数据披露，发送文件至指定服务器
-        result=this.updateRevealStatusByRevealId(listdto);
-        //有披露失败的，默认全部失败，直接结束
-        if(!result){
-            return false;
+        //周报(公募私募)  定期报告(季报(指数型 非指数型)半年报(非现管类非指数型 现管类非指数型 指数型) 年报(非现管类非指数型 现管类非指数型 指数型))不需要在此文件夹生成/home/weblogic
+        //根据所有报表id查询出报表类别
+        List<ReportInfo> reportInfoByIDS = reportInfoMapper.getReportInfoByIDS(listdto.stream().map(ReportConfirmManage001Dto::getRepId).distinct().collect(Collectors.toList()));
+        Map<String, String> map1 = reportInfoByIDS.stream().collect(Collectors.toMap(ReportInfo::getReportID, ReportInfo::getUri));
+        for (ReportConfirmManage001Dto dto : listdto) {
+            if (Objects.nonNull(map1.get(dto.getRepId()))){
+                dto.setUri(map1.get(dto.getRepId()));
+            }
         }
+        //存放不需要官网生成文件的数据
+        List<ReportConfirmManage001Dto> list1 = new ArrayList<>();
+
+        for (ReportConfirmManage001Dto s : listdto) {
+            if (DisReportType.JDBG_ZSX.equals(s.getUri()) || DisReportType.JDBG_FZSX.equals(s.getUri())
+                    || DisReportType.BNDBG_ZSX.equals(s.getUri()) || DisReportType.BNDBG_FZSXXGL.equals(s.getUri()) || DisReportType.BNDBG_FZSX.equals(s.getUri())
+                    || DisReportType.NDBG_ZSX.equals(s.getUri()) || DisReportType.NDBG_FZSXXGL.equals(s.getUri()) || DisReportType.NDBG_FZSX.equals(s.getUri())
+                    || DisReportType.MZJZGG.equals(s.getUri()) || DisReportType.MZJJBG.equals(s.getUri())){
+             list1.add(s);
+            }
+        }
+        //1.先将单条数据披露，发送文件至指定服务器
+        //result=this.updateRevealStatusByRevealId(listdto);
+        if (CollectionUtils.isNotEmpty(list1)){
+            result=this.updateRevealStatusByRevealId(list1);
+            //有披露失败的，默认全部失败，直接结束
+            if(!result){
+                return false;
+            }
+        }
+
         List<String> prodIds = listdto.stream().distinct().map(ReportConfirmManage001Dto::getProdid).collect(Collectors.toList());
         result=genFile(prodIds);
 

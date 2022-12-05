@@ -53,4 +53,6 @@ public interface DisReportType {
 	public static final String QSBG="QSBG";
 	public static final String FHJSQD="FHJSQD";   //分红计算清单
 	public static final String TEST="TEST";   //poi测试报表
+	public static final String BNDBG_FZSXXGL="BNDBG_FZSXXGL";   //poi测试报表
+	public static final String NDBG_FZSXXGL="NDBG_FZSXXGL";   //poi测试报表
 }
