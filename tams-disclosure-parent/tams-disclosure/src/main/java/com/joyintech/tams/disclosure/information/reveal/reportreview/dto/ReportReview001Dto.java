@@ -27,6 +27,11 @@ public class ReportReview001Dto extends ReportConfirmManage001Dto {
 
     private Date reviewTgTime;
     private String reviewTgStatus;
+
+    private String raiseType;
+
+    private String raiseTypeName;
+
     public String getReviewStatus() {
         return reviewStatus;
     }
@@ -108,5 +113,22 @@ public class ReportReview001Dto extends ReportConfirmManage001Dto {
 
     public void setReviewTgStatus(String reviewTgStatus) {
         this.reviewTgStatus = reviewTgStatus;
+    }
+
+    public String getRaiseType() {
+        return raiseType;
+    }
+
+    public void setRaiseType(String raiseType) {
+        this.raiseType = raiseType;
+    }
+
+    public String getRaiseTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCodeExt1.信披_募集方式,getRaiseType());
+
+    }
+
+    public void setRaiseTypeName(String raiseTypeName) {
+        this.raiseTypeName = raiseTypeName;
     }
 }

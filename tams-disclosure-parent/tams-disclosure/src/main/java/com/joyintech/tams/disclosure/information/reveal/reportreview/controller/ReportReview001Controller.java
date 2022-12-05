@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -52,6 +49,7 @@ public class ReportReview001Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCodeExt1.复核状态,DictCodeExt1.信披报表类别);
+        this.setSelectOptionToModel(model, DictCodeExt1.信披_募集方式);
         model.addAttribute("reviewStatus", "01");
         return super.init(model);
     }
@@ -69,6 +67,25 @@ public class ReportReview001Controller extends BaseController {
     public Page<ReportReview001Dto> findPage(){
         Map<String, Object> param= RequestUtil.getPageParam();
         Page<ReportReview001Dto> page = reportReview001Service.findPage(param);
+        page.getRoot().forEach(dto -> {
+            String raiseType = reportConfirmManage001Service.selectRaiseTypebyProdID(dto.getProdid());
+            dto.setRaiseType(raiseType);
+        });
+        List<ReportReview001Dto> ReportReview001DtoList=page.getRoot();
+        String r=RequestUtil.getPageParam().get("raiseType").toString();
+        String raiseTypeRequest[]=null;
+        if(StringUtil.isNotEmpty(r)) {
+            raiseTypeRequest = RequestUtil.getPageParam().get("raiseType").toString().split(",");
+        }
+        if(StringUtil.isNotEmpty(raiseTypeRequest)) {
+            for (int i = 0; i < ReportReview001DtoList.size(); i++) {
+                if(!Arrays.asList(raiseTypeRequest).contains(ReportReview001DtoList.get(i).getRaiseType())){
+                    ReportReview001DtoList.remove(i);
+                    // 减一操作
+                    i--;
+                }
+            }
+        }
         return page;
     }
 
