@@ -92,6 +92,13 @@ public class ReportRevealManage001Service extends CommonExportService<ReportRevi
             prodIdArr = prodId.split(",");
         }
         params.put("prodIdArr", prodIdArr);
+
+        String raiseType = (String) params.get("raiseType");
+        String[] raiseTypeArr = null;
+        if(StringUtil.isNotEmpty(raiseType)){
+            raiseTypeArr = raiseType.split(",");
+        }
+        params.put("raiseTypeArr", raiseTypeArr);
         
         String repType = (String)params.get("repType");
         String[] repTypeArr = null;
