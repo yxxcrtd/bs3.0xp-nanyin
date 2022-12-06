@@ -1294,3 +1294,10 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('InvestmentInfo001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('InvestmentInfo001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+-- 报表作业范围 每周净值公告新增发行方式为封闭式 2022-12-06 start
+DELETE from REP_JOB_RANGE where ID='D0000000000000000635';
+insert into REP_JOB_RANGE values ('D0000000000000000635','CP_001_002_005','02','ISSUING_WAY','=','02','02','system','',sysdate,'system',sysdate);
+DELETE from REP_JOB_RANGE where ID='D0000000000000000636';
+insert into REP_JOB_RANGE values ('D0000000000000000636','100000004','02','ISSUING_WAY','=','02','02','system','',sysdate,'system',sysdate);
+-- 报表作业范围 每周净值公告新增发行方式为封闭式 2022-12-06 end
