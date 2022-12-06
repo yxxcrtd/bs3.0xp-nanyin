@@ -59,6 +59,12 @@ public class ReportReview001Service extends CommonExportService<ReportReview001D
             pProdIdArr = pProdId.split(",");
             param.put("pProdIdArr",pProdIdArr);
         }
+        String raiseType = (String) param.get("raiseType");
+        String[] raiseTypeArr = null;
+        if(StringUtil.isNotEmpty(raiseType)){
+            raiseTypeArr = raiseType.split(",");
+        }
+        param.put("raiseTypeArr", raiseTypeArr);
 
         String prodId=(String) param.get("prodId");
         String[] prodIdArr = null;
