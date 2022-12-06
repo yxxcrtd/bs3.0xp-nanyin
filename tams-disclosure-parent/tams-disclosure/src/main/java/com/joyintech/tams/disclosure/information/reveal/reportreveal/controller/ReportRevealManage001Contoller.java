@@ -216,6 +216,7 @@ public class ReportRevealManage001Contoller extends BaseController {
                     }
                 }
             }
+            page.setRecords(ReportReview001DtoList.size());
     		page.getRoot().forEach(dto -> {
     			if(dto.getFilename() != null) {
     				dto.setSysFilename(dto.getFilename());

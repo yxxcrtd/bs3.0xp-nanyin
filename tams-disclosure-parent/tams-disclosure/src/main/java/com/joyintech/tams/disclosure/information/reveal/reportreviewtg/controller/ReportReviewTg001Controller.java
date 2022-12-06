@@ -77,6 +77,7 @@ public class ReportReviewTg001Controller extends BaseController {
                 }
             }
         }
+        page.setRecords(ReportReview001DtoList.size());
         return page;
     }
 

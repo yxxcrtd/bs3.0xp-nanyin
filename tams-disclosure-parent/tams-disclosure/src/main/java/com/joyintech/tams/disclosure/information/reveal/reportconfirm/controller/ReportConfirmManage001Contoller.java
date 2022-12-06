@@ -242,6 +242,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 				}
 			}
 		}
+		page.setRecords(reportConfirmManage001DtoList.size());
 		page.getRoot().forEach(dto -> {
 			if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getRevealChannel())) {
 				List<String> revealChannelList = StringUtil.splitToList(",", dto.getRevealChannel());
