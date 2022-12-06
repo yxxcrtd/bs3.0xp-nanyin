@@ -62,7 +62,7 @@ public class ReportReviewTg001Controller extends BaseController {
             String raiseType = reportConfirmManage001Service.selectRaiseTypebyProdID(dto.getProdid());
             dto.setRaiseType(raiseType);
         });
-        List<ReportReview001Dto> ReportReview001DtoList=page.getRoot();
+       /* List<ReportReview001Dto> ReportReview001DtoList=page.getRoot();
         String r=RequestUtil.getPageParam().get("raiseType").toString();
         String raiseTypeRequest[]=null;
         if(StringUtil.isNotEmpty(r)) {
@@ -77,7 +77,7 @@ public class ReportReviewTg001Controller extends BaseController {
                 }
             }
         }
-        page.setRecords(ReportReview001DtoList.size());
+        page.setRecords(ReportReview001DtoList.size());*/
         return page;
     }
 

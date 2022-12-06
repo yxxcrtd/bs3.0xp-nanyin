@@ -64,6 +64,14 @@
                 left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
         where 1=1
         and REVEAL.status ='E'
+        <if test="raiseTypeArr != null and raiseTypeArr.length > 0">
+            AND (NVL(R1.RAISE_TYPE,R2.RAISE_TYPE) IN
+            <foreach item="item" collection="raiseTypeArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )
+        </if>
         <if test="pProdIdArr != null and pProdIdArr.length > 0">
             AND REVEAL.PRODID IN
             <foreach item="item" collection="pProdIdArr" index="index"
