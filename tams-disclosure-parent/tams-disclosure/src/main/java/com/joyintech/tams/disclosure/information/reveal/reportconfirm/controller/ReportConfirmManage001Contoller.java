@@ -227,7 +227,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 			String raiseType = reportConfirmManage001Service.selectRaiseTypebyProdID(dto.getProdid());
 			dto.setRaiseType(raiseType);
 		});
-		List<ReportConfirmManage001Dto> reportConfirmManage001DtoList=page.getRoot();
+		/*List<ReportConfirmManage001Dto> reportConfirmManage001DtoList=page.getRoot();
 		String r=RequestUtil.getPageParam().get("raiseType").toString();
 		String raiseTypeRequest[]=null;
 		if(StringUtil.isNotEmpty(r)) {
@@ -242,7 +242,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 				}
 			}
 		}
-		page.setRecords(reportConfirmManage001DtoList.size());
+		page.setRecords(reportConfirmManage001DtoList.size());*/
 		page.getRoot().forEach(dto -> {
 			if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getRevealChannel())) {
 				List<String> revealChannelList = StringUtil.splitToList(",", dto.getRevealChannel());

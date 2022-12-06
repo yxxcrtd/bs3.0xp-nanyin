@@ -113,6 +113,13 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         }
         params.put("finprodIdArr", finprodIdArr);
 
+		String raiseType = (String)params.get("raiseType");
+		String[] raiseTypeArr = null;
+		if(StringUtil.isNotEmpty(raiseType)){
+			raiseTypeArr = raiseType.split(",");
+		}
+		params.put("raiseTypeArr", raiseTypeArr);
+
 		String prodId = (String)params.get("prodId");
 		String[] prodIdArr = null;
 		if(StringUtil.isNotEmpty(prodId)){
