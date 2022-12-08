@@ -79,13 +79,17 @@ public class HomeRevealStatService {
 	    		p.put("is_holiday", "0");
 	    		p.put("market_code", "01");
 	    		Date sDate = holidayService.getNextWorkDay(p);
-	    		
-	    		//统计已发生的列
-				info = queryOtherCounts(repId,sunday,saturday);
-				
-				//统计预计披露的列
-				int counts = queryExpectCounts(repId,sDate,saturday,statDate);
-	    		info.setExpectRevealCounts(counts);
+
+	    		if(DateUtil.isSameDate(statDate,sDate)) {
+
+
+					//统计已发生的列
+					info = queryOtherCounts(repId, sunday, saturday);
+
+					//统计预计披露的列
+					int counts = queryExpectCounts(repId, sDate, saturday, statDate);
+					info.setExpectRevealCounts(counts);
+				}
 				
 	    	}
 	    	else if (repId.equals("CP_001_002_015") || repId.equals("CP_001_002_016") ) {  //季报
