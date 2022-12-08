@@ -1301,3 +1301,29 @@ insert into REP_JOB_RANGE values ('D0000000000000000635','CP_001_002_005','02','
 DELETE from REP_JOB_RANGE where ID='D0000000000000000636';
 insert into REP_JOB_RANGE values ('D0000000000000000636','100000004','02','ISSUING_WAY','=','02','02','system','',sysdate,'system',sysdate);
 -- 报表作业范围 每周净值公告新增发行方式为封闭式 2022-12-06 end
+
+-- 页面权限控制 2022-12-08 start
+delete from SYS_PAGE_ELEMENT where PAGE_ID='ReportReview001';
+
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportReview001', 'ReportReview001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportReview001', 'ReportReview001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportReview001', 'ReportReview001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportReview001', 'ReportReview001_btn_back', '01', '01', null, '退回', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportReview001', 'ReportReview001_btn_push_reveal', '01', '01', null, '复核并推送待披露', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportReview001', 'ReportReview001_btn_push_tg', '01', '01', null, '复核并推送托管复核', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportReview001', 'ReportReview001_btn_export_file', '01', '01', null, '导出报表文件', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+-- 页面权限控制 2022-12-08 end
+
