@@ -154,7 +154,7 @@
 		select
 		TII.tz_type,
 		TII.hold_share,
-		TII.proportion_share*100
+		TII.proportion_share*100 as proportionShare
 		from TOP_INVESTOR_INFORMATION TII
 		where
 		TII.STATUS='E'
