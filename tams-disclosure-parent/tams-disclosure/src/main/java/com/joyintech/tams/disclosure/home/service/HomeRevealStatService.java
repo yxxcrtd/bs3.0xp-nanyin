@@ -423,7 +423,12 @@ public class HomeRevealStatService {
 //    		Date qDate = getLastDurationFirstDate(statDate,"W");
 //    		String qDateStr = sdf.format(qDate);
 //    		condition = " info.MDATE>=to_date('"+qDateStr+"','yyyy-mm-dd')";
-			condition = planDate + "=" +queryDate;
+			if(repId.equals("CP_001_002_005")){
+				condition = planDate + "=" +queryDate
+				 + " and info.ISSUING_WAY='02' ";
+			}else{
+				condition="1=2 ";
+			}
 //    		//找到本周一
 //    		Calendar cal = Calendar.getInstance();
 //    		cal.setTime(statDate);

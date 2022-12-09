@@ -749,3 +749,14 @@ ALTER TABLE REP_ASSETS_COMB ADD CONSTRAINT PK_REP_ASSETS_COMB_ID_01 PRIMARY KEY 
 
 --删除前十名资产投资明细主键 add by wanglei 2022/12/02 start
 ALTER TABLE REP_ASSETS_COMB DROP CONSTRAINT PK_REP_ASSETS_COMB_ID_01;
+
+-- 创建前十大投资者信息序列
+drop sequence TOP_INVESTOR_INFORMATION_HIS_NO;
+create sequence TOP_INVESTOR_INFORMATION_HIS_NO
+    minvalue 1
+    maxvalue 9999999999999999999999999999
+    start with 37
+    increment by 1
+    nocache;
+-- 创建前十大投资者信息序列 add end
+
